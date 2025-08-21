@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Card - CSS Parts & Custom Properties Demo</title>
+  
+  <style>
+    /* ============================================
+       Global Design Tokens
+       These cascade to all adaptive cards
+       ============================================ */
+    :root {
+      /* Spacing tokens */
+      --design-token-spacing-xs: 0.25rem;
+      --design-token-spacing-sm: 0.5rem;
+      --design-token-spacing-md: 1rem;
+      --design-token-spacing-lg: 1.5rem;
+      --design-token-spacing-xl: 2rem;
+      
+      /* Color tokens */
+      --design-token-surface-primary: #ffffff;
+      --design-token-surface-primary-hover: #f5f5f5;
+      --design-token-surface-primary-active: #eeeeee;
+      --design-token-surface-selected: #e3f2fd;
+      --design-token-surface-disabled: #fafafa;
+      
+      --design-token-text-primary: #212121;
+      --design-token-text-secondary: #666666;
+      --design-token-text-disabled: #999999;
+      
+      --design-token-border-default: #e0e0e0;
+      --design-token-focus-color: #2196f3;
+      
+      /* Radius tokens */
+      --design-token-radius-sm: 0.25rem;
+      --design-token-radius-md: 0.5rem;
+      --design-token-radius-lg: 1rem;
+      
+      /* Shadow tokens */
+      --design-token-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+      --design-token-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.16);
+      --design-token-shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19);
+      --design-token-shadow-xl: 0 14px 28px rgba(0, 0, 0, 0.25);
+      
+      /* Animation tokens */
+      --design-token-duration-fast: 150ms;
+      --design-token-duration-normal: 250ms;
+      --design-token-duration-slow: 350ms;
+      --design-token-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Dark mode tokens */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --design-token-surface-primary: #1e1e1e;
+        --design-token-surface-primary-hover: #2a2a2a;
+        --design-token-surface-primary-active: #333333;
+        --design-token-surface-selected: #1a237e;
+        --design-token-surface-disabled: #0a0a0a;
+        
+        --design-token-text-primary: #ffffff;
+        --design-token-text-secondary: #b0b0b0;
+        --design-token-text-disabled: #666666;
+        
+        --design-token-border-default: #404040;
+        --design-token-focus-color: #64b5f6;
+      }
+    }
+    
+    /* ============================================
+       Demo Layout Styles
+       ============================================ */
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: #f8f9fa;
+      min-height: 100vh;
+    }
+    
+    .demo-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+    
+    h1, h2, h3 {
+      color: var(--design-token-text-primary);
+    }
+    
+    /* ============================================
+       Example 1: Basic Theming with CSS Custom Properties
+       ============================================ */
+    .example-basic adaptive-card {
+      --adaptive-card-bg: #f0f4f8;
+      --adaptive-card-radius: 1rem;
+      --adaptive-card-padding-medium: 1.5rem;
+      --adaptive-card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* ============================================
+       Example 2: Advanced Styling with CSS Parts
+       ============================================ */
+    .example-parts adaptive-card::part(base) {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .example-parts adaptive-card::part(header) {
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .example-parts adaptive-card::part(content) {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    .example-parts adaptive-card::part(actions) {
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 1rem;
+      margin-top: auto;
+    }
+    
+    /* ============================================
+       Example 3: State-based Theming
+       ============================================ */
+    .example-states adaptive-card {
+      --adaptive-card-bg: white;
+      --adaptive-card-bg-hover: #e8f5e9;
+      --adaptive-card-bg-active: #c8e6c9;
+      --adaptive-card-bg-selected: #a5d6a7;
+      --adaptive-card-focus-color: #4caf50;
+      --adaptive-card-transition-duration: 300ms;
+    }
+    
+    .example-states adaptive-card[data-selected="true"]::part(base) {
+      border-left: 4px solid #4caf50;
+    }
+    
+    /* ============================================
+       Example 4: Responsive Theming
+       ============================================ */
+    .example-responsive adaptive-card {
+      --adaptive-card-padding-small: 0.75rem;
+      --adaptive-card-padding-medium: 1.25rem;
+      --adaptive-card-padding-large: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .example-responsive adaptive-card {
+        --adaptive-card-radius: 0;
+        --adaptive-card-shadow: none;
+        --adaptive-card-border: 1px solid var(--design-token-border-default);
+      }
+    }
+    
+    /* ============================================
+       Example 5: Product Card Theme
+       ============================================ */
+    .product-card {
+      --adaptive-card-radius: 0.75rem;
+      --adaptive-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --adaptive-card-media-aspect-ratio: 4/3;
+      --adaptive-card-media-object-fit: cover;
+    }
+    
+    .product-card::part(media) {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .product-card::part(media)::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.3));
+      pointer-events: none;
+    }
+    
+    .product-card::part(badge) {
+      background: #ff5722;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    
+    /* ============================================
+       Example 6: Notification Card Theme
+       ============================================ */
+    .notification-card {
+      --adaptive-card-border-width: 0;
+      --adaptive-card-border-style: solid;
+      --adaptive-card-border-color: currentColor;
+      --adaptive-card-padding-medium: 1rem;
+    }
+    
+    .notification-card[data-variant="success"] {
+      --adaptive-card-bg: #e8f5e9;
+      --adaptive-card-color: #1b5e20;
+      --adaptive-card-border-color: #4caf50;
+      --adaptive-card-border-width: 0 0 0 4px;
+    }
+    
+    .notification-card[data-variant="warning"] {
+      --adaptive-card-bg: #fff3e0;
+      --adaptive-card-color: #e65100;
+      --adaptive-card-border-color: #ff9800;
+      --adaptive-card-border-width: 0 0 0 4px;
+    }
+    
+    .notification-card[data-variant="error"] {
+      --adaptive-card-bg: #ffebee;
+      --adaptive-card-color: #b71c1c;
+      --adaptive-card-border-color: #f44336;
+      --adaptive-card-border-width: 0 0 0 4px;
+    }
+    
+    /* ============================================
+       Example 7: Complex Layout with Parts
+       ============================================ */
+    .complex-card::part(base) {
+      display: grid;
+      grid-template-areas:
+        "media header header"
+        "media content content"
+        "media actions badge";
+      grid-template-columns: 150px 1fr auto;
+      gap: 1rem;
+    }
+    
+    .complex-card::part(media-container) {
+      grid-area: media;
+    }
+    
+    .complex-card::part(header-container) {
+      grid-area: header;
+    }
+    
+    .complex-card::part(content-container) {
+      grid-area: content;
+    }
+    
+    .complex-card::part(actions-container) {
+      grid-area: actions;
+    }
+    
+    .complex-card::part(badge-container) {
+      grid-area: badge;
+      position: static;
+    }
+    
+    /* ============================================
+       Utility Classes
+       ============================================ */
+    .demo-button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.25rem;
+      background: var(--design-token-focus-color);
+      color: white;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: opacity 200ms;
+    }
+    
+    .demo-button:hover {
+      opacity: 0.9;
+    }
+    
+    .demo-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: #ff5722;
+      color: white;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    
+    code {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 0.125rem 0.25rem;
+      border-radius: 0.25rem;
+      font-family: 'Courier New', monospace;
+    }
+    
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <h1>Adaptive Card Component - CSS Parts & Custom Properties Demo</h1>
+    <p>This demo showcases the improved CSS Parts and CSS Custom Properties implementation based on best practices.</p>
+    
+    <!-- Example 1: Basic Theming -->
+    <section>
+      <h2>1. Basic Theming with CSS Custom Properties</h2>
+      <p>Using CSS custom properties for simple theming without touching the internals.</p>
+      
+      <div class="demo-grid example-basic">
+        <adaptive-card variant="elevated" padding="medium">
+          <div slot="header">
+            <h3>Basic Card</h3>
+          </div>
+          <p>This card uses CSS custom properties for theming. The background, radius, padding, and shadow are all customized.</p>
+          <div slot="actions">
+            <button class="demo-button">Action</button>
+          </div>
+        </adaptive-card>
+        
+        <adaptive-card variant="outlined" padding="large">
+          <div slot="header">
+            <h3>Outlined Variant</h3>
+          </div>
+          <p>Same custom properties applied to an outlined variant.</p>
+        </adaptive-card>
+      </div>
+      
+      <pre><code>/* CSS */
+.example-basic adaptive-card {
+  --adaptive-card-bg: #f0f4f8;
+  --adaptive-card-radius: 1rem;
+  --adaptive-card-padding-medium: 1.5rem;
+  --adaptive-card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}</code></pre>
+    </section>
+    
+    <!-- Example 2: CSS Parts -->
+    <section>
+      <h2>2. Advanced Styling with CSS Parts</h2>
+      <p>Using CSS Parts to style internal elements directly.</p>
+      
+      <div class="demo-grid example-parts">
+        <adaptive-card variant="filled" padding="medium">
+          <div slot="header">
+            <h3>Gradient Card</h3>
+          </div>
+          <p>This card uses CSS Parts to apply a gradient background and style individual sections.</p>
+          <div slot="actions">
+            <button class="demo-button" style="background: white; color: #667eea;">Learn More</button>
+          </div>
+        </adaptive-card>
+      </div>
+      
+      <pre><code>/* CSS */
+adaptive-card::part(base) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+adaptive-card::part(header) {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}</code></pre>
+    </section>
+    
+    <!-- Example 3: Interactive States -->
+    <section>
+      <h2>3. State-based Theming</h2>
+      <p>Cards with interactive states and visual feedback.</p>
+      
+      <div class="demo-grid example-states">
+        <adaptive-card variant="elevated" padding="medium" interactive="true">
+          <div slot="header">
+            <h3>Interactive Card</h3>
+          </div>
+          <p>Click me! I have hover and active states defined via CSS custom properties.</p>
+        </adaptive-card>
+        
+        <adaptive-card variant="elevated" padding="medium" interactive="true" selected="true">
+          <div slot="header">
+            <h3>Selected Card</h3>
+          </div>
+          <p>This card is in a selected state with custom styling.</p>
+        </adaptive-card>
+      </div>
+    </section>
+    
+    <!-- Example 4: Product Cards -->
+    <section>
+      <h2>4. Product Card Theme</h2>
+      <p>E-commerce style product cards with media and badges.</p>
+      
+      <div class="demo-grid">
+        <adaptive-card class="product-card" variant="elevated" padding="none">
+          <img slot="media" src="https://via.placeholder.com/400x300/667eea/ffffff?text=Product" alt="Product">
+          <span slot="badge" class="demo-badge">SALE</span>
+          <div slot="header" style="padding: 1rem 1rem 0;">
+            <h3 style="margin: 0;">Product Name</h3>
+            <p style="margin: 0.5rem 0; color: var(--design-token-text-secondary);">$99.99</p>
+          </div>
+          <div style="padding: 0 1rem;">
+            <p>High-quality product with amazing features.</p>
+          </div>
+          <div slot="actions" style="padding: 1rem;">
+            <button class="demo-button" style="width: 100%;">Add to Cart</button>
+          </div>
+        </adaptive-card>
+        
+        <adaptive-card class="product-card" variant="elevated" padding="none">
+          <img slot="media" src="https://via.placeholder.com/400x300/764ba2/ffffff?text=Product" alt="Product">
+          <span slot="badge" class="demo-badge" style="background: #4caf50;">NEW</span>
+          <div slot="header" style="padding: 1rem 1rem 0;">
+            <h3 style="margin: 0;">Another Product</h3>
+            <p style="margin: 0.5rem 0; color: var(--design-token-text-secondary);">$149.99</p>
+          </div>
+          <div style="padding: 0 1rem;">
+            <p>Premium quality with exclusive features.</p>
+          </div>
+          <div slot="actions" style="padding: 1rem;">
+            <button class="demo-button" style="width: 100%;">Add to Cart</button>
+          </div>
+        </adaptive-card>
+      </div>
+    </section>
+    
+    <!-- Example 5: Notification Cards -->
+    <section>
+      <h2>5. Notification Card Variants</h2>
+      <p>Different notification styles using custom properties.</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <adaptive-card class="notification-card" data-variant="success" variant="filled" padding="medium">
+          <strong>Success!</strong> Your changes have been saved successfully.
+        </adaptive-card>
+        
+        <adaptive-card class="notification-card" data-variant="warning" variant="filled" padding="medium">
+          <strong>Warning!</strong> Please review your input before continuing.
+        </adaptive-card>
+        
+        <adaptive-card class="notification-card" data-variant="error" variant="filled" padding="medium">
+          <strong>Error!</strong> Something went wrong. Please try again.
+        </adaptive-card>
+      </div>
+    </section>
+    
+    <!-- Documentation Section -->
+    <section>
+      <h2>Key Improvements</h2>
+      
+      <h3>CSS Custom Properties Strategy</h3>
+      <ul>
+        <li><strong>Comprehensive property set:</strong> Every visual aspect is customizable via CSS properties</li>
+        <li><strong>Semantic naming:</strong> Properties follow <code>--adaptive-card-*</code> pattern for clarity</li>
+        <li><strong>Design token integration:</strong> Falls back to global design tokens (<code>--design-token-*</code>)</li>
+        <li><strong>State modifiers:</strong> Separate properties for hover, active, selected, and disabled states</li>
+        <li><strong>Section-specific properties:</strong> Granular control over media, header, content, and actions</li>
+      </ul>
+      
+      <h3>CSS Parts Implementation</h3>
+      <ul>
+        <li><strong>Granular parts:</strong> Multiple parts exposed for each section (container + inner)</li>
+        <li><strong>Semantic aliases:</strong> Parts have both specific and general names</li>
+        <li><strong>Layout flexibility:</strong> Parts can be targeted for complex grid/flex layouts</li>
+        <li><strong>State-based styling:</strong> Parts work with attribute selectors for conditional styling</li>
+      </ul>
+      
+      <h3>Performance Optimizations</h3>
+      <ul>
+        <li><strong>CSS containment:</strong> <code>contain: layout style</code> for rendering performance</li>
+        <li><strong>Efficient selectors:</strong> Using <code>:where()</code> to maintain specificity</li>
+        <li><strong>Motion preferences:</strong> Respects <code>prefers-reduced-motion</code></li>
+        <li><strong>High contrast support:</strong> Enhanced borders in high contrast mode</li>
+      </ul>
+      
+      <h3>Design System Integration</h3>
+      <ul>
+        <li><strong>Token cascade:</strong> Component properties fall back to design system tokens</li>
+        <li><strong>Predictable API:</strong> Consistent property naming across components</li>
+        <li><strong>Theme flexibility:</strong> Easy to create theme variations without modifying component</li>
+        <li><strong>Dark mode ready:</strong> Automatic adaptation with CSS media queries</li>
+      </ul>
+    </section>
+  </div>
+  
+  <!-- Import the improved component -->
+  <script type="module">
+    import '../src/adaptive-card-improved.js';
+    
+    // Demo: Toggle selection on click
+    document.querySelectorAll('.example-states adaptive-card[interactive]').forEach(card => {
+      card.addEventListener('card-click', (e) => {
+        e.target.toggleSelection();
+      });
+    });
+    
+    // Demo: Log breakpoint changes
+    document.querySelectorAll('adaptive-card[responsive]').forEach(card => {
+      card.addEventListener('breakpoint-change', (e) => {
+        console.log('Breakpoint changed:', e.detail);
+      });
+    });
+  </script>
+</body>
+</html>
