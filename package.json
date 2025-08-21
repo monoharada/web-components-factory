@@ -1,0 +1,50 @@
+{
+  "name": "web-components-factory",
+  "version": "0.1.0",
+  "description": "Adaptive Card Component with TDD approach using web-components.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:run": "vitest run",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "tdd": "npm run test:watch",
+    "ci": "npm run type-check && npm run test:run && npm run build"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/ui": "^1.6.0",
+    "eslint": "^8.57.0",
+    "happy-dom": "^14.12.3",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "vite": "^5.3.5",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {},
+  "keywords": [
+    "web-components",
+    "adaptive-card",
+    "tdd",
+    "typescript",
+    "accessibility",
+    "responsive"
+  ],
+  "author": "",
+  "license": "MIT"
+}
