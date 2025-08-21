@@ -1,0 +1,77 @@
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    // 高速化設定
+    threads: true,
+    maxThreads: 4,
+    isolate: false,
+    
+    // テスト環境設定
+    environment: 'happy-dom',
+    
+    // グローバル設定
+    globals: true,
+    
+    // セットアップファイル
+    setupFiles: ['./tests/setup.ts'],
+    
+    // テストファイルパターン
+    include: [
+      'tests/**/*.{test,spec}.{js,ts}',
+      'src/**/*.{test,spec}.{js,ts}'
+    ],
+    
+    // ファイル監視設定
+    watch: {
+      include: ['src/**/*', 'tests/**/*']
+    },
+    
+    // カバレッジ設定
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/**',
+        'tests/**',
+        '**/*.d.ts',
+        '**/*.config.*',
+        '**/coverage/**'
+      ],
+      thresholds: {
+        global: {
+          branches: 80,
+          functions: 85,
+          lines: 85,
+          statements: 85
+        }
+      }
+    },
+    
+    // レポーター設定
+    reporter: ['verbose', 'json'],
+    
+    // タイムアウト設定
+    testTimeout: 5000,
+    
+    // 並列実行設定
+    maxConcurrency: 5,
+    
+    // Mock設定
+    mockReset: true,
+    restoreMocks: true,
+    
+    // Shadow DOM対応
+    pool: 'forks'
+  },
+  
+  // Vite設定
+  esbuild: {
+    target: 'es2022'
+  },
+  
+  // TypeScript設定
+  define: {
+    __DEV__: true
+  }
+});
