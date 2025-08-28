@@ -58,6 +58,66 @@ Note: No package.json or build system is configured. Consider setting up proper 
   - Functions/methods: camelCase
   - Private fields: #camelCase
 
+## 🎯 Web Components Best Practices
+
+### MUST: Use ::part() Instead of Classes for Styling
+
+**重要**: Web Components を実装する際は、Shadow DOM 内の要素のスタイリングにクラスではなく `::part()` を使用してください。
+
+#### ✅ 正しい実装
+```html
+<!-- Shadow DOM 内 -->
+<summary part="summary">
+  <span part="icon">
+    <svg part="icon-svg">...</svg>
+  </span>
+  <span part="header-text">
+    <slot name="header"></slot>
+  </span>
+</summary>
+<div part="content">
+  <slot name="content"></slot>
+</div>
+```
+
+```css
+/* 外部からのスタイリング */
+my-component::part(summary) { /* ... */ }
+my-component::part(icon) { /* ... */ }
+my-component::part(content) { /* ... */ }
+```
+
+#### ❌ 避けるべき実装
+```html
+<!-- クラスベースの実装は避ける -->
+<div class="accordion-summary">
+  <span class="accordion-icon">...</span>
+</div>
+```
+
+#### なぜ ::part() を使うのか
+
+1. **カプセル化の維持**: Shadow DOM の境界を保ちながら、特定の部分だけを公開
+2. **意図的な API**: コンポーネント作者が「どこがカスタマイズ可能か」を明示的に定義
+3. **セマンティック**: part属性で要素の役割を意味的に表現
+4. **スコープの明確化**: グローバルなクラス名の衝突を避ける
+5. **テーマ対応**: 親要素のクラスで子コンポーネントのスタイルを一括変更可能
+
+### MUST: Prefer Native HTML Elements
+
+**重要**: 可能な限りネイティブHTML要素を活用してください。
+
+- `details/summary` をアコーディオンに使用
+- `dialog` をモーダルに使用
+- `input[type="date"]` を日付選択に使用
+- フォーム要素には適切な type 属性を使用
+
+理由：
+- ネイティブのアクセシビリティ機能
+- ブラウザ標準のキーボード操作
+- スクリーンリーダー対応
+- プログレッシブエンハンスメント
+
 ## Development Workflow
 
 When modifying code:

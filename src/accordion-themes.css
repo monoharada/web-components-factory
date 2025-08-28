@@ -1,0 +1,165 @@
+/**
+ * アコーディオンコンポーネントのテーマスタイル
+ * ::part() を使用した外部スタイリング
+ */
+
+/* ========================================
+   デフォルトテーマ（デジタル庁デザインシステム）
+   ======================================== */
+
+dads-accordion-item::part(summary) {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333333;
+  transition: background-color 0.2s;
+}
+
+dads-accordion-item::part(summary):hover {
+  background-color: #f2f2f2;
+}
+
+dads-accordion-item::part(icon) {
+  background: white;
+  border: 1px solid #00118f;
+  border-radius: 50%;
+  transition: border-width 0.15s;
+}
+
+dads-accordion-item::part(summary):hover::part(icon) {
+  border-width: 3px;
+}
+
+dads-accordion-item::part(icon) svg {
+  stroke: #00118f;
+}
+
+dads-accordion-item::part(content) {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #333333;
+}
+
+dads-accordion-item::part(return-button) {
+  color: #00118f;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+dads-accordion-item::part(return-button):hover {
+  opacity: 0.8;
+}
+
+/* ========================================
+   モバイル対応
+   ======================================== */
+
+@media (max-width: 768px) {
+  dads-accordion-item::part(summary) {
+    padding: 4px 8px 8px 0;
+    font-size: 16px;
+  }
+  
+  dads-accordion-item::part(icon) {
+    width: 24px;
+    height: 24px;
+    padding: 2px;
+  }
+  
+  dads-accordion-item::part(content) {
+    padding: 0 32px 16px;
+  }
+}
+
+/* ========================================
+   高コントラストモード
+   ======================================== */
+
+@media (prefers-contrast: high) {
+  dads-accordion-item::part(summary) {
+    border: 2px solid ButtonText;
+    color: ButtonText;
+    background: ButtonFace;
+  }
+  
+  dads-accordion-item::part(summary):hover {
+    border-color: Highlight;
+    color: HighlightText;
+    background: Highlight;
+  }
+  
+  dads-accordion-item::part(icon) {
+    border-width: 2px;
+  }
+}
+
+/* ========================================
+   RTL対応
+   ======================================== */
+
+[dir="rtl"] dads-accordion-item::part(summary) {
+  text-align: right;
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] dads-accordion-item::part(content) {
+  padding-left: 16px;
+  padding-right: 52px;
+}
+
+/* ========================================
+   ダークテーマ
+   ======================================== */
+
+.dark-theme dads-accordion-item::part(summary) {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border: 1px solid #444;
+}
+
+.dark-theme dads-accordion-item::part(summary):hover {
+  background: #333;
+}
+
+.dark-theme dads-accordion-item::part(icon) {
+  background: #1a1a1a;
+  border-color: #666;
+}
+
+.dark-theme dads-accordion-item::part(icon) svg {
+  stroke: #e0e0e0;
+}
+
+.dark-theme dads-accordion-item::part(content) {
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+
+.dark-theme dads-accordion-item::part(return-button) {
+  color: #66b3ff;
+}
+
+/* ========================================
+   カラフルテーマの例
+   ======================================== */
+
+.colorful-theme dads-accordion-item::part(summary) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  margin: 5px 0;
+}
+
+.colorful-theme dads-accordion-item::part(icon) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+}
+
+.colorful-theme dads-accordion-item::part(icon) svg {
+  stroke: white;
+}
+
+.colorful-theme dads-accordion-item::part(content) {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0e6ff 100%);
+  border-radius: 0 0 8px 8px;
+  padding: 20px;
+}

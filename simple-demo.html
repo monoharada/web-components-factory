@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アコーディオンコンポーネント - シンプルデモ</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      background: #f5f5f5;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #00118f;
+      border-bottom: 3px solid #00118f;
+      padding-bottom: 10px;
+    }
+    
+    .demo-section {
+      background: white;
+      padding: 30px;
+      margin: 30px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .demo-title {
+      color: #00118f;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    
+    /* カスタムエレメント用の基本スタイル */
+    dads-accordion {
+      display: block;
+      width: 100%;
+    }
+    
+    dads-accordion-item {
+      display: block;
+      border-bottom: 1px solid #949494;
+    }
+    
+    .accordion-header {
+      font-size: 18px;
+      padding: 8px 0;
+      color: #333333;
+    }
+    
+    .accordion-content {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #333333;
+      padding: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🏛️ デジタル庁デザインシステム - アコーディオンコンポーネント</h1>
+  
+  <div class="demo-section">
+    <h2 class="demo-title">シンプルな実装デモ</h2>
+    
+    <!-- カスタムエレメントの使用 -->
+    <dads-accordion id="demo-accordion">
+      <dads-accordion-item>
+        <div slot="header" class="accordion-header">デジタル庁とは何ですか？</div>
+        <div slot="content" class="accordion-content">
+          デジタル庁は、2021年9月1日に設置された日本の行政機関です。
+          デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item>
+        <div slot="header" class="accordion-header">アクセシビリティファーストとは？</div>
+        <div slot="content" class="accordion-content">
+          すべてのユーザーが等しく情報にアクセスできることを最優先に考える設計思想です。
+          障害の有無に関わらず、誰もが使いやすいサービスを提供することを目標としています。
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item>
+        <div slot="header" class="accordion-header">WCAG 2.1 AAとは？</div>
+        <div slot="content" class="accordion-content">
+          Web Content Accessibility Guidelines (WCAG) 2.1のAAレベルは、
+          ウェブコンテンツのアクセシビリティ基準です。
+          色のコントラスト比、キーボード操作、スクリーンリーダー対応など、
+          幅広い要件を満たす必要があります。
+        </div>
+      </dads-accordion-item>
+    </dads-accordion>
+  </div>
+  
+  <div class="demo-section">
+    <h2 class="demo-title">JavaScript実装（簡易版）</h2>
+    <p>以下は、Web Componentsの簡易実装例です：</p>
+    <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 4px; overflow-x: auto;">
+// シンプルなアコーディオンコンポーネントの定義
+class DadsAccordion extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
+  
+  connectedCallback() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host { display: block; width: 100%; }
+        ::slotted(dads-accordion-item) {
+          display: block;
+          border-bottom: 1px solid #949494;
+        }
+      &lt;/style&gt;
+      &lt;slot&gt;&lt;/slot&gt;
+    `;
+  }
+}
+
+// カスタムエレメントを登録
+customElements.define('dads-accordion', DadsAccordion);
+    </pre>
+  </div>
+  
+  <script>
+    // シンプルなアコーディオンの実装
+    class DadsAccordion extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.allowMultiple = this.hasAttribute('allow-multiple');
+      }
+      
+      connectedCallback() {
+        this.shadowRoot.innerHTML = `
+          <style>
+            :host {
+              display: block;
+              width: 100%;
+              font-family: 'Noto Sans JP', sans-serif;
+            }
+            ::slotted(dads-accordion-item) {
+              display: block;
+            }
+          </style>
+          <slot></slot>
+        `;
+        
+        // アイテムのトグルイベントを監視
+        this.addEventListener('item-toggle', (e) => {
+          if (!this.allowMultiple) {
+            // 単一展開モード: 他のアイテムを閉じる
+            const items = this.querySelectorAll('dads-accordion-item');
+            items.forEach(item => {
+              if (item !== e.detail.item && item.hasAttribute('expanded')) {
+                item.removeAttribute('expanded');
+              }
+            });
+          }
+        });
+      }
+    }
+    
+    class DadsAccordionItem extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.expanded = false;
+      }
+      
+      connectedCallback() {
+        this.shadowRoot.innerHTML = `
+          <style>
+            :host {
+              display: block;
+              border-bottom: 1px solid #949494;
+            }
+            
+            .button {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 8px 16px 8px 0;
+              border: none;
+              background: transparent;
+              font-family: inherit;
+              font-size: 18px;
+              line-height: 1.6;
+              color: #333333;
+              cursor: pointer;
+              text-align: left;
+            }
+            
+            .button:hover {
+              background-color: #f2f2f2;
+            }
+            
+            .button:focus {
+              outline: 2px solid #ffd43d;
+              outline-offset: 2px;
+            }
+            
+            .icon {
+              display: inline-block;
+              width: 32px;
+              height: 32px;
+              padding: 6px;
+              background: white;
+              border: 1px solid #00118f;
+              border-radius: 50%;
+              transition: transform 0.3s ease;
+            }
+            
+            .button:hover .icon {
+              border-width: 3px;
+            }
+            
+            :host([expanded]) .icon svg {
+              transform: rotate(180deg);
+            }
+            
+            .content {
+              display: none;
+              padding: 24px 52px;
+              font-size: 16px;
+              line-height: 1.7;
+              color: #333333;
+            }
+            
+            :host([expanded]) .content {
+              display: block;
+            }
+            
+            svg {
+              width: 20px;
+              height: 20px;
+              transition: transform 0.3s ease;
+            }
+          </style>
+          
+          <button class="button" type="button" aria-expanded="false">
+            <span class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#00118f" stroke-width="2">
+                <path d="M6 9L12 15L18 9" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <slot name="header"></slot>
+          </button>
+          
+          <div class="content" aria-hidden="true">
+            <slot name="content"></slot>
+          </div>
+        `;
+        
+        // ボタンクリックでトグル
+        const button = this.shadowRoot.querySelector('.button');
+        button.addEventListener('click', () => {
+          this.toggle();
+        });
+        
+        // 初期状態の設定
+        if (this.hasAttribute('expanded')) {
+          this.expanded = true;
+          this.updateState();
+        }
+      }
+      
+      toggle() {
+        this.expanded = !this.expanded;
+        this.updateState();
+        
+        // カスタムイベントを発火
+        this.dispatchEvent(new CustomEvent('item-toggle', {
+          detail: { item: this, expanded: this.expanded },
+          bubbles: true,
+          composed: true
+        }));
+      }
+      
+      updateState() {
+        const button = this.shadowRoot.querySelector('.button');
+        const content = this.shadowRoot.querySelector('.content');
+        
+        if (this.expanded) {
+          this.setAttribute('expanded', '');
+          button.setAttribute('aria-expanded', 'true');
+          content.setAttribute('aria-hidden', 'false');
+        } else {
+          this.removeAttribute('expanded');
+          button.setAttribute('aria-expanded', 'false');
+          content.setAttribute('aria-hidden', 'true');
+        }
+      }
+    }
+    
+    // カスタムエレメントを登録
+    customElements.define('dads-accordion', DadsAccordion);
+    customElements.define('dads-accordion-item', DadsAccordionItem);
+    
+    console.log('✅ アコーディオンコンポーネントを登録しました');
+  </script>
+</body>
+</html>

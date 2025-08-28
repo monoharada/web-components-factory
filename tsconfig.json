@@ -1,68 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    
-    // 厳密モード
+    "target": "ES2020",
+    "module": "ES2020",
+    "lib": ["ES2022", "DOM"],
     "strict": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "exactOptionalPropertyTypes": true,
-    "noUncheckedIndexedAccess": true,
-    "noPropertyAccessFromIndexSignature": true,
-    
-    // コード品質
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "noFallthroughCasesInSwitch": true,
-    
-    // モジュール設定
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    
-    // アウトプット設定
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
+    "moduleResolution": "node",
+    "outDir": "./",
+    "rootDir": "./",
+    "declaration": false,
     "removeComments": false,
-    
-    // JSONインポート
-    "resolveJsonModule": true,
-    
-    // デコレーターサポート
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    
-    // パスエイリアス
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@/tests/*": ["tests/*"]
-    },
-    
-    // スキップ設定
-    "skipLibCheck": true
+    "allowJs": true
   },
   "include": [
-    "src/**/*",
-    "tests/**/*",
-    "*.ts",
-    "vitest.config.ts"
+    "web-components.ts",
+    "src/*.ts",
+    "types/*.d.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "coverage"
-  ],
-  "ts-node": {
-    "esm": true
-  }
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
 }

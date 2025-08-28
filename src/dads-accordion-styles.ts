@@ -1,0 +1,173 @@
+/**
+ * アコーディオンコンポーネント用スタイル定義
+ */
+import { css } from '../web-components';
+
+export const accordionItemStyles = css`
+  :host {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid var(--color-border, #949494);
+  }
+  
+  * { box-sizing: border-box; }
+  
+  /* details/summary リセット */
+  [part="details"] { width: 100%; }
+  [part="summary"] { 
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px 8px 0;
+    font-size: var(--font-size, 18px);
+    line-height: var(--line-height, 1.6);
+    color: var(--color-text, #333333);
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+  [part="summary"]::-webkit-details-marker { display: none; }
+  [part="summary"]:hover { background-color: var(--color-bg-hover, #f2f2f2); }
+  
+  /* フォーカススタイル */
+  [part="summary"]:focus {
+    outline: none;
+    position: relative;
+  }
+  [part="summary"]:focus::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background-color: var(--color-focus, #ffd43d);
+    border-radius: var(--border-radius-md, 8px);
+    z-index: -1;
+  }
+  [part="summary"]:focus::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border: 4px solid var(--color-focus-ring, #000000);
+    border-radius: calc(var(--border-radius-md, 8px) + 4px);
+    pointer-events: none;
+  }
+  
+  /* アイコン */
+  [part="icon"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    flex-shrink: 0;
+    background-color: var(--color-white, #ffffff);
+    border: 1px solid var(--color-primary, #00118f);
+    border-radius: 9999px;
+    transition: border-width 0.15s ease;
+  }
+  [part="summary"]:hover [part="icon"] { border-width: 3px; }
+  
+  [part="icon"] svg {
+    width: 100%;
+    height: 100%;
+    color: var(--color-primary, #00118f);
+    transition: transform 0.3s ease;
+  }
+  details[open] [part="icon"] svg { transform: rotate(180deg); }
+  
+  [part="header"] { 
+    flex: 1;
+    padding: 8px 0;
+  }
+  
+  /* コンテンツ */
+  [part="content"] { overflow: hidden; }
+  [part="content-inner"] {
+    padding: 24px 0 24px 52px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-text, #333333);
+  }
+  
+  /* 戻るボタン */
+  [part="return-button"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--color-primary, #00118f);
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 20%;
+  }
+  [part="return-button"]:hover { opacity: 0.8; }
+  details:not([open]) [part="return-button"] { display: none; }
+  
+  /* アニメーション */
+  :host-context([animation="smooth"]) [part="content"] {
+    animation: fadeIn 300ms ease-out;
+  }
+  :host-context([animation="none"]) * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* 状態 */
+  :host([disabled]) [part="summary"] {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  :host([icon-position="right"]) [part="summary"] {
+    flex-direction: row-reverse;
+  }
+  :host([icon-position="right"]) [part="content-inner"] {
+    padding-left: 16px;
+    padding-right: 52px;
+  }
+  
+  /* モバイル */
+  @media (max-width: 768px) {
+    [part="summary"] { padding: 4px 8px 8px 0; font-size: 16px; }
+    [part="icon"] { width: 24px; height: 24px; padding: 2px; }
+    [part="content-inner"] { padding: 16px 8px 16px 32px; }
+    :host([icon-position="right"]) [part="content-inner"] {
+      padding-left: 8px; padding-right: 32px;
+    }
+  }
+  
+  /* 高コントラスト */
+  @media (prefers-contrast: high) {
+    [part="summary"] {
+      border: 2px solid ButtonText;
+      color: ButtonText;
+      background: ButtonFace;
+    }
+    [part="summary"]:hover {
+      border-color: Highlight;
+      color: HighlightText;
+      background: Highlight;
+    }
+  }
+  
+  /* RTL */
+  :host-context([dir="rtl"]) [part="summary"] {
+    text-align: right;
+    flex-direction: row-reverse;
+  }
+  :host-context([dir="rtl"]) [part="content-inner"] {
+    padding-left: 16px;
+    padding-right: 52px;
+  }
+`;

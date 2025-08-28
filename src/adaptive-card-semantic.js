@@ -3,6 +3,30 @@
 
 import { WebComponent, html, css, PropertyAttr, BooleanAttr } from '../web-components.ts';
 
+// Constants for reusable values
+const CONSTANTS = {
+  PROTOCOLS: ['http:', 'https:', 'mailto:', 'tel:'],
+  INTERACTIVE_SELECTORS: 'button, a, input[type="button"], input[type="submit"], [role="button"]',
+  ANNOUNCEMENT_TIMEOUT: 1000,
+  ID_PREFIX: {
+    TITLE: 'card-title-',
+    LIVE: 'card-live-'
+  },
+  ARIA: {
+    FALLBACK_LABEL: 'Interactive card',
+    LIVE_POLITE: 'polite',
+    ROLE_REGION: 'region'
+  },
+  CSS_CLASSES: {
+    SR_ONLY: 'sr-only',
+    STRETCHED_LINK: 'card-link--stretched',
+    HAS_CONTENT: 'has-content'
+  },
+  DATA_ATTRS: {
+    HAS_CTA: 'data-has-cta'
+  }
+};
+
 // Template definition using html`` template literal
 const cardTemplate = html`
   <article id="cardArticle" class="card-article" role="article">
@@ -32,9 +56,11 @@ const cardTemplate = html`
   </article>
 `;
 
-// Styles definition using css`` template literal
-const cardStyles = css`
-  /* Host element setup */
+// CSS sections organized by concern
+const baseStyles = css`
+  /* =========================
+     Host Element Base Styles
+     ========================= */
   :host {
     display: block;
     contain: content;
@@ -69,7 +95,9 @@ const cardStyles = css`
     box-shadow: none;
   }
 
-  /* Article structure */
+  /* =========================
+     Card Structure
+     ========================= */
   .card-article {
     display: flex;
     flex-direction: column;
@@ -113,7 +141,9 @@ const cardStyles = css`
     align-items: center;
   }
 
-  /* Slotted content styling */
+  /* =========================
+     Slotted Content Styles
+     ========================= */
   ::slotted([slot="title"]) {
     margin: 0 0 0.5rem 0;
     font-size: var(--title-font-size, 1.25rem);
@@ -226,7 +256,9 @@ const cardStyles = css`
     color: var(--badge-color, #374151);
   }
 
-  /* Responsive adjustments */
+  /* =========================
+     Responsive Design
+     ========================= */
   @media (max-width: 640px) {
     :host {
       max-width: 100%;
@@ -250,7 +282,9 @@ const cardStyles = css`
     }
   }
 
-  /* High contrast mode support */
+  /* =========================
+     Accessibility Features
+     ========================= */
   @media (prefers-contrast: high) {
     :host {
       border-width: 2px;
@@ -281,13 +315,19 @@ const cardStyles = css`
     border: 0;
   }
 
-  /* Stretched link pattern for accessible link cards */
+  /* =========================
+     Stretched Link Pattern
+     ========================= */
   .card-link--stretched {
     position: absolute;
     inset: 0;
     z-index: 1;
     text-decoration: none;
     border-radius: inherit;
+    /* テキストを視覚的に隠す（スクリーンリーダーには読み上げられる） */
+    font-size: 0;
+    overflow: hidden;
+    text-indent: -9999px;
   }
   
   /* Remove outline from stretched link itself */
@@ -370,7 +410,9 @@ const cardStyles = css`
     z-index: 2;
   }
 
-  /* Show/hide sections based on content */
+  /* =========================
+     Content Visibility Rules
+     ========================= */
   .card-header:not(.has-content),
   .card-media:not(.has-content),
   .card-details:not(.has-content),
@@ -378,6 +420,9 @@ const cardStyles = css`
     display: none;
   }
 `;
+
+// Combine all styles
+const cardStyles = baseStyles;
 
 class AdaptiveCard extends WebComponent {
   static get observedAttributes() {
@@ -412,37 +457,43 @@ class AdaptiveCard extends WebComponent {
   }
 
   setupAccessibility() {
-    // Set up ARIA labeling
     this.setupAriaLabeling();
-    
-    // Add role if not specified (only for link cards)
-    if (!this.hasAttribute('role') && this.hasAttribute('href')) {
-      this.setAttribute('role', 'region');
-    }
-
-    // Don't add tabindex to basic cards - only interactive elements should be focusable
-    // Removed automatic tabindex setting
-
-    // Announce dynamic content changes
+    this.setupRoleAttribute();
     this.setupLiveRegion();
   }
 
-  setupAriaLabeling() {
-    if (!this.getAttribute('aria-label') && !this.getAttribute('aria-labelledby')) {
-      const titleSlot = this.shadowRoot.querySelector('slot[name="title"]');
-      const titleElement = titleSlot?.assignedElements()?.[0];
-      
-      if (titleElement) {
-        // Use title as label
-        if (!titleElement.id) {
-          titleElement.id = `card-title-${this.generateId()}`;
-        }
-        this.setAttribute('aria-labelledby', titleElement.id);
-      } else {
-        // Fallback to descriptive label
-        this.setAttribute('aria-label', 'Interactive card');
-      }
+  setupRoleAttribute() {
+    // Early return if role already exists or no href
+    if (this.hasAttribute('role') || !this.hasAttribute('href')) {
+      return;
     }
+    this.setAttribute('role', CONSTANTS.ARIA.ROLE_REGION);
+  }
+
+  setupAriaLabeling() {
+    // Early return if already labeled
+    if (this.getAttribute('aria-label') || this.getAttribute('aria-labelledby')) {
+      return;
+    }
+
+    const titleElement = this.getTitleElement();
+    if (titleElement) {
+      this.labelWithTitle(titleElement);
+    } else {
+      this.setAttribute('aria-label', CONSTANTS.ARIA.FALLBACK_LABEL);
+    }
+  }
+
+  getTitleElement() {
+    const titleSlot = this.shadowRoot.querySelector('slot[name="title"]');
+    return titleSlot?.assignedElements()?.[0];
+  }
+
+  labelWithTitle(titleElement) {
+    if (!titleElement.id) {
+      titleElement.id = `${CONSTANTS.ID_PREFIX.TITLE}${this.generateId()}`;
+    }
+    this.setAttribute('aria-labelledby', titleElement.id);
   }
 
   setupSlotObservers() {
@@ -465,144 +516,183 @@ class AdaptiveCard extends WebComponent {
   }
 
   updateSectionVisibility(slot) {
-    const hasContent = slot.assignedElements().length > 0 || 
-                      slot.assignedNodes().some(node => 
-                        node.nodeType === Node.TEXT_NODE && 
-                        node.textContent.trim() !== ''
-                      );
+    const hasContent = this.slotHasContent(slot);
+    const section = this.findParentSection(slot);
     
-    const section = slot.closest('.card-header, .card-media, .card-details, .card-footer');
     if (section) {
-      section.classList.toggle('has-content', hasContent);
+      section.classList.toggle(CONSTANTS.CSS_CLASSES.HAS_CONTENT, hasContent);
     }
+  }
+
+  slotHasContent(slot) {
+    return slot.assignedElements().length > 0 || 
+           slot.assignedNodes().some(node => this.isNonEmptyTextNode(node));
+  }
+
+  isNonEmptyTextNode(node) {
+    return node.nodeType === Node.TEXT_NODE && 
+           node.textContent.trim() !== '';
+  }
+
+  findParentSection(slot) {
+    return slot.closest('.card-header, .card-media, .card-details, .card-footer');
   }
 
   setupKeyboardNavigation() {
-    // Only set up keyboard navigation for link cards
-    if (!this.href) {
-      return;
-    }
+    if (!this.href) return;
     
-    this.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        const activeElement = this.shadowRoot.activeElement || document.activeElement;
-        
-        // Only handle if this card is focused and is a link card
-        if (activeElement === this && this.href) {
-          event.preventDefault();
-          this.click();
-        }
-      }
-    });
+    this.addEventListener('keydown', this.handleCardKeydown.bind(this));
+  }
+
+  handleCardKeydown(event) {
+    const isActivationKey = event.key === 'Enter' || event.key === ' ';
+    const isThisCardFocused = (this.shadowRoot.activeElement || document.activeElement) === this;
+    
+    if (isActivationKey && isThisCardFocused && this.href) {
+      event.preventDefault();
+      this.click();
+    }
   }
 
   setupLiveRegion() {
-    // Create a live region for dynamic content announcements
-    const liveRegion = document.createElement('div');
-    liveRegion.setAttribute('aria-live', 'polite');
-    liveRegion.setAttribute('aria-atomic', 'true');
-    liveRegion.className = 'sr-only';
-    liveRegion.id = `card-live-${this.generateId()}`;
+    const liveRegion = this.createLiveRegionElement();
     this.shadowRoot.appendChild(liveRegion);
-    
     this.liveRegion = liveRegion;
   }
 
+  createLiveRegionElement() {
+    const liveRegion = document.createElement('div');
+    liveRegion.setAttribute('aria-live', CONSTANTS.ARIA.LIVE_POLITE);
+    liveRegion.setAttribute('aria-atomic', 'true');
+    liveRegion.className = CONSTANTS.CSS_CLASSES.SR_ONLY;
+    liveRegion.id = `${CONSTANTS.ID_PREFIX.LIVE}${this.generateId()}`;
+    return liveRegion;
+  }
+
   announceChange(message) {
-    if (this.liveRegion) {
-      this.liveRegion.textContent = message;
-      
-      // Clear after announcement
-      setTimeout(() => {
-        this.liveRegion.textContent = '';
-      }, 1000);
+    if (!this.liveRegion) {
+      return;
     }
+    
+    this.liveRegion.textContent = message;
+    this.clearAnnouncementAfterDelay();
+  }
+
+  clearAnnouncementAfterDelay() {
+    setTimeout(() => {
+      if (this.liveRegion) {
+        this.liveRegion.textContent = '';
+      }
+    }, CONSTANTS.ANNOUNCEMENT_TIMEOUT);
   }
 
 
   setupStretchedLink() {
-    // Remove existing stretched link if present
+    this.removeExistingStretchedLink();
+
+    const href = this.href;
+    if (!href || !this.validateURL(href)) {
+      return;
+    }
+
+    if (this.hasInteractiveButtons()) {
+      this.markAsHavingCTA();
+      return;
+    }
+
+    this.createAndConfigureStretchedLink();
+  }
+
+  removeExistingStretchedLink() {
     if (this._stretchedLink) {
       this._stretchedLink.remove();
       this._stretchedLink = null;
     }
+  }
 
-    const href = this.href;
-    const linkText = this.linkText;
-    const linkTarget = this.linkTarget;
+  markAsHavingCTA() {
+    this.setAttribute(CONSTANTS.DATA_ATTRS.HAS_CTA, 'true');
+  }
 
-    if (href && this.validateURL(href)) {
-      // Check if card has interactive buttons/CTAs
-      const hasInteractiveButtons = this.hasInteractiveButtons();
-      
-      if (hasInteractiveButtons) {
-        // If buttons exist, don't create stretched link - let buttons handle focus
-        this.setAttribute('data-has-cta', 'true');
-        return;
-      }
+  createAndConfigureStretchedLink() {
+    this._stretchedLink = this.createStretchedLinkElement();
+    this.configureStretchedLinkTarget();
+    this.configureStretchedLinkAccessibility();
+    this.attachStretchedLink();
+    this.updateCardForStretchedLink();
+  }
 
-      // Create stretched link element only if no buttons
-      this._stretchedLink = document.createElement('a');
-      this._stretchedLink.href = href;
-      this._stretchedLink.className = 'card-link--stretched';
-      
-      // Set link target if specified
-      if (linkTarget) {
-        this._stretchedLink.target = linkTarget;
-        if (linkTarget === '_blank') {
-          this._stretchedLink.rel = 'noopener noreferrer';
-        }
-      }
+  createStretchedLinkElement() {
+    const link = document.createElement('a');
+    link.href = this.href;
+    link.className = CONSTANTS.CSS_CLASSES.STRETCHED_LINK;
+    return link;
+  }
 
-      // Set accessible link text
-      if (linkText) {
-        this._stretchedLink.setAttribute('aria-label', linkText);
-        // Add screen reader only text
-        const srText = document.createElement('span');
-        srText.className = 'sr-only';
-        srText.textContent = linkText;
-        this._stretchedLink.appendChild(srText);
-      } else {
-        // Fallback: try to get title from card
-        const titleElement = this.shadowRoot.querySelector('slot[name="title"]')?.assignedElements()?.[0];
-        if (titleElement) {
-          this._stretchedLink.setAttribute('aria-label', titleElement.textContent.trim());
-        }
-      }
-
-      // Add to shadow DOM
-      const article = this.refs?.cardArticle || this.shadowRoot?.querySelector('.card-article');
-      if (article) {
-        article.appendChild(this._stretchedLink);
-      }
-
-      // Update card accessibility
-      this.setAttribute('role', 'region');
-      this.setAttribute('data-has-cta', 'false');
-      
-      // Emit link card setup event
-      this.emitEvent('card-link-setup', {
-        href, linkText, linkTarget, hasButtons: false
-      });
+  configureStretchedLinkTarget() {
+    if (!this.linkTarget) {
+      return;
+    }
+    
+    this._stretchedLink.target = this.linkTarget;
+    if (this.linkTarget === '_blank') {
+      this._stretchedLink.rel = 'noopener noreferrer';
     }
   }
 
+  configureStretchedLinkAccessibility() {
+    const linkText = this.linkText || this.getDefaultLinkText();
+    if (!linkText) {
+      return;
+    }
+
+    // リンクテキストを直接設定（aria-labelは不要）
+    this._stretchedLink.textContent = linkText;
+  }
+
+  getDefaultLinkText() {
+    const titleElement = this.getTitleElement();
+    return titleElement?.textContent?.trim();
+  }
+
+  attachStretchedLink() {
+    const article = this.refs?.cardArticle || this.shadowRoot?.querySelector('.card-article');
+    if (article) {
+      article.appendChild(this._stretchedLink);
+    }
+  }
+
+  updateCardForStretchedLink() {
+    this.setAttribute('role', CONSTANTS.ARIA.ROLE_REGION);
+    this.setAttribute(CONSTANTS.DATA_ATTRS.HAS_CTA, 'false');
+    
+    this.emitEvent('card-link-setup', {
+      href: this.href,
+      linkText: this.linkText,
+      linkTarget: this.linkTarget,
+      hasButtons: false
+    });
+  }
+
   hasInteractiveButtons() {
-    // Check if card has interactive buttons in actions slot
     const actionsSlot = this.shadowRoot.querySelector('slot[name="actions"]');
-    if (!actionsSlot) return false;
+    if (!actionsSlot) {
+      return false;
+    }
     
     const assignedElements = actionsSlot.assignedElements();
-    return assignedElements.some(el => 
-      el.matches('button, a, input[type="button"], input[type="submit"], [role="button"]') ||
-      el.querySelector('button, a, input[type="button"], input[type="submit"], [role="button"]')
-    );
+    return assignedElements.some(el => this.isInteractiveElement(el));
+  }
+
+  isInteractiveElement(element) {
+    return element.matches(CONSTANTS.INTERACTIVE_SELECTORS) ||
+           element.querySelector(CONSTANTS.INTERACTIVE_SELECTORS) !== null;
   }
 
   validateURL(url) {
     try {
       const parsed = new URL(url, window.location.href);
-      return ['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol);
+      return CONSTANTS.PROTOCOLS.includes(parsed.protocol);
     } catch {
       return false;
     }
@@ -612,33 +702,29 @@ class AdaptiveCard extends WebComponent {
     return Math.random().toString(36).substring(2, 9);
   }
 
-  // Custom method to update card content dynamically
   updateContent(changes) {
-    let announcements = [];
-    
-    Object.entries(changes).forEach(([slot, content]) => {
-      const slotElement = this.querySelector(`[slot="${slot}"]`);
-      if (slotElement) {
-        slotElement.textContent = content;
-        announcements.push(`${slot} updated`);
-      }
-    });
+    const announcements = Object.entries(changes)
+      .filter(([slot, content]) => this.updateSlotContent(slot, content))
+      .map(([slot]) => `${slot} updated`);
     
     if (announcements.length > 0) {
-      if (this.announceChange) {
-        this.announceChange(announcements.join(', '));
-      }
+      this.announceChange?.(announcements.join(', '));
     }
   }
 
-  // Focus management method
-  focusFirstInteractive() {
-    const interactiveElement = this.querySelector('button, a, input, select, textarea, [tabindex]');
-    if (interactiveElement) {
-      interactiveElement.focus();
+  updateSlotContent(slot, content) {
+    const slotElement = this.querySelector(`[slot="${slot}"]`);
+    if (slotElement) {
+      slotElement.textContent = content;
       return true;
     }
     return false;
+  }
+
+  focusFirstInteractive() {
+    const interactiveElement = this.querySelector(CONSTANTS.INTERACTIVE_SELECTORS + ', input, select, textarea, [tabindex]');
+    interactiveElement?.focus();
+    return !!interactiveElement;
   }
 }
 

@@ -510,7 +510,7 @@ export class WebComponent extends HTMLElement {
     }
     for (const p of this.definition.properties) {
       const prop = p.property;
-      if (prop && Object.hasOwn(this, prop)) {
+      if (prop && Object.prototype.hasOwnProperty.call(this, prop)) {
         const v = (this as Dict)[prop];
         delete (this as Dict)[prop];
         Attribute.captureInitialValue(this, prop, v);

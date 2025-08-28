@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>デジタル庁デザインシステム - アコーディオンコンポーネント デモ</title>
+  
+  <!-- デザイントークン用のベースフォント -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
+  
+  <style>
+    /* リセットスタイル */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      background-color: #ffffff;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* デモコンテナ */
+    .demo-section {
+      margin: 40px 0;
+      padding: 30px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+    
+    .demo-header {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #00118f;
+    }
+    
+    .demo-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00118f;
+    }
+    
+    .demo-description {
+      margin-top: 10px;
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .demo-code {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 15px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+    
+    /* モバイル対応チェック用 */
+    .mobile-check {
+      display: none;
+      padding: 10px;
+      background: #ffd43d;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      .mobile-check {
+        display: block;
+      }
+    }
+    
+    /* 高コントラストモード確認 */
+    @media (prefers-contrast: high) {
+      body {
+        border: 4px solid #000;
+      }
+      .demo-section {
+        border: 2px solid ButtonText;
+      }
+    }
+    
+    /* ナビゲーション */
+    .navigation {
+      position: sticky;
+      top: 20px;
+      background: white;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 40px;
+    }
+    
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .nav-links a {
+      color: #00118f;
+      text-decoration: none;
+      padding: 8px 16px;
+      border: 1px solid #00118f;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    
+    .nav-links a:hover {
+      background: #00118f;
+      color: white;
+    }
+    
+    /* コントロールパネル */
+    .controls {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .control-button {
+      padding: 8px 16px;
+      background: #00118f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .control-button:hover {
+      background: #0017c1;
+    }
+    
+    /* RTLデモ */
+    [dir="rtl"] {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏛️ デジタル庁デザインシステム</h1>
+    <h2>アコーディオンコンポーネント デモンストレーション</h2>
+    <p class="mobile-check">📱 モバイルビューで表示中</p>
+  </header>
+
+  <!-- ナビゲーション -->
+  <nav class="navigation">
+    <ul class="nav-links">
+      <li><a href="#default">デフォルト（アクセシビリティ優先）</a></li>
+      <li><a href="#animations">アニメーションタイプ</a></li>
+      <li><a href="#multiple">複数展開モード</a></li>
+      <li><a href="#rtl">RTL対応</a></li>
+      <li><a href="#interactive">インタラクティブデモ</a></li>
+    </ul>
+  </nav>
+
+  <!-- セクション1: デフォルト（アクセシビリティファースト） -->
+  <section id="default" class="demo-section">
+    <div class="demo-header">
+      <h3 class="demo-title">1. デフォルト設定（アクセシビリティファースト）</h3>
+      <p class="demo-description">
+        デフォルトではアニメーションが無効化されています。これは、モーション酔いや認知障害を持つユーザーのアクセシビリティを優先した設計です。
+      </p>
+    </div>
+    
+    <dads-accordion>
+      <dads-accordion-item expanded>
+        <div slot="header">デジタル庁とは何ですか？</div>
+        <div slot="content">
+          デジタル庁は、2021年9月1日に設置された日本の行政機関です。
+          デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進し、
+          誰一人取り残されないデジタル社会の実現を目指しています。
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item>
+        <div slot="header">アクセシビリティファーストとは？</div>
+        <div slot="content">
+          アクセシビリティファーストは、すべてのユーザーが等しく情報にアクセスできることを
+          最優先に考える設計思想です。視覚・聴覚・運動・認知などの障害の有無に関わらず、
+          誰もが使いやすいサービスを提供することを目標としています。
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item>
+        <div slot="header">WCAG 2.1 AAとは？</div>
+        <div slot="content">
+          Web Content Accessibility Guidelines (WCAG) 2.1のAAレベルは、
+          ウェブコンテンツのアクセシビリティ基準です。色のコントラスト比、
+          キーボード操作、スクリーンリーダー対応など、幅広い要件を満たす必要があります。
+        </div>
+      </dads-accordion-item>
+    </dads-accordion>
+    
+    <pre class="demo-code">&lt;dads-accordion&gt;
+  &lt;dads-accordion-item expanded&gt;
+    &lt;div slot="header"&gt;質問内容&lt;/div&gt;
+    &lt;div slot="content"&gt;回答内容&lt;/div&gt;
+  &lt;/dads-accordion-item&gt;
+&lt;/dads-accordion&gt;</pre>
+  </section>
+
+  <!-- セクション2: アニメーションタイプ -->
+  <section id="animations" class="demo-section">
+    <div class="demo-header">
+      <h3 class="demo-title">2. アニメーションタイプ</h3>
+      <p class="demo-description">
+        ユーザーが明示的に選択した場合のみ、アニメーションを有効化できます。
+        respect-motion-preference属性を追加すると、OSのモーション削減設定を尊重します。
+      </p>
+    </div>
+    
+    <!-- スムーズアニメーション -->
+    <h4>スムーズアニメーション</h4>
+    <dads-accordion animation="smooth" respect-motion-preference>
+      <dads-accordion-item>
+        <div slot="header">スムーズなアニメーション例</div>
+        <div slot="content">
+          このアコーディオンは、スムーズなアニメーションで開閉します。
+          ただし、OSでモーション削減が有効な場合は自動的に無効化されます。
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item>
+        <div slot="header">パフォーマンス最適化</div>
+        <div slot="content">
+          CSS Transitionを使用し、GPUアクセラレーションを活用して
+          60fpsの滑らかなアニメーションを実現しています。
+        </div>
+      </dads-accordion-item>
+    </dads-accordion>
+    
+    <!-- バウンスアニメーション -->
+    <h4 style="margin-top: 30px;">バウンスアニメーション</h4>
+    <dads-accordion animation="bounce">
+      <dads-accordion-item>
+        <div slot="header">バウンスアニメーション例</div>
+        <div slot="content">
+          スプリング効果のあるアニメーションで、より動的な印象を与えます。
+          エンターテインメント性の高いコンテンツに適しています。
+        </div>
+      </dads-accordion-item>
+    </dads-accordion>
+    
+    <pre class="demo-code">&lt;!-- スムーズアニメーション + モーション設定尊重 --&gt;
+&lt;dads-accordion animation="smooth" respect-motion-preference&gt;
+  ...
+&lt;/dads-accordion&gt;
+
+&lt;!-- バウンスアニメーション --&gt;
+&lt;dads-accordion animation="bounce"&gt;
+  ...
+&lt;/dads-accordion&gt;</pre>
+  </section>
+
+  <!-- セクション3: 複数展開モード -->
+  <section id="multiple" class="demo-section">
+    <div class="demo-header">
+      <h3 class="demo-title">3. 複数展開モード</h3>
+      <p class="demo-description">
+        allow-multiple属性を追加すると、複数のアイテムを同時に展開できます。
+      </p>
+    </div>
+    
+    <dads-accordion allow-multiple animation="smooth">
+      <dads-accordion-item expanded>
+        <div slot="header">複数展開可能アイテム 1</div>
+        <div slot="content">
+          このアコーディオンは複数のアイテムを同時に展開できます。
+          他のアイテムをクリックしても、このアイテムは開いたままです。
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item expanded>
+        <div slot="header">複数展開可能アイテム 2</div>
+        <div slot="content">
+          複数展開モードは、比較や並列的な情報表示に適しています。
+          ユーザーが必要な情報を一度に確認できます。
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item>
+        <div slot="header">複数展開可能アイテム 3</div>
+        <div slot="content">
+          デフォルトでは単一展開モードで、一つのアイテムのみ展開されます。
+          これは画面スペースの効率的な利用とフォーカスの明確化に役立ちます。
+        </div>
+      </dads-accordion-item>
+    </dads-accordion>
+    
+    <!-- コントロールボタン -->
+    <div class="controls">
+      <button class="control-button" onclick="document.querySelector('#multiple dads-accordion').expandAll()">
+        すべて展開
+      </button>
+      <button class="control-button" onclick="document.querySelector('#multiple dads-accordion').collapseAll()">
+        すべて折りたたむ
+      </button>
+    </div>
+    
+    <pre class="demo-code">&lt;dads-accordion allow-multiple animation="smooth"&gt;
+  &lt;dads-accordion-item expanded&gt;...&lt;/dads-accordion-item&gt;
+  &lt;dads-accordion-item expanded&gt;...&lt;/dads-accordion-item&gt;
+&lt;/dads-accordion&gt;</pre>
+  </section>
+
+  <!-- セクション4: RTL対応 -->
+  <section id="rtl" class="demo-section">
+    <div class="demo-header">
+      <h3 class="demo-title">4. RTL（右から左）言語対応</h3>
+      <p class="demo-description">
+        アラビア語やヘブライ語などのRTL言語に対応しています。
+      </p>
+    </div>
+    
+    <div dir="rtl">
+      <dads-accordion animation="smooth">
+        <dads-accordion-item>
+          <div slot="header">هذا مثال على النص العربي</div>
+          <div slot="content">
+            يدعم هذا المكون اللغات التي تُكتب من اليمين إلى اليسار.
+            يتم عكس جميع العناصر البصرية تلقائيًا لتتوافق مع اتجاه القراءة.
+          </div>
+        </dads-accordion-item>
+        
+        <dads-accordion-item>
+          <div slot="header">דוגמה בעברית</div>
+          <div slot="content">
+            רכיב זה תומך בשפות הנכתבות מימין לשמאל.
+            כל האלמנטים הויזואליים מתהפכים אוטומטית כדי להתאים לכיוון הקריאה.
+          </div>
+        </dads-accordion-item>
+      </dads-accordion>
+    </div>
+    
+    <pre class="demo-code">&lt;div dir="rtl"&gt;
+  &lt;dads-accordion&gt;
+    &lt;dads-accordion-item&gt;
+      &lt;div slot="header"&gt;RTL言語のヘッダー&lt;/div&gt;
+      &lt;div slot="content"&gt;RTL言語のコンテンツ&lt;/div&gt;
+    &lt;/dads-accordion-item&gt;
+  &lt;/dads-accordion&gt;
+&lt;/div&gt;</pre>
+  </section>
+
+  <!-- セクション5: インタラクティブデモ -->
+  <section id="interactive" class="demo-section">
+    <div class="demo-header">
+      <h3 class="demo-title">5. インタラクティブデモ</h3>
+      <p class="demo-description">
+        実際の使用例を想定した、より複雑なコンテンツを含むデモです。
+      </p>
+    </div>
+    
+    <dads-accordion animation="smooth" keyboard-nav>
+      <dads-accordion-item>
+        <div slot="header">📋 申請手続きについて</div>
+        <div slot="content">
+          <h4>必要書類</h4>
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li>本人確認書類（運転免許証、マイナンバーカードなど）</li>
+            <li>住民票の写し（3ヶ月以内のもの）</li>
+            <li>申請書（オンラインで作成可能）</li>
+          </ul>
+          
+          <h4>申請方法</h4>
+          <ol style="margin: 10px 0; padding-left: 20px;">
+            <li>オンライン申請システムにアクセス</li>
+            <li>必要事項を入力</li>
+            <li>書類をアップロード</li>
+            <li>申請内容を確認して送信</li>
+          </ol>
+          
+          <p style="margin-top: 15px;">
+            <strong>処理期間：</strong>通常3〜5営業日<br>
+            <strong>手数料：</strong>無料
+          </p>
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item>
+        <div slot="header">🔒 セキュリティとプライバシー</div>
+        <div slot="content">
+          <h4>個人情報の取り扱い</h4>
+          <p style="margin: 10px 0;">
+            お預かりした個人情報は、法令に基づき厳重に管理されます。
+            第三者への提供は、法令で定められた場合を除き、行いません。
+          </p>
+          
+          <h4>セキュリティ対策</h4>
+          <ul style="margin: 10px 0; padding-left: 20px;">
+            <li>SSL/TLS暗号化通信</li>
+            <li>二要素認証の導入</li>
+            <li>定期的なセキュリティ監査</li>
+            <li>ISO 27001認証取得</li>
+          </ul>
+          
+          <p style="margin-top: 15px; padding: 10px; background: #f0f0f0; border-left: 4px solid #00118f;">
+            <strong>⚠️ 注意：</strong>
+            フィッシング詐欺にご注意ください。当庁から個人情報を
+            メールで直接お聞きすることはありません。
+          </p>
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item disabled>
+        <div slot="header">🚧 メンテナンス中のサービス（無効化状態）</div>
+        <div slot="content">
+          このコンテンツは現在利用できません。
+        </div>
+      </dads-accordion-item>
+      
+      <dads-accordion-item>
+        <div slot="header">📞 お問い合わせ</div>
+        <div slot="content">
+          <h4>カスタマーサポート</h4>
+          <table style="margin: 15px 0; width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #ddd;">
+              <th style="padding: 10px; text-align: left;">受付時間</th>
+              <td style="padding: 10px;">平日 9:00〜17:00</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <th style="padding: 10px; text-align: left;">電話番号</th>
+              <td style="padding: 10px;">0120-XXX-XXX（フリーダイヤル）</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <th style="padding: 10px; text-align: left;">メール</th>
+              <td style="padding: 10px;">support@example.go.jp</td>
+            </tr>
+            <tr>
+              <th style="padding: 10px; text-align: left;">チャット</th>
+              <td style="padding: 10px;">24時間対応（AI自動応答）</td>
+            </tr>
+          </table>
+          
+          <div style="margin-top: 20px; padding: 15px; background: #ffd43d; border-radius: 4px;">
+            <strong>💡 ヒント：</strong>
+            よくある質問はFAQページで確認できます。
+            まずはそちらをご覧ください。
+          </div>
+        </div>
+      </dads-accordion-item>
+    </dads-accordion>
+  </section>
+
+  <!-- キーボード操作説明 -->
+  <section class="demo-section">
+    <div class="demo-header">
+      <h3 class="demo-title">⌨️ キーボード操作</h3>
+      <p class="demo-description">
+        keyboard-nav属性が有効な場合、以下のキー操作が可能です：
+      </p>
+    </div>
+    
+    <ul style="padding-left: 20px; line-height: 2;">
+      <li><kbd>Tab</kbd> / <kbd>Shift+Tab</kbd> - フォーカス移動</li>
+      <li><kbd>Enter</kbd> / <kbd>Space</kbd> - アイテムの開閉</li>
+      <li><kbd>↑</kbd> / <kbd>↓</kbd> - アイテム間の移動</li>
+      <li><kbd>Home</kbd> - 最初のアイテムへ移動</li>
+      <li><kbd>End</kbd> - 最後のアイテムへ移動</li>
+    </ul>
+  </section>
+
+  <!-- パフォーマンスメトリクス表示 -->
+  <section class="demo-section">
+    <div class="demo-header">
+      <h3 class="demo-title">📊 パフォーマンスメトリクス</h3>
+      <p class="demo-description">
+        このデモページのパフォーマンス指標
+      </p>
+    </div>
+    
+    <div id="metrics" style="font-family: monospace; padding: 15px; background: #2d2d2d; color: #f8f8f2; border-radius: 4px;">
+      測定中...
+    </div>
+  </section>
+
+  <!-- スクリプト -->
+  <script type="module">
+    // web-components.tsライブラリとコンポーネントのインポート
+    import './src/index.js';
+    
+    // コンポーネントの登録
+    import { registerAccordionComponents } from './src/index.js';
+    registerAccordionComponents();
+    
+    // パフォーマンス測定
+    window.addEventListener('load', () => {
+      const metrics = document.getElementById('metrics');
+      const startTime = performance.now();
+      
+      setTimeout(() => {
+        const loadTime = performance.now() - startTime;
+        const accordions = document.querySelectorAll('dads-accordion').length;
+        const items = document.querySelectorAll('dads-accordion-item').length;
+        
+        metrics.innerHTML = `
+          <div>ページ読み込み時間: ${loadTime.toFixed(2)}ms</div>
+          <div>アコーディオン数: ${accordions}</div>
+          <div>アイテム総数: ${items}</div>
+          <div>メモリ使用量: ${(performance.memory?.usedJSHeapSize / 1024 / 1024).toFixed(2) || 'N/A'} MB</div>
+        `;
+        
+        // Core Web Vitals (簡易版)
+        if ('PerformanceObserver' in window) {
+          const cls = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === 'layout-shift') {
+                console.log('CLS:', entry.value);
+              }
+            }
+          });
+          cls.observe({ type: 'layout-shift', buffered: true });
+        }
+      }, 100);
+    });
+    
+    // アクセシビリティ確認
+    console.log('アクセシビリティチェック:');
+    document.querySelectorAll('dads-accordion-item').forEach((item, index) => {
+      const button = item.shadowRoot?.querySelector('.accordion-button');
+      console.log(`Item ${index + 1}:`, {
+        'aria-expanded': button?.getAttribute('aria-expanded'),
+        'aria-controls': button?.getAttribute('aria-controls'),
+        'role': item.getAttribute('role')
+      });
+    });
+  </script>
+</body>
+</html>

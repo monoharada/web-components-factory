@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Components ::part() を活用したアコーディオン</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      background: #f5f5f5;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #00118f;
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+    
+    .demo-section {
+      background: white;
+      padding: 30px;
+      margin: 30px 0;
+      border-radius: 8px;
+    }
+    
+    /* ::part() を使った外部からのスタイリング例 */
+    
+    /* デフォルトテーマ */
+    dads-accordion-item-parts::part(summary) {
+      font-size: 18px;
+      color: #333333;
+    }
+    
+    dads-accordion-item-parts::part(summary):hover {
+      background-color: #f2f2f2;
+    }
+    
+    dads-accordion-item-parts::part(icon) {
+      border: 1px solid #00118f;
+      background: white;
+    }
+    
+    dads-accordion-item-parts::part(summary):hover::part(icon) {
+      border-width: 3px;
+    }
+    
+    dads-accordion-item-parts::part(icon-svg) {
+      stroke: #00118f;
+    }
+    
+    dads-accordion-item-parts::part(content) {
+      color: #333333;
+    }
+    
+    dads-accordion-item-parts::part(return-button) {
+      color: #00118f;
+    }
+    
+    /* カスタムテーマ例 */
+    .custom-theme dads-accordion-item-parts::part(summary) {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 8px;
+      margin: 5px 0;
+    }
+    
+    .custom-theme dads-accordion-item-parts::part(icon) {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: white;
+    }
+    
+    .custom-theme dads-accordion-item-parts::part(icon-svg) {
+      stroke: white;
+    }
+    
+    .custom-theme dads-accordion-item-parts::part(content) {
+      background: #f8f9ff;
+      border-radius: 0 0 8px 8px;
+      padding: 20px;
+    }
+    
+    /* ダークテーマ例 */
+    .dark-theme {
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+    
+    .dark-theme dads-accordion-item-parts::part(summary) {
+      background: #2a2a2a;
+      color: #e0e0e0;
+      border: 1px solid #444;
+    }
+    
+    .dark-theme dads-accordion-item-parts::part(summary):hover {
+      background: #333;
+    }
+    
+    .dark-theme dads-accordion-item-parts::part(icon) {
+      background: #1a1a1a;
+      border-color: #666;
+    }
+    
+    .dark-theme dads-accordion-item-parts::part(icon-svg) {
+      stroke: #e0e0e0;
+    }
+    
+    .dark-theme dads-accordion-item-parts::part(content) {
+      background: #2a2a2a;
+      color: #e0e0e0;
+      border: 1px solid #444;
+      border-top: none;
+    }
+    
+    .dark-theme dads-accordion-item-parts::part(return-button) {
+      color: #66b3ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Web Components ::part() を活用したアコーディオン</h1>
+  
+  <div class="demo-section">
+    <h2>デフォルトスタイル</h2>
+    <dads-accordion-parts>
+      <dads-accordion-item-parts>
+        <span slot="header">::part() とは何ですか？</span>
+        <div slot="content">
+          <p>::part() は Web Components の Shadow DOM 内の要素を外部からスタイリングするための CSS 擬似要素です。</p>
+          <p>これにより、コンポーネントの作者が意図的に公開した部分のみを、利用者が自由にカスタマイズできます。</p>
+        </div>
+      </dads-accordion-item-parts>
+      
+      <dads-accordion-item-parts>
+        <span slot="header">なぜクラスより ::part() が良いのか？</span>
+        <div slot="content">
+          <ul>
+            <li><strong>カプセル化の維持</strong>: Shadow DOM の境界を保ちながら、特定の部分だけを公開</li>
+            <li><strong>意図的な API</strong>: コンポーネント作者が「どこがカスタマイズ可能か」を明示的に定義</li>
+            <li><strong>セマンティック</strong>: part属性で要素の役割を意味的に表現</li>
+            <li><strong>スコープの明確化</strong>: グローバルなクラス名の衝突を避ける</li>
+          </ul>
+        </div>
+      </dads-accordion-item-parts>
+      
+      <dads-accordion-item-parts>
+        <span slot="header">実装例</span>
+        <div slot="content">
+          <pre style="background: #f0f0f0; padding: 10px; border-radius: 4px; overflow-x: auto;">
+// コンポーネント側
+&lt;summary part="summary"&gt;
+  &lt;span part="icon"&gt;
+    &lt;svg part="icon-svg"&gt;...&lt;/svg&gt;
+  &lt;/span&gt;
+  &lt;slot name="header"&gt;&lt;/slot&gt;
+&lt;/summary&gt;
+
+// 利用側のCSS
+component::part(summary) { }
+component::part(icon) { }
+component::part(icon-svg) { }</pre>
+        </div>
+      </dads-accordion-item-parts>
+    </dads-accordion-parts>
+  </div>
+  
+  <div class="demo-section custom-theme">
+    <h2 style="color: #667eea;">カスタムテーマ（グラデーション）</h2>
+    <dads-accordion-parts>
+      <dads-accordion-item-parts>
+        <span slot="header">カスタムスタイルの適用</span>
+        <div slot="content">
+          ::part() を使うことで、Shadow DOM 内の要素を外部から自由にスタイリングできます。
+          このセクションはグラデーションテーマを適用しています。
+        </div>
+      </dads-accordion-item-parts>
+      
+      <dads-accordion-item-parts>
+        <span slot="header">テーマの切り替え</span>
+        <div slot="content">
+          親要素にクラスを追加するだけで、子コンポーネントのスタイルを一括で変更できます。
+          Shadow DOM のカプセル化を維持しながら、柔軟なカスタマイズが可能です。
+        </div>
+      </dads-accordion-item-parts>
+    </dads-accordion-parts>
+  </div>
+  
+  <div class="demo-section dark-theme">
+    <h2>ダークテーマ</h2>
+    <dads-accordion-parts>
+      <dads-accordion-item-parts>
+        <span slot="header">ダークモード対応</span>
+        <div slot="content">
+          ::part() を使えば、ダークモードの実装も簡単です。
+          親要素に .dark-theme クラスを付けるだけで、すべての子要素が適切にスタイリングされます。
+        </div>
+      </dads-accordion-item-parts>
+      
+      <dads-accordion-item-parts>
+        <span slot="header">アクセシビリティ</span>
+        <div slot="content">
+          ダークモードでも適切なコントラスト比を維持し、
+          WCAG 2.1 AA の基準を満たすようにスタイリングされています。
+        </div>
+      </dads-accordion-item-parts>
+    </dads-accordion-parts>
+  </div>
+
+  <script>
+    // ::part() を活用した実装
+    class DadsAccordionParts extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.allowMultiple = this.hasAttribute('allow-multiple');
+      }
+      
+      connectedCallback() {
+        this.shadowRoot.innerHTML = `
+          <style>
+            :host {
+              display: block;
+              width: 100%;
+            }
+          </style>
+          <div part="container">
+            <slot></slot>
+          </div>
+        `;
+        
+        // 単一展開モードの処理
+        this.addEventListener('toggle', (e) => {
+          if (!this.allowMultiple && e.target.open) {
+            const items = this.querySelectorAll('dads-accordion-item-parts');
+            items.forEach(item => {
+              const details = item.shadowRoot?.querySelector('details');
+              if (details && details !== e.target && details.open) {
+                details.open = false;
+              }
+            });
+          }
+        });
+      }
+    }
+    
+    class DadsAccordionItemParts extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+      }
+      
+      connectedCallback() {
+        this.shadowRoot.innerHTML = `
+          <style>
+            :host {
+              display: block;
+              border-bottom: 1px solid #949494;
+            }
+            
+            /* details/summary のリセット */
+            details {
+              width: 100%;
+            }
+            
+            summary {
+              list-style: none;
+              cursor: pointer;
+              padding: 12px 16px 12px 0;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              user-select: none;
+              transition: background-color 0.2s;
+            }
+            
+            summary::-webkit-details-marker {
+              display: none;
+            }
+            
+            /* フォーカススタイル */
+            summary:focus {
+              outline: none;
+              position: relative;
+            }
+            
+            summary:focus::before {
+              content: '';
+              position: absolute;
+              inset: -4px;
+              background-color: #ffd43d;
+              border-radius: 8px;
+              z-index: -1;
+            }
+            
+            /* パート要素の基本スタイル */
+            [part="icon"] {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              width: 32px;
+              height: 32px;
+              padding: 6px;
+              border-radius: 50%;
+              flex-shrink: 0;
+              transition: border-width 0.15s;
+            }
+            
+            [part="icon-svg"] {
+              width: 20px;
+              height: 20px;
+              transition: transform 0.3s ease;
+            }
+            
+            details[open] [part="icon-svg"] {
+              transform: rotate(180deg);
+            }
+            
+            [part="header-text"] {
+              flex: 1;
+            }
+            
+            [part="content"] {
+              padding: 0 52px 24px;
+              font-size: 16px;
+              line-height: 1.7;
+            }
+            
+            /* アニメーション */
+            [part="content"] {
+              animation: slideDown 300ms ease-out;
+            }
+            
+            @keyframes slideDown {
+              from {
+                opacity: 0;
+                transform: translateY(-10px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            
+            /* 先頭に戻るボタン */
+            [part="return-button"] {
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              margin-top: 16px;
+              padding: 0;
+              border: none;
+              background: none;
+              font-size: 16px;
+              cursor: pointer;
+              text-decoration: underline;
+              text-underline-offset: 4px;
+              transition: opacity 0.2s;
+            }
+            
+            [part="return-button"]:hover {
+              opacity: 0.8;
+            }
+            
+            [part="return-icon"] {
+              width: 24px;
+              height: 24px;
+            }
+            
+            /* モバイル対応 */
+            @media (max-width: 768px) {
+              summary {
+                padding: 8px 8px 8px 0;
+                font-size: 16px;
+              }
+              
+              [part="icon"] {
+                width: 24px;
+                height: 24px;
+                padding: 2px;
+              }
+              
+              [part="icon-svg"] {
+                width: 16px;
+                height: 16px;
+              }
+              
+              [part="content"] {
+                padding: 0 32px 16px;
+              }
+            }
+          </style>
+          
+          <details ${this.hasAttribute('expanded') ? 'open' : ''} part="details">
+            <summary part="summary">
+              <span part="icon">
+                <svg part="icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2">
+                  <path d="M6 9L12 15L18 9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span part="header-text">
+                <slot name="header"></slot>
+              </span>
+            </summary>
+            <div part="content">
+              <slot name="content"></slot>
+              <button part="return-button" type="button">
+                <svg part="return-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="currentColor">
+                  <path d="M14 8L10 12L14 16" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-90 12 12)"/>
+                </svg>
+                <span part="return-text">先頭に戻る</span>
+              </button>
+            </div>
+          </details>
+        `;
+        
+        // detailsイベントをバブリング
+        const details = this.shadowRoot.querySelector('details');
+        details?.addEventListener('toggle', (e) => {
+          this.dispatchEvent(new Event('toggle', { bubbles: true }));
+        });
+        
+        // 先頭に戻るボタン
+        const returnBtn = this.shadowRoot.querySelector('[part="return-button"]');
+        returnBtn?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const summary = this.shadowRoot.querySelector('summary');
+          summary?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          summary?.focus();
+        });
+      }
+    }
+    
+    // カスタムエレメントを登録
+    customElements.define('dads-accordion-parts', DadsAccordionParts);
+    customElements.define('dads-accordion-item-parts', DadsAccordionItemParts);
+    
+    console.log('✅ ::part() を活用したアコーディオンコンポーネントを登録しました');
+  </script>
+  
+  <div class="demo-section">
+    <h2>公開されている part 一覧</h2>
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background: #f0f0f0;">
+          <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">part名</th>
+          <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">要素</th>
+          <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">説明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>details</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">details</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">アコーディオン全体のコンテナ</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>summary</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">summary</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">クリック可能なヘッダー部分</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>icon</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">span</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">アイコンのコンテナ</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>icon-svg</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">svg</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">矢印アイコンのSVG</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>header-text</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">span</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">ヘッダーテキストのラッパー</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>content</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">div</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">展開されるコンテンツエリア</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>return-button</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">button</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">先頭に戻るボタン</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>return-icon</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">svg</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">戻るボタンのアイコン</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><code>return-text</code></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">span</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">戻るボタンのテキスト</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,869 @@
+{
+  "project": {
+    "name": "デジタル庁アコーディオンWeb Component開発",
+    "duration": "2週間（10営業日）",
+    "team_size": 2,
+    "total_hours": 26,
+    "budget": {
+      "development": 26,
+      "contingency": 3.9
+    }
+  },
+  "overview": {
+    "purpose": "デジタル庁デザインシステム準拠のアコーディオンコンポーネントをWeb Componentsで実装",
+    "scope": {
+      "included": [
+        "dgov-accordion（親コンテナ）コンポーネント",
+        "dgov-accordion-item（個別アイテム）コンポーネント",
+        "デザイントークン統合",
+        "アクセシビリティ完全対応",
+        "レスポンシブデザイン実装",
+        "パフォーマンス最適化",
+        "自動テストスイート",
+        "APIドキュメンテーション"
+      ],
+      "excluded": [
+        "レガシーブラウザ（IE11）対応",
+        "SSR/SSG対応",
+        "既存実装との完全互換性"
+      ]
+    },
+    "non_functional_requirements": {
+      "performance": {
+        "fcp": "< 1.8s",
+        "fid": "< 100ms",
+        "cls": "< 0.1",
+        "fps": 60
+      },
+      "accessibility": "WCAG 2.2 AA",
+      "i18n": {
+        "rtl": true,
+        "multi_language": true
+      },
+      "security": {
+        "xss_prevention": true,
+        "csp_compatible": true
+      },
+      "observability": {
+        "telemetry": true,
+        "custom_metrics": true
+      }
+    }
+  },
+  "phases": [
+    {
+      "id": "P1",
+      "name": "Foundation",
+      "duration_days": 1,
+      "hours": 4.5,
+      "purpose": "プロジェクト基盤とデザインシステム統合",
+      "e2e_procedures": [
+        "ls -la src/accordion/",
+        "tsc --noEmit web-components.ts --strict",
+        "node -e \"import './src/accordion/dgov-accordion.js'; console.log(customElements.get('dgov-accordion'))\"",
+        "open tests/visual/tokens.html"
+      ],
+      "tasks": ["T-001", "T-002", "T-003"],
+      "deliverables": [
+        "src/accordion/ディレクトリ構造",
+        "TypeScript設定ファイル",
+        "WebComponentベースクラス",
+        "デザイントークン定義ファイル"
+      ],
+      "acceptance_criteria": [
+        "TypeScript strict modeでエラーなし",
+        "WebComponentが正常に登録される",
+        "デザイントークンが正しく適用される",
+        "ビルドプロセスが正常動作"
+      ]
+    },
+    {
+      "id": "P2",
+      "name": "Core Implementation",
+      "duration_days": 2,
+      "hours": 6,
+      "purpose": "コアコンポーネント機能の実装",
+      "e2e_procedures": [
+        "open tests/integration/shadow-dom.html",
+        "npm run test:integration -- --grep \"parent-child communication\"",
+        "open tests/manual/state-management.html"
+      ],
+      "tasks": ["T-004", "T-005", "T-006"],
+      "deliverables": [
+        "Shadow DOM構造定義",
+        "DgovAccordionItemクラス",
+        "親子間通信メカニズム",
+        "状態管理ロジック"
+      ],
+      "acceptance_criteria": [
+        "Shadow DOMが正しくレンダリングされる",
+        "Slotによるコンテンツ配置が機能する",
+        "親子コンポーネント間の通信が確立される",
+        "allow-multiple属性が正しく動作する"
+      ]
+    },
+    {
+      "id": "P3",
+      "name": "Interaction & Accessibility",
+      "duration_days": 2,
+      "hours": 5,
+      "purpose": "ユーザーインタラクションとアクセシビリティ実装",
+      "e2e_procedures": [
+        "npm run test:e2e -- --spec interaction.spec.ts",
+        "open tests/manual/keyboard-nav.html",
+        "npm run test:a11y",
+        "# NVDA/JAWS/VoiceOverで動作確認"
+      ],
+      "tasks": ["T-007", "T-008", "T-009"],
+      "deliverables": [
+        "イベントハンドラー実装",
+        "キーボードナビゲーション機能",
+        "ARIA属性管理システム",
+        "フォーカス管理ロジック"
+      ],
+      "acceptance_criteria": [
+        "クリック/タッチで開閉動作",
+        "Enter/Space/矢印キーが正しく機能",
+        "aria-expanded/aria-controlsが動的更新",
+        "スクリーンリーダーで正しく読み上げ"
+      ]
+    },
+    {
+      "id": "P4",
+      "name": "Polish & Performance",
+      "duration_days": 2,
+      "hours": 4.5,
+      "purpose": "アニメーションとパフォーマンス最適化",
+      "e2e_procedures": [
+        "npm run perf:animation",
+        "npm run test:responsive",
+        "npm run perf:metrics",
+        "npm run lighthouse -- --only-categories=performance"
+      ],
+      "tasks": ["T-010", "T-011", "T-012"],
+      "deliverables": [
+        "スムーズなアニメーション実装",
+        "レスポンシブスタイルシート",
+        "パフォーマンス計測システム",
+        "reduced-motion対応"
+      ],
+      "acceptance_criteria": [
+        "アニメーションが60fpsで動作",
+        "モバイル/タブレット/デスクトップ対応",
+        "パフォーマンスメトリクス収集可能",
+        "prefers-reduced-motion尊重"
+      ]
+    },
+    {
+      "id": "P5",
+      "name": "Quality & Documentation",
+      "duration_days": 3,
+      "hours": 5.5,
+      "purpose": "テスト自動化とドキュメント作成",
+      "e2e_procedures": [
+        "npm run test:all",
+        "npm run coverage",
+        "npm run docs:build",
+        "npm run demo:serve && open http://localhost:8080"
+      ],
+      "tasks": ["T-013", "T-014", "T-015"],
+      "deliverables": [
+        "自動テストスイート",
+        "E2Eテストシナリオ",
+        "APIリファレンス",
+        "使用例とデモサイト"
+      ],
+      "acceptance_criteria": [
+        "WCAG 2.2 AA全項目合格",
+        "E2Eテスト合格率100%",
+        "APIドキュメント完成",
+        "デモサイト公開"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T-001",
+      "phase": "P1",
+      "type": "refactor",
+      "title": "プロジェクト構造準備とTypeScript設定",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "src/accordion/ ディレクトリ構造作成",
+        "TypeScript設定（strict mode有効）",
+        "ビルドスクリプト設定",
+        "tsc --noEmit でエラーゼロ"
+      ],
+      "telemetry": {
+        "event": "project_structure_created",
+        "props": ["timestamp", "directories_count"],
+        "retention": "30d",
+        "consent": "opt-out"
+      },
+      "rollback": "git revert",
+      "estimate": "1h",
+      "owner": "Frontend",
+      "risk": "Low"
+    },
+    {
+      "id": "T-002",
+      "phase": "P1",
+      "type": "feature",
+      "title": "基本WebComponentクラス実装",
+      "dependencies": ["T-001"],
+      "acceptance_criteria": [
+        "DgovAccordion クラス作成",
+        "WebComponent 継承",
+        "customElements.define() 実装",
+        "基本ライフサイクル実装"
+      ],
+      "telemetry": {
+        "event": "accordion_component_mounted",
+        "props": ["items_count", "allow_multiple"],
+        "retention": "90d",
+        "consent": "opt-out"
+      },
+      "rollback": "ファイル削除",
+      "estimate": "2h",
+      "owner": "Frontend",
+      "risk": "Low"
+    },
+    {
+      "id": "T-003",
+      "phase": "P1",
+      "type": "design",
+      "title": "デザイントークンCSS変数定義",
+      "dependencies": ["T-001"],
+      "acceptance_criteria": [
+        "デジタル庁トークンをCSS変数化",
+        "セマンティックトークン定義",
+        "カラーコントラスト検証（WCAG AA）",
+        "ダークモード考慮"
+      ],
+      "telemetry": {
+        "event": "design_tokens_loaded",
+        "props": ["token_count", "theme"],
+        "retention": "30d",
+        "consent": "opt-out"
+      },
+      "rollback": "CSSファイル削除",
+      "estimate": "1.5h",
+      "owner": "Design/Frontend",
+      "risk": "Low"
+    },
+    {
+      "id": "T-004",
+      "phase": "P2",
+      "type": "feature",
+      "title": "Shadow DOMテンプレート構造",
+      "dependencies": ["T-002", "T-003"],
+      "acceptance_criteria": [
+        "Shadow DOM内のHTML構造定義",
+        "Slot配置（header, content）",
+        "基本スタイリング適用",
+        "アイコン要素配置"
+      ],
+      "telemetry": {
+        "event": "shadow_dom_rendered",
+        "props": ["slot_count", "render_time_ms"],
+        "retention": "90d",
+        "consent": "opt-out"
+      },
+      "rollback": "feature flag",
+      "estimate": "2h",
+      "owner": "Frontend",
+      "risk": "Medium"
+    },
+    {
+      "id": "T-005",
+      "phase": "P2",
+      "type": "feature",
+      "title": "アコーディオンアイテム基本実装",
+      "dependencies": ["T-004"],
+      "acceptance_criteria": [
+        "DgovAccordionItem クラス実装",
+        "ヘッダー/コンテンツ構造",
+        "expanded属性管理",
+        "基本スタイル適用"
+      ],
+      "telemetry": {
+        "event": "accordion_item_created",
+        "props": ["item_id", "initial_state"],
+        "retention": "90d",
+        "consent": "opt-out"
+      },
+      "rollback": "コンポーネント無効化フラグ",
+      "estimate": "2h",
+      "owner": "Frontend",
+      "risk": "Medium"
+    },
+    {
+      "id": "T-006",
+      "phase": "P2",
+      "type": "feature",
+      "title": "親コンテナーロジック実装",
+      "dependencies": ["T-005"],
+      "acceptance_criteria": [
+        "子アイテム管理ロジック",
+        "allow-multiple 制御",
+        "イベントリスナー設定",
+        "状態同期メカニズム"
+      ],
+      "telemetry": {
+        "event": "accordion_state_change",
+        "props": ["expanded_count", "total_items"],
+        "retention": "90d",
+        "consent": "opt-out"
+      },
+      "rollback": "独立モードフラグ",
+      "estimate": "2h",
+      "owner": "Frontend",
+      "risk": "Medium"
+    },
+    {
+      "id": "T-007",
+      "phase": "P3",
+      "type": "feature",
+      "title": "クリック開閉インタラクション",
+      "dependencies": ["T-006"],
+      "acceptance_criteria": [
+        "クリックイベント処理",
+        "タッチイベント対応",
+        "状態トグル実装",
+        "イベント発火"
+      ],
+      "telemetry": {
+        "event": "accordion_interaction",
+        "props": ["action", "item_id", "method"],
+        "retention": "90d",
+        "consent": "opt-out"
+      },
+      "rollback": "イベントリスナー削除",
+      "estimate": "1.5h",
+      "owner": "Frontend",
+      "risk": "Low"
+    },
+    {
+      "id": "T-008",
+      "phase": "P3",
+      "type": "feature",
+      "title": "キーボードナビゲーション実装",
+      "dependencies": ["T-007"],
+      "acceptance_criteria": [
+        "Enter/Space キーで開閉",
+        "矢印キーでナビゲーション",
+        "Home/End キーサポート",
+        "Tab キー順序管理"
+      ],
+      "telemetry": {
+        "event": "keyboard_navigation",
+        "props": ["key", "action", "focus_index"],
+        "retention": "90d",
+        "consent": "opt-out"
+      },
+      "rollback": "キーボード処理無効化フラグ",
+      "estimate": "2h",
+      "owner": "Frontend",
+      "risk": "High"
+    },
+    {
+      "id": "T-009",
+      "phase": "P3",
+      "type": "feature",
+      "title": "ARIA属性動的更新",
+      "dependencies": ["T-008"],
+      "acceptance_criteria": [
+        "aria-expanded 動的更新",
+        "aria-controls 関連付け",
+        "aria-labelledby 設定",
+        "ライブリージョン実装"
+      ],
+      "telemetry": {
+        "event": "aria_update",
+        "props": ["attribute", "value", "element_id"],
+        "retention": "30d",
+        "consent": "opt-out"
+      },
+      "rollback": "静的ARIA属性にフォールバック",
+      "estimate": "1.5h",
+      "owner": "Frontend",
+      "risk": "High"
+    },
+    {
+      "id": "T-010",
+      "phase": "P4",
+      "type": "feature",
+      "title": "CSSアニメーション実装",
+      "dependencies": ["T-007"],
+      "acceptance_criteria": [
+        "高さアニメーション実装",
+        "アイコン回転アニメーション",
+        "60fps 維持",
+        "prefers-reduced-motion 対応"
+      ],
+      "telemetry": {
+        "event": "animation_performance",
+        "props": ["fps", "duration_ms", "reduced_motion"],
+        "retention": "30d",
+        "consent": "opt-out"
+      },
+      "rollback": "アニメーション無効化CSS変数",
+      "estimate": "2h",
+      "owner": "Frontend",
+      "risk": "Medium"
+    },
+    {
+      "id": "T-011",
+      "phase": "P4",
+      "type": "feature",
+      "title": "レスポンシブブレークポイント",
+      "dependencies": ["T-010"],
+      "acceptance_criteria": [
+        "モバイル（~768px）スタイル",
+        "タブレット（768px~1024px）",
+        "デスクトップ（1024px~）",
+        "タッチ対応最適化"
+      ],
+      "telemetry": {
+        "event": "viewport_change",
+        "props": ["viewport_width", "breakpoint", "device_type"],
+        "retention": "30d",
+        "consent": "opt-out"
+      },
+      "rollback": "メディアクエリ削除",
+      "estimate": "1.5h",
+      "owner": "Frontend",
+      "risk": "Low"
+    },
+    {
+      "id": "T-012",
+      "phase": "P4",
+      "type": "observability",
+      "title": "パフォーマンス計測フック",
+      "dependencies": ["T-010"],
+      "acceptance_criteria": [
+        "レンダリング時間計測",
+        "インタラクション遅延計測",
+        "メモリ使用量追跡",
+        "Performance Observer 統合"
+      ],
+      "telemetry": {
+        "event": "performance_metrics",
+        "props": ["metric_name", "value", "unit"],
+        "retention": "90d",
+        "consent": "opt-out"
+      },
+      "rollback": "計測コード削除",
+      "estimate": "1h",
+      "owner": "Frontend",
+      "risk": "Low"
+    },
+    {
+      "id": "T-013",
+      "phase": "P5",
+      "type": "docops",
+      "title": "アクセシビリティテスト自動化",
+      "dependencies": ["T-009"],
+      "acceptance_criteria": [
+        "axe-core 統合",
+        "WCAG 2.2 AA チェック",
+        "自動テストスイート作成",
+        "CI/CD 統合"
+      ],
+      "telemetry": {
+        "event": "a11y_test_run",
+        "props": ["violations_count", "passes_count", "test_suite"],
+        "retention": "90d",
+        "consent": "opt-out"
+      },
+      "rollback": "テスト一時無効化",
+      "estimate": "2h",
+      "owner": "QA",
+      "risk": "Medium"
+    },
+    {
+      "id": "T-014",
+      "phase": "P5",
+      "type": "docops",
+      "title": "E2Eテストシナリオ実装",
+      "dependencies": ["T-011"],
+      "acceptance_criteria": [
+        "基本操作シナリオ",
+        "複数ブラウザテスト",
+        "モバイル/デスクトップ",
+        "エッジケーステスト"
+      ],
+      "telemetry": {
+        "event": "e2e_test_complete",
+        "props": ["scenario", "duration_ms", "success"],
+        "retention": "30d",
+        "consent": "opt-out"
+      },
+      "rollback": "特定ブラウザテスト除外",
+      "estimate": "2h",
+      "owner": "QA",
+      "risk": "Medium"
+    },
+    {
+      "id": "T-015",
+      "phase": "P5",
+      "type": "docops",
+      "title": "APIドキュメント・使用例作成",
+      "dependencies": ["T-014"],
+      "acceptance_criteria": [
+        "API リファレンス完成",
+        "使用例5パターン以上",
+        "移行ガイド作成",
+        "デモサイト公開"
+      ],
+      "telemetry": {
+        "event": "docs_published",
+        "props": ["page_count", "example_count", "language"],
+        "retention": "30d",
+        "consent": "opt-out"
+      },
+      "rollback": "以前のドキュメントバージョン",
+      "estimate": "1.5h",
+      "owner": "Documentation",
+      "risk": "Low"
+    }
+  ],
+  "tokens_map": {
+    "primitive": {
+      "--color-primitive-blue-1000": "#00118f",
+      "--color-neutral-white": "#ffffff",
+      "--color-neutral-solid-gray-800": "#333333",
+      "--color-neutral-solid-gray-420": "#949494",
+      "--color-neutral-solid-gray-50": "#f2f2f2",
+      "--color-primitive-yellow-300": "#ffd43d",
+      "--color-neutral-black": "#000000"
+    },
+    "semantic": {
+      "--dgov-accordion-border": "var(--color-neutral-solid-gray-420)",
+      "--dgov-accordion-text": "var(--color-neutral-solid-gray-800)",
+      "--dgov-accordion-bg-hover": "var(--color-neutral-solid-gray-50)",
+      "--dgov-accordion-focus-bg": "var(--color-primitive-yellow-300)",
+      "--dgov-accordion-focus-border": "var(--color-neutral-black)",
+      "--dgov-accordion-link": "var(--color-primitive-blue-1000)"
+    },
+    "spacing": {
+      "--dgov-accordion-padding": "16px",
+      "--dgov-accordion-icon-size": "48px",
+      "--dgov-accordion-border-radius": "8px",
+      "--dgov-accordion-border-radius-mobile": "4px"
+    },
+    "animation": {
+      "--dgov-accordion-transition": "all 0.3s ease",
+      "--dgov-accordion-duration": "300ms",
+      "--dgov-accordion-easing": "cubic-bezier(0.4, 0, 0.2, 1)"
+    }
+  },
+  "docops": {
+    "automated": true,
+    "toc_generation": true,
+    "glossary": true,
+    "link_integrity": true,
+    "screenshot_updates": true,
+    "translation_qa": false,
+    "auto_extraction": true,
+    "documentation_items": [
+      "プロジェクト構造",
+      "ビルド手順",
+      "コンポーネント登録方法",
+      "属性一覧",
+      "トークン一覧表",
+      "カラーコントラスト検証結果",
+      "Shadow DOM構造図",
+      "Slot使用方法",
+      "アイテム構造",
+      "親子通信パターン",
+      "状態管理フロー",
+      "インタラクションパターン",
+      "キーボード操作一覧",
+      "ARIA実装パターン",
+      "アニメーション仕様",
+      "レスポンシブ仕様",
+      "パフォーマンス基準",
+      "テスト結果レポート",
+      "APIドキュメント",
+      "使用例集",
+      "移行ガイド"
+    ]
+  },
+  "raci": {
+    "matrix": {
+      "implementation": {
+        "frontend": "R/A",
+        "qa": "C",
+        "design": "I",
+        "pm": "I"
+      },
+      "testing": {
+        "frontend": "C",
+        "qa": "R/A",
+        "design": "I",
+        "pm": "I"
+      },
+      "documentation": {
+        "frontend": "R/A",
+        "qa": "C",
+        "design": "C",
+        "pm": "I"
+      },
+      "review": {
+        "frontend": "R",
+        "qa": "R",
+        "design": "C/A",
+        "pm": "I"
+      },
+      "release": {
+        "frontend": "C",
+        "qa": "C",
+        "design": "I",
+        "pm": "R/A"
+      }
+    },
+    "stakeholders": [
+      {
+        "role": "Frontend Engineer",
+        "responsibility": "実装全般、ドキュメント",
+        "hours": 20.5,
+        "percentage": 79
+      },
+      {
+        "role": "QA Engineer",
+        "responsibility": "テスト設計・実装",
+        "hours": 4,
+        "percentage": 15
+      },
+      {
+        "role": "Design Review",
+        "responsibility": "デザイン確認",
+        "hours": 1.5,
+        "percentage": 6
+      }
+    ],
+    "approval_points": [
+      "Phase 1完了時 - 基盤承認",
+      "Phase 2完了時 - コア機能承認",
+      "Phase 3完了時 - アクセシビリティ承認",
+      "Phase 4完了時 - パフォーマンス承認",
+      "Phase 5完了時 - 最終承認"
+    ],
+    "reporting": {
+      "frequency": "daily",
+      "format": "standup",
+      "metrics": [
+        "tasks_completed",
+        "blockers",
+        "risks",
+        "quality_metrics"
+      ]
+    }
+  },
+  "risk_management": {
+    "risks": [
+      {
+        "description": "アクセシビリティ要件未達",
+        "impact": "high",
+        "probability": "medium",
+        "mitigation": "早期テスト、専門家レビュー",
+        "owner": "QA"
+      },
+      {
+        "description": "パフォーマンス目標未達",
+        "impact": "medium",
+        "probability": "low",
+        "mitigation": "継続的計測、最適化",
+        "owner": "Frontend"
+      },
+      {
+        "description": "Shadow DOM互換性問題",
+        "impact": "medium",
+        "probability": "low",
+        "mitigation": "Polyfill準備、代替実装",
+        "owner": "Frontend"
+      },
+      {
+        "description": "スケジュール遅延",
+        "impact": "medium",
+        "probability": "medium",
+        "mitigation": "バッファ時間確保、優先順位付け",
+        "owner": "PM"
+      },
+      {
+        "description": "デザイントークン変更",
+        "impact": "low",
+        "probability": "medium",
+        "mitigation": "変更通知プロセス、自動同期",
+        "owner": "Design"
+      }
+    ],
+    "rat": {
+      "high_risk_tasks": ["T-008", "T-009"],
+      "medium_risk_tasks": ["T-004", "T-005", "T-006", "T-010", "T-013", "T-014"],
+      "low_risk_tasks": ["T-001", "T-002", "T-003", "T-007", "T-011", "T-012", "T-015"]
+    }
+  },
+  "rollback_strategies": {
+    "phase_1_2": {
+      "method": "complete_removal",
+      "commands": [
+        "git revert --no-commit HEAD~n",
+        "rm -rf src/accordion/",
+        "git commit -m 'rollback: Phase 1-2 implementation'"
+      ]
+    },
+    "phase_3_4": {
+      "method": "feature_flag",
+      "commands": [
+        "export ACCORDION_FEATURES='interaction:false,animation:false'",
+        "npm run build -- --features minimal"
+      ]
+    },
+    "phase_5": {
+      "method": "test_exclusion",
+      "commands": [
+        "npm run build -- --skip-tests --skip-docs",
+        "git checkout v1.0.0 -- docs/"
+      ]
+    },
+    "phased_rollout": {
+      "stages": [
+        "Flag: 機能フラグによる制御",
+        "Dual: 新旧並行運用",
+        "Switch: 完全切り替え",
+        "Removal: 旧実装削除"
+      ]
+    }
+  },
+  "trace_map": [
+    {
+      "task": "T-001",
+      "design_doc": "design-doc-accordion-component.md#実装計画",
+      "figma": "-",
+      "issue": "#001",
+      "pr": ""
+    },
+    {
+      "task": "T-002",
+      "design_doc": "design-doc-accordion-component.md#API仕様",
+      "figma": "Accordion Container",
+      "issue": "#002",
+      "pr": ""
+    },
+    {
+      "task": "T-003",
+      "design_doc": "design-doc-accordion-component.md#付録",
+      "figma": "Design Tokens",
+      "issue": "#003",
+      "pr": ""
+    },
+    {
+      "task": "T-004",
+      "design_doc": "design-doc-accordion-component.md#システムアーキテクチャ",
+      "figma": "Shadow DOM Structure",
+      "issue": "#004",
+      "pr": ""
+    },
+    {
+      "task": "T-005",
+      "design_doc": "design-doc-accordion-component.md#API仕様",
+      "figma": "Accordion Item",
+      "issue": "#005",
+      "pr": ""
+    },
+    {
+      "task": "T-006",
+      "design_doc": "design-doc-accordion-component.md#コンポーネントインタラクション",
+      "figma": "State Management",
+      "issue": "#006",
+      "pr": ""
+    },
+    {
+      "task": "T-007",
+      "design_doc": "design-doc-accordion-component.md#実装計画",
+      "figma": "Interaction States",
+      "issue": "#007",
+      "pr": ""
+    },
+    {
+      "task": "T-008",
+      "design_doc": "design-doc-accordion-component.md#アクセシビリティ",
+      "figma": "Keyboard Navigation",
+      "issue": "#008",
+      "pr": ""
+    },
+    {
+      "task": "T-009",
+      "design_doc": "design-doc-accordion-component.md#テスト戦略",
+      "figma": "ARIA Pattern",
+      "issue": "#009",
+      "pr": ""
+    },
+    {
+      "task": "T-010",
+      "design_doc": "design-doc-accordion-component.md#パフォーマンス最適化",
+      "figma": "Animation",
+      "issue": "#010",
+      "pr": ""
+    },
+    {
+      "task": "T-011",
+      "design_doc": "design-doc-accordion-component.md#実装計画",
+      "figma": "Responsive Layout",
+      "issue": "#011",
+      "pr": ""
+    },
+    {
+      "task": "T-012",
+      "design_doc": "design-doc-accordion-component.md#パフォーマンス最適化",
+      "figma": "Performance",
+      "issue": "#012",
+      "pr": ""
+    },
+    {
+      "task": "T-013",
+      "design_doc": "design-doc-accordion-component.md#テスト戦略",
+      "figma": "Testing",
+      "issue": "#013",
+      "pr": ""
+    },
+    {
+      "task": "T-014",
+      "design_doc": "design-doc-accordion-component.md#テスト戦略",
+      "figma": "Test Scenarios",
+      "issue": "#014",
+      "pr": ""
+    },
+    {
+      "task": "T-015",
+      "design_doc": "design-doc-accordion-component.md#実装計画",
+      "figma": "Documentation",
+      "issue": "#015",
+      "pr": ""
+    }
+  ],
+  "quality_checks": {
+    "phases_defined": true,
+    "e2e_procedures": true,
+    "requirements_taskified": true,
+    "dependencies_max_depth": 2,
+    "fofe_ac_present": true,
+    "ds_tokens_defined": true,
+    "docops_embedded": true,
+    "telemetry_defined": true,
+    "service_design_reflected": true,
+    "trace_map_connected": true,
+    "diagrams_included": true,
+    "update_mode_constraints": false
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "created_date": "2025-08-28",
+    "created_by": "Work-Orchestrator (Claude Code)",
+    "approved_by": null,
+    "status": "review_pending",
+    "last_updated": "2025-08-28"
+  }
+}
