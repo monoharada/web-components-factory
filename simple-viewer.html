@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Component Viewer</title>
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      padding: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #00118f;
+      border-bottom: 2px solid #00118f;
+      padding-bottom: 10px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>アコーディオンコンポーネント</h1>
+  
+  <div class="container">
+    <dads-accordion-details>
+      <dads-accordion-item-details>
+        <span slot="header">項目1: クリックで開閉</span>
+        <div slot="content">
+          これは項目1のコンテンツです。
+          details/summary要素を使用しています。
+        </div>
+      </dads-accordion-item-details>
+      
+      <dads-accordion-item-details>
+        <span slot="header">項目2: クリックで開閉</span>
+        <div slot="content">
+          これは項目2のコンテンツです。
+          開閉が動作することを確認してください。
+        </div>
+      </dads-accordion-item-details>
+      
+      <dads-accordion-item-details>
+        <span slot="header">項目3: クリックで開閉</span>
+        <div slot="content">
+          これは項目3のコンテンツです。
+          複数のアイテムを同時に開くことができます。
+        </div>
+      </dads-accordion-item-details>
+    </dads-accordion-details>
+  </div>
+
+  <script type="module">
+    // コンパイル済みのJSファイルを直接読み込む
+    import './src/dads-accordion-details.js';
+    
+    console.log('アコーディオンコンポーネントを読み込みました');
+    
+    // 動作確認用のログ
+    setTimeout(() => {
+      const items = document.querySelectorAll('dads-accordion-item-details');
+      console.log(`アコーディオンアイテム数: ${items.length}`);
+      
+      items.forEach((item, index) => {
+        const shadowRoot = item.shadowRoot;
+        const details = shadowRoot?.querySelector('details');
+        console.log(`アイテム${index + 1}: details要素 = `, details);
+      });
+    }, 100);
+  </script>
+</body>
+</html>
