@@ -10,11 +10,11 @@ import {
   css, 
   BooleanAttr, 
   PropertyAttr 
-} from '../web-components';
+} from '../web-components.ts';
 import { 
   generateCSSVariables,
   createIconSVG
-} from './design-tokens';
+} from './design-tokens.ts';
 
 /**
  * 親コンテナコンポーネント

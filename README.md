@@ -1,66 +1,64 @@
 # Web Components Factory
 
-Web Components用のAdaptiveCardコンポーネント実装プロジェクト
+TypeScriptで実装された Web Components ライブラリとコンポーネント集。
 
-## 🎯 主要機能
-
-- **セマンティックHTML5構造**: `<article>`, `<header>`, `<section>`, `<aside>`, `<footer>`
-- **アクセシブルなリンクカード**: Stretched Linkパターン実装
-- **デジタル庁スタイルフォーカスリング**: 高コントラストキーボードナビゲーション
-- **適応的フォーカス制御**: CTAボタン存在時の適切なフォーカス動作
-- **WCAG 2.2準拠**: AAレベルアクセシビリティ対応
-
-## 🚀 開発環境
+## 🚀 起動方法
 
 ```bash
-# 開発サーバー起動
-npm run dev
-
-# ブラウザで http://localhost:5173 を開く
+# Bunで開発サーバーを起動（TypeScriptを直接実行）
+bun --hot view.html
 ```
 
-## 📁 プロジェクト構成
+http://localhost:3000/ にアクセスして、コンポーネントビューアが表示されます。
+
+## 📦 利用可能なコンポーネント
+
+### Component Viewer (`view.html`)
+すべてのコンポーネントを確認できる統一ビューア。URLパラメータでコンポーネントを切り替え：
+
+- `http://localhost:3000/?component=accordion` - アコーディオン（details/summary版）
+- `http://localhost:3000/?component=accordion-improved` - アコーディオン（改善版）
+- `http://localhost:3000/?component=adaptive-card` - アダプティブカード
+
+## 🏗 プロジェクト構造
 
 ```
-src/
-├── adaptive-card-semantic.js  # メインコンポーネント（使用中）
-└── old/                      # 開発履歴ファイル（アーカイブ）
-
-index.html                    # デモページ
+web-components-factory/
+├── view.html              # 統一コンポーネントビューア
+├── web-components.ts      # コアライブラリ
+├── src/
+│   ├── dads-accordion-details.ts    # アコーディオン実装
+│   ├── dads-accordion-improved.ts   # 改善版アコーディオン
+│   ├── design-tokens.ts             # デザイントークン
+│   └── adaptive-card-semantic.js    # アダプティブカード
+├── docs/                  # ドキュメント
+└── CLAUDE.md             # Claude Code用ガイドライン
 ```
 
-## 🎨 主要実装
+## 📋 開発ガイドライン
 
-### Stretched Linkパターン
-```html
-<adaptive-card 
-    href="https://example.com"
-    link-text="リンク先の説明"
-    link-target="_blank">
-    <h3 slot="title">カードタイトル</h3>
-    <p slot="content">カード内容</p>
-</adaptive-card>
+### 重要な原則
+1. **::part() を使用** - Shadow DOM内の要素はクラスではなく`part`属性でスタイリング
+2. **ネイティブHTML優先** - `details/summary`、`dialog`など適切な要素を使用
+3. **TypeScript厳格モード** - `any`型の使用禁止
+4. **アクセシビリティファースト** - WCAG 2.1 AA準拠
+
+詳細は [CLAUDE.md](./CLAUDE.md) と [WEB_COMPONENTS_GUIDELINES.md](./WEB_COMPONENTS_GUIDELINES.md) を参照。
+
+## 🛠 開発コマンド
+
+```bash
+# 開発サーバー起動（Bun）
+bun --hot view.html
+
+# TypeScriptの型チェック
+tsc --noEmit
+
+# 特定コンポーネントのコンパイル（必要な場合）
+tsc src/component.ts --target ES2020 --module ES2020
 ```
 
-### CTAボタン付きカード
-```html
-<adaptive-card>
-    <h3 slot="title">カードタイトル</h3>
-    <p slot="content">カード内容</p>
-    <button slot="actions">アクション</button>
-</adaptive-card>
-```
+## ⚠️ 注意事項
 
-## 🏆 技術スタック
-
-- **Web Components**: Custom Elements v1, Shadow DOM
-- **TypeScript**: ES2022対応
-- **Vite**: 開発環境・ビルドツール  
-- **モダンCSS**: OKLCH、CSS Layers、Container Queries
-
-## ♿ アクセシビリティ
-
-- デジタル庁レベル高コントラストフォーカスリング
-- スクリーンリーダー最適化
-- キーボードナビゲーション完全対応
-- 意味のある要素のみフォーカス可能
+- **HTMLファイルの作成について**: 新しいデモHTMLファイルを作成する代わりに、`view.html`を使用してください
+- **TypeScriptコンパイル**: Bunを使用することで、TypeScriptファイルを直接実行できます

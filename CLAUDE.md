@@ -21,7 +21,7 @@ Note: No package.json or build system is configured. Consider setting up proper 
 
 ## Code Architecture
 
-### Core Components
+### Core Library (@web-components.ts)
 
 1. **WebComponent Base Class**
    - Base class for all web components
@@ -46,6 +46,52 @@ Note: No package.json or build system is configured. Consider setting up proper 
    - `BooleanAttr`: Boolean attributes
    - `TransferringPropertyAttr`: Transfers attributes to child elements
    - `NonReflectingPropertyAttr`: Non-reflected properties
+
+### Utility Modules
+
+#### @aria.ts
+ARIA属性マッピング定義：
+- `ariaCommonProperties`: 共通ARIA属性のマッピング（aria-label、aria-hidden等）
+- `ariaButtonProperties`: ボタン専用ARIA属性（aria-expanded、aria-pressed）
+- JavaScriptプロパティ名とHTML属性名の対応表
+
+使用例：
+```typescript
+import { ariaCommonProperties } from './aria';
+
+// コンポーネント内でARIA属性を設定
+for (const [prop, attr] of ariaCommonProperties) {
+  // prop: "ariaLabel", attr: "aria-label"
+}
+```
+
+#### @behaviors.ts
+Web Componentsに共通動作を追加するミックスイン：
+
+- `applyHideEmptySlotBehavior(type, slotId?, targetId?)`
+  - 空のスロットを自動的に非表示にする
+  - スロットに内容がある場合のみ表示
+
+- `applyStandardFormElementBehavior(type, resetProperty?, resetAttribute?)`
+  - フォーム要素の標準動作を実装
+  - formResetCallback、formStateRestoreCallback
+  - formDisabledCallback、readOnlyChanged
+
+使用例：
+```typescript
+import { applyHideEmptySlotBehavior, applyStandardFormElementBehavior } from './behaviors';
+
+class MyInput extends FormComponent {
+  // クラス定義後に適用
+}
+applyHideEmptySlotBehavior(MyInput);
+applyStandardFormElementBehavior(MyInput);
+```
+
+#### @dom.ts
+DOM操作ユーティリティ：
+- `isNotWhitespace(node)`: 空白のみのテキストノードを除外する判定関数
+  - slot要素の内容判定などで使用
 
 ## Code Style Requirements
 
@@ -117,6 +163,26 @@ my-component::part(content) { /* ... */ }
 - ブラウザ標準のキーボード操作
 - スクリーンリーダー対応
 - プログレッシブエンハンスメント
+
+### MUST: Use viewer.html for Component Testing
+
+**重要**: 新しいデモHTMLファイルを作成しないでください。
+
+コンポーネントのテストや確認は `viewer.html` のみを使用：
+```bash
+# サーバーを起動（TypeScript自動トランスパイル対応）
+bun server.ts
+```
+
+アクセス: 
+- http://localhost:3000/ - viewer.html（自動的にリダイレクト）
+- http://localhost:3000/viewer.html - 直接アクセス
+
+理由：
+- HTMLファイルの乱立を防ぐ
+- TypeScriptの再コンパイル不要
+- 統一されたテスト環境
+- クエリパラメータで簡単切り替え
 
 ## Development Workflow
 

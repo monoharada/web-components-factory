@@ -45,5 +45,51 @@ export const demos = {
   `
 };
 
+// ビューワーの初期化関数
+export function initViewer(): void {
+  const selector = document.getElementById('component') as HTMLSelectElement;
+  const container = document.getElementById('component-container');
+  
+  if (!selector || !container) {
+    console.error('Required elements not found');
+    return;
+  }
+  
+  // URLパラメータから初期値を取得
+  const params = new URLSearchParams(window.location.search);
+  const initialComponent = params.get('component');
+  
+  // コンポーネントを表示
+  function showComponent(name: string): void {
+    const demoFn = demos[name as keyof typeof demos] || demos.empty;
+    container.innerHTML = demoFn();
+  }
+  
+  // セレクタの変更を監視
+  selector.addEventListener('change', (e) => {
+    const value = (e.target as HTMLSelectElement).value;
+    
+    // URLパラメータを更新
+    const url = new URL(window.location.href);
+    if (value) {
+      url.searchParams.set('component', value);
+    } else {
+      url.searchParams.delete('component');
+    }
+    window.history.pushState({}, '', url);
+    
+    // コンポーネントを表示
+    showComponent(value || 'empty');
+  });
+  
+  // 初期表示
+  if (initialComponent) {
+    selector.value = initialComponent;
+    showComponent(initialComponent);
+  } else {
+    showComponent('empty');
+  }
+}
+
 // グローバルに公開（デバッグ用）
 (window as any).componentDemos = demos;

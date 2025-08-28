@@ -86,45 +86,14 @@
   </main>
 
   <script type="module">
-    // すべてのコンポーネントを読み込み（定義される）
-    import { demos } from './src/entry.ts';
+    // エントリーポイントからビューワーを初期化
+    import { initViewer } from './src/entry.ts';
     
-    const selector = document.getElementById('component');
-    const container = document.getElementById('component-container');
-    
-    // URLパラメータから初期値を取得
-    const params = new URLSearchParams(window.location.search);
-    const initialComponent = params.get('component');
-    
-    // コンポーネントを表示
-    function showComponent(name) {
-      const demoFn = demos[name] || demos.empty;
-      container.innerHTML = demoFn();
-    }
-    
-    // セレクタの変更を監視
-    selector.addEventListener('change', (e) => {
-      const value = e.target.value;
-      
-      // URLパラメータを更新
-      const url = new URL(window.location);
-      if (value) {
-        url.searchParams.set('component', value);
-      } else {
-        url.searchParams.delete('component');
-      }
-      window.history.pushState({}, '', url);
-      
-      // コンポーネントを表示
-      showComponent(value || 'empty');
-    });
-    
-    // 初期表示
-    if (initialComponent) {
-      selector.value = initialComponent;
-      showComponent(initialComponent);
+    // DOMロード後に初期化
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initViewer);
     } else {
-      showComponent('empty');
+      initViewer();
     }
   </script>
 </body>

@@ -8,13 +8,13 @@ const server = serve({
     const url = new URL(req.url);
     let path = url.pathname;
     
-    // ルートの場合は view.html を返す
+    // ルートの場合は viewer.html を返す
     if (path === "/") {
-      path = "/view.html";
+      path = "/viewer.html";
     }
     
     // ファイルパスを構築
-    const filePath = join(process.cwd(), path === "/" ? "view.html" : path.slice(1));
+    const filePath = join(process.cwd(), path === "/" ? "viewer.html" : path.slice(1));
     
     console.log(`Request: ${path} -> ${filePath}`);
     
@@ -75,4 +75,4 @@ const server = serve({
 });
 
 console.log(`🚀 Server running at http://localhost:${server.port}`);
-console.log(`📋 View components at http://localhost:${server.port}/?component=accordion`);
+console.log(`📋 View components at http://localhost:${server.port}`);
