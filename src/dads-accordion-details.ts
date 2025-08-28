@@ -64,12 +64,12 @@ export class DadsAccordionDetails extends WebComponent {
     this.addEventListener('toggle', (e: Event) => {
       if (!this.#allowMultiple && (e.target as HTMLDetailsElement)?.open) {
         const items = this.querySelectorAll('dads-accordion-item-details');
-        for (const item of items) {
+        Array.from(items).forEach(item => {
           const details = item.shadowRoot?.querySelector('[part="details"]') as HTMLDetailsElement;
           if (details && details !== e.target && details.open) {
             details.open = false;
           }
-        }
+        });
       }
     });
   }
