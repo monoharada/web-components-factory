@@ -222,7 +222,7 @@ export function createIconSVG(
         stroke-width="${icon.strokeWidth}"
         stroke-linecap="round"
         stroke-linejoin="round"
-        ${(icon as any).transform ? `transform="${(icon as any).transform}"` : ''}
+        ${'transform' in icon && icon.transform ? `transform="${icon.transform}"` : ''}
       />
     </svg>
   `;
