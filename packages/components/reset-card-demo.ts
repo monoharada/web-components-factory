@@ -1,8 +1,8 @@
 // demo-reset-card.ts
 // リセットCSS適用のデモコンポーネント
 
-import { WebComponent, css, html } from './web-components.js';
-import { withReset, minimalResetStyles, kisoResetStyles } from './reset-css.js';
+import { WebComponent, css, html } from '../core/web-components.js';
+import { withReset, minimalResetStyles, kisoResetStyles } from '../styles/reset-css.js';
 
 /**
  * リセットCSSありのカードコンポーネント

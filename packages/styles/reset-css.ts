@@ -2,7 +2,7 @@
 // Web Components用のリセットCSS管理モジュール
 // kiso.css (https://tak-dcxi.github.io/kiso.css/) のWeb Components向け実装
 
-import { css, AdoptableStyles } from './web-components.js';
+import { css, AdoptableStyles } from '../core/web-components.js';
 
 /**
  * kiso.cssのWeb Components向けサブセット

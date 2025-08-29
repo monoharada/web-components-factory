@@ -1,39 +1,71 @@
 # Web Components Factory
 
-TypeScriptで実装された Web Components ライブラリとコンポーネント集。
+TypeScriptで実装された Web Components ライブラリとコンポーネント集。デジタル庁デザインシステムに準拠した高品質なコンポーネントを提供します。
 
 ## 🚀 起動方法
 
 ```bash
-# Bunで開発サーバーを起動（TypeScriptを直接実行）
-bun --hot view.html
+# Bunで開発サーバーを起動（TypeScript自動トランスパイル対応）
+bun server.ts
 ```
 
 http://localhost:3000/ にアクセスして、コンポーネントビューアが表示されます。
 
 ## 📦 利用可能なコンポーネント
 
-### Component Viewer (`view.html`)
+### Component Viewer (`viewer.html`)
 すべてのコンポーネントを確認できる統一ビューア。URLパラメータでコンポーネントを切り替え：
 
 - `http://localhost:3000/?component=accordion` - アコーディオン（details/summary版）
-- `http://localhost:3000/?component=accordion-improved` - アコーディオン（改善版）
-- `http://localhost:3000/?component=adaptive-card` - アダプティブカード
+- `http://localhost:3000/?component=resetCss` - リセットCSS適用デモ（Shadow DOM隔離）
 
 ## 🏗 プロジェクト構造
 
 ```
 web-components-factory/
-├── view.html              # 統一コンポーネントビューア
-├── web-components.ts      # コアライブラリ
+├── packages/
+│   ├── core/                        # コアライブラリ
+│   │   └── web-components.ts        # Web Components基底クラス
+│   ├── components/                  # コンポーネント実装
+│   │   ├── accordion.ts            # アコーディオンコンポーネント
+│   │   └── reset-card-demo.ts      # リセットCSSデモカード
+│   ├── styles/                      # スタイル関連
+│   │   ├── design-tokens/          # デザイントークン
+│   │   │   └── accordion-tokens.ts # アコーディオン用トークン
+│   │   ├── accordion-styles.ts     # アコーディオンスタイル
+│   │   └── reset-css.ts            # kiso.css v1.2.2ベースのリセットCSS
+│   └── utils/                       # ユーティリティ
+│       ├── aria.ts                 # ARIA属性マッピング
+│       ├── behaviors.ts            # 共通動作ミックスイン
+│       └── dom.ts                  # DOM操作ヘルパー
 ├── src/
-│   ├── dads-accordion-details.ts    # アコーディオン実装
-│   ├── dads-accordion-improved.ts   # 改善版アコーディオン
-│   ├── design-tokens.ts             # デザイントークン
-│   └── adaptive-card-semantic.js    # アダプティブカード
-├── docs/                  # ドキュメント
-└── CLAUDE.md             # Claude Code用ガイドライン
+│   └── entry.ts                    # エントリーポイント
+├── server.ts                        # 開発サーバー（TypeScript対応）
+├── viewer.html                      # コンポーネントビューア
+└── CLAUDE.md                        # Claude Code用ガイドライン
 ```
+
+### パッケージ説明
+
+- **core**: Web Components基底クラス、テンプレート、スタイル管理
+- **components**: 再利用可能なWeb Components実装
+- **styles**: デザイントークン、リセットCSS、コンポーネントスタイル
+- **utils**: ARIA、DOM操作、共通動作などのユーティリティ
+
+## 🎨 主な特徴
+
+### 1. Shadow DOM隔離によるリセットCSS
+- kiso.css v1.2.2を採用
+- Shadow DOM内のみに適用され、既存サイトのスタイルに影響なし
+- `withReset()`ヘルパーで選択的適用
+
+### 2. ::part()ベースのスタイリング
+- Shadow DOM境界を保ちながら外部からカスタマイズ可能
+- クラスベースではなくセマンティックなpart属性を使用
+
+### 3. TypeScript厳格モード
+- `any`型の使用禁止
+- 完全な型安全性を保証
 
 ## 📋 開発ガイドライン
 
@@ -42,23 +74,25 @@ web-components-factory/
 2. **ネイティブHTML優先** - `details/summary`、`dialog`など適切な要素を使用
 3. **TypeScript厳格モード** - `any`型の使用禁止
 4. **アクセシビリティファースト** - WCAG 2.1 AA準拠
+5. **Shadow DOM隔離** - リセットCSSはコンポーネント内部のみに適用
 
-詳細は [CLAUDE.md](./CLAUDE.md) と [WEB_COMPONENTS_GUIDELINES.md](./WEB_COMPONENTS_GUIDELINES.md) を参照。
+詳細は [CLAUDE.md](./CLAUDE.md) を参照。
 
 ## 🛠 開発コマンド
 
 ```bash
-# 開発サーバー起動（Bun）
-bun --hot view.html
+# 開発サーバー起動
+bun server.ts
 
 # TypeScriptの型チェック
-tsc --noEmit
+tsc --noEmit packages/core/web-components.ts --strict
 
 # 特定コンポーネントのコンパイル（必要な場合）
-tsc src/component.ts --target ES2020 --module ES2020
+tsc packages/components/accordion.ts --target ES2020 --module ES2020
 ```
 
 ## ⚠️ 注意事項
 
-- **HTMLファイルの作成について**: 新しいデモHTMLファイルを作成する代わりに、`view.html`を使用してください
-- **TypeScriptコンパイル**: Bunを使用することで、TypeScriptファイルを直接実行できます
+- **HTMLファイルの作成について**: 新しいデモHTMLファイルを作成する代わりに、`viewer.html`を使用してください
+- **TypeScriptコンパイル**: `server.ts`が自動的に.tsファイルをトランスパイルします
+- **インポート**: TypeScriptファイルでも`.js`拡張子でインポートしてください（ESモジュール仕様準拠）

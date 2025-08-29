@@ -10,13 +10,13 @@ import {
   css, 
   BooleanAttr, 
   PropertyAttr 
-} from '../web-components.js';
+} from '../core/web-components.js';
 import { 
   generateCSSVariables,
   createIconSVG
-} from './design-tokens.js';
-import { accordionItemStyles } from './dads-accordion-styles.js';
-import { withReset } from '../reset-css.js';
+} from '../styles/design-tokens/accordion-tokens.js';
+import { accordionItemStyles } from '../styles/accordion-styles.js';
+import { withReset } from '../styles/reset-css.js';
 
 /**
  * アコーディオンコンテナコンポーネント

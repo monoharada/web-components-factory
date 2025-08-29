@@ -3,10 +3,10 @@
  */
 
 // アコーディオンコンポーネント
-import './dads-accordion-details.ts';
+import '../packages/components/accordion.js';
 
 // リセットCSSデモコンポーネント
-import '../demo-reset-card.ts';
+import '../packages/components/reset-card-demo.js';
 
 // 他のコンポーネントがあれば追加
 // import './other-component.ts';
