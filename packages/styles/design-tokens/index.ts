@@ -170,8 +170,12 @@ export const componentTokens = css`
  * DADS (Digital Agency Design System) トークンを適用
  */
 export function applyDADSTokens() {
-  return css`
-    ${digitalGovTokens}
-    ${componentTokens}
-  `;
+  // digitalGovTokensとcomponentTokensは既にCSSStyleSheetオブジェクトなので
+  // そのまま返す（配列ではなく、単一の統合されたスタイルシートとして）
+  return digitalGovTokens;
 }
+
+/**
+ * コンポーネント用のエイリアストークンを別途エクスポート
+ */
+export { componentTokens };
