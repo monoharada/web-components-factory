@@ -32,14 +32,16 @@ export class DadsAccordionDetails extends WebComponent {
         <slot></slot>
       </div>
     `,
-    styles: withReset(css`
-      ${applyDADSTokens()}
-      ${accordionTokens}
-      :host {
-        display: block;
-        width: 100%;
-      }
-    `, 'minimal'),
+    styles: withReset([
+      applyDADSTokens(),
+      accordionTokens,
+      css`
+        :host {
+          display: block;
+          width: 100%;
+        }
+      `
+    ], 'minimal'),
     attributes: [
       BooleanAttr('allow-multiple'),
       PropertyAttr('animation'),
@@ -118,11 +120,11 @@ export class DadsAccordionItemDetails extends WebComponent {
         </div>
       </details>
     `,
-    styles: withReset(css`
-      ${applyDADSTokens()}
-      ${accordionTokens}
-      ${accordionItemStyles}
-    `, 'full'),
+    styles: withReset([
+      applyDADSTokens(),
+      accordionTokens,
+      accordionItemStyles
+    ], 'full'),
     attributes: [
       BooleanAttr('expanded'),
       BooleanAttr('disabled'),

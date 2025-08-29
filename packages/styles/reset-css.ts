@@ -564,15 +564,19 @@ export const minimalResetStyles = css`
  * リセットスタイルとコンポーネントスタイルを結合するヘルパー
  */
 export function withReset(
-  componentStyles: CSSStyleSheet | string,
+  componentStyles: CSSStyleSheet | string | CSSStyleSheet[],
   resetType: 'full' | 'minimal' = 'full'
 ): CSSStyleSheet[] {
   const reset = resetType === 'full' ? kisoResetStyles : minimalResetStyles;
-  const styles = typeof componentStyles === 'string' 
-    ? AdoptableStyles.for(componentStyles)
-    : componentStyles;
   
-  return [reset, styles];
+  // 配列の場合はそのまま使用、単一の場合は配列に変換
+  const stylesArray = Array.isArray(componentStyles) 
+    ? componentStyles
+    : [typeof componentStyles === 'string' 
+        ? AdoptableStyles.for(componentStyles)
+        : componentStyles];
+  
+  return [reset, ...stylesArray];
 }
 
 /**
