@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Style Test</title>
+  <style>
+    body {
+      padding: 40px;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    
+    .test-container {
+      display: grid;
+      gap: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .test-section {
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    
+    .white-bg {
+      background: white;
+    }
+    
+    .gray-bg {
+      background: #f5f5f5;
+    }
+    
+    .no-bg {
+      background: transparent;
+    }
+    
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 18px;
+    }
+    
+    p {
+      margin-bottom: 10px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>フォーカススタイル表示テスト</h1>
+  
+  <div class="test-container">
+    <!-- 白背景のコンテナ -->
+    <div class="test-section white-bg">
+      <h2>白背景（viewer.htmlと同じ）</h2>
+      <p>Tab キーでフォーカスを移動して、黄色の背景が表示されるか確認</p>
+      <dads-accordion-details>
+        <dads-accordion-item-details>
+          <span slot="header">項目1（白背景内）</span>
+          <div slot="content">
+            フォーカス時に黄色の背景と黒い枠線が表示されるはずです。
+          </div>
+        </dads-accordion-item-details>
+        <dads-accordion-item-details>
+          <span slot="header">項目2（白背景内）</span>
+          <div slot="content">
+            box-shadowを使用して実装しているので、z-indexの問題は解決されています。
+          </div>
+        </dads-accordion-item-details>
+      </dads-accordion-details>
+    </div>
+    
+    <!-- グレー背景のコンテナ -->
+    <div class="test-section gray-bg">
+      <h2>グレー背景</h2>
+      <p>異なる背景色でもフォーカススタイルが正しく表示されることを確認</p>
+      <dads-accordion-details>
+        <dads-accordion-item-details>
+          <span slot="header">項目1（グレー背景内）</span>
+          <div slot="content">
+            グレー背景でも黄色のフォーカスインジケータが見えるはずです。
+          </div>
+        </dads-accordion-item-details>
+      </dads-accordion-details>
+    </div>
+    
+    <!-- 透明背景のコンテナ -->
+    <div class="test-section no-bg">
+      <h2>透明背景（test.htmlと同じ）</h2>
+      <p>背景なしでのフォーカススタイル表示</p>
+      <dads-accordion-details>
+        <dads-accordion-item-details>
+          <span slot="header">項目1（透明背景）</span>
+          <div slot="content">
+            背景が透明でもフォーカススタイルは正常に表示されます。
+          </div>
+        </dads-accordion-item-details>
+      </dads-accordion-details>
+    </div>
+  </div>
+  
+  <script type="module">
+    import './packages/components/accordion.js';
+    console.log('Focus test loaded');
+  </script>
+</body>
+</html>

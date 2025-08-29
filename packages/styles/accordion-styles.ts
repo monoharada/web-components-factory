@@ -35,22 +35,18 @@ export const accordionItemStyles = css`
   [part="summary"]:focus {
     outline: none;
     position: relative;
-  }
-  [part="summary"]:focus::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    background-color: var(--color-primitive-yellow-300, #ffd43d);
+    /* 黄色の背景をbox-shadowで実現 */
+    box-shadow: 
+      0 0 0 4px var(--color-primitive-yellow-300, #ffd43d),
+      0 0 0 8px var(--color-neutral-black, #000000);
     border-radius: var(--accordion-border-radius, var(--border-radius-8));
-    z-index: -1;
   }
-  [part="summary"]:focus::after {
-    content: '';
-    position: absolute;
-    inset: -8px;
-    border: 4px solid var(--color-neutral-black, #000000);
-    border-radius: calc(var(--accordion-border-radius, var(--border-radius-8)) + 4px);
-    pointer-events: none;
+  
+  /* フォーカス時の境界線をきれいに見せるための調整 */
+  [part="summary"]:focus [part="icon"],
+  [part="summary"]:focus [part="header"] {
+    position: relative;
+    z-index: 1;
   }
   
   /* アイコン */
