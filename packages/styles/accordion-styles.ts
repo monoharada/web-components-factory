@@ -31,20 +31,36 @@ export const accordionItemStyles = css`
   [part="summary"]::-webkit-details-marker { display: none; }
   [part="summary"]:hover { background-color: var(--accordion-hover-bg, var(--color-neutral-solid-gray-50)); }
   
-  /* フォーカススタイル */
-  [part="summary"]:focus {
+  /* フォーカススタイル - デジタル庁デザインシステム準拠 */
+  /* キーボード操作時のみフォーカススタイルを表示 */
+  [part="summary"]:focus-visible {
     outline: none;
     position: relative;
-    /* 黄色の背景をbox-shadowで実現 */
-    box-shadow: 
-      0 0 0 4px var(--color-primitive-yellow-300, #ffd43d),
-      0 0 0 8px var(--color-neutral-black, #000000);
-    border-radius: var(--accordion-border-radius, var(--border-radius-8));
   }
   
-  /* フォーカス時の境界線をきれいに見せるための調整 */
-  [part="summary"]:focus [part="icon"],
-  [part="summary"]:focus [part="header"] {
+  /* 黄色の塗りつぶし背景（内側） */
+  [part="summary"]:focus-visible::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background-color: var(--color-primitive-yellow-300, #ffd43d);
+    border-radius: var(--accordion-border-radius, var(--border-radius-8));
+    z-index: 0;
+  }
+  
+  /* 黒いアウトラインリング（外側） */
+  [part="summary"]:focus-visible::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 4px solid var(--color-neutral-black, #000000);
+    border-radius: calc(var(--accordion-border-radius, var(--border-radius-8)) + 2px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* コンテンツを前面に */
+  [part="summary"]:focus-visible > * {
     position: relative;
     z-index: 1;
   }
