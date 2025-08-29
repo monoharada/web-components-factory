@@ -15,7 +15,7 @@ import {
   accordionTokens,
   createIconSVG
 } from '../styles/design-tokens/accordion-tokens.js';
-import { applyDADSTokens, componentTokens } from '../styles/design-tokens/index.js';
+import { applyDADSTokens } from '../styles/design-tokens/index.js';
 import { accordionItemStyles } from '../styles/accordion-styles.js';
 import { withReset } from '../styles/reset-css.js';
 
@@ -34,7 +34,6 @@ export class DadsAccordionDetails extends WebComponent {
     `,
     styles: withReset([
       applyDADSTokens(),
-      componentTokens,
       accordionTokens,
       css`
         :host {
@@ -123,7 +122,6 @@ export class DadsAccordionItemDetails extends WebComponent {
     `,
     styles: withReset([
       applyDADSTokens(),
-      componentTokens,
       accordionTokens,
       accordionItemStyles
     ], 'full'),
