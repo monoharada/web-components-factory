@@ -10,12 +10,13 @@ import {
   css, 
   BooleanAttr, 
   PropertyAttr 
-} from '../web-components';
+} from '../web-components.js';
 import { 
   generateCSSVariables,
   createIconSVG
-} from './design-tokens';
-import { accordionItemStyles } from './dads-accordion-styles';
+} from './design-tokens.js';
+import { accordionItemStyles } from './dads-accordion-styles.js';
+import { withReset } from '../reset-css.js';
 
 /**
  * アコーディオンコンテナコンポーネント
@@ -30,13 +31,13 @@ export class DadsAccordionDetails extends WebComponent {
         <slot></slot>
       </div>
     `,
-    styles: css`
+    styles: withReset(css`
       :host {
         display: block;
         width: 100%;
         ${generateCSSVariables()}
       }
-    `,
+    `, 'minimal'),
     attributes: [
       BooleanAttr('allow-multiple'),
       PropertyAttr('animation'),
@@ -115,7 +116,7 @@ export class DadsAccordionItemDetails extends WebComponent {
         </div>
       </details>
     `,
-    styles: accordionItemStyles,
+    styles: withReset(accordionItemStyles, 'full'),
     attributes: [
       BooleanAttr('expanded'),
       BooleanAttr('disabled'),

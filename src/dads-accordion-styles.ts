@@ -1,7 +1,7 @@
 /**
  * アコーディオンコンポーネント用スタイル定義
  */
-import { css } from '../web-components';
+import { css } from '../web-components.js';
 
 export const accordionItemStyles = css`
   :host {

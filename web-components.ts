@@ -502,11 +502,15 @@ export class WebComponent extends HTMLElement {
         this.#dsd = true;
       } else this.#sr = this.attachShadow(shadowOptions);
     }
-    if (!this.#dsd) {
-      const target = this.#sr
-        ? this.#sr.adoptedStyleSheets
-        : (this.getRootNode() as Document | ShadowRoot).adoptedStyleSheets;
-      for (const s of styles) target.push(s);
+    if (!this.#dsd && styles.length > 0) {
+      if (this.#sr) {
+        // Shadow DOMの場合、adoptedStyleSheetsを新しい配列で置き換える
+        this.#sr.adoptedStyleSheets = [...this.#sr.adoptedStyleSheets, ...styles];
+      } else {
+        // Light DOMの場合
+        const root = this.getRootNode() as Document | ShadowRoot;
+        root.adoptedStyleSheets = [...root.adoptedStyleSheets, ...styles];
+      }
     }
     for (const p of this.definition.properties) {
       const prop = p.property;

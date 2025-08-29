@@ -14,7 +14,20 @@ const server = serve({
     }
     
     // ファイルパスを構築
-    const filePath = join(process.cwd(), path === "/" ? "viewer.html" : path.slice(1));
+    let filePath = join(process.cwd(), path === "/" ? "viewer.html" : path.slice(1));
+    
+    // .jsファイルがリクエストされた場合、対応する.tsファイルがあるかチェック
+    if (filePath.endsWith('.js')) {
+      const tsPath = filePath.replace(/\.js$/, '.ts');
+      try {
+        const stats = Bun.file(tsPath);
+        if (stats.size !== undefined) {
+          filePath = tsPath;
+        }
+      } catch (e) {
+        // .tsファイルが存在しない場合は.jsファイルを探す
+      }
+    }
     
     console.log(`Request: ${path} -> ${filePath}`);
     
@@ -68,8 +81,14 @@ const server = serve({
       });
       
     } catch (error) {
-      // エラーの場合は404
-      return new Response("Not Found", { status: 404 });
+      // エラーの場合は詳細なエラーメッセージを返す
+      console.error(`GET - ${path} failed`);
+      console.error(error);
+      
+      return new Response(`File not found: ${path}`, { 
+        status: 500,
+        headers: { "Content-Type": "text/plain" }
+      });
     }
   },
 });

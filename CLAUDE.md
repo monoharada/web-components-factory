@@ -104,6 +104,59 @@ DOM操作ユーティリティ：
   - Functions/methods: camelCase
   - Private fields: #camelCase
 
+## 🎨 Reset CSS Integration
+
+### Overview
+Web Componentsでのリセットスタイル管理システムを提供。kiso.css (https://tak-dcxi.github.io/kiso.css/) をベースに、Shadow DOM内でのみ適用される安全な実装。
+
+### Key Features
+1. **Shadow DOM隔離**: リセットCSSはコンポーネント内部にのみ適用
+2. **既存サイトとの共存**: グローバルスタイルに影響を与えない
+3. **選択的適用**: コンポーネントごとにリセットレベルを選択可能
+
+### Usage
+```typescript
+import { WebComponent, css, html } from './web-components';
+import { withReset } from './reset-css';
+
+class MyComponent extends WebComponent {
+  static definition = {
+    name: 'my-component',
+    template: html`...`,
+    // フルリセットを適用
+    styles: withReset(css`
+      :host { /* component styles */ }
+    `, 'full')
+  };
+}
+
+// リセットレベル:
+// 'full' - kiso.css完全版
+// 'minimal' - 最小限のリセット
+// カスタムリセットも定義可能
+```
+
+### Architecture Decision
+- **Shadow DOMのみ**: Light DOMには適用しない（既存サイトへの影響を防ぐ）
+- **opt-in方式**: 必要なコンポーネントのみリセット適用
+- **パフォーマンス考慮**: CSSStyleSheetキャッシング活用
+- **カスタマイズ可能**: withReset()ヘルパーで簡単統合
+
+### Testing
+リセットCSSの動作確認：
+```bash
+# サーバー起動
+bun server.ts
+
+# ブラウザでアクセス
+# http://localhost:3000/?component=resetCss
+```
+
+デモページで以下を確認：
+- Shadow DOM内でのリセット適用
+- 既存サイトスタイルへの非干渉
+- フル/最小限/なしの比較
+
 ## 🎯 Web Components Best Practices
 
 ### MUST: Use ::part() Instead of Classes for Styling
