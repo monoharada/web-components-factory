@@ -1,5 +1,6 @@
 /**
- * デジタル庁デザインシステム - デザイントークン
+ * デジタル庁デザインシステム（DADS） - デザイントークン
+ * Digital Agency Design System
  * @digital-go-jp/design-tokens に準拠
  */
 
@@ -166,8 +167,9 @@ export const componentTokens = css`
 
 /**
  * デザイントークンを統合してエクスポート
+ * DADS (Digital Agency Design System) トークンを適用
  */
-export function applyDigitalGovTokens() {
+export function applyDADSTokens() {
   return css`
     ${digitalGovTokens}
     ${componentTokens}

@@ -15,7 +15,7 @@ import {
   accordionTokens,
   createIconSVG
 } from '../styles/design-tokens/accordion-tokens.js';
-import { applyDigitalGovTokens } from '../styles/design-tokens/index.js';
+import { applyDADSTokens } from '../styles/design-tokens/index.js';
 import { accordionItemStyles } from '../styles/accordion-styles.js';
 import { withReset } from '../styles/reset-css.js';
 
@@ -33,7 +33,7 @@ export class DadsAccordionDetails extends WebComponent {
       </div>
     `,
     styles: withReset(css`
-      ${applyDigitalGovTokens()}
+      ${applyDADSTokens()}
       ${accordionTokens}
       :host {
         display: block;
@@ -119,7 +119,7 @@ export class DadsAccordionItemDetails extends WebComponent {
       </details>
     `,
     styles: withReset(css`
-      ${applyDigitalGovTokens()}
+      ${applyDADSTokens()}
       ${accordionTokens}
       ${accordionItemStyles}
     `, 'full'),
