@@ -175,7 +175,4 @@ export function applyDADSTokens() {
   return digitalGovTokens;
 }
 
-/**
- * コンポーネント用のエイリアストークンを別途エクスポート
- */
-export { componentTokens };
+// componentTokensは既に132行目でexportしているため、ここでの再エクスポートは不要
