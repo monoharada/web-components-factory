@@ -31,9 +31,15 @@ export const accordionItemStyles = css`
   }
   [part="summary"]::-webkit-details-marker { display: none; }
   
-  /* ホバー効果 - Figmaデザイン準拠 */
+  /* ホバー効果 - デジタル庁デザインシステムv2.7.0準拠 */
   [part="summary"]:hover {
+    /* Figma node-id=8201-29177のホバー状態 */
     background-color: var(--accordion-hover-bg, var(--color-neutral-solid-gray-50, #f2f2f2));
+  }
+  
+  /* アクティブ状態 */
+  [part="summary"]:active {
+    background-color: var(--color-neutral-solid-gray-100, #e6e6e6);
   }
   
   /* フォーカススタイル - デジタル庁デザインシステム準拠 */
