@@ -20,8 +20,9 @@ export const accordionItemStyles = css`
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: var(--accordion-padding-block) var(--accordion-padding-inline) var(--accordion-padding-block) 0;
+    gap: 12px;
+    /* Figmaデザイン準拠: 左16px、右20px、上下16px */
+    padding: 16px 20px 16px 16px;
     font-size: var(--accordion-font-size, var(--font-size-16));
     line-height: var(--accordion-line-height, var(--line-height-150));
     color: var(--accordion-text-primary, var(--color-neutral-solid-gray-900));
@@ -114,7 +115,8 @@ export const accordionItemStyles = css`
   /* コンテンツ */
   [part="content"] { overflow: hidden; }
   [part="content-inner"] {
-    padding: var(--accordion-content-padding) 0 var(--accordion-content-padding) 52px;
+    /* Figmaデザイン準拠: 左側はアイコン幅(32px) + gap(12px) + 左余白(16px) = 60px */
+    padding: 16px 20px 24px 60px;
     font-size: var(--font-size-16);
     line-height: var(--line-height-170);
     color: var(--accordion-text-primary, var(--color-neutral-solid-gray-900));
@@ -196,19 +198,31 @@ export const accordionItemStyles = css`
   
   :host([icon-position="right"]) [part="summary"] {
     flex-direction: row-reverse;
+    padding: 16px 16px 16px 20px; /* アイコンが右側なので左側の余白を増やす */
   }
   :host([icon-position="right"]) [part="content-inner"] {
-    padding-left: 16px;
-    padding-right: 52px;
+    padding: 16px 60px 24px 20px; /* テキストは左寄せ、右側にアイコン分の余白 */
   }
   
   /* モバイル */
   @media (max-width: 768px) {
-    [part="summary"] { padding: 4px 8px 8px 0; font-size: var(--font-size-16); }
-    [part="icon"] { width: 24px; height: 24px; padding: 2px; }
-    [part="content-inner"] { padding: 16px 8px 16px 32px; }
+    [part="summary"] { 
+      padding: 12px 16px 12px 12px; 
+      gap: 8px;
+      font-size: var(--font-size-16); 
+    }
+    [part="icon"] { 
+      width: 24px; 
+      height: 24px; 
+      padding: 4px; 
+    }
+    [part="content-inner"] { 
+      /* モバイル: アイコン(24px) + gap(8px) + 左余白(12px) = 44px */
+      padding: 12px 16px 20px 44px; 
+    }
     :host([icon-position="right"]) [part="content-inner"] {
-      padding-left: 8px; padding-right: 32px;
+      padding-left: 12px; 
+      padding-right: 44px;
     }
   }
   
@@ -238,11 +252,11 @@ export const accordionItemStyles = css`
   
   /* RTL */
   :host-context([dir="rtl"]) [part="summary"] {
+    padding: 16px 16px 16px 20px; /* 左右を反転 */
     text-align: right;
     flex-direction: row-reverse;
   }
   :host-context([dir="rtl"]) [part="content-inner"] {
-    padding-left: 16px;
-    padding-right: 52px;
+    padding: 16px 60px 24px 20px; /* 左右を反転 */
   }
 `;
