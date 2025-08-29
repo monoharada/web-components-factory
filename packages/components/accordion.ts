@@ -118,7 +118,11 @@ export class DadsAccordionItemDetails extends WebComponent {
         </div>
       </details>
     `,
-    styles: withReset(accordionItemStyles, 'full'),
+    styles: withReset(css`
+      ${applyDigitalGovTokens()}
+      ${accordionTokens}
+      ${accordionItemStyles}
+    `, 'full'),
     attributes: [
       BooleanAttr('expanded'),
       BooleanAttr('disabled'),
