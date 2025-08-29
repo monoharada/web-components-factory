@@ -27,8 +27,14 @@ export const accordionItemStyles = css`
     color: var(--accordion-text-primary, var(--color-neutral-solid-gray-900));
     user-select: none;
     position: relative;
+    transition: background-color 0.2s ease;
   }
   [part="summary"]::-webkit-details-marker { display: none; }
+  
+  /* ホバー効果 - Figmaデザイン準拠 */
+  [part="summary"]:hover {
+    background-color: var(--accordion-hover-bg, var(--color-neutral-solid-gray-50, #f2f2f2));
+  }
   
   /* フォーカススタイル - デジタル庁デザインシステム準拠 */
   /* キーボード操作時のみフォーカススタイルを表示 */
