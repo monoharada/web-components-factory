@@ -18,7 +18,9 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "tdd": "npm run test:watch",
-    "ci": "npm run type-check && npm run test:run && npm run build"
+    "ci": "npm run type-check && npm run test:run && npm run build",
+    "update-tokens": "node scripts/update-design-tokens.js",
+    "check-tokens": "npm view @digital-go-jp/design-tokens version"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",

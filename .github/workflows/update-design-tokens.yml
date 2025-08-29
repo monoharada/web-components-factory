@@ -1,0 +1,130 @@
+name: Update Design Tokens
+
+# 毎週月曜日の朝に実行 + 手動トリガー可能
+on:
+  schedule:
+    - cron: '0 9 * * MON'  # 毎週月曜日 9:00 JST (0:00 UTC)
+  workflow_dispatch:        # 手動実行も可能
+  
+jobs:
+  update-tokens:
+    name: デザイントークン更新チェック
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Check for design token updates
+      id: check
+      run: |
+        CURRENT_VERSION=$(grep -o '"@digital-go-jp/design-tokens": "[^"]*"' package.json | cut -d '"' -f4 | sed 's/\^//')
+        LATEST_VERSION=$(npm view @digital-go-jp/design-tokens version)
+        echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        echo "latest=$LATEST_VERSION" >> $GITHUB_OUTPUT
+        echo "Current version: $CURRENT_VERSION"
+        echo "Latest version: $LATEST_VERSION"
+        if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+          echo "update_needed=true" >> $GITHUB_OUTPUT
+          echo "🎯 新しいバージョンが利用可能: $LATEST_VERSION"
+        else
+          echo "update_needed=false" >> $GITHUB_OUTPUT
+          echo "✅ 最新バージョンです"
+        fi
+        
+    - name: Update design tokens
+      if: steps.check.outputs.update_needed == 'true'
+      run: |
+        echo "📦 デザイントークンを更新中..."
+        npm run update-tokens
+        
+    - name: Update package.json dependency
+      if: steps.check.outputs.update_needed == 'true'
+      run: |
+        echo "📝 package.jsonの依存関係を更新中..."
+        npm install @digital-go-jp/design-tokens@${{ steps.check.outputs.latest }}
+        
+    - name: Run type check
+      if: steps.check.outputs.update_needed == 'true'
+      run: |
+        echo "🔍 型チェックを実行中..."
+        npm run type-check
+        
+    - name: Commit and push changes
+      if: steps.check.outputs.update_needed == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        git add packages/styles/design-tokens/index.ts package.json package-lock.json
+        
+        if git diff --staged --quiet; then
+          echo "変更がありません"
+          exit 0
+        fi
+        
+        git commit -m "chore: デザイントークンをv${{ steps.check.outputs.latest }}に更新
+
+        @digital-go-jp/design-tokens: ${{ steps.check.outputs.current }} → ${{ steps.check.outputs.latest }}
+        
+        🤖 自動更新 by GitHub Actions"
+        
+        git push
+        
+    - name: Create Pull Request
+      if: steps.check.outputs.update_needed == 'true'
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: |
+          chore: デザイントークンをv${{ steps.check.outputs.latest }}に更新
+          
+          @digital-go-jp/design-tokens: ${{ steps.check.outputs.current }} → ${{ steps.check.outputs.latest }}
+          
+          🤖 自動更新 by GitHub Actions
+        title: 'chore: デザイントークンをv${{ steps.check.outputs.latest }}に更新'
+        body: |
+          ## 📦 デザイントークン自動更新
+          
+          デジタル庁デザイントークンの新しいバージョンが検出されました。
+          
+          ### 🔄 変更内容
+          - **パッケージ**: `@digital-go-jp/design-tokens`
+          - **旧バージョン**: `${{ steps.check.outputs.current }}`
+          - **新バージョン**: `${{ steps.check.outputs.latest }}`
+          
+          ### ✅ 実行済みチェック
+          - [x] デザイントークンファイルの自動生成
+          - [x] package.jsonの依存関係更新
+          - [x] TypeScript型チェック
+          
+          ### 📋 確認事項
+          - [ ] フォーカススタイルが正常に表示される
+          - [ ] 既存コンポーネントでトークンが正しく適用される
+          - [ ] 新しいトークンに破壊的変更がない
+          
+          ### 🔗 リンク
+          - [公式リリース](https://www.npmjs.com/package/@digital-go-jp/design-tokens)
+          - [デザインシステム](https://www.figma.com/community/file/1255349027535859598)
+          
+          このPRは自動生成されました。問題がなければマージしてください。
+        branch: update-design-tokens-v${{ steps.check.outputs.latest }}
+        branch-suffix: short-commit-hash
+        
+    - name: Summary
+      run: |
+        if [ "${{ steps.check.outputs.update_needed }}" = "true" ]; then
+          echo "✅ デザイントークンをv${{ steps.check.outputs.latest }}に更新しました"
+          echo "📋 Pull Requestが作成されました"
+        else
+          echo "✅ デザイントークンは最新バージョンです（v${{ steps.check.outputs.current }}）"
+        fi
