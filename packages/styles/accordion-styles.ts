@@ -1,5 +1,6 @@
 /**
  * アコーディオンコンポーネント用スタイル定義
+ * デジタル庁デザインシステムに準拠
  */
 import { css } from '../core/web-components.js';
 
@@ -7,7 +8,7 @@ export const accordionItemStyles = css`
   :host {
     display: block;
     width: 100%;
-    border-bottom: 1px solid var(--color-border, #949494);
+    border-bottom: var(--accordion-border-width) solid var(--accordion-border-color, var(--color-neutral-solid-gray-420));
   }
   
   * { box-sizing: border-box; }
@@ -20,15 +21,15 @@ export const accordionItemStyles = css`
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px 8px 0;
-    font-size: var(--font-size, 18px);
-    line-height: var(--line-height, 1.6);
-    color: var(--color-text, #333333);
+    padding: var(--accordion-padding-block) var(--accordion-padding-inline) var(--accordion-padding-block) 0;
+    font-size: var(--accordion-font-size, var(--font-size-16));
+    line-height: var(--accordion-line-height, var(--line-height-150));
+    color: var(--accordion-text-primary, var(--color-neutral-solid-gray-900));
     user-select: none;
     transition: background-color 0.2s ease;
   }
   [part="summary"]::-webkit-details-marker { display: none; }
-  [part="summary"]:hover { background-color: var(--color-bg-hover, #f2f2f2); }
+  [part="summary"]:hover { background-color: var(--accordion-hover-bg, var(--color-neutral-solid-gray-50)); }
   
   /* フォーカススタイル */
   [part="summary"]:focus {
@@ -39,16 +40,16 @@ export const accordionItemStyles = css`
     content: '';
     position: absolute;
     inset: -4px;
-    background-color: var(--color-focus, #ffd43d);
-    border-radius: var(--border-radius-md, 8px);
+    background-color: var(--color-primitive-yellow-300, #ffd43d);
+    border-radius: var(--accordion-border-radius, var(--border-radius-8));
     z-index: -1;
   }
   [part="summary"]:focus::after {
     content: '';
     position: absolute;
     inset: -8px;
-    border: 4px solid var(--color-focus-ring, #000000);
-    border-radius: calc(var(--border-radius-md, 8px) + 4px);
+    border: 4px solid var(--color-neutral-black, #000000);
+    border-radius: calc(var(--accordion-border-radius, var(--border-radius-8)) + 4px);
     pointer-events: none;
   }
   
@@ -61,8 +62,8 @@ export const accordionItemStyles = css`
     height: 32px;
     padding: 6px;
     flex-shrink: 0;
-    background-color: var(--color-white, #ffffff);
-    border: 1px solid var(--color-primary, #00118f);
+    background-color: var(--color-neutral-white, #ffffff);
+    border: 1px solid var(--color-primitive-blue-1000, #00118f);
     border-radius: 9999px;
     transition: border-width 0.15s ease;
   }
@@ -71,7 +72,7 @@ export const accordionItemStyles = css`
   [part="icon"] svg {
     width: 100%;
     height: 100%;
-    color: var(--color-primary, #00118f);
+    color: var(--color-primitive-blue-1000, #00118f);
     transition: transform 0.3s ease;
   }
   details[open] [part="icon"] svg { transform: rotate(180deg); }
@@ -84,10 +85,10 @@ export const accordionItemStyles = css`
   /* コンテンツ */
   [part="content"] { overflow: hidden; }
   [part="content-inner"] {
-    padding: 24px 0 24px 52px;
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--color-text, #333333);
+    padding: var(--accordion-content-padding) 0 var(--accordion-content-padding) 52px;
+    font-size: var(--font-size-16);
+    line-height: var(--line-height-170);
+    color: var(--accordion-text-primary, var(--color-neutral-solid-gray-900));
   }
   
   /* 戻るボタン */
@@ -99,8 +100,8 @@ export const accordionItemStyles = css`
     padding: 0;
     border: none;
     background: none;
-    color: var(--color-primary, #00118f);
-    font-size: 16px;
+    color: var(--color-primitive-blue-1000, #00118f);
+    font-size: var(--font-size-16);
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 20%;
@@ -139,7 +140,7 @@ export const accordionItemStyles = css`
   
   /* モバイル */
   @media (max-width: 768px) {
-    [part="summary"] { padding: 4px 8px 8px 0; font-size: 16px; }
+    [part="summary"] { padding: 4px 8px 8px 0; font-size: var(--font-size-16); }
     [part="icon"] { width: 24px; height: 24px; padding: 2px; }
     [part="content-inner"] { padding: 16px 8px 16px 32px; }
     :host([icon-position="right"]) [part="content-inner"] {

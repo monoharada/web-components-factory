@@ -1,41 +1,52 @@
 /**
  * アコーディオンコンポーネント用デザイントークン
+ * デジタル庁デザインシステムに準拠
  */
 
+import { css } from '../../core/web-components.js';
+
 /**
- * CSSカスタムプロパティを生成
+ * アコーディオン専用のデザイントークン
+ * 公式トークンをコンポーネント用にマッピング
+ */
+export const accordionTokens = css`
+  :host {
+    /* アコーディオン専用カラー */
+    --accordion-icon-color: var(--color-neutral-solid-gray-900);
+    --accordion-border-color: var(--color-neutral-solid-gray-420);
+    --accordion-hover-bg: var(--color-neutral-solid-gray-50);
+    --accordion-focus-color: var(--color-primitive-blue-600);
+    --accordion-text-primary: var(--color-neutral-solid-gray-900);
+    --accordion-text-secondary: var(--color-neutral-solid-gray-600);
+    
+    /* スペーシング */
+    --accordion-padding-block: 1rem;
+    --accordion-padding-inline: 1.25rem;
+    --accordion-content-padding: 1.25rem;
+    --accordion-gap: 0.75rem;
+    
+    /* タイポグラフィ */
+    --accordion-font-size: var(--font-size-16);
+    --accordion-font-weight: var(--font-weight-400);
+    --accordion-line-height: var(--line-height-150);
+    
+    /* トランジション */
+    --accordion-transition-duration: 200ms;
+    --accordion-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* ボーダー */
+    --accordion-border-width: 1px;
+    --accordion-border-radius: var(--border-radius-8);
+    --accordion-focus-outline-width: 2px;
+    --accordion-focus-outline-offset: 2px;
+  }
+`;
+
+/**
+ * CSSカスタムプロパティを生成（後方互換性のため維持）
  */
 export function generateCSSVariables(): string {
-  return `
-    /* Colors */
-    --icon-color: #1a1a1a;
-    --border-color: #d1d5db;
-    --hover-bg: #f3f4f6;
-    --focus-color: #2563eb;
-    --text-primary: #1a1a1a;
-    --text-secondary: #4b5563;
-    
-    /* Spacing */
-    --padding-block: 1rem;
-    --padding-inline: 1.25rem;
-    --content-padding: 1.25rem;
-    --gap: 0.75rem;
-    
-    /* Typography */
-    --font-size-base: 1rem;
-    --font-weight-medium: 500;
-    --line-height: 1.5;
-    
-    /* Transitions */
-    --transition-duration: 200ms;
-    --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Borders */
-    --border-width: 1px;
-    --border-radius: 0.5rem;
-    --focus-outline-width: 2px;
-    --focus-outline-offset: 2px;
-  `;
+  return accordionTokens.toString();
 }
 
 /**

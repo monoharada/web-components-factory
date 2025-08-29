@@ -36,7 +36,9 @@
     "vite": "^5.3.5",
     "vitest": "^1.6.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@digital-go-jp/design-tokens": "^1.1.1"
+  },
   "keywords": [
     "web-components",
     "adaptive-card",
