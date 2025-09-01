@@ -45,7 +45,6 @@ export function applyFocusStyles(options: FocusStyleOptions = {}) {
       border-radius: ${borderRadius};
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.2s ease;
     }
 
     /* キーボードフォーカス時のみ表示 */
