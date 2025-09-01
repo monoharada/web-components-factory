@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { html } from 'lit';
 import { defineButton } from './button-define';
 
 // コンポーネントを登録
@@ -9,20 +8,37 @@ const meta: Meta = {
   title: 'Components/DADS Button',
   tags: ['autodocs'],
   render: (args) => {
-    return html`
-      <dads-button
-        variant="${args.variant}"
-        size="${args.size}"
-        ?disabled="${args.disabled}"
-        type="${args.type}"
-        ?full-width="${args.fullWidth}"
-        aria-label="${args.ariaLabel || ''}"
-      >
-        ${args.iconStart ? html`<span slot="icon-start">${args.iconStart}</span>` : ''}
-        ${args.label}
-        ${args.iconEnd ? html`<span slot="icon-end">${args.iconEnd}</span>` : ''}
-      </dads-button>
-    `;
+    // Litを使わずに純粋なHTMLを生成
+    const button = document.createElement('dads-button');
+    
+    // 属性を設定
+    if (args.variant) button.setAttribute('variant', args.variant);
+    if (args.size) button.setAttribute('size', args.size);
+    if (args.disabled) button.setAttribute('disabled', '');
+    if (args.type) button.setAttribute('type', args.type);
+    if (args.fullWidth) button.setAttribute('full-width', '');
+    if (args.ariaLabel) button.setAttribute('aria-label', args.ariaLabel);
+    
+    // スロットコンテンツを設定
+    if (args.iconStart) {
+      const iconStart = document.createElement('span');
+      iconStart.slot = 'icon-start';
+      iconStart.textContent = args.iconStart;
+      button.appendChild(iconStart);
+    }
+    
+    // ラベルテキスト
+    const labelText = document.createTextNode(args.label || 'ボタン');
+    button.appendChild(labelText);
+    
+    if (args.iconEnd) {
+      const iconEnd = document.createElement('span');
+      iconEnd.slot = 'icon-end';
+      iconEnd.textContent = args.iconEnd;
+      button.appendChild(iconEnd);
+    }
+    
+    return button;
   },
   argTypes: {
     variant: {
@@ -273,13 +289,28 @@ export const IconOnly: Story = {
 
 export const ButtonGroup: Story = {
   name: 'Button Group',
-  render: () => html`
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-      <dads-button variant="solid">送信</dads-button>
-      <dads-button variant="outlined">下書き保存</dads-button>
-      <dads-button variant="text">キャンセル</dads-button>
-    </div>
-  `,
+  render: () => {
+    const container = document.createElement('div');
+    container.style.cssText = 'display: flex; gap: 8px; flex-wrap: wrap;';
+    
+    const solidBtn = document.createElement('dads-button');
+    solidBtn.setAttribute('variant', 'solid');
+    solidBtn.textContent = '送信';
+    
+    const outlinedBtn = document.createElement('dads-button');
+    outlinedBtn.setAttribute('variant', 'outlined');
+    outlinedBtn.textContent = '下書き保存';
+    
+    const textBtn = document.createElement('dads-button');
+    textBtn.setAttribute('variant', 'text');
+    textBtn.textContent = 'キャンセル';
+    
+    container.appendChild(solidBtn);
+    container.appendChild(outlinedBtn);
+    container.appendChild(textBtn);
+    
+    return container;
+  },
   parameters: {
     docs: {
       description: {
@@ -291,8 +322,12 @@ export const ButtonGroup: Story = {
 
 export const ResponsiveButtonGroup: Story = {
   name: 'Responsive Button Group',
-  render: () => html`
-    <style>
+  render: () => {
+    const wrapper = document.createElement('div');
+    
+    // スタイルを追加
+    const style = document.createElement('style');
+    style.textContent = `
       .button-group {
         display: flex;
         gap: 8px;
@@ -304,12 +339,27 @@ export const ResponsiveButtonGroup: Story = {
           justify-content: flex-start;
         }
       }
-    </style>
-    <div class="button-group">
-      <dads-button variant="solid">次へ進む</dads-button>
-      <dads-button variant="text">戻る</dads-button>
-    </div>
-  `,
+    `;
+    
+    const container = document.createElement('div');
+    container.className = 'button-group';
+    
+    const solidBtn = document.createElement('dads-button');
+    solidBtn.setAttribute('variant', 'solid');
+    solidBtn.textContent = '次へ進む';
+    
+    const textBtn = document.createElement('dads-button');
+    textBtn.setAttribute('variant', 'text');
+    textBtn.textContent = '戻る';
+    
+    container.appendChild(solidBtn);
+    container.appendChild(textBtn);
+    
+    wrapper.appendChild(style);
+    wrapper.appendChild(container);
+    
+    return wrapper;
+  },
   parameters: {
     docs: {
       description: {
@@ -323,18 +373,49 @@ export const ResponsiveButtonGroup: Story = {
 
 export const FormSubmitExample: Story = {
   name: 'Form Submit（フォーム送信）',
-  render: () => html`
-    <form style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-      <div style="margin-bottom: 16px;">
-        <label for="email" style="display: block; margin-bottom: 4px;">メールアドレス</label>
-        <input id="email" type="email" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-      </div>
-      <div style="display: flex; gap: 8px; justify-content: flex-end;">
-        <dads-button variant="text" type="button">キャンセル</dads-button>
-        <dads-button variant="solid" type="submit">送信</dads-button>
-      </div>
-    </form>
-  `,
+  render: () => {
+    const form = document.createElement('form');
+    form.style.cssText = 'padding: 20px; border: 1px solid #ddd; border-radius: 8px;';
+    
+    // メールアドレス入力部分
+    const fieldDiv = document.createElement('div');
+    fieldDiv.style.marginBottom = '16px';
+    
+    const label = document.createElement('label');
+    label.setAttribute('for', 'email');
+    label.style.cssText = 'display: block; margin-bottom: 4px;';
+    label.textContent = 'メールアドレス';
+    
+    const input = document.createElement('input');
+    input.id = 'email';
+    input.type = 'email';
+    input.style.cssText = 'width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;';
+    
+    fieldDiv.appendChild(label);
+    fieldDiv.appendChild(input);
+    
+    // ボタン部分
+    const buttonDiv = document.createElement('div');
+    buttonDiv.style.cssText = 'display: flex; gap: 8px; justify-content: flex-end;';
+    
+    const cancelBtn = document.createElement('dads-button');
+    cancelBtn.setAttribute('variant', 'text');
+    cancelBtn.setAttribute('type', 'button');
+    cancelBtn.textContent = 'キャンセル';
+    
+    const submitBtn = document.createElement('dads-button');
+    submitBtn.setAttribute('variant', 'solid');
+    submitBtn.setAttribute('type', 'submit');
+    submitBtn.textContent = '送信';
+    
+    buttonDiv.appendChild(cancelBtn);
+    buttonDiv.appendChild(submitBtn);
+    
+    form.appendChild(fieldDiv);
+    form.appendChild(buttonDiv);
+    
+    return form;
+  },
   parameters: {
     docs: {
       description: {

@@ -39,6 +39,12 @@ export const accordionTokens = css`
     --accordion-border-radius: var(--border-radius-8);
     --accordion-focus-outline-width: 2px;
     --accordion-focus-outline-offset: 2px;
+    
+    /* フォーカススタイル用セマンティックトークン */
+    --focus-ring-color: var(--color-primitive-yellow-300, #ffd43d);
+    --focus-ring-width: 4px;
+    --focus-outline-color: var(--color-neutral-black, #000000);
+    --focus-outline-width: 4px;
   }
 `;
 

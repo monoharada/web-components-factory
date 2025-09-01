@@ -43,39 +43,7 @@ export const accordionItemStyles = css`
     background-color: var(--color-neutral-solid-gray-100, #e6e6e6);
   }
   
-  /* フォーカススタイル - デジタル庁デザインシステム準拠 */
-  /* キーボード操作時のみフォーカススタイルを表示 */
-  [part="summary"]:focus-visible {
-    outline: none;
-    position: relative;
-  }
-  
-  /* 黄色の塗りつぶし背景（内側） */
-  [part="summary"]:focus-visible::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    background-color: var(--color-primitive-yellow-300, #ffd43d);
-    border-radius: var(--accordion-border-radius, var(--border-radius-8));
-    z-index: 0;
-  }
-  
-  /* 黒いアウトラインリング（外側） */
-  [part="summary"]:focus-visible::after {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border: 4px solid var(--color-neutral-black, #000000);
-    border-radius: calc(var(--accordion-border-radius, var(--border-radius-8)) + 2px);
-    pointer-events: none;
-    z-index: 0;
-  }
-  
-  /* コンテンツを前面に */
-  [part="summary"]:focus-visible > * {
-    position: relative;
-    z-index: 1;
-  }
+  /* フォーカススタイルはmixin (applyFocusStyles) で適用 - accordion.tsで呼び出し */
   
   /* アイコン */
   [part="icon"] {

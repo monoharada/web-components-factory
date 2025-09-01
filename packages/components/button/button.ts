@@ -7,14 +7,14 @@
 import { 
   WebComponent, 
   html, 
-  css, 
+  css,
   BooleanAttr, 
   PropertyAttr 
 } from '../../core/web-components.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
-import { buttonTokens } from '../../styles/design-tokens/button-tokens.js';
 import { buttonStyles } from './button-styles.js';
 import { withReset } from '../../styles/reset-css.js';
+import { applyFocusStylesHost } from '../../styles/mixins/focus-styles-host.js';
 
 /**
  * Buttonコンポーネント
@@ -70,9 +70,124 @@ export class DadsButton extends WebComponent {
       </button>
     `,
     styles: withReset([
-      applyDADSTokens(),  // デザイントークン（プリミティブカラー等）
-      buttonTokens,       // ボタン用トークン（セマンティック＋ローカル）
-      buttonStyles        // ボタンスタイル定義
+      applyDADSTokens(),
+      css`
+        :host {
+          /* ボタン用セマンティックトークン */
+          --button-primary-bg: var(--color-primitive-blue-1000, #0017c1);
+          --button-primary-bg-hover: var(--color-primitive-blue-900, #0d2ea1);
+          --button-primary-bg-active: var(--color-primitive-blue-800, #1a3b81);
+          --button-primary-text: var(--color-primitive-white, #ffffff);
+          --button-primary-border: var(--color-primitive-blue-1000, #0017c1);
+          
+          --button-secondary-bg: var(--color-primitive-white, #ffffff);
+          --button-secondary-bg-hover: var(--color-primitive-gray-50, #f7f7f7);
+          --button-secondary-bg-active: var(--color-primitive-gray-100, #efefef);
+          --button-secondary-text: var(--color-primitive-blue-1000, #0017c1);
+          --button-secondary-border: var(--color-primitive-blue-1000, #0017c1);
+          
+          --button-tertiary-bg: transparent;
+          --button-tertiary-bg-hover: var(--color-primitive-blue-50, #f0f4ff);
+          --button-tertiary-bg-active: var(--color-primitive-blue-100, #e0e9ff);
+          --button-tertiary-text: var(--color-primitive-blue-1000, #0017c1);
+          --button-tertiary-border: transparent;
+          
+          /* ローカルコンポーネントトークン（デフォルトはprimary） */
+          --dads-button-background: var(--button-primary-bg);
+          --dads-button-background-hover: var(--button-primary-bg-hover);
+          --dads-button-background-active: var(--button-primary-bg-active);
+          --dads-button-color: var(--button-primary-text);
+          --dads-button-border-color: var(--button-primary-border);
+          --dads-button-border-width: 2px;
+          --dads-button-border-radius: var(--border-radius-8, 0.5rem);
+          
+          /* サイズトークン */
+          --dads-button-padding: 12px 24px;
+          --dads-button-font-size: var(--font-size-16, 1rem);
+          --dads-button-font-weight: var(--font-weight-700, 700);
+          --dads-button-line-height: 1.25;
+          --dads-button-min-height: 48px;
+          
+          /* その他のトークン */
+          --dads-button-icon-size: 1.25em;
+          --dads-button-icon-gap: 8px;
+          --dads-button-transition: all 200ms ease;
+          --dads-button-cursor: pointer;
+          --dads-button-width: auto;
+          
+          /* フォーカススタイル用セマンティックトークン */
+          --focus-ring-color: var(--color-primitive-yellow-300, #ffd43d);
+          --focus-ring-width: 4px;
+          --focus-outline-color: var(--color-neutral-black, #000000);
+          --focus-outline-width: 4px;
+        }
+        
+        /* バリアント別のトークン上書き */
+        :host([variant="solid"]),
+        :host([variant="primary"]) {
+          --dads-button-background: var(--button-primary-bg);
+          --dads-button-background-hover: var(--button-primary-bg-hover);
+          --dads-button-background-active: var(--button-primary-bg-active);
+          --dads-button-color: var(--button-primary-text);
+          --dads-button-border-color: var(--button-primary-border);
+        }
+        
+        :host([variant="outlined"]),
+        :host([variant="secondary"]) {
+          --dads-button-background: var(--button-secondary-bg);
+          --dads-button-background-hover: var(--button-secondary-bg-hover);
+          --dads-button-background-active: var(--button-secondary-bg-active);
+          --dads-button-color: var(--button-secondary-text);
+          --dads-button-border-color: var(--button-secondary-border);
+        }
+        
+        :host([variant="text"]),
+        :host([variant="tertiary"]) {
+          --dads-button-background: var(--button-tertiary-bg);
+          --dads-button-background-hover: var(--button-tertiary-bg-hover);
+          --dads-button-background-active: var(--button-tertiary-bg-active);
+          --dads-button-color: var(--button-tertiary-text);
+          --dads-button-border-color: var(--button-tertiary-border);
+          --dads-button-border-width: 0;
+        }
+        
+        /* サイズ別のトークン上書き */
+        :host([size="x-small"]) {
+          --dads-button-padding: 8px 12px;
+          --dads-button-font-size: 0.75rem;
+          --dads-button-min-height: 44px;
+        }
+        
+        :host([size="small"]) {
+          --dads-button-padding: 8px 16px;
+          --dads-button-font-size: var(--font-size-14, 0.875rem);
+          --dads-button-min-height: 44px;
+        }
+        
+        :host([size="large"]) {
+          --dads-button-padding: 16px 32px;
+          --dads-button-font-size: var(--font-size-18, 1.125rem);
+          --dads-button-min-height: 56px;
+        }
+        
+        /* 無効状態 */
+        :host([disabled]) {
+          --dads-button-background: var(--color-neutral-solid-gray-300, #b3b3b3);
+          --dads-button-color: var(--color-neutral-solid-gray-600, #666666);
+          --dads-button-border-color: var(--color-neutral-solid-gray-300, #b3b3b3);
+          --dads-button-cursor: not-allowed;
+          opacity: 0.5;
+        }
+        
+        /* フルワイド */
+        :host([full-width]) {
+          --dads-button-width: 100%;
+        }
+      `,
+      buttonStyles,
+      applyFocusStylesHost({
+        borderRadius: 'var(--dads-button-border-radius, var(--border-radius-8, 0.5rem))'
+      })
     ], 'minimal'),
     attributes: [
       PropertyAttr('variant'),

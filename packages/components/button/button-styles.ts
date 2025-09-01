@@ -43,7 +43,7 @@ export const buttonStyles = css`
     -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color);
     transition: var(--dads-button-transition);
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden を削除して擬似要素が見えるように */
     font-family: inherit;
     box-sizing: border-box;
     appearance: none;
@@ -64,29 +64,7 @@ export const buttonStyles = css`
     box-shadow: var(--dads-button-shadow-active);
   }
 
-  /* フォーカス状態 - デジタル庁デザインシステム準拠 */
-  [part="base"]:focus-visible {
-    outline: var(--dads-button-focus-visible-outline);
-    position: relative;
-  }
-
-  [part="base"]:focus-visible::before {
-    content: '';
-    position: absolute;
-    inset: calc(-1 * var(--dads-button-focus-ring-width));
-    background-color: var(--dads-button-focus-ring-color);
-    border-radius: calc(var(--dads-button-border-radius) + var(--dads-button-focus-ring-width));
-    z-index: -1;
-  }
-
-  [part="base"]:focus-visible::after {
-    content: '';
-    position: absolute;
-    inset: calc(-1 * var(--dads-button-focus-outline-offset));
-    border: var(--dads-button-focus-outline-width) solid var(--dads-button-focus-outline-color);
-    border-radius: calc(var(--dads-button-border-radius) + var(--dads-button-focus-outline-offset));
-    pointer-events: none;
-  }
+  /* フォーカススタイルはmixin (applyFocusStyles) で適用 */
 
   /* 無効状態 */
   [part="base"]:disabled {
@@ -124,23 +102,8 @@ export const buttonStyles = css`
 
   /* ========== バリアント固有スタイル ========== */
 
-  /* Solid（塗りつぶし）バリアント - デフォルト */
-  /* Note: バリアント固有のスタイルはbutton-tokens.tsで
-     ローカル変数への代入として定義済み */
-  :host([variant="solid"]) [part="base"] {
-    /* button-tokens.tsで定義されたローカル変数を使用 */
-  }
-
-  /* Outlined（アウトライン）バリアント */
-  /* Note: バリアント固有のスタイルはbutton-tokens.tsで
-     ローカル変数への代入として定義済み */
-  :host([variant="outlined"]) [part="base"] {
-    /* button-tokens.tsで定義されたローカル変数を使用 */
-  }
-
   /* Text（テキストのみ）バリアント - デジタル庁準拠で下線付き */
   :host([variant="text"]) [part="base"] {
-    /* button-tokens.tsで定義されたローカル変数を使用 */
     text-decoration: underline;
     text-underline-offset: 2px;
   }
@@ -154,16 +117,7 @@ export const buttonStyles = css`
   }
 
   /* ========== サイズ固有スタイル ========== */
-
-  /* サイズ固有スタイル */
-  /* Note: サイズ固有のスタイルはbutton-tokens.tsで
-     ローカル変数への代入として定義済み */
-  :host([size="x-small"]) [part="base"],
-  :host([size="small"]) [part="base"],
-  :host([size="medium"]) [part="base"],
-  :host([size="large"]) [part="base"] {
-    /* button-tokens.tsで定義されたローカル変数を使用 */
-  }
+  /* Note: サイズ固有のスタイルはbutton-tokens.tsでローカル変数への代入として定義済み */
 
   /* ========== レスポンシブ対応 ========== */
   

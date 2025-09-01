@@ -18,6 +18,7 @@ import {
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { accordionItemStyles } from '../../styles/accordion-styles.js';
 import { withReset } from '../../styles/reset-css.js';
+import { applyFocusStylesPseudo } from '../../styles/mixins/focus-styles-pseudo.js';
 
 /**
  * アコーディオンコンテナコンポーネント
@@ -123,7 +124,10 @@ export class DadsAccordionItemDetails extends WebComponent {
     styles: withReset([
       applyDADSTokens(),
       accordionTokens,
-      accordionItemStyles
+      accordionItemStyles,
+      applyFocusStylesPseudo('[part="summary"]', {
+        borderRadius: 'var(--accordion-border-radius, var(--border-radius-8))'
+      })
     ], 'full'),
     attributes: [
       BooleanAttr('expanded'),
