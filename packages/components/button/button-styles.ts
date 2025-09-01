@@ -55,6 +55,11 @@ export const buttonStyles = css`
   [part="base"]:hover:not(:disabled) {
     background-color: var(--dads-button-background-hover);
     box-shadow: var(--dads-button-shadow-hover);
+  }
+
+  /* 塗りボタンとアウトラインボタンのみHover時に下線 */
+  :host([variant="solid"]) [part="base"]:hover:not(:disabled),
+  :host([variant="outlined"]) [part="base"]:hover:not(:disabled) {
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
@@ -64,6 +69,11 @@ export const buttonStyles = css`
     background-color: var(--dads-button-background-active);
     transform: var(--dads-button-transform-active);
     box-shadow: var(--dads-button-shadow-active);
+  }
+
+  /* 塗りボタンとアウトラインボタンのみActive時に下線 */
+  :host([variant="solid"]) [part="base"]:active:not(:disabled),
+  :host([variant="outlined"]) [part="base"]:active:not(:disabled) {
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
@@ -128,15 +138,21 @@ export const buttonStyles = css`
   /* Text（テキストのみ）バリアント - デジタル庁準拠で下線付き */
   :host([variant="text"]) [part="base"] {
     text-decoration: underline;
-    text-underline-offset: 2px;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
   }
 
+  /* テキストボタンは常に同じ下線スタイル（Hover/Activeでも変わらない） */
   :host([variant="text"]) [part="base"]:hover:not(:disabled) {
     text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
   }
 
   :host([variant="text"]) [part="base"]:active:not(:disabled) {
     text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
   }
 
   /* ========== サイズ固有スタイル ========== */
