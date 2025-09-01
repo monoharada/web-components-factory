@@ -147,7 +147,6 @@ export const buttonLocalTokens = css`
     
     /* カーソルカスタマイズ用トークン */
     --dads-button-cursor: pointer;
-    --dads-button-cursor-disabled: not-allowed;
     
     /* アクセシビリティカスタマイズ用トークン */
     --dads-button-focus-visible-outline: none;
@@ -212,7 +211,6 @@ export const buttonLocalTokens = css`
     --dads-button-background: var(--button-disabled-primary-bg);
     --dads-button-color: var(--button-disabled-primary-text);
     --dads-button-border-color: var(--button-disabled-primary-border);
-    --dads-button-cursor: var(--dads-button-cursor-disabled);
     --dads-button-opacity: var(--button-disabled-opacity);
   }
   
@@ -221,7 +219,6 @@ export const buttonLocalTokens = css`
     --dads-button-background: var(--button-disabled-secondary-bg);
     --dads-button-color: var(--button-disabled-secondary-text);
     --dads-button-border-color: var(--button-disabled-secondary-border);
-    --dads-button-cursor: var(--dads-button-cursor-disabled);
     --dads-button-opacity: var(--button-disabled-opacity);
   }
   
@@ -230,7 +227,6 @@ export const buttonLocalTokens = css`
     --dads-button-background: var(--button-disabled-tertiary-bg);
     --dads-button-color: var(--button-disabled-tertiary-text);
     --dads-button-border-color: var(--button-disabled-tertiary-border);
-    --dads-button-cursor: var(--dads-button-cursor-disabled);
     --dads-button-opacity: var(--button-disabled-opacity);
   }
   

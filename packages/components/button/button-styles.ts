@@ -117,7 +117,6 @@ export const buttonStyles = css`
   /* 無効状態 */
   :host([disabled]) [part="base"],
   [part="base"]:disabled {
-    cursor: var(--dads-button-cursor-disabled, not-allowed);
     opacity: var(--dads-button-opacity, 1);
   }
 
