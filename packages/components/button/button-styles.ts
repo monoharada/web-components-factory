@@ -142,17 +142,17 @@ export const buttonStyles = css`
     text-decoration-thickness: 1px;
   }
 
-  /* テキストボタンは常に同じ下線スタイル（Hover/Activeでも変わらない） */
+  /* テキストボタンのHover時は下線が太くなる */
   :host([variant="text"]) [part="base"]:hover:not(:disabled) {
     text-decoration: underline;
     text-underline-offset: 0.2em;
-    text-decoration-thickness: 1px;
+    text-decoration-thickness: 2px;
   }
 
   :host([variant="text"]) [part="base"]:active:not(:disabled) {
     text-decoration: underline;
     text-underline-offset: 0.2em;
-    text-decoration-thickness: 1px;
+    text-decoration-thickness: 2px;
   }
 
   /* ========== サイズ固有スタイル ========== */
