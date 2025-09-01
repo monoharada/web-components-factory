@@ -14,7 +14,7 @@ import {
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { buttonStyles } from './button-styles.js';
 import { withReset } from '../../styles/reset-css.js';
-import { applyFocusStylesHost } from '../../styles/mixins/focus-styles-host.js';
+import { applyButtonFocusStyles } from '../../styles/mixins/focus-styles-simple.js';
 
 /**
  * Buttonコンポーネント
@@ -185,7 +185,7 @@ export class DadsButton extends WebComponent {
         }
       `,
       buttonStyles,
-      applyFocusStylesHost({
+      applyButtonFocusStyles('[part="base"]', {
         borderRadius: 'var(--dads-button-border-radius, var(--border-radius-8, 0.5rem))'
       })
     ], 'minimal'),
