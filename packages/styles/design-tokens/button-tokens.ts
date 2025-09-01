@@ -36,9 +36,9 @@ export const buttonSemanticTokens = css`
     --button-tertiary-border: transparent;
     
     /* Disabled（無効）状態用トークン */
-    --button-disabled-bg: var(--color-neutral-gray-300, #d4d4d4);
-    --button-disabled-text: var(--color-neutral-gray-600, #6b6b6b);
-    --button-disabled-border: var(--color-neutral-gray-300, #d4d4d4);
+    --button-disabled-bg: var(--color-neutral-solid-gray-300, #b3b3b3);
+    --button-disabled-text: var(--color-neutral-solid-gray-600, #666666);
+    --button-disabled-border: var(--color-neutral-solid-gray-300, #b3b3b3);
     --button-disabled-opacity: 0.5;
     
     /* Focus（フォーカス）状態用トークン - デジタル庁準拠 */
@@ -49,15 +49,15 @@ export const buttonSemanticTokens = css`
     --button-focus-outline-offset: 2px;
     
     /* サイズ用セマンティックトークン */
-    --button-padding-x-small: var(--spacing-xs, 8px) var(--spacing-sm, 12px);
-    --button-padding-small: var(--spacing-xs, 8px) var(--spacing-md, 16px);
-    --button-padding-medium: var(--spacing-sm, 12px) var(--spacing-lg, 24px);
-    --button-padding-large: var(--spacing-md, 16px) var(--spacing-xl, 32px);
+    --button-padding-x-small: 8px 12px;
+    --button-padding-small: 8px 16px;
+    --button-padding-medium: 12px 24px;
+    --button-padding-large: 16px 32px;
     
-    --button-font-size-x-small: var(--font-size-xs, 12px);
-    --button-font-size-small: var(--font-size-sm, 14px);
-    --button-font-size-medium: var(--font-size-base, 16px);
-    --button-font-size-large: var(--font-size-lg, 18px);
+    --button-font-size-x-small: 0.75rem; /* 12px */
+    --button-font-size-small: var(--font-size-14, 0.875rem);
+    --button-font-size-medium: var(--font-size-16, 1rem);
+    --button-font-size-large: var(--font-size-18, 1.125rem);
     
     /* デジタル庁準拠: 最小44x44pxを確保 */
     --button-height-x-small: 44px;  /* 最小高さ44px */
@@ -66,10 +66,10 @@ export const buttonSemanticTokens = css`
     --button-height-large: 56px;
     
     /* その他のセマンティックトークン */
-    --button-border-radius: var(--radius-md, 8px);
+    --button-border-radius: var(--border-radius-8, 0.5rem);
     --button-border-width: 2px;
-    --button-font-weight: var(--font-weight-bold, 700);
-    --button-line-height: var(--line-height-tight, 1.25);
+    --button-font-weight: var(--font-weight-700, 700);
+    --button-line-height: 1.25;
     --button-transition-duration: 200ms;
     --button-transition-timing: ease;
   }
@@ -102,7 +102,7 @@ export const buttonLocalTokens = css`
     
     /* アイコンカスタマイズ用トークン */
     --dads-button-icon-size: 1.25em;
-    --dads-button-icon-gap: var(--spacing-xs, 8px);
+    --dads-button-icon-gap: 8px;
     --dads-button-icon-color: currentColor;
     
     /* アニメーションカスタマイズ用トークン */
