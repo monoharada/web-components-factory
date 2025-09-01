@@ -129,39 +129,61 @@ export const buttonStyles = css`
 
   /* ========== バリアント固有スタイル ========== */
   
+  /* デフォルト（variant未指定）のDisabled状態 */
+  :host([disabled]:not([variant])) [part="base"] {
+    background-color: #b3b3b3;
+    color: #f2f2f2;
+    border-color: #b3b3b3;
+  }
+  
   /* Solid (Primary) バリアントのデフォルト値 */
-  :host([variant="solid"]) [part="base"] {
+  :host([variant="solid"]:not([disabled])) [part="base"] {
     background-color: var(--dads-button-background, #0017c1);
     color: var(--dads-button-color, #ffffff);
     border-color: var(--dads-button-border-color, #0017c1);
   }
   
-  :host([variant="solid"]) [part="base"]:hover:not(:disabled) {
+  :host([variant="solid"]:not([disabled])) [part="base"]:hover {
     background-color: var(--dads-button-background-hover, #00118f);
   }
   
-  :host([variant="solid"]) [part="base"]:active:not(:disabled) {
+  :host([variant="solid"]:not([disabled])) [part="base"]:active {
     background-color: var(--dads-button-background-active, #000060);
   }
   
+  /* Solid Disabled状態 */
+  :host([variant="solid"][disabled]) [part="base"] {
+    background-color: #b3b3b3;
+    color: #f2f2f2;
+    border-color: #b3b3b3;
+  }
+  
   /* Outlined (Secondary) バリアントのデフォルト値 */
-  :host([variant="outlined"]) [part="base"] {
+  :host([variant="outlined"]:not([disabled])) [part="base"] {
     background-color: var(--dads-button-background, #ffffff);
     color: var(--dads-button-color, #0017c1);
     border-color: var(--dads-button-border-color, #0017c1);
     border-width: var(--dads-button-border-width, 1px);
   }
   
-  :host([variant="outlined"]) [part="base"]:hover:not(:disabled) {
+  :host([variant="outlined"]:not([disabled])) [part="base"]:hover {
     background-color: var(--dads-button-background-hover, #c5d7fb);
   }
   
-  :host([variant="outlined"]) [part="base"]:active:not(:disabled) {
+  :host([variant="outlined"]:not([disabled])) [part="base"]:active {
     background-color: var(--dads-button-background-active, #9db7f9);
+  }
+  
+  /* Outlined Disabled状態 */
+  :host([variant="outlined"][disabled]) [part="base"] {
+    background-color: #ffffff;
+    color: #b3b3b3;
+    border-color: #b3b3b3;
+    border-width: 1px;
   }
 
   /* Text（テキストのみ）バリアント - デジタル庁準拠で下線付き */
-  :host([variant="text"]) [part="base"] {
+  :host([variant="text"]:not([disabled])) [part="base"] {
     background-color: var(--dads-button-background, transparent);
     color: var(--dads-button-color, #0017c1);
     border-color: var(--dads-button-border-color, transparent);
@@ -171,12 +193,22 @@ export const buttonStyles = css`
     text-decoration-thickness: 1px;
   }
   
-  :host([variant="text"]) [part="base"]:hover:not(:disabled) {
+  :host([variant="text"]:not([disabled])) [part="base"]:hover {
     background-color: var(--dads-button-background-hover, #e8f1fe);
   }
   
-  :host([variant="text"]) [part="base"]:active:not(:disabled) {
+  :host([variant="text"]:not([disabled])) [part="base"]:active {
     background-color: var(--dads-button-background-active, #d9e6ff);
+  }
+  
+  /* Text Disabled状態 */
+  :host([variant="text"][disabled]) [part="base"] {
+    background-color: transparent;
+    color: #b3b3b3;
+    border-width: 0;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
   }
 
   /* テキストボタンのHover時は下線が太くなる */
