@@ -145,9 +145,6 @@ export const buttonLocalTokens = css`
     --dads-button-text-align: center;
     --dads-button-white-space: nowrap;
     
-    /* カーソルカスタマイズ用トークン */
-    --dads-button-cursor: pointer;
-    
     /* アクセシビリティカスタマイズ用トークン */
     --dads-button-focus-visible-outline: none;
     --dads-button-tap-highlight-color: transparent;

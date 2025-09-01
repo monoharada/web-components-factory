@@ -35,7 +35,6 @@ export const buttonStyles = css`
     text-decoration: var(--dads-button-text-decoration, none);
     text-transform: var(--dads-button-text-transform, none);
     white-space: var(--dads-button-white-space, nowrap);
-    cursor: var(--dads-button-cursor, pointer);
     user-select: var(--dads-button-user-select, none);
     -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color, transparent);
     /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */
