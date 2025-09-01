@@ -20,9 +20,18 @@
     "tdd": "npm run test:watch",
     "ci": "npm run type-check && npm run test:run && npm run build",
     "update-tokens": "node scripts/update-design-tokens.js",
-    "check-tokens": "npm view @digital-go-jp/design-tokens version"
+    "check-tokens": "npm view @digital-go-jp/design-tokens version",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^7.6.10",
+    "@storybook/addon-interactions": "^7.6.10",
+    "@storybook/addon-links": "^7.6.10",
+    "@storybook/blocks": "^7.6.10",
+    "@storybook/testing-library": "^0.2.2",
+    "@storybook/web-components": "^7.6.10",
+    "@storybook/web-components-vite": "^7.6.10",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/user-event": "^14.5.1",
@@ -33,7 +42,9 @@
     "@vitest/ui": "^1.6.0",
     "eslint": "^8.57.0",
     "happy-dom": "^14.12.3",
+    "lit": "^3.1.1",
     "prettier": "^3.3.3",
+    "storybook": "^7.6.10",
     "typescript": "^5.5.4",
     "vite": "^5.3.5",
     "vitest": "^1.6.0"
