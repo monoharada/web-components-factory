@@ -104,14 +104,8 @@ export class DadsButton extends WebComponent {
     // 属性の反映
     button.type = (this.getAttribute('type') || 'button') as 'button' | 'submit' | 'reset';
     
-    // Disabled状態でもフォーカス可能にするため、disabled属性は設定しない
-    // 代わりにaria-disabledを使用
-    if (this.hasAttribute('disabled')) {
-      button.setAttribute('aria-disabled', 'true');
-      button.removeAttribute('disabled');
-    } else {
-      button.removeAttribute('aria-disabled');
-    }
+    // disabled属性をそのまま渡す
+    button.disabled = this.hasAttribute('disabled');
     
     const ariaLabel = this.getAttribute('aria-label');
     if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
@@ -131,13 +125,8 @@ export class DadsButton extends WebComponent {
         button.type = (newValue || 'button') as 'button' | 'submit' | 'reset';
         break;
       case 'disabled':
-        // Disabled状態でもフォーカス可能にするため、disabled属性は設定しない
-        if (this.hasAttribute('disabled')) {
-          button.setAttribute('aria-disabled', 'true');
-          button.removeAttribute('disabled');
-        } else {
-          button.removeAttribute('aria-disabled');
-        }
+        // disabled属性をそのまま渡す
+        button.disabled = this.hasAttribute('disabled');
         break;
       case 'aria-label':
         if (newValue) button.setAttribute('aria-label', newValue);
