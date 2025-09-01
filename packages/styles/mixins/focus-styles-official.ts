@@ -31,10 +31,9 @@ export function applyDADSFocusStyles() {
       box-shadow: 0 0 0 .125rem var(--focus-yellow);
     }
 
-    /* 枠線ボタン（outlined）: 背景を黄色に変更 */
+    /* 枠線ボタン（outlined）: box-shadowのみ（背景色は変更しない） */
     :host([variant="outlined"]) [part="base"]:focus-visible,
     :host([variant="secondary"]) [part="base"]:focus-visible {
-      background-color: var(--focus-yellow);
       box-shadow: 0 0 0 .125rem var(--focus-yellow);
     }
 
