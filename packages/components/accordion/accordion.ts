@@ -10,14 +10,14 @@ import {
   css, 
   BooleanAttr, 
   PropertyAttr 
-} from '../core/web-components.js';
+} from '../../core/web-components.js';
 import { 
   accordionTokens,
   createIconSVG
-} from '../styles/design-tokens/accordion-tokens.js';
-import { applyDADSTokens } from '../styles/design-tokens/index.js';
-import { accordionItemStyles } from '../styles/accordion-styles.js';
-import { withReset } from '../styles/reset-css.js';
+} from '../../styles/design-tokens/accordion-tokens.js';
+import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { accordionItemStyles } from '../../styles/accordion-styles.js';
+import { withReset } from '../../styles/reset-css.js';
 
 /**
  * アコーディオンコンテナコンポーネント
@@ -175,6 +175,4 @@ export class DadsAccordionItemDetails extends WebComponent {
   collapse() { this.#details && (this.#details.open = false); }
 }
 
-// コンポーネントの登録
-DadsAccordionDetails.define();
-DadsAccordionItemDetails.define();
+// コンポーネントの登録は定義ファイルで行う

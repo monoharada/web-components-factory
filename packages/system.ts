@@ -2,7 +2,7 @@
  * システム全体のコンポーネント登録
  */
 
-import { defineAccordion } from './components/accordion-define';
+import { defineAccordion } from './components/accordion/accordion-define';
 import { defineButton } from './components/button/button-define';
 
 /**
