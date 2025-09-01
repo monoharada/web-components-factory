@@ -18,6 +18,11 @@ const meta: Meta = {
     if (args.type) button.setAttribute('type', args.type);
     if (args.fullWidth) button.setAttribute('full-width', '');
     if (args.ariaLabel) button.setAttribute('aria-label', args.ariaLabel);
+    if (args.as) button.setAttribute('as', args.as);
+    if (args.href) button.setAttribute('href', args.href);
+    if (args.target) button.setAttribute('target', args.target);
+    if (args.rel) button.setAttribute('rel', args.rel);
+    if (args.download) button.setAttribute('download', '');
     
     // スロットコンテンツを設定
     if (args.iconStart) {
@@ -86,6 +91,37 @@ const meta: Meta = {
     ariaLabel: {
       control: 'text',
       description: 'アクセシビリティ用ラベル',
+    },
+    as: {
+      control: { type: 'select' },
+      options: ['button', 'link', 'a', undefined],
+      description: '要素タイプの明示的指定',
+      table: {
+        defaultValue: { summary: 'auto' },
+      },
+    },
+    href: {
+      control: 'text',
+      description: 'リンク先URL（設定するとa要素になる）',
+    },
+    target: {
+      control: { type: 'select' },
+      options: ['_self', '_blank', '_parent', '_top'],
+      description: 'リンクターゲット',
+      table: {
+        defaultValue: { summary: '_self' },
+      },
+    },
+    rel: {
+      control: 'text',
+      description: 'リンクの関係性（noopener noreferrer等）',
+    },
+    download: {
+      control: 'boolean',
+      description: 'ダウンロードリンクとして扱う',
+      table: {
+        defaultValue: { summary: false },
+      },
     },
     iconStart: {
       control: 'text',
@@ -366,6 +402,79 @@ export const ResponsiveButtonGroup: Story = {
         story: 'レスポンシブなボタングループ。モバイルでは縦並び、デスクトップでは横並び（プライマリが右）。',
       },
     },
+  },
+};
+
+// ========== リンクボタン ==========
+
+export const LinkButton: Story = {
+  name: 'Link Button（リンクボタン）',
+  args: {
+    ...Default.args,
+    href: 'https://www.digital.go.jp/',
+    label: 'デジタル庁へ',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'href属性を設定すると自動的にa要素として描画されます。',
+      },
+    },
+  },
+};
+
+export const LinkButtonNewTab: Story = {
+  name: 'Link Button（新規タブ）',
+  args: {
+    ...Default.args,
+    href: 'https://www.digital.go.jp/',
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    label: '新規タブで開く',
+  },
+};
+
+export const LinkButtonWithoutHref: Story = {
+  name: 'Link Button（hrefなし）',
+  args: {
+    ...Default.args,
+    as: 'link',
+    label: 'JavaScriptで処理',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'as="link"を指定するとhrefなしでもa要素として描画されます。JavaScript処理に便利です。',
+      },
+    },
+  },
+};
+
+export const LinkButtonDisabled: Story = {
+  name: 'Link Button（無効）',
+  args: {
+    ...Default.args,
+    href: '#',
+    disabled: true,
+    label: '無効なリンク',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'a要素でdisabled時はaria-disabled="true"とtabindex="-1"が設定されます。',
+      },
+    },
+  },
+};
+
+export const DownloadButton: Story = {
+  name: 'Download Button',
+  args: {
+    ...Default.args,
+    href: '/path/to/file.pdf',
+    download: true,
+    label: 'PDFをダウンロード',
+    iconStart: '⬇',
   },
 };
 

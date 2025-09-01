@@ -15,7 +15,7 @@ export const buttonStyles = css`
     width: 100%;
   }
 
-  /* ベースボタンスタイル */
+  /* ベースボタンスタイル（button要素とa要素共通） */
   [part="base"] {
     display: inline-flex;
     align-items: center;
@@ -139,6 +139,22 @@ export const buttonStyles = css`
   /* ラベル */
   [part="label"] {
     flex: 1 1 auto;
+  }
+  
+  /* ========== a要素固有のスタイル ========== */
+  
+  /* a要素のデフォルトスタイルをリセット */
+  [part="base"]:where(a) {
+    text-decoration: none;
+    color: inherit;
+    /* hrefなしのa要素やJavaScript処理用 */
+    cursor: pointer;
+  }
+  
+  /* a要素でdisabled時 */
+  :host([disabled]) [part="base"]:where(a) {
+    pointer-events: none;
+    opacity: var(--dads-button-opacity, 1);
   }
 
   /* ========== バリアント固有スタイル ========== */

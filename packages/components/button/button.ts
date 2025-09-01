@@ -52,22 +52,7 @@ export class DadsButton extends WebComponent {
 
   static definition = {
     name: 'dads-button',
-    template: html`
-      <button 
-        part="base"
-        type="button"
-      >
-        <span part="icon-start">
-          <slot name="icon-start"></slot>
-        </span>
-        <span part="label">
-          <slot></slot>
-        </span>
-        <span part="icon-end">
-          <slot name="icon-end"></slot>
-        </span>
-      </button>
-    `,
+    template: null, // テンプレートは動的に生成
     styles: withReset([
       applyDADSTokens(),
       buttonTokens,
@@ -80,7 +65,12 @@ export class DadsButton extends WebComponent {
       BooleanAttr('disabled'),
       PropertyAttr('type'),
       BooleanAttr('full-width'),
-      PropertyAttr('aria-label')
+      PropertyAttr('aria-label'),
+      PropertyAttr('as'),
+      PropertyAttr('href'),
+      PropertyAttr('target'),
+      PropertyAttr('rel'),
+      BooleanAttr('download')
     ]
   };
 
@@ -88,49 +78,166 @@ export class DadsButton extends WebComponent {
     super.connectedCallback();
     
     // デフォルト属性の設定
-    const defaults = { variant: 'solid', size: 'medium', type: 'button' };
+    const defaults = { variant: 'solid', size: 'medium' };
     for (const [attr, value] of Object.entries(defaults)) {
       if (!this.hasAttribute(attr)) this.setAttribute(attr, value);
     }
     
+    // テンプレートをレンダリング
+    this.#renderTemplate();
+    
     // ボタン要素の初期化
     this.#initButton();
   }
+  
+  #isLink(): boolean {
+    const as = this.getAttribute('as');
+    // 明示的な指定があればそれに従う
+    if (as === 'link' || as === 'a') return true;
+    if (as === 'button') return false;
+    // hrefがあればリンクと判定
+    return this.hasAttribute('href');
+  }
+  
+  #renderTemplate() {
+    if (!this.shadowRoot) return;
+    
+    const isLink = this.#isLink();
+    const template = isLink ? this.#createLinkTemplate() : this.#createButtonTemplate();
+    
+    // Shadow DOMの内容を更新
+    this.shadowRoot.innerHTML = '';
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
+  }
+  
+  #createButtonTemplate(): HTMLTemplateElement {
+    const template = document.createElement('template');
+    template.innerHTML = `
+      <button 
+        part="base"
+        type="${this.getAttribute('type') || 'button'}"
+      >
+        <span part="icon-start">
+          <slot name="icon-start"></slot>
+        </span>
+        <span part="label">
+          <slot></slot>
+        </span>
+        <span part="icon-end">
+          <slot name="icon-end"></slot>
+        </span>
+      </button>
+    `;
+    return template;
+  }
+  
+  #createLinkTemplate(): HTMLTemplateElement {
+    const template = document.createElement('template');
+    const href = this.getAttribute('href') || '#';
+    const target = this.getAttribute('target') || '_self';
+    const rel = this.getAttribute('rel') || '';
+    const download = this.hasAttribute('download');
+    
+    template.innerHTML = `
+      <a 
+        part="base"
+        href="${href}"
+        ${target ? `target="${target}"` : ''}
+        ${rel ? `rel="${rel}"` : ''}
+        ${download ? 'download' : ''}
+      >
+        <span part="icon-start">
+          <slot name="icon-start"></slot>
+        </span>
+        <span part="label">
+          <slot></slot>
+        </span>
+        <span part="icon-end">
+          <slot name="icon-end"></slot>
+        </span>
+      </a>
+    `;
+    return template;
+  }
 
   #initButton() {
-    const button = this.shadowRoot?.querySelector('[part="base"]') as HTMLButtonElement;
-    if (!button) return;
+    const base = this.shadowRoot?.querySelector('[part="base"]') as HTMLElement;
+    if (!base) return;
     
-    // 属性の反映
-    button.type = (this.getAttribute('type') || 'button') as 'button' | 'submit' | 'reset';
+    const isLink = this.#isLink();
     
-    // disabled属性をそのまま渡す
-    button.disabled = this.hasAttribute('disabled');
+    if (!isLink) {
+      // button要素の場合
+      const button = base as HTMLButtonElement;
+      button.type = (this.getAttribute('type') || 'button') as 'button' | 'submit' | 'reset';
+      button.disabled = this.hasAttribute('disabled');
+    } else {
+      // a要素の場合
+      const link = base as HTMLAnchorElement;
+      if (this.hasAttribute('disabled')) {
+        link.setAttribute('aria-disabled', 'true');
+        link.setAttribute('tabindex', '-1');
+      }
+    }
     
+    // 共通属性
     const ariaLabel = this.getAttribute('aria-label');
-    if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
+    if (ariaLabel) base.setAttribute('aria-label', ariaLabel);
     
     // イベントリスナー
-    button.addEventListener('click', this.#handleClick);
+    base.addEventListener('click', this.#handleClick);
   }
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
     super.attributeChangedCallback(name, oldValue, newValue);
     
-    const button = this.shadowRoot?.querySelector('[part="base"]') as HTMLButtonElement;
-    if (!button) return;
+    // as属性やhref属性が変更された場合は再レンダリングが必要
+    if (name === 'as' || name === 'href') {
+      this.#renderTemplate();
+      this.#initButton();
+      return;
+    }
+    
+    const base = this.shadowRoot?.querySelector('[part="base"]') as HTMLElement;
+    if (!base) return;
+    
+    const isLink = this.#isLink();
     
     switch (name) {
       case 'type':
-        button.type = (newValue || 'button') as 'button' | 'submit' | 'reset';
+        if (!isLink && base instanceof HTMLButtonElement) {
+          base.type = (newValue || 'button') as 'button' | 'submit' | 'reset';
+        }
         break;
       case 'disabled':
-        // disabled属性をそのまま渡す
-        button.disabled = this.hasAttribute('disabled');
+        if (!isLink && base instanceof HTMLButtonElement) {
+          base.disabled = this.hasAttribute('disabled');
+        } else if (isLink && base instanceof HTMLAnchorElement) {
+          if (this.hasAttribute('disabled')) {
+            base.setAttribute('aria-disabled', 'true');
+            base.setAttribute('tabindex', '-1');
+          } else {
+            base.removeAttribute('aria-disabled');
+            base.removeAttribute('tabindex');
+          }
+        }
+        break;
+      case 'target':
+      case 'rel':
+        if (isLink && base instanceof HTMLAnchorElement) {
+          if (newValue) base.setAttribute(name, newValue);
+          else base.removeAttribute(name);
+        }
+        break;
+      case 'download':
+        if (isLink && base instanceof HTMLAnchorElement) {
+          if (this.hasAttribute('download')) base.setAttribute('download', '');
+          else base.removeAttribute('download');
+        }
         break;
       case 'aria-label':
-        if (newValue) button.setAttribute('aria-label', newValue);
-        else button.removeAttribute('aria-label');
+        if (newValue) base.setAttribute('aria-label', newValue);
+        else base.removeAttribute('aria-label');
         break;
     }
   }
