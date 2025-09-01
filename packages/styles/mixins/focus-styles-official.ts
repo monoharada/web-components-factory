@@ -25,12 +25,10 @@ export function applyDADSFocusStyles() {
       position: relative;
     }
 
-    /* 塗りボタン（solid）: インセットシャドウで黄色の枠を内側に追加 */
+    /* 塗りボタン（solid）: box-shadowのみ（背景色は変更しない） */
     :host([variant="solid"]) [part="base"]:focus-visible,
     :host([variant="primary"]) [part="base"]:focus-visible {
-      box-shadow: 
-        inset 0 0 0 4px var(--focus-yellow),
-        0 0 0 .125rem var(--focus-yellow);
+      box-shadow: 0 0 0 .125rem var(--focus-yellow);
     }
 
     /* 枠線ボタン（outlined）: 背景を黄色に変更 */
