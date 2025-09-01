@@ -75,21 +75,26 @@ export class DadsButton extends WebComponent {
         :host {
           /* ボタン用セマンティックトークン */
           --button-primary-bg: var(--color-primitive-blue-1000, #0017c1);
-          --button-primary-bg-hover: var(--color-primitive-blue-900, #0d2ea1);
-          --button-primary-bg-active: var(--color-primitive-blue-800, #1a3b81);
+          --button-primary-bg-hover: var(--color-primitive-blue-1000, #00118f);
+          --button-primary-bg-active: var(--color-primitive-blue-1200, #000060);
           --button-primary-text: var(--color-primitive-white, #ffffff);
           --button-primary-border: var(--color-primitive-blue-1000, #0017c1);
           
           --button-secondary-bg: var(--color-primitive-white, #ffffff);
-          --button-secondary-bg-hover: var(--color-primitive-gray-50, #f7f7f7);
-          --button-secondary-bg-active: var(--color-primitive-gray-100, #efefef);
+          --button-secondary-bg-hover: var(--color-primitive-blue-200, #c5d7fb);
+          --button-secondary-bg-active: var(--color-primitive-blue-300, #9db7f9);
           --button-secondary-text: var(--color-primitive-blue-1000, #0017c1);
+          --button-secondary-text-active: var(--color-primitive-blue-1200, #000060);
           --button-secondary-border: var(--color-primitive-blue-1000, #0017c1);
+          --button-secondary-border-hover: var(--color-primitive-blue-1000, #00118f);
+          --button-secondary-border-active: var(--color-primitive-blue-1200, #000060);
           
           --button-tertiary-bg: transparent;
-          --button-tertiary-bg-hover: var(--color-primitive-blue-50, #f0f4ff);
-          --button-tertiary-bg-active: var(--color-primitive-blue-100, #e0e9ff);
+          --button-tertiary-bg-hover: var(--color-primitive-blue-50, #e8f1fe);
+          --button-tertiary-bg-active: var(--color-primitive-blue-100, #d9e6ff);
           --button-tertiary-text: var(--color-primitive-blue-1000, #0017c1);
+          --button-tertiary-text-hover: var(--color-primitive-blue-1000, #00118f);
+          --button-tertiary-text-active: var(--color-primitive-blue-1200, #000060);
           --button-tertiary-border: transparent;
           
           /* ローカルコンポーネントトークン（デフォルトはprimary） */

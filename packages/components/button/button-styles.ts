@@ -55,6 +55,8 @@ export const buttonStyles = css`
   [part="base"]:hover:not(:disabled) {
     background-color: var(--dads-button-background-hover);
     box-shadow: var(--dads-button-shadow-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   /* アクティブ状態 */
@@ -62,6 +64,27 @@ export const buttonStyles = css`
     background-color: var(--dads-button-background-active);
     transform: var(--dads-button-transform-active);
     box-shadow: var(--dads-button-shadow-active);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* アウトラインボタンのActive時の特別処理 */
+  :host([variant="outlined"]) [part="base"]:hover:not(:disabled) {
+    border-color: var(--button-secondary-border-hover);
+  }
+
+  :host([variant="outlined"]) [part="base"]:active:not(:disabled) {
+    color: var(--button-secondary-text-active);
+    border-color: var(--button-secondary-border-active);
+  }
+
+  /* テキストボタンのHover/Active時の特別処理 */
+  :host([variant="text"]) [part="base"]:hover:not(:disabled) {
+    color: var(--button-tertiary-text-hover);
+  }
+
+  :host([variant="text"]) [part="base"]:active:not(:disabled) {
+    color: var(--button-tertiary-text-active);
   }
 
   /* フォーカススタイルはmixin (applyFocusStyles) で適用 */
