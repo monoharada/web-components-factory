@@ -41,11 +41,20 @@ export const buttonSemanticTokens = css`
     --button-tertiary-text-active: var(--color-primitive-blue-1200, #000060);
     --button-tertiary-border: transparent;
     
-    /* Disabled（無効）状態用トークン */
-    --button-disabled-bg: var(--color-neutral-solid-gray-300, #b3b3b3);
-    --button-disabled-text: var(--color-neutral-solid-gray-600, #666666);
-    --button-disabled-border: var(--color-neutral-solid-gray-300, #b3b3b3);
-    --button-disabled-opacity: 0.5;
+    /* Disabled（無効）状態用セマンティックトークン */
+    --button-disabled-primary-bg: var(--color-neutral-solid-gray-300, #b3b3b3);
+    --button-disabled-primary-text: var(--color-neutral-solid-gray-50, #f2f2f2);
+    --button-disabled-primary-border: var(--color-neutral-solid-gray-300, #b3b3b3);
+    
+    --button-disabled-secondary-bg: var(--color-neutral-white, #ffffff);
+    --button-disabled-secondary-text: var(--color-neutral-solid-gray-300, #b3b3b3);
+    --button-disabled-secondary-border: var(--color-neutral-solid-gray-300, #b3b3b3);
+    
+    --button-disabled-tertiary-bg: transparent;
+    --button-disabled-tertiary-text: var(--color-neutral-solid-gray-300, #b3b3b3);
+    --button-disabled-tertiary-border: transparent;
+    
+    --button-disabled-opacity: 1;
     
     /* Focus（フォーカス）状態用トークン - デジタル庁準拠 */
     --button-focus-ring-color: var(--color-primitive-yellow-300, #ffd43d);
@@ -196,11 +205,31 @@ export const buttonLocalTokens = css`
     --dads-button-min-height: var(--button-height-large);
   }
   
-  /* 無効状態のローカルトークン上書き */
-  :host([disabled]) {
-    --dads-button-background: var(--button-disabled-bg);
-    --dads-button-color: var(--button-disabled-text);
-    --dads-button-border-color: var(--button-disabled-border);
+  /* 無効状態のローカルトークン上書き - バリアント別 */
+  :host([disabled]:not([variant])),
+  :host([variant="solid"][disabled]),
+  :host([variant="primary"][disabled]) {
+    --dads-button-background: var(--button-disabled-primary-bg);
+    --dads-button-color: var(--button-disabled-primary-text);
+    --dads-button-border-color: var(--button-disabled-primary-border);
+    --dads-button-cursor: var(--dads-button-cursor-disabled);
+    --dads-button-opacity: var(--button-disabled-opacity);
+  }
+  
+  :host([variant="outlined"][disabled]),
+  :host([variant="secondary"][disabled]) {
+    --dads-button-background: var(--button-disabled-secondary-bg);
+    --dads-button-color: var(--button-disabled-secondary-text);
+    --dads-button-border-color: var(--button-disabled-secondary-border);
+    --dads-button-cursor: var(--dads-button-cursor-disabled);
+    --dads-button-opacity: var(--button-disabled-opacity);
+  }
+  
+  :host([variant="text"][disabled]),
+  :host([variant="tertiary"][disabled]) {
+    --dads-button-background: var(--button-disabled-tertiary-bg);
+    --dads-button-color: var(--button-disabled-tertiary-text);
+    --dads-button-border-color: var(--button-disabled-tertiary-border);
     --dads-button-cursor: var(--dads-button-cursor-disabled);
     --dads-button-opacity: var(--button-disabled-opacity);
   }
