@@ -7,6 +7,45 @@
   <script type="module">
     import { defineButton } from './packages/components/button/button-define.js';
     defineButton();
+    
+    // デバッグ: コンポーネント読み込み後にスタイルを確認
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const button = document.querySelector('dads-button');
+        if (button && button.shadowRoot) {
+          const styles = button.shadowRoot.adoptedStyleSheets || [];
+          console.log('Adopted StyleSheets count:', styles.length);
+          
+          // 各スタイルシートの内容を確認
+          styles.forEach((sheet, index) => {
+            console.log(`StyleSheet ${index}:`, sheet.cssRules.length, 'rules');
+            try {
+              for (let rule of sheet.cssRules) {
+                if (rule.cssText.includes('--dads-button')) {
+                  console.log('Found button token rule:', rule.cssText.substring(0, 200));
+                }
+              }
+            } catch(e) {
+              console.log('Cannot read stylesheet', index, e);
+            }
+          });
+          
+          // Shadow DOM内のボタン要素のスタイルを確認
+          const baseButton = button.shadowRoot.querySelector('[part="base"]');
+          if (baseButton) {
+            const computed = window.getComputedStyle(baseButton);
+            console.log('Button computed styles:', {
+              background: computed.backgroundColor,
+              color: computed.color,
+              border: computed.border,
+              '--dads-button-background': computed.getPropertyValue('--dads-button-background'),
+              '--button-primary-bg': computed.getPropertyValue('--button-primary-bg'),
+              '--color-primitive-blue-1000': computed.getPropertyValue('--color-primitive-blue-1000')
+            });
+          }
+        }
+      }, 1000);
+    });
   </script>
   <style>
     body {

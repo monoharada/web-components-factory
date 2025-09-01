@@ -70,9 +70,9 @@ export class DadsButton extends WebComponent {
       </button>
     `,
     styles: withReset([
-      applyDADSTokens(),
-      buttonTokens,
-      buttonStyles
+      applyDADSTokens(),  // デザイントークン（プリミティブカラー等）
+      buttonTokens,       // ボタン用トークン（セマンティック＋ローカル）
+      buttonStyles        // ボタンスタイル定義
     ], 'minimal'),
     attributes: [
       PropertyAttr('variant'),
