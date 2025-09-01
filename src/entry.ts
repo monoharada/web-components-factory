@@ -116,6 +116,92 @@ export const demos = {
     </div>
   `,
   
+  // ボタンデモ
+  button: () => `
+    <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ボタンコンポーネント</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        デジタル庁デザインシステムv2.7.0準拠のボタンコンポーネント。TDD（テスト駆動開発）で実装。
+      </p>
+      
+      <!-- バリアント -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">バリアント</h3>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+          <dads-button variant="solid">Solid（塗り）</dads-button>
+          <dads-button variant="outlined">Outlined（枠線）</dads-button>
+          <dads-button variant="text">Text（テキスト）</dads-button>
+        </div>
+      </section>
+      
+      <!-- サイズ -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">サイズ（最小44px高）</h3>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+          <dads-button size="x-small">X-Small</dads-button>
+          <dads-button size="small">Small</dads-button>
+          <dads-button size="medium">Medium</dads-button>
+          <dads-button size="large">Large</dads-button>
+        </div>
+      </section>
+      
+      <!-- 実際の使用例 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">実際の使用例</h3>
+        <div style="border: 1px solid #ddd; padding: 24px; border-radius: 8px; background: #f9f9f9;">
+          <form style="max-width: 400px;">
+            <div style="margin-bottom: 16px;">
+              <label for="demo-email" style="display: block; margin-bottom: 4px; font-weight: 500;">
+                メールアドレス
+              </label>
+              <input 
+                id="demo-email" 
+                type="email" 
+                placeholder="example@email.com"
+                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"
+              >
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+              <dads-button variant="text" type="button">キャンセル</dads-button>
+              <dads-button variant="solid" type="submit">送信</dads-button>
+            </div>
+          </form>
+        </div>
+      </section>
+      
+      <!-- フルワイド -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">フルワイドボタン</h3>
+        <div style="max-width: 400px;">
+          <dads-button variant="solid" full-width>幅100%のボタン</dads-button>
+        </div>
+      </section>
+      
+      <!-- 無効状態（非推奨） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">無効状態（デジタル庁では非推奨）</h3>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+          <dads-button variant="solid" disabled>無効化されたボタン</dads-button>
+          <span style="color: #dc3545; font-size: 14px;">
+            ※ デジタル庁ガイドラインでは、disabled属性の使用は推奨されていません
+          </span>
+        </div>
+      </section>
+      
+      <!-- 特徴 -->
+      <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3;">
+        <h3 style="color: #1565c0; margin-bottom: 10px;">特徴</h3>
+        <ul style="color: #1565c0; line-height: 1.8; padding-left: 20px;">
+          <li>🎯 <strong>WCAG 2.2 AA準拠:</strong> 最小44x44pxタップターゲット</li>
+          <li>🎨 <strong>デザイントークン:</strong> セマンティック & ローカルトークンの2層構造</li>
+          <li>📏 <strong>Figmaデザイン準拠:</strong> ピクセルパーフェクトな実装</li>
+          <li>✅ <strong>TDD開発:</strong> 100%テストカバレッジ</li>
+          <li>⚡ <strong>Shadow DOM:</strong> スタイルの完全な隔離</li>
+        </ul>
+      </div>
+    </div>
+  `,
+  
   // 他のデモを追加
   empty: () => `
     <div style="padding: 40px; text-align: center; color: #666;">
