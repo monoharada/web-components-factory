@@ -96,13 +96,29 @@ export const buttonStyles = css`
   }
 
   /* フォーカススタイルはmixin (applyFocusStyles) で適用 */
+  
+  /* Disabled時のフォーカススタイル */
+  :host([disabled]) [part="base"]:focus,
+  [part="base"][aria-disabled="true"]:focus {
+    outline: var(--focus-outline-width, 4px) solid var(--focus-outline-color, #000000);
+    outline-offset: 0;
+  }
+  
+  :host([disabled]) [part="base"]:focus::after,
+  [part="base"][aria-disabled="true"]:focus::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--focus-outline-width, 4px) * -1);
+    border: var(--focus-ring-width, 4px) solid var(--focus-ring-color, #ffd43d);
+    border-radius: inherit;
+    pointer-events: none;
+  }
 
   /* 無効状態 */
   :host([disabled]) [part="base"],
-  [part="base"]:disabled {
+  [part="base"][aria-disabled="true"] {
     cursor: var(--dads-button-cursor-disabled, not-allowed);
     opacity: var(--dads-button-opacity, 1);
-    pointer-events: none;
   }
 
   /* アイコンスロット */
