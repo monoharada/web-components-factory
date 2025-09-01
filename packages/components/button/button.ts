@@ -139,6 +139,7 @@ export class DadsButton extends WebComponent {
           --dads-button-background-active: var(--button-secondary-bg-active);
           --dads-button-color: var(--button-secondary-text);
           --dads-button-border-color: var(--button-secondary-border);
+          --dads-button-border-width: 1px;
         }
         
         :host([variant="text"]),
