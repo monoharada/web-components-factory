@@ -23,16 +23,22 @@ export const buttonSemanticTokens = css`
     
     /* Secondary（副次アクション）用トークン */
     --button-secondary-bg: var(--color-primitive-white, #ffffff);
-    --button-secondary-bg-hover: var(--color-primitive-gray-50, #f7f7f7);
-    --button-secondary-bg-active: var(--color-primitive-gray-100, #efefef);
-    --button-secondary-text: var(--color-primitive-blue-1000, #0017c1);
-    --button-secondary-border: var(--color-primitive-blue-1000, #0017c1);
+    --button-secondary-bg-hover: var(--color-primitive-blue-200, #c5d7fb);
+    --button-secondary-bg-active: var(--color-primitive-blue-300, #9db7f9);
+    --button-secondary-text: var(--color-primitive-blue-900, #0017c1);
+    --button-secondary-text-hover: var(--color-primitive-blue-1000, #00118f);
+    --button-secondary-text-active: var(--color-primitive-blue-1200, #000060);
+    --button-secondary-border: var(--color-primitive-blue-900, #0017c1);
+    --button-secondary-border-hover: var(--color-primitive-blue-1000, #00118f);
+    --button-secondary-border-active: var(--color-primitive-blue-1200, #000060);
     
     /* Tertiary（第三アクション）用トークン */
     --button-tertiary-bg: transparent;
-    --button-tertiary-bg-hover: var(--color-primitive-blue-50, #f0f4ff);
-    --button-tertiary-bg-active: var(--color-primitive-blue-100, #e0e9ff);
-    --button-tertiary-text: var(--color-primitive-blue-1000, #0017c1);
+    --button-tertiary-bg-hover: var(--color-primitive-blue-50, #e8f1fe);
+    --button-tertiary-bg-active: var(--color-primitive-blue-100, #d9e6ff);
+    --button-tertiary-text: var(--color-primitive-blue-900, #0017c1);
+    --button-tertiary-text-hover: var(--color-primitive-blue-1000, #00118f);
+    --button-tertiary-text-active: var(--color-primitive-blue-1200, #000060);
     --button-tertiary-border: transparent;
     
     /* Disabled（無効）状態用トークン */
@@ -138,6 +144,7 @@ export const buttonLocalTokens = css`
     --dads-button-focus-visible-outline: none;
     --dads-button-tap-highlight-color: transparent;
     --dads-button-user-select: none;
+    --dads-button-opacity: 1;
   }
   
   /* バリアントごとのローカルトークン上書き */
@@ -157,6 +164,7 @@ export const buttonLocalTokens = css`
     --dads-button-background-active: var(--button-secondary-bg-active);
     --dads-button-color: var(--button-secondary-text);
     --dads-button-border-color: var(--button-secondary-border);
+    --dads-button-border-width: 1px;
   }
   
   :host([variant="text"]),

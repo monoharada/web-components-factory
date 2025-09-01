@@ -8,14 +8,11 @@ export const buttonStyles = css`
   :host {
     display: inline-block;
     font-family: var(--font-family-base, 'Noto Sans JP', sans-serif);
-    --dads-button-width: auto;
   }
 
-  /* フルワイド対応 */
   :host([full-width]) {
     display: block;
     width: 100%;
-    --dads-button-width: 100%;
   }
 
   /* ベースボタンスタイル */
@@ -23,24 +20,24 @@ export const buttonStyles = css`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--dads-button-icon-gap);
-    width: var(--dads-button-width);
-    min-height: var(--dads-button-min-height);
-    padding: var(--dads-button-padding);
-    border: var(--dads-button-border-width) solid var(--dads-button-border-color);
-    border-radius: var(--dads-button-border-radius);
+    gap: var(--dads-button-icon-gap, 8px);
+    width: var(--dads-button-width, auto);
+    min-height: var(--dads-button-min-height, 48px);
+    padding: var(--dads-button-padding, 12px 24px);
+    border: var(--dads-button-border-width, 2px) solid var(--dads-button-border-color, #0017c1);
+    border-radius: var(--dads-button-border-radius, 0.5rem);
     background-color: var(--dads-button-background);
     color: var(--dads-button-color);
-    font-size: var(--dads-button-font-size);
-    font-weight: var(--dads-button-font-weight);
-    line-height: var(--dads-button-line-height);
-    text-align: var(--dads-button-text-align);
-    text-decoration: var(--dads-button-text-decoration);
-    text-transform: var(--dads-button-text-transform);
-    white-space: var(--dads-button-white-space);
-    cursor: var(--dads-button-cursor);
-    user-select: var(--dads-button-user-select);
-    -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color);
+    font-size: var(--dads-button-font-size, 1rem);
+    font-weight: var(--dads-button-font-weight, 700);
+    line-height: var(--dads-button-line-height, 1.25);
+    text-align: var(--dads-button-text-align, center);
+    text-decoration: var(--dads-button-text-decoration, none);
+    text-transform: var(--dads-button-text-transform, none);
+    white-space: var(--dads-button-white-space, nowrap);
+    cursor: var(--dads-button-cursor, pointer);
+    user-select: var(--dads-button-user-select, none);
+    -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color, transparent);
     /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */
     position: relative;
     /* overflow: hidden を削除して擬似要素が見えるように */
@@ -54,7 +51,7 @@ export const buttonStyles = css`
   /* ホバー状態 */
   [part="base"]:hover:not(:disabled) {
     background-color: var(--dads-button-background-hover);
-    box-shadow: var(--dads-button-shadow-hover);
+    box-shadow: var(--dads-button-shadow-hover, none);
   }
 
   /* 塗りボタンとアウトラインボタンのみHover時に下線 */
@@ -67,8 +64,8 @@ export const buttonStyles = css`
   /* アクティブ状態 */
   [part="base"]:active:not(:disabled) {
     background-color: var(--dads-button-background-active);
-    transform: var(--dads-button-transform-active);
-    box-shadow: var(--dads-button-shadow-active);
+    transform: var(--dads-button-transform-active, none);
+    box-shadow: var(--dads-button-shadow-active, none);
   }
 
   /* 塗りボタンとアウトラインボタンのみActive時に下線 */
@@ -78,36 +75,33 @@ export const buttonStyles = css`
     text-underline-offset: 0.2em;
   }
 
-  /* アウトラインボタンのActive時の特別処理 */
+  /* アウトラインボタンのHover/Active時の特別処理 */
   :host([variant="outlined"]) [part="base"]:hover:not(:disabled) {
-    border-color: var(--button-secondary-border-hover);
+    color: var(--button-secondary-text-hover, #00118f);
+    border-color: var(--button-secondary-border-hover, #00118f);
   }
 
   :host([variant="outlined"]) [part="base"]:active:not(:disabled) {
-    color: var(--button-secondary-text-active);
-    border-color: var(--button-secondary-border-active);
+    color: var(--button-secondary-text-active, #000060);
+    border-color: var(--button-secondary-border-active, #000060);
   }
 
   /* テキストボタンのHover/Active時の特別処理 */
   :host([variant="text"]) [part="base"]:hover:not(:disabled) {
-    color: var(--button-tertiary-text-hover);
+    color: var(--button-tertiary-text-hover, #00118f);
   }
 
   :host([variant="text"]) [part="base"]:active:not(:disabled) {
-    color: var(--button-tertiary-text-active);
+    color: var(--button-tertiary-text-active, #000060);
   }
 
   /* フォーカススタイルはmixin (applyFocusStyles) で適用 */
 
   /* 無効状態 */
+  :host([disabled]) [part="base"],
   [part="base"]:disabled {
-    cursor: var(--dads-button-cursor-disabled);
-    opacity: var(--dads-button-opacity);
-  }
-
-  :host([disabled]) [part="base"] {
-    cursor: var(--dads-button-cursor-disabled);
-    opacity: var(--button-disabled-opacity);
+    cursor: var(--dads-button-cursor-disabled, not-allowed);
+    opacity: var(--dads-button-opacity, 0.5);
     pointer-events: none;
   }
 
@@ -118,8 +112,8 @@ export const buttonStyles = css`
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: var(--dads-button-icon-size);
-    color: var(--dads-button-icon-color);
+    font-size: var(--dads-button-icon-size, 1.25em);
+    color: var(--dads-button-icon-color, currentColor);
   }
 
   /* 空のアイコンスロットは非表示 */
@@ -134,12 +128,55 @@ export const buttonStyles = css`
   }
 
   /* ========== バリアント固有スタイル ========== */
+  
+  /* Solid (Primary) バリアントのデフォルト値 */
+  :host([variant="solid"]) [part="base"] {
+    background-color: var(--dads-button-background, #0017c1);
+    color: var(--dads-button-color, #ffffff);
+    border-color: var(--dads-button-border-color, #0017c1);
+  }
+  
+  :host([variant="solid"]) [part="base"]:hover:not(:disabled) {
+    background-color: var(--dads-button-background-hover, #00118f);
+  }
+  
+  :host([variant="solid"]) [part="base"]:active:not(:disabled) {
+    background-color: var(--dads-button-background-active, #000060);
+  }
+  
+  /* Outlined (Secondary) バリアントのデフォルト値 */
+  :host([variant="outlined"]) [part="base"] {
+    background-color: var(--dads-button-background, #ffffff);
+    color: var(--dads-button-color, #0017c1);
+    border-color: var(--dads-button-border-color, #0017c1);
+    border-width: var(--dads-button-border-width, 1px);
+  }
+  
+  :host([variant="outlined"]) [part="base"]:hover:not(:disabled) {
+    background-color: var(--dads-button-background-hover, #c5d7fb);
+  }
+  
+  :host([variant="outlined"]) [part="base"]:active:not(:disabled) {
+    background-color: var(--dads-button-background-active, #9db7f9);
+  }
 
   /* Text（テキストのみ）バリアント - デジタル庁準拠で下線付き */
   :host([variant="text"]) [part="base"] {
+    background-color: var(--dads-button-background, transparent);
+    color: var(--dads-button-color, #0017c1);
+    border-color: var(--dads-button-border-color, transparent);
+    border-width: 0;
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: 1px;
+  }
+  
+  :host([variant="text"]) [part="base"]:hover:not(:disabled) {
+    background-color: var(--dads-button-background-hover, #e8f1fe);
+  }
+  
+  :host([variant="text"]) [part="base"]:active:not(:disabled) {
+    background-color: var(--dads-button-background-active, #d9e6ff);
   }
 
   /* テキストボタンのHover時は下線が太くなる */
@@ -155,21 +192,7 @@ export const buttonStyles = css`
     text-decoration-thickness: 2px;
   }
 
-  /* ========== サイズ固有スタイル ========== */
-  /* Note: サイズ固有のスタイルはbutton-tokens.tsでローカル変数への代入として定義済み */
-
-  /* ========== レスポンシブ対応 ========== */
-  
-  @media (max-width: 640px) {
-    :host {
-      --dads-button-min-width: 64px;
-    }
-  }
-
-  /* @media (prefers-reduced-motion: reduce) セクションは削除（transitionを完全に無効化） */
-
-  /* ========== 印刷対応 ========== */
-  
+  /* 印刷対応 */
   @media print {
     [part="base"] {
       background-color: transparent !important;
