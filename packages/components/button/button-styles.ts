@@ -125,85 +125,44 @@ export const buttonStyles = css`
   /* ========== バリアント固有スタイル ========== */
 
   /* Solid（塗りつぶし）バリアント - デフォルト */
+  /* Note: バリアント固有のスタイルはbutton-tokens.tsで
+     ローカル変数への代入として定義済み */
   :host([variant="solid"]) [part="base"] {
-    background-color: var(--button-primary-bg);
-    color: var(--button-primary-text);
-    border-color: var(--button-primary-border);
-  }
-
-  :host([variant="solid"]) [part="base"]:hover:not(:disabled) {
-    background-color: var(--button-primary-bg-hover);
-    border-color: var(--button-primary-bg-hover);
-  }
-
-  :host([variant="solid"]) [part="base"]:active:not(:disabled) {
-    background-color: var(--button-primary-bg-active);
-    border-color: var(--button-primary-bg-active);
+    /* button-tokens.tsで定義されたローカル変数を使用 */
   }
 
   /* Outlined（アウトライン）バリアント */
+  /* Note: バリアント固有のスタイルはbutton-tokens.tsで
+     ローカル変数への代入として定義済み */
   :host([variant="outlined"]) [part="base"] {
-    background-color: var(--button-secondary-bg);
-    color: var(--button-secondary-text);
-    border-color: var(--button-secondary-border);
-  }
-
-  :host([variant="outlined"]) [part="base"]:hover:not(:disabled) {
-    background-color: var(--button-secondary-bg-hover);
-  }
-
-  :host([variant="outlined"]) [part="base"]:active:not(:disabled) {
-    background-color: var(--button-secondary-bg-active);
+    /* button-tokens.tsで定義されたローカル変数を使用 */
   }
 
   /* Text（テキストのみ）バリアント - デジタル庁準拠で下線付き */
   :host([variant="text"]) [part="base"] {
-    background-color: var(--button-tertiary-bg);
-    color: var(--button-tertiary-text);
-    border-color: var(--button-tertiary-border);
-    border-width: 0;
+    /* button-tokens.tsで定義されたローカル変数を使用 */
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
   :host([variant="text"]) [part="base"]:hover:not(:disabled) {
-    background-color: var(--button-tertiary-bg-hover);
     text-decoration: underline;
   }
 
   :host([variant="text"]) [part="base"]:active:not(:disabled) {
-    background-color: var(--button-tertiary-bg-active);
     text-decoration: underline;
   }
 
   /* ========== サイズ固有スタイル ========== */
 
-  /* X-Small サイズ */
-  :host([size="x-small"]) [part="base"] {
-    min-height: var(--button-height-x-small);
-    padding: var(--button-padding-x-small);
-    font-size: var(--button-font-size-x-small);
-  }
-
-  /* Small サイズ */
-  :host([size="small"]) [part="base"] {
-    min-height: var(--button-height-small);
-    padding: var(--button-padding-small);
-    font-size: var(--button-font-size-small);
-  }
-
-  /* Medium サイズ（デフォルト） */
-  :host([size="medium"]) [part="base"] {
-    min-height: var(--button-height-medium);
-    padding: var(--button-padding-medium);
-    font-size: var(--button-font-size-medium);
-  }
-
-  /* Large サイズ */
+  /* サイズ固有スタイル */
+  /* Note: サイズ固有のスタイルはbutton-tokens.tsで
+     ローカル変数への代入として定義済み */
+  :host([size="x-small"]) [part="base"],
+  :host([size="small"]) [part="base"],
+  :host([size="medium"]) [part="base"],
   :host([size="large"]) [part="base"] {
-    min-height: var(--button-height-large);
-    padding: var(--button-padding-large);
-    font-size: var(--button-font-size-large);
+    /* button-tokens.tsで定義されたローカル変数を使用 */
   }
 
   /* ========== レスポンシブ対応 ========== */

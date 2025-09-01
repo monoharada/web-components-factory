@@ -84,7 +84,7 @@ export const buttonLocalTokens = css`
   :host {
     /* ========== ローカルコンポーネントトークン（カスタマイズ用） ========== */
     
-    /* 基本カスタマイズ用トークン */
+    /* 基本カスタマイズ用トークン（デフォルトはprimaryバリアント） */
     --dads-button-background: var(--button-primary-bg);
     --dads-button-background-hover: var(--button-primary-bg-hover);
     --dads-button-background-active: var(--button-primary-bg-active);
@@ -141,6 +141,7 @@ export const buttonLocalTokens = css`
   }
   
   /* バリアントごとのローカルトークン上書き */
+  :host([variant="solid"]),
   :host([variant="primary"]) {
     --dads-button-background: var(--button-primary-bg);
     --dads-button-background-hover: var(--button-primary-bg-hover);
@@ -149,6 +150,7 @@ export const buttonLocalTokens = css`
     --dads-button-border-color: var(--button-primary-border);
   }
   
+  :host([variant="outlined"]),
   :host([variant="secondary"]) {
     --dads-button-background: var(--button-secondary-bg);
     --dads-button-background-hover: var(--button-secondary-bg-hover);
@@ -157,6 +159,7 @@ export const buttonLocalTokens = css`
     --dads-button-border-color: var(--button-secondary-border);
   }
   
+  :host([variant="text"]),
   :host([variant="tertiary"]) {
     --dads-button-background: var(--button-tertiary-bg);
     --dads-button-background-hover: var(--button-tertiary-bg-hover);
