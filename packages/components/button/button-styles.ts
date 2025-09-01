@@ -49,49 +49,49 @@ export const buttonStyles = css`
   }
 
   /* ホバー状態 */
-  [part="base"]:hover:not(:disabled) {
+  [part="base"]:not([aria-disabled="true"]):hover {
     background-color: var(--dads-button-background-hover);
     box-shadow: var(--dads-button-shadow-hover, none);
   }
 
   /* 塗りボタンとアウトラインボタンのみHover時に下線 */
-  :host([variant="solid"]) [part="base"]:hover:not(:disabled),
-  :host([variant="outlined"]) [part="base"]:hover:not(:disabled) {
+  :host([variant="solid"]) [part="base"]:not([aria-disabled="true"]):hover,
+  :host([variant="outlined"]) [part="base"]:not([aria-disabled="true"]):hover {
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
 
   /* アクティブ状態 */
-  [part="base"]:active:not(:disabled) {
+  [part="base"]:not([aria-disabled="true"]):active {
     background-color: var(--dads-button-background-active);
     transform: var(--dads-button-transform-active, none);
     box-shadow: var(--dads-button-shadow-active, none);
   }
 
   /* 塗りボタンとアウトラインボタンのみActive時に下線 */
-  :host([variant="solid"]) [part="base"]:active:not(:disabled),
-  :host([variant="outlined"]) [part="base"]:active:not(:disabled) {
+  :host([variant="solid"]) [part="base"]:not([aria-disabled="true"]):active,
+  :host([variant="outlined"]) [part="base"]:not([aria-disabled="true"]):active {
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
 
   /* アウトラインボタンのHover/Active時の特別処理 */
-  :host([variant="outlined"]) [part="base"]:hover:not(:disabled) {
+  :host([variant="outlined"]) [part="base"]:not([aria-disabled="true"]):hover {
     color: var(--button-secondary-text-hover, #00118f);
     border-color: var(--button-secondary-border-hover, #00118f);
   }
 
-  :host([variant="outlined"]) [part="base"]:active:not(:disabled) {
+  :host([variant="outlined"]) [part="base"]:not([aria-disabled="true"]):active {
     color: var(--button-secondary-text-active, #000060);
     border-color: var(--button-secondary-border-active, #000060);
   }
 
   /* テキストボタンのHover/Active時の特別処理 */
-  :host([variant="text"]) [part="base"]:hover:not(:disabled) {
+  :host([variant="text"]) [part="base"]:not([aria-disabled="true"]):hover {
     color: var(--button-tertiary-text-hover, #00118f);
   }
 
-  :host([variant="text"]) [part="base"]:active:not(:disabled) {
+  :host([variant="text"]) [part="base"]:not([aria-disabled="true"]):active {
     color: var(--button-tertiary-text-active, #000060);
   }
 
@@ -228,13 +228,13 @@ export const buttonStyles = css`
   }
 
   /* テキストボタンのHover時は下線が太くなる */
-  :host([variant="text"]) [part="base"]:hover:not(:disabled) {
+  :host([variant="text"]) [part="base"]:not([aria-disabled="true"]):hover {
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: 2px;
   }
 
-  :host([variant="text"]) [part="base"]:active:not(:disabled) {
+  :host([variant="text"]) [part="base"]:not([aria-disabled="true"]):active {
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: 2px;
