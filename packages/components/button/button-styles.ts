@@ -41,7 +41,7 @@ export const buttonStyles = css`
     cursor: var(--dads-button-cursor);
     user-select: var(--dads-button-user-select);
     -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color);
-    transition: var(--dads-button-transition);
+    /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */
     position: relative;
     /* overflow: hidden を削除して擬似要素が見えるように */
     font-family: inherit;
@@ -127,11 +127,7 @@ export const buttonStyles = css`
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    [part="base"] {
-      transition: none;
-    }
-  }
+  /* @media (prefers-reduced-motion: reduce) セクションは削除（transitionを完全に無効化） */
 
   /* ========== 印刷対応 ========== */
   
