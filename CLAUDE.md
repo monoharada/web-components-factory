@@ -2,9 +2,127 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🎯 Claude Code Development Workflow
+
+### Development Flow Type
+This project follows an **incremental, review-driven development flow** optimized for Claude Code collaboration.
+
+### Core Principles
+1. **Incremental Development**: Work in small, reversible chunks
+2. **Clear Work Scopes**: Each task should have clear boundaries
+3. **Frequent Commits**: Commit after each logical change
+4. **Continuous Review**: Review at each stage of development
+5. **Knowledge Capture**: Document learnings and patterns
+
+## 🔠 Slash Commands (Claude Code)
+
+Claude Code supports slash commands for streamlined workflow. Full definitions are in `.claude/slash-commands/`.
+
+### Core Commands
+| Command | Purpose | Details |
+|---------|---------|--------|
+| `/design` | Create implementation plan | → [design.md](.claude/commands/design.md) |
+| `/revise` | Update plan based on feedback | (standard command) |
+| `/implement` | Execute TDD implementation | → [implement.md](.claude/commands/implement.md) |
+| `/review` | Multi-perspective code review | → [review.md](.claude/commands/review.md) |
+| `/recap` | Extract learnings & knowledge | → [recap.md](.claude/commands/recap.md) |
+| `/ask` | Query about codebase | Standard command |
+| `/instruct` | Execute specific tasks | Standard command |
+
+### Workflow Example
+```
+/design 新機能
+  ↓
+/implement TASK-001
+  ↓
+/review
+  ↓
+/recap
+```
+
+### Project-Specific Behavior
+Commands are customized for Web Components development:
+- **Testing**: TDD with vitest
+- **Styling**: ::part() instead of classes
+- **Types**: No `any`, strict mode
+- **Accessibility**: WCAG 2.2 AA compliance
+- **Documentation**: Automatic knowledge capture
+
 ## Project Overview
 
 This is a TypeScript utility library for creating Web Components with strict typing and no use of `any` types or `Array.forEach`.
+
+## 📋 Standard Development Commands
+
+### Quick Start Commands
+```bash
+# Start development server
+bun server.ts  # TypeScript auto-transpile with viewer.html
+
+# Run tests
+npm test       # Run all tests
+npm run tdd    # Test-driven development mode
+
+# Type checking
+npm run type-check  # Check TypeScript types
+
+# Code quality
+npm run lint    # ESLint checking
+npm run format  # Prettier formatting
+
+# Build
+npm run build   # Production build
+npm run ci      # CI pipeline (type-check + test + build)
+```
+
+### Advanced Commands
+```bash
+# Design tokens management
+npm run update-tokens  # Update design tokens
+npm run check-tokens   # Check token version
+
+# Testing variations
+npm run test:watch     # Watch mode
+npm run test:ui        # UI test runner
+npm run test:coverage  # Coverage report
+
+# Storybook
+npm run storybook       # Development mode
+npm run build-storybook # Build static Storybook
+```
+
+## 🔄 Claude Code Workflow Commands
+
+### 1. Planning Phase
+```bash
+# Create implementation plan
+echo "Create detailed implementation plan in docs/plans/"
+# Review existing plans
+ls -la docs/plans/
+```
+
+### 2. Implementation Phase
+```bash
+# Start TDD workflow
+npm run tdd
+# Type check continuously
+npm run type-check -- --watch
+```
+
+### 3. Review Phase
+```bash
+# Run all quality checks
+npm run ci
+# Generate review report
+mkdir -p tmp && echo "Review results" > tmp/review-$(date +%Y%m%d-%H%M%S).md
+```
+
+### 4. Knowledge Management
+```bash
+# Create knowledge document
+mkdir -p docs/knowledge
+touch docs/knowledge/$(date +%Y%m%d)-learnings.md
+```
 
 ## Commands
 
@@ -278,6 +396,41 @@ When modifying code:
 3. Use the established attribute behavior system
 4. Ensure proper encapsulation with private fields
 5. Type check with: `tsc --noEmit web-components.ts --strict`
+
+## 📚 Project Documentation Structure
+
+### Knowledge Management
+- **[Development Workflow](docs/claude-code-workflow.md)**: Claude Code開発フロー
+- **[Knowledge Base](docs/knowledge/)**: 学習内容とパターン
+  - [Learnings](docs/knowledge/learnings.md): 学習記録
+  - [Patterns](docs/knowledge/patterns.md): 再利用可能パターン
+- **[Implementation Plans](docs/plans/)**: 実装計画
+- **[Reviews](docs/reviews/)**: レビュー結果
+
+### Quick Reference
+
+#### Slash Commands (Primary)
+```
+/design      # Create implementation plan
+/implement   # Execute implementation
+/revise      # Update plan
+/review      # Code review
+/recap       # Extract knowledge
+```
+
+#### NPM Scripts (Support)
+```bash
+# Testing & Validation
+npm run tdd            # TDD mode
+npm run claude:check   # Quick type & lint check
+npm run claude:quick   # Type check + test
+npm run claude:verify  # Full CI verification
+
+# Utilities
+npm run claude:docs    # Check documentation
+npm run claude:status  # Current status
+npm run claude:clean   # Clean build artifacts
+```
 
 ## Key Patterns
 

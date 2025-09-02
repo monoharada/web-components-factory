@@ -22,7 +22,16 @@
     "update-tokens": "node scripts/update-design-tokens.js",
     "check-tokens": "npm view @digital-go-jp/design-tokens version",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "claude:plan": "mkdir -p docs/plans && echo 'Create implementation plan' && ls -la docs/plans/",
+    "claude:review": "npm run lint && npm run type-check && npm run test:run && echo '✅ Review complete'",
+    "claude:check": "npm run type-check && npm run lint && echo '✅ Code check complete'",
+    "claude:clean": "rm -rf dist coverage .vitest && echo '🧹 Cleaned build artifacts'",
+    "claude:docs": "mkdir -p docs/knowledge && echo '📚 Documentation structure:' && ls -la docs/",
+    "claude:status": "git status && npm run type-check",
+    "claude:verify": "npm run ci && echo '✅ All checks passed'",
+    "claude:quick": "npm run type-check && npm run test:run",
+    "claude:all": "npm run claude:check && npm run test:run && npm run build && echo '🎉 Full pipeline complete'"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.6.10",

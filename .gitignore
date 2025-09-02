@@ -56,4 +56,4 @@ temp/
 .nyc_output
 
 # Vitest
-.vitest/
+.vitest/.serena/
