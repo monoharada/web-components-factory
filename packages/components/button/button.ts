@@ -53,7 +53,22 @@ export class DadsButton extends WebComponent {
 
   static definition = {
     name: 'dads-button',
-    template: null, // テンプレートは動的に生成
+    template: html`
+      <button 
+        part="base"
+        type="button"
+      >
+        <span part="icon-start">
+          <slot name="icon-start"></slot>
+        </span>
+        <span part="label">
+          <slot></slot>
+        </span>
+        <span part="icon-end">
+          <slot name="icon-end"></slot>
+        </span>
+      </button>
+    `,
     styles: withReset([
       applyDADSTokens(),
       buttonTokens,
@@ -84,8 +99,10 @@ export class DadsButton extends WebComponent {
       if (!this.hasAttribute(attr)) this.setAttribute(attr, value);
     }
     
-    // テンプレートをレンダリング
-    this.#renderTemplate();
+    // リンクの場合のみテンプレートを再レンダリング
+    if (this.#isLink()) {
+      this.#renderTemplate();
+    }
     
     // ボタン要素の初期化
     this.#initButton();
@@ -109,11 +126,6 @@ export class DadsButton extends WebComponent {
     // Shadow DOMの内容を更新
     this.shadowRoot.innerHTML = '';
     this.shadowRoot.appendChild(template.content.cloneNode(true));
-    
-    // スタイルを再適用（template: nullの場合、手動で適用が必要）
-    if (this.definition.styles && this.shadowRoot.adoptedStyleSheets.length === 0) {
-      this.shadowRoot.adoptedStyleSheets = [...this.definition.styles];
-    }
   }
   
   #createButtonTemplate(): HTMLTemplateElement {
@@ -193,13 +205,7 @@ export class DadsButton extends WebComponent {
     
     // as属性やhref属性が変更された場合は再レンダリングが必要
     if (name === 'as' || name === 'href') {
-      // 現在のスタイルを保存
-      const currentStyles = this.shadowRoot?.adoptedStyleSheets || [];
       this.#renderTemplate();
-      // スタイルを復元
-      if (this.shadowRoot && currentStyles.length > 0) {
-        this.shadowRoot.adoptedStyleSheets = currentStyles;
-      }
       this.#initButton();
       return;
     }
@@ -260,7 +266,3 @@ export class DadsButton extends WebComponent {
     }));
   };
 }
-
-// WebComponentDefinitionマップに登録（カスタムエレメント登録はしない）
-// これによりthis.definitionが正しく動作する
-WebComponentDefinition.compose(DadsButton, DadsButton.definition);
