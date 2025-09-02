@@ -5,7 +5,8 @@
  */
 
 import { 
-  WebComponent, 
+  WebComponent,
+  WebComponentDefinition,
   html, 
   css,
   BooleanAttr, 
@@ -108,6 +109,11 @@ export class DadsButton extends WebComponent {
     // Shadow DOMの内容を更新
     this.shadowRoot.innerHTML = '';
     this.shadowRoot.appendChild(template.content.cloneNode(true));
+    
+    // スタイルを再適用（template: nullの場合、手動で適用が必要）
+    if (this.definition.styles && this.shadowRoot.adoptedStyleSheets.length === 0) {
+      this.shadowRoot.adoptedStyleSheets = [...this.definition.styles];
+    }
   }
   
   #createButtonTemplate(): HTMLTemplateElement {
@@ -187,7 +193,13 @@ export class DadsButton extends WebComponent {
     
     // as属性やhref属性が変更された場合は再レンダリングが必要
     if (name === 'as' || name === 'href') {
+      // 現在のスタイルを保存
+      const currentStyles = this.shadowRoot?.adoptedStyleSheets || [];
       this.#renderTemplate();
+      // スタイルを復元
+      if (this.shadowRoot && currentStyles.length > 0) {
+        this.shadowRoot.adoptedStyleSheets = currentStyles;
+      }
       this.#initButton();
       return;
     }
@@ -248,3 +260,7 @@ export class DadsButton extends WebComponent {
     }));
   };
 }
+
+// WebComponentDefinitionマップに登録（カスタムエレメント登録はしない）
+// これによりthis.definitionが正しく動作する
+WebComponentDefinition.compose(DadsButton, DadsButton.definition);

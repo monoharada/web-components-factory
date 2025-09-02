@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Styles Debug</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .debug-info {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 20px 0;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    .button-test {
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+    .status {
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Button Styles Debug</h1>
+    
+    <div class="status" id="status">
+      調査中...
+    </div>
+    
+    <div class="button-test">
+      <h2>テストボタン</h2>
+      <dads-button id="test-button" variant="solid">Solidボタン</dads-button>
+      <dads-button id="test-link" href="/test">リンクボタン</dads-button>
+    </div>
+    
+    <div class="debug-info">
+      <h3>Debug Information</h3>
+      <div id="debug-output"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { DadsButton } from './packages/components/button/button.js';
+    
+    async function debugStyles() {
+      // コンポーネントを定義
+      DadsButton.define();
+      
+      // 少し待ってから検査
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const button = document.getElementById('test-button');
+      const link = document.getElementById('test-link');
+      
+      if (!button || !button.shadowRoot) {
+        document.getElementById('status').innerHTML = '❌ ボタンまたはShadow DOMが見つかりません';
+        return;
+      }
+      
+      const debugInfo = [];
+      
+      // 1. Shadow Rootの確認
+      debugInfo.push('=== Shadow Root ===');
+      debugInfo.push(`Shadow Root exists: ${!!button.shadowRoot}`);
+      debugInfo.push(`Shadow Root mode: ${button.shadowRoot.mode}`);
+      
+      // 2. adoptedStyleSheetsの確認
+      debugInfo.push('\n=== Adopted StyleSheets ===');
+      const sheets = button.shadowRoot.adoptedStyleSheets;
+      debugInfo.push(`StyleSheets count: ${sheets.length}`);
+      
+      // 各StyleSheetの内容を確認
+      for (let i = 0; i < sheets.length; i++) {
+        try {
+          const sheet = sheets[i];
+          const rules = sheet.cssRules || sheet.rules;
+          debugInfo.push(`\nStyleSheet ${i + 1}: ${rules.length} rules`);
+          
+          // CSS変数を含むルールを探す
+          let hasVariables = false;
+          for (let j = 0; j < Math.min(rules.length, 5); j++) {
+            const rule = rules[j];
+            if (rule.cssText && rule.cssText.includes('--')) {
+              hasVariables = true;
+              debugInfo.push(`  Rule ${j + 1}: ${rule.cssText.substring(0, 100)}...`);
+            }
+          }
+          debugInfo.push(`  Contains CSS variables: ${hasVariables}`);
+        } catch (e) {
+          debugInfo.push(`  Error reading stylesheet ${i + 1}: ${e.message}`);
+        }
+      }
+      
+      // 3. Shadow DOM内の要素を確認
+      debugInfo.push('\n=== Shadow DOM Content ===');
+      const baseElement = button.shadowRoot.querySelector('[part="base"]');
+      debugInfo.push(`Base element: ${baseElement ? baseElement.tagName : 'Not found'}`);
+      
+      // 4. 計算済みスタイルを確認
+      if (baseElement) {
+        debugInfo.push('\n=== Computed Styles ===');
+        const computedStyle = getComputedStyle(baseElement);
+        
+        // 重要なCSS変数をチェック
+        const vars = [
+          '--dads-button-background',
+          '--dads-button-color',
+          '--button-primary-bg',
+          '--color-primitive-blue-1000'
+        ];
+        
+        for (const varName of vars) {
+          const value = computedStyle.getPropertyValue(varName);
+          debugInfo.push(`${varName}: ${value || 'undefined'}`);
+        }
+        
+        // 実際の背景色とテキスト色
+        debugInfo.push(`\nActual styles:`);
+        debugInfo.push(`background-color: ${computedStyle.backgroundColor}`);
+        debugInfo.push(`color: ${computedStyle.color}`);
+        debugInfo.push(`border: ${computedStyle.border}`);
+      }
+      
+      // 5. リンクボタンの確認
+      if (link && link.shadowRoot) {
+        debugInfo.push('\n=== Link Button ===');
+        const linkBase = link.shadowRoot.querySelector('[part="base"]');
+        debugInfo.push(`Link base element: ${linkBase ? linkBase.tagName : 'Not found'}`);
+        debugInfo.push(`Link StyleSheets count: ${link.shadowRoot.adoptedStyleSheets.length}`);
+      }
+      
+      // 結果を表示
+      document.getElementById('debug-output').innerHTML = `<pre>${debugInfo.join('\n')}</pre>`;
+      document.getElementById('status').innerHTML = '✅ デバッグ情報を取得しました';
+    }
+    
+    debugStyles().catch(error => {
+      document.getElementById('status').innerHTML = `❌ エラー: ${error.message}`;
+      console.error(error);
+    });
+  </script>
+</body>
+</html>
