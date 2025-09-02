@@ -56,4 +56,7 @@ temp/
 .nyc_output
 
 # Vitest
-.vitest/.serena/
+.vitest/
+
+# Serena tool
+.serena/
