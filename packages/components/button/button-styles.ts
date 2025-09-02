@@ -162,17 +162,17 @@ export const buttonStyles = css`
   
   /* Solid (Primary) バリアントのデフォルト値 */
   :host([variant="solid"]:not([disabled])) [part="base"] {
-    background-color: var(--dads-button-background, #0017c1);
-    color: var(--dads-button-color, #ffffff);
-    border-color: var(--dads-button-border-color, #0017c1);
+    background-color: var(--dads-button-background);
+    color: var(--dads-button-color);
+    border-color: var(--dads-button-border-color);
   }
   
-  :host([variant="solid"]:not([disabled])):hover {
-    --dads-button-background: var(--button-primary-bg-hover, #000071);
+  :host([variant="solid"]:not([disabled])) [part="base"]:hover {
+    --dads-button-background: var(--button-primary-bg-hover);
   }
   
-  :host([variant="solid"]:not([disabled])):active {
-    --dads-button-background: var(--button-primary-bg-active, #000060);
+  :host([variant="solid"]:not([disabled])) [part="base"]:active {
+    --dads-button-background: var(--button-primary-bg-active);
   }
   
   /* Solid Disabled状態 */
@@ -184,18 +184,22 @@ export const buttonStyles = css`
   
   /* Outlined (Secondary) バリアントのデフォルト値 */
   :host([variant="outlined"]:not([disabled])) [part="base"] {
-    background-color: var(--dads-button-background, #ffffff);
-    color: var(--dads-button-color, #0017c1);
-    border-color: var(--dads-button-border-color, #0017c1);
-    border-width: var(--dads-button-border-width, 1px);
+    background-color: var(--dads-button-background);
+    color: var(--dads-button-color);
+    border-color: var(--dads-button-border-color);
+    border-width: var(--dads-button-border-width);
   }
   
-  :host([variant="outlined"]:not([disabled])):hover {
-    --dads-button-background: var(--button-secondary-bg-hover, #c5d7fb);
+  :host([variant="outlined"]:not([disabled])) [part="base"]:hover {
+    --dads-button-background: var(--button-secondary-bg-hover);
+    --dads-button-color: var(--button-secondary-text-hover);
+    --dads-button-border-color: var(--button-secondary-border-hover);
   }
   
-  :host([variant="outlined"]:not([disabled])):active {
-    --dads-button-background: var(--button-secondary-bg-active, #9db7f9);
+  :host([variant="outlined"]:not([disabled])) [part="base"]:active {
+    --dads-button-background: var(--button-secondary-bg-active);
+    --dads-button-color: var(--button-secondary-text-active);
+    --dads-button-border-color: var(--button-secondary-border-active);
   }
   
   /* Outlined Disabled状態 */
@@ -208,21 +212,23 @@ export const buttonStyles = css`
 
   /* Text（テキストのみ）バリアント - デジタル庁準拠で下線付き */
   :host([variant="text"]:not([disabled])) [part="base"] {
-    background-color: var(--dads-button-background, transparent);
-    color: var(--dads-button-color, #0017c1);
-    border-color: var(--dads-button-border-color, transparent);
+    background-color: var(--dads-button-background);
+    color: var(--dads-button-color);
+    border-color: var(--dads-button-border-color);
     border-width: 0;
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: 1px;
   }
   
-  :host([variant="text"]:not([disabled])):hover {
-    --dads-button-background: var(--button-tertiary-bg-hover, #e8f1fe);
+  :host([variant="text"]:not([disabled])) [part="base"]:hover {
+    --dads-button-background: var(--button-tertiary-bg-hover);
+    --dads-button-color: var(--button-tertiary-text-hover);
   }
   
-  :host([variant="text"]:not([disabled])):active {
-    --dads-button-background: var(--button-tertiary-bg-active, #d9e6ff);
+  :host([variant="text"]:not([disabled])) [part="base"]:active {
+    --dads-button-background: var(--button-tertiary-bg-active);
+    --dads-button-color: var(--button-tertiary-text-active);
   }
   
   /* Text Disabled状態 */

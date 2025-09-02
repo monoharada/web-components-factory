@@ -15,11 +15,11 @@ const buttonSemanticTokensText = `
     /* ========== セマンティックトークン（意味的な値） ========== */
     
     /* Primary（主要アクション）用トークン */
-    --button-primary-bg: var(--color-primitive-blue-1000, #0017c1);
-    --button-primary-bg-hover: var(--color-primitive-blue-1100, #000071);
-    --button-primary-bg-active: var(--color-primitive-blue-1200, #000060);
+    --button-primary-bg: var(--color-primitive-blue-900, #0017c1);
+    --button-primary-bg-hover: var(--color-primitive-blue-1000, #00118f);
+    --button-primary-bg-active: var(--color-primitive-blue-1100, #000071);
     --button-primary-text: var(--color-primitive-white, #ffffff);
-    --button-primary-border: var(--color-primitive-blue-1000, #0017c1);
+    --button-primary-border: var(--color-primitive-blue-900, #0017c1);
     
     /* Secondary（副次アクション）用トークン */
     --button-secondary-bg: var(--color-primitive-white, #ffffff);
