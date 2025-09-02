@@ -16,8 +16,8 @@ const buttonSemanticTokensText = `
     
     /* Primary（主要アクション）用トークン */
     --button-primary-bg: var(--color-primitive-blue-1000, #0017c1);
-    --button-primary-bg-hover: var(--color-primitive-blue-900, #0d2ea1);
-    --button-primary-bg-active: var(--color-primitive-blue-800, #1a3b81);
+    --button-primary-bg-hover: var(--color-primitive-blue-1100, #000071);
+    --button-primary-bg-active: var(--color-primitive-blue-1200, #000060);
     --button-primary-text: var(--color-primitive-white, #ffffff);
     --button-primary-border: var(--color-primitive-blue-1000, #0017c1);
     

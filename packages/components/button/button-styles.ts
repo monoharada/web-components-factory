@@ -167,12 +167,12 @@ export const buttonStyles = css`
     border-color: var(--dads-button-border-color, #0017c1);
   }
   
-  :host([variant="solid"]:not([disabled])) [part="base"]:hover {
-    background-color: var(--dads-button-background-hover, #00118f);
+  :host([variant="solid"]:not([disabled])):hover {
+    --dads-button-background: var(--button-primary-bg-hover, #000071);
   }
   
-  :host([variant="solid"]:not([disabled])) [part="base"]:active {
-    background-color: var(--dads-button-background-active, #000060);
+  :host([variant="solid"]:not([disabled])):active {
+    --dads-button-background: var(--button-primary-bg-active, #000060);
   }
   
   /* Solid Disabled状態 */
@@ -190,12 +190,12 @@ export const buttonStyles = css`
     border-width: var(--dads-button-border-width, 1px);
   }
   
-  :host([variant="outlined"]:not([disabled])) [part="base"]:hover {
-    background-color: var(--dads-button-background-hover, #c5d7fb);
+  :host([variant="outlined"]:not([disabled])):hover {
+    --dads-button-background: var(--button-secondary-bg-hover, #c5d7fb);
   }
   
-  :host([variant="outlined"]:not([disabled])) [part="base"]:active {
-    background-color: var(--dads-button-background-active, #9db7f9);
+  :host([variant="outlined"]:not([disabled])):active {
+    --dads-button-background: var(--button-secondary-bg-active, #9db7f9);
   }
   
   /* Outlined Disabled状態 */
@@ -217,12 +217,12 @@ export const buttonStyles = css`
     text-decoration-thickness: 1px;
   }
   
-  :host([variant="text"]:not([disabled])) [part="base"]:hover {
-    background-color: var(--dads-button-background-hover, #e8f1fe);
+  :host([variant="text"]:not([disabled])):hover {
+    --dads-button-background: var(--button-tertiary-bg-hover, #e8f1fe);
   }
   
-  :host([variant="text"]:not([disabled])) [part="base"]:active {
-    background-color: var(--dads-button-background-active, #d9e6ff);
+  :host([variant="text"]:not([disabled])):active {
+    --dads-button-background: var(--button-tertiary-bg-active, #d9e6ff);
   }
   
   /* Text Disabled状態 */
