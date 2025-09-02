@@ -450,23 +450,6 @@ export const LinkButtonWithoutHref: Story = {
   },
 };
 
-export const LinkButtonDisabled: Story = {
-  name: 'Link Button（無効）',
-  args: {
-    ...Default.args,
-    href: '#',
-    disabled: true,
-    label: '無効なリンク',
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: 'a要素でdisabled時はaria-disabled="true"とtabindex="-1"が設定されます。',
-      },
-    },
-  },
-};
-
 export const DownloadButton: Story = {
   name: 'Download Button',
   args: {

@@ -171,14 +171,8 @@ export class DadsButton extends WebComponent {
       const button = base as HTMLButtonElement;
       button.type = (this.getAttribute('type') || 'button') as 'button' | 'submit' | 'reset';
       button.disabled = this.hasAttribute('disabled');
-    } else {
-      // a要素の場合
-      const link = base as HTMLAnchorElement;
-      if (this.hasAttribute('disabled')) {
-        link.setAttribute('aria-disabled', 'true');
-        link.setAttribute('tabindex', '-1');
-      }
     }
+    // a要素の場合はdisabled処理不要
     
     // 共通属性
     const ariaLabel = this.getAttribute('aria-label');
@@ -210,16 +204,9 @@ export class DadsButton extends WebComponent {
         }
         break;
       case 'disabled':
+        // button要素のみdisabled処理（a要素は無視）
         if (!isLink && base instanceof HTMLButtonElement) {
           base.disabled = this.hasAttribute('disabled');
-        } else if (isLink && base instanceof HTMLAnchorElement) {
-          if (this.hasAttribute('disabled')) {
-            base.setAttribute('aria-disabled', 'true');
-            base.setAttribute('tabindex', '-1');
-          } else {
-            base.removeAttribute('aria-disabled');
-            base.removeAttribute('tabindex');
-          }
         }
         break;
       case 'target':
@@ -243,8 +230,8 @@ export class DadsButton extends WebComponent {
   }
 
   #handleClick = (event: MouseEvent) => {
-    // disabled時はイベントを止める
-    if (this.hasAttribute('disabled')) {
+    // button要素でdisabled時はイベントを止める（a要素は通常通り動作）
+    if (!this.#isLink() && this.hasAttribute('disabled')) {
       event.preventDefault();
       event.stopPropagation();
       return;

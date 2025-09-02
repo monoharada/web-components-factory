@@ -150,12 +150,6 @@ export const buttonStyles = css`
     /* hrefなしのa要素やJavaScript処理用 */
     cursor: pointer;
   }
-  
-  /* a要素でdisabled時 */
-  :host([disabled]) [part="base"]:where(a) {
-    pointer-events: none;
-    opacity: var(--dads-button-opacity, 1);
-  }
 
   /* ========== バリアント固有スタイル ========== */
   
