@@ -10,7 +10,7 @@ import { css } from '../../core/web-components.js';
  * ボタンセマンティックトークン
  * 意味的な役割に基づいた命名
  */
-export const buttonSemanticTokens = css`
+const buttonSemanticTokensText = `
   :host {
     /* ========== セマンティックトークン（意味的な値） ========== */
     
@@ -95,7 +95,7 @@ export const buttonSemanticTokens = css`
  * コンポーネント固有のカスタマイズ可能な変数
  * 外部から上書きして使用可能
  */
-export const buttonLocalTokens = css`
+const buttonLocalTokensText = `
   :host {
     /* ========== ローカルコンポーネントトークン（カスタマイズ用） ========== */
     
@@ -234,11 +234,17 @@ export const buttonLocalTokens = css`
 `;
 
 /**
+ * 個別エクスポート（後方互換性のため）
+ */
+export const buttonSemanticTokens = css`${buttonSemanticTokensText}`;
+export const buttonLocalTokens = css`${buttonLocalTokensText}`;
+
+/**
  * 統合トークン（セマンティック + ローカル）
  */
 export const buttonTokens = css`
-  ${buttonSemanticTokens}
-  ${buttonLocalTokens}
+  ${buttonSemanticTokensText}
+  ${buttonLocalTokensText}
 `;
 
 /**
