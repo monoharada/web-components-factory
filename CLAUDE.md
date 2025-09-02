@@ -104,6 +104,39 @@ DOM操作ユーティリティ：
   - Functions/methods: camelCase
   - Private fields: #camelCase
 
+## 🎨 CSS Variable Pattern (重要)
+
+**必読**: `/docs/css-variable-pattern.md` を参照
+
+### 基本原則
+1. プロパティと変数のマッピングは一度だけ定義
+2. 状態変化は変数の再代入で実現
+3. 重複定義の徹底排除
+
+### 正しい実装例
+```css
+/* ベース要素で一度だけ定義 */
+[part="base"] {
+  background-color: var(--dads-button-background);
+  color: var(--dads-button-color);
+}
+
+/* 状態変化は変数の再代入のみ */
+:host([variant="solid"]:hover) {
+  --dads-button-background: var(--button-primary-bg-hover);
+}
+```
+
+### トークン定義の注意
+```typescript
+// 文字列として定義
+const tokenText = `...`;
+// 最後にcss関数で変換
+export const tokens = css`${tokenText}`;
+```
+
+**重要**: CSSStyleSheetオブジェクトを文字列テンプレート内で展開しないこと
+
 ## 🎨 Reset CSS Integration
 
 ### Overview
