@@ -96,15 +96,15 @@ export const buttonStyles = css`
 
   /* フォーカススタイルはmixin (applyFocusStyles) で適用 */
   
-  /* Disabled時のフォーカススタイル */
-  :host([disabled]) [part="base"]:focus,
-  [part="base"]:disabled:focus {
+  /* Disabled時のフォーカススタイル（button要素のみ） */
+  :host([disabled]) button[part="base"]:focus,
+  button[part="base"]:disabled:focus {
     outline: var(--focus-outline-width, 4px) solid var(--focus-outline-color, #000000);
     outline-offset: 0;
   }
   
-  :host([disabled]) [part="base"]:focus::after,
-  [part="base"]:disabled:focus::after {
+  :host([disabled]) button[part="base"]:focus::after,
+  button[part="base"]:disabled:focus::after {
     content: '';
     position: absolute;
     inset: calc(var(--focus-outline-width, 4px) * -1);
@@ -113,9 +113,9 @@ export const buttonStyles = css`
     pointer-events: none;
   }
 
-  /* 無効状態 */
-  :host([disabled]) [part="base"],
-  [part="base"]:disabled {
+  /* 無効状態（button要素のみ） */
+  :host([disabled]) button[part="base"],
+  button[part="base"]:disabled {
     opacity: var(--dads-button-opacity, 1);
   }
 
@@ -154,7 +154,7 @@ export const buttonStyles = css`
   /* ========== バリアント固有スタイル ========== */
   
   /* デフォルト（variant未指定）のDisabled状態 */
-  :host([disabled]:not([variant])) [part="base"] {
+  :host([disabled]:not([variant])) button[part="base"] {
     background-color: #b3b3b3;
     color: #f2f2f2;
     border-color: #b3b3b3;
@@ -176,7 +176,7 @@ export const buttonStyles = css`
   }
   
   /* Solid Disabled状態 */
-  :host([variant="solid"][disabled]) [part="base"] {
+  :host([variant="solid"][disabled]) button[part="base"] {
     background-color: #b3b3b3;
     color: #f2f2f2;
     border-color: #b3b3b3;
@@ -199,7 +199,7 @@ export const buttonStyles = css`
   }
   
   /* Outlined Disabled状態 */
-  :host([variant="outlined"][disabled]) [part="base"] {
+  :host([variant="outlined"][disabled]) button[part="base"] {
     background-color: #ffffff;
     color: #b3b3b3;
     border-color: #b3b3b3;
@@ -226,7 +226,7 @@ export const buttonStyles = css`
   }
   
   /* Text Disabled状態 */
-  :host([variant="text"][disabled]) [part="base"] {
+  :host([variant="text"][disabled]) button[part="base"] {
     background-color: transparent;
     color: #b3b3b3;
     border-width: 0;
