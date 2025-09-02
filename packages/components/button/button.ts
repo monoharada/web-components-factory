@@ -5,13 +5,13 @@
  */
 
 import { 
-  WebComponent,
   WebComponentDefinition,
   html, 
   css,
   BooleanAttr, 
   PropertyAttr 
 } from '../../core/web-components.js';
+import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { buttonTokens } from '../../styles/design-tokens/button-tokens.js';
 import { buttonStyles } from './button-styles.js';
@@ -49,7 +49,7 @@ import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.
  * </dads-button>
  * ```
  */
-export class DadsButton extends WebComponent {
+export class DadsButton extends TypographyWebComponent {
 
   static definition = {
     name: 'dads-button',
@@ -73,7 +73,8 @@ export class DadsButton extends WebComponent {
       applyDADSTokens(),
       buttonTokens,
       buttonStyles,
-      applyDADSFocusStyles()
+      applyDADSFocusStyles(),
+      css`@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap');`
     ], 'minimal'),
     attributes: [
       PropertyAttr('variant'),

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typography Global System Demo</title>
+  <style>
+    body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: #f5f5f5;
+    }
+    
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    
+    .demo-card {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #0017c1;
+      border-bottom: 3px solid #0017c1;
+      padding-bottom: 16px;
+    }
+    
+    h2 {
+      color: #333;
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .status-indicator {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-left: 12px;
+    }
+    
+    .fonts-loading {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .fonts-loaded {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .fonts-error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    pre {
+      background: #f4f4f4;
+      padding: 12px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 14px;
+    }
+    
+    .demo-text {
+      padding: 16px;
+      background: #f9f9f9;
+      border-left: 4px solid #0017c1;
+      margin: 12px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    🌐 グローバルタイポグラフィシステム
+    <span id="status" class="status-indicator">初期化中...</span>
+  </h1>
+  
+  <p>すべてのWeb ComponentsでNoto Sans JPが自動適用されるシステムのデモ</p>
+  
+  <div class="demo-grid">
+    <!-- カード1: 基本的な使用例 -->
+    <div class="demo-card">
+      <h2>📝 基本コンポーネント</h2>
+      <dads-text variant="standard">
+        これは標準のテキストコンポーネントです。
+        Noto Sans JPが自動的に適用されています。
+      </dads-text>
+      
+      <div class="demo-text">
+        <dads-text variant="display">
+          ディスプレイバリアント
+        </dads-text>
+      </div>
+      
+      <div class="demo-text">
+        <dads-text variant="dense">
+          密集表示バリアント（UIコンポーネント用）
+        </dads-text>
+      </div>
+    </div>
+    
+    <!-- カード2: カスタムコンポーネント -->
+    <div class="demo-card">
+      <h2>🎨 カスタムコンポーネント例</h2>
+      <my-custom-component></my-custom-component>
+      
+      <pre><code>class MyCustom extends TypographyWebComponent {
+  // Noto Sans JP自動適用
+}</code></pre>
+    </div>
+    
+    <!-- カード3: フォント読み込み状態 -->
+    <div class="demo-card">
+      <h2>📊 読み込み状態モニター</h2>
+      <div id="monitor">
+        <p>Body クラス: <code id="body-class">-</code></p>
+        <p>読み込み済みフォント:</p>
+        <ul id="loaded-fonts"></ul>
+        <p>Font Loading API: <span id="font-api">-</span></p>
+      </div>
+    </div>
+    
+    <!-- カード4: パフォーマンス -->
+    <div class="demo-card">
+      <h2>⚡ パフォーマンス</h2>
+      <div id="performance">
+        <p>初期化時間: <span id="init-time">計測中...</span></p>
+        <p>フォント読み込み: <span id="font-time">計測中...</span></p>
+        <p>チラツキ対策: <strong>有効</strong></p>
+        <p>font-display: <strong>swap</strong></p>
+      </div>
+    </div>
+    
+    <!-- カード5: 複数ウェイト -->
+    <div class="demo-card">
+      <h2>🔤 ウェイトバリエーション</h2>
+      <div class="demo-text">
+        <dads-text weight="normal">Normal (400)</dads-text>
+      </div>
+      <div class="demo-text">
+        <dads-text weight="bold">Bold (700)</dads-text>
+      </div>
+      <div class="demo-text">
+        <dads-text variant="display">Display + Bold</dads-text>
+      </div>
+    </div>
+    
+    <!-- カード6: フォールバック動作 -->
+    <div class="demo-card">
+      <h2>🔄 フォールバック</h2>
+      <p>Noto Sans JPが読み込めない場合:</p>
+      <ol>
+        <li>Hiragino Kaku Gothic ProN（Mac）</li>
+        <li>Yu Gothic（Windows）</li>
+        <li>システムフォント</li>
+      </ol>
+      <div class="demo-text" style="font-family: var(--system-font-stack, sans-serif);">
+        フォールバックフォントでの表示例
+      </div>
+    </div>
+  </div>
+  
+  <script type="module">
+    const startTime = performance.now();
+    
+    // コンポーネントとタイポグラフィシステムをインポート
+    import { TypographyWebComponent, html, css } from '../packages/core/index.js';
+    import '../packages/components/typography/dads-text.js';
+    
+    // カスタムコンポーネントの例
+    class MyCustomComponent extends TypographyWebComponent {
+      static definition = {
+        name: 'my-custom-component',
+        template: html`
+          <div part="base">
+            <h3>カスタムコンポーネント</h3>
+            <p>TypographyWebComponentを継承することで、</p>
+            <p>自動的にNoto Sans JPが適用されます。</p>
+            <p style="font-weight: 700;">太字テキストも自動対応</p>
+          </div>
+        `,
+        styles: css`
+          :host {
+            display: block;
+          }
+          
+          [part="base"] {
+            padding: 16px;
+            background: #f0f7ff;
+            border: 2px solid #0017c1;
+            border-radius: 8px;
+          }
+          
+          h3 {
+            margin: 0 0 12px 0;
+            color: #0017c1;
+          }
+          
+          p {
+            margin: 8px 0;
+            line-height: 1.6;
+          }
+        `
+      };
+    }
+    
+    MyCustomComponent.define();
+    
+    // モニタリング
+    function updateMonitor() {
+      // Body クラス
+      document.getElementById('body-class').textContent = document.body.className || '(なし)';
+      
+      // ステータス表示更新
+      const statusEl = document.getElementById('status');
+      statusEl.className = 'status-indicator';
+      
+      if (document.body.classList.contains('fonts-loaded')) {
+        statusEl.textContent = '読み込み完了';
+        statusEl.classList.add('fonts-loaded');
+      } else if (document.body.classList.contains('fonts-loading')) {
+        statusEl.textContent = '読み込み中...';
+        statusEl.classList.add('fonts-loading');
+      } else if (document.body.classList.contains('fonts-error')) {
+        statusEl.textContent = 'エラー';
+        statusEl.classList.add('fonts-error');
+      }
+      
+      // Font Loading API
+      if ('fonts' in document) {
+        document.getElementById('font-api').textContent = '利用可能';
+        
+        // 読み込み済みフォント
+        const loadedFonts = [];
+        for (const font of document.fonts) {
+          if (font.status === 'loaded' && font.family.includes('Noto')) {
+            loadedFonts.push(`${font.family} ${font.weight}`);
+          }
+        }
+        
+        const fontsListEl = document.getElementById('loaded-fonts');
+        fontsListEl.innerHTML = '';
+        loadedFonts.forEach(font => {
+          const li = document.createElement('li');
+          li.textContent = font;
+          fontsListEl.appendChild(li);
+        });
+        
+        // フォント読み込み完了時間
+        document.fonts.ready.then(() => {
+          const fontTime = performance.now() - startTime;
+          document.getElementById('font-time').textContent = `${Math.round(fontTime)}ms`;
+        });
+      } else {
+        document.getElementById('font-api').textContent = '利用不可';
+      }
+      
+      // 初期化時間
+      const initTime = performance.now() - startTime;
+      document.getElementById('init-time').textContent = `${Math.round(initTime)}ms`;
+    }
+    
+    // 監視開始
+    updateMonitor();
+    setInterval(updateMonitor, 500);
+    
+    // Body クラス変更を監視
+    const observer = new MutationObserver(updateMonitor);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    
+    // CSS変数の値を表示（デバッグ用）
+    console.log('Typography System Initialized');
+    console.log('Base Font:', getComputedStyle(document.documentElement).getPropertyValue('--base-font-family'));
+  </script>
+</body>
+</html>

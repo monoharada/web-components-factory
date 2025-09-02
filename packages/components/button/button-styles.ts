@@ -36,6 +36,8 @@ export const buttonStyles = css`
     padding: var(--dads-button-padding, 12px 24px);
     min-height: var(--dads-button-min-height, 48px);
     
+    /* フォント設定 - Noto Sans JPを明示的に指定 */
+    font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Yu Gothic", Arial, sans-serif;
     font-size: var(--dads-button-font-size, 1rem);
     font-weight: var(--dads-button-font-weight, 700);
     line-height: var(--dads-button-line-height, 1.25);
@@ -50,7 +52,6 @@ export const buttonStyles = css`
     /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */
     position: relative;
     /* overflow: hidden を削除して擬似要素が見えるように */
-    font-family: inherit;
     box-sizing: border-box;
     appearance: none;
     -webkit-appearance: none;

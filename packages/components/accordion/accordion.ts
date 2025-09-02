@@ -5,12 +5,12 @@
  */
 
 import { 
-  WebComponent, 
   html, 
   css, 
   BooleanAttr, 
   PropertyAttr 
 } from '../../core/web-components.js';
+import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { 
   accordionTokens,
   createIconSVG
@@ -23,7 +23,7 @@ import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.
 /**
  * アコーディオンコンテナコンポーネント
  */
-export class DadsAccordionDetails extends WebComponent {
+export class DadsAccordionDetails extends TypographyWebComponent {
   #allowMultiple = false;
 
   static definition = {
@@ -37,6 +37,7 @@ export class DadsAccordionDetails extends WebComponent {
       applyDADSTokens(),
       accordionTokens,
       css`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap');
         :host {
           display: block;
           width: 100%;
@@ -91,7 +92,7 @@ export class DadsAccordionDetails extends WebComponent {
 /**
  * アコーディオンアイテムコンポーネント
  */
-export class DadsAccordionItemDetails extends WebComponent {
+export class DadsAccordionItemDetails extends TypographyWebComponent {
   #details?: HTMLDetailsElement;
 
   static definition = {
@@ -125,7 +126,8 @@ export class DadsAccordionItemDetails extends WebComponent {
       applyDADSTokens(),
       accordionTokens,
       accordionItemStyles,
-      applyDADSFocusStyles()
+      applyDADSFocusStyles(),
+      css`@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap');`
     ], 'full'),
     attributes: [
       BooleanAttr('expanded'),

@@ -23,6 +23,8 @@ export const accordionItemStyles = css`
     gap: 12px;
     /* Figmaデザイン準拠: 左16px、右20px、上下16px */
     padding: 16px 20px 16px 16px;
+    /* フォント設定 - Noto Sans JPを明示的に指定 */
+    font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Yu Gothic", Arial, sans-serif;
     font-size: var(--accordion-font-size, var(--font-size-16));
     line-height: var(--accordion-line-height, var(--line-height-150));
     color: var(--accordion-text-primary, var(--color-neutral-solid-gray-900));
@@ -85,6 +87,8 @@ export const accordionItemStyles = css`
   [part="content-inner"] {
     /* Figmaデザイン準拠: 左側はアイコン幅(32px) + gap(12px) + 左余白(16px) = 60px */
     padding: 16px 20px 24px 60px;
+    /* フォント設定 - Noto Sans JPを明示的に指定 */
+    font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Yu Gothic", Arial, sans-serif;
     font-size: var(--font-size-16);
     line-height: var(--line-height-170);
     color: var(--accordion-text-primary, var(--color-neutral-solid-gray-900));
@@ -101,6 +105,8 @@ export const accordionItemStyles = css`
     border-radius: var(--border-radius-6);
     background: none;
     color: var(--color-primitive-blue-1000, #00118f);
+    /* フォント設定 - Noto Sans JPを明示的に指定 */
+    font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Yu Gothic", Arial, sans-serif;
     font-size: var(--font-size-16);
     cursor: pointer;
     text-decoration: underline;
