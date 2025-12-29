@@ -124,22 +124,29 @@ mkdir -p docs/knowledge
 touch docs/knowledge/$(date +%Y%m%d)-learnings.md
 ```
 
-## Commands
+## Running a Single Test
 
-### TypeScript Compilation
 ```bash
-# Type check only (no emit)
-tsc --noEmit web-components.ts --strict
+# Run a specific test file
+npm test -- packages/components/accordion.test.ts
 
-# Compile to JavaScript
-tsc web-components.ts --strict --target ES2020 --module ES2020
+# Run tests matching a pattern
+npm test -- --grep "accordion"
+
+# Run with verbose output
+npm test -- --reporter=verbose
 ```
-
-Note: No package.json or build system is configured. Consider setting up proper tooling as the project grows.
 
 ## Code Architecture
 
-### Core Library (@web-components.ts)
+### File Location Pattern
+Files prefixed with `@` (e.g., `@web-components.ts`) are located in `packages/core/` or `packages/utils/`:
+- `@web-components.ts` → `packages/core/web-components.ts`
+- `@aria.ts` → `packages/utils/aria.ts`
+- `@behaviors.ts` → `packages/utils/behaviors.ts`
+- `@dom.ts` → `packages/utils/dom.ts`
+
+### Core Library (packages/core/web-components.ts)
 
 1. **WebComponent Base Class**
    - Base class for all web components
@@ -395,7 +402,7 @@ When modifying code:
 2. Follow existing patterns for component creation
 3. Use the established attribute behavior system
 4. Ensure proper encapsulation with private fields
-5. Type check with: `tsc --noEmit web-components.ts --strict`
+5. Type check with: `npm run type-check`
 
 ## 📚 Project Documentation Structure
 
