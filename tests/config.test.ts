@@ -2,7 +2,7 @@
  * 設定モジュール テスト
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   getConfig,
   setConfig,
@@ -90,6 +90,51 @@ describe('config - 設定モジュール', () => {
       setConfig({ prefix: 'my-ui' });
       const name = getComponentName('button', 'override');
       expect(name).toBe('override-button');
+    });
+  });
+
+  describe('SSR環境対応', () => {
+    let originalCustomElements: typeof customElements | undefined;
+
+    beforeEach(() => {
+      // customElementsを保存
+      originalCustomElements = globalThis.customElements;
+    });
+
+    afterEach(() => {
+      // customElementsを復元
+      if (originalCustomElements) {
+        (globalThis as Record<string, unknown>).customElements = originalCustomElements;
+      }
+      resetConfig();
+    });
+
+    it('customElements不在時にgetConfig()がエラーを投げる', () => {
+      // customElementsを削除してSSR環境をシミュレート
+      delete (globalThis as Record<string, unknown>).customElements;
+      resetConfig(); // registryをnullにリセット
+
+      expect(() => getConfig()).toThrow('CustomElementRegistryが利用できない環境です');
+    });
+
+    it('setConfig({ registry })で明示的に設定すればcustomElements不在でも動作する', () => {
+      // モックレジストリを作成
+      const mockRegistry = {
+        get: () => undefined,
+        define: () => {},
+      } as unknown as CustomElementRegistry;
+
+      // customElementsを削除
+      delete (globalThis as Record<string, unknown>).customElements;
+      resetConfig();
+
+      // 明示的にregistryを設定
+      setConfig({ registry: mockRegistry });
+
+      // エラーなく設定を取得できる
+      const config = getConfig();
+      expect(config.prefix).toBe('dads');
+      expect(config.registry).toBe(mockRegistry);
     });
   });
 });

@@ -19,9 +19,11 @@ export function defineAllComponents(
   prefix?: string,
   registry?: CustomElementRegistry
 ): void {
-  const config = getConfig();
-  const effectivePrefix = prefix ?? config.prefix;
-  const effectiveRegistry = registry ?? config.registry;
+  // 両方渡されている場合はgetConfig()を呼ばない（SSR対応）
+  const needsConfig = prefix === undefined || registry === undefined;
+  const config = needsConfig ? getConfig() : null;
+  const effectivePrefix = prefix ?? config!.prefix;
+  const effectiveRegistry = registry ?? config!.registry;
 
   // アコーディオン
   defineAccordion(effectivePrefix, effectiveRegistry);
