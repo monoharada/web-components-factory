@@ -8,6 +8,7 @@ import {
   setConfig,
   resetConfig,
   getComponentName,
+  getPrefix,
 } from '../packages/config';
 
 describe('config - 設定モジュール', () => {
@@ -135,6 +136,19 @@ describe('config - 設定モジュール', () => {
       const config = getConfig();
       expect(config.prefix).toBe('dads');
       expect(config.registry).toBe(mockRegistry);
+    });
+
+    it('getPrefix()はcustomElements不在でも動作する', () => {
+      // customElementsを削除
+      delete (globalThis as Record<string, unknown>).customElements;
+      resetConfig();
+
+      // prefixはSSR環境でも取得可能
+      expect(getPrefix()).toBe('dads');
+
+      // setConfigで変更しても取得可能
+      setConfig({ prefix: 'ssr-prefix' });
+      expect(getPrefix()).toBe('ssr-prefix');
     });
   });
 });

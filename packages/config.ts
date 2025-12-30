@@ -88,6 +88,15 @@ export function resetConfig(): void {
 }
 
 /**
+ * 現在のprefixを取得（registryに依存しない）
+ * SSR環境でも安全に呼び出し可能
+ * @returns 現在設定されているprefix
+ */
+export function getPrefix(): string {
+  return currentConfig.prefix;
+}
+
+/**
  * コンポーネント名を生成
  * @param baseName - 基本名（例: 'button', 'accordion-details'）
  * @param overridePrefix - 個別オーバーライド用プレフィックス

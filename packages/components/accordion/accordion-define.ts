@@ -5,22 +5,21 @@
 
 import { DadsAccordionDetails, DadsAccordionItemDetails } from './accordion';
 import { WebComponentDefinition } from '../../core/web-components';
-import { getConfig } from '../../config';
+import { getConfig, getPrefix } from '../../config';
 
 /**
  * アコーディオンコンポーネントを定義
- * @param prefix - コンポーネント名のプレフィックス（省略時はgetConfig()のprefixを使用）
+ * @param prefix - コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）
  * @param registry - カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）
  */
 export function defineAccordion(
   prefix?: string,
   registry?: CustomElementRegistry
 ): void {
-  // 両方渡されている場合はgetConfig()を呼ばない（SSR対応）
-  const needsConfig = prefix === undefined || registry === undefined;
-  const config = needsConfig ? getConfig() : null;
-  const effectivePrefix = prefix ?? config!.prefix;
-  const effectiveRegistry = registry ?? config!.registry;
+  // prefixはgetPrefix()で取得（registry非依存、SSR安全）
+  // registryが未指定の場合のみgetConfig()を呼ぶ
+  const effectivePrefix = prefix ?? getPrefix();
+  const effectiveRegistry = registry ?? getConfig().registry;
 
   const containerName = `${effectivePrefix}-accordion-details`;
   const itemName = `${effectivePrefix}-accordion-item-details`;
