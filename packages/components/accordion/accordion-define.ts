@@ -5,29 +5,35 @@
 
 import { DadsAccordionDetails, DadsAccordionItemDetails } from './accordion';
 import { WebComponentDefinition } from '../../core/web-components';
+import { getConfig, getPrefix } from '../../config';
 
 /**
  * アコーディオンコンポーネントを定義
- * @param prefix - コンポーネント名のプレフィックス（デフォルト: 'dads'）
- * @param registry - カスタムエレメントレジストリ（デフォルト: customElements）
+ * @param prefix - コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）
+ * @param registry - カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）
  */
 export function defineAccordion(
-  prefix: string = 'dads',
-  registry: CustomElementRegistry = customElements
+  prefix?: string,
+  registry?: CustomElementRegistry
 ): void {
-  const containerName = `${prefix}-accordion-details`;
-  const itemName = `${prefix}-accordion-item-details`;
+  // prefixはgetPrefix()で取得（registry非依存、SSR安全）
+  // registryが未指定の場合のみgetConfig()を呼ぶ
+  const effectivePrefix = prefix ?? getPrefix();
+  const effectiveRegistry = registry ?? getConfig().registry;
+
+  const containerName = `${effectivePrefix}-accordion-details`;
+  const itemName = `${effectivePrefix}-accordion-item-details`;
 
   // コンテナコンポーネントの登録
-  if (!registry.get(containerName)) {
-    const containerDef = { ...DadsAccordionDetails.definition, name: containerName, registry };
-    WebComponentDefinition.compose(DadsAccordionDetails, containerDef).define(registry);
+  if (!effectiveRegistry.get(containerName)) {
+    const containerDef = { ...DadsAccordionDetails.definition, name: containerName, registry: effectiveRegistry };
+    WebComponentDefinition.compose(DadsAccordionDetails, containerDef).define(effectiveRegistry);
   }
 
   // アイテムコンポーネントの登録
-  if (!registry.get(itemName)) {
-    const itemDef = { ...DadsAccordionItemDetails.definition, name: itemName, registry };
-    WebComponentDefinition.compose(DadsAccordionItemDetails, itemDef).define(registry);
+  if (!effectiveRegistry.get(itemName)) {
+    const itemDef = { ...DadsAccordionItemDetails.definition, name: itemName, registry: effectiveRegistry };
+    WebComponentDefinition.compose(DadsAccordionItemDetails, itemDef).define(effectiveRegistry);
   }
 }
 
