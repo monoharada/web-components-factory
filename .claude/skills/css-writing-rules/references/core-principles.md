@@ -54,18 +54,33 @@ color: red !important;
 
 代替: `@layer`で詳細度を管理
 
-### 2. カラーキーワード
+**唯一の例外**: `prefers-reduced-motion` 対応
+```css
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+### 2. カラーキーワード・ハードコード色値
 
 ```css
-/* NG */
+/* NG: カラーキーワード */
 color: black;
 background: white;
 
-/* OK: 明示的な値 */
+/* NG: ハードコード値（コンポーネント内） */
 color: #000000;
-color: rgb(0 0 0);
-color: hsl(0 0% 0%);
+--dads-button-color: #000000;
+
+/* OK: グローバルトークン参照 */
+color: var(--color-neutral-black);
+--dads-button-color: var(--color-neutral-black);
 ```
+
+**Note**: プリミティブトークン定義内（`:root`）では HEX/RGB/HSL を使用する。
 
 ### 3. html font-size: 62.5%
 
@@ -109,9 +124,10 @@ monosus/lint-tools/.stylelintrc.json
 
 ## Output Quality Checklist
 
-- [ ] `!important`未使用
+- [ ] `!important`未使用（`prefers-reduced-motion`例外のみ）
 - [ ] 論理プロパティを使用
-- [ ] カラーキーワード未使用（HEX/RGB/HSL）
+- [ ] カラーキーワード未使用
+- [ ] ハードコード色値未使用（グローバルトークン参照）
 - [ ] `html { font-size: 62.5% }`未使用
 - [ ] 省略プロパティは制限された用途のみ
 - [ ] Stylelint準拠

@@ -25,6 +25,23 @@ HTMLで必ずレイヤー順序を宣言：
 
 **重要**: すべてのスタイルは`@layer`内に記述。`@layer`外のスタイルは禁止。
 
+## Shadow DOM Integration（Web Components）
+
+**このプロジェクトはWeb Components中心のため、以下が重要。**
+
+Shadow DOM内では`@layer`が使用できないため、スタイル配列の順序で詳細度を管理：
+
+```typescript
+styles: withReset([
+  applyDADSTokens(),    // ≈ tokens layer
+  componentTokens,       // ≈ component-specific tokens
+  componentStyles,       // ≈ components layer
+  applyDADSFocusStyles() // ≈ focus styles
+], 'minimal')            // ≈ reset layer
+```
+
+順序が重要：後のスタイルが前のスタイルを上書き。
+
 ## File Organization
 
 ### 単一ファイル層
@@ -107,15 +124,3 @@ PostCSSでインポート：
    - 一時的な修正のみ
    - PR前に適切なレイヤーへ移行
    - デプロイ前に削除確認
-
-## Shadow DOM Integration
-
-Web Componentsでは`@layer`の代わりにスタイル配列の順序で管理：
-
-```typescript
-styles: withReset([
-  applyDADSTokens(),    // ≈ tokens layer
-  componentTokens,       // ≈ component-specific tokens
-  componentStyles,       // ≈ components layer
-], 'minimal')            // ≈ reset layer
-```

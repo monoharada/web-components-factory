@@ -142,8 +142,18 @@ styles: withReset([
 | [naming-rules.md](references/naming-rules.md) | クラス・変数の命名規則 |
 | [web-components.md](references/web-components.md) | ::part()、Shadow DOM、リセットCSS |
 
+## Relationship with Other Docs
+
+このスキルは `/docs/css-variable-pattern.md` の内容を包含・拡張したものです。
+
+| ドキュメント | 用途 |
+|-------------|------|
+| `/docs/css-variable-pattern.md` | 人間向けクイックリファレンス |
+| このスキル | Claude Code向け包括的ガイドライン |
+
+変更時は両方を更新してください。
+
 ## Sources
 
 - [monosus CSS Coding Guidelines](https://coding-guidelines.pages.dev/05-coding-style/03-css/)
 - [monosus Naming Rules](https://coding-guidelines.pages.dev/07-naming-rules/)
-- Project: `/docs/css-variable-pattern.md`
