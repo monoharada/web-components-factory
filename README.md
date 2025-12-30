@@ -93,6 +93,7 @@ defineAllComponents();
 - `getConfig()` - 現在の設定を取得
 - `setConfig({ prefix: 'xxx' })` - プレフィックスを変更
 - `resetConfig()` - デフォルト設定にリセット
+- `getPrefix()` - 現在のprefixを取得（SSR環境でも安全）
 
 ## 📋 開発ガイドライン
 
