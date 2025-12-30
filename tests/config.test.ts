@@ -42,6 +42,22 @@ describe('config - 設定モジュール', () => {
       expect(config.prefix).toBe('custom');
       expect(config.registry).toBe(customElements);
     });
+
+    it('undefinedの値は無視される', () => {
+      setConfig({ prefix: 'initial' });
+      // undefinedを渡しても既存値は保持される
+      setConfig({ prefix: undefined });
+      const config = getConfig();
+      expect(config.prefix).toBe('initial');
+    });
+
+    it('undefinedが混在しても有効な値のみ適用される', () => {
+      setConfig({ prefix: 'first' });
+      setConfig({ prefix: undefined, registry: customElements });
+      const config = getConfig();
+      expect(config.prefix).toBe('first'); // undefinedなので変更されない
+      expect(config.registry).toBe(customElements);
+    });
   });
 
   describe('resetConfig', () => {
