@@ -1,5 +1,17 @@
 # CSS Variables Management
 
+## Contents
+
+- [Token Architecture](#token-architecture)
+- [Critical: Always Use Global Tokens](#critical-always-use-global-tokens)
+- [Critical Pattern: Property-Variable Mapping](#critical-pattern-property-variable-mapping)
+- [Scope Chain](#scope-chain)
+- [Token Definition in TypeScript](#token-definition-in-typescript)
+- [Global Variables (:root)](#global-variables-root)
+- [Fallback Values](#fallback-values)
+- [Component Token File Structure](#component-token-file-structure)
+- [DevTools Debugging](#devtools-debugging)
+
 ## Token Architecture
 
 3層のトークン構造：
