@@ -5,22 +5,27 @@
 
 import { DadsButton } from './button';
 import { WebComponentDefinition } from '../../core/web-components';
+import { getConfig } from '../../config';
 
 /**
  * Buttonコンポーネントを定義
- * @param prefix - コンポーネント名のプレフィックス（デフォルト: 'dads'）
- * @param registry - カスタムエレメントレジストリ（デフォルト: customElements）
+ * @param prefix - コンポーネント名のプレフィックス（省略時はgetConfig()のprefixを使用）
+ * @param registry - カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）
  */
 export function defineButton(
-  prefix: string = 'dads',
-  registry: CustomElementRegistry = customElements
+  prefix?: string,
+  registry?: CustomElementRegistry
 ): void {
-  const name = `${prefix}-button`;
+  const config = getConfig();
+  const effectivePrefix = prefix ?? config.prefix;
+  const effectiveRegistry = registry ?? config.registry;
 
-  if (!registry.get(name)) {
+  const name = `${effectivePrefix}-button`;
+
+  if (!effectiveRegistry.get(name)) {
     // definitionを上書きして正しい名前で登録
-    const buttonDef = { ...DadsButton.definition, name, registry };
-    WebComponentDefinition.compose(DadsButton, buttonDef).define(registry);
+    const buttonDef = { ...DadsButton.definition, name, registry: effectiveRegistry };
+    WebComponentDefinition.compose(DadsButton, buttonDef).define(effectiveRegistry);
   }
 }
 

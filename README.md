@@ -67,6 +67,33 @@ web-components-factory/
 - `any`型の使用禁止
 - 完全な型安全性を保証
 
+### 4. コンポーネント名のプレフィックス設定
+
+コンポーネント名のプレフィックス（デフォルト: `dads`）を一括で変更できます。
+
+```typescript
+import { setConfig, defineAllComponents } from './packages/system';
+
+// 方法1: グローバル設定を変更
+setConfig({ prefix: 'my-ui' });
+defineAllComponents();
+// → <my-ui-button>, <my-ui-accordion-details> が登録される
+
+// 方法2: 個別にオーバーライド
+import { defineButton } from './packages/components/button/button-define';
+defineButton('custom');
+// → <custom-button> が登録される
+
+// デフォルト（後方互換）
+defineAllComponents();
+// → <dads-button>, <dads-accordion-details> が登録される
+```
+
+**設定API:**
+- `getConfig()` - 現在の設定を取得
+- `setConfig({ prefix: 'xxx' })` - プレフィックスを変更
+- `resetConfig()` - デフォルト設定にリセット
+
 ## 📋 開発ガイドライン
 
 ### 重要な原則
