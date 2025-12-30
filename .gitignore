@@ -42,8 +42,9 @@ pids/
 *.seed
 *.pid.lock
 
-# Claude Code files
-.claude/
+# Claude Code files (except skills)
+.claude/*
+!.claude/skills/
 
 # Temporary files
 tmp/
