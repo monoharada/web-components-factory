@@ -6,7 +6,7 @@
 export * from './web-components.js';
 
 // Typography System
-export { 
+export {
   TypographyWebComponent,
   TypographyFormComponent,
   baseTypographyStyles,
@@ -14,3 +14,13 @@ export {
   initializeGlobalFonts,
   ensureFontsInitialized
 } from './typography/index.js';
+
+// Preloader (HTTP/2 Server Push クライアント側フォールバック)
+export {
+  CORE_DEPENDENCIES,
+  preloadCoreDependencies,
+  preloadCoreDependenciesWhenIdle,
+  generatePreloadHTML,
+  generateLinkHeader,
+  type PreloadOptions
+} from './preloader.js';
