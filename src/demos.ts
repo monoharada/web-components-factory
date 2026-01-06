@@ -1,21 +1,8 @@
 /**
- * エントリーポイント - すべてのWeb Componentsを定義
+ * コンポーネントのデモマークアップ定義
+ * autoloaderと組み合わせて使用される
  */
 
-// アコーディオンコンポーネント
-import { defineDefaultAccordion } from '../packages/components/accordion/index.js';
-
-// ボタンコンポーネント
-import { defineDefaultButton } from '../packages/components/button/index.js';
-
-// リセットCSSデモコンポーネント
-import '../packages/components/reset-card-demo.js';
-
-// コンポーネント登録
-defineDefaultAccordion();
-defineDefaultButton();
-
-// コンポーネントのデモマークアップを返す関数
 export const demos = {
   accordion: () => `
     <dads-accordion-details>
@@ -26,7 +13,7 @@ export const demos = {
           デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
         </div>
       </dads-accordion-item-details>
-      
+
       <dads-accordion-item-details>
         <span slot="header">利用可能なサービス</span>
         <div slot="content">
@@ -34,7 +21,7 @@ export const demos = {
           様々な行政サービスをデジタルで利用できます。
         </div>
       </dads-accordion-item-details>
-      
+
       <dads-accordion-item-details>
         <span slot="header">お問い合わせ</span>
         <div slot="content">
@@ -43,11 +30,11 @@ export const demos = {
       </dads-accordion-item-details>
     </dads-accordion-details>
   `,
-  
+
   resetCss: () => `
     <div style="padding: 20px;">
       <h2 style="margin-bottom: 30px; color: #333;">リセットCSS比較デモ</h2>
-      
+
       <div style="display: grid; gap: 30px; max-width: 1200px;">
         <!-- 既存サイトのスタイル影響テスト -->
         <div style="background: #f0f0f0; padding: 20px; border-radius: 8px;">
@@ -63,7 +50,7 @@ export const demos = {
             既存のボタンスタイル
           </button>
         </div>
-        
+
         <!-- Web Components（Shadow DOM隔離） -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
           <!-- フルリセット適用 -->
@@ -78,7 +65,7 @@ export const demos = {
               <span slot="action">詳細を見る</span>
             </reset-card>
           </div>
-          
+
           <!-- 最小限リセット -->
           <div>
             <h3 style="color: #333; margin-bottom: 10px;">最小限リセット</h3>
@@ -91,7 +78,7 @@ export const demos = {
               <span slot="action">詳細を見る</span>
             </minimal-reset-card>
           </div>
-          
+
           <!-- リセットなし -->
           <div>
             <h3 style="color: #333; margin-bottom: 10px;">リセットなし（比較用）</h3>
@@ -105,7 +92,7 @@ export const demos = {
             </no-reset-card>
           </div>
         </div>
-        
+
         <!-- 解説 -->
         <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107;">
           <h3 style="color: #856404; margin-bottom: 10px;">重要なポイント</h3>
@@ -119,15 +106,14 @@ export const demos = {
       </div>
     </div>
   `,
-  
-  // ボタンデモ
+
   button: () => `
     <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ボタンコンポーネント</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステムv2.7.0準拠のボタンコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
-      
+
       <!-- バリアント -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">バリアント</h3>
@@ -137,7 +123,7 @@ export const demos = {
           <dads-button variant="text">Text（テキスト）</dads-button>
         </div>
       </section>
-      
+
       <!-- サイズ -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">サイズ（最小44px高）</h3>
@@ -148,7 +134,7 @@ export const demos = {
           <dads-button size="large">Large</dads-button>
         </div>
       </section>
-      
+
       <!-- 実際の使用例 -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">実際の使用例</h3>
@@ -158,9 +144,9 @@ export const demos = {
               <label for="demo-email" style="display: block; margin-bottom: 4px; font-weight: 500;">
                 メールアドレス
               </label>
-              <input 
-                id="demo-email" 
-                type="email" 
+              <input
+                id="demo-email"
+                type="email"
                 placeholder="example@email.com"
                 style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"
               >
@@ -172,7 +158,7 @@ export const demos = {
           </form>
         </div>
       </section>
-      
+
       <!-- フルワイド -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">フルワイドボタン</h3>
@@ -180,7 +166,7 @@ export const demos = {
           <dads-button variant="solid" full-width>幅100%のボタン</dads-button>
         </div>
       </section>
-      
+
       <!-- 無効状態（非推奨） -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">無効状態（デジタル庁では非推奨）</h3>
@@ -191,22 +177,21 @@ export const demos = {
           </span>
         </div>
       </section>
-      
+
       <!-- 特徴 -->
       <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3;">
         <h3 style="color: #1565c0; margin-bottom: 10px;">特徴</h3>
         <ul style="color: #1565c0; line-height: 1.8; padding-left: 20px;">
-          <li>🎯 <strong>WCAG 2.2 AA準拠:</strong> 最小44x44pxタップターゲット</li>
-          <li>🎨 <strong>デザイントークン:</strong> セマンティック & ローカルトークンの2層構造</li>
-          <li>📏 <strong>Figmaデザイン準拠:</strong> ピクセルパーフェクトな実装</li>
-          <li>✅ <strong>TDD開発:</strong> 100%テストカバレッジ</li>
-          <li>⚡ <strong>Shadow DOM:</strong> スタイルの完全な隔離</li>
+          <li><strong>WCAG 2.2 AA準拠:</strong> 最小44x44pxタップターゲット</li>
+          <li><strong>デザイントークン:</strong> セマンティック & ローカルトークンの2層構造</li>
+          <li><strong>Figmaデザイン準拠:</strong> ピクセルパーフェクトな実装</li>
+          <li><strong>TDD開発:</strong> 100%テストカバレッジ</li>
+          <li><strong>Shadow DOM:</strong> スタイルの完全な隔離</li>
         </ul>
       </div>
     </div>
   `,
-  
-  // 他のデモを追加
+
   empty: () => `
     <div style="padding: 40px; text-align: center; color: #666;">
       コンポーネントを選択してください
@@ -214,51 +199,4 @@ export const demos = {
   `
 };
 
-// ビューワーの初期化関数
-export function initViewer(): void {
-  const selector = document.getElementById('component') as HTMLSelectElement;
-  const container = document.getElementById('component-container');
-  
-  if (!selector || !container) {
-    console.error('Required elements not found');
-    return;
-  }
-  
-  // URLパラメータから初期値を取得
-  const params = new URLSearchParams(window.location.search);
-  const initialComponent = params.get('component');
-  
-  // コンポーネントを表示
-  function showComponent(name: string): void {
-    const demoFn = demos[name as keyof typeof demos] || demos.empty;
-    container.innerHTML = demoFn();
-  }
-  
-  // セレクタの変更を監視
-  selector.addEventListener('change', (e) => {
-    const value = (e.target as HTMLSelectElement).value;
-    
-    // URLパラメータを更新
-    const url = new URL(window.location.href);
-    if (value) {
-      url.searchParams.set('component', value);
-    } else {
-      url.searchParams.delete('component');
-    }
-    window.history.pushState({}, '', url);
-    
-    // コンポーネントを表示
-    showComponent(value || 'empty');
-  });
-  
-  // 初期表示
-  if (initialComponent) {
-    selector.value = initialComponent;
-    showComponent(initialComponent);
-  } else {
-    showComponent('empty');
-  }
-}
-
-// グローバルに公開（デバッグ用）
-(window as any).componentDemos = demos;
+export type DemoName = keyof typeof demos;

@@ -3,9 +3,9 @@
  * デジタル庁デザインシステム準拠
  */
 
-import { DadsButton } from './button';
-import { WebComponentDefinition } from '../../core/web-components';
-import { getConfig, getPrefix } from '../../config';
+import { DadsButton } from './button.js';
+import { WebComponentDefinition } from '../../core/web-components.js';
+import { getConfig, getPrefix } from '../../config.js';
 
 /**
  * Buttonコンポーネントを定義

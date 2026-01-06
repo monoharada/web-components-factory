@@ -3,9 +3,9 @@
  * デジタル庁デザインシステム準拠
  */
 
-import { DadsAccordionDetails, DadsAccordionItemDetails } from './accordion';
-import { WebComponentDefinition } from '../../core/web-components';
-import { getConfig, getPrefix } from '../../config';
+import { DadsAccordionDetails, DadsAccordionItemDetails } from './accordion.js';
+import { WebComponentDefinition } from '../../core/web-components.js';
+import { getConfig, getPrefix } from '../../config.js';
 
 /**
  * アコーディオンコンポーネントを定義

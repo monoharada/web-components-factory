@@ -3,46 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Components Viewer</title>
+  <title>Web Components Viewer (Autoload)</title>
+
+  <!-- Import Maps: コンポーネントタグ名からモジュールパスへのマッピング -->
+  <script type="importmap">
+  {
+    "imports": {
+      "@components/dads/": "/@components/dads/",
+      "@core/autoloader": "/core/autoloader.js",
+      "@demos": "/src/demos.js",
+      "dads-button": "/@components/dads/button.js",
+      "dads-accordion-details": "/@components/dads/accordion-details.js",
+      "dads-accordion-item-details": "/@components/dads/accordion-item-details.js",
+      "dads-text": "/@components/dads/text.js"
+    }
+  }
+  </script>
+
+  <!--
+    コア依存のプリロード（HTTP/2 Server Push クライアント側フォールバック）
+
+    - HTTP/2環境: サーバーがLinkヘッダーでServer Pushを提供
+    - HTTP/1.1環境: ブラウザがmodulepreloadを解析してプリロード
+
+    ライブラリ利用者向け:
+    1. HTML直書き（推奨）: 以下のlinkタグをコピー
+    2. JavaScript動的追加: import { preloadCoreDependencies } from '@luxembourg/core/preloader';
+    3. SSR/SSG: generatePreloadHTML('/path/to/lib') で生成
+  -->
+  <link rel="modulepreload" href="/core/web-components.js">
+  <link rel="modulepreload" href="/config.js">
+  <link rel="modulepreload" href="/utils/aria.js">
+  <link rel="modulepreload" href="/utils/behaviors.js">
+  <link rel="modulepreload" href="/utils/dom.js">
+  <link rel="modulepreload" href="/styles/tokens.js">
+
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: 'Noto Sans JP', sans-serif;
       background: #f5f5f5;
       min-height: 100vh;
     }
-    
+
     header {
       background: white;
       border-bottom: 1px solid #ddd;
       padding: 20px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    
+
     .header-content {
       max-width: 1200px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
     }
-    
+
     h1 {
       color: #00118f;
       font-size: 20px;
     }
-    
+
+    .header-controls {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .component-selector {
       display: flex;
       gap: 10px;
       align-items: center;
     }
-    
+
     select {
       padding: 8px 12px;
       border: 1px solid #ddd;
@@ -51,13 +94,22 @@
       background: white;
       cursor: pointer;
     }
-    
+
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #e3f2fd;
+      color: #1565c0;
+      font-weight: 500;
+    }
+
     main {
       max-width: 1200px;
       margin: 40px auto;
       padding: 0 20px;
     }
-    
+
     #component-container {
       background: white;
       padding: 40px;
@@ -65,37 +117,234 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       min-height: 400px;
     }
+
+    .loaded-log {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px;
+      max-width: 300px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 12px;
+      font-family: monospace;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .loaded-log.visible {
+      display: block;
+    }
+
+    .loaded-log h4 {
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .loaded-log ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .loaded-log li {
+      padding: 2px 0;
+      color: #28a745;
+    }
+
+    .loaded-log li::before {
+      content: '✓ ';
+    }
+
+    /* FOUC防止: 未定義のカスタム要素にスケルトン表示 */
+    :not(:defined) {
+      display: inline-block;
+      min-width: 80px;
+      min-height: 32px;
+      background: linear-gradient(
+        90deg,
+        #f0f0f0 25%,
+        #e8e8e8 50%,
+        #f0f0f0 75%
+      );
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 1.2s ease-in-out infinite;
+      border-radius: 4px;
+      opacity: 0.7;
+    }
+
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* 定義済み要素はフェードイン */
+    :defined {
+      opacity: 1;
+      animation: none;
+      background: none;
+      transition: opacity 0.1s ease-out;
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="header-content">
-      <h1>Web Components Viewer</h1>
-      <div class="component-selector">
-        <label for="component">Component:</label>
-        <select id="component">
-          <option value="">-- Select --</option>
-          <option value="accordion">Accordion</option>
-          <option value="button">Button</option>
-          <option value="resetCss">Reset CSS Demo</option>
-        </select>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <h1>Web Components Viewer</h1>
+        <span class="badge">Autoload</span>
+      </div>
+      <div class="header-controls">
+        <div class="component-selector">
+          <label for="component">Component:</label>
+          <select id="component">
+            <option value="">-- Select --</option>
+            <option value="accordion">Accordion</option>
+            <option value="button">Button</option>
+            <option value="resetCss">Reset CSS Demo</option>
+          </select>
+        </div>
       </div>
     </div>
   </header>
-  
+
   <main>
     <div id="component-container"></div>
   </main>
 
+  <div id="loaded-log" class="loaded-log">
+    <h4>Loaded Components:</h4>
+    <ul id="loaded-list"></ul>
+  </div>
+
+  <!-- Service Worker登録（キャッシュ戦略） -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('[SW] Registered:', reg.scope))
+        .catch((err) => console.log('[SW] Registration failed:', err));
+    }
+  </script>
+
   <script type="module">
-    // エントリーポイントからビューワーを初期化
-    import { initViewer } from './src/entry.js';
-    
-    // DOMロード後に初期化
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initViewer);
+    import { demos } from '@demos';
+    import { Autoloader } from '@core/autoloader';
+
+    // =====================================
+    // Viewer 初期化
+    // =====================================
+    const container = document.getElementById('component-container');
+    const componentSelector = document.getElementById('component');
+    const loadedLog = document.getElementById('loaded-log');
+    const loadedList = document.getElementById('loaded-list');
+
+    let currentAutoloader = null;
+    const loadedComponents = new Set();
+
+    function onComponentLoad(tagName) {
+      loadedComponents.add(tagName);
+      updateLoadedLog();
+    }
+
+    function updateLoadedLog() {
+      loadedList.innerHTML = '';
+      for (const name of loadedComponents) {
+        const li = document.createElement('li');
+        li.textContent = name;
+        loadedList.appendChild(li);
+      }
+      if (loadedComponents.size > 0) {
+        loadedLog.classList.add('visible');
+      }
+    }
+
+    function showComponent(name) {
+      const demoFn = demos[name] || demos.empty;
+      container.innerHTML = demoFn();
+    }
+
+    function initAutoloader() {
+      console.log('[Autoloader] Starting...');
+      currentAutoloader = new Autoloader({
+        debug: true,
+        onLoad: onComponentLoad
+      });
+      currentAutoloader.start();
+    }
+
+    // コンポーネントセレクタの変更
+    componentSelector.addEventListener('change', (e) => {
+      const value = e.target.value;
+
+      // URLパラメータを更新
+      const url = new URL(window.location.href);
+      if (value) {
+        url.searchParams.set('component', value);
+      } else {
+        url.searchParams.delete('component');
+      }
+      window.history.pushState({}, '', url);
+
+      // コンポーネントを表示
+      showComponent(value || 'empty');
+    });
+
+    // 初期化
+    const params = new URLSearchParams(window.location.search);
+    const initialComponent = params.get('component');
+
+    // Autoloaderを初期化
+    initAutoloader();
+
+    // 初期コンポーネントを表示
+    if (initialComponent) {
+      componentSelector.value = initialComponent;
+      showComponent(initialComponent);
     } else {
-      initViewer();
+      showComponent('empty');
+    }
+
+    // デバッグ用にグローバルに公開
+    window.componentDemos = demos;
+    window.loadedComponents = loadedComponents;
+
+    // =====================================
+    // コンポーネントプリロード（バックグラウンド）
+    // =====================================
+    // ページ読み込み後、アイドル時にすべてのコンポーネントをプリロード
+    const componentAdapters = [
+      '/@components/dads/button.js',
+      '/@components/dads/accordion-details.js',
+      '/@components/dads/accordion-item-details.js',
+      '/@components/dads/text.js'
+    ];
+
+    function preloadComponents() {
+      console.log('[Preloader] Starting background preload...');
+      const promises = componentAdapters.map(path => {
+        const link = document.createElement('link');
+        link.rel = 'modulepreload';
+        link.href = path;
+        document.head.appendChild(link);
+        return new Promise(resolve => {
+          link.onload = resolve;
+          link.onerror = resolve; // エラーでも継続
+        });
+      });
+      Promise.all(promises).then(() => {
+        console.log('[Preloader] Background preload complete');
+      });
+    }
+
+    // requestIdleCallbackが使えない場合はsetTimeoutでフォールバック
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(preloadComponents, { timeout: 2000 });
+    } else {
+      setTimeout(preloadComponents, 100);
     }
   </script>
 </body>
