@@ -35,7 +35,7 @@ function hasNoExtension(path: string): boolean {
   const basename = path.split('/').pop() || '';
   if (!basename.includes('.')) return true;
   const ext = basename.split('.').pop();
-  return !ext || !['js', 'ts', 'html', 'css', 'json', 'mjs'].includes(ext);
+  return !ext;
 }
 
 // fetch ハンドラー
@@ -80,7 +80,14 @@ async function handleRequest(req: Request): Promise<Response> {
         contentType = "application/javascript";
         break;
       case "ts":
-        // TypeScriptファイルはキャッシュ付きトランスパイル
+        // TypeScriptファイルは存在チェック後にキャッシュ付きトランスパイル
+        if (!(await fileExists(filePath))) {
+          console.error(`File not found: ${path} -> ${filePath}`);
+          return new Response(`File not found: ${path}`, {
+            status: 404,
+            headers: { "Content-Type": "text/plain" }
+          });
+        }
         try {
           const { content, mtime } = await transpileWithCache(filePath);
           return new Response(content, {
