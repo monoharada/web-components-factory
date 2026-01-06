@@ -114,6 +114,15 @@ async function handleRequest(req: Request): Promise<Response> {
     // ファイルを読み込んで返す
     const file = Bun.file(filePath);
 
+    // ファイルが存在するかチェック（Bun.file は遅延評価のため明示的にチェック）
+    if (!(await fileExists(filePath))) {
+      console.error(`File not found: ${path} -> ${filePath}`);
+      return new Response(`File not found: ${path}`, {
+        status: 404,
+        headers: { "Content-Type": "text/plain" }
+      });
+    }
+
     // キャッシュヘッダーを設定（JS/CSS は長期キャッシュ、HTML は短期）
     const cacheControl = ext === 'html'
       ? "no-cache, must-revalidate"
@@ -134,11 +143,20 @@ async function handleRequest(req: Request): Promise<Response> {
 
   } catch (error) {
     // エラーの場合は詳細なエラーメッセージを返す
-    console.error(`GET - ${path} failed`);
-    console.error(error);
+    const err = error as { code?: string };
+    console.error(`GET - ${path} failed:`, err.code || error);
 
-    return new Response(`File not found: ${path}`, {
-      status: 404,
+    // ENOENT（ファイルが存在しない）は404
+    if (err.code === 'ENOENT') {
+      return new Response(`File not found: ${path}`, {
+        status: 404,
+        headers: { "Content-Type": "text/plain" }
+      });
+    }
+
+    // その他のエラーは500
+    return new Response(`Internal server error: ${path}`, {
+      status: 500,
       headers: { "Content-Type": "text/plain" }
     });
   }
