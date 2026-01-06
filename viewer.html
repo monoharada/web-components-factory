@@ -10,6 +10,8 @@
   {
     "imports": {
       "@components/dads/": "/@components/dads/",
+      "@core/autoloader": "/core/autoloader.js",
+      "@demos": "/src/demos.js",
       "dads-button": "/@components/dads/button.js",
       "dads-accordion-details": "/@components/dads/accordion-details.js",
       "dads-accordion-item-details": "/@components/dads/accordion-item-details.js",
@@ -78,8 +80,7 @@
       flex-wrap: wrap;
     }
 
-    .component-selector,
-    .loader-selector {
+    .component-selector {
       display: flex;
       gap: 10px;
       align-items: center;
@@ -198,13 +199,6 @@
         <span class="badge">Autoload</span>
       </div>
       <div class="header-controls">
-        <div class="loader-selector">
-          <label for="loader">Loader:</label>
-          <select id="loader">
-            <option value="custom" selected>URL解決型</option>
-            <option value="cdn">Import Maps型</option>
-          </select>
-        </div>
         <div class="component-selector">
           <label for="component">Component:</label>
           <select id="component">
@@ -237,275 +231,14 @@
   </script>
 
   <script type="module">
-    import { demos } from './src/demos.js';
-
-    // =====================================
-    // 自作 Autoloader（Intersection Observer対応）
-    // =====================================
-    class ComponentAutoloader {
-      #mutationObserver;
-      #intersectionObserver;
-      #loaded = new Set();
-      #loading = new Map();
-      #pending = new Set(); // 画面外で待機中のコンポーネント
-      #baseUrl;
-      #debug;
-      #onLoad;
-      #lazyLoad; // 遅延ロードモード
-
-      constructor(options) {
-        this.#baseUrl = options.baseUrl;
-        this.#debug = options.debug ?? false;
-        this.#onLoad = options.onLoad ?? (() => {});
-        this.#lazyLoad = options.lazyLoad ?? true; // デフォルトで遅延ロード有効
-
-        // MutationObserver: DOM変更を監視
-        this.#mutationObserver = new MutationObserver((mutations) => {
-          for (const mutation of mutations) {
-            for (const node of mutation.addedNodes) {
-              if (node instanceof Element) {
-                this.#scan(node);
-              }
-            }
-          }
-        });
-
-        // IntersectionObserver: 画面内に入った要素を検知
-        if (this.#lazyLoad) {
-          this.#intersectionObserver = new IntersectionObserver(
-            (entries) => {
-              for (const entry of entries) {
-                if (entry.isIntersecting) {
-                  const el = entry.target;
-                  const tagName = el.tagName.toLowerCase();
-                  this.#log(`[Visible] ${tagName}`);
-                  this.#loadComponent(tagName);
-                  this.#intersectionObserver.unobserve(el);
-                }
-              }
-            },
-            {
-              rootMargin: '100px', // 100px手前からプリロード開始
-              threshold: 0
-            }
-          );
-        }
-      }
-
-      start() {
-        this.#log(`Autoloader started (lazyLoad: ${this.#lazyLoad})`);
-        this.#scan(document.documentElement);
-        this.#mutationObserver.observe(document.body, {
-          childList: true,
-          subtree: true,
-        });
-      }
-
-      stop() {
-        this.#mutationObserver.disconnect();
-        if (this.#intersectionObserver) {
-          this.#intersectionObserver.disconnect();
-        }
-        this.#log('Autoloader stopped');
-      }
-
-      #scan(root) {
-        const elements = [root, ...root.querySelectorAll('*')];
-        const newTags = new Set();
-
-        for (const el of elements) {
-          const tagName = el.tagName.toLowerCase();
-          if (!tagName.includes('-')) continue;
-          if (this.#loaded.has(tagName) || this.#loading.has(tagName)) continue;
-
-          newTags.add(tagName);
-
-          if (this.#lazyLoad && this.#intersectionObserver) {
-            // 遅延ロード: IntersectionObserverで監視
-            if (!this.#pending.has(tagName)) {
-              this.#pending.add(tagName);
-              this.#intersectionObserver.observe(el);
-              this.#log(`[Pending] ${tagName} - waiting for visibility`);
-            }
-          } else {
-            // 即時ロード
-            this.#loadComponent(tagName);
-          }
-        }
-      }
-
-      async #loadComponent(tagName) {
-        if (customElements.get(tagName)) return;
-        if (this.#loaded.has(tagName)) return;
-
-        const existing = this.#loading.get(tagName);
-        if (existing) return existing;
-
-        this.#loaded.add(tagName);
-        this.#pending.delete(tagName);
-
-        const [prefix, ...parts] = tagName.split('-');
-        const componentName = parts.join('-');
-        const modulePath = `${this.#baseUrl}/${prefix}/${componentName}.js`;
-
-        this.#log(`Loading: ${tagName} from ${modulePath}`);
-
-        const loadPromise = import(modulePath)
-          .then((module) => {
-            this.#loading.delete(tagName);
-            this.#log(`Loaded: ${tagName}`);
-            this.#onLoad(tagName);
-            return module;
-          })
-          .catch((error) => {
-            this.#loading.delete(tagName);
-            this.#log(`Failed to load: ${tagName}`, error);
-          });
-
-        this.#loading.set(tagName, loadPromise);
-        return loadPromise;
-      }
-
-      #log(message, ...args) {
-        if (this.#debug) {
-          console.log(`[Autoloader] ${message}`, ...args);
-        }
-      }
-    }
-
-    // =====================================
-    // CDN Autoloader (Import Maps based + Intersection Observer)
-    // =====================================
-    class ImportMapsAutoloader {
-      #mutationObserver;
-      #intersectionObserver;
-      #loaded = new Set();
-      #loading = new Map();
-      #pending = new Set();
-      #debug;
-      #onLoad;
-      #lazyLoad;
-
-      constructor(options = {}) {
-        this.#debug = options.debug ?? false;
-        this.#onLoad = options.onLoad ?? (() => {});
-        this.#lazyLoad = options.lazyLoad ?? true;
-
-        this.#mutationObserver = new MutationObserver((mutations) => {
-          for (const mutation of mutations) {
-            for (const node of mutation.addedNodes) {
-              if (node instanceof Element) {
-                this.#scan(node);
-              }
-            }
-          }
-        });
-
-        if (this.#lazyLoad) {
-          this.#intersectionObserver = new IntersectionObserver(
-            (entries) => {
-              for (const entry of entries) {
-                if (entry.isIntersecting) {
-                  const el = entry.target;
-                  const tagName = el.tagName.toLowerCase();
-                  this.#log(`[Visible] ${tagName}`);
-                  this.#loadComponent(tagName);
-                  this.#intersectionObserver.unobserve(el);
-                }
-              }
-            },
-            { rootMargin: '100px', threshold: 0 }
-          );
-        }
-      }
-
-      start() {
-        this.#log(`Import Maps Autoloader started (lazyLoad: ${this.#lazyLoad})`);
-        this.#scan(document.documentElement);
-        this.#mutationObserver.observe(document.body, {
-          childList: true,
-          subtree: true,
-        });
-      }
-
-      stop() {
-        this.#mutationObserver.disconnect();
-        if (this.#intersectionObserver) {
-          this.#intersectionObserver.disconnect();
-        }
-        this.#log('Import Maps Autoloader stopped');
-      }
-
-      #scan(root) {
-        const elements = [root, ...root.querySelectorAll('*')];
-        for (const el of elements) {
-          const tagName = el.tagName.toLowerCase();
-          if (!tagName.includes('-')) continue;
-          if (this.#loaded.has(tagName) || this.#loading.has(tagName)) continue;
-
-          if (this.#lazyLoad && this.#intersectionObserver) {
-            if (!this.#pending.has(tagName)) {
-              this.#pending.add(tagName);
-              this.#intersectionObserver.observe(el);
-              this.#log(`[Pending] ${tagName} - waiting for visibility`);
-            }
-          } else {
-            this.#loadComponent(tagName);
-          }
-        }
-      }
-
-      async #loadComponent(tagName) {
-        if (customElements.get(tagName)) return;
-        if (this.#loaded.has(tagName)) return;
-
-        const existing = this.#loading.get(tagName);
-        if (existing) return existing;
-
-        this.#loaded.add(tagName);
-        this.#pending.delete(tagName);
-
-        this.#log(`Loading via Import Maps: ${tagName}`);
-
-        const loadPromise = import(tagName)
-          .then((module) => {
-            this.#loading.delete(tagName);
-            this.#log(`Loaded: ${tagName}`);
-            this.#onLoad(tagName);
-            return module;
-          })
-          .catch((error) => {
-            this.#loading.delete(tagName);
-            this.#log(`Failed to load: ${tagName}`, error);
-          });
-
-        this.#loading.set(tagName, loadPromise);
-        return loadPromise;
-      }
-
-      #log(message, ...args) {
-        if (this.#debug) {
-          console.log(`[ImportMapsAutoloader] ${message}`, ...args);
-        }
-      }
-    }
-
-    function initCDNAutoloader(onLoad) {
-      console.log('[Autoloader] Using Import Maps Autoloader');
-      const autoloader = new ImportMapsAutoloader({
-        debug: true,
-        onLoad
-      });
-      autoloader.start();
-      return autoloader;
-    }
+    import { demos } from '@demos';
+    import { Autoloader } from '@core/autoloader';
 
     // =====================================
     // Viewer 初期化
     // =====================================
     const container = document.getElementById('component-container');
     const componentSelector = document.getElementById('component');
-    const loaderSelector = document.getElementById('loader');
     const loadedLog = document.getElementById('loaded-log');
     const loadedList = document.getElementById('loaded-list');
 
@@ -534,22 +267,13 @@
       container.innerHTML = demoFn();
     }
 
-    function initAutoloader(type) {
-      // 既存のautoloaderを停止
-      if (currentAutoloader?.stop) {
-        currentAutoloader.stop();
-      }
-
-      if (type === 'custom') {
-        currentAutoloader = new ComponentAutoloader({
-          baseUrl: '/@components',
-          debug: true,
-          onLoad: onComponentLoad
-        });
-        currentAutoloader.start();
-      } else if (type === 'cdn') {
-        currentAutoloader = initCDNAutoloader(onComponentLoad);
-      }
+    function initAutoloader() {
+      console.log('[Autoloader] Starting...');
+      currentAutoloader = new Autoloader({
+        debug: true,
+        onLoad: onComponentLoad
+      });
+      currentAutoloader.start();
     }
 
     // コンポーネントセレクタの変更
@@ -569,29 +293,12 @@
       showComponent(value || 'empty');
     });
 
-    // ローダーセレクタの変更
-    loaderSelector.addEventListener('change', (e) => {
-      const url = new URL(window.location.href);
-      url.searchParams.set('loader', e.target.value);
-      window.history.pushState({}, '', url);
-
-      initAutoloader(e.target.value);
-
-      // 現在表示中のコンポーネントを再描画（新しいautoloaderでロード）
-      const currentComponent = componentSelector.value;
-      if (currentComponent) {
-        showComponent(currentComponent);
-      }
-    });
-
     // 初期化
     const params = new URLSearchParams(window.location.search);
     const initialComponent = params.get('component');
-    const initialLoader = params.get('loader') || 'custom';
 
-    // ローダーを初期化
-    loaderSelector.value = initialLoader;
-    initAutoloader(initialLoader);
+    // Autoloaderを初期化
+    initAutoloader();
 
     // 初期コンポーネントを表示
     if (initialComponent) {

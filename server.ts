@@ -1,5 +1,6 @@
 import { serve } from "bun";
 import { join } from "path";
+import { CORE_DEPENDENCIES, generateLinkHeader } from "./packages/core/preloader";
 
 // ===== パフォーマンス最適化: キャッシュ設定 =====
 
@@ -12,26 +13,20 @@ const globalTranspiler = new Bun.Transpiler({
 // トランスパイルキャッシュ（ファイルパス → { content, mtime }）
 const transpileCache = new Map<string, { content: string; mtime: number }>();
 
-// ファイル解決キャッシュ
-const fileResolutionCache = new Map<string, string>();
+// ファイル解決キャッシュ（タイムスタンプ付き）
+const fileResolutionCache = new Map<string, { value: string; timestamp: number }>();
 const RESOLUTION_CACHE_TTL = 30000; // 30秒
+const CACHE_CLEANUP_INTERVAL = 10000; // 10秒ごとにクリーンアップ
 
-// HTTP/2 Server Push用のコア依存
-const CORE_DEPENDENCIES = [
-  '/core/web-components.js',
-  '/config.js',
-  '/utils/aria.js',
-  '/utils/behaviors.js',
-  '/utils/dom.js',
-  '/styles/tokens.js'
-];
-
-// Link ヘッダー生成（HTTP/2 Server Push / Preload）
-function generateLinkHeader(): string {
-  return CORE_DEPENDENCIES
-    .map(dep => `<${dep}>; rel=preload; as=script; crossorigin`)
-    .join(', ');
-}
+// 定期的なキャッシュクリーンアップ（高負荷時のsetTimeout乱立を防止）
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of fileResolutionCache) {
+    if (now - entry.timestamp > RESOLUTION_CACHE_TTL) {
+      fileResolutionCache.delete(key);
+    }
+  }
+}, CACHE_CLEANUP_INTERVAL);
 
 // ===== ユーティリティ関数 =====
 
@@ -162,11 +157,12 @@ async function handleRequest(req: Request): Promise<Response> {
   }
 }
 
-// ファイルが存在するかチェック
+// ファイルが存在するかチェック（空ファイルもtrue）
 async function fileExists(path: string): Promise<boolean> {
   try {
     const file = Bun.file(path);
-    return file.size > 0;
+    await file.stat();
+    return true;
   } catch {
     return false;
   }
@@ -198,9 +194,11 @@ async function transpileWithCache(filePath: string): Promise<{ content: string; 
 
 // 拡張子を解決（.js -> .ts、拡張子なし -> .ts/.js）+ キャッシュ + 並列化
 async function resolveExtension(filePath: string): Promise<string> {
-  // キャッシュチェック
+  // キャッシュチェック（TTL検証）
   const cached = fileResolutionCache.get(filePath);
-  if (cached) return cached;
+  if (cached && Date.now() - cached.timestamp <= RESOLUTION_CACHE_TTL) {
+    return cached.value;
+  }
 
   // .js -> .ts 変換の場合
   if (filePath.endsWith('.js')) {
@@ -215,9 +213,8 @@ async function resolveExtension(filePath: string): Promise<string> {
 
     const result = tsExists ? tsPath : (jsExists ? jsPath : filePath);
 
-    // キャッシュに保存（TTL付き）
-    fileResolutionCache.set(filePath, result);
-    setTimeout(() => fileResolutionCache.delete(filePath), RESOLUTION_CACHE_TTL);
+    // キャッシュに保存（タイムスタンプ付き）
+    fileResolutionCache.set(filePath, { value: result, timestamp: Date.now() });
 
     return result;
   }
@@ -238,9 +235,8 @@ async function resolveExtension(filePath: string): Promise<string> {
 
     const result = tsExists ? tsPath : (jsExists ? jsPath : filePath);
 
-    // キャッシュに保存（TTL付き）
-    fileResolutionCache.set(filePath, result);
-    setTimeout(() => fileResolutionCache.delete(filePath), RESOLUTION_CACHE_TTL);
+    // キャッシュに保存（タイムスタンプ付き）
+    fileResolutionCache.set(filePath, { value: result, timestamp: Date.now() });
 
     return result;
   }

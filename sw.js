@@ -21,7 +21,10 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CORE_CACHE).then((cache) => {
       console.log('[SW] Pre-caching core assets');
-      return cache.addAll(CORE_ASSETS);
+      return cache.addAll(CORE_ASSETS).catch((error) => {
+        console.error('[SW] Pre-caching failed:', error);
+        // プリキャッシュ失敗でもインストールは継続（オフライン時は個別フェッチで対応）
+      });
     }).then(() => {
       console.log('[SW] Install complete');
       return self.skipWaiting(); // 即座にアクティブ化
@@ -38,8 +41,8 @@ self.addEventListener('activate', (event) => {
         cacheNames
           .filter((name) => {
             // 現在のバージョン以外のキャッシュを削除
-            return name.startsWith('core-') && name !== CORE_CACHE ||
-                   name.startsWith('components-') && name !== COMPONENT_CACHE;
+            return (name.startsWith('core-') && name !== CORE_CACHE) ||
+                   (name.startsWith('components-') && name !== COMPONENT_CACHE);
           })
           .map((name) => {
             console.log('[SW] Deleting old cache:', name);

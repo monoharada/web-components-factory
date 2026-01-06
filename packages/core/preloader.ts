@@ -19,6 +19,21 @@
  * ```
  */
 
+/** requestIdleCallback の型定義（lib.dom.d.ts に含まれていないため） */
+interface IdleRequestOptions {
+  timeout?: number;
+}
+type IdleRequestCallback = (deadline: IdleDeadline) => void;
+interface IdleDeadline {
+  readonly didTimeout: boolean;
+  timeRemaining(): number;
+}
+declare global {
+  interface Window {
+    requestIdleCallback?(callback: IdleRequestCallback, options?: IdleRequestOptions): number;
+  }
+}
+
 /** コア依存のリスト（相対パス） */
 export const CORE_DEPENDENCIES = [
   '/core/web-components.js',
@@ -119,9 +134,8 @@ export function preloadCoreDependenciesWhenIdle(
 ): void {
   const doPreload = () => preloadCoreDependencies(options);
 
-  if ('requestIdleCallback' in window) {
-    (window as Window & { requestIdleCallback: (cb: () => void, options?: { timeout: number }) => void })
-      .requestIdleCallback(doPreload, { timeout });
+  if (window.requestIdleCallback) {
+    window.requestIdleCallback(doPreload, { timeout });
   } else {
     // フォールバック: setTimeout
     setTimeout(doPreload, 100);
