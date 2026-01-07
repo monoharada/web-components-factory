@@ -426,6 +426,65 @@ bun server.ts
 - 統一されたテスト環境
 - クエリパラメータで簡単切り替え
 
+## ♿ Accessibility Guidelines (DADS準拠)
+
+### MUST: aria-live / role="alert" を使わない
+
+**重要**: DADSガイドラインでは、**エラーテキストの読み上げにaria-liveを使わない**ことを規定しています。
+
+```html
+<!-- NG: スクリーンリーダーの読み上げが割り込む -->
+<span id="error" aria-live="polite">エラーメッセージ</span>
+<div id="error" role="alert">エラーメッセージ</div>
+
+<!-- OK: 静的テキスト + aria-describedby -->
+<input aria-describedby="error" aria-invalid="true">
+<span id="error">エラーメッセージ</span>
+```
+
+**理由**: 「エラーテキストの読み上げが割り込んでくることになり、スクリーンリーダーユーザーの閲覧や操作の妨げとなる」
+
+### MUST: aria-describedby で動的関連付け
+
+複数の説明要素（サポートテキスト、カウンター、エラー）を状態に応じて管理：
+
+```typescript
+#updateAriaDescribedBy(): void {
+  const ids: string[] = [];
+  if (this.#hasSupportText()) ids.push('support-text');
+  if (this.hasAttribute('show-counter')) ids.push('counter');
+  if (this.hasAttribute('error')) ids.push('error-text');
+
+  if (ids.length > 0) {
+    this.#input.setAttribute('aria-describedby', ids.join(' '));
+  } else {
+    this.#input.removeAttribute('aria-describedby');
+  }
+}
+```
+
+### MUST: エラーメッセージはDADS準拠文言
+
+| エラー種別 | 推奨メッセージ |
+|-----------|---------------|
+| 必須未入力 | この項目は入力が必須です |
+| 文字数超過 | 入力できる文字数を超えています |
+
+### Quick Reference
+
+| 要件 | 実装方法 |
+|------|----------|
+| ラベル関連付け | `<label for="id">` + `<input id="id">` |
+| エラー状態 | `aria-invalid="true/false"` |
+| 説明テキスト | `aria-describedby` |
+| 必須表示 | `aria-required="true"` + 視覚的表示 |
+
+### 詳細ドキュメント
+
+- [アクセシビリティガイドライン](docs/knowledge/accessibility-guidelines.md)
+- [DADS Input Text Accessibility](https://design.digital.go.jp/dads/components/input-text/accessibility/)
+- [DADS Textarea](https://design.digital.go.jp/dads/components/textarea/)
+
 ## Development Workflow
 
 When modifying code:

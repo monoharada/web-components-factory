@@ -26,20 +26,20 @@ vi.stubGlobal('IntersectionObserver', IntersectionObserverMock);
 if (!('CSSStyleSheet' in globalThis)) {
   class MockCSSStyleSheet {
     cssRules: never[] = [];
-    
+
     replaceSync(css: string): void {
       // Mock implementation
     }
-    
+
     insertRule(rule: string, index?: number): number {
       return 0;
     }
-    
+
     deleteRule(index: number): void {
       // Mock implementation
     }
   }
-  
+
   (globalThis as any).CSSStyleSheet = MockCSSStyleSheet;
 }
 
@@ -74,19 +74,33 @@ class MockElementInternals {
   willValidate = true;
 
   checkValidity(): boolean {
-    return true;
+    return this.validity.valid;
   }
 
   reportValidity(): boolean {
-    return true;
+    return this.validity.valid;
   }
 
   setFormValue(value: File | string | FormData | null): void {
     // Mock implementation
   }
 
-  setValidity(flags: Partial<ValidityState>, message?: string): void {
-    // Mock implementation
+  setValidity(flags: Partial<ValidityState>, message?: string, anchor?: HTMLElement): void {
+    // Update validity state
+    if (flags && Object.keys(flags).length > 0) {
+      for (const [key, value] of Object.entries(flags)) {
+        if (key in this.validity) {
+          (this.validity as Record<string, boolean>)[key] = Boolean(value);
+        }
+      }
+      this.validity.valid = !Object.entries(flags).some(([k, v]) => k !== 'valid' && v);
+    } else {
+      // Clear all errors
+      for (const key in this.validity) {
+        (this.validity as Record<string, boolean>)[key] = key === 'valid';
+      }
+    }
+    this.validationMessage = message ?? '';
   }
 }
 
@@ -99,24 +113,24 @@ HTMLElement.prototype.attachInternals = function() {
 if (!('customElements' in globalThis)) {
   class MockCustomElementRegistry {
     private elements = new Map<string, CustomElementConstructor>();
-    
+
     define(name: string, constructor: CustomElementConstructor, options?: ElementDefinitionOptions): void {
       this.elements.set(name, constructor);
     }
-    
+
     get(name: string): CustomElementConstructor | undefined {
       return this.elements.get(name);
     }
-    
+
     whenDefined(name: string): Promise<CustomElementConstructor> {
       return Promise.resolve(this.elements.get(name)!);
     }
-    
+
     upgrade(root: Node): void {
       // Mock implementation
     }
   }
-  
+
   (globalThis as any).customElements = new MockCustomElementRegistry();
 }
 
@@ -183,7 +197,7 @@ export const mockViewportSize = (width: number, height: number): void => {
     configurable: true,
     value: height,
   });
-  
+
   // Trigger resize event
   window.dispatchEvent(new Event('resize'));
 };
