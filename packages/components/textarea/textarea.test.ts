@@ -461,7 +461,7 @@ describe('DadsTextarea - アクセシビリティ', () => {
     expect(describedBy).toContain('error-text');
   });
 
-  it('カウンターがaria-live="polite"を持つ', async () => {
+  it('カウンターにaria-liveが設定されていない（DADSガイドライン準拠）', async () => {
     const { defineTextarea } = await import('./textarea-define');
     defineTextarea();
 
@@ -469,10 +469,10 @@ describe('DadsTextarea - アクセシビリティ', () => {
     await waitForCustomElement(element);
 
     const counter = getShadowContent(element, '[part="counter"]');
-    expect(counter?.getAttribute('aria-live')).toBe('polite');
+    expect(counter?.hasAttribute('aria-live')).toBe(false);
   });
 
-  it('エラーテキストがrole="alert"を持つ', async () => {
+  it('エラーテキストにrole="alert"が設定されていない（DADSガイドライン準拠）', async () => {
     const { defineTextarea } = await import('./textarea-define');
     defineTextarea();
 
@@ -480,7 +480,7 @@ describe('DadsTextarea - アクセシビリティ', () => {
     await waitForCustomElement(element);
 
     const errorText = getShadowContent(element, '[part="error-text"]');
-    expect(errorText?.getAttribute('role')).toBe('alert');
+    expect(errorText?.hasAttribute('role')).toBe(false);
   });
 });
 
@@ -710,7 +710,7 @@ describe('DadsTextarea - 文字数バリデーション', () => {
     });
   });
 
-  it('デフォルトメッセージは「＊入力可能な文字数を超えています」', async () => {
+  it('デフォルトメッセージは「＊入力できる文字数を超えています」', async () => {
     const { defineTextarea } = await import('./textarea-define');
     defineTextarea();
 
@@ -726,7 +726,7 @@ describe('DadsTextarea - 文字数バリデーション', () => {
 
     await waitFor(() => {
       // error-text属性にはプレフィックスなし（表示時にプレフィックスが付く）
-      expect(element.getAttribute('error-text')).toBe('入力可能な文字数を超えています');
+      expect(element.getAttribute('error-text')).toBe('入力できる文字数を超えています');
     });
   });
 
@@ -1007,5 +1007,218 @@ describe('DadsTextarea - バリデーション共通', () => {
 
     // 注: 現在の設計では、手動errorも入力時にクリアされる
     // これは設計上の選択であり、必要に応じて調整可能
+  });
+});
+
+// ========== Phase 12: ライフサイクルとクリーンアップ ==========
+describe('DadsTextarea - ライフサイクルとクリーンアップ', () => {
+  let element: HTMLElement;
+  let form: HTMLFormElement;
+
+  afterEach(() => {
+    if (element && element.isConnected) {
+      element.remove();
+    }
+    if (form && form.isConnected) {
+      form.remove();
+    }
+  });
+
+  it('disconnectedCallback後にformのsubmitリスナーが削除される', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    form = document.createElement('form');
+    element = document.createElement('dads-textarea');
+    element.setAttribute('auto-validate', '');
+    element.setAttribute('required', '');
+    form.appendChild(element);
+    document.body.appendChild(form);
+    await waitForCustomElement(element);
+
+    // コンポーネントを削除
+    element.remove();
+
+    // フォーム送信（コンポーネントがないのでエラーは発生しないはず）
+    const submitHandler = vi.fn();
+    form.addEventListener('submit', submitHandler);
+    const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+    form.dispatchEvent(submitEvent);
+
+    // メモリリークなしで送信が処理される（エラーが発生しない）
+    expect(submitHandler).toHaveBeenCalled();
+  });
+
+  it('コンポーネント削除後に再追加しても動作する', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    form = document.createElement('form');
+    element = document.createElement('dads-textarea');
+    element.setAttribute('auto-validate', '');
+    element.setAttribute('required', '');
+    form.appendChild(element);
+    document.body.appendChild(form);
+    await waitForCustomElement(element);
+
+    // コンポーネントを削除
+    element.remove();
+
+    // 再追加
+    form.appendChild(element);
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+    // フォーム送信でバリデーションが動作する
+    const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+    form.dispatchEvent(submitEvent);
+
+    await waitFor(() => {
+      expect(element.hasAttribute('error')).toBe(true);
+    });
+  });
+});
+
+// ========== Phase 13: Form Submit時のOverflowバリデーション ==========
+describe('DadsTextarea - Form Submit時のOverflowバリデーション', () => {
+  let element: HTMLElement;
+  let form: HTMLFormElement;
+
+  afterEach(() => {
+    if (element && element.isConnected) {
+      element.remove();
+    }
+    if (form && form.isConnected) {
+      form.remove();
+    }
+  });
+
+  it('auto-validate時、maxlength超過でform submitするとエラー表示', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    form = document.createElement('form');
+    element = document.createElement('dads-textarea');
+    element.setAttribute('auto-validate', '');
+    element.setAttribute('maxlength', '10');
+    form.appendChild(element);
+    document.body.appendChild(form);
+    await waitForCustomElement(element);
+
+    // maxlengthを超える入力
+    const textarea = getShadowContent(element, '[part="textarea"]') as HTMLTextAreaElement;
+    textarea.value = '12345678901'; // 11文字
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // フォーム送信
+    const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+    form.dispatchEvent(submitEvent);
+
+    await waitFor(() => {
+      expect(element.hasAttribute('error')).toBe(true);
+      expect(element.getAttribute('error-text')).toBe('入力できる文字数を超えています');
+    });
+  });
+
+  it('required + maxlength超過の両方のエラー時はrequiredが優先（空の場合）', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    form = document.createElement('form');
+    element = document.createElement('dads-textarea');
+    element.setAttribute('auto-validate', '');
+    element.setAttribute('required', '');
+    element.setAttribute('maxlength', '10');
+    form.appendChild(element);
+    document.body.appendChild(form);
+    await waitForCustomElement(element);
+
+    // 空のまま送信（required優先）
+    const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+    form.dispatchEvent(submitEvent);
+
+    await waitFor(() => {
+      expect(element.hasAttribute('error')).toBe(true);
+      expect(element.getAttribute('error-text')).toBe('この項目は入力が必須です');
+    });
+  });
+
+  it('required + maxlength超過の両方を満たさない場合、両方チェックされる', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    form = document.createElement('form');
+    element = document.createElement('dads-textarea');
+    element.setAttribute('auto-validate', '');
+    element.setAttribute('required', '');
+    element.setAttribute('maxlength', '10');
+    form.appendChild(element);
+    document.body.appendChild(form);
+    await waitForCustomElement(element);
+
+    // maxlengthを超える入力（requiredは満たす）
+    const textarea = getShadowContent(element, '[part="textarea"]') as HTMLTextAreaElement;
+    textarea.value = '12345678901'; // 11文字
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // フォーム送信
+    const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+    form.dispatchEvent(submitEvent);
+
+    await waitFor(() => {
+      expect(element.hasAttribute('error')).toBe(true);
+      // 両方満たさない場合、overflowエラーが表示される（requiredは満たしているので）
+      expect(element.getAttribute('error-text')).toBe('入力できる文字数を超えています');
+    });
+  });
+});
+
+// ========== Phase 14: Edge Case - 無効なmaxlength値 ==========
+describe('DadsTextarea - 無効なmaxlength値', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) {
+      cleanupTestElement(element);
+    }
+  });
+
+  it('maxlengthが無効な値（NaN）の場合はバリデーションスキップ', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    element = createTestElement('dads-textarea');
+    element.setAttribute('maxlength', 'invalid'); // 無効な値
+    element.setAttribute('auto-validate', '');
+    await waitForCustomElement(element);
+
+    const textarea = getShadowContent(element, '[part="textarea"]') as HTMLTextAreaElement;
+    textarea.value = '非常に長いテキスト入力';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new FocusEvent('blur', { bubbles: true }));
+
+    await waitFor(() => {
+      // 無効なmaxlengthはスキップされるのでエラーなし
+      expect(element.hasAttribute('error')).toBe(false);
+    });
+  });
+
+  it('maxlengthが空文字の場合はバリデーションスキップ', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    element = createTestElement('dads-textarea');
+    element.setAttribute('maxlength', ''); // 空文字
+    element.setAttribute('auto-validate', '');
+    await waitForCustomElement(element);
+
+    const textarea = getShadowContent(element, '[part="textarea"]') as HTMLTextAreaElement;
+    textarea.value = '非常に長いテキスト入力';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new FocusEvent('blur', { bubbles: true }));
+
+    await waitFor(() => {
+      // 空のmaxlengthはスキップされるのでエラーなし
+      expect(element.hasAttribute('error')).toBe(false);
+    });
   });
 });

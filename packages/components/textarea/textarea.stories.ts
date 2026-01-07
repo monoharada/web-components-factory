@@ -174,8 +174,8 @@ const meta: Meta = {
 ## アクセシビリティ
 - ラベルとtextareaがfor/idで関連付け
 - サポートテキスト・カウンター・エラーがaria-describedbyで関連付け
-- カウンターはaria-live="polite"でスクリーンリーダーに通知
-- エラーメッセージはrole="alert"で即座に通知
+- カウンターはaria-describedbyで関連付け（DADSガイドライン準拠）
+- エラーメッセージはaria-describedbyで関連付け（DADSガイドライン準拠）
         `
       }
     }

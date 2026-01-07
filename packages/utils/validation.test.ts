@@ -54,8 +54,8 @@ describe('validation.ts', () => {
       expect(rule.slotName).toBe('overflow-error');
     });
 
-    it('デフォルトメッセージが「入力可能な文字数を超えています」', () => {
-      expect(rule.defaultMessage).toBe('入力可能な文字数を超えています');
+    it('デフォルトメッセージが「入力できる文字数を超えています」', () => {
+      expect(rule.defaultMessage).toBe('入力できる文字数を超えています');
     });
 
     it('maxlengthが設定されていない場合はtrueを返す', () => {

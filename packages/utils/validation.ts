@@ -54,7 +54,7 @@ export const VALIDATION_RULES = {
       if (!maxLength) return true;
       return value.length <= parseInt(maxLength, 10);
     },
-    defaultMessage: '入力可能な文字数を超えています',
+    defaultMessage: '入力できる文字数を超えています',
     slotName: 'overflow-error',
   },
 } as const satisfies Record<string, ValidationRule>;

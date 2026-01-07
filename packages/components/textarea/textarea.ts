@@ -20,6 +20,8 @@ import {
   checkDeprecatedAttrs,
   DEPRECATED_FORM_ATTRS,
 } from '../../utils/deprecated-attrs.js';
+import { hasSlotContent } from '../../utils/dom.js';
+import { VALIDATION_RULES, getValidationMessage } from '../../utils/validation.js';
 
 /**
  * Textareaコンポーネント
@@ -84,6 +86,9 @@ export class DadsTextarea extends TypographyFormComponent {
   // バリデーション状態
   #validationErrorType: 'required' | 'overflow' | null = null;
 
+  // フォームリスナー用（クリーンアップのため参照を保持）
+  #boundForm: HTMLFormElement | null = null;
+
   static definition = {
     name: 'dads-textarea',
     template: html`
@@ -109,9 +114,9 @@ export class DadsTextarea extends TypographyFormComponent {
           ></textarea>
         </div>
 
-        <span part="counter" id="counter" aria-live="polite"></span>
+        <span part="counter" id="counter"></span>
 
-        <div part="error-text" id="error-text" role="alert">
+        <div part="error-text" id="error-text">
           <slot name="error-text" id="error-slot"></slot>
           <span id="error-fallback"></span>
         </div>
@@ -174,23 +179,31 @@ export class DadsTextarea extends TypographyFormComponent {
     // 初期化
     this.#initTextarea();
     this.#initSlots();
-    this.#updateCounter();
-    this.#updateAriaDescribedBy();
-
-    // フォーム送信バリデーションのセットアップ
     this.#setupFormValidation();
 
     // 属性が接続後に設定された場合のために再同期
     queueMicrotask(() => {
       if (!this.isConnected) return;
-      this.#syncTextareaAttributes();
-      this.#updateLabelFallback();
-      this.#updateSupportFallback();
-      this.#updateErrorFallback();
-      this.#updateRequirement();
-      this.#updateCounter();
-      this.#updateAriaDescribedBy();
+      this.#syncAllState();
     });
+  }
+
+  disconnectedCallback() {
+    // Form submit リスナーのクリーンアップ（メモリリーク防止）
+    if (this.#boundForm) {
+      this.#boundForm.removeEventListener('submit', this.#handleFormSubmit);
+      this.#boundForm = null;
+    }
+  }
+
+  #syncAllState(): void {
+    this.#syncTextareaAttributes();
+    this.#updateLabelFallback();
+    this.#updateSupportFallback();
+    this.#updateErrorFallback();
+    this.#updateRequirement();
+    this.#updateCounter();
+    this.#updateAriaDescribedBy();
   }
 
   #initTextarea() {
@@ -264,17 +277,9 @@ export class DadsTextarea extends TypographyFormComponent {
   #updateLabelFallback() {
     const fallback = this.shadowRoot?.querySelector('#label-fallback') as HTMLElement;
     if (!fallback) return;
-
-    const hasSlotContent = this.#labelSlot?.assignedNodes().filter(n =>
-      n.nodeType === Node.ELEMENT_NODE || (n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
-    ).length ?? 0;
-
-    if (hasSlotContent === 0) {
-      const labelAttr = this.getAttribute('label');
-      fallback.textContent = labelAttr ?? '';
-    } else {
-      fallback.textContent = '';
-    }
+    fallback.textContent = hasSlotContent(this.#labelSlot)
+      ? ''
+      : this.getAttribute('label') ?? '';
   }
 
   #updateSupportFallback() {
@@ -282,20 +287,9 @@ export class DadsTextarea extends TypographyFormComponent {
     const fallback = this.shadowRoot?.querySelector('#support-fallback') as HTMLElement;
     if (!supportText || !fallback) return;
 
-    const hasSlotContent = this.#supportSlot?.assignedNodes().filter(n =>
-      n.nodeType === Node.ELEMENT_NODE || (n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
-    ).length ?? 0;
-
-    if (hasSlotContent === 0) {
-      const supportAttr = this.getAttribute('support-text');
-      fallback.textContent = supportAttr ?? '';
-    } else {
-      fallback.textContent = '';
-    }
-
-    // サポートテキストがない場合は非表示
-    const hasSupportText = hasSlotContent > 0 || !!this.getAttribute('support-text');
-    supportText.style.display = hasSupportText ? '' : 'none';
+    const hasContent = hasSlotContent(this.#supportSlot);
+    fallback.textContent = hasContent ? '' : this.getAttribute('support-text') ?? '';
+    supportText.style.display = (hasContent || this.getAttribute('support-text')) ? '' : 'none';
   }
 
   #updateErrorFallback() {
@@ -303,21 +297,11 @@ export class DadsTextarea extends TypographyFormComponent {
     const fallback = this.shadowRoot?.querySelector('#error-fallback') as HTMLElement;
     if (!errorText || !fallback) return;
 
-    const hasSlotContent = this.#errorSlot?.assignedNodes().filter(n =>
-      n.nodeType === Node.ELEMENT_NODE || (n.nodeType === Node.TEXT_NODE && n.textContent?.trim())
-    ).length ?? 0;
-
-    if (hasSlotContent === 0) {
-      const errorAttr = this.getAttribute('error-text');
-      // 全角アスタリスクをプレフィックスとして追加（スロット経由には付けない）
-      fallback.textContent = errorAttr ? `＊${errorAttr}` : '';
-    } else {
-      fallback.textContent = '';
-    }
-
-    // エラーがない場合は非表示
-    const hasError = this.hasAttribute('error');
-    errorText.style.display = hasError ? '' : 'none';
+    const hasContent = hasSlotContent(this.#errorSlot);
+    const errorAttr = this.getAttribute('error-text');
+    // 全角アスタリスクをプレフィックスとして追加（スロット経由には付けない）
+    fallback.textContent = hasContent ? '' : (errorAttr ? `＊${errorAttr}` : '');
+    errorText.style.display = this.hasAttribute('error') ? '' : 'none';
   }
 
   #updateRequirement() {
@@ -447,6 +431,7 @@ export class DadsTextarea extends TypographyFormComponent {
       }
 
       if (form) {
+        this.#boundForm = form;
         form.addEventListener('submit', this.#handleFormSubmit);
       }
     });
@@ -456,7 +441,10 @@ export class DadsTextarea extends TypographyFormComponent {
     // disabled/readonlyの場合はバリデーションしない
     if (this.hasAttribute('disabled') || this.hasAttribute('readonly')) return;
 
-    if (!this.#validateRequired()) {
+    const isRequiredValid = this.#validateRequired();
+    const isOverflowValid = this.#validateOverflow();
+
+    if (!isRequiredValid || !isOverflowValid) {
       e.preventDefault();
     }
   };
@@ -465,7 +453,11 @@ export class DadsTextarea extends TypographyFormComponent {
     const maxLength = this.getAttribute('maxlength') ?? this.getAttribute('counter-max');
     if (!maxLength) return true;
 
-    const isValid = this.value.length <= parseInt(maxLength, 10);
+    const max = parseInt(maxLength, 10);
+    // 無効な数値の場合は検証スキップ
+    if (Number.isNaN(max)) return true;
+
+    const isValid = this.value.length <= max;
     if (!isValid) {
       this.#showValidationError('overflow');
     } else if (this.#validationErrorType === 'overflow') {
@@ -489,15 +481,7 @@ export class DadsTextarea extends TypographyFormComponent {
     const message = this.#getErrorMessage(type);
     this.setAttribute('error', '');
     this.setAttribute('error-text', message);
-
-    // 直接UI更新を呼び出し（attributeChangedCallbackに依存しない）
-    this.#updateErrorFallback();
-    this.#updateAriaDescribedBy();
-    if (this.#textarea) {
-      this.#textarea.setAttribute('aria-invalid', 'true');
-    }
-
-    // ElementInternals.setValidity を呼び出し
+    this.#updateValidationUI(true);
     this._internals.setValidity(
       { customError: true },
       message,
@@ -510,47 +494,20 @@ export class DadsTextarea extends TypographyFormComponent {
     this.#validationErrorType = null;
     this.removeAttribute('error');
     this.removeAttribute('error-text');
-
-    // 直接UI更新を呼び出し（attributeChangedCallbackに依存しない）
-    this.#updateErrorFallback();
-    this.#updateAriaDescribedBy();
-    if (this.#textarea) {
-      this.#textarea.setAttribute('aria-invalid', 'false');
-    }
-
+    this.#updateValidationUI(false);
     this._internals.setValidity({});
   }
 
-  #getErrorMessage(type: 'required' | 'overflow'): string {
-    const slot = type === 'required'
-      ? this.#requiredErrorSlot
-      : this.#overflowErrorSlot;
-
-    // スロットに割り当てられたノードからテキストを取得
-    const nodes = slot?.assignedNodes({ flatten: true });
-    if (nodes && nodes.length > 0) {
-      const text = nodes
-        .map((node) => {
-          if (node.nodeType === Node.TEXT_NODE) {
-            return node.textContent ?? '';
-          }
-          if (node.nodeType === Node.ELEMENT_NODE) {
-            return (node as HTMLElement).textContent ?? '';
-          }
-          return '';
-        })
-        .join('')
-        .trim();
-
-      if (text) {
-        return text;
-      }
+  #updateValidationUI(hasError: boolean): void {
+    this.#updateErrorFallback();
+    this.#updateAriaDescribedBy();
+    if (this.#textarea) {
+      this.#textarea.setAttribute('aria-invalid', hasError ? 'true' : 'false');
     }
+  }
 
-    // デフォルトメッセージ
-    return type === 'required'
-      ? 'この項目は入力が必須です'
-      : '入力可能な文字数を超えています';
+  #getErrorMessage(type: 'required' | 'overflow'): string {
+    return getValidationMessage(this, VALIDATION_RULES[type]);
   }
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {

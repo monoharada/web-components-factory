@@ -257,8 +257,8 @@ export const demos = {
         <h3 style="color: #1565c0; margin-bottom: 10px;">特徴</h3>
         <ul style="color: #1565c0; line-height: 1.8; padding-left: 20px;">
           <li><strong>WCAG 2.2 AA準拠:</strong> ラベル関連付け、aria-describedby、フォーカス管理</li>
-          <li><strong>文字数カウンター:</strong> 「0/100」形式、aria-live="polite"で通知</li>
-          <li><strong>エラー状態:</strong> role="alert"で即時通知</li>
+          <li><strong>文字数カウンター:</strong> 「0/100」形式、aria-describedbyで関連付け</li>
+          <li><strong>エラー状態:</strong> aria-describedbyで関連付け（DADSガイドライン準拠）</li>
           <li><strong>Form Associated:</strong> ネイティブフォームに参加</li>
           <li><strong>スロット対応:</strong> label、support-text、error-textをスロットでカスタマイズ可能</li>
           <li><strong>::part()スタイリング:</strong> 外部からの柔軟なカスタマイズ</li>
