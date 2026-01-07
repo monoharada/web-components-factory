@@ -26,150 +26,129 @@ vi.stubGlobal('IntersectionObserver', IntersectionObserverMock);
 if (!('CSSStyleSheet' in globalThis)) {
   class MockCSSStyleSheet {
     cssRules: never[] = [];
-    
+
     replaceSync(css: string): void {
       // Mock implementation
     }
-    
+
     insertRule(rule: string, index?: number): number {
       return 0;
     }
-    
+
     deleteRule(index: number): void {
       // Mock implementation
     }
   }
-  
+
   (globalThis as any).CSSStyleSheet = MockCSSStyleSheet;
 }
 
 // ElementInternals Mock (for form-associated custom elements)
-if (!('ElementInternals' in globalThis)) {
-  class MockElementInternals {
-    #element: HTMLElement;
+// happy-domの実装を上書きして、Form Associated Custom Elementsを正しくサポート
+class MockElementInternals {
+  #element: HTMLElement;
 
-    constructor(element: HTMLElement) {
-      this.#element = element;
-    }
-
-    // form プロパティは動的に取得（親フォームを探す）
-    get form(): HTMLFormElement | null {
-      let current: HTMLElement | null = this.#element;
-      while (current) {
-        current = current.parentElement;
-        if (current instanceof HTMLFormElement) {
-          return current;
-        }
-      }
-      return null;
-    }
-
-    validity: ValidityState = {
-      badInput: false,
-      customError: false,
-      patternMismatch: false,
-      rangeOverflow: false,
-      rangeUnderflow: false,
-      stepMismatch: false,
-      tooLong: false,
-      tooShort: false,
-      typeMismatch: false,
-      valid: true,
-      valueMissing: false,
-    };
-    validationMessage = '';
-    willValidate = true;
-
-    checkValidity(): boolean {
-      return this.validity.valid;
-    }
-
-    reportValidity(): boolean {
-      return this.validity.valid;
-    }
-
-    setFormValue(value: File | string | FormData | null): void {
-      // Mock implementation
-    }
-
-    setValidity(flags: Partial<ValidityState>, message?: string, anchor?: HTMLElement): void {
-      // Update validity state
-      if (flags && Object.keys(flags).length > 0) {
-        for (const [key, value] of Object.entries(flags)) {
-          if (key in this.validity) {
-            (this.validity as Record<string, boolean>)[key] = Boolean(value);
-          }
-        }
-        this.validity.valid = !Object.entries(flags).some(([k, v]) => k !== 'valid' && v);
-      } else {
-        // Clear all errors
-        for (const key in this.validity) {
-          (this.validity as Record<string, boolean>)[key] = key === 'valid';
-        }
-      }
-      this.validationMessage = message ?? '';
-    }
+  constructor(element: HTMLElement) {
+    this.#element = element;
   }
 
-  // Mock attachInternals method
-  HTMLElement.prototype.attachInternals = function() {
-    return new MockElementInternals(this);
+  get form(): HTMLFormElement | null {
+    // 親要素を辿ってフォームを検索
+    return this.#element.closest('form');
+  }
+
+  validity: ValidityState = {
+    badInput: false,
+    customError: false,
+    patternMismatch: false,
+    rangeOverflow: false,
+    rangeUnderflow: false,
+    stepMismatch: false,
+    tooLong: false,
+    tooShort: false,
+    typeMismatch: false,
+    valid: true,
+    valueMissing: false,
   };
+  validationMessage = '';
+  willValidate = true;
+
+  checkValidity(): boolean {
+    return this.validity.valid;
+  }
+
+  reportValidity(): boolean {
+    return this.validity.valid;
+  }
+
+  setFormValue(value: File | string | FormData | null): void {
+    // Mock implementation
+  }
+
+  setValidity(flags: Partial<ValidityState>, message?: string, anchor?: HTMLElement): void {
+    // Update validity state
+    if (flags && Object.keys(flags).length > 0) {
+      for (const [key, value] of Object.entries(flags)) {
+        if (key in this.validity) {
+          (this.validity as Record<string, boolean>)[key] = Boolean(value);
+        }
+      }
+      this.validity.valid = !Object.entries(flags).some(([k, v]) => k !== 'valid' && v);
+    } else {
+      // Clear all errors
+      for (const key in this.validity) {
+        (this.validity as Record<string, boolean>)[key] = key === 'valid';
+      }
+    }
+    this.validationMessage = message ?? '';
+  }
 }
+
+// attachInternalsを常にMockで上書き（happy-domの実装よりこちらを優先）
+HTMLElement.prototype.attachInternals = function() {
+  return new MockElementInternals(this);
+};
 
 // Custom Element Registry Mock
 if (!('customElements' in globalThis)) {
   class MockCustomElementRegistry {
     private elements = new Map<string, CustomElementConstructor>();
-    
+
     define(name: string, constructor: CustomElementConstructor, options?: ElementDefinitionOptions): void {
       this.elements.set(name, constructor);
     }
-    
+
     get(name: string): CustomElementConstructor | undefined {
       return this.elements.get(name);
     }
-    
+
     whenDefined(name: string): Promise<CustomElementConstructor> {
       return Promise.resolve(this.elements.get(name)!);
     }
-    
+
     upgrade(root: Node): void {
       // Mock implementation
     }
   }
-  
+
   (globalThis as any).customElements = new MockCustomElementRegistry();
 }
 
-// グローバルテストユーティリティ
-export const createTestElement = <T extends HTMLElement>(tagName: string): T => {
-  const element = document.createElement(tagName) as T;
-  document.body.appendChild(element);
-  return element;
-};
+// テストヘルパー関数を再エクスポート
+// 新しいテストは test/utils/test-helpers.ts から直接インポートしてください
+export {
+  renderWebComponent,
+  createTestElement,
+  getShadowElement,
+  getShadowContent,
+  getShadowText,
+  cleanup,
+  cleanupTestElement,
+  waitForComponent,
+  waitForCustomElement,
+} from '../test/utils/test-helpers';
 
-export const cleanupTestElement = (element: HTMLElement): void => {
-  if (element.parentNode) {
-    element.parentNode.removeChild(element);
-  }
-};
-
-export const waitForCustomElement = async (element: HTMLElement): Promise<void> => {
-  if ('connectedCallback' in element && typeof element.connectedCallback === 'function') {
-    await new Promise(resolve => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(resolve);
-      });
-    });
-  }
-};
-
-// Shadow DOMテストユーティリティ
-export const getShadowContent = (element: HTMLElement, selector: string): Element | null => {
-  return element.shadowRoot?.querySelector(selector) || null;
-};
-
+// Shadow DOMテストユーティリティ（追加）
 export const getAllShadowContent = (element: HTMLElement, selector: string): NodeListOf<Element> => {
   return element.shadowRoot?.querySelectorAll(selector) || document.querySelectorAll('_no_match_');
 };
@@ -205,7 +184,7 @@ export const mockViewportSize = (width: number, height: number): void => {
     configurable: true,
     value: height,
   });
-  
+
   // Trigger resize event
   window.dispatchEvent(new Event('resize'));
 };

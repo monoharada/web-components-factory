@@ -11,6 +11,7 @@ import {
   cleanup,
   waitForComponent,
 } from '../../../test/utils/test-helpers';
+import type { DadsButton } from './button';
 
 // ========== Phase 1: 基本レンダリング ==========
 describe('DadsButton - 基本レンダリング', () => {
@@ -274,12 +275,219 @@ describe('DadsButton - アクセシビリティ', () => {
   it('full-width属性で幅100%になる', async () => {
     const { defineButton } = await import('./button-define');
     defineButton();
-    
+
     const component = await renderWebComponent(`
       <dads-button full-width>Full Width Button</dads-button>
     `);
 
     await waitForComponent('dads-button');
     expect(component.hasAttribute('full-width')).toBe(true);
+  });
+});
+
+// ========== Phase 7: フォーム統合 ==========
+describe('DadsButton - フォーム統合', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  describe('Form Association', () => {
+    it('formAssociatedがtrueである', async () => {
+      const { DadsButton } = await import('./button');
+      expect(DadsButton.formAssociated).toBe(true);
+    });
+
+    it('formプロパティが親フォームを参照する', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const form = document.createElement('form');
+      form.id = 'test-form';
+      const button = document.createElement('dads-button');
+      button.setAttribute('type', 'submit');
+      button.textContent = 'Submit';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      // formプロパティでフォームを参照できることを確認
+      expect((button as DadsButton).form).toBe(form);
+    });
+
+    it('フォーム外のボタンはformがnullになる', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const component = await renderWebComponent(`
+        <dads-button type="submit">Submit</dads-button>
+      `);
+
+      await waitForComponent('dads-button');
+      expect((component as DadsButton).form).toBeNull();
+    });
+  });
+
+  describe('Submit Button', () => {
+    it('type="submit"でフォーム送信がトリガーされる', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const submitHandler = vi.fn((e: Event) => e.preventDefault());
+      const form = document.createElement('form');
+      form.addEventListener('submit', submitHandler);
+
+      const button = document.createElement('dads-button');
+      button.setAttribute('type', 'submit');
+      button.textContent = 'Submit';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      const internalButton = button.shadowRoot?.querySelector('[part="base"]');
+      internalButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      await waitFor(() => {
+        expect(submitHandler).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('Reset Button', () => {
+    it('type="reset"でフォームリセットがトリガーされる', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const resetHandler = vi.fn();
+      const form = document.createElement('form');
+      form.addEventListener('reset', resetHandler);
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = 'test';
+      input.value = 'changed';
+      form.appendChild(input);
+
+      const button = document.createElement('dads-button');
+      button.setAttribute('type', 'reset');
+      button.textContent = 'Reset';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      const internalButton = button.shadowRoot?.querySelector('[part="base"]');
+      internalButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      await waitFor(() => {
+        expect(resetHandler).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('Disabled State', () => {
+    it('disabled時はフォーム送信されない', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const submitHandler = vi.fn((e: Event) => e.preventDefault());
+      const form = document.createElement('form');
+      form.addEventListener('submit', submitHandler);
+
+      const button = document.createElement('dads-button');
+      button.setAttribute('type', 'submit');
+      button.setAttribute('disabled', '');
+      button.textContent = 'Submit';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      const internalButton = button.shadowRoot?.querySelector('[part="base"]');
+      internalButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      await waitFor(() => {
+        expect(submitHandler).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('Type Button (Default)', () => {
+    it('type="button"ではフォーム操作されない', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const submitHandler = vi.fn();
+      const resetHandler = vi.fn();
+      const form = document.createElement('form');
+      form.addEventListener('submit', submitHandler);
+      form.addEventListener('reset', resetHandler);
+
+      const button = document.createElement('dads-button');
+      button.setAttribute('type', 'button');
+      button.textContent = 'Button';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      const internalButton = button.shadowRoot?.querySelector('[part="base"]');
+      internalButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      await waitFor(() => {
+        expect(submitHandler).not.toHaveBeenCalled();
+        expect(resetHandler).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('Without Form (Graceful)', () => {
+    it('フォーム外でtype="submit"でもエラーにならない', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const component = await renderWebComponent(`
+        <dads-button type="submit">Submit</dads-button>
+      `);
+
+      await waitForComponent('dads-button');
+
+      // エラーが発生しないことを確認
+      expect(() => {
+        const internalButton = component.shadowRoot?.querySelector('[part="base"]');
+        internalButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      }).not.toThrow();
+    });
+  });
+
+  describe('リンクモードとの互換性', () => {
+    it('as="link"時はフォーム操作が行われない', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const submitHandler = vi.fn();
+      const form = document.createElement('form');
+      form.addEventListener('submit', submitHandler);
+
+      const button = document.createElement('dads-button');
+      button.setAttribute('as', 'link');
+      button.setAttribute('href', '/test');
+      button.setAttribute('type', 'submit');
+      button.textContent = 'Link';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      const base = button.shadowRoot?.querySelector('[part="base"]');
+      expect(base?.tagName.toLowerCase()).toBe('a');
+
+      base?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      await waitFor(() => {
+        expect(submitHandler).not.toHaveBeenCalled();
+      });
+    });
   });
 });

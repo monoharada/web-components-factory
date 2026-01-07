@@ -11,7 +11,7 @@ import {
   BooleanAttr, 
   PropertyAttr 
 } from '../../core/web-components.js';
-import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
+import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { buttonTokens } from '../../styles/design-tokens/button-tokens.js';
 import { buttonStyles } from './button-styles.js';
@@ -49,7 +49,8 @@ import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.
  * </dads-button>
  * ```
  */
-export class DadsButton extends TypographyWebComponent {
+export class DadsButton extends TypographyFormComponent {
+  static override readonly formAssociated = true;
 
   static definition = {
     name: 'dads-button',
@@ -249,21 +250,63 @@ export class DadsButton extends TypographyWebComponent {
   }
 
   #handleClick = (event: MouseEvent) => {
-    // button要素でdisabled時はイベントを止める（a要素は通常通り動作）
-    if (!this.#isLink() && this.hasAttribute('disabled')) {
+    // リンクモードは既存処理のみ
+    if (this.#isLink()) {
+      this.#emitClickEvent();
+      return;
+    }
+
+    // button要素でdisabled時はイベントを止める
+    if (this.hasAttribute('disabled')) {
       event.preventDefault();
       event.stopPropagation();
       return;
     }
-    
+
+    // フォーム操作を実行
+    this.#handleFormAction();
+
     // カスタムイベントを発火
+    this.#emitClickEvent();
+  };
+
+  /**
+   * フォーム操作を実行
+   * type属性に応じてフォーム送信またはリセットをトリガー
+   *
+   * @remarks
+   * デフォルトは'button'であり、ネイティブHTML `<button>`のデフォルト('submit')とは
+   * 異なります。これは意図しないフォーム送信を防ぐための設計上の決定です。
+   */
+  #handleFormAction() {
+    const form = this._internals.form;
+    if (!form) return;
+
+    const buttonType = this.getAttribute('type') || 'button';
+    switch (buttonType) {
+      case 'submit':
+        if (form.reportValidity()) {
+          form.requestSubmit();
+        }
+        break;
+      case 'reset':
+        form.reset();
+        break;
+      // 'button'タイプは何もしない
+    }
+  }
+
+  /**
+   * カスタムclickイベントを発火
+   */
+  #emitClickEvent() {
     this.dispatchEvent(new CustomEvent('click', {
-      detail: { 
-        variant: this.getAttribute('variant') || 'solid', 
+      detail: {
+        variant: this.getAttribute('variant') || 'solid',
         size: this.getAttribute('size') || 'medium'
       },
       bubbles: true,
       composed: true
     }));
-  };
+  }
 }
