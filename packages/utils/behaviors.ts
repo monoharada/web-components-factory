@@ -67,14 +67,16 @@ export function applyStandardFormElementBehavior(
 
   if (!proto.formResetCallback) {
     proto.formResetCallback = function () {
-      (this as any)[resetProperty] = this.getAttribute(resetAttribute as string);
+      const self = this as unknown as Record<string, unknown>;
+      self[resetProperty] = this.getAttribute(resetAttribute);
     };
   }
 
   if (!proto.formStateRestoreCallback) {
     proto.formStateRestoreCallback = function (state: unknown, _mode: unknown) {
       if (state != null) {
-        (this as any).value = state as any;
+        const self = this as unknown as { value?: unknown };
+        self.value = state;
       }
     };
   }
@@ -95,8 +97,9 @@ export function applyStandardFormElementBehavior(
     if (control) {
       control.readOnly = !!(this as { readOnly?: boolean }).readOnly;
     }
-    if ((this as any)._internals) {
-      (this as any)._internals.ariaReadOnly = (this as any).readOnly ? 'true' : 'false';
+    const internals = (this as { _internals?: ElementInternals })._internals;
+    if (internals) {
+      internals.ariaReadOnly = (this as { readOnly?: boolean }).readOnly ? 'true' : 'false';
     }
   };
 }
