@@ -485,6 +485,43 @@ bun server.ts
 - [DADS Input Text Accessibility](https://design.digital.go.jp/dads/components/input-text/accessibility/)
 - [DADS Textarea](https://design.digital.go.jp/dads/components/textarea/)
 
+## 🎬 E2Eエビデンス取得（Playwright MCP）
+
+### 概要
+Playwright MCPを使用してブラウザ操作を自動化し、スクリーンショットと動画でエビデンスを取得する。
+
+### 前提条件
+```bash
+# サーバー起動
+bun server.ts
+
+# 確認
+curl http://localhost:3000/
+```
+
+### エージェント呼び出し
+```
+Task({
+  description: "E2E evidence capture",
+  prompt: "...(詳細なプロンプト)...",
+  subagent_type: "playwright-automation-expert"
+})
+```
+
+### エビデンス保存先
+```
+e2e-evidence/
+├── 01-initial-state.png     # スクリーンショット
+├── 02-after-action.png
+├── *-recording-*.webm       # 動画
+└── README.md                # エビデンス一覧
+```
+
+### 詳細ガイド
+→ [E2Eエビデンス取得ガイド](docs/knowledge/e2e-evidence-guide.md)
+
+---
+
 ## Development Workflow
 
 When modifying code:
@@ -501,6 +538,7 @@ When modifying code:
 - **[Knowledge Base](docs/knowledge/)**: 学習内容とパターン
   - [Learnings](docs/knowledge/learnings.md): 学習記録
   - [Patterns](docs/knowledge/patterns.md): 再利用可能パターン
+  - [E2Eエビデンス取得ガイド](docs/knowledge/e2e-evidence-guide.md): Playwright MCPによるE2Eテスト
 - **[Implementation Plans](docs/plans/)**: 実装計画
 - **[Reviews](docs/reviews/)**: レビュー結果
 

@@ -9,4 +9,4 @@ export * from './accordion';
 export * from './button';
 
 // リセットカードデモ
-export * from './reset-card';
+export * from './reset-card-demo';

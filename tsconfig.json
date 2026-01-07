@@ -14,6 +14,15 @@
   },
   "include": [
     "src/**/*.ts",
-    "*.ts"
+    "packages/**/*.ts"
+  ],
+  "exclude": [
+    "server.ts",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.stories.ts",
+    "tests/**/*"
   ]
 }

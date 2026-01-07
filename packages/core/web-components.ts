@@ -298,7 +298,7 @@ export const Attribute = Object.freeze({
 
 type ViewInstance = HTMLElement & { refs: Dict };
 
-type WebComponentConfig<T extends typeof WebComponent = typeof WebComponent> = {
+export type WebComponentConfig<T extends typeof WebComponent = typeof WebComponent> = {
   name: string;
   template?: ViewTemplate | null;
   styles?: string | CSSStyleSheet | (string | CSSStyleSheet)[];

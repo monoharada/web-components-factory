@@ -2,6 +2,13 @@
  * エントリーポイント - すべてのWeb Componentsを定義
  */
 
+// グローバル型拡張（デバッグ用）
+declare global {
+  interface Window {
+    componentDemos?: typeof demos;
+  }
+}
+
 // アコーディオンコンポーネント
 import { defineDefaultAccordion } from '../packages/components/accordion/index.js';
 
@@ -228,10 +235,13 @@ export function initViewer(): void {
   const params = new URLSearchParams(window.location.search);
   const initialComponent = params.get('component');
   
+  // nullチェック後の変数を保持（型ナローイングのため）
+  const componentContainer = container;
+
   // コンポーネントを表示
   function showComponent(name: string): void {
     const demoFn = demos[name as keyof typeof demos] || demos.empty;
-    container.innerHTML = demoFn();
+    componentContainer.innerHTML = demoFn();
   }
   
   // セレクタの変更を監視
@@ -261,4 +271,4 @@ export function initViewer(): void {
 }
 
 // グローバルに公開（デバッグ用）
-(window as any).componentDemos = demos;
+window.componentDemos = demos;

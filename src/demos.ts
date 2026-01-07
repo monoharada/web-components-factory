@@ -46,9 +46,7 @@ export const demos = {
             <li style="margin: 5px 0;">既存サイトのリスト項目1</li>
             <li style="margin: 5px 0;">既存サイトのリスト項目2</li>
           </ul>
-          <button style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            既存のボタンスタイル
-          </button>
+          <dads-button variant="solid">既存のボタンスタイル</dads-button>
         </div>
 
         <!-- Web Components（Shadow DOM隔離） -->
@@ -430,8 +428,8 @@ export const demos = {
         </section>
 
         <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
-          <button type="button" onclick="this.closest('form').reset()" style="padding: 8px 16px; background: transparent; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">リセット</button>
-          <button type="submit" style="padding: 8px 16px; background: #0050b3; color: white; border: none; border-radius: 4px; cursor: pointer;">送信</button>
+          <dads-button variant="outlined" type="button" onclick="this.closest('form').reset()">リセット</dads-button>
+          <dads-button variant="solid" type="submit">送信</dads-button>
         </div>
       </form>
 

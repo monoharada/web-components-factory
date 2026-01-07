@@ -61,3 +61,7 @@ temp/
 
 # Serena tool
 .serena/
+
+# E2E evidence (screenshots, videos - for user review only)
+e2e-evidence/
+test-results/
