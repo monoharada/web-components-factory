@@ -273,6 +273,10 @@ export class DadsButton extends TypographyFormComponent {
   /**
    * フォーム操作を実行
    * type属性に応じてフォーム送信またはリセットをトリガー
+   *
+   * @remarks
+   * デフォルトは'button'であり、ネイティブHTML `<button>`のデフォルト('submit')とは
+   * 異なります。これは意図しないフォーム送信を防ぐための設計上の決定です。
    */
   #handleFormAction() {
     const form = this._internals.form;

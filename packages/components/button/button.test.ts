@@ -11,6 +11,7 @@ import {
   cleanup,
   waitForComponent,
 } from '../../../test/utils/test-helpers';
+import type { DadsButton } from './button';
 
 // ========== Phase 1: 基本レンダリング ==========
 describe('DadsButton - 基本レンダリング', () => {
@@ -311,7 +312,7 @@ describe('DadsButton - フォーム統合', () => {
       await waitForComponent('dads-button');
 
       // formプロパティでフォームを参照できることを確認
-      expect((button as any).form).toBe(form);
+      expect((button as DadsButton).form).toBe(form);
     });
 
     it('フォーム外のボタンはformがnullになる', async () => {
@@ -323,7 +324,7 @@ describe('DadsButton - フォーム統合', () => {
       `);
 
       await waitForComponent('dads-button');
-      expect((component as any).form).toBeNull();
+      expect((component as DadsButton).form).toBeNull();
     });
   });
 

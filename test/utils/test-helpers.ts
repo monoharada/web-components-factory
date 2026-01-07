@@ -22,6 +22,14 @@ export function getShadowElement(component: HTMLElement, selector: string): Elem
 }
 
 /**
+ * Shadow DOM内のテキストコンテンツを取得
+ */
+export function getShadowText(component: HTMLElement, selector: string): string {
+  const element = component.shadowRoot?.querySelector(selector);
+  return element?.textContent?.trim() || '';
+}
+
+/**
  * テスト後のクリーンアップ
  */
 export function cleanup(): void {
@@ -31,7 +39,7 @@ export function cleanup(): void {
 /**
  * カスタム要素の定義完了を待機
  */
-export async function waitForComponent(tagName: string, timeout = 1000): Promise<void> {
+export async function waitForComponent(tagName: string): Promise<void> {
   await customElements.whenDefined(tagName);
   // requestAnimationFrameで2フレーム待機して初期化を確実に完了させる
   await new Promise(resolve => {
