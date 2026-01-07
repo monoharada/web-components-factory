@@ -44,47 +44,56 @@ if (!('CSSStyleSheet' in globalThis)) {
 }
 
 // ElementInternals Mock (for form-associated custom elements)
-if (!('ElementInternals' in globalThis)) {
-  class MockElementInternals {
-    form: HTMLFormElement | null = null;
-    validity: ValidityState = {
-      badInput: false,
-      customError: false,
-      patternMismatch: false,
-      rangeOverflow: false,
-      rangeUnderflow: false,
-      stepMismatch: false,
-      tooLong: false,
-      tooShort: false,
-      typeMismatch: false,
-      valid: true,
-      valueMissing: false,
-    };
-    validationMessage = '';
-    willValidate = true;
-    
-    checkValidity(): boolean {
-      return true;
-    }
-    
-    reportValidity(): boolean {
-      return true;
-    }
-    
-    setFormValue(value: File | string | FormData | null): void {
-      // Mock implementation
-    }
-    
-    setValidity(flags: Partial<ValidityState>, message?: string): void {
-      // Mock implementation
-    }
+// happy-domの実装を上書きして、Form Associated Custom Elementsを正しくサポート
+class MockElementInternals {
+  #element: HTMLElement;
+
+  constructor(element: HTMLElement) {
+    this.#element = element;
   }
-  
-  // Mock attachInternals method
-  HTMLElement.prototype.attachInternals = function() {
-    return new MockElementInternals();
+
+  get form(): HTMLFormElement | null {
+    // 親要素を辿ってフォームを検索
+    return this.#element.closest('form');
+  }
+
+  validity: ValidityState = {
+    badInput: false,
+    customError: false,
+    patternMismatch: false,
+    rangeOverflow: false,
+    rangeUnderflow: false,
+    stepMismatch: false,
+    tooLong: false,
+    tooShort: false,
+    typeMismatch: false,
+    valid: true,
+    valueMissing: false,
   };
+  validationMessage = '';
+  willValidate = true;
+
+  checkValidity(): boolean {
+    return true;
+  }
+
+  reportValidity(): boolean {
+    return true;
+  }
+
+  setFormValue(value: File | string | FormData | null): void {
+    // Mock implementation
+  }
+
+  setValidity(flags: Partial<ValidityState>, message?: string): void {
+    // Mock implementation
+  }
 }
+
+// attachInternalsを常にMockで上書き（happy-domの実装よりこちらを優先）
+HTMLElement.prototype.attachInternals = function() {
+  return new MockElementInternals(this);
+};
 
 // Custom Element Registry Mock
 if (!('customElements' in globalThis)) {

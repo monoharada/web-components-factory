@@ -19,7 +19,8 @@ export default defineConfig({
     // テストファイルパターン
     include: [
       'tests/**/*.{test,spec}.{js,ts}',
-      'src/**/*.{test,spec}.{js,ts}'
+      'src/**/*.{test,spec}.{js,ts}',
+      'packages/**/*.{test,spec}.{js,ts}'
     ],
     
     // ファイル監視設定
