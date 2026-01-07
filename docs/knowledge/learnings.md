@@ -535,6 +535,140 @@ export function applyReadonlyStyles() {
 
 ---
 
+## [2026-01-07] FormComponent: フォーム参加可能なWeb Components基盤
+**タグ**: #webcomponents #forms #formAssociated #elementInternals
+
+### 概要
+Web Componentsがネイティブフォームに参加するための基盤クラス`FormComponent`の仕組みと使い方。
+
+### 詳細
+
+#### 1. Form Associated Custom Elementsとは
+通常のカスタム要素はShadow DOM内のフォーム要素と外部の`<form>`が接続されない。
+Form Associated Custom Elementを使うと、カスタム要素自体がフォームに参加できる。
+
+#### 2. 既存の基盤クラス
+
+| クラス | 場所 | 用途 |
+|--------|------|------|
+| `FormComponent` | `packages/core/web-components.ts:548` | フォーム参加の基本クラス |
+| `TypographyFormComponent` | `packages/core/typography/typography-web-component.ts:108` | タイポグラフィ付きフォーム基盤 |
+
+#### 3. FormComponentの提供機能
+
+```typescript
+export class FormComponent extends WebComponent {
+  static readonly formAssociated = true;  // フォーム参加を宣言
+  readonly _internals: ElementInternals;  // フォームAPIアクセス
+
+  constructor() {
+    super();
+    this._internals = this.attachInternals();  // 内部状態へのアクセス取得
+  }
+
+  // 提供されるプロパティ
+  get form() { return this._internals.form; }  // 所属フォーム
+  get validity() { return this._internals.validity; }  // バリデーション状態
+  get validationMessage() { return this._internals.validationMessage; }
+
+  // 提供されるメソッド
+  checkValidity() { return this._internals.checkValidity(); }
+  reportValidity() { return this._internals.reportValidity(); }
+
+  // ライフサイクルコールバック
+  formDisabledCallback(disabled: boolean) { /* フォーム無効化時 */ }
+  formResetCallback() { /* フォームリセット時 */ }
+  formStateRestoreCallback(state) { /* 状態復元時 */ }
+}
+```
+
+#### 4. 使用例: フォーム送信ボタン
+
+```typescript
+import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
+
+export class DadsButton extends TypographyFormComponent {
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('click', this.#handleClick);
+  }
+
+  #handleClick = () => {
+    if (this.hasAttribute('disabled')) return;
+
+    const type = this.getAttribute('type');
+    const form = this._internals.form;  // FormComponentから継承
+
+    if (!form) return;
+
+    switch (type) {
+      case 'submit':
+        form.requestSubmit();  // フォーム送信
+        break;
+      case 'reset':
+        form.reset();  // フォームリセット
+        break;
+    }
+  };
+}
+```
+
+#### 5. 使用例: 入力コンポーネント
+
+```typescript
+export class DadsTextarea extends TypographyFormComponent {
+  static readonly formAssociated = true;  // 継承元で宣言済みだが明示も可
+
+  #handleInput = () => {
+    // フォーム値の更新
+    this._internals.setFormValue(this.#textarea.value);
+  };
+
+  // バリデーション設定
+  #setInvalidState(message: string) {
+    this._internals.setValidity(
+      { customError: true },
+      message,
+      this.#textarea  // バリデーション対象要素
+    );
+  }
+
+  #clearInvalidState() {
+    this._internals.setValidity({});
+  }
+}
+```
+
+### ElementInternals APIまとめ
+
+| メソッド/プロパティ | 説明 |
+|---------------------|------|
+| `form` | 所属する`<form>`要素 |
+| `setFormValue(value)` | フォーム送信時の値を設定 |
+| `setValidity(flags, message, anchor)` | バリデーション状態を設定 |
+| `checkValidity()` | バリデーションチェック |
+| `reportValidity()` | バリデーションエラーを表示 |
+| `validity` | ValidityStateオブジェクト |
+| `validationMessage` | バリデーションメッセージ |
+| `willValidate` | バリデーション対象かどうか |
+
+### 適用例
+- `packages/components/textarea/textarea.ts` - 入力コンポーネント
+- Issue #5: `dads-button`のフォーム送信対応
+
+### 注意点
+- `static readonly formAssociated = true`は必須（宣言がないとattachInternals()が機能しない）
+- `attachInternals()`はコンストラクタで1回だけ呼ぶ
+- Shadow DOM内のネイティブフォーム要素は外部formと接続されないため、必ず`_internals`経由で操作
+- フォームリセット時は`formResetCallback`で初期値に戻す処理が必要
+
+### 参考資料
+- [MDN: Form-associated custom elements](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/attachInternals)
+- [web.dev: More capable form controls](https://web.dev/articles/more-capable-form-controls)
+- GitHub Issue #5: dads-button Form Associated対応
+
+---
+
 ## テンプレート（新しい学習記録用）
 
 ## [日付] タイトル
