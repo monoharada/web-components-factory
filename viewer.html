@@ -13,6 +13,7 @@
       "@core/autoloader": "/core/autoloader.js",
       "@demos": "/src/demos.js",
       "dads-button": "/@components/dads/button.js",
+      "dads-textarea": "/@components/dads/textarea.js",
       "dads-accordion-details": "/@components/dads/accordion-details.js",
       "dads-accordion-item-details": "/@components/dads/accordion-item-details.js",
       "dads-text": "/@components/dads/text.js"
@@ -205,6 +206,8 @@
             <option value="">-- Select --</option>
             <option value="accordion">Accordion</option>
             <option value="button">Button</option>
+            <option value="textarea">Textarea</option>
+            <option value="textareaValidation">Textarea Validation</option>
             <option value="resetCss">Reset CSS Demo</option>
           </select>
         </div>
@@ -318,6 +321,7 @@
     // ページ読み込み後、アイドル時にすべてのコンポーネントをプリロード
     const componentAdapters = [
       '/@components/dads/button.js',
+      '/@components/dads/textarea.js',
       '/@components/dads/accordion-details.js',
       '/@components/dads/accordion-item-details.js',
       '/@components/dads/text.js'

@@ -46,7 +46,24 @@ if (!('CSSStyleSheet' in globalThis)) {
 // ElementInternals Mock (for form-associated custom elements)
 if (!('ElementInternals' in globalThis)) {
   class MockElementInternals {
-    form: HTMLFormElement | null = null;
+    #element: HTMLElement;
+
+    constructor(element: HTMLElement) {
+      this.#element = element;
+    }
+
+    // form プロパティは動的に取得（親フォームを探す）
+    get form(): HTMLFormElement | null {
+      let current: HTMLElement | null = this.#element;
+      while (current) {
+        current = current.parentElement;
+        if (current instanceof HTMLFormElement) {
+          return current;
+        }
+      }
+      return null;
+    }
+
     validity: ValidityState = {
       badInput: false,
       customError: false,
@@ -62,27 +79,41 @@ if (!('ElementInternals' in globalThis)) {
     };
     validationMessage = '';
     willValidate = true;
-    
+
     checkValidity(): boolean {
-      return true;
+      return this.validity.valid;
     }
-    
+
     reportValidity(): boolean {
-      return true;
+      return this.validity.valid;
     }
-    
+
     setFormValue(value: File | string | FormData | null): void {
       // Mock implementation
     }
-    
-    setValidity(flags: Partial<ValidityState>, message?: string): void {
-      // Mock implementation
+
+    setValidity(flags: Partial<ValidityState>, message?: string, anchor?: HTMLElement): void {
+      // Update validity state
+      if (flags && Object.keys(flags).length > 0) {
+        for (const [key, value] of Object.entries(flags)) {
+          if (key in this.validity) {
+            (this.validity as Record<string, boolean>)[key] = Boolean(value);
+          }
+        }
+        this.validity.valid = !Object.entries(flags).some(([k, v]) => k !== 'valid' && v);
+      } else {
+        // Clear all errors
+        for (const key in this.validity) {
+          (this.validity as Record<string, boolean>)[key] = key === 'valid';
+        }
+      }
+      this.validationMessage = message ?? '';
     }
   }
-  
+
   // Mock attachInternals method
   HTMLElement.prototype.attachInternals = function() {
-    return new MockElementInternals();
+    return new MockElementInternals(this);
   };
 }
 

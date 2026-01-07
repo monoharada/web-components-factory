@@ -6,11 +6,12 @@
 
 ```
 knowledge/
-├── README.md           # このファイル
-├── learnings.md        # 学習内容の記録
-├── patterns.md         # 発見したパターン
-├── improvements.md     # 改善提案
-└── decisions.md        # 技術的決定事項
+├── README.md                    # このファイル
+├── learnings.md                 # 学習内容の記録
+├── patterns.md                  # 発見したパターン
+├── improvements.md              # 改善提案
+├── decisions.md                 # 技術的決定事項
+└── accessibility-guidelines.md  # アクセシビリティガイドライン (DADS準拠)
 ```
 
 ## 📝 記録すべき内容

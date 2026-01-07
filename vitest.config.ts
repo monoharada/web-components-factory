@@ -19,13 +19,12 @@ export default defineConfig({
     // テストファイルパターン
     include: [
       'tests/**/*.{test,spec}.{js,ts}',
-      'src/**/*.{test,spec}.{js,ts}'
+      'src/**/*.{test,spec}.{js,ts}',
+      'packages/**/*.{test,spec}.{js,ts}'
     ],
     
-    // ファイル監視設定
-    watch: {
-      include: ['src/**/*', 'tests/**/*']
-    },
+    // ファイル監視無効化（CIモード用、手動実行時は --watch で有効化）
+    watch: false,
     
     // カバレッジ設定
     coverage: {
