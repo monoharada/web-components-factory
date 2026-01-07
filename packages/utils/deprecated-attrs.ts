@@ -3,6 +3,9 @@
  * DADS公式アクセシビリティガイドラインに基づく
  */
 
+// Node.js process グローバル変数の型定義（ブラウザでは未定義）
+declare const process: { env?: { NODE_ENV?: string } } | undefined;
+
 /**
  * 非推奨属性の設定インターフェース
  */

@@ -12,7 +12,7 @@ function updateLabel(slot: HTMLSlotElement, target: HTMLElement): void {
   }
 }
 
-type WithRefs = { refs: Record<string, any> };
+type WithRefs = { refs?: Record<string, unknown> };
 
 export function applyHideEmptySlotBehavior(
   type: { prototype: HTMLElement & WithRefs & { connectedCallback?: () => void } },
@@ -37,7 +37,8 @@ export function applyHideEmptySlotBehavior(
   const proto = type.prototype as HTMLElement & WithRefs & { connectedCallback?: () => void };
   const originalConnectedCallback = proto.connectedCallback;
   proto.connectedCallback = function (this: HTMLElement & WithRefs) {
-    originalConnectedCallback?.call(this as any);
+    originalConnectedCallback?.call(this as HTMLElement);
+    if (!this.refs) return;
     const slotEl = this.refs[slotId] as HTMLSlotElement;
     const targetEl = this.refs[targetId] as HTMLElement;
     slotEl.addEventListener('slotchange', handler);
@@ -80,17 +81,19 @@ export function applyStandardFormElementBehavior(
 
   const originalDisabledCallback = proto.formDisabledCallback;
   proto.formDisabledCallback = function (disabled: boolean) {
-    originalDisabledCallback?.call(this as any, disabled);
-    if (this.refs?.control) {
-      this.refs.control.disabled = disabled;
+    originalDisabledCallback?.call(this as HTMLElement, disabled);
+    const control = this.refs?.control as HTMLInputElement | HTMLTextAreaElement | undefined;
+    if (control) {
+      control.disabled = disabled;
     }
   };
 
   const originalReadOnlyChanged = proto.readOnlyChanged;
   proto.readOnlyChanged = function (ov: unknown, nv: unknown) {
-    originalReadOnlyChanged?.call(this as any, ov, nv);
-    if (this.refs?.control) {
-      this.refs.control.readOnly = !!(this as any).readOnly;
+    originalReadOnlyChanged?.call(this as HTMLElement, ov, nv);
+    const control = this.refs?.control as HTMLInputElement | HTMLTextAreaElement | undefined;
+    if (control) {
+      control.readOnly = !!(this as { readOnly?: boolean }).readOnly;
     }
     if ((this as any)._internals) {
       (this as any)._internals.ariaReadOnly = (this as any).readOnly ? 'true' : 'false';

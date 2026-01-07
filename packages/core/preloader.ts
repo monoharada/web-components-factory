@@ -19,21 +19,6 @@
  * ```
  */
 
-/** requestIdleCallback の型定義（lib.dom.d.ts に含まれていないため） */
-interface IdleRequestOptions {
-  timeout?: number;
-}
-type IdleRequestCallback = (deadline: IdleDeadline) => void;
-interface IdleDeadline {
-  readonly didTimeout: boolean;
-  timeRemaining(): number;
-}
-declare global {
-  interface Window {
-    requestIdleCallback?(callback: IdleRequestCallback, options?: IdleRequestOptions): number;
-  }
-}
-
 /** コア依存のリスト（相対パス） */
 export const CORE_DEPENDENCIES = [
   '/core/web-components.js',

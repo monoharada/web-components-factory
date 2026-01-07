@@ -3,8 +3,6 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     // 高速化設定
-    threads: true,
-    maxThreads: 4,
     isolate: false,
     
     // テスト環境設定

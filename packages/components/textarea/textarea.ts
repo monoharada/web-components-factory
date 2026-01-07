@@ -596,8 +596,8 @@ export class DadsTextarea extends TypographyFormComponent {
     this.value = defaultValue;
   }
 
-  formStateRestoreCallback(state: string | null) {
-    if (state !== null) {
+  formStateRestoreCallback(state: unknown, _mode: unknown) {
+    if (state !== null && typeof state === 'string') {
       this.value = state;
     }
   }
