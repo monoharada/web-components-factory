@@ -135,6 +135,406 @@ npm run tdd  # watch modeでテスト駆動開発
 
 ---
 
+## [2025-01-07] Textareaコンポーネント実装から得た学び
+**タグ**: #webcomponents #slots #focus #forms #tdd
+
+### 概要
+DADS準拠Textareaコンポーネントの実装を通じて、スロット管理、フォーカススタイルの共通化、属性同期のベストプラクティスを確立。
+
+### 詳細
+
+#### 1. スロットフォールバックの正しい実装
+**問題**: スロット親要素の`textContent`を上書きすると、スロットされたコンテンツが破壊される
+
+```typescript
+// ❌ BAD: スロットが破壊される
+labelElement.textContent = this.getAttribute('label') || '';
+
+// ✅ GOOD: 別のフォールバック要素を使用
+<label part="label">
+  <span part="label-text"><slot name="label"></slot></span>
+  <span part="label-fallback"></span>  <!-- フォールバック用 -->
+</label>
+// フォールバック要素のみ更新
+fallbackElement.textContent = this.getAttribute('label') || '';
+```
+
+#### 2. フォーカススタイルはミックスインで共通化
+**問題**: 各コンポーネントで個別にフォーカススタイルを定義すると不整合が生じる
+
+```typescript
+// focus-styles-official.ts に集約
+export function applyDADSFocusStyles() {
+  return css`
+    :host [part="base"]:focus-visible { /* ボタン */ }
+    :host [part="summary"]:focus-visible { /* アコーディオン */ }
+    :host [part="textarea"]:focus-visible { /* テキストエリア */ }
+    :host [part="input"]:focus-visible { /* インプット */ }
+  `;
+}
+
+// 各コンポーネントで使用
+static definition = {
+  styles: [tokens, styles, applyDADSFocusStyles()]
+};
+```
+
+#### 3. 属性の遅延同期にqueueMicrotaskを使用
+**問題**: `connectedCallback`時点では属性がまだ設定されていないケースがある
+
+```typescript
+connectedCallback() {
+  super.connectedCallback();
+  // 初期設定...
+
+  // 属性が接続後に設定された場合のために再同期
+  queueMicrotask(() => {
+    if (!this.isConnected) return;
+    this.#syncAllAttributes();
+  });
+}
+```
+
+#### 4. happy-domでのrows属性の型
+**問題**: happy-domは`textarea.rows`を文字列として返す場合がある
+
+```typescript
+// ❌ 失敗する可能性
+expect(textarea?.rows).toBe(5);
+
+// ✅ 安全な比較
+expect(Number(textarea?.rows)).toBe(5);
+```
+
+### 適用例
+`packages/components/textarea/` の実装全体、特に:
+- `textarea.ts`: スロットフォールバック、queueMicrotask
+- `textarea-styles.ts`: ミックスインへの委譲
+- `textarea.test.ts`: 型安全なテスト
+
+### 注意点
+- スロット親要素のtextContentは絶対に上書きしない
+- フォーカススタイルは必ず共通ミックスインを使用
+- テスト環境とブラウザ環境の差異を考慮
+
+---
+
+## [2025-01-07] DADS公式準拠フォーカススタイルとヘッドレスWebComponent設計思想
+**タグ**: #dads #focus #tokens #design-philosophy #headless
+
+### 概要
+DADS（デジタル庁デザインシステム）公式実装を調査し、フォーカススタイルの不整合を発見・修正。同時に、ヘッドレスWebComponentライブラリとしての設計思想をドキュメント化。
+
+### 詳細
+
+#### 1. DADS公式フォーカススタイルの発見
+**問題**: フォーカス時の`border-radius: .25rem`が公式にはない
+
+公式実装（GitHub: digital-go-jp/design-system-example-components）を調査:
+```css
+/* Button.tsx / Textarea.tsx 共通 */
+focus-visible:outline
+focus-visible:outline-4
+focus-visible:outline-black
+focus-visible:outline-offset-[calc(2/16*1rem)]
+focus-visible:ring-[calc(2/16*1rem)]
+focus-visible:ring-yellow-300
+/* ← border-radiusの変更なし */
+```
+
+**対応**: `focus-styles-official.ts`から全ての`border-radius`を削除
+
+#### 2. 3層トークン構造の確立
+```
+Primitive Tokens (DADS公式)
+    ↓
+Semantic Tokens (意味層)
+    ↓
+Local Tokens (--dads-* オーバーライド用API)
+    ↓
+CSS Properties
+```
+
+各層の役割:
+- **Primitive**: DADS公式の基本値（変更しない）
+- **Semantic**: 意味的なマッピング（低頻度変更）
+- **Local**: 外部カスタマイズ用API（ユーザーが変更可能）
+
+#### 3. ヘッドレスWebComponentライブラリ思想
+Radix UI / shadcn UIから着想:
+- DADS準拠をデフォルトに
+- `--dads-*` プレフィックスでオーバーライドポイントを提供
+- Shadow DOMのカプセル化を活かしながらCSS変数APIで安全に拡張
+
+### 適用例
+```typescript
+// フォーカストークンの3層構造
+:host {
+  /* セマンティック層 */
+  --focus-outline-color: var(--color-neutral-black);
+  --focus-ring-color: var(--color-primitive-yellow-300);
+
+  /* ローカル層（API） */
+  --dads-focus-outline-color: var(--focus-outline-color);
+  --dads-focus-ring-color: var(--focus-ring-color);
+}
+
+/* 利用者によるオーバーライド */
+dads-button {
+  --dads-focus-ring-color: #your-brand-focus-color;
+}
+```
+
+### 成果物
+- `packages/styles/mixins/focus-styles-official.ts` - 公式準拠版に修正
+- `docs/architecture/design-philosophy.md` - 設計思想ドキュメント
+- `.claude/skills/headless-component-design/` - Claude Skills化
+
+### 注意点
+- 公式実装は必ずGitHubで確認（Tailwindクラスの解読が必要）
+- `border-radius`はフォーカス時に変更しない（公式準拠）
+- トークンの3層構造を維持し、API層（--dads-*）を公開する
+
+---
+
+## [2025-01-07] DADS角丸（Corner Shapes）仕様の発見と修正
+**タグ**: #dads #corner-shapes #border-radius #design-tokens
+
+### 概要
+Textareaコンポーネントの角丸が公式仕様と異なることを発見し、修正。DADS公式の角丸設計ルールを文書化。
+
+### 詳細
+
+#### 発見した問題
+実装では `0.25rem (4px)` を使用していたが、公式は `0.5rem (8px)` を使用。
+
+```typescript
+// ❌ 間違い
+--textarea-border-radius: var(--border-radius-4, 0.25rem);
+
+// ✅ 正解
+--textarea-border-radius: var(--border-radius-8, 0.5rem);
+```
+
+#### DADS公式の角丸5段階スタイル
+
+| スタイル | 正方形 | 長方形 | 用途 |
+|---------|--------|--------|------|
+| 角丸なし | 0px | 0px | シャープな印象 |
+| **角丸スモール** | **8px** | **8px** | **フォーム要素** |
+| 角丸ミディアム | 16px | 12px | カード、モーダル |
+| 角丸ラージ | 32px | 16px | 大きな強調要素 |
+| 角丸フル | 50% | 50% | ピル、アバター |
+
+#### 重要な原則
+**同じスタイルでもサイズによって視覚的印象が異なる**
+- 小さいコンポーネント → 角丸の影響が強く見える
+- コンポーネント種別ごとに個別調整が必要
+
+### 適用例
+```css
+/* フォーム要素は角丸スモール（8px）を使用 */
+--textarea-border-radius: var(--border-radius-8, 0.5rem);
+--button-border-radius: var(--border-radius-8, 0.5rem);
+--input-border-radius: var(--border-radius-8, 0.5rem);
+```
+
+### 成果物
+- `packages/components/textarea/textarea-tokens.ts` - 角丸を0.5remに修正
+- `docs/architecture/design-philosophy.md` - 角丸セクション追加
+- `.claude/skills/headless-component-design/references/corner-shapes.md` - 角丸リファレンス
+
+### 注意点
+- フォーム要素（Button, Textarea, Input）は **8px (0.5rem)** を使用
+- 4px (0.25rem) は極小要素用であり、フォーム要素には使用しない
+- 公式ドキュメント: https://design.digital.go.jp/dads/foundations/corner-shapes/
+
+---
+
+## [2025-01-07] placeholder属性非推奨の実装とアクセシビリティガイドライン
+**タグ**: #dads #accessibility #placeholder #deprecated #forms
+
+### 概要
+DADS公式アクセシビリティガイドラインに基づき、フォーム入力要素の`placeholder`属性を非推奨として警告・禁止する仕組みを実装。
+
+### 詳細
+
+#### 1. placeholder非推奨の理由（DADS公式）
+**参照**: https://design.digital.go.jp/dads/components/input-text/accessibility/
+
+1. **コントラスト比が低い**: 視認性が良くない
+2. **入力中の消失**: ユーザーが入力条件を確認できない
+3. **スクリーンリーダー対応**: 読み上げられない場合がある
+
+#### 2. 実装パターン: ソフトな禁止
+
+```typescript
+// packages/utils/deprecated-attrs.ts
+export const DEPRECATED_FORM_ATTRS: DeprecatedAttrConfig[] = [
+  {
+    name: 'placeholder',
+    reason: 'プレースホルダーはコントラスト比が低く、入力中に消えるためアクセシビリティ上の問題があります',
+    alternative: 'support-text属性を使用してください',
+    docsUrl: 'https://design.digital.go.jp/dads/components/input-text/accessibility/'
+  }
+];
+
+// コンポーネント側での使用
+connectedCallback() {
+  checkDeprecatedAttrs(this, DEPRECATED_FORM_ATTRS);
+}
+```
+
+**挙動**:
+- 開発モードで警告を出力
+- 内部のネイティブ要素には転送しない
+- 本番環境（`NODE_ENV=production`）では警告なし
+
+#### 3. support-textが代替として機能
+```html
+<!-- ❌ 非推奨 -->
+<dads-textarea placeholder="入力例: 山田太郎"></dads-textarea>
+
+<!-- ✅ 推奨 -->
+<dads-textarea support-text="入力例: 山田太郎"></dads-textarea>
+```
+
+`support-text`の利点:
+- 常に表示される（入力中も消えない）
+- 高いコントラスト比
+- `aria-describedby`で適切に関連付け
+
+#### 4. テストのポイント
+属性を設定してからDOMに追加する順序が重要:
+
+```typescript
+// ✅ 正しい順序
+element = document.createElement('dads-textarea');
+element.setAttribute('placeholder', '...'); // 先に属性設定
+document.body.appendChild(element); // 後でDOM追加
+
+// ❌ 間違い（警告が発火しない）
+element = createTestElement('dads-textarea'); // DOM追加済み
+element.setAttribute('placeholder', '...'); // connectedCallback後
+```
+
+### 成果物
+- `packages/utils/deprecated-attrs.ts` - 非推奨属性ユーティリティ（新規）
+- `packages/components/textarea/textarea.ts` - placeholder禁止実装
+- `packages/components/textarea/textarea.test.ts` - 非推奨属性テスト追加
+- `docs/architecture/design-philosophy.md` - アクセシビリティセクション追加
+- `.claude/skills/headless-component-design/references/accessibility.md` - 参照ドキュメント（新規）
+
+### 注意点
+- placeholder属性は`observedAttributes`から除外
+- `#syncTextareaAttributes`でも転送しない
+- 将来的にエラーとして扱う可能性を考慮した設計
+- support-textは必ず`aria-describedby`で関連付け
+
+---
+
+## [2026-01-07] フォームラベル・エラー表示の設計パターン
+**タグ**: #dads #forms #labels #errors #accessibility
+
+### 概要
+フォームコンポーネントの要否ラベルとエラー表示の設計パターンを確立。任意ラベルの廃止、読み取り専用ラベルの追加、エラープレフィックスの統一。
+
+### 詳細
+
+#### 1. 要否ラベルの設計
+| 状態 | 表示テキスト | 備考 |
+|------|--------------|------|
+| 必須 (required) | ※必須 | 赤色で表示 |
+| 読み取り専用 (readonly) | 読み取り専用 | デフォルト色 |
+| 任意 | **表示なし** | optional属性は廃止 |
+
+**重要な排他制御**: `required`と`readonly`が両方設定された場合、`required`が優先される。
+
+```typescript
+#updateRequirement() {
+  // required と readonly は排他的（required優先）
+  if (this.hasAttribute('required')) {
+    requirement.textContent = '※必須';
+  } else if (this.hasAttribute('readonly')) {
+    requirement.textContent = '読み取り専用';
+  } else {
+    requirement.textContent = '';
+    requirement.style.display = 'none';
+  }
+}
+```
+
+#### 2. エラーメッセージのプレフィックス
+**ルール**: 属性経由のエラーには全角「＊」をプレフィックス（スペースなし）
+
+```typescript
+// error-text属性経由の場合
+fallback.textContent = errorAttr ? `＊${errorAttr}` : '';
+
+// スロット経由のカスタムエラーにはプレフィックス不要
+// ユーザーが自由にフォーマットできるため
+```
+
+表示例:
+- `error-text="入力が必須です"` → 表示: `＊入力が必須です`
+- `<span slot="error-text">カスタムエラー</span>` → 表示: `カスタムエラー`
+
+#### 3. optional属性の廃止理由
+- ユーザーテストで「任意」表示は冗長と判断
+- 必須以外はデフォルトで任意と理解される
+- シンプルなUIがアクセシビリティ向上に寄与
+
+#### 4. readonly用汎用ミックスインの作成
+複数のフォームコンポーネント間で一貫したreadonlyスタイルを提供:
+
+```typescript
+// packages/styles/mixins/readonly-styles.ts
+export function applyReadonlyStyles() {
+  return css`
+    :host {
+      --readonly-background: var(--color-neutral-solid-gray-50, #f2f2f2);
+      --dads-readonly-background: var(--readonly-background);
+    }
+    :host([readonly]) [part="textarea"],
+    :host([readonly]) [part="input"] {
+      background-color: var(--dads-readonly-background);
+      cursor: default;
+    }
+  `;
+}
+```
+
+### 適用例
+```html
+<!-- 必須フィールド -->
+<dads-textarea label="お名前" required>
+</dads-textarea>
+<!-- 表示: お名前 ※必須 -->
+
+<!-- 読み取り専用フィールド -->
+<dads-textarea label="ユーザーID" readonly value="user123">
+</dads-textarea>
+<!-- 表示: ユーザーID 読み取り専用 -->
+
+<!-- エラー表示 -->
+<dads-textarea label="コメント" error error-text="入力が必須です">
+</dads-textarea>
+<!-- 表示: ＊入力が必須です -->
+```
+
+### 成果物
+- `packages/components/textarea/textarea.ts` - 要否ラベル・エラープレフィックス実装
+- `packages/styles/mixins/readonly-styles.ts` - readonly用汎用ミックスイン（新規）
+- テスト更新: required/readonly/error表示のテスト追加
+
+### 注意点
+- プレフィックスはCSSの`::before`ではなくテキストとして追加（アクセシビリティ向上）
+- `required`と`readonly`の排他制御は必ず実装
+- `optional`属性は完全に削除（破壊的変更）
+- スロット経由のカスタムコンテンツはそのまま表示
+
+---
+
 ## テンプレート（新しい学習記録用）
 
 ## [日付] タイトル
