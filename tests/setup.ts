@@ -134,34 +134,21 @@ if (!('customElements' in globalThis)) {
   (globalThis as any).customElements = new MockCustomElementRegistry();
 }
 
-// グローバルテストユーティリティ
-export const createTestElement = <T extends HTMLElement>(tagName: string): T => {
-  const element = document.createElement(tagName) as T;
-  document.body.appendChild(element);
-  return element;
-};
+// テストヘルパー関数を再エクスポート
+// 新しいテストは test/utils/test-helpers.ts から直接インポートしてください
+export {
+  renderWebComponent,
+  createTestElement,
+  getShadowElement,
+  getShadowContent,
+  getShadowText,
+  cleanup,
+  cleanupTestElement,
+  waitForComponent,
+  waitForCustomElement,
+} from '../test/utils/test-helpers';
 
-export const cleanupTestElement = (element: HTMLElement): void => {
-  if (element.parentNode) {
-    element.parentNode.removeChild(element);
-  }
-};
-
-export const waitForCustomElement = async (element: HTMLElement): Promise<void> => {
-  if ('connectedCallback' in element && typeof element.connectedCallback === 'function') {
-    await new Promise(resolve => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(resolve);
-      });
-    });
-  }
-};
-
-// Shadow DOMテストユーティリティ
-export const getShadowContent = (element: HTMLElement, selector: string): Element | null => {
-  return element.shadowRoot?.querySelector(selector) || null;
-};
-
+// Shadow DOMテストユーティリティ（追加）
 export const getAllShadowContent = (element: HTMLElement, selector: string): NodeListOf<Element> => {
   return element.shadowRoot?.querySelectorAll(selector) || document.querySelectorAll('_no_match_');
 };
