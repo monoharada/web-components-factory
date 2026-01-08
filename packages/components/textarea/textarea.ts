@@ -286,7 +286,13 @@ export class DadsTextarea extends TypographyFormComponent {
     // Boolean属性
     this.#textarea.disabled = this.hasAttribute('disabled');
     this.#textarea.readOnly = this.hasAttribute('readonly');
-    this.#textarea.required = this.hasAttribute('required');
+    // required は内部textareaに転送しない（ネイティブバリデーションを使わず、カスタムバリデーションで制御）
+    // 代わりに aria-required を設定してアクセシビリティを維持
+    if (this.hasAttribute('required')) {
+      this.#textarea.setAttribute('aria-required', 'true');
+    } else {
+      this.#textarea.removeAttribute('aria-required');
+    }
 
     // 初期値の設定（value属性から）
     const valueAttr = this.getAttribute('value');
@@ -453,7 +459,13 @@ export class DadsTextarea extends TypographyFormComponent {
       case 'required':
         updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
         if (this.#textarea) {
-          this.#textarea.required = this.hasAttribute('required');
+          // required は内部textareaに転送しない（カスタムバリデーションで制御）
+          // aria-required でアクセシビリティを維持
+          if (this.hasAttribute('required')) {
+            this.#textarea.setAttribute('aria-required', 'true');
+          } else {
+            this.#textarea.removeAttribute('aria-required');
+          }
         }
         break;
       case 'maxlength':
