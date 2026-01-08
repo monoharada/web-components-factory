@@ -20,8 +20,21 @@ import {
   checkDeprecatedAttrs,
   DEPRECATED_FORM_ATTRS,
 } from '../../utils/deprecated-attrs.js';
-import { hasSlotContent } from '../../utils/dom.js';
 import { VALIDATION_RULES, getValidationMessage } from '../../utils/validation.js';
+import {
+  setDefaultAttributes,
+  setupFormValidation,
+  updateLabelFallback,
+  updateSupportFallback,
+  updateErrorFallback,
+  updateRequirement,
+  updateValidationUI,
+  showValidationError,
+  clearValidationError,
+  updateAriaDescribedBy,
+  setupSlotChangeListeners,
+  type FormValidationSetup,
+} from '../../utils/form-component-helpers.js';
 
 /**
  * InputTextコンポーネント
@@ -77,15 +90,19 @@ export class DadsInputText extends TypographyFormComponent {
   #supportSlot: HTMLSlotElement | null = null;
   #errorSlot: HTMLSlotElement | null = null;
 
-  // バリデーション用スロット
-  #requiredErrorSlot: HTMLSlotElement | null = null;
-  #typeMismatchErrorSlot: HTMLSlotElement | null = null;
+  // UI要素参照
+  #labelFallback: HTMLElement | null = null;
+  #supportText: HTMLElement | null = null;
+  #supportFallback: HTMLElement | null = null;
+  #errorText: HTMLElement | null = null;
+  #errorFallback: HTMLElement | null = null;
+  #requirement: HTMLElement | null = null;
 
   // バリデーション状態
   #validationErrorType: 'required' | 'typeMismatch' | null = null;
 
-  // フォームリスナー用（クリーンアップのため参照を保持）
-  #boundForm: HTMLFormElement | null = null;
+  // フォームバリデーションセットアップ
+  #formValidation: FormValidationSetup | null = null;
 
   static definition = {
     name: 'dads-input-text',
@@ -154,12 +171,7 @@ export class DadsInputText extends TypographyFormComponent {
     checkDeprecatedAttrs(this, DEPRECATED_FORM_ATTRS);
 
     // デフォルト属性の設定
-    if (!this.hasAttribute('size')) {
-      this.setAttribute('size', 'md');
-    }
-    if (!this.hasAttribute('input-width')) {
-      this.setAttribute('input-width', 'full');
-    }
+    setDefaultAttributes(this, { size: 'md', 'input-width': 'full' });
 
     // 内部要素の参照を取得
     this.#input = this.shadowRoot?.querySelector('[part="input"]') as HTMLInputElement;
@@ -167,14 +179,25 @@ export class DadsInputText extends TypographyFormComponent {
     this.#supportSlot = this.shadowRoot?.querySelector('#support-slot') as HTMLSlotElement;
     this.#errorSlot = this.shadowRoot?.querySelector('#error-slot') as HTMLSlotElement;
 
-    // バリデーション用スロット参照取得
-    this.#requiredErrorSlot = this.shadowRoot?.querySelector('#required-error-slot') as HTMLSlotElement;
-    this.#typeMismatchErrorSlot = this.shadowRoot?.querySelector('#type-mismatch-error-slot') as HTMLSlotElement;
+    // UI要素参照取得
+    this.#labelFallback = this.shadowRoot?.querySelector('#label-fallback') as HTMLElement;
+    this.#supportText = this.shadowRoot?.querySelector('#support-text') as HTMLElement;
+    this.#supportFallback = this.shadowRoot?.querySelector('#support-fallback') as HTMLElement;
+    this.#errorText = this.shadowRoot?.querySelector('#error-text') as HTMLElement;
+    this.#errorFallback = this.shadowRoot?.querySelector('#error-fallback') as HTMLElement;
+    this.#requirement = this.shadowRoot?.querySelector('#requirement') as HTMLElement;
 
     // 初期化
     this.#initInput();
     this.#initSlots();
-    this.#setupFormValidation();
+
+    // フォームバリデーションのセットアップ
+    this.#formValidation = setupFormValidation(
+      this,
+      this._internals,
+      'auto-validate',
+      this.#handleFormSubmit
+    );
 
     // 属性が接続後に設定された場合のために再同期
     queueMicrotask(() => {
@@ -185,18 +208,15 @@ export class DadsInputText extends TypographyFormComponent {
 
   disconnectedCallback() {
     // Form submit リスナーのクリーンアップ（メモリリーク防止）
-    if (this.#boundForm) {
-      this.#boundForm.removeEventListener('submit', this.#handleFormSubmit);
-      this.#boundForm = null;
-    }
+    this.#formValidation?.cleanup();
   }
 
   #syncAllState(): void {
     this.#syncInputAttributes();
-    this.#updateLabelFallback();
-    this.#updateSupportFallback();
-    this.#updateErrorFallback();
-    this.#updateRequirement();
+    updateLabelFallback(this.#labelSlot, this.#labelFallback, this.getAttribute('label'));
+    updateSupportFallback(this.#supportSlot, this.#supportText, this.#supportFallback, this.getAttribute('support-text'));
+    updateErrorFallback(this.#errorSlot, this.#errorText, this.#errorFallback, this.getAttribute('error-text'), this.hasAttribute('error'));
+    updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
     this.#updateInputWidth();
     this.#updateAriaDescribedBy();
   }
@@ -213,16 +233,19 @@ export class DadsInputText extends TypographyFormComponent {
   }
 
   #initSlots() {
-    // スロットの変更を監視してフォールバック表示を制御
-    this.#labelSlot?.addEventListener('slotchange', () => this.#updateLabelFallback());
-    this.#supportSlot?.addEventListener('slotchange', () => this.#updateSupportFallback());
-    this.#errorSlot?.addEventListener('slotchange', () => this.#updateErrorFallback());
-
-    // 初回チェック
-    this.#updateLabelFallback();
-    this.#updateSupportFallback();
-    this.#updateErrorFallback();
-    this.#updateRequirement();
+    setupSlotChangeListeners(
+      {
+        label: this.#labelSlot,
+        support: this.#supportSlot,
+        error: this.#errorSlot,
+      },
+      {
+        onLabelChange: () => updateLabelFallback(this.#labelSlot, this.#labelFallback, this.getAttribute('label')),
+        onSupportChange: () => updateSupportFallback(this.#supportSlot, this.#supportText, this.#supportFallback, this.getAttribute('support-text')),
+        onErrorChange: () => updateErrorFallback(this.#errorSlot, this.#errorText, this.#errorFallback, this.getAttribute('error-text'), this.hasAttribute('error')),
+      }
+    );
+    updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
   }
 
   #syncInputAttributes() {
@@ -266,54 +289,6 @@ export class DadsInputText extends TypographyFormComponent {
     this.#input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
   }
 
-  #updateLabelFallback() {
-    const fallback = this.shadowRoot?.querySelector('#label-fallback') as HTMLElement;
-    if (!fallback) return;
-    fallback.textContent = hasSlotContent(this.#labelSlot)
-      ? ''
-      : this.getAttribute('label') ?? '';
-  }
-
-  #updateSupportFallback() {
-    const supportText = this.shadowRoot?.querySelector('#support-text') as HTMLElement;
-    const fallback = this.shadowRoot?.querySelector('#support-fallback') as HTMLElement;
-    if (!supportText || !fallback) return;
-
-    const hasContent = hasSlotContent(this.#supportSlot);
-    fallback.textContent = hasContent ? '' : this.getAttribute('support-text') ?? '';
-    supportText.style.display = (hasContent || this.getAttribute('support-text')) ? '' : 'none';
-  }
-
-  #updateErrorFallback() {
-    const errorText = this.shadowRoot?.querySelector('#error-text') as HTMLElement;
-    const fallback = this.shadowRoot?.querySelector('#error-fallback') as HTMLElement;
-    if (!errorText || !fallback) return;
-
-    const hasContent = hasSlotContent(this.#errorSlot);
-    const errorAttr = this.getAttribute('error-text');
-    const hasError = this.hasAttribute('error');
-    // 全角アスタリスクをプレフィックスとして追加（スロット経由には付けない）
-    fallback.textContent = hasContent ? '' : (errorAttr ? `＊${errorAttr}` : '');
-    errorText.style.display = hasError ? '' : 'none';
-  }
-
-  #updateRequirement() {
-    const requirement = this.shadowRoot?.querySelector('#requirement') as HTMLElement;
-    if (!requirement) return;
-
-    // required と readonly は排他的（required優先）
-    if (this.hasAttribute('required')) {
-      requirement.textContent = '※必須';
-      requirement.style.display = '';
-    } else if (this.hasAttribute('readonly')) {
-      requirement.textContent = '編集不可';
-      requirement.style.display = '';
-    } else {
-      requirement.textContent = '';
-      requirement.style.display = 'none';
-    }
-  }
-
   #updateInputWidth(): void {
     const width = this.getAttribute('input-width') || 'full';
 
@@ -339,26 +314,8 @@ export class DadsInputText extends TypographyFormComponent {
   }
 
   #updateAriaDescribedBy() {
-    if (!this.#input) return;
-
-    const ids: string[] = [];
-
-    // サポートテキストがある場合
-    const supportText = this.shadowRoot?.querySelector('#support-text') as HTMLElement;
-    if (supportText && supportText.style.display !== 'none') {
-      ids.push('support-text');
-    }
-
-    // エラーがある場合
-    if (this.hasAttribute('error')) {
-      ids.push('error-text');
-    }
-
-    if (ids.length > 0) {
-      this.#input.setAttribute('aria-describedby', ids.join(' '));
-    } else {
-      this.#input.removeAttribute('aria-describedby');
-    }
+    const supportVisible = this.#supportText?.style.display !== 'none';
+    updateAriaDescribedBy(this.#input, supportVisible, this.hasAttribute('error'));
   }
 
   #handleInput = () => {
@@ -379,36 +336,6 @@ export class DadsInputText extends TypographyFormComponent {
   #handleChange = () => {
     this.emitEvent('dads-change', { value: this.value });
   };
-
-  #setupFormValidation(): void {
-    if (!this.hasAttribute('auto-validate')) return;
-
-    // フォームに接続されたらsubmitイベントをリッスン
-    // queueMicrotaskで遅延させてDOMの構築完了を待つ
-    queueMicrotask(() => {
-      if (!this.isConnected) return;
-
-      // _internals.formを優先、フォールバックとしてDOM探索
-      let form: HTMLFormElement | null = this._internals.form;
-
-      if (!form) {
-        // フォールバック: 親要素を辿ってformを探す
-        let current: HTMLElement | null = this.parentElement;
-        while (current) {
-          if (current instanceof HTMLFormElement) {
-            form = current;
-            break;
-          }
-          current = current.parentElement;
-        }
-      }
-
-      if (form) {
-        this.#boundForm = form;
-        form.addEventListener('submit', this.#handleFormSubmit);
-      }
-    });
-  }
 
   #handleFormSubmit = (e: Event): void => {
     // disabled/readonlyの場合はバリデーションしない
@@ -454,33 +381,30 @@ export class DadsInputText extends TypographyFormComponent {
   #showValidationError(type: 'required' | 'typeMismatch'): void {
     this.#validationErrorType = type;
     const message = this.#getErrorMessage(type);
-    this.setAttribute('error', '');
-    this.setAttribute('error-text', message);
-    this.#updateValidationUI(true);
-    this._internals.setValidity(
-      { customError: true },
+    showValidationError({
+      element: this,
+      control: this.#input,
+      internals: this._internals,
       message,
-      this.#input ?? undefined
-    );
+      updateUI: (hasError) => this.#updateValidationUI(hasError),
+    });
   }
 
   #clearValidationError(): void {
     if (this.#validationErrorType === null) return;
     this.#validationErrorType = null;
-    this.removeAttribute('error');
-    this.removeAttribute('error-text');
-    this.#updateValidationUI(false);
-    // バリデーション状態をクリアして、次回submitイベントが発火するようにする
-    // 注意: サブミット時に #handleFormSubmit で改めてバリデーションが実行される
-    this._internals.setValidity({});
+    clearValidationError(this, this._internals, (hasError) =>
+      this.#updateValidationUI(hasError)
+    );
   }
 
   #updateValidationUI(hasError: boolean): void {
-    this.#updateErrorFallback();
-    this.#updateAriaDescribedBy();
-    if (this.#input) {
-      this.#input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
-    }
+    updateValidationUI(
+      this.#input,
+      hasError,
+      () => updateErrorFallback(this.#errorSlot, this.#errorText, this.#errorFallback, this.getAttribute('error-text'), this.hasAttribute('error')),
+      () => this.#updateAriaDescribedBy()
+    );
   }
 
   #getErrorMessage(type: 'required' | 'typeMismatch'): string {
@@ -495,10 +419,10 @@ export class DadsInputText extends TypographyFormComponent {
 
     switch (name) {
       case 'label':
-        this.#updateLabelFallback();
+        updateLabelFallback(this.#labelSlot, this.#labelFallback, this.getAttribute('label'));
         break;
       case 'support-text':
-        this.#updateSupportFallback();
+        updateSupportFallback(this.#supportSlot, this.#supportText, this.#supportFallback, this.getAttribute('support-text'));
         this.#updateAriaDescribedBy();
         break;
       case 'type':
@@ -507,7 +431,7 @@ export class DadsInputText extends TypographyFormComponent {
         }
         break;
       case 'required':
-        this.#updateRequirement();
+        updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
         if (this.#input) {
           // required は内部inputに転送しない（カスタムバリデーションで制御）
           // aria-required でアクセシビリティを維持
@@ -520,7 +444,7 @@ export class DadsInputText extends TypographyFormComponent {
         break;
       case 'error':
       case 'error-text':
-        this.#updateErrorFallback();
+        updateErrorFallback(this.#errorSlot, this.#errorText, this.#errorFallback, this.getAttribute('error-text'), this.hasAttribute('error'));
         this.#updateAriaDescribedBy();
         if (this.#input) {
           this.#input.setAttribute('aria-invalid', this.hasAttribute('error') ? 'true' : 'false');
@@ -532,7 +456,7 @@ export class DadsInputText extends TypographyFormComponent {
         }
         break;
       case 'readonly':
-        this.#updateRequirement();
+        updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
         if (this.#input) {
           this.#input.readOnly = this.hasAttribute('readonly');
         }

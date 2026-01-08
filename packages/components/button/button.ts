@@ -4,12 +4,12 @@
  * @version 1.0.0
  */
 
-import { 
+import {
   WebComponentDefinition,
-  html, 
+  html,
   css,
-  BooleanAttr, 
-  PropertyAttr 
+  BooleanAttr,
+  PropertyAttr
 } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -17,6 +17,7 @@ import { buttonTokens } from '../../styles/design-tokens/button-tokens.js';
 import { buttonStyles } from './button-styles.js';
 import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
+import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 
 /**
  * Buttonコンポーネント
@@ -96,10 +97,7 @@ export class DadsButton extends TypographyFormComponent {
     super.connectedCallback();
 
     // デフォルト属性の設定
-    const defaults = { variant: 'solid', size: 'medium' };
-    for (const [attr, value] of Object.entries(defaults)) {
-      if (!this.hasAttribute(attr)) this.setAttribute(attr, value);
-    }
+    setDefaultAttributes(this, { variant: 'solid', size: 'medium' });
 
     // リンクの場合のみテンプレートを再レンダリング
     if (this.#isLink()) {
