@@ -270,10 +270,11 @@ Claude Code用のCSS実装ガイドラインスキルが `.claude/skills/css-wri
 
 1. **!important禁止** - `@layer`で詳細度を管理
 2. **::part()必須** - Shadow DOM内でクラスではなくpart属性を使用
-3. **変数マッピングは一度だけ** - プロパティ定義は1箇所、状態変化は変数再代入
-4. **ネスト1階層** - `@layer`・疑似クラス・メディアクエリを除く
-5. **状態はHTML属性** - `.is-open`ではなく`[open]`、`[aria-expanded="true"]`
-6. **グローバルトークン必須** - `#000000`ではなく`var(--color-neutral-black)`
+3. **Div Soup禁止** - 不要なwrapper div削除、最小限のDOM構造を維持
+4. **変数マッピングは一度だけ** - プロパティ定義は1箇所、状態変化は変数再代入
+5. **ネスト1階層** - `@layer`・疑似クラス・メディアクエリを除く
+6. **状態はHTML属性** - `.is-open`ではなく`[open]`、`[aria-expanded="true"]`
+7. **グローバルトークン必須** - `#000000`ではなく`var(--color-neutral-black)`
 
 ### Reference Files
 
@@ -286,7 +287,7 @@ Claude Code用のCSS実装ガイドラインスキルが `.claude/skills/css-wri
 | `references/media-queries.md` | レスポンシブ、アクセシビリティ |
 | `references/css-variables.md` | 変数パターン、トークン設計 |
 | `references/naming-rules.md` | 命名規則 |
-| `references/web-components.md` | ::part()、Shadow DOM |
+| `references/web-components.md` | Div Soup禁止、::part()、Shadow DOM |
 
 ### Sources
 
