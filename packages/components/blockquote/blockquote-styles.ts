@@ -28,7 +28,7 @@ export const blockquoteStyles = css`
     border-left-color: var(--dads-blockquote-border-color);
 
     /* タイポグラフィ - DADS公式準拠 */
-    font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Yu Gothic", Arial, sans-serif;
+    font-family: var(--font-family-sans);
     font-size: var(--dads-blockquote-font-size);
     line-height: var(--dads-blockquote-line-height);
     color: var(--dads-blockquote-color);
