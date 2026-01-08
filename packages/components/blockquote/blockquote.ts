@@ -83,7 +83,7 @@ export class DadsBlockquote extends TypographyWebComponent {
     shadowOptions: { mode: 'open' as const, slotAssignment: 'manual' as const },
   };
 
-  // cite属性を監視対象として明示的に定義
+  // cite属性を監視対象として明示的に定義（ベースクラスでは自動処理されないため必須）
   static get observedAttributes(): string[] {
     return ['cite'];
   }
@@ -94,17 +94,13 @@ export class DadsBlockquote extends TypographyWebComponent {
     return this.shadowRoot?.querySelector('[part="blockquote"]') as HTMLQuoteElement | null;
   }
 
-  get #leadSlot(): HTMLSlotElement | null {
-    return this.shadowRoot?.getElementById('lead-slot') as HTMLSlotElement | null;
+  #getSlot(id: 'lead-slot' | 'body-slot' | 'close-slot'): HTMLSlotElement | null {
+    return this.shadowRoot?.getElementById(id) as HTMLSlotElement | null;
   }
 
-  get #bodySlot(): HTMLSlotElement | null {
-    return this.shadowRoot?.getElementById('body-slot') as HTMLSlotElement | null;
-  }
-
-  get #closeSlot(): HTMLSlotElement | null {
-    return this.shadowRoot?.getElementById('close-slot') as HTMLSlotElement | null;
-  }
+  get #leadSlot(): HTMLSlotElement | null { return this.#getSlot('lead-slot'); }
+  get #bodySlot(): HTMLSlotElement | null { return this.#getSlot('body-slot'); }
+  get #closeSlot(): HTMLSlotElement | null { return this.#getSlot('close-slot'); }
 
   #updateSlotVisibility(slot: HTMLSlotElement): void {
     const nodes = slot.assignedNodes();
@@ -116,18 +112,13 @@ export class DadsBlockquote extends TypographyWebComponent {
   }
 
   /**
-   * 子要素を自動的にスロットに振り分ける
-   * - 明示的にslot属性を指定した要素は尊重
-   * - slot属性なしの要素は位置に基づいて自動振り分け
+   * 子要素を収集・分類する
    */
-  #assignSlots(): void {
-    const leadSlot = this.#leadSlot;
-    const bodySlot = this.#bodySlot;
-    const closeSlot = this.#closeSlot;
-
-    if (!leadSlot || !bodySlot || !closeSlot) return;
-
-    // 明示的にslot指定された要素を収集
+  #collectChildren(): {
+    explicitLead: Element[];
+    explicitClose: Element[];
+    unslotted: Element[];
+  } {
     const explicitLead: Element[] = [];
     const explicitClose: Element[] = [];
     const unslotted: Element[] = [];
@@ -144,50 +135,112 @@ export class DadsBlockquote extends TypographyWebComponent {
       // slot属性が他の値の場合は無視
     }
 
-    // 自動振り分け（明示的slot指定を考慮）
-    let autoLead: Element[] = [];
-    let autoBody: Element[] = [];
-    let autoClose: Element[] = [];
+    return { explicitLead, explicitClose, unslotted };
+  }
 
-    const hasExplicitLead = explicitLead.length > 0;
-    const hasExplicitClose = explicitClose.length > 0;
-
-    if (unslotted.length > 0) {
-      if (hasExplicitLead && hasExplicitClose) {
-        // lead/close両方が明示指定 → 全てbodyへ
-        autoBody = unslotted;
-      } else if (hasExplicitLead) {
-        // leadのみ明示指定 → 最後をclose、残りをbodyへ
-        if (unslotted.length >= 2) {
-          autoBody = unslotted.slice(0, -1);
-          autoClose = [unslotted[unslotted.length - 1]];
-        } else {
-          autoBody = unslotted;
-        }
-      } else if (hasExplicitClose) {
-        // closeのみ明示指定 → 最初をlead、残りをbodyへ
-        autoLead = [unslotted[0]];
-        autoBody = unslotted.slice(1);
-      } else {
-        // 明示指定なし → 要素数に基づく自動振り分け
-        if (unslotted.length === 1) {
-          autoLead = [unslotted[0]];
-        } else if (unslotted.length === 2) {
-          autoLead = [unslotted[0]];
-          autoBody = [unslotted[1]];
-        } else {
-          // 3要素以上: 最初→lead, 中間→body, 最後→close
-          autoLead = [unslotted[0]];
-          autoBody = unslotted.slice(1, -1);
-          autoClose = [unslotted[unslotted.length - 1]];
-        }
-      }
+  /**
+   * スロット振り分け結果の型
+   */
+  #distributeUnslotted(
+    unslotted: Element[],
+    hasExplicitLead: boolean,
+    hasExplicitClose: boolean
+  ): { lead: Element[]; body: Element[]; close: Element[] } {
+    if (unslotted.length === 0) {
+      return { lead: [], body: [], close: [] };
     }
 
+    if (hasExplicitLead && hasExplicitClose) {
+      // lead/close両方が明示指定 → 全てbodyへ
+      return { lead: [], body: unslotted, close: [] };
+    }
+
+    if (hasExplicitLead) {
+      return this.#distributeWithExplicitLead(unslotted);
+    }
+
+    if (hasExplicitClose) {
+      return this.#distributeWithExplicitClose(unslotted);
+    }
+
+    return this.#distributeByCount(unslotted);
+  }
+
+  /**
+   * leadのみ明示指定時の振り分け
+   * → 最後をclose、残りをbodyへ
+   */
+  #distributeWithExplicitLead(unslotted: Element[]): { lead: Element[]; body: Element[]; close: Element[] } {
+    if (unslotted.length >= 2) {
+      return {
+        lead: [],
+        body: unslotted.slice(0, -1),
+        close: [unslotted[unslotted.length - 1]],
+      };
+    }
+    return { lead: [], body: unslotted, close: [] };
+  }
+
+  /**
+   * closeのみ明示指定時の振り分け
+   * → 最初をlead、残りをbodyへ
+   */
+  #distributeWithExplicitClose(unslotted: Element[]): { lead: Element[]; body: Element[]; close: Element[] } {
+    return {
+      lead: [unslotted[0]],
+      body: unslotted.slice(1),
+      close: [],
+    };
+  }
+
+  /**
+   * 要素数に基づく自動振り分け
+   * - 1要素: lead
+   * - 2要素: 最初→lead, 最後→body
+   * - 3要素以上: 最初→lead, 中間→body, 最後→close
+   */
+  #distributeByCount(unslotted: Element[]): { lead: Element[]; body: Element[]; close: Element[] } {
+    const count = unslotted.length;
+
+    if (count === 1) {
+      return { lead: [unslotted[0]], body: [], close: [] };
+    }
+
+    if (count === 2) {
+      return { lead: [unslotted[0]], body: [unslotted[1]], close: [] };
+    }
+
+    // 3要素以上
+    return {
+      lead: [unslotted[0]],
+      body: unslotted.slice(1, -1),
+      close: [unslotted[unslotted.length - 1]],
+    };
+  }
+
+  /**
+   * 子要素を自動的にスロットに振り分ける
+   * - 明示的にslot属性を指定した要素は尊重
+   * - slot属性なしの要素は位置に基づいて自動振り分け
+   */
+  #assignSlots(): void {
+    const leadSlot = this.#leadSlot;
+    const bodySlot = this.#bodySlot;
+    const closeSlot = this.#closeSlot;
+
+    if (!leadSlot || !bodySlot || !closeSlot) return;
+
+    const { explicitLead, explicitClose, unslotted } = this.#collectChildren();
+    const auto = this.#distributeUnslotted(
+      unslotted,
+      explicitLead.length > 0,
+      explicitClose.length > 0
+    );
+
     // スロットに割り当て
-    leadSlot.assign(...explicitLead, ...autoLead);
-    bodySlot.assign(...autoBody);
-    closeSlot.assign(...explicitClose, ...autoClose);
+    leadSlot.assign(...explicitLead, ...auto.lead);
+    bodySlot.assign(...auto.body);
+    closeSlot.assign(...explicitClose, ...auto.close);
 
     // 可視性更新
     this.#updateSlotVisibility(leadSlot);
