@@ -4,6 +4,140 @@
  */
 
 export const demos = {
+  blockquote: () => `
+    <div style="padding: 40px; max-width: 800px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">引用ブロックコンポーネント</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        デジタル庁デザインシステム準拠の引用ブロックコンポーネント。TDD（テスト駆動開発）で実装。
+      </p>
+
+      <!-- 基本（デフォルトスロットのみ） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">基本（デフォルトスロット）</h3>
+        <dads-blockquote>
+          <p>デジタル庁は、2021年9月1日に設置された日本の行政機関です。デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。</p>
+        </dads-blockquote>
+      </section>
+
+      <!-- 3スロット構造 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">3スロット構造（lead / default / close）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ lead（冒頭）、デフォルト（本文）、close（締め括り）の3スロットでコンテンツを構造化。CSS Gridのgapで余白制御。
+        </p>
+        <dads-blockquote>
+          <p slot="lead">これは冒頭の段落です。最初に表示されます。</p>
+          <p>これは本文の段落1です。デフォルトスロットに配置されます。</p>
+          <p>これは本文の段落2です。複数の段落を配置可能です。</p>
+          <p slot="close">これは締め括りの段落です。最後に表示されます。</p>
+        </dads-blockquote>
+      </section>
+
+      <!-- 本文のみ（3段落） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">本文のみ（3段落）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ lead/closeスロットが空の場合、非表示になり余分なgapが発生しません。
+        </p>
+        <dads-blockquote>
+          <p>これは引用文の例です。デジタル庁デザインシステムでは、アクセシビリティファーストの原則に基づいて、すべてのユーザーが利用しやすいサービスの提供を目指しています。</p>
+          <p>デジタル社会の形成は、国民の利便性向上を第一に考え、誰一人取り残されないよう配慮することが重要です。</p>
+          <p>私たちは、これらの理念を実現するために、継続的な改善と研究・実践を行っています。</p>
+        </dads-blockquote>
+      </section>
+
+      <!-- リスト付き -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">リスト付き</h3>
+        <dads-blockquote>
+          <p slot="lead">デジタル庁が推進する主な取り組み：</p>
+          <ul>
+            <li>マイナンバーカードの普及促進</li>
+            <li>行政手続きのオンライン化</li>
+            <li>データ連携基盤の整備</li>
+          </ul>
+        </dads-blockquote>
+      </section>
+
+      <!-- cite属性付き -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">cite属性付き</h3>
+        <dads-blockquote cite="https://www.digital.go.jp/">
+          <p>デジタル庁は、デジタル社会形成基本法に基づき、デジタル社会の形成に関する施策を迅速かつ重点的に推進することを目的として設置されました。</p>
+        </dads-blockquote>
+        <p style="margin-top: 10px; font-size: 14px; color: #666;">
+          ※ cite属性は視覚的には表示されませんが、内部のblockquote要素に引用元URLとして設定されます。
+        </p>
+      </section>
+
+      <!-- 自動スロット割り当て（3要素以上） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">自動スロット割り当て（3要素以上）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ slot属性なしで自動振り分け：最初→lead, 中間→body, 最後→close
+        </p>
+        <dads-blockquote>
+          <p>これは最初の段落です。自動的にleadスロットに配置。</p>
+          <p>これは中間の段落です。bodyスロットに配置。</p>
+          <p>これは最後の段落です。自動的にcloseスロットに配置。</p>
+        </dads-blockquote>
+      </section>
+
+      <!-- 自動スロット割り当て（2要素） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">自動スロット割り当て（2要素）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ 2要素の場合：最初→lead, 最後→body
+        </p>
+        <dads-blockquote>
+          <p>これは最初の段落です。leadスロットに配置。</p>
+          <p>これは最後の段落です。bodyスロットに配置。</p>
+        </dads-blockquote>
+      </section>
+
+      <!-- 自動スロット割り当て（1要素） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">自動スロット割り当て（1要素）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ 1要素の場合：lead に配置
+        </p>
+        <dads-blockquote>
+          <p>これは唯一の段落です。leadスロットに配置。</p>
+        </dads-blockquote>
+      </section>
+
+      <!-- 明示的slot指定と自動振り分けの混在 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">明示的slot指定と自動振り分けの混在</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ slot属性を明示指定した要素は尊重され、残りの要素は自動振り分け
+        </p>
+        <dads-blockquote>
+          <p slot="lead">明示的にlead指定</p>
+          <p>自動振り分け1</p>
+          <p>自動振り分け2</p>
+          <p slot="close">明示的にclose指定</p>
+        </dads-blockquote>
+      </section>
+
+      <!-- 特徴 -->
+      <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3; margin-top: 40px;">
+        <h3 style="color: #1565c0; margin-bottom: 10px;">特徴</h3>
+        <ul style="color: #1565c0; line-height: 1.8; padding-left: 20px;">
+          <li><strong>DADS準拠:</strong> デジタル庁デザインシステムのスタイルに準拠</li>
+          <li><strong>3スロット構造:</strong> lead（冒頭）/ default（本文）/ close（締め括り）</li>
+          <li><strong>自動スロット割り当て:</strong> slot属性なしで最初→lead, 中間→body, 最後→close</li>
+          <li><strong>空スロット非表示:</strong> 使用しないスロットは自動的に非表示</li>
+          <li><strong>CSS Grid + gap:</strong> !importantを使わずに余白制御</li>
+          <li><strong>cite属性サポート:</strong> 引用元URLを内部blockquoteに転送</li>
+          <li><strong>::part()スタイリング:</strong> 外部からの柔軟なカスタマイズ</li>
+          <li><strong>Shadow DOM:</strong> スタイルの完全な隔離</li>
+          <li><strong>TDD開発:</strong> テスト駆動開発で品質を担保</li>
+        </ul>
+      </div>
+    </div>
+  `,
+
   accordion: () => `
     <dads-accordion-details>
       <dads-accordion-item-details>
