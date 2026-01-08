@@ -446,6 +446,337 @@ export const demos = {
     </div>
   `,
 
+  inputText: () => `
+    <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">インプットテキストコンポーネント</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        デジタル庁デザインシステム準拠のインプットテキストコンポーネント。TDD（テスト駆動開発）で実装。
+      </p>
+
+      <!-- 基本 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">基本</h3>
+        <div style="max-width: 500px;">
+          <dads-input-text
+            label="氏名"
+            support-text="姓と名の間にスペースを入れてください"
+          ></dads-input-text>
+        </div>
+      </section>
+
+      <!-- 入力タイプ -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">入力タイプ</h3>
+        <div style="display: grid; gap: 24px; max-width: 500px;">
+          <dads-input-text
+            label="氏名"
+            type="text"
+            support-text="テキスト入力"
+          ></dads-input-text>
+
+          <dads-input-text
+            label="メールアドレス"
+            type="email"
+            support-text="例: example@example.com"
+            autocomplete="email"
+          ></dads-input-text>
+
+          <dads-input-text
+            label="電話番号"
+            type="tel"
+            support-text="例: 090-1234-5678"
+            autocomplete="tel"
+            input-width="medium"
+          ></dads-input-text>
+        </div>
+      </section>
+
+      <!-- 幅バリエーション -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">幅バリエーション</h3>
+        <div style="display: grid; gap: 24px; max-width: 600px;">
+          <dads-input-text
+            label="郵便番号"
+            input-width="short"
+            support-text="short (8ch)"
+          ></dads-input-text>
+
+          <dads-input-text
+            label="電話番号"
+            input-width="medium"
+            support-text="medium (16ch)"
+          ></dads-input-text>
+
+          <dads-input-text
+            label="住所"
+            input-width="full"
+            support-text="full (100%)"
+          ></dads-input-text>
+
+          <dads-input-text
+            label="カスタム幅"
+            input-width="300px"
+            support-text="カスタム値 (300px)"
+          ></dads-input-text>
+        </div>
+      </section>
+
+      <!-- サポートテキスト・要否ラベル -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">サポートテキスト・要否ラベル</h3>
+        <div style="display: grid; gap: 24px; max-width: 500px;">
+          <dads-input-text
+            label="必須項目"
+            support-text="入力が必須です"
+            required
+          ></dads-input-text>
+
+          <dads-input-text
+            label="任意項目"
+            support-text="入力は任意です"
+          ></dads-input-text>
+        </div>
+      </section>
+
+      <!-- エラー状態 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">エラー状態</h3>
+        <div style="max-width: 500px;">
+          <dads-input-text
+            label="メールアドレス"
+            required
+            error
+            error-text="メールアドレスの形式が正しくありません"
+            value="invalid-email"
+          ></dads-input-text>
+        </div>
+      </section>
+
+      <!-- サイズ -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">サイズ</h3>
+        <div style="display: grid; gap: 24px; max-width: 500px;">
+          <dads-input-text label="Small" size="sm"></dads-input-text>
+          <dads-input-text label="Medium（デフォルト）" size="md"></dads-input-text>
+          <dads-input-text label="Large" size="lg"></dads-input-text>
+        </div>
+      </section>
+
+      <!-- 状態 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">状態</h3>
+        <div style="display: grid; gap: 24px; max-width: 500px;">
+          <dads-input-text
+            label="無効状態"
+            disabled
+            value="編集できません"
+          ></dads-input-text>
+
+          <dads-input-text
+            label="ユーザーID"
+            readonly
+            support-text="この項目は編集できません"
+            value="user-12345678"
+          ></dads-input-text>
+        </div>
+      </section>
+
+      <!-- 実際の使用例 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">実際の使用例</h3>
+        <div style="border: 1px solid #ddd; padding: 24px; border-radius: 8px; background: #f9f9f9;">
+          <form style="max-width: 600px;">
+            <h4 style="font-size: 18px; margin-bottom: 20px; color: #333;">お問い合わせフォーム</h4>
+
+            <div style="display: grid; gap: 16px; margin-bottom: 24px;">
+              <dads-input-text
+                label="氏名"
+                required
+                support-text="姓と名の間にスペースを入れてください"
+                autocomplete="name"
+                auto-validate
+              ></dads-input-text>
+
+              <dads-input-text
+                label="メールアドレス"
+                type="email"
+                required
+                support-text="例: example@example.com"
+                autocomplete="email"
+                auto-validate
+              ></dads-input-text>
+
+              <dads-input-text
+                label="電話番号"
+                type="tel"
+                support-text="例: 090-1234-5678"
+                autocomplete="tel"
+                input-width="medium"
+              ></dads-input-text>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+              <dads-button variant="text" type="button">キャンセル</dads-button>
+              <dads-button variant="solid" type="submit">送信</dads-button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- 住所入力フォーム -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">住所入力フォーム例</h3>
+        <div style="border: 1px solid #ddd; padding: 24px; border-radius: 8px; background: #f9f9f9; max-width: 500px;">
+          <div style="display: grid; gap: 16px;">
+            <dads-input-text
+              label="郵便番号"
+              support-text="例: 100-0001"
+              input-width="short"
+              autocomplete="postal-code"
+            ></dads-input-text>
+
+            <dads-input-text
+              label="都道府県"
+              input-width="medium"
+              autocomplete="address-level1"
+            ></dads-input-text>
+
+            <dads-input-text
+              label="市区町村"
+              autocomplete="address-level2"
+            ></dads-input-text>
+
+            <dads-input-text
+              label="番地・建物名"
+              support-text="建物名・部屋番号がある場合は入力してください"
+              autocomplete="street-address"
+            ></dads-input-text>
+          </div>
+        </div>
+      </section>
+
+      <!-- 特徴 -->
+      <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3;">
+        <h3 style="color: #1565c0; margin-bottom: 10px;">特徴</h3>
+        <ul style="color: #1565c0; line-height: 1.8; padding-left: 20px;">
+          <li><strong>WCAG 2.2 AA準拠:</strong> ラベル関連付け、aria-describedby、フォーカス管理</li>
+          <li><strong>幅バリエーション:</strong> short(8ch) / medium(16ch) / full(100%) / カスタム値</li>
+          <li><strong>エラー状態:</strong> aria-describedbyで関連付け（DADSガイドライン準拠）</li>
+          <li><strong>Form Associated:</strong> ネイティブフォームに参加</li>
+          <li><strong>スロット対応:</strong> label、support-text、error-textをスロットでカスタマイズ可能</li>
+          <li><strong>::part()スタイリング:</strong> 外部からの柔軟なカスタマイズ</li>
+          <li><strong>入力タイプ:</strong> text / email / tel をサポート</li>
+        </ul>
+      </div>
+    </div>
+  `,
+
+  inputTextValidation: () => `
+    <div style="padding: 40px; max-width: 600px; margin: 0 auto;">
+      <h2 style="font-size: 24px; margin-bottom: 20px; color: #333;">Input Text Validation Test</h2>
+      <p style="color: #666; margin-bottom: 30px;">
+        auto-validate属性による自動バリデーション機能のテスト（必須バリデーション + Emailフォーマット検証）
+      </p>
+
+      <form id="input-validation-form" novalidate>
+        <!-- 必須バリデーション -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">必須バリデーション</h3>
+          <dads-input-text
+            id="test-required-input"
+            label="必須項目"
+            support-text="空のまま送信するとエラー表示されます"
+            required
+            auto-validate
+          ></dads-input-text>
+        </section>
+
+        <!-- Emailバリデーション -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">Emailバリデーション</h3>
+          <dads-input-text
+            id="test-email-input"
+            label="メールアドレス"
+            type="email"
+            support-text="不正な形式（@なし等）で送信するとエラー表示されます"
+            auto-validate
+          ></dads-input-text>
+        </section>
+
+        <!-- 必須 + Emailバリデーション -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">必須 + Emailバリデーション（複合）</h3>
+          <dads-input-text
+            id="test-combined-input"
+            label="メールアドレス（必須）"
+            type="email"
+            support-text="必須チェック → Email形式チェックの順で検証"
+            required
+            auto-validate
+          ></dads-input-text>
+        </section>
+
+        <!-- カスタムエラーメッセージ（必須） -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">カスタムエラーメッセージ（必須）</h3>
+          <dads-input-text
+            id="test-custom-required-input"
+            label="お名前"
+            support-text="required-errorスロットでメッセージをカスタマイズ"
+            required
+            auto-validate
+          >
+            <span slot="required-error">お名前を入力してください（カスタム）</span>
+          </dads-input-text>
+        </section>
+
+        <!-- カスタムエラーメッセージ（Email） -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">カスタムエラーメッセージ（Email）</h3>
+          <dads-input-text
+            id="test-custom-email-input"
+            label="連絡先メール"
+            type="email"
+            support-text="type-mismatch-errorスロットでメッセージをカスタマイズ"
+            auto-validate
+          >
+            <span slot="type-mismatch-error">正しいメールアドレス形式で入力してください（カスタム）</span>
+          </dads-input-text>
+        </section>
+
+        <!-- バリデーション無効（比較用） -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">バリデーション無効（比較用）</h3>
+          <dads-input-text
+            id="test-no-validate-input"
+            label="auto-validateなし"
+            support-text="auto-validate属性がないため、バリデーションされません"
+            required
+          ></dads-input-text>
+        </section>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+          <dads-button type="reset">リセット</dads-button>
+          <dads-button type="submit" variant="solid">送信</dads-button>
+        </div>
+      </form>
+
+      <div style="margin-top: 40px; background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107;">
+        <h3 style="color: #856404; margin-bottom: 10px;">テスト手順</h3>
+        <ol style="color: #856404; line-height: 1.8; padding-left: 20px;">
+          <li>「必須項目」を空のまま「送信」ボタン → 「この項目は入力が必須です」エラー表示</li>
+          <li>値を入力して再送信 → エラークリア、送信成功</li>
+          <li>「Emailバリデーション」に「test」と入力して送信 → 「メールアドレスの形式が正しくありません」エラー表示</li>
+          <li>「test@example.com」と入力して送信 → エラークリア、送信成功</li>
+          <li>「必須 + Email」を空のまま送信 → 必須エラー表示</li>
+          <li>「必須 + Email」に「test」と入力して送信 → Emailエラー表示（必須は通過）</li>
+          <li>カスタムメッセージのスロット表示確認</li>
+          <li>auto-validateなしのフィールドでは、バリデーションが発生しないことを確認</li>
+        </ol>
+      </div>
+    </div>
+  `,
+
   empty: () => `
     <div style="padding: 40px; text-align: center; color: #666;">
       コンポーネントを選択してください

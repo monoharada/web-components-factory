@@ -669,6 +669,93 @@ export class DadsTextarea extends TypographyFormComponent {
 
 ---
 
+## [2026-01-08] Form-Associated Web Componentsのバリデーション設計
+**タグ**: #webcomponents #forms #validation #elementInternals #dads
+
+### 概要
+Form-Associated Custom Elementsでカスタムバリデーションを実装する際、ネイティブバリデーションとの干渉を避けるための設計パターンを確立。`reportValidity()`の罠と`setValidity({})`の重要性を発見。
+
+### 詳細
+
+#### 1. 発生したバグ
+「Email形式エラー → 入力削除 → 再送信 → 必須エラーが表示されない」という問題。
+
+#### 2. 根本原因
+
+**問題A: setValidity({})の欠如**
+```typescript
+// ❌ 不完全なエラークリア
+#clearValidationError(): void {
+  this.removeAttribute('error');
+  this.removeAttribute('error-text');
+  // setValidity({})がない → 内部状態がdirtyのまま
+}
+
+// ✅ 正しいエラークリア
+#clearValidationError(): void {
+  this.removeAttribute('error');
+  this.removeAttribute('error-text');
+  this._internals.setValidity({});  // 状態を明示的にクリア
+}
+```
+
+**問題B: reportValidity()とネイティブinputの干渉**
+```typescript
+// ❌ ネイティブバリデーションが干渉
+#handleFormAction() {
+  if (form.reportValidity()) {  // ← Shadow DOM内の<input type="email">をチェック
+    form.requestSubmit();
+  }
+}
+
+// ✅ カスタムバリデーションに任せる
+#handleFormAction() {
+  form.requestSubmit();  // submitイベントでカスタムバリデーション実行
+}
+```
+
+#### 3. 設計原則
+
+| 原則 | 理由 |
+|------|------|
+| required属性を内部inputに転送しない | ネイティブバリデーション回避（aria-requiredで代替） |
+| カスタムバリデーションはsubmitイベントで実行 | 一元管理、優先順位制御 |
+| ボタンはrequestSubmit()を直接呼ぶ | reportValidity()の干渉を防ぐ |
+| エラークリア時はsetValidity({})必須 | 次回submit時の再評価を保証 |
+
+#### 4. バリデーション優先順位
+```typescript
+#handleFormSubmit = (e: Event): void => {
+  // 1. required（必須）チェック - 最優先
+  const isRequiredValid = this.#validateRequired();
+  if (!isRequiredValid) {
+    e.preventDefault();
+    return;
+  }
+
+  // 2. typeMismatch（形式）チェック
+  const isTypeMismatchValid = this.#validateTypeMismatch();
+  if (!isTypeMismatchValid) {
+    e.preventDefault();
+  }
+};
+```
+
+### 適用例
+- `packages/components/input-text/input-text.ts` - バリデーション実装
+- `packages/components/button/button.ts` - フォームアクション処理
+- `packages/utils/validation.ts` - バリデーションルール定義
+
+### 関連ADR
+[ADR-002: Form-Associated Web Componentsのバリデーションアーキテクチャ](../adr/ADR-002-form-validation-architecture.md)
+
+### 注意点
+- `form.reportValidity()`はShadow DOM内のネイティブ要素もチェックする
+- `_internals.setValidity({})`を呼ばないと次回submitがブロックされる可能性
+- クリティカルなコンポーネント（送信ボタン等）は遅延ロードではなく即座にロード
+
+---
+
 ## テンプレート（新しい学習記録用）
 
 ## [日付] タイトル

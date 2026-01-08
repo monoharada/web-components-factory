@@ -7,6 +7,7 @@
 | ADR | タイトル | ステータス | 日付 |
 |-----|---------|----------|------|
 | [ADR-001](./ADR-001-placeholder-deprecation.md) | フォーム入力要素のplaceholder属性非推奨化 | 承認済み | 2025-01-07 |
+| [ADR-002](./ADR-002-form-validation-architecture.md) | Form-Associated Web Componentsのバリデーションアーキテクチャ | 承認済み | 2026-01-08 |
 
 ## ADRとは
 

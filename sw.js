@@ -1,7 +1,7 @@
 // Service Worker for Web Components Factory
 // キャッシュ戦略: Core → Cache-First, Components → Stale-While-Revalidate
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v10';
 const CORE_CACHE = `core-${CACHE_VERSION}`;
 const COMPONENT_CACHE = `components-${CACHE_VERSION}`;
 

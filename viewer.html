@@ -16,7 +16,8 @@
       "dads-textarea": "/@components/dads/textarea.js",
       "dads-accordion-details": "/@components/dads/accordion-details.js",
       "dads-accordion-item-details": "/@components/dads/accordion-item-details.js",
-      "dads-text": "/@components/dads/text.js"
+      "dads-text": "/@components/dads/text.js",
+      "dads-input-text": "/@components/dads/input-text.js"
     }
   }
   </script>
@@ -206,6 +207,8 @@
             <option value="">-- Select --</option>
             <option value="accordion">Accordion</option>
             <option value="button">Button</option>
+            <option value="inputText">Input Text</option>
+            <option value="inputTextValidation">Input Text Validation</option>
             <option value="textarea">Textarea</option>
             <option value="textareaValidation">Textarea Validation</option>
             <option value="resetCss">Reset CSS Demo</option>
@@ -316,16 +319,38 @@
     window.loadedComponents = loadedComponents;
 
     // =====================================
-    // コンポーネントプリロード（バックグラウンド）
+    // コンポーネントプリロード
     // =====================================
-    // ページ読み込み後、アイドル時にすべてのコンポーネントをプリロード
+
+    // 即時ロードが必要なコンポーネント（フォーム操作に関わるもの）
+    // これらは遅延ロードだとユーザー操作に支障が出る
+    const criticalComponents = [
+      '/@components/dads/button.js'
+    ];
+
+    // バックグラウンドプリロード対象（アイドル時にロード）
     const componentAdapters = [
-      '/@components/dads/button.js',
       '/@components/dads/textarea.js',
+      '/@components/dads/input-text.js',
       '/@components/dads/accordion-details.js',
       '/@components/dads/accordion-item-details.js',
       '/@components/dads/text.js'
     ];
+
+    // クリティカルコンポーネントを即座にロード
+    function loadCriticalComponents() {
+      console.log('[Preloader] Loading critical components...');
+      criticalComponents.forEach(path => {
+        import(path).then(() => {
+          console.log(`[Preloader] Critical: ${path} loaded`);
+        }).catch(err => {
+          console.warn(`[Preloader] Failed to load ${path}:`, err);
+        });
+      });
+    }
+
+    // 即座に実行
+    loadCriticalComponents();
 
     function preloadComponents() {
       console.log('[Preloader] Starting background preload...');

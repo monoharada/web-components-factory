@@ -94,21 +94,59 @@ export class DadsButton extends TypographyFormComponent {
 
   connectedCallback() {
     super.connectedCallback();
-    
+
     // デフォルト属性の設定
     const defaults = { variant: 'solid', size: 'medium' };
     for (const [attr, value] of Object.entries(defaults)) {
       if (!this.hasAttribute(attr)) this.setAttribute(attr, value);
     }
-    
+
     // リンクの場合のみテンプレートを再レンダリング
     if (this.#isLink()) {
       this.#renderTemplate();
     }
-    
+
     // ボタン要素の初期化
     this.#initButton();
+
+    // ホスト要素へのクリックリスナー追加
+    // Shadow DOM内のbutton要素に加えて、ホスト要素自体のクリックも処理
+    // これにより遅延ロード時のクリックも確実に処理される
+    this.addEventListener('click', this.#handleHostClick);
   }
+
+  disconnectedCallback() {
+    this.removeEventListener('click', this.#handleHostClick);
+  }
+
+  /**
+   * ホスト要素のクリックハンドラ
+   * Shadow DOM内のbutton要素のクリックがない場合（遅延ロード中）のフォールバック
+   */
+  #handleHostClick = (event: MouseEvent) => {
+    // リンクモードはスキップ（aタグのデフォルト動作に任せる）
+    if (this.#isLink()) return;
+
+    // disabled時は何もしない
+    if (this.hasAttribute('disabled')) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    // Shadow DOM内のボタンがクリックされた場合は、内部ハンドラに任せる
+    // （二重実行を防ぐ）
+    const composedPath = event.composedPath();
+    const innerButton = this.shadowRoot?.querySelector('[part="base"]');
+    if (innerButton && composedPath.includes(innerButton)) {
+      // 内部ボタンがクリックされた → #handleClick で処理される
+      return;
+    }
+
+    // 内部ボタン以外（ホスト要素の境界部分など）がクリックされた場合
+    // または遅延ロード中で内部ボタンがない場合
+    this.#handleFormAction();
+  };
   
   #isLink(): boolean {
     const as = this.getAttribute('as');
@@ -285,9 +323,10 @@ export class DadsButton extends TypographyFormComponent {
     const buttonType = this.getAttribute('type') || 'button';
     switch (buttonType) {
       case 'submit':
-        if (form.reportValidity()) {
-          form.requestSubmit();
-        }
+        // カスタムバリデーションはsubmitイベントハンドラで処理されるため、
+        // reportValidity()は呼ばない（ネイティブバリデーションとの干渉を防ぐ）
+        // フォームにnovalidate属性がある場合や、カスタムWeb Componentsを使用する場合に対応
+        form.requestSubmit();
         break;
       case 'reset':
         form.reset();
