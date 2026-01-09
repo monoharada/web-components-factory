@@ -1,6 +1,6 @@
 /**
- * @module textarea
- * デジタル庁デザインシステム Textareaコンポーネント
+ * @module input-text
+ * デジタル庁デザインシステム InputTextコンポーネント
  * @version 1.0.0
  */
 
@@ -11,8 +11,8 @@ import {
 } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
-import { textareaTokens } from './textarea-tokens.js';
-import { textareaStyles } from './textarea-styles.js';
+import { inputTextTokens } from './input-text-tokens.js';
+import { inputTextStyles } from './input-text-styles.js';
 import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
 import { applyStandardFormElementBehavior } from '../../utils/behaviors.js';
@@ -37,57 +37,55 @@ import {
 } from '../../utils/form-component-helpers.js';
 
 /**
- * Textareaコンポーネント
+ * InputTextコンポーネント
  *
- * @customElement dads-textarea
- * @tagname dads-textarea
+ * @customElement dads-input-text
+ * @tagname dads-input-text
  *
  * @slot label - ラベルテキスト
  * @slot support-text - サポートテキスト（ヒント）
  * @slot error-text - エラーメッセージ
  * @slot required-error - 必須バリデーションのカスタムエラーメッセージ
- * @slot overflow-error - 文字数超過バリデーションのカスタムエラーメッセージ
+ * @slot type-mismatch-error - タイプ不一致（email形式）バリデーションのカスタムエラーメッセージ
  *
  * @csspart wrapper - 全体を囲むコンテナ
  * @csspart label - ラベル要素
+ * @csspart label-text - ラベルテキストラッパー
  * @csspart requirement - 要否ラベル（必須/読み取り専用）
  * @csspart support-text - サポートテキストコンテナ
- * @csspart textarea-wrapper - テキストエリアを囲むコンテナ
- * @csspart textarea - ネイティブtextarea要素
- * @csspart counter - 文字数カウンター（show-counter未設定時は:emptyで自動非表示）
+ * @csspart input-wrapper - インプットを囲むコンテナ
+ * @csspart input - ネイティブinput要素
  * @csspart error-text - エラーメッセージコンテナ
  *
  * @attr {string} label - ラベルテキスト（スロット未使用時のフォールバック）
  * @attr {string} support-text - サポートテキスト（スロット未使用時のフォールバック）
+ * @attr {string} type - 入力タイプ (text | email | tel)
  * @attr {boolean} required - 必須項目
- * @attr {number} maxlength - 最大文字数
- * @attr {boolean} show-counter - 文字数カウンター表示
- * @attr {number} counter-max - カウンター用最大値（maxlength未設定時）
  * @attr {boolean} error - エラー状態
  * @attr {string} error-text - エラーメッセージ（スロット未使用時のフォールバック）
  * @attr {boolean} disabled - 無効状態
  * @attr {boolean} readonly - 読み取り専用
  * @attr {string} name - フォーム名
- * @attr {number} rows - 行数（デフォルト: 3）
  * @attr {string} size - サイズ (sm | md | lg)
+ * @attr {string} input-width - 幅バリアント (short | medium | full | カスタム値)
  * @attr {boolean} auto-validate - 自動バリデーションを有効化
+ * @attr {string} autocomplete - オートコンプリートヒント
  *
  * @fires dads-input - 入力時に発火
  * @fires dads-change - 値変更確定時に発火
  *
  * @example
  * ```html
- * <dads-textarea label="お問い合わせ内容" required show-counter maxlength="500">
- *   <span slot="support-text">500文字以内で入力してください</span>
- * </dads-textarea>
+ * <dads-input-text label="メールアドレス" type="email" required>
+ *   <span slot="support-text">例: example@example.com</span>
+ * </dads-input-text>
  * ```
  */
-export class DadsTextarea extends TypographyFormComponent {
+export class DadsInputText extends TypographyFormComponent {
   static readonly formAssociated = true;
 
   // Private fields
-  #textarea: HTMLTextAreaElement | null = null;
-  #counter: HTMLElement | null = null;
+  #input: HTMLInputElement | null = null;
   #labelSlot: HTMLSlotElement | null = null;
   #supportSlot: HTMLSlotElement | null = null;
   #errorSlot: HTMLSlotElement | null = null;
@@ -101,16 +99,16 @@ export class DadsTextarea extends TypographyFormComponent {
   #requirement: HTMLElement | null = null;
 
   // バリデーション状態
-  #validationErrorType: 'required' | 'overflow' | null = null;
+  #validationErrorType: 'required' | 'typeMismatch' | null = null;
 
   // フォームバリデーションセットアップ
   #formValidation: FormValidationSetup | null = null;
 
   static definition = {
-    name: 'dads-textarea',
+    name: 'dads-input-text',
     template: html`
       <div part="wrapper" id="wrapper">
-        <label part="label" id="label" for="textarea">
+        <label part="label" id="label" for="input">
           <span part="label-text" id="label-text">
             <slot name="label" id="label-slot"></slot>
             <span id="label-fallback"></span>
@@ -123,15 +121,13 @@ export class DadsTextarea extends TypographyFormComponent {
           <span id="support-fallback"></span>
         </div>
 
-        <div part="textarea-wrapper" id="textarea-wrapper">
-          <textarea
-            part="textarea"
-            id="textarea"
-            rows="3"
-          ></textarea>
+        <div part="input-wrapper" id="input-wrapper">
+          <input
+            part="input"
+            id="input"
+            type="text"
+          />
         </div>
-
-        <span part="counter" id="counter"></span>
 
         <div part="error-text" id="error-text">
           <slot name="error-text" id="error-slot"></slot>
@@ -140,34 +136,31 @@ export class DadsTextarea extends TypographyFormComponent {
 
         <!-- バリデーション用カスタムエラーメッセージスロット（非表示） -->
         <slot name="required-error" id="required-error-slot" hidden></slot>
-        <slot name="overflow-error" id="overflow-error-slot" hidden></slot>
+        <slot name="type-mismatch-error" id="type-mismatch-error-slot" hidden></slot>
       </div>
     `,
     styles: withReset([
       applyDADSTokens(),
-      textareaTokens,
-      textareaStyles,
+      inputTextTokens,
+      inputTextStyles,
       applyDADSFocusStyles(),
     ], 'minimal'),
     attributes: [
       PropertyAttr('label'),
       PropertyAttr('support-text'),
+      PropertyAttr('type'),
       BooleanAttr('required'),
-      PropertyAttr('maxlength'),
-      BooleanAttr('show-counter'),
-      PropertyAttr('counter-max'),
       BooleanAttr('error'),
       PropertyAttr('error-text'),
       BooleanAttr('disabled'),
       BooleanAttr('readonly'),
-      // placeholder は非推奨: support-text を使用してください
       PropertyAttr('name'),
-      PropertyAttr('rows'),
       PropertyAttr('size'),
-      // value は observedAttributes に含めるが、PropertyAttr は使わない
-      // カスタム getter/setter が定義されているため (property フィールドなし)
-      { attribute: 'value' },
+      PropertyAttr('input-width'),
       BooleanAttr('auto-validate'),
+      PropertyAttr('autocomplete'),
+      // value は observedAttributes に含めるが、PropertyAttr は使わない
+      { attribute: 'value' },
     ],
   };
 
@@ -178,11 +171,10 @@ export class DadsTextarea extends TypographyFormComponent {
     checkDeprecatedAttrs(this, DEPRECATED_FORM_ATTRS);
 
     // デフォルト属性の設定
-    setDefaultAttributes(this, { size: 'md' });
+    setDefaultAttributes(this, { size: 'md', 'input-width': 'full' });
 
     // 内部要素の参照を取得
-    this.#textarea = this.shadowRoot?.querySelector('[part="textarea"]') as HTMLTextAreaElement;
-    this.#counter = this.shadowRoot?.querySelector('[part="counter"]') as HTMLElement;
+    this.#input = this.shadowRoot?.querySelector('[part="input"]') as HTMLInputElement;
     this.#labelSlot = this.shadowRoot?.querySelector('#label-slot') as HTMLSlotElement;
     this.#supportSlot = this.shadowRoot?.querySelector('#support-slot') as HTMLSlotElement;
     this.#errorSlot = this.shadowRoot?.querySelector('#error-slot') as HTMLSlotElement;
@@ -196,7 +188,7 @@ export class DadsTextarea extends TypographyFormComponent {
     this.#requirement = this.shadowRoot?.querySelector('#requirement') as HTMLElement;
 
     // 初期化
-    this.#initTextarea();
+    this.#initInput();
     this.#initSlots();
 
     // フォームバリデーションのセットアップ
@@ -220,25 +212,24 @@ export class DadsTextarea extends TypographyFormComponent {
   }
 
   #syncAllState(): void {
-    this.#syncTextareaAttributes();
+    this.#syncInputAttributes();
     updateLabelFallback(this.#labelSlot, this.#labelFallback, this.getAttribute('label'));
     updateSupportFallback(this.#supportSlot, this.#supportText, this.#supportFallback, this.getAttribute('support-text'));
     updateErrorFallback(this.#errorSlot, this.#errorText, this.#errorFallback, this.getAttribute('error-text'), this.hasAttribute('error'));
     updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
-    this.#updateCounter();
+    this.#updateInputWidth();
     this.#updateAriaDescribedBy();
   }
 
-  #initTextarea() {
-    if (!this.#textarea) return;
+  #initInput() {
+    if (!this.#input) return;
 
     // 属性の転送
-    this.#syncTextareaAttributes();
+    this.#syncInputAttributes();
 
     // イベントリスナー
-    this.#textarea.addEventListener('input', this.#handleInput);
-    this.#textarea.addEventListener('change', this.#handleChange);
-    this.#textarea.addEventListener('blur', this.#handleBlur);
+    this.#input.addEventListener('input', this.#handleInput);
+    this.#input.addEventListener('change', this.#handleChange);
   }
 
   #initSlots() {
@@ -257,96 +248,82 @@ export class DadsTextarea extends TypographyFormComponent {
     updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
   }
 
-  #syncTextareaAttributes() {
-    if (!this.#textarea) return;
+  #syncInputAttributes() {
+    if (!this.#input) return;
+
+    // type属性の転送（無効値またはnullの場合は'text'にリセット）
+    const typeAttr = this.getAttribute('type');
+    if (typeAttr !== null && ['text', 'email', 'tel'].includes(typeAttr)) {
+      this.#input.type = typeAttr;
+    } else {
+      this.#input.type = 'text';
+    }
 
     // 転送する属性（文字列）
-    // placeholder は非推奨: 内部textareaには転送しない
-    // auto-validate時はmaxlengthを転送しない（ブラウザの制限を無効化してバリデーションで制御）
-    const hasAutoValidate = this.hasAttribute('auto-validate');
-    const transferAttrs = hasAutoValidate ? ['name'] : ['maxlength', 'name'];
+    const transferAttrs = ['name', 'autocomplete'];
     for (const attr of transferAttrs) {
       const value = this.getAttribute(attr);
       if (value !== null) {
-        this.#textarea.setAttribute(attr, value);
+        this.#input.setAttribute(attr, value);
       }
     }
 
-    // auto-validate時はmaxlengthを削除（属性変更で追加された場合に備えて）
-    if (hasAutoValidate) {
-      this.#textarea.removeAttribute('maxlength');
-    }
-
-    // rows属性は数値プロパティとして設定
-    const rowsAttr = this.getAttribute('rows');
-    if (rowsAttr !== null) {
-      this.#textarea.rows = parseInt(rowsAttr, 10);
-    }
-
     // Boolean属性
-    this.#textarea.disabled = this.hasAttribute('disabled');
-    this.#textarea.readOnly = this.hasAttribute('readonly');
-    // required は内部textareaに転送しない（ネイティブバリデーションを使わず、カスタムバリデーションで制御）
+    this.#input.disabled = this.hasAttribute('disabled');
+    this.#input.readOnly = this.hasAttribute('readonly');
+    // required は内部inputに転送しない（ネイティブバリデーションを使わず、カスタムバリデーションで制御）
     // 代わりに aria-required を設定してアクセシビリティを維持
     if (this.hasAttribute('required')) {
-      this.#textarea.setAttribute('aria-required', 'true');
+      this.#input.setAttribute('aria-required', 'true');
     } else {
-      this.#textarea.removeAttribute('aria-required');
+      this.#input.removeAttribute('aria-required');
     }
 
     // 初期値の設定（value属性から）
     const valueAttr = this.getAttribute('value');
     if (valueAttr !== null) {
-      this.#textarea.value = valueAttr;
+      this.#input.value = valueAttr;
       this._internals.setFormValue(valueAttr);
     }
 
     // エラー状態
     const hasError = this.hasAttribute('error');
-    this.#textarea.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+    this.#input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
   }
 
-  #updateCounter() {
-    if (!this.#counter) return;
+  #updateInputWidth(): void {
+    const width = this.getAttribute('input-width') || 'full';
 
-    const showCounter = this.hasAttribute('show-counter');
-    if (!showCounter) {
-      // :empty疑似クラスで非表示にするため、textContentを空にする
-      this.#counter.textContent = '';
-      this.#counter.removeAttribute('data-exceeded');
-      return;
-    }
-
-    const currentLength = this.#textarea?.value.length ?? 0;
-    const maxLength = this.getAttribute('maxlength') ?? this.getAttribute('counter-max');
-
-    if (maxLength) {
-      this.#counter.textContent = `${currentLength}/${maxLength}`;
-
-      // 超過時のエラー状態
-      const max = parseInt(maxLength, 10);
-      if (currentLength > max) {
-        this.#counter.setAttribute('data-exceeded', '');
-      } else {
-        this.#counter.removeAttribute('data-exceeded');
-      }
-    } else {
-      this.#counter.textContent = `${currentLength}`;
+    switch (width) {
+      case 'short':
+        this.style.setProperty('--dads-input-width', 'var(--input-width-short)');
+        break;
+      case 'medium':
+        this.style.setProperty('--dads-input-width', 'var(--input-width-medium)');
+        break;
+      case 'full':
+        this.style.setProperty('--dads-input-width', 'var(--input-width-full)');
+        break;
+      default:
+        // カスタム値 (200px, 20ch, 50% など)
+        if (/^\d+(\.\d+)?(px|ch|em|rem|vw|%)$/.test(width)) {
+          this.style.setProperty('--dads-input-width', width);
+        } else {
+          // 無効な値はfullにフォールバック
+          this.style.setProperty('--dads-input-width', 'var(--input-width-full)');
+        }
     }
   }
 
   #updateAriaDescribedBy() {
     const supportVisible = this.#supportText?.style.display !== 'none';
-    const counterVisible = this.hasAttribute('show-counter');
-    updateAriaDescribedBy(this.#textarea, supportVisible, this.hasAttribute('error'), counterVisible);
+    updateAriaDescribedBy(this.#input, supportVisible, this.hasAttribute('error'));
   }
 
   #handleInput = () => {
-    this.#updateCounter();
-
     // フォーム値を更新
-    if (this.#textarea) {
-      this._internals.setFormValue(this.#textarea.value);
+    if (this.#input) {
+      this._internals.setFormValue(this.#input.value);
     }
 
     // auto-validate時、入力開始でバリデーションエラーをクリア
@@ -362,42 +339,22 @@ export class DadsTextarea extends TypographyFormComponent {
     this.emitEvent('dads-change', { value: this.value });
   };
 
-  #handleBlur = () => {
-    // auto-validateが有効で、disabled/readonlyでない場合のみバリデーション
-    if (!this.hasAttribute('auto-validate')) return;
-    if (this.hasAttribute('disabled') || this.hasAttribute('readonly')) return;
-
-    this.#validateOverflow();
-  };
-
   #handleFormSubmit = (e: Event): void => {
     // disabled/readonlyの場合はバリデーションしない
     if (this.hasAttribute('disabled') || this.hasAttribute('readonly')) return;
 
+    // 順序: required → typeMismatch
     const isRequiredValid = this.#validateRequired();
-    const isOverflowValid = this.#validateOverflow();
+    if (!isRequiredValid) {
+      e.preventDefault();
+      return;
+    }
 
-    if (!isRequiredValid || !isOverflowValid) {
+    const isTypeMismatchValid = this.#validateTypeMismatch();
+    if (!isTypeMismatchValid) {
       e.preventDefault();
     }
   };
-
-  #validateOverflow(): boolean {
-    const maxLength = this.getAttribute('maxlength') ?? this.getAttribute('counter-max');
-    if (!maxLength) return true;
-
-    const max = parseInt(maxLength, 10);
-    // 無効な数値の場合は検証スキップ
-    if (Number.isNaN(max)) return true;
-
-    const isValid = this.value.length <= max;
-    if (!isValid) {
-      this.#showValidationError('overflow');
-    } else if (this.#validationErrorType === 'overflow') {
-      this.#clearValidationError();
-    }
-    return isValid;
-  }
 
   #validateRequired(): boolean {
     if (!this.hasAttribute('required')) return true;
@@ -409,12 +366,26 @@ export class DadsTextarea extends TypographyFormComponent {
     return isValid;
   }
 
-  #showValidationError(type: 'required' | 'overflow'): void {
+  #validateTypeMismatch(): boolean {
+    // type="email" の場合のみバリデーション
+    if (this.getAttribute('type') !== 'email') return true;
+
+    // 空の値はバリデーションしない（requiredで別途チェック）
+    if (this.value.trim().length === 0) return true;
+
+    const isValid = VALIDATION_RULES.typeMismatch.validate(this.value, this);
+    if (!isValid) {
+      this.#showValidationError('typeMismatch');
+    }
+    return isValid;
+  }
+
+  #showValidationError(type: 'required' | 'typeMismatch'): void {
     this.#validationErrorType = type;
     const message = this.#getErrorMessage(type);
     showValidationError({
       element: this,
-      control: this.#textarea,
+      control: this.#input,
       internals: this._internals,
       message,
       updateUI: (hasError) => this.#updateValidationUI(hasError),
@@ -431,14 +402,14 @@ export class DadsTextarea extends TypographyFormComponent {
 
   #updateValidationUI(hasError: boolean): void {
     updateValidationUI(
-      this.#textarea,
+      this.#input,
       hasError,
       () => updateErrorFallback(this.#errorSlot, this.#errorText, this.#errorFallback, this.getAttribute('error-text'), this.hasAttribute('error')),
       () => this.#updateAriaDescribedBy()
     );
   }
 
-  #getErrorMessage(type: 'required' | 'overflow'): string {
+  #getErrorMessage(type: 'required' | 'typeMismatch'): string {
     return getValidationMessage(this, VALIDATION_RULES[type]);
   }
 
@@ -446,7 +417,7 @@ export class DadsTextarea extends TypographyFormComponent {
     super.attributeChangedCallback(name, oldValue, newValue);
 
     // 初期化前は無視
-    if (!this.#textarea) return;
+    if (!this.#input) return;
 
     switch (name) {
       case 'label':
@@ -456,61 +427,66 @@ export class DadsTextarea extends TypographyFormComponent {
         updateSupportFallback(this.#supportSlot, this.#supportText, this.#supportFallback, this.getAttribute('support-text'));
         this.#updateAriaDescribedBy();
         break;
-      case 'required':
-        updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
-        if (this.#textarea) {
-          // required は内部textareaに転送しない（カスタムバリデーションで制御）
-          // aria-required でアクセシビリティを維持
-          if (this.hasAttribute('required')) {
-            this.#textarea.setAttribute('aria-required', 'true');
-          } else {
-            this.#textarea.removeAttribute('aria-required');
-          }
+      case 'type':
+        if (newValue !== null && ['text', 'email', 'tel'].includes(newValue)) {
+          this.#input.type = newValue;
+        } else {
+          // 属性削除または無効値の場合は'text'にリセット
+          this.#input.type = 'text';
         }
         break;
-      case 'maxlength':
-      case 'counter-max':
-      case 'show-counter':
-        this.#updateCounter();
-        this.#updateAriaDescribedBy();
+      case 'required':
+        updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
+        if (this.#input) {
+          // required は内部inputに転送しない（カスタムバリデーションで制御）
+          // aria-required でアクセシビリティを維持
+          if (this.hasAttribute('required')) {
+            this.#input.setAttribute('aria-required', 'true');
+          } else {
+            this.#input.removeAttribute('aria-required');
+          }
+        }
         break;
       case 'error':
       case 'error-text':
         updateErrorFallback(this.#errorSlot, this.#errorText, this.#errorFallback, this.getAttribute('error-text'), this.hasAttribute('error'));
         this.#updateAriaDescribedBy();
-        if (this.#textarea) {
-          this.#textarea.setAttribute('aria-invalid', this.hasAttribute('error') ? 'true' : 'false');
+        if (this.#input) {
+          this.#input.setAttribute('aria-invalid', this.hasAttribute('error') ? 'true' : 'false');
         }
         break;
       case 'disabled':
-        if (this.#textarea) {
-          this.#textarea.disabled = this.hasAttribute('disabled');
+        if (this.#input) {
+          this.#input.disabled = this.hasAttribute('disabled');
         }
         break;
       case 'readonly':
         updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
-        if (this.#textarea) {
-          this.#textarea.readOnly = this.hasAttribute('readonly');
+        if (this.#input) {
+          this.#input.readOnly = this.hasAttribute('readonly');
         }
         break;
       case 'name':
-        if (this.#textarea && newValue !== null) {
-          this.#textarea.setAttribute(name, newValue);
-        } else if (this.#textarea) {
-          this.#textarea.removeAttribute(name);
+        if (this.#input && newValue !== null) {
+          this.#input.setAttribute(name, newValue);
+        } else if (this.#input) {
+          this.#input.removeAttribute(name);
         }
         break;
-      // placeholder は非推奨: attributeChangedCallback では処理しない
-      case 'rows':
-        if (this.#textarea && newValue !== null) {
-          this.#textarea.rows = parseInt(newValue, 10);
+      case 'input-width':
+        this.#updateInputWidth();
+        break;
+      case 'autocomplete':
+        if (this.#input && newValue !== null) {
+          this.#input.setAttribute('autocomplete', newValue);
+        } else if (this.#input) {
+          this.#input.removeAttribute('autocomplete');
         }
         break;
       case 'value':
-        if (this.#textarea && newValue !== null) {
-          this.#textarea.value = newValue;
+        if (this.#input && newValue !== null) {
+          this.#input.value = newValue;
           this._internals.setFormValue(newValue);
-          this.#updateCounter();
         }
         break;
     }
@@ -518,14 +494,13 @@ export class DadsTextarea extends TypographyFormComponent {
 
   // Public API
   get value(): string {
-    return this.#textarea?.value ?? '';
+    return this.#input?.value ?? '';
   }
 
   set value(v: string) {
-    if (this.#textarea) {
-      this.#textarea.value = v;
+    if (this.#input) {
+      this.#input.value = v;
       this._internals.setFormValue(v);
-      this.#updateCounter();
     }
   }
 
@@ -543,28 +518,28 @@ export class DadsTextarea extends TypographyFormComponent {
 
   formDisabledCallback(disabled: boolean) {
     super.formDisabledCallback(disabled);
-    if (this.#textarea) {
-      this.#textarea.disabled = disabled;
+    if (this.#input) {
+      this.#input.disabled = disabled;
     }
   }
 
   // Focus delegation
   focus(options?: FocusOptions) {
-    this.#textarea?.focus(options);
+    this.#input?.focus(options);
   }
 
   blur() {
-    this.#textarea?.blur();
+    this.#input?.blur();
   }
 
   select() {
-    this.#textarea?.select();
+    this.#input?.select();
   }
 
   setSelectionRange(start: number, end: number, direction?: 'forward' | 'backward' | 'none') {
-    this.#textarea?.setSelectionRange(start, end, direction);
+    this.#input?.setSelectionRange(start, end, direction);
   }
 }
 
 // フォーム要素の標準動作を適用
-applyStandardFormElementBehavior(DadsTextarea, 'value', 'value');
+applyStandardFormElementBehavior(DadsInputText, 'value', 'value');

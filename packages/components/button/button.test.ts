@@ -490,4 +490,85 @@ describe('DadsButton - フォーム統合', () => {
       });
     });
   });
+
+  describe('ダブルサブミット防止', () => {
+    it('内部ボタンクリック時にsubmitが1回だけ実行される', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const submitHandler = vi.fn((e: Event) => e.preventDefault());
+      const form = document.createElement('form');
+      form.addEventListener('submit', submitHandler);
+
+      const button = document.createElement('dads-button') as DadsButton;
+      button.setAttribute('type', 'submit');
+      button.textContent = 'Submit';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      // 内部ボタンをクリック（submit 1回）
+      const internalButton = button.shadowRoot?.querySelector('[part="base"]');
+      internalButton?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      await waitFor(() => {
+        // submitは1回だけ呼ばれる
+        expect(submitHandler).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it('CustomEvent（object detail）はホストハンドラで無視される', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const submitHandler = vi.fn((e: Event) => e.preventDefault());
+      const form = document.createElement('form');
+      form.addEventListener('submit', submitHandler);
+
+      const button = document.createElement('dads-button') as DadsButton;
+      button.setAttribute('type', 'submit');
+      button.textContent = 'Submit';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      // CustomEvent（#emitClickEventと同じ形式）をホストに発火
+      // detailがobjectなのでホストハンドラで無視される
+      button.dispatchEvent(new CustomEvent('click', {
+        bubbles: true,
+        detail: { variant: 'solid', size: 'medium' }
+      }));
+
+      await waitFor(() => {
+        // CustomEventなので#handleHostClickは無視、submitは呼ばれない
+        expect(submitHandler).not.toHaveBeenCalled();
+      });
+    });
+
+    it('.click()メソッドでフォーム送信が動作する', async () => {
+      const { defineButton } = await import('./button-define');
+      defineButton();
+
+      const submitHandler = vi.fn((e: Event) => e.preventDefault());
+      const form = document.createElement('form');
+      form.addEventListener('submit', submitHandler);
+
+      const button = document.createElement('dads-button') as DadsButton;
+      button.setAttribute('type', 'submit');
+      button.textContent = 'Submit';
+      form.appendChild(button);
+      document.body.appendChild(form);
+
+      await waitForComponent('dads-button');
+
+      // .click()はMouseEvent（detail=0）を発火するのでホストハンドラで処理される
+      button.click();
+
+      await waitFor(() => {
+        expect(submitHandler).toHaveBeenCalledTimes(1);
+      });
+    });
+  });
 });

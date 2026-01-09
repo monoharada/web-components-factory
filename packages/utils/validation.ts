@@ -57,6 +57,29 @@ export const VALIDATION_RULES = {
     defaultMessage: '入力できる文字数を超えています',
     slotName: 'overflow-error',
   },
+
+  /**
+   * タイプ不一致バリデーション（email形式）
+   * - type="email" の場合、メールアドレス形式をチェック
+   * - 空の値はバリデーションしない（requiredで別途チェック）
+   */
+  typeMismatch: {
+    type: 'typeMismatch',
+    validate: (value: string, element: HTMLElement): boolean => {
+      // 空の値はバリデーションしない
+      if (value.trim().length === 0) return true;
+
+      const type = element.getAttribute('type');
+      if (type !== 'email') return true;
+
+      // 基本的なemail形式チェック（ブラウザのvalidityと同様）
+      // RFC 5322に準拠した簡易パターン
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(value);
+    },
+    defaultMessage: 'メールアドレスの形式が正しくありません',
+    slotName: 'type-mismatch-error',
+  },
 } as const satisfies Record<string, ValidationRule>;
 
 /**

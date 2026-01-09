@@ -486,6 +486,47 @@ bun server.ts
 - [DADS Input Text Accessibility](https://design.digital.go.jp/dads/components/input-text/accessibility/)
 - [DADS Textarea](https://design.digital.go.jp/dads/components/textarea/)
 
+## 📝 Form Validation Architecture
+
+### MUST: ネイティブバリデーションを回避
+
+Form-Associated Custom Elementsでカスタムバリデーションを実装する際、ネイティブバリデーションとの干渉を避ける。
+
+**詳細**: [ADR-002: Form-Associated Web Componentsのバリデーションアーキテクチャ](docs/adr/ADR-002-form-validation-architecture.md)
+
+### 設計原則
+
+| 原則 | 理由 |
+|------|------|
+| `required`属性を内部inputに転送しない | ネイティブバリデーション回避（`aria-required`で代替） |
+| カスタムバリデーションは`submit`イベントで実行 | 一元管理、優先順位制御 |
+| ボタンは`requestSubmit()`を直接呼ぶ | `reportValidity()`の干渉を防ぐ |
+| エラークリア時は`setValidity({})`必須 | 次回submit時の再評価を保証 |
+
+### 重要なAPI
+
+```typescript
+// ❌ 使用禁止: ネイティブバリデーションが干渉
+if (form.reportValidity()) {
+  form.requestSubmit();
+}
+
+// ✅ 推奨: カスタムバリデーションに委ねる
+form.requestSubmit();  // submitイベントでバリデーション
+
+// ✅ エラークリア時は必ずsetValidity({})を呼ぶ
+#clearValidationError(): void {
+  this.removeAttribute('error');
+  this._internals.setValidity({});  // 重要！
+}
+```
+
+### バリデーション優先順位
+
+1. `required`（必須）- 最優先
+2. `typeMismatch`（形式）- 値がある場合のみ
+3. その他カスタムルール
+
 ## 🎬 E2Eエビデンス取得（Playwright MCP）
 
 ### 概要
