@@ -48,21 +48,14 @@ padding: 0.5rem 1rem;
 ### 1. !important
 
 ```css
-/* 絶対禁止 */
+/* 絶対禁止 - 例外なし */
 color: red !important;
 ```
 
-代替: `@layer`で詳細度を管理
-
-**唯一の例外**: `prefers-reduced-motion` 対応
-```css
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-```
+**完全禁止** - 代替手法を使用すること:
+- `@layer` で詳細度を管理
+- flexbox/grid の `gap` で余白制御（marginの詳細度問題を回避）
+- CSS変数の再代入でスタイル上書き
 
 ### 2. カラーキーワード・ハードコード色値
 
@@ -81,6 +74,24 @@ color: var(--color-neutral-black);
 ```
 
 **Note**: プリミティブトークン定義内（`:root`）では HEX/RGB/HSL を使用する。
+
+### 2.5. ハードコード数値（スペーシング・サイズ）
+
+```css
+/* NG: ハードコード数値 */
+gap: 1em;
+margin: 16px;
+padding: 8px 16px;
+
+/* OK: CSS変数経由 */
+gap: var(--blockquote-gap);
+margin: var(--spacing-md);
+padding: var(--spacing-sm) var(--spacing-md);
+```
+
+数値（`1em`, `16px`, `0.5rem` 等）は直接記述せず、必ずCSS変数（トークン）経由で指定すること。
+
+**例外**: `calc()` 内でのベース値（例: `calc(17 / 16 * 1rem)`）はトークン定義として許容。
 
 ### 3. html font-size: 62.5%
 

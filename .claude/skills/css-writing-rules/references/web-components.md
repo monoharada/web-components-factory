@@ -2,6 +2,7 @@
 
 ## Contents
 
+- [Critical: No Div Soup (Markup Rules)](#critical-no-div-soup-markup-rules)
 - [Critical: Use ::part() Instead of Classes](#critical-use-part-instead-of-classes)
 - [Style Application Order](#style-application-order)
 - [:host() Selector](#host-selector)
@@ -10,6 +11,118 @@
 - [Native HTML Elements Priority](#native-html-elements-priority)
 - [State Management](#state-management)
 - [Slot Styling](#slot-styling)
+
+## Critical: No Div Soup (Markup Rules)
+
+**Div Soup禁止**: 不要なラッパー要素を作成しない。最小限のDOM構造を維持する。
+
+### 原則
+
+1. **フラット構造優先**: ネストは必要最小限に抑える
+2. **セマンティック要素活用**: `<div>`より意味のある要素を使用
+3. **display: contents活用**: レイアウト目的のwrapper divは`display: contents`で透明化
+4. **直接スロット配置**: 可能な限り`<slot>`要素に直接`part`属性を付与
+
+### NG: Div Soup
+
+```html
+<!-- 避ける: 無意味に深いネスト -->
+<div part="outer">
+  <div part="wrapper">
+    <div part="container">
+      <div part="content">
+        <slot></slot>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+### OK: フラット構造
+
+```html
+<!-- 推奨: 最小限のネスト -->
+<blockquote part="blockquote">
+  <slot name="lead" part="lead"></slot>
+  <slot part="body"></slot>
+  <slot name="close" part="close"></slot>
+</blockquote>
+```
+
+### Wrapper Divが許容されるケース
+
+1. **複数スロットのグループ化が必要な場合**
+2. **CSSでは実現できないレイアウト要件がある場合**
+3. **アクセシビリティ目的（role属性が必要など）**
+
+### Slot要素への直接属性付与
+
+`<slot>`要素に`part`と`hidden`属性を直接付与可能：
+
+```html
+<!-- slot要素に直接属性を付与 -->
+<slot name="lead" id="lead-slot" part="lead"></slot>
+```
+
+```css
+/* 空のスロットを非表示 */
+[part="lead"][hidden],
+[part="body"][hidden],
+[part="close"][hidden] {
+  display: none;
+}
+```
+
+### スロット要素のデフォルト動作
+
+slot要素はデフォルトで `display: contents` 相当の振る舞いをする。これにより：
+
+- **スロット要素自体はレイアウトボックスを生成しない**
+- **親グリッドのgapが全要素間に適用される**
+
+#### 自動スロット割り当て（デフォルト）の場合
+
+追加のdisplay指定は通常不要：
+
+```css
+/* 親コンテナにgrid + gapを設定するだけで十分 */
+[part="blockquote"] {
+  display: grid;
+  gap: var(--dads-blockquote-gap);
+}
+```
+
+#### Manual Slot Assignment（slotAssignment: 'manual'）の場合
+
+**重要**: 明示的に `display: contents` を指定すること：
+
+```css
+/* スロット要素を明示的に透明化 */
+[part="lead"],
+[part="body"],
+[part="close"] {
+  display: contents;
+}
+
+/* 空スロットは非表示（display: none が contents を上書き） */
+[part="lead"][hidden],
+[part="body"][hidden],
+[part="close"][hidden] {
+  display: none;
+}
+```
+
+理由：`slotAssignment: 'manual'` 使用時はブラウザのデフォルト動作が一貫しない可能性があるため、明示的に指定してクロスブラウザ対応を確保する。
+
+**注意**: `display: block` を明示指定すると、スロット要素がブロックボックスになり、親グリッドのgapがスロット内の要素間に適用されなくなる。
+
+### チェックリスト
+
+- [ ] 不要なwrapper divを削除したか
+- [ ] 各要素に明確な目的があるか
+- [ ] display: contentsで透明化できないか検討したか
+- [ ] slot要素に直接part属性を付与できないか検討したか
+- [ ] ネスト深度は最小限か（目安: 3層以内）
 
 ## Critical: Use ::part() Instead of Classes
 

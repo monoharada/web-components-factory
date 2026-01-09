@@ -13,10 +13,11 @@ Web ComponentsプロジェクトにおけるCSS実装ガイドライン。monosu
 
 1. **!important禁止** - `@layer`で詳細度を管理
 2. **::part()必須** - Shadow DOM内でクラスではなくpart属性を使用
-3. **変数マッピングは一度だけ** - プロパティ定義は1箇所、状態変化は変数再代入
-4. **ネスト1階層** - `@layer`・疑似クラス・メディアクエリを除く
-5. **状態はHTML属性** - `.is-open`ではなく`[open]`、`[aria-expanded="true"]`
-6. **グローバルトークン必須** - `#000000`ではなく`var(--color-neutral-black)`
+3. **Div Soup禁止** - 不要なwrapper div削除、最小限のDOM構造を維持
+4. **変数マッピングは一度だけ** - プロパティ定義は1箇所、状態変化は変数再代入
+5. **ネスト1階層** - `@layer`・疑似クラス・メディアクエリを除く
+6. **状態はHTML属性** - `.is-open`ではなく`[open]`、`[aria-expanded="true"]`
+7. **グローバルトークン必須** - `#000000`ではなく`var(--color-neutral-black)`
 
 ### Prohibited（絶対禁止）
 
@@ -40,11 +41,29 @@ html { font-size: 62.5%; }
 .is-open { }  /* → [open] { } */
 ```
 
+```html
+<!-- NG: Div Soup（不要なwrapper div） -->
+<div part="outer">
+  <div part="wrapper">
+    <div part="container">
+      <slot></slot>
+    </div>
+  </div>
+</div>
+
+<!-- OK: フラット構造 -->
+<blockquote part="blockquote">
+  <slot name="lead" part="lead"></slot>
+  <slot part="body"></slot>
+</blockquote>
+```
+
 ## Decision Tree
 
 | ユースケース | 参照ドキュメント |
 |-------------|-----------------|
 | コンポーネントのCSS実装 | [web-components.md](references/web-components.md) |
+| マークアップ・テンプレート設計 | [web-components.md](references/web-components.md)（Div Soup禁止セクション） |
 | @layer構造の設定 | [layer-structure.md](references/layer-structure.md) |
 | CSS変数の設計 | [css-variables.md](references/css-variables.md) |
 | レスポンシブ対応 | [media-queries.md](references/media-queries.md) |
@@ -140,7 +159,7 @@ styles: withReset([
 | [media-queries.md](references/media-queries.md) | レスポンシブ、アクセシビリティ、単位 |
 | [css-variables.md](references/css-variables.md) | 変数パターン、トークン設計、スコープ |
 | [naming-rules.md](references/naming-rules.md) | クラス・変数の命名規則 |
-| [web-components.md](references/web-components.md) | ::part()、Shadow DOM、リセットCSS |
+| [web-components.md](references/web-components.md) | Div Soup禁止、::part()、Shadow DOM、リセットCSS |
 
 ## Relationship with Other Docs
 
