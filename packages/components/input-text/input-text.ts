@@ -251,10 +251,12 @@ export class DadsInputText extends TypographyFormComponent {
   #syncInputAttributes() {
     if (!this.#input) return;
 
-    // type属性の転送
+    // type属性の転送（無効値またはnullの場合は'text'にリセット）
     const typeAttr = this.getAttribute('type');
     if (typeAttr !== null && ['text', 'email', 'tel'].includes(typeAttr)) {
       this.#input.type = typeAttr;
+    } else {
+      this.#input.type = 'text';
     }
 
     // 転送する属性（文字列）
@@ -428,6 +430,9 @@ export class DadsInputText extends TypographyFormComponent {
       case 'type':
         if (newValue !== null && ['text', 'email', 'tel'].includes(newValue)) {
           this.#input.type = newValue;
+        } else {
+          // 属性削除または無効値の場合は'text'にリセット
+          this.#input.type = 'text';
         }
         break;
       case 'required':
@@ -481,6 +486,7 @@ export class DadsInputText extends TypographyFormComponent {
       case 'value':
         if (this.#input && newValue !== null) {
           this.#input.value = newValue;
+          this._internals.setFormValue(newValue);
         }
         break;
     }

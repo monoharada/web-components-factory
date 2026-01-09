@@ -509,6 +509,7 @@ export class DadsTextarea extends TypographyFormComponent {
       case 'value':
         if (this.#textarea && newValue !== null) {
           this.#textarea.value = newValue;
+          this._internals.setFormValue(newValue);
           this.#updateCounter();
         }
         break;

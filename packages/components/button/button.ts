@@ -122,6 +122,11 @@ export class DadsButton extends TypographyFormComponent {
    * Shadow DOM内のbutton要素のクリックがない場合（遅延ロード中）のフォールバック
    */
   #handleHostClick = (event: MouseEvent) => {
+    // #emitClickEventのCustomEventはobject detail({ variant, size })
+    // ネイティブMouseEventはnumber detail（クリック回数、.click()は0）
+    // これにより.click()は許可しつつ、#handleClickとの二重実行を防ぐ
+    if (typeof event.detail !== 'number') return;
+
     // リンクモードはスキップ（aタグのデフォルト動作に任せる）
     if (this.#isLink()) return;
 

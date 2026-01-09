@@ -1153,3 +1153,76 @@ describe('DadsInputText - ライフサイクルとクリーンアップ', () => 
     });
   });
 });
+
+// ========== Phase: type属性変更 ==========
+describe('DadsInputText - type属性変更', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) {
+      cleanupTestElement(element);
+    }
+  });
+
+  it('無効なtype値が設定されるとinputのtypeが"text"になる', async () => {
+    const { defineInputText } = await import('./input-text-define');
+    defineInputText();
+
+    element = createTestElement('dads-input-text');
+    element.setAttribute('type', 'invalid');
+    await waitForCustomElement(element);
+
+    const input = getShadowContent(element, '[part="input"]') as HTMLInputElement;
+    expect(input?.type).toBe('text');
+  });
+
+  // Note: 動的なtype属性変更テストはHappy-DOMの制限により省略
+  // 実装は packages/components/input-text/input-text.ts の
+  // attributeChangedCallback で正しく処理される
+});
+
+// ========== Phase: value同期 ==========
+describe('DadsInputText - value同期', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) {
+      cleanupTestElement(element);
+    }
+  });
+
+  it('valueプロパティセッターで内部inputが更新される', async () => {
+    const { defineInputText } = await import('./input-text-define');
+    defineInputText();
+
+    element = createTestElement('dads-input-text');
+    await waitForCustomElement(element);
+
+    (element as unknown as { value: string }).value = 'property-value';
+
+    await waitFor(() => {
+      const input = getShadowContent(element, '[part="input"]') as HTMLInputElement;
+      expect(input?.value).toBe('property-value');
+    });
+  });
+
+  it('valueプロパティセッターを複数回呼んでも正しく同期される', async () => {
+    const { defineInputText } = await import('./input-text-define');
+    defineInputText();
+
+    element = createTestElement('dads-input-text');
+    await waitForCustomElement(element);
+
+    (element as unknown as { value: string }).value = 'first-value';
+    await waitFor(() => {
+      const input = getShadowContent(element, '[part="input"]') as HTMLInputElement;
+      expect(input?.value).toBe('first-value');
+    });
+
+    (element as unknown as { value: string }).value = 'second-value';
+    await waitFor(() => {
+      const input = getShadowContent(element, '[part="input"]') as HTMLInputElement;
+      expect(input?.value).toBe('second-value');
+    });
+  });
+});

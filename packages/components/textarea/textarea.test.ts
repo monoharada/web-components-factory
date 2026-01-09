@@ -1222,3 +1222,49 @@ describe('DadsTextarea - 無効なmaxlength値', () => {
     });
   });
 });
+
+// ========== Phase 15: value同期 ==========
+describe('DadsTextarea - value同期', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) {
+      cleanupTestElement(element);
+    }
+  });
+
+  it('valueプロパティセッターで内部textareaが更新される', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    element = createTestElement('dads-textarea');
+    await waitForCustomElement(element);
+
+    (element as unknown as { value: string }).value = 'property-value';
+
+    await waitFor(() => {
+      const textarea = getShadowContent(element, '[part="textarea"]') as HTMLTextAreaElement;
+      expect(textarea?.value).toBe('property-value');
+    });
+  });
+
+  it('valueプロパティセッターを複数回呼んでも正しく同期される', async () => {
+    const { defineTextarea } = await import('./textarea-define');
+    defineTextarea();
+
+    element = createTestElement('dads-textarea');
+    await waitForCustomElement(element);
+
+    (element as unknown as { value: string }).value = 'first-value';
+    await waitFor(() => {
+      const textarea = getShadowContent(element, '[part="textarea"]') as HTMLTextAreaElement;
+      expect(textarea?.value).toBe('first-value');
+    });
+
+    (element as unknown as { value: string }).value = 'second-value';
+    await waitFor(() => {
+      const textarea = getShadowContent(element, '[part="textarea"]') as HTMLTextAreaElement;
+      expect(textarea?.value).toBe('second-value');
+    });
+  });
+});
