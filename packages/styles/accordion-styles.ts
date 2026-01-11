@@ -15,15 +15,13 @@ export const accordionItemStyles = css`
   
   /* details/summary リセット */
   [part="details"] { width: 100%; }
-  [part="summary"] { 
+  [part="summary"] {
     list-style: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 12px;
-    /* Figmaデザイン準拠: 左16px、右20px、上下16px */
     padding: 16px 20px 16px 16px;
-    /* フォント設定 - Noto Sans JPを明示的に指定 */
     font-family: var(--font-family-sans);
     font-size: var(--accordion-font-size, var(--font-size-16));
     line-height: var(--accordion-line-height, var(--line-height-150));
@@ -34,9 +32,8 @@ export const accordionItemStyles = css`
   }
   [part="summary"]::-webkit-details-marker { display: none; }
   
-  /* ホバー効果 - デジタル庁デザインシステムv2.7.0準拠 */
+  /* ホバー効果 */
   [part="summary"]:hover {
-    /* Figma node-id=8201-29177のホバー状態 */
     background-color: var(--accordion-hover-bg, var(--color-neutral-solid-gray-50, #f2f2f2));
   }
   
@@ -44,8 +41,6 @@ export const accordionItemStyles = css`
   [part="summary"]:active {
     background-color: var(--color-neutral-solid-gray-100, #e6e6e6);
   }
-  
-  /* フォーカススタイルはmixin (applyFocusStyles) で適用 - accordion.tsで呼び出し */
   
   /* アイコン */
   [part="icon"] {
@@ -62,10 +57,9 @@ export const accordionItemStyles = css`
     transition: border-width 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  /* アイコンホバー効果 - Figmaデザイン準拠 */
-  [part="summary"]:hover [part="icon"] { 
+  /* アイコンホバー効果 */
+  [part="summary"]:hover [part="icon"] {
     border-width: 3px;
-    /* パディング調整で内側の要素サイズ維持 */
     padding: 4px;
   }
   
@@ -85,53 +79,42 @@ export const accordionItemStyles = css`
   /* コンテンツ */
   [part="content"] { overflow: hidden; }
   [part="content-inner"] {
-    /* Figmaデザイン準拠: 左側はアイコン幅(32px) + gap(12px) + 左余白(16px) = 60px */
     padding: 16px 20px 24px 60px;
-    /* フォント設定 - Noto Sans JPを明示的に指定 */
     font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
     line-height: var(--line-height-170);
     color: var(--accordion-text-primary, var(--color-neutral-solid-gray-900));
   }
   
-  /* 戻るボタン */
+  /* 戻るリンク */
   [part="return-button"] {
+    --return-link-underline-thickness: 1px;
+    --return-link-underline-thickness-hover: 3px;
+
     display: inline-flex;
     align-items: center;
     gap: 8px;
     margin-top: 16px;
-    padding: 8px 12px;
-    border: 1px solid transparent;
-    border-radius: var(--border-radius-6);
+    padding: 8px 0;
+    border: none;
     background: none;
     color: var(--color-primitive-blue-1000, #00118f);
-    /* フォント設定 - Noto Sans JPを明示的に指定 */
     font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 0.2em;
-    text-decoration-thickness: 1px;
-    transition: 
+    text-decoration-thickness: var(--return-link-underline-thickness);
+    transition:
       color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration-thickness 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
-  /* 戻るボタンホバー効果 - シンプル版 */
-  [part="return-button"]:hover { 
+
+  [part="return-button"]:hover {
     color: var(--color-primitive-blue-800, #0031d8);
-    background-color: var(--color-primitive-blue-50, #e8f1fe);
-    border-color: var(--color-primitive-blue-200, #c5d7fb);
-    text-decoration-thickness: 2px;
+    text-decoration-thickness: var(--return-link-underline-thickness-hover);
   }
-  
-  /* 戻るボタンアクティブ状態 */
-  [part="return-button"]:active {
-    background-color: var(--color-primitive-blue-100, #d9e6ff);
-  }
-  
-  /* 戻るボタンフォーカス */
+
   [part="return-button"]:focus-visible {
     outline: 2px solid var(--color-primitive-blue-600, #3460fb);
     outline-offset: 2px;
@@ -172,30 +155,29 @@ export const accordionItemStyles = css`
   
   :host([icon-position="right"]) [part="summary"] {
     flex-direction: row-reverse;
-    padding: 16px 16px 16px 20px; /* アイコンが右側なので左側の余白を増やす */
+    padding: 16px 16px 16px 20px;
   }
   :host([icon-position="right"]) [part="content-inner"] {
-    padding: 16px 60px 24px 20px; /* テキストは左寄せ、右側にアイコン分の余白 */
+    padding: 16px 60px 24px 20px;
   }
   
   /* モバイル */
   @media (max-width: 768px) {
-    [part="summary"] { 
-      padding: 12px 16px 12px 12px; 
+    [part="summary"] {
+      padding: 12px 16px 12px 12px;
       gap: 8px;
-      font-size: var(--font-size-16); 
+      font-size: var(--font-size-16);
     }
-    [part="icon"] { 
-      width: 24px; 
-      height: 24px; 
-      padding: 4px; 
+    [part="icon"] {
+      width: 24px;
+      height: 24px;
+      padding: 4px;
     }
-    [part="content-inner"] { 
-      /* モバイル: アイコン(24px) + gap(8px) + 左余白(12px) = 44px */
-      padding: 12px 16px 20px 44px; 
+    [part="content-inner"] {
+      padding: 12px 16px 20px 44px;
     }
     :host([icon-position="right"]) [part="content-inner"] {
-      padding-left: 12px; 
+      padding-left: 12px;
       padding-right: 44px;
     }
   }
@@ -213,24 +195,22 @@ export const accordionItemStyles = css`
     }
     
     [part="return-button"] {
-      border: 1px solid ButtonText;
-      color: ButtonText;
+      color: LinkText;
     }
-    
+
     [part="return-button"]:hover {
-      border-color: Highlight;
-      color: HighlightText;
-      background: Highlight;
+      color: LinkText;
+      text-decoration-thickness: var(--return-link-underline-thickness-hover);
     }
   }
   
   /* RTL */
   :host-context([dir="rtl"]) [part="summary"] {
-    padding: 16px 16px 16px 20px; /* 左右を反転 */
+    padding: 16px 16px 16px 20px;
     text-align: right;
     flex-direction: row-reverse;
   }
   :host-context([dir="rtl"]) [part="content-inner"] {
-    padding: 16px 60px 24px 20px; /* 左右を反転 */
+    padding: 16px 60px 24px 20px;
   }
 `;

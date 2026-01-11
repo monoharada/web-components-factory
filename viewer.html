@@ -18,7 +18,8 @@
       "dads-accordion-item-details": "/@components/dads/accordion-item-details.js",
       "dads-blockquote": "/@components/dads/blockquote.js",
       "dads-text": "/@components/dads/text.js",
-      "dads-input-text": "/@components/dads/input-text.js"
+      "dads-input-text": "/@components/dads/input-text.js",
+      "a11y-annotate": "/@components/meta/annotate.js"
     }
   }
   </script>
@@ -343,13 +344,13 @@
     // クリティカルコンポーネントを即座にロード
     function loadCriticalComponents() {
       console.log('[Preloader] Loading critical components...');
-      criticalComponents.forEach(path => {
+      for (const path of criticalComponents) {
         import(path).then(() => {
           console.log(`[Preloader] Critical: ${path} loaded`);
         }).catch(err => {
           console.warn(`[Preloader] Failed to load ${path}:`, err);
         });
-      });
+      }
     }
 
     // 即座に実行
