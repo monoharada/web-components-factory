@@ -57,10 +57,6 @@ function isHTMLElement(v: unknown): v is HTMLElement {
   return v instanceof HTMLElement;
 }
 
-function formatTag(el: Element): string {
-  return `<${el.tagName.toLowerCase()}>`;
-}
-
 function getAriaAttrs(el: Element): readonly [string, string][] {
   const out: [string, string][] = [];
   for (const attr of el.attributes) {
@@ -117,6 +113,29 @@ export class DadsAnnotate extends TypographyWebComponent {
 	    styles: css`
       a11y-annotate {
         display: block;
+
+        /* カスタマイズ可能な注釈カラー */
+        --a11y-annotate-callout-color: rgba(239, 68, 68, 0.9);
+        --a11y-annotate-callout-color-solid: rgb(239, 68, 68);
+
+        /* パネル・レイアウト用カラー */
+        --a11y-annotate-border-color: var(--color-border-light, #e5e7eb);
+        --a11y-annotate-background: var(--color-neutral-white, #ffffff);
+        --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc);
+        --a11y-annotate-text-primary: var(--color-text-primary, #0f172a);
+        --a11y-annotate-text-secondary: var(--color-text-secondary, #475569);
+        --a11y-annotate-text-muted: #334155;
+
+        /* バッジ用カラー */
+        --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe);
+        --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985);
+        --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd);
+
+        /* スナップショット用 */
+        --a11y-annotate-snapshot-border: #e2e8f0;
+
+        /* シャドウ */
+        --a11y-annotate-shadow: 0 10px 30px rgba(2, 6, 23, 0.25);
       }
 
       a11y-annotate [part="layout"] {
@@ -127,9 +146,9 @@ export class DadsAnnotate extends TypographyWebComponent {
 
 	      a11y-annotate [part="preview"] {
 	        min-width: 0;
-	        border: 1px solid #e5e7eb;
+	        border: 1px solid var(--a11y-annotate-border-color);
 	        border-radius: 12px;
-	        background: #ffffff;
+	        background: var(--a11y-annotate-background);
 	        padding: 48px;
 	        position: relative;
           overflow: visible;
@@ -150,16 +169,16 @@ export class DadsAnnotate extends TypographyWebComponent {
 	      }
 
       a11y-annotate [part="panel"] {
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--a11y-annotate-border-color);
         border-radius: 12px;
-        background: #ffffff;
+        background: var(--a11y-annotate-background);
         overflow: hidden;
       }
 
       a11y-annotate [part="panel-header"] {
         padding: 16px 16px 12px;
-        border-bottom: 1px solid #e5e7eb;
-        background: #f8fafc;
+        border-bottom: 1px solid var(--a11y-annotate-border-color);
+        background: var(--a11y-annotate-background-muted);
       }
 
       a11y-annotate [part="panel-title-row"] {
@@ -174,7 +193,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         line-height: 1.2;
         font-weight: 700;
         margin: 0;
-        color: #0f172a;
+        color: var(--a11y-annotate-text-primary);
       }
 
       a11y-annotate [part="panel-badges"] {
@@ -188,7 +207,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         margin: 8px 0 0;
         font-size: 12px;
         line-height: 1.4;
-        color: #475569;
+        color: var(--a11y-annotate-text-secondary);
       }
 
       a11y-annotate [part="panel-body"] {
@@ -207,7 +226,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         line-height: 1.2;
         font-weight: 700;
         margin: 0;
-        color: #0f172a;
+        color: var(--a11y-annotate-text-primary);
       }
 
       a11y-annotate section > ul {
@@ -215,14 +234,14 @@ export class DadsAnnotate extends TypographyWebComponent {
         padding-left: 18px;
         display: grid;
         gap: 4px;
-        color: #0f172a;
+        color: var(--a11y-annotate-text-primary);
         font-size: 12px;
         line-height: 1.5;
       }
 
       a11y-annotate section > p {
         margin: 0;
-        color: #0f172a;
+        color: var(--a11y-annotate-text-primary);
         font-size: 12px;
         line-height: 1.6;
       }
@@ -232,9 +251,9 @@ export class DadsAnnotate extends TypographyWebComponent {
         line-height: 1;
         padding: 4px 8px;
         border-radius: 999px;
-        background: #e0f2fe;
-        color: #075985;
-        border: 1px solid #bae6fd;
+        background: var(--a11y-annotate-badge-bg);
+        color: var(--a11y-annotate-badge-color);
+        border: 1px solid var(--a11y-annotate-badge-border);
         white-space: nowrap;
       }
 
@@ -248,7 +267,7 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate .callout-line {
         fill: none;
-        stroke: rgba(239, 68, 68, 0.9);
+        stroke: var(--a11y-annotate-callout-color);
         stroke-width: 2;
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -264,7 +283,7 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate .callout-box {
         position: absolute;
-        border: 2px dashed rgba(239, 68, 68, 0.9);
+        border: 2px dashed var(--a11y-annotate-callout-color);
         border-radius: 10px;
         background: transparent;
       }
@@ -275,13 +294,13 @@ export class DadsAnnotate extends TypographyWebComponent {
         max-width: min(320px, calc(100vw - 40px));
         padding: 6px 10px;
         border-radius: 10px;
-        background: rgba(239, 68, 68, 0.95);
-        border: 1px solid rgba(239, 68, 68, 0.95);
-        color: #ffffff;
+        background: var(--a11y-annotate-callout-color);
+        border: 1px solid var(--a11y-annotate-callout-color);
+        color: var(--a11y-annotate-background);
         font-size: 12px;
         line-height: 1.3;
         font-weight: 700;
-        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.25);
+        box-shadow: var(--a11y-annotate-shadow);
         white-space: nowrap;
         display: flex;
         align-items: center;
@@ -296,8 +315,8 @@ export class DadsAnnotate extends TypographyWebComponent {
         height: 20px;
         padding: 0 5px;
         border-radius: 999px;
-        background: #ffffff;
-        color: rgba(239, 68, 68, 1);
+        background: var(--a11y-annotate-background);
+        color: var(--a11y-annotate-callout-color-solid);
         font-size: 11px;
         font-weight: 700;
         flex-shrink: 0;
@@ -328,8 +347,8 @@ export class DadsAnnotate extends TypographyWebComponent {
         width: 22px;
         height: 22px;
         border-radius: 999px;
-        background: #0f172a;
-        color: #ffffff;
+        background: var(--a11y-annotate-text-primary);
+        color: var(--a11y-annotate-background);
         display: grid;
         place-items: center;
         font-size: 12px;
@@ -345,24 +364,24 @@ export class DadsAnnotate extends TypographyWebComponent {
         font-size: 12px;
         line-height: 1.4;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--a11y-annotate-text-primary);
       }
 
       a11y-annotate .callout-desc {
         font-size: 12px;
         line-height: 1.5;
-        color: #334155;
+        color: var(--a11y-annotate-text-muted);
       }
 
       a11y-annotate .snapshot {
         margin: 0;
         padding: 10px 12px;
         border-radius: 10px;
-        border: 1px solid #e2e8f0;
-        background: #f8fafc;
+        border: 1px solid var(--a11y-annotate-snapshot-border);
+        background: var(--a11y-annotate-background-muted);
         font-size: 12px;
         line-height: 1.5;
-        color: #0f172a;
+        color: var(--a11y-annotate-text-primary);
       }
 
       a11y-annotate .snapshot code {
@@ -690,7 +709,7 @@ export class DadsAnnotate extends TypographyWebComponent {
     pre.className = 'snapshot';
 
     const lines: string[] = [];
-    lines.push(`要素: ${formatTag(el)}`);
+    lines.push(`要素: <${el.tagName.toLowerCase()}>`);
     if (role) lines.push(`role: ${role}`);
     if (aria.length > 0) {
       for (const [k, v] of aria) {
@@ -701,12 +720,10 @@ export class DadsAnnotate extends TypographyWebComponent {
       lines.push('role/aria-*: （なし）');
     }
 
-    pre.innerHTML = `<code>${this.#escapeHtml(lines.join('\n'))}</code>`;
+    const code = document.createElement('code');
+    code.textContent = lines.join('\n');
+    pre.replaceChildren(code);
     return pre;
-  }
-
-  #escapeHtml(s: string): string {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   #normalizeCallouts(spec: A11yAnnotations | null): CalloutRender[] {
