@@ -139,30 +139,42 @@ export const demos = {
   `,
 
   accordion: () => `
-    <dads-accordion-details>
-      <dads-accordion-item-details>
-        <span slot="header">デジタル庁について</span>
-        <div slot="content">
-          デジタル庁は、2021年9月1日に設置された日本の行政機関です。
-          デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
-        </div>
-      </dads-accordion-item-details>
+    <a11y-annotate>
+      <dads-accordion-details>
+        <dads-accordion-item-details expanded>
+          <span slot="header">デジタル庁について</span>
+          <div slot="content">
+            デジタル庁は、2021年9月1日に設置された日本の行政機関です。
+            デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
+          </div>
+        </dads-accordion-item-details>
+      </dads-accordion-details>
+    </a11y-annotate>
 
-      <dads-accordion-item-details>
-        <span slot="header">利用可能なサービス</span>
-        <div slot="content">
-          マイナポータル、e-Tax、各種オンライン申請など、
-          様々な行政サービスをデジタルで利用できます。
-        </div>
-      </dads-accordion-item-details>
-
-      <dads-accordion-item-details>
-        <span slot="header">お問い合わせ</span>
-        <div slot="content">
-          ご不明な点がございましたら、公式ウェブサイトのお問い合わせフォームよりご連絡ください。
-        </div>
-      </dads-accordion-item-details>
-    </dads-accordion-details>
+    <div style="margin-top: 40px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px;">
+      <dads-accordion-details>
+        <dads-accordion-item-details>
+          <span slot="header">デジタル庁について</span>
+          <div slot="content">
+            デジタル庁は、2021年9月1日に設置された日本の行政機関です。
+            デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
+          </div>
+        </dads-accordion-item-details>
+        <dads-accordion-item-details>
+          <span slot="header">利用可能なサービス</span>
+          <div slot="content">
+            マイナポータル、e-Tax、各種オンライン申請など、
+            様々な行政サービスをデジタルで利用できます。
+          </div>
+        </dads-accordion-item-details>
+        <dads-accordion-item-details>
+          <span slot="header">お問い合わせ</span>
+          <div slot="content">
+            ご不明な点がございましたら、公式ウェブサイトのお問い合わせフォームよりご連絡ください。
+          </div>
+        </dads-accordion-item-details>
+      </dads-accordion-details>
+    </div>
   `,
 
   resetCss: () => `

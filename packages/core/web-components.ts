@@ -503,13 +503,30 @@ export class WebComponent extends HTMLElement {
       } else this.#sr = this.attachShadow(shadowOptions);
     }
     if (!this.#dsd && styles.length > 0) {
+      const mergeSheets = (current: unknown, next: readonly CSSStyleSheet[]) => {
+        const base = (() => {
+          if (Array.isArray(current)) return current;
+          if (!current) return [];
+          try {
+            return Array.from(current as ArrayLike<CSSStyleSheet>);
+          } catch {
+            return [];
+          }
+        })();
+        return [...base, ...next];
+      };
+
       if (this.#sr) {
         // Shadow DOMの場合、adoptedStyleSheetsを新しい配列で置き換える
-        this.#sr.adoptedStyleSheets = [...this.#sr.adoptedStyleSheets, ...styles];
+        this.#sr.adoptedStyleSheets = mergeSheets(this.#sr.adoptedStyleSheets, styles);
       } else {
         // Light DOMの場合
         const root = this.getRootNode() as Document | ShadowRoot;
-        root.adoptedStyleSheets = [...root.adoptedStyleSheets, ...styles];
+        // happy-dom等の環境では adoptedStyleSheets が配列ではない場合がある
+        (root as Document | ShadowRoot).adoptedStyleSheets = mergeSheets(
+          (root as Document | ShadowRoot).adoptedStyleSheets,
+          styles,
+        );
       }
     }
     for (const p of this.definition.properties) {
@@ -640,8 +657,12 @@ export class ElementSelection<T extends Element = Element> {
     return this.#elements[i];
   }
 
-  forEach(cb: (el: T, isCurrent: boolean, index: number) => void) {
-    this.#elements.forEach((el, idx) => cb(el, el === this.#current, idx));
+  forEach(cb: (el: T, isCurrent: boolean, index: number) => void): void {
+    let idx = 0;
+    for (const el of this.#elements) {
+      cb(el, el === this.#current, idx);
+      idx += 1;
+    }
   }
 
   processKey(
@@ -650,18 +671,23 @@ export class ElementSelection<T extends Element = Element> {
     orientation: OrientationValue = Orientation.vertical,
   ) {
     const dir = getComputedStyle(this.#current).direction;
-    const prevKey =
-      orientation === Orientation.vertical
-        ? Keys.arrowUp
-        : dir === 'rtl'
-          ? Keys.arrowRight
-          : Keys.arrowLeft;
-    const nextKey =
-      orientation === Orientation.vertical
-        ? Keys.arrowDown
-        : dir === 'rtl'
-          ? Keys.arrowLeft
-          : Keys.arrowRight;
+    const isVertical = orientation === Orientation.vertical;
+    const isRtl = dir === 'rtl';
+
+    let prevKey: KeyName;
+    let nextKey: KeyName;
+
+    if (isVertical) {
+      prevKey = Keys.arrowUp;
+      nextKey = Keys.arrowDown;
+    } else if (isRtl) {
+      prevKey = Keys.arrowRight;
+      nextKey = Keys.arrowLeft;
+    } else {
+      prevKey = Keys.arrowLeft;
+      nextKey = Keys.arrowRight;
+    }
+
     let target: T | undefined;
     switch (event.key) {
       case prevKey:
@@ -682,8 +708,10 @@ export class ElementSelection<T extends Element = Element> {
     if (target) cb(target);
   }
 
-  #clamp(i: number) {
-    return i < 0 ? 0 : i >= this.#elements.length ? this.#elements.length - 1 : i;
+  #clamp(i: number): number {
+    if (i < 0) return 0;
+    if (i >= this.#elements.length) return this.#elements.length - 1;
+    return i;
   }
 
   static includingSimilarPeersOf<U extends Element>(
