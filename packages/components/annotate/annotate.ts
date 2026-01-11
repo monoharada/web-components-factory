@@ -526,16 +526,13 @@ export class DadsAnnotate extends TypographyWebComponent {
     if (!container) return null;
 
     const directChildren = Array.from(container.children).filter(isHTMLElement) as ElementWithAnnotations[];
-    const rootFromChildren =
-      directChildren.find((el) => el.tagName.includes('-')) ?? directChildren[0];
-
-    const root = rootFromChildren ?? null;
+    const root = directChildren.find((el) => el.tagName.includes('-')) ?? directChildren[0] ?? null;
     if (!root) return null;
 
     const selector = this.getAttribute('target-selector')?.trim();
     if (!selector) return root;
-
     if (root.matches(selector)) return root;
+
     const found = root.querySelector(selector);
     return isHTMLElement(found) ? (found as ElementWithAnnotations) : root;
   }
@@ -557,10 +554,11 @@ export class DadsAnnotate extends TypographyWebComponent {
     this.#panelSubtitle.textContent = `${tagName}${summary}`;
 
     this.#panelBadges.textContent = '';
-    const badges: string[] = [];
-    if (!this.hasAttribute('no-live')) badges.push('Live');
-    badges.push('Overlay');
-    if (this.#supportsAnchors) badges.push('Anchor-ready');
+    const badges = [
+      !this.hasAttribute('no-live') && 'Live',
+      'Overlay',
+      this.#supportsAnchors && 'Anchor-ready',
+    ].filter(Boolean) as string[];
 
     for (const label of badges) {
       const span = document.createElement('span');
@@ -858,38 +856,15 @@ export class DadsAnnotate extends TypographyWebComponent {
       item.boxEl.style.height = `${localHeight + pad * 2}px`;
 
       const placement = item.callout.placement ?? 'top-right';
-      const anchorX =
-        placement === 'top-left' || placement === 'bottom-left' ? localLeft : localLeft + localWidth;
-      const anchorY = placement === 'top-left' || placement === 'top-right' ? localTop : localTop + localHeight;
+      const isLeft = placement === 'top-left' || placement === 'bottom-left';
+      const isTop = placement === 'top-left' || placement === 'top-right';
+      const anchorX = isLeft ? localLeft : localLeft + localWidth;
+      const anchorY = isTop ? localTop : localTop + localHeight;
 
       const gap = 22;
-      let tagLeft = 0;
-      let tagTop = 0;
-      let tagTransform = '';
-
-      switch (placement) {
-        case 'top-left':
-          tagLeft = anchorX - gap;
-          tagTop = anchorY - gap;
-          tagTransform = 'translate(-100%, -100%)';
-          break;
-        case 'bottom-left':
-          tagLeft = anchorX - gap;
-          tagTop = anchorY + gap;
-          tagTransform = 'translate(-100%, 0)';
-          break;
-        case 'bottom-right':
-          tagLeft = anchorX + gap;
-          tagTop = anchorY + gap;
-          tagTransform = 'translate(0, 0)';
-          break;
-        case 'top-right':
-        default:
-          tagLeft = anchorX + gap;
-          tagTop = anchorY - gap;
-          tagTransform = 'translate(0, -100%)';
-          break;
-      }
+      let tagLeft = isLeft ? anchorX - gap : anchorX + gap;
+      let tagTop = isTop ? anchorY - gap : anchorY + gap;
+      const tagTransform = `translate(${isLeft ? '-100%' : '0'}, ${isTop ? '-100%' : '0'})`;
 
       item.tagEl.style.left = `${tagLeft}px`;
       item.tagEl.style.top = `${tagTop}px`;
@@ -940,26 +915,22 @@ export class DadsAnnotate extends TypographyWebComponent {
         if (!hit) break;
 
         const shift = 10;
-        if (placement === 'top-left' || placement === 'top-right') {
-          tagTop += hit.bottom - tagRect.top + shift;
-        } else {
-          tagTop -= tagRect.bottom - hit.top + shift;
-        }
+        tagTop += isTop
+          ? hit.bottom - tagRect.top + shift
+          : -(tagRect.bottom - hit.top + shift);
         item.tagEl.style.top = `${tagTop}px`;
         tagRect = clampToContainer();
       }
 
       // ターゲットと重なる場合は、少しだけ離す
-      const targetRect = rect;
       const intersectsTarget =
-        tagRect.left < targetRect.right &&
-        tagRect.right > targetRect.left &&
-        tagRect.top < targetRect.bottom &&
-        tagRect.bottom > targetRect.top;
+        tagRect.left < rect.right &&
+        tagRect.right > rect.left &&
+        tagRect.top < rect.bottom &&
+        tagRect.bottom > rect.top;
       if (intersectsTarget) {
         const nudge = 14;
-        if (placement === 'top-left' || placement === 'top-right') tagTop -= nudge;
-        else tagTop += nudge;
+        tagTop += isTop ? -nudge : nudge;
         item.tagEl.style.top = `${tagTop}px`;
         tagRect = clampToContainer();
       }
@@ -968,30 +939,8 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       const tagLocalLeft = tagRect.left - containerRect.left;
       const tagLocalTop = tagRect.top - containerRect.top;
-      const tagLocalW = tagRect.width;
-      const tagLocalH = tagRect.height;
-
-      let startX = 0;
-      let startY = 0;
-      switch (placement) {
-        case 'top-left':
-          startX = tagLocalLeft + tagLocalW;
-          startY = tagLocalTop + tagLocalH;
-          break;
-        case 'top-right':
-          startX = tagLocalLeft;
-          startY = tagLocalTop + tagLocalH;
-          break;
-        case 'bottom-left':
-          startX = tagLocalLeft + tagLocalW;
-          startY = tagLocalTop;
-          break;
-        case 'bottom-right':
-        default:
-          startX = tagLocalLeft;
-          startY = tagLocalTop;
-          break;
-      }
+      const startX = isLeft ? tagLocalLeft + tagRect.width : tagLocalLeft;
+      const startY = isTop ? tagLocalTop + tagRect.height : tagLocalTop;
 
       item.lineEl.setAttribute('d', `M ${startX} ${startY} L ${anchorX} ${startY} L ${anchorX} ${anchorY}`);
     }
@@ -1025,17 +974,13 @@ export class DadsAnnotate extends TypographyWebComponent {
 
     // calloutsが参照するshadowRootも監視
     const spec = readAnnotations(this.#target);
-    if (spec?.callouts) {
-      for (const c of spec.callouts) {
-        if (c.target.scope !== 'shadow') continue;
-        const hostBase = (c.target.host ?? 'target') === 'annotate' ? this : this.#target;
-        if (!hostBase) continue;
-        const hostEl = c.target.hostSelector
-          ? (hostBase.querySelector(c.target.hostSelector) as HTMLElement | null)
-          : (hostBase as unknown as HTMLElement);
-        if (!hostEl?.shadowRoot) continue;
-        observeNode(hostEl.shadowRoot);
-      }
+    for (const c of spec?.callouts ?? []) {
+      if (c.target.scope !== 'shadow') continue;
+      const hostBase = (c.target.host ?? 'target') === 'annotate' ? this : this.#target;
+      const hostEl = c.target.hostSelector
+        ? (hostBase?.querySelector(c.target.hostSelector) as HTMLElement | null)
+        : (hostBase as unknown as HTMLElement);
+      if (hostEl?.shadowRoot) observeNode(hostEl.shadowRoot);
     }
 
     window.addEventListener('resize', onLayout, { passive: true });
