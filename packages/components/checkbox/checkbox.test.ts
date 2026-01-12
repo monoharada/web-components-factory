@@ -210,3 +210,87 @@ describe('DadsCheckbox - バリデーション', () => {
   });
 });
 
+describe('DadsCheckbox - Fieldset内での※必須表示', () => {
+  let fieldset: HTMLElement;
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (fieldset) fieldset.remove();
+  });
+
+  it('単体でrequired時は※必須が表示される', async () => {
+    const { defineDefaultCheckbox } = await import('./checkbox-define');
+    defineDefaultCheckbox();
+
+    element = document.createElement('dads-checkbox');
+    element.setAttribute('required', '');
+    element.setAttribute('label', 'テスト');
+    document.body.appendChild(element);
+    await waitForCustomElement(element);
+
+    const requirement = getShadowContent(element, '[part="requirement"]');
+    expect(requirement?.textContent).toBe('※必須');
+
+    element.remove();
+  });
+
+  it('fieldset(required)内のcheckbox(required)は※必須を表示しない', async () => {
+    const { defineDefaultCheckbox } = await import('./checkbox-define');
+    const { defineDefaultFieldset } = await import('../fieldset/fieldset-define');
+    defineDefaultCheckbox();
+    defineDefaultFieldset();
+
+    fieldset = document.createElement('dads-fieldset');
+    fieldset.setAttribute('required', '');
+    fieldset.setAttribute('legend', '東京23区');
+    document.body.appendChild(fieldset);
+
+    element = document.createElement('dads-checkbox');
+    element.setAttribute('required', '');
+    element.setAttribute('label', '東京23区');
+    fieldset.appendChild(element);
+
+    await waitForCustomElement(fieldset);
+    await waitForCustomElement(element);
+    // slotchange発火を待つ
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    // fieldsetのlegendには※必須が表示される
+    const fieldsetRequirement = fieldset.shadowRoot?.querySelector('[part="requirement"]');
+    expect(fieldsetRequirement?.textContent).toBe('※必須');
+
+    // checkboxには※必須が表示されない
+    const checkboxRequirement = getShadowContent(element, '[part="requirement"]');
+    expect(checkboxRequirement?.textContent).toBe('');
+  });
+
+  it('fieldset(required無し)内のcheckbox(required)は※必須を表示する', async () => {
+    const { defineDefaultCheckbox } = await import('./checkbox-define');
+    const { defineDefaultFieldset } = await import('../fieldset/fieldset-define');
+    defineDefaultCheckbox();
+    defineDefaultFieldset();
+
+    fieldset = document.createElement('dads-fieldset');
+    // requiredなし
+    fieldset.setAttribute('legend', '任意グループ');
+    document.body.appendChild(fieldset);
+
+    element = document.createElement('dads-checkbox');
+    element.setAttribute('required', '');
+    element.setAttribute('label', '必須項目');
+    fieldset.appendChild(element);
+
+    await waitForCustomElement(fieldset);
+    await waitForCustomElement(element);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    // fieldsetのlegendには※必須が表示されない
+    const fieldsetRequirement = fieldset.shadowRoot?.querySelector('[part="requirement"]');
+    expect(fieldsetRequirement?.textContent).toBe('');
+
+    // checkboxには※必須が表示される
+    const checkboxRequirement = getShadowContent(element, '[part="requirement"]');
+    expect(checkboxRequirement?.textContent).toBe('※必須');
+  });
+});
+
