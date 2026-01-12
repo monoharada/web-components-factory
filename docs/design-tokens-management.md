@@ -107,6 +107,31 @@ class MyComponent extends WebComponent {
 - `--border-radius-{size}`: 4, 6, 8, 12, 16, 24, 32, full
 - `--elevation-{level}`: 1～8（ボックスシャドウ）
 
+#### Spacing（余白）
+このリポジトリでは、DADS公式トークン（`@digital-go-jp/design-tokens`）とは別に、**ヘッドレスな余白スケール**を提供します。
+
+- **スケール（数値・単位なし）**: `--spacing-scale-*`（例: `--spacing-scale-4: 16;`）
+- **rem派生**: `--spacing-*`（例: `--spacing-4`）
+- **px派生**: `--spacing-*-px`（例: `--spacing-4-px`）
+- **変換/密度**:
+  - `--spacing-root-font-size`（デフォルト: `16`）
+  - `--spacing-factor`（デフォルト: `1`）
+
+利用するには、`applySpacingTokens()` を `styles` に追加します（Shadow DOM内でも利用可能になります）。
+
+```typescript
+import { applyDADSTokens } from '../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../styles/spacing-tokens.js';
+
+styles: withReset([
+  applyDADSTokens(),
+  applySpacingTokens(),
+  css`
+    :host { padding: var(--spacing-6); }
+  `
+])
+```
+
 ## 🔧 カスタマイズ
 
 ### コンポーネント固有トークンの追加

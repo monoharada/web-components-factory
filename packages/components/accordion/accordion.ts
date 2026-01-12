@@ -16,6 +16,7 @@ import {
   createIconSVG
 } from '../../styles/design-tokens/accordion-tokens.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { accordionItemStyles } from '../../styles/accordion-styles.js';
 import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
@@ -108,6 +109,7 @@ export class DadsAccordionDetails extends TypographyWebComponent {
     `,
     styles: withReset([
       applyDADSTokens(),
+      applySpacingTokens(),
       accordionTokens,
       css`
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap');
@@ -283,6 +285,7 @@ export class DadsAccordionItemDetails extends TypographyWebComponent {
     `,
     styles: withReset([
       applyDADSTokens(),
+      applySpacingTokens(),
       accordionTokens,
       accordionItemStyles,
       applyDADSFocusStyles(),

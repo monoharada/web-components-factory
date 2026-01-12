@@ -89,14 +89,14 @@ export class DadsAnnotate extends TypographyWebComponent {
   static definition = {
     name: 'a11y-annotate',
     shadowOptions: null,
-	    template: html`
-	      <div part="layout">
-	        <div part="preview">
-	          <div part="preview-inner">
-	            <div part="target-root"></div>
-	          </div>
-	          <div part="callout-layer" aria-hidden="true"></div>
-	        </div>
+    template: html`
+      <div part="layout">
+        <div part="preview">
+          <div part="preview-inner">
+            <div part="target-root"></div>
+          </div>
+          <div part="callout-layer" aria-hidden="true"></div>
+        </div>
 
         <aside part="panel" aria-label="アクセシビリティ注釈">
           <div part="panel-header">
@@ -110,7 +110,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         </aside>
       </div>
     `,
-	    styles: css`
+    styles: css`
       a11y-annotate {
         display: block;
 
@@ -141,32 +141,32 @@ export class DadsAnnotate extends TypographyWebComponent {
       a11y-annotate [part="layout"] {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: var(--spacing-6, 24px);
       }
 
-	      a11y-annotate [part="preview"] {
-	        min-width: 0;
-	        border: 1px solid var(--a11y-annotate-border-color);
-	        border-radius: 12px;
-	        background: var(--a11y-annotate-background);
-	        padding: 48px;
-	        position: relative;
-          overflow: visible;
-          --a11y-annotate-callout-gutter: 64px;
-	      }
+      a11y-annotate [part="preview"] {
+        min-width: 0;
+        border: 1px solid var(--a11y-annotate-border-color);
+        border-radius: 12px;
+        background: var(--a11y-annotate-background);
+        padding: var(--spacing-12, 48px);
+        position: relative;
+        overflow: visible;
+        --a11y-annotate-callout-gutter: 64px;
+      }
 
-	      a11y-annotate [part="preview-inner"] {
-	        position: relative;
-	        min-width: 0;
-	      }
+      a11y-annotate [part="preview-inner"] {
+        position: relative;
+        min-width: 0;
+      }
 
-	      a11y-annotate [part="callout-layer"] {
-	        position: absolute;
-	        inset: calc(var(--a11y-annotate-callout-gutter) * -1) 0
-            calc(var(--a11y-annotate-callout-gutter) * -1)
-            calc(var(--a11y-annotate-callout-gutter) * -1);
-	        pointer-events: none;
-	      }
+      a11y-annotate [part="callout-layer"] {
+        position: absolute;
+        inset: calc(var(--a11y-annotate-callout-gutter) * -1) 0
+          calc(var(--a11y-annotate-callout-gutter) * -1)
+          calc(var(--a11y-annotate-callout-gutter) * -1);
+        pointer-events: none;
+      }
 
       a11y-annotate [part="panel"] {
         border: 1px solid var(--a11y-annotate-border-color);
@@ -176,7 +176,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       }
 
       a11y-annotate [part="panel-header"] {
-        padding: 16px 16px 12px;
+        padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px);
         border-bottom: 1px solid var(--a11y-annotate-border-color);
         background: var(--a11y-annotate-background-muted);
       }
@@ -185,7 +185,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
+        gap: var(--spacing-2-5, 10px);
       }
 
       a11y-annotate [part="panel-title"] {
@@ -199,26 +199,26 @@ export class DadsAnnotate extends TypographyWebComponent {
       a11y-annotate [part="panel-badges"] {
         display: flex;
         flex-wrap: wrap;
-        gap: 6px;
+        gap: var(--spacing-1-5, 6px);
         justify-content: flex-end;
       }
 
       a11y-annotate [part="panel-subtitle"] {
-        margin: 8px 0 0;
+        margin: var(--spacing-2, 8px) 0 0;
         font-size: 12px;
         line-height: 1.4;
         color: var(--a11y-annotate-text-secondary);
       }
 
       a11y-annotate [part="panel-body"] {
-        padding: 12px;
+        padding: var(--spacing-3, 12px);
         display: grid;
-        gap: 12px;
+        gap: var(--spacing-3, 12px);
       }
 
       a11y-annotate section {
         display: grid;
-        gap: 6px;
+        gap: var(--spacing-1-5, 6px);
       }
 
       a11y-annotate section > h3 {
@@ -231,9 +231,9 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate section > ul {
         margin: 0;
-        padding-left: 18px;
+        padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px));
         display: grid;
-        gap: 4px;
+        gap: var(--spacing-1, 4px);
         color: var(--a11y-annotate-text-primary);
         font-size: 12px;
         line-height: 1.5;
@@ -249,7 +249,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       a11y-annotate .badge {
         font-size: 11px;
         line-height: 1;
-        padding: 4px 8px;
+        padding: var(--spacing-1, 4px) var(--spacing-2, 8px);
         border-radius: 999px;
         background: var(--a11y-annotate-badge-bg);
         color: var(--a11y-annotate-badge-color);
@@ -292,7 +292,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         position: absolute;
         z-index: 50;
         max-width: min(320px, calc(100vw - 40px));
-        padding: 6px 10px;
+        padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px);
         border-radius: 10px;
         background: var(--a11y-annotate-callout-color);
         border: 1px solid var(--a11y-annotate-callout-color);
@@ -304,7 +304,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         white-space: nowrap;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: var(--spacing-1-5, 6px);
       }
 
       a11y-annotate .callout-tag-number {
@@ -313,7 +313,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         justify-content: center;
         min-width: 20px;
         height: 20px;
-        padding: 0 5px;
+        padding: 0 var(--spacing-1, 4px);
         border-radius: 999px;
         background: var(--a11y-annotate-background);
         color: var(--a11y-annotate-callout-color-solid);
@@ -333,13 +333,13 @@ export class DadsAnnotate extends TypographyWebComponent {
         padding: 0;
         list-style: none;
         display: grid;
-        gap: 6px;
+        gap: var(--spacing-1-5, 6px);
       }
 
       a11y-annotate .callout-item {
         display: grid;
         grid-template-columns: 22px minmax(0, 1fr);
-        gap: 10px;
+        gap: var(--spacing-2-5, 10px);
         align-items: start;
       }
 
@@ -357,7 +357,7 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate .callout-text {
         display: grid;
-        gap: 4px;
+        gap: var(--spacing-1, 4px);
       }
 
       a11y-annotate .callout-title {
@@ -375,7 +375,7 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate .snapshot {
         margin: 0;
-        padding: 10px 12px;
+        padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px);
         border-radius: 10px;
         border: 1px solid var(--a11y-annotate-snapshot-border);
         background: var(--a11y-annotate-background-muted);
@@ -417,6 +417,13 @@ export class DadsAnnotate extends TypographyWebComponent {
   #resizeObserver: ResizeObserver | null = null;
   #raf = 0;
   #supportsAnchors = supportsAnchorPositioning();
+
+  #readCssPx(varName: string, fallback: number): number {
+    if (typeof window === 'undefined') return fallback;
+    const value = getComputedStyle(this).getPropertyValue(varName).trim();
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
 
   static #instanceCounter = 0;
   readonly #instanceId = ++DadsAnnotate.#instanceCounter;
@@ -861,7 +868,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       const anchorX = isLeft ? localLeft : localLeft + localWidth;
       const anchorY = isTop ? localTop : localTop + localHeight;
 
-      const gap = 22;
+      const gap = this.#readCssPx('--spacing-6', 24);
       let tagLeft = isLeft ? anchorX - gap : anchorX + gap;
       let tagTop = isTop ? anchorY - gap : anchorY + gap;
       const tagTransform = `translate(${isLeft ? '-100%' : '0'}, ${isTop ? '-100%' : '0'})`;

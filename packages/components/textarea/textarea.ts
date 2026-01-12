@@ -11,6 +11,7 @@ import {
 } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { textareaTokens } from './textarea-tokens.js';
 import { textareaStyles } from './textarea-styles.js';
 import { withReset } from '../../styles/reset-css.js';
@@ -145,6 +146,7 @@ export class DadsTextarea extends TypographyFormComponent {
     `,
     styles: withReset([
       applyDADSTokens(),
+      applySpacingTokens(),
       textareaTokens,
       textareaStyles,
       applyDADSFocusStyles(),

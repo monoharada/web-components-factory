@@ -15,15 +15,15 @@ const blockquoteSemanticTokensText = `
     /* ========== セマンティックトークン（意味的な値） ========== */
 
     /* 段落間余白 */
-    --blockquote-gap: 1em;
+    --blockquote-gap: var(--spacing-4, 1em);
 
     /* マージン（DADS準拠: 左右40px） */
-    --blockquote-margin-inline: calc(40 / 16 * 1rem);
+    --blockquote-margin-inline: var(--spacing-10, calc(40 / 16 * 1rem));
 
     /* パディング（DADS準拠: 上下8px、左24px、右16px） */
-    --blockquote-padding-block: calc(8 / 16 * 1rem);
-    --blockquote-padding-inline-start: calc(24 / 16 * 1rem);
-    --blockquote-padding-inline-end: calc(16 / 16 * 1rem);
+    --blockquote-padding-block: var(--spacing-2, calc(8 / 16 * 1rem));
+    --blockquote-padding-inline-start: var(--spacing-6, calc(24 / 16 * 1rem));
+    --blockquote-padding-inline-end: var(--spacing-4, calc(16 / 16 * 1rem));
 
     /* 左ボーダー（DADS準拠: 8px gray） */
     --blockquote-border-width: 8px;

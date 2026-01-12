@@ -53,7 +53,7 @@ const textareaSemanticTokensText = `
     /* 読み取り専用バッジ（DADS公式準拠） */
     --textarea-readonly-badge-bg: var(--color-neutral-solid-gray-50, #f2f2f2);
     --textarea-readonly-badge-color: var(--color-neutral-solid-gray-800, #333333);
-    --textarea-readonly-badge-padding: 0.5rem;
+    --textarea-readonly-badge-padding: var(--spacing-2, 0.5rem);
     --textarea-readonly-badge-radius: 0.5rem;
 
     /* サポートテキスト */
@@ -75,14 +75,14 @@ const textareaSemanticTokensText = `
     /* レイアウト */
     --textarea-border-width: 1px;
     --textarea-border-radius: var(--border-radius-8, 0.5rem);  /* DADS公式: 角丸スモール（8px） */
-    --textarea-padding: 12px 16px;
+    --textarea-padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
     --textarea-min-height-sm: 72px;
     --textarea-min-height-md: 96px;
     --textarea-min-height-lg: 120px;
 
     /* 間隔 */
-    --textarea-gap: 8px;
-    --textarea-requirement-margin: 4px;
+    --textarea-gap: var(--spacing-2, 8px);
+    --textarea-requirement-margin: var(--spacing-1, 4px);
   }
 `;
 

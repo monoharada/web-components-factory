@@ -5,7 +5,6 @@
  */
 
 import {
-  WebComponentDefinition,
   html,
   css,
   BooleanAttr,
@@ -17,6 +16,7 @@ import { buttonTokens } from '../../styles/design-tokens/button-tokens.js';
 import { buttonStyles } from './button-styles.js';
 import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 
 /**
@@ -73,6 +73,7 @@ export class DadsButton extends TypographyFormComponent {
     `,
     styles: withReset([
       applyDADSTokens(),
+      applySpacingTokens(),
       buttonTokens,
       buttonStyles,
       applyDADSFocusStyles(),

@@ -2,7 +2,8 @@
 // リセットCSS適用のデモコンポーネント
 
 import { WebComponent, css, html } from '../core/web-components.js';
-import { withReset, minimalResetStyles, kisoResetStyles } from '../styles/reset-css.js';
+import { withReset } from '../styles/reset-css.js';
+import { applySpacingTokens } from '../styles/spacing-tokens.js';
 
 /**
  * リセットCSSありのカードコンポーネント
@@ -29,9 +30,11 @@ class ResetCard extends WebComponent {
         </button>
       </article>
     `,
-    styles: withReset(css`
+    styles: withReset([
+      applySpacingTokens(),
+      css`
       :host {
-        --card-padding: 1.5rem;
+        --card-padding: var(--spacing-6, 1.5rem);
         --card-border-radius: 12px;
         --card-border-color: #e0e0e0;
         --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -49,20 +52,20 @@ class ResetCard extends WebComponent {
         font-size: 1.5rem;
         font-weight: 600;
         color: #333;
-        margin-bottom: 0.75rem;
+        margin-bottom: var(--spacing-3, 0.75rem);
       }
 
       p {
         color: #666;
-        margin-bottom: 1rem;
+        margin-bottom: var(--spacing-4, 1rem);
       }
 
       ul {
-        margin-bottom: 1.5rem;
+        margin-bottom: var(--spacing-6, 1.5rem);
       }
 
       li {
-        padding: 0.25rem 0;
+        padding: var(--spacing-1, 0.25rem) 0;
         color: #555;
       }
 
@@ -74,7 +77,7 @@ class ResetCard extends WebComponent {
       button {
         background: #0066cc;
         color: white;
-        padding: 0.5rem 1.5rem;
+        padding: var(--spacing-2, 0.5rem) var(--spacing-6, 1.5rem);
         border: none;
         border-radius: 6px;
         font-weight: 500;
@@ -88,7 +91,8 @@ class ResetCard extends WebComponent {
       button:active {
         transform: translateY(1px);
       }
-    `, 'full')
+    `
+    ], 'full')
   };
 }
 
@@ -117,10 +121,12 @@ class NoResetCard extends WebComponent {
       </article>
     `,
     // リセットCSSを使わず、ブラウザのデフォルトスタイルが残る
-    styles: css`
+    styles: [
+      applySpacingTokens(),
+      css`
       :host {
         display: block;
-        --card-padding: 1.5rem;
+        --card-padding: var(--spacing-6, 1.5rem);
         --card-border-radius: 12px;
         --card-border-color: #e0e0e0;
         --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -155,13 +161,13 @@ class NoResetCard extends WebComponent {
       li {
         color: #555;
         /* ブラウザデフォルトのlist-styleが適用される */
-        padding: 0.25rem 0;
+        padding: var(--spacing-1, 0.25rem) 0;
       }
 
       button {
         background: #0066cc;
         color: white;
-        padding: 0.5rem 1.5rem;
+        padding: var(--spacing-2, 0.5rem) var(--spacing-6, 1.5rem);
         border-radius: 6px;
         font-weight: 500;
         transition: background-color 0.2s;
@@ -176,6 +182,7 @@ class NoResetCard extends WebComponent {
         transform: translateY(1px);
       }
     `
+    ]
   };
 }
 
@@ -198,9 +205,11 @@ class MinimalResetCard extends WebComponent {
         </button>
       </article>
     `,
-    styles: withReset(css`
+    styles: withReset([
+      applySpacingTokens(),
+      css`
       article {
-        padding: 1.5rem;
+        padding: var(--spacing-6, 1.5rem);
         border: 1px solid #e0e0e0;
         border-radius: 8px;
         background: white;
@@ -209,18 +218,18 @@ class MinimalResetCard extends WebComponent {
       h2 {
         font-size: 1.25rem;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        margin-bottom: var(--spacing-2, 0.5rem);
       }
 
       p {
         color: #666;
-        margin-bottom: 1rem;
+        margin-bottom: var(--spacing-4, 1rem);
       }
 
       button {
         background: linear-gradient(to bottom, #4a90e2, #357abd);
         color: white;
-        padding: 0.5rem 1rem;
+        padding: var(--spacing-2, 0.5rem) var(--spacing-4, 1rem);
         border: none;
         border-radius: 4px;
         cursor: pointer;
@@ -229,7 +238,8 @@ class MinimalResetCard extends WebComponent {
       button:hover {
         filter: brightness(1.1);
       }
-    `, 'minimal')
+    `
+    ], 'minimal')
   };
 }
 
