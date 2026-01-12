@@ -63,7 +63,17 @@ export function applySpacingTokens() {
       --spacing-scale-36: 144;
       --spacing-scale-40: 160;
 
-      /* Spacing (rem) */
+      /**
+       * Spacing (rem)
+       *
+       * Formula: scale × factor × (1rem / root-font-size)
+       *
+       * Example: --spacing-1 = 4 × 1 × (1rem / 16) = 0.25rem = 4px
+       *
+       * - scale: unitless base value from --spacing-scale-*
+       * - factor: density multiplier (default 1, <1 tighter, >1 looser)
+       * - 1rem / root-font-size: converts unitless to rem
+       */
       --spacing-0: 0;
       --spacing-0-5: calc(
         var(--spacing-scale-0-5) *
@@ -178,7 +188,16 @@ export function applySpacingTokens() {
           (1rem / var(--spacing-root-font-size))
       );
 
-      /* Spacing (px) */
+      /**
+       * Spacing (px)
+       *
+       * Formula: scale × factor × 1px
+       *
+       * Example: --spacing-1-px = 4 × 1 × 1px = 4px
+       *
+       * Use for fixed-size elements like hairlines, borders, or inline padding
+       * where rem-based scaling is not desired.
+       */
       --spacing-0-px: 0;
       --spacing-0-5-px: calc(var(--spacing-scale-0-5) * var(--spacing-factor) * 1px);
       --spacing-1-px: calc(var(--spacing-scale-1) * var(--spacing-factor) * 1px);

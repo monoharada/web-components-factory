@@ -262,6 +262,77 @@ export const tokens = css`${tokenText}`;
 
 **重要**: CSSStyleSheetオブジェクトを文字列テンプレート内で展開しないこと
 
+## 📐 Spacing Tokens（必須）
+
+### MUST: ハードコードされたpx/rem値を使わない
+
+**重要**: コンポーネントのスペーシング（padding、margin、gap等）には必ず `--spacing-*` トークンを使用してください。
+
+```css
+/* ❌ NG: ハードコードされた値 */
+padding: 16px 20px;
+gap: 12px;
+margin-top: 8px;
+
+/* ✅ OK: Spacing Tokens を使用 */
+padding: var(--spacing-4) var(--spacing-5);
+gap: var(--spacing-3);
+margin-top: var(--spacing-2);
+```
+
+### トークンスケール対応表
+
+| Token | Scale | px値 |
+|-------|-------|------|
+| `--spacing-0` | 0 | 0 |
+| `--spacing-0-5` | 0.5 | 2px |
+| `--spacing-1` | 1 | 4px |
+| `--spacing-1-5` | 1.5 | 6px |
+| `--spacing-2` | 2 | 8px |
+| `--spacing-2-5` | 2.5 | 10px |
+| `--spacing-3` | 3 | 12px |
+| `--spacing-3-5` | 3.5 | 14px |
+| `--spacing-4` | 4 | 16px |
+| `--spacing-5` | 5 | 20px |
+| `--spacing-6` | 6 | 24px |
+| `--spacing-8` | 8 | 32px |
+| `--spacing-10` | 10 | 40px |
+| `--spacing-12` | 12 | 48px |
+| `--spacing-15` | 15 | 60px |
+| `--spacing-16` | 16 | 64px |
+| `--spacing-20` | 20 | 80px |
+
+### トークンの種類
+
+| 種類 | 形式 | 用途 |
+|------|------|------|
+| rem版 | `--spacing-4` | 通常使用（レスポンシブ対応） |
+| px版 | `--spacing-4-px` | 固定サイズが必要な場合（hairline、border等） |
+| scale版 | `--spacing-scale-4` | calc()での計算用（unitless） |
+
+### Light DOM コンポーネントでのフォールバック
+
+`shadowOptions: null`（Light DOM）を使用するコンポーネントでは、フォールバック値を必ず指定：
+
+```css
+/* Light DOM コンポーネント用 */
+gap: var(--spacing-6, 24px);
+padding: var(--spacing-4, 16px);
+```
+
+### 例外ケース
+
+以下の場合のみハードコード値を許可：
+
+1. **ボーダー幅**: `border: 1px solid ...`（`--spacing-0-5`は2pxのため）
+2. **アウトライン**: `outline: 2px solid ...`
+3. **ボーダー半径**: `border-radius: 9999px`（pill形状）
+4. **アイコンサイズ**: `width: 24px; height: 24px;`（固定アイコンサイズ）
+
+### 定義ファイル
+
+→ `packages/styles/spacing-tokens.ts`
+
 ## 🎨 CSS Writing Rules Skill
 
 Claude Code用のCSS実装ガイドラインスキルが `.claude/skills/css-writing-rules/` に配置されています。
