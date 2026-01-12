@@ -4,6 +4,168 @@
  */
 
 export const demos = {
+  checkbox: () => `
+    <div style="padding: 40px; max-width: 900px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">チェックボックス</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム（DADS）HTML版 checkbox.css と同一の見た目になるよう実装したWeb Components版です。
+      </p>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます（Annotateのバッジにバージョン表示）。
+        </p>
+
+        <a11y-annotate target-selector="dads-fieldset">
+          <form class="checkbox-validation">
+            <dads-fieldset required>
+              <span slot="legend">利用規約</span>
+              <p slot="support-text">送信ボタンでrequiredバリデーションを確認できます。</p>
+              <dads-checkbox
+                label="利用規約に同意する"
+                size="sm"
+                name="agreement"
+                value="yes"
+                required
+                auto-validate
+              ></dads-checkbox>
+            </dads-fieldset>
+
+            <div>
+              <dads-button type="submit">送信</dads-button>
+            </div>
+          </form>
+
+          <style>
+            .checkbox-validation {
+              display: grid;
+              gap: 12px;
+              max-width: 520px;
+            }
+
+            .checkbox-validation dads-checkbox {
+              display: block;
+            }
+          </style>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本</h3>
+        <dads-checkbox label="ラベル" size="sm"></dads-checkbox>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">オプション（ラベル無し）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ 視覚ラベルを出さない場合は <code>aria-label</code> または <code>aria-labelledby</code> を指定してください。
+        </p>
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <dads-checkbox size="sm" aria-label="ラベルなしチェックボックス"></dads-checkbox>
+          <dads-checkbox size="sm" checked aria-label="ラベルなし（checked）"></dads-checkbox>
+          <dads-checkbox size="sm" indeterminate aria-label="ラベルなし（indeterminate）"></dads-checkbox>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">必須項目（※必須ラベル）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ <code>required</code>属性が付与されていると「※必須」ラベルが自動表示されます。
+        </p>
+        <dads-fieldset required>
+          <span slot="legend">東京23区</span>
+          <p slot="support-text">該当するすべての項目を選択してください。</p>
+          <dads-checkbox label="東京23区" size="sm"></dads-checkbox>
+          <dads-checkbox label="その他の地域" size="sm"></dads-checkbox>
+        </dads-fieldset>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">サポートテキスト（aria-describedby）</h3>
+        <p id="checkbox-support-2" style="margin: 0 0 12px; font-size: 0.875rem; line-height: 1.5; color: #4d4d4d;">
+          該当するすべての項目を選択してください。
+        </p>
+        <dads-checkbox label="東京23区（例）" size="sm" aria-describedby="checkbox-support-2"></dads-checkbox>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">状態（サイズ別）</h3>
+        <div style="display: grid; grid-template-columns: repeat(6, auto); gap: 2rem; justify-content: start;">
+          <dads-checkbox label="ラベル" size="lg"></dads-checkbox>
+          <dads-checkbox label="ラベル" size="lg" checked></dads-checkbox>
+          <dads-checkbox label="ラベル" size="lg" error></dads-checkbox>
+          <dads-checkbox label="ラベル" size="lg" checked error></dads-checkbox>
+          <dads-checkbox label="ラベル" size="lg" disabled></dads-checkbox>
+          <dads-checkbox label="ラベル" size="lg" checked disabled></dads-checkbox>
+
+          <dads-checkbox label="ラベル" size="md"></dads-checkbox>
+          <dads-checkbox label="ラベル" size="md" checked></dads-checkbox>
+          <dads-checkbox label="ラベル" size="md" error></dads-checkbox>
+          <dads-checkbox label="ラベル" size="md" checked error></dads-checkbox>
+          <dads-checkbox label="ラベル" size="md" disabled></dads-checkbox>
+          <dads-checkbox label="ラベル" size="md" checked disabled></dads-checkbox>
+
+          <dads-checkbox label="ラベル" size="sm"></dads-checkbox>
+          <dads-checkbox label="ラベル" size="sm" checked></dads-checkbox>
+          <dads-checkbox label="ラベル" size="sm" error></dads-checkbox>
+          <dads-checkbox label="ラベル" size="sm" checked error></dads-checkbox>
+          <dads-checkbox label="ラベル" size="sm" disabled></dads-checkbox>
+          <dads-checkbox label="ラベル" size="sm" checked disabled></dads-checkbox>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">不確定状態（チェック全選択）</h3>
+        <div data-js-indeterminate-example>
+          <dads-checkbox data-js-check-all label="全てのスポーツ" size="sm"></dads-checkbox>
+
+          <div style="margin-top: calc(16 / 16 * 1rem); display: grid; gap: 8px;">
+            <dads-checkbox data-js-check label="サッカー" size="sm"></dads-checkbox>
+            <dads-checkbox data-js-check label="バスケットボール" size="sm" checked></dads-checkbox>
+            <dads-checkbox data-js-check label="テニス" size="sm"></dads-checkbox>
+            <dads-checkbox data-js-check label="スイミング" size="sm" checked></dads-checkbox>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      // custom element定義前にプロパティへ触ると、upgrade後に「自前プロパティ」が残り挙動が壊れるため先に読み込む
+      await Promise.all([import('dads-checkbox'), import('dads-button'), import('dads-fieldset')]);
+
+      // デモ用: フォーム送信でページ遷移しないようにする
+      document.querySelectorAll('.checkbox-validation').forEach((form) => {
+        form.addEventListener('submit', (e) => e.preventDefault());
+      });
+
+      document.querySelectorAll('[data-js-indeterminate-example]').forEach((el) => {
+        const checkAll = el.querySelector('[data-js-check-all]');
+        const checks = [...el.querySelectorAll('[data-js-check]')];
+        if (!checkAll) return;
+        if (checks.length === 0) return;
+
+        function updateCheckAll() {
+          const allChecked = checks.every((c) => c.checked);
+          const noneChecked = checks.every((c) => !c.checked);
+          checkAll.checked = allChecked;
+          checkAll.indeterminate = !allChecked && !noneChecked;
+        }
+
+        function checkOrUncheckAll() {
+          const checked = checkAll.checked;
+          for (const c of checks) c.checked = checked;
+          updateCheckAll();
+        }
+
+        checkAll.addEventListener('dads-change', checkOrUncheckAll);
+        for (const c of checks) c.addEventListener('dads-change', updateCheckAll);
+
+        updateCheckAll();
+      });
+    <\/script>
+  `,
+
   blockquote: () => `
     <div style="padding: 40px; max-width: 800px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">引用ブロックコンポーネント</h2>
@@ -136,6 +298,93 @@ export const demos = {
         </ul>
       </div>
     </div>
+  `,
+
+  fieldset: () => `
+    <div style="padding: 40px; max-width: 900px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">フィールドセット</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム（DADS）準拠のフィールドセットWeb Componentです。
+        フォーム要素のグループ化と、aria-describedbyの自動設定を行います。
+      </p>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+
+        <a11y-annotate target-selector="dads-fieldset">
+          <dads-fieldset required>
+            <span slot="legend">東京23区</span>
+            <p slot="support-text">該当するすべての項目を選択してください。</p>
+            <dads-checkbox label="東京23区" size="sm"></dads-checkbox>
+            <dads-checkbox label="その他の地域" size="sm"></dads-checkbox>
+          </dads-fieldset>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">属性によるレジェンド・サポートテキスト</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ スロットの代わりにlegend属性とsupport-text属性でテキストを指定できます。
+        </p>
+        <dads-fieldset
+          legend="お住まいのエリア"
+          support-text="該当する項目を選択してください"
+        >
+          <dads-checkbox label="関東" size="sm"></dads-checkbox>
+          <dads-checkbox label="関西" size="sm"></dads-checkbox>
+          <dads-checkbox label="その他" size="sm"></dads-checkbox>
+        </dads-fieldset>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">aria-describedby自動設定</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ support-textスロットに一意IDが付与され、子のform要素にaria-describedbyが自動設定されます。
+          開発者ツールで確認してください。
+        </p>
+        <dads-fieldset>
+          <span slot="legend">興味のある分野</span>
+          <p slot="support-text">複数選択可能です。</p>
+          <dads-checkbox label="プログラミング" size="sm"></dads-checkbox>
+          <dads-checkbox label="デザイン" size="sm"></dads-checkbox>
+          <dads-checkbox label="マーケティング" size="sm"></dads-checkbox>
+        </dads-fieldset>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">disabled状態</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ dads-fieldsetにdisabled属性を付けると、子のform要素にも伝播します。
+        </p>
+        <dads-fieldset disabled>
+          <span slot="legend">無効化されたグループ</span>
+          <p slot="support-text">この選択肢は現在利用できません。</p>
+          <dads-checkbox label="選択肢A" size="sm" checked></dads-checkbox>
+          <dads-checkbox label="選択肢B" size="sm"></dads-checkbox>
+        </dads-fieldset>
+      </section>
+
+      <!-- 特徴 -->
+      <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3; margin-top: 40px;">
+        <h3 style="color: #1565c0; margin-bottom: 10px;">特徴</h3>
+        <ul style="color: #1565c0; line-height: 1.8; padding-left: 20px;">
+          <li><strong>DADS準拠:</strong> デジタル庁デザインシステムのスタイルに準拠</li>
+          <li><strong>セマンティクス:</strong> ネイティブfieldset/legendを内部で使用</li>
+          <li><strong>※必須ラベル:</strong> required属性で自動表示</li>
+          <li><strong>aria-describedby自動設定:</strong> support-textスロットのIDを子要素に設定</li>
+          <li><strong>disabled伝播:</strong> 親のdisabledが子要素に伝播</li>
+          <li><strong>スロットと属性:</strong> legend/support-textはスロットでも属性でも指定可能</li>
+          <li><strong>Shadow DOM:</strong> スタイルの完全な隔離</li>
+        </ul>
+      </div>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-fieldset'), import('dads-checkbox')]);
+    </script>
   `,
 
   accordion: () => `
