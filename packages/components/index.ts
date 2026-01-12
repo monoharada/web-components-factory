@@ -17,6 +17,9 @@ export * from './input-text';
 // テキストエリア
 export * from './textarea';
 
+// チェックボックス
+export * from './checkbox';
+
 // リセットカードデモ
 export * from './reset-card-demo';
 

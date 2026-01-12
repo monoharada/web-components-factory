@@ -20,6 +20,7 @@
       "dads-text": "/@components/dads/text.js",
       "dads-input-text": "/@components/dads/input-text.js",
       "dads-switch": "/@components/dads/switch.js",
+      "dads-checkbox": "/@components/dads/checkbox.js",
       "a11y-annotate": "/@components/meta/annotate.js"
     }
   }
@@ -210,6 +211,7 @@
             <option value="">-- Select --</option>
             <option value="accordion">Accordion</option>
             <option value="blockquote">Blockquote</option>
+            <option value="checkbox">Checkbox</option>
             <option value="button">Button</option>
             <option value="inputText">Input Text</option>
             <option value="inputTextValidation">Input Text Validation</option>
@@ -276,19 +278,19 @@
     function showComponent(name) {
       const demoFn = demos[name] || demos.empty;
       container.innerHTML = demoFn();
+      activateEmbeddedScripts(container);
+    }
 
-      // innerHTML で追加されたスクリプトを実行
-      const scripts = container.querySelectorAll('script');
+    // innerHTMLで挿入したscriptは実行されないため、必要に応じて再評価する
+    function activateEmbeddedScripts(root) {
+      const scripts = root.querySelectorAll('script');
       for (const oldScript of scripts) {
-        const newScript = document.createElement('script');
-        // 属性をコピー
+        const script = document.createElement('script');
         for (const attr of oldScript.attributes) {
-          newScript.setAttribute(attr.name, attr.value);
+          script.setAttribute(attr.name, attr.value);
         }
-        // コンテンツをコピー
-        newScript.textContent = oldScript.textContent;
-        // 古いスクリプトを新しいスクリプトで置き換え（実行をトリガー）
-        oldScript.parentNode.replaceChild(newScript, oldScript);
+        script.textContent = oldScript.textContent;
+        oldScript.parentNode?.replaceChild(script, oldScript);
       }
     }
 
@@ -351,6 +353,7 @@
     const componentAdapters = [
       '/@components/dads/textarea.js',
       '/@components/dads/input-text.js',
+      '/@components/dads/checkbox.js',
       '/@components/dads/accordion-details.js',
       '/@components/dads/accordion-item-details.js',
       '/@components/dads/blockquote.js',
