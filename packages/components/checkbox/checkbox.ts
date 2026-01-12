@@ -265,6 +265,14 @@ export class DadsCheckbox extends TypographyFormComponent {
     this.#input?.blur();
   }
 
+  /**
+   * ※必須表示の再同期
+   * fieldsetから呼び出される（スロット変更時やrequired属性変更時）
+   */
+  syncRequirement(): void {
+    this.#syncRequirement();
+  }
+
   // ============================================================
   // Form callbacks
   // ============================================================

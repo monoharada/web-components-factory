@@ -199,6 +199,7 @@ export class DadsFieldset extends TypographyFormComponent {
     // デフォルトスロット監視（子要素のaria設定用）
     this.#defaultSlot?.addEventListener('slotchange', () => {
       this.#setupChildAriaDescribedBy();
+      this.#syncChildRequirements();
     });
 
     // support-textスロット直接監視（setupSlotChangeListenersと重複するが確実性のため）
@@ -232,6 +233,7 @@ export class DadsFieldset extends TypographyFormComponent {
         break;
       case 'required':
         this.#syncRequirement();
+        this.#syncChildRequirements();
         break;
       case 'disabled':
         this.#propagateDisabled();
@@ -319,6 +321,22 @@ export class DadsFieldset extends TypographyFormComponent {
 
     for (const child of formChildren) {
       child.toggleAttribute('disabled', isDisabled);
+    }
+  }
+
+  /**
+   * 子要素に※必須表示の再同期を通知
+   * checkboxなどは親fieldsetのrequired状態に応じて自身の※必須表示を変更する
+   */
+  #syncChildRequirements(): void {
+    const formChildren = this.querySelectorAll('dads-checkbox, dads-radio');
+
+    for (const child of formChildren) {
+      // 子要素のsyncRequirement()メソッドを呼び出す（存在する場合）
+      const anyChild = child as unknown as { syncRequirement?: () => void };
+      if (typeof anyChild.syncRequirement === 'function') {
+        anyChild.syncRequirement();
+      }
     }
   }
 }
