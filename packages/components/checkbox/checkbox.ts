@@ -331,6 +331,9 @@ export class DadsCheckbox extends TypographyFormComponent {
   }
 
   #syncRequirement(): void {
+    // connectedCallback前は何もしない
+    if (!this.#requirement) return;
+
     // fieldset内にいる場合は、fieldsetのlegendに※必須が表示されるため非表示
     const parentFieldset = this.closest('dads-fieldset');
     const insideRequiredFieldset = parentFieldset?.hasAttribute('required') ?? false;
