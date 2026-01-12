@@ -184,5 +184,21 @@ export const checkboxStyles = css`
     font-family: var(--font-family-sans);
     letter-spacing: 0;
   }
+
+  /* ========== 要否ラベル ========== */
+  [part='requirement'] {
+    padding-top: var(--_label-padding-top);
+    margin-left: var(--spacing-1, 4px);
+    font-weight: 400;
+    font-size: var(--_label-font-size);
+    line-height: 1.3;
+    font-family: var(--font-family-sans);
+    color: var(--color-semantic-error-1, #ec0000);
+  }
+
+  /* 要否ラベルが空の場合は非表示 */
+  [part='requirement']:empty {
+    display: none;
+  }
 `;
 

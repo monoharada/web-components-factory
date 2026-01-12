@@ -11,6 +11,7 @@ import { withReset } from '../../styles/reset-css.js';
 import {
   setDefaultAttributes,
   setupFormValidation,
+  updateRequirement,
   type FormValidationSetup,
 } from '../../utils/form-component-helpers.js';
 import { VALIDATION_RULES, getValidationMessage } from '../../utils/validation.js';
@@ -29,6 +30,7 @@ import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
  * @csspart checkbox - チェックボックス枠（背景ホバー含む）
  * @csspart input - ネイティブinput[type=checkbox]
  * @csspart label - ラベルテキスト
+ * @csspart requirement - 要否ラベル（※必須）
  *
  * @attr {string} label - ラベルテキスト
  * @attr {string} size - サイズ (sm | md | lg)
@@ -110,12 +112,22 @@ export class DadsCheckbox extends TypographyFormComponent {
         placement: 'bottom-right',
         target: { scope: 'shadow', selector: '[part="label"]' },
       },
+      {
+        id: 'requirement',
+        title: '要否ラベル',
+        label: '※必須',
+        description: 'required属性が設定されている場合に「※必須」と表示されます。必須入力であることを視覚的に伝えます。',
+        category: 'labels',
+        placement: 'top-right',
+        target: { scope: 'shadow', selector: '[part="requirement"]' },
+      },
     ],
   };
 
   #base: HTMLLabelElement | null = null;
   #input: HTMLInputElement | null = null;
   #labelEl: HTMLElement | null = null;
+  #requirement: HTMLElement | null = null;
 
   #formDisabled = false;
   #validationError = false;
@@ -129,6 +141,7 @@ export class DadsCheckbox extends TypographyFormComponent {
           <input part="input" id="input" class="dads-checkbox__input" type="checkbox" />
         </span>
         <span part="label" id="label" class="dads-checkbox__label"></span>
+        <span part="requirement" id="requirement"></span>
       </label>
 
       <!-- バリデーション用カスタムエラーメッセージスロット（非表示） -->
@@ -182,6 +195,7 @@ export class DadsCheckbox extends TypographyFormComponent {
     this.#base = this.shadowRoot?.querySelector('#base') as HTMLLabelElement | null;
     this.#input = this.shadowRoot?.querySelector('#input') as HTMLInputElement | null;
     this.#labelEl = this.shadowRoot?.querySelector('#label') as HTMLElement | null;
+    this.#requirement = this.shadowRoot?.querySelector('#requirement') as HTMLElement | null;
 
     this.#syncAll();
 
@@ -289,6 +303,7 @@ export class DadsCheckbox extends TypographyFormComponent {
   #syncAll(): void {
     this.#syncSize();
     this.#syncLabel();
+    this.#syncRequirement();
     this.#syncInputFromAttributes();
     this.#syncAria();
     this.#syncAriaInvalid();
@@ -305,6 +320,11 @@ export class DadsCheckbox extends TypographyFormComponent {
   #syncLabel(): void {
     if (!this.#labelEl) return;
     this.#labelEl.textContent = this.getAttribute('label') ?? '';
+  }
+
+  #syncRequirement(): void {
+    // checkboxはreadonlyがないのでfalse固定
+    updateRequirement(this.#requirement, this.hasAttribute('required'), false);
   }
 
   #syncInputFromAttributes(): void {
@@ -463,6 +483,7 @@ export class DadsCheckbox extends TypographyFormComponent {
         this.#syncFormValue();
         break;
       case 'required':
+        this.#syncRequirement();
         this.#syncAria();
         break;
       case 'auto-validate':

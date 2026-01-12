@@ -88,6 +88,23 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">必須項目（※必須ラベル）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ <code>required</code>属性が付与されていると「※必須」ラベルが自動表示されます。
+        </p>
+        <fieldset style="border: none; padding: 0; margin: 0;">
+          <legend style="font-weight: 600; font-size: 1rem; margin-bottom: 12px; color: var(--color-neutral-black, #1a1a1c);">東京23区</legend>
+          <p id="checkbox-support-area" style="margin: 0 0 12px; font-size: 0.875rem; line-height: 1.5; color: var(--color-neutral-solid-gray-700, #4d4d4d);">
+            該当するすべての項目を選択してください。
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <dads-checkbox label="東京23区" size="sm" required aria-describedby="checkbox-support-area"></dads-checkbox>
+            <dads-checkbox label="その他の地域" size="sm" aria-describedby="checkbox-support-area"></dads-checkbox>
+          </div>
+        </fieldset>
+      </section>
+
+      <section style="margin-bottom: 32px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">サポートテキスト（aria-describedby）</h3>
         <p id="checkbox-support-2" style="margin: 0 0 12px; font-size: 0.875rem; line-height: 1.5; color: #4d4d4d;">
           該当するすべての項目を選択してください。
