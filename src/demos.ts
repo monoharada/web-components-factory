@@ -323,6 +323,93 @@ export const demos = {
     </div>
   `,
 
+  fieldset: () => `
+    <div style="padding: 40px; max-width: 900px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">フィールドセット</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム（DADS）準拠のフィールドセットWeb Componentです。
+        フォーム要素のグループ化と、aria-describedbyの自動設定を行います。
+      </p>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+
+        <a11y-annotate target-selector="dads-fieldset">
+          <dads-fieldset required>
+            <span slot="legend">東京23区</span>
+            <p slot="support-text">該当するすべての項目を選択してください。</p>
+            <dads-checkbox label="東京23区" size="sm"></dads-checkbox>
+            <dads-checkbox label="その他の地域" size="sm"></dads-checkbox>
+          </dads-fieldset>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">属性によるレジェンド・サポートテキスト</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ スロットの代わりにlegend属性とsupport-text属性でテキストを指定できます。
+        </p>
+        <dads-fieldset
+          legend="お住まいのエリア"
+          support-text="該当する項目を選択してください"
+        >
+          <dads-checkbox label="関東" size="sm"></dads-checkbox>
+          <dads-checkbox label="関西" size="sm"></dads-checkbox>
+          <dads-checkbox label="その他" size="sm"></dads-checkbox>
+        </dads-fieldset>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">aria-describedby自動設定</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ support-textスロットに一意IDが付与され、子のform要素にaria-describedbyが自動設定されます。
+          開発者ツールで確認してください。
+        </p>
+        <dads-fieldset>
+          <span slot="legend">興味のある分野</span>
+          <p slot="support-text">複数選択可能です。</p>
+          <dads-checkbox label="プログラミング" size="sm"></dads-checkbox>
+          <dads-checkbox label="デザイン" size="sm"></dads-checkbox>
+          <dads-checkbox label="マーケティング" size="sm"></dads-checkbox>
+        </dads-fieldset>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">disabled状態</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ dads-fieldsetにdisabled属性を付けると、子のform要素にも伝播します。
+        </p>
+        <dads-fieldset disabled>
+          <span slot="legend">無効化されたグループ</span>
+          <p slot="support-text">この選択肢は現在利用できません。</p>
+          <dads-checkbox label="選択肢A" size="sm" checked></dads-checkbox>
+          <dads-checkbox label="選択肢B" size="sm"></dads-checkbox>
+        </dads-fieldset>
+      </section>
+
+      <!-- 特徴 -->
+      <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3; margin-top: 40px;">
+        <h3 style="color: #1565c0; margin-bottom: 10px;">特徴</h3>
+        <ul style="color: #1565c0; line-height: 1.8; padding-left: 20px;">
+          <li><strong>DADS準拠:</strong> デジタル庁デザインシステムのスタイルに準拠</li>
+          <li><strong>セマンティクス:</strong> ネイティブfieldset/legendを内部で使用</li>
+          <li><strong>※必須ラベル:</strong> required属性で自動表示</li>
+          <li><strong>aria-describedby自動設定:</strong> support-textスロットのIDを子要素に設定</li>
+          <li><strong>disabled伝播:</strong> 親のdisabledが子要素に伝播</li>
+          <li><strong>スロットと属性:</strong> legend/support-textはスロットでも属性でも指定可能</li>
+          <li><strong>Shadow DOM:</strong> スタイルの完全な隔離</li>
+        </ul>
+      </div>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-fieldset'), import('dads-checkbox')]);
+    </script>
+  `,
+
   accordion: () => `
     <a11y-annotate>
       <dads-accordion-details>

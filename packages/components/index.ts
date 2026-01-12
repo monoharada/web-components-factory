@@ -20,6 +20,9 @@ export * from './textarea';
 // チェックボックス
 export * from './checkbox';
 
+// フィールドセット
+export * from './fieldset';
+
 // リセットカードデモ
 export * from './reset-card-demo';
 
