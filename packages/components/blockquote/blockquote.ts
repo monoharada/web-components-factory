@@ -10,6 +10,7 @@ import {
 } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { blockquoteTokens } from './blockquote-tokens.js';
 import { blockquoteStyles } from './blockquote-styles.js';
 import { withReset } from '../../styles/reset-css.js';
@@ -74,6 +75,7 @@ export class DadsBlockquote extends TypographyWebComponent {
     `,
     styles: withReset([
       applyDADSTokens(),
+      applySpacingTokens(),
       blockquoteTokens,
       blockquoteStyles,
     ], 'full'),

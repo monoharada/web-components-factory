@@ -20,10 +20,10 @@ export const accordionTokens = css`
     --accordion-text-secondary: var(--color-neutral-solid-gray-600);
     
     /* スペーシング - Figmaデザイン準拠 */
-    --accordion-padding-block: 1rem; /* 16px */
-    --accordion-padding-inline: 1.25rem; /* 20px */
-    --accordion-content-padding: 1rem; /* 16px */
-    --accordion-gap: 0.75rem; /* 12px */
+    --accordion-padding-block: var(--spacing-4, 1rem); /* 16px */
+    --accordion-padding-inline: var(--spacing-5, 1.25rem); /* 20px */
+    --accordion-content-padding: var(--spacing-4, 1rem); /* 16px */
+    --accordion-gap: var(--spacing-3, 0.75rem); /* 12px */
     
     /* タイポグラフィ */
     --accordion-font-size: var(--font-size-16);

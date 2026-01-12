@@ -11,6 +11,7 @@ import {
 } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { inputTextTokens } from './input-text-tokens.js';
 import { inputTextStyles } from './input-text-styles.js';
 import { withReset } from '../../styles/reset-css.js';
@@ -141,6 +142,7 @@ export class DadsInputText extends TypographyFormComponent {
     `,
     styles: withReset([
       applyDADSTokens(),
+      applySpacingTokens(),
       inputTextTokens,
       inputTextStyles,
       applyDADSFocusStyles(),

@@ -8,6 +8,9 @@
 // グローバルトークン（デジタル庁デザインシステム）
 export { applyDADSTokens, componentTokens } from './design-tokens/index.js';
 
+// Spacing tokens (scale + derived)
+export { applySpacingTokens } from './spacing-tokens.js';
+
 // ボタンコンポーネント用トークン
 export {
   buttonTokens,

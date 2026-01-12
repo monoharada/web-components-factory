@@ -53,7 +53,7 @@ const inputTextSemanticTokensText = `
     /* 読み取り専用バッジ（DADS公式準拠） */
     --input-readonly-badge-bg: var(--color-neutral-solid-gray-50, #f2f2f2);
     --input-readonly-badge-color: var(--color-neutral-solid-gray-800, #333333);
-    --input-readonly-badge-padding: 0.5rem;
+    --input-readonly-badge-padding: var(--spacing-2, 0.5rem);
     --input-readonly-badge-radius: 0.5rem;
 
     /* サポートテキスト */
@@ -71,14 +71,14 @@ const inputTextSemanticTokensText = `
     /* レイアウト */
     --input-border-width: 1px;
     --input-border-radius: var(--border-radius-8, 0.5rem);  /* DADS公式: 角丸スモール（8px） */
-    --input-padding: 12px 16px;
+    --input-padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
     --input-height-sm: 40px;
     --input-height-md: 48px;
     --input-height-lg: 56px;
 
     /* 間隔 */
-    --input-gap: 8px;
-    --input-requirement-margin: 4px;
+    --input-gap: var(--spacing-2, 8px);
+    --input-requirement-margin: var(--spacing-1, 4px);
 
     /* 幅プリセット */
     --input-width-short: 8ch;

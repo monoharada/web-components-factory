@@ -64,10 +64,10 @@ const buttonSemanticTokensText = `
     --button-focus-outline-offset: 2px;
     
     /* サイズ用セマンティックトークン */
-    --button-padding-x-small: 8px 12px;
-    --button-padding-small: 8px 16px;
-    --button-padding-medium: 12px 24px;
-    --button-padding-large: 16px 32px;
+    --button-padding-x-small: var(--spacing-2, 8px) var(--spacing-3, 12px);
+    --button-padding-small: var(--spacing-2, 8px) var(--spacing-4, 16px);
+    --button-padding-medium: var(--spacing-3, 12px) var(--spacing-6, 24px);
+    --button-padding-large: var(--spacing-4, 16px) var(--spacing-8, 32px);
     
     --button-font-size-x-small: 0.75rem; /* 12px */
     --button-font-size-small: var(--font-size-14, 0.875rem);
@@ -117,7 +117,7 @@ const buttonLocalTokensText = `
     
     /* アイコンカスタマイズ用トークン */
     --dads-button-icon-size: 1.25em;
-    --dads-button-icon-gap: 8px;
+    --dads-button-icon-gap: var(--spacing-2, 8px);
     --dads-button-icon-color: currentColor;
     
     /* アニメーションカスタマイズ用トークン */

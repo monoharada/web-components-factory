@@ -33,7 +33,7 @@ export const buttonStyles = css`
     border: var(--dads-button-border-width, 2px) solid var(--dads-button-border-color);
     border-radius: var(--dads-button-border-radius, 0.5rem);
     
-    padding: var(--dads-button-padding, 12px 24px);
+    padding: var(--dads-button-padding, var(--spacing-3, 12px) var(--spacing-6, 24px));
     min-height: var(--dads-button-min-height, 48px);
     
     /* フォント設定 - グローバルトークン参照 */

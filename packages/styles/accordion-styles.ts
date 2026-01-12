@@ -20,8 +20,8 @@ export const accordionItemStyles = css`
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 20px 16px 16px;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4) var(--spacing-5) var(--spacing-4) var(--spacing-4);
     font-family: var(--font-family-sans);
     font-size: var(--accordion-font-size, var(--font-size-16));
     line-height: var(--accordion-line-height, var(--line-height-150));
@@ -49,7 +49,7 @@ export const accordionItemStyles = css`
     justify-content: center;
     width: 32px;
     height: 32px;
-    padding: 6px;
+    padding: var(--spacing-1-5);
     flex-shrink: 0;
     background-color: var(--color-neutral-white, #ffffff);
     border: 1px solid var(--color-primitive-blue-1000, #00118f);
@@ -60,7 +60,7 @@ export const accordionItemStyles = css`
   /* アイコンホバー効果 */
   [part="summary"]:hover [part="icon"] {
     border-width: 3px;
-    padding: 4px;
+    padding: var(--spacing-1);
   }
   
   [part="icon"] svg {
@@ -73,13 +73,13 @@ export const accordionItemStyles = css`
   
   [part="header"] { 
     flex: 1;
-    padding: 8px 0;
+    padding: var(--spacing-2) 0;
   }
   
   /* コンテンツ */
   [part="content"] { overflow: hidden; }
   [part="content-inner"] {
-    padding: 16px 20px 24px 60px;
+    padding: var(--spacing-4) var(--spacing-5) var(--spacing-6) var(--spacing-15);
     font-family: var(--font-family-sans);
     font-size: var(--font-size-16);
     line-height: var(--line-height-170);
@@ -93,9 +93,9 @@ export const accordionItemStyles = css`
 
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 16px;
-    padding: 8px 0;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-4);
+    padding: var(--spacing-2) 0;
     border: none;
     background: none;
     color: var(--color-primitive-blue-1000, #00118f);
@@ -155,30 +155,30 @@ export const accordionItemStyles = css`
   
   :host([icon-position="right"]) [part="summary"] {
     flex-direction: row-reverse;
-    padding: 16px 16px 16px 20px;
+    padding: var(--spacing-4) var(--spacing-4) var(--spacing-4) var(--spacing-5);
   }
   :host([icon-position="right"]) [part="content-inner"] {
-    padding: 16px 60px 24px 20px;
+    padding: var(--spacing-4) var(--spacing-15) var(--spacing-6) var(--spacing-5);
   }
   
   /* モバイル */
   @media (max-width: 768px) {
     [part="summary"] {
-      padding: 12px 16px 12px 12px;
-      gap: 8px;
+      padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-3);
+      gap: var(--spacing-2);
       font-size: var(--font-size-16);
     }
     [part="icon"] {
       width: 24px;
       height: 24px;
-      padding: 4px;
+      padding: var(--spacing-1);
     }
     [part="content-inner"] {
-      padding: 12px 16px 20px 44px;
+      padding: var(--spacing-3) var(--spacing-4) var(--spacing-5) var(--spacing-11);
     }
     :host([icon-position="right"]) [part="content-inner"] {
-      padding-left: 12px;
-      padding-right: 44px;
+      padding-left: var(--spacing-3);
+      padding-right: var(--spacing-11);
     }
   }
   
@@ -191,7 +191,7 @@ export const accordionItemStyles = css`
     
     [part="summary"]:hover [part="icon"] {
       border-width: 3px;
-      padding: 4px;
+      padding: var(--spacing-1);
     }
     
     [part="return-button"] {
@@ -206,11 +206,11 @@ export const accordionItemStyles = css`
   
   /* RTL */
   :host-context([dir="rtl"]) [part="summary"] {
-    padding: 16px 16px 16px 20px;
+    padding: var(--spacing-4) var(--spacing-4) var(--spacing-4) var(--spacing-5);
     text-align: right;
     flex-direction: row-reverse;
   }
   :host-context([dir="rtl"]) [part="content-inner"] {
-    padding: 16px 60px 24px 20px;
+    padding: var(--spacing-4) var(--spacing-15) var(--spacing-6) var(--spacing-5);
   }
 `;
