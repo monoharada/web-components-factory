@@ -58,10 +58,7 @@ export const fieldsetStyles = css`
     color: var(--color-neutral-solid-gray-700, #4d4d4d);
   }
 
-  /* Support Text が空の場合は非表示 */
-  [part='support-text']:has([part='support-fallback']:empty):has(slot[name='support-text']:not(:has(*))) {
-    display: none;
-  }
+  /* Support Text の表示/非表示はJS（updateSupportFallback）で制御 */
 
   /* Support Fallback */
   [part='support-fallback']:empty {

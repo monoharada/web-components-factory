@@ -205,8 +205,8 @@ export const checkboxStyles = css`
   [part='error-text'] {
     display: block;
     margin-top: var(--spacing-1, 4px);
-    /* smサイズ: checkbox(24px) + gap(4px) = 28px */
-    padding-left: calc(28 / 16 * 1rem);
+    /* サイズに応じて動的に計算（checkbox + gap） */
+    padding-left: calc(var(--_checkbox-size) + var(--_gap));
     font-weight: 400;
     font-size: calc(14 / 16 * 1rem);
     line-height: 1.5;
