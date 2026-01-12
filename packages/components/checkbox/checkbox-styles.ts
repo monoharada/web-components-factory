@@ -200,5 +200,23 @@ export const checkboxStyles = css`
   [part='requirement']:empty {
     display: none;
   }
+
+  /* ========== エラーテキスト ========== */
+  [part='error-text'] {
+    display: block;
+    margin-top: var(--spacing-1, 4px);
+    /* smサイズ: checkbox(24px) + gap(4px) = 28px */
+    padding-left: calc(28 / 16 * 1rem);
+    font-weight: 400;
+    font-size: calc(14 / 16 * 1rem);
+    line-height: 1.5;
+    font-family: var(--font-family-sans);
+    color: var(--color-semantic-error-1, #ec0000);
+  }
+
+  /* エラーテキストが空の場合は非表示 */
+  [part='error-text']:empty {
+    display: none;
+  }
 `;
 

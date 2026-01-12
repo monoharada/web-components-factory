@@ -65,6 +65,7 @@ export class DadsFieldset extends TypographyFormComponent {
       states: [
         'disabled属性で子要素を一括無効化できます。',
         'required属性で「※必須」ラベルを表示します。',
+        'バリデーションエラー時は子要素にエラーメッセージが表示されます。',
       ],
       labels: [
         'legend属性またはlegendスロットでグループのラベルを指定します。',
@@ -98,7 +99,7 @@ export class DadsFieldset extends TypographyFormComponent {
       {
         id: 'requirement',
         title: '要否ラベル',
-        label: '※必須',
+        label: '要否ラベル',
         description:
           'required属性が設定されている場合に「※必須」と表示されます。',
         category: 'labels',
@@ -114,6 +115,20 @@ export class DadsFieldset extends TypographyFormComponent {
         category: 'labels',
         placement: 'bottom-left',
         target: { scope: 'shadow', selector: '[part="support-text"]' },
+      },
+      {
+        id: 'error-text',
+        title: 'エラーメッセージ',
+        label: 'error-text',
+        description:
+          'バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。',
+        category: 'states',
+        placement: 'bottom-left',
+        target: {
+          hostSelector: 'dads-checkbox',
+          scope: 'shadow',
+          selector: '[part="error-text"]',
+        },
       },
     ],
   };
@@ -188,24 +203,12 @@ export class DadsFieldset extends TypographyFormComponent {
       },
       {
         onLabelChange: () => this.#syncLegend(),
-        onSupportChange: () => {
-          this.#syncSupportText();
-          // support-textスロット変更時にaria-describedbyを再設定
-          this.#setupChildAriaDescribedBy();
-        },
+        onSupportChange: () => this.#handleSupportSlotChange(),
       }
     );
 
     // デフォルトスロット監視（子要素のaria設定用）
-    this.#defaultSlot?.addEventListener('slotchange', () => {
-      this.#setupChildAriaDescribedBy();
-      this.#syncChildRequirements();
-    });
-
-    // support-textスロット直接監視（setupSlotChangeListenersと重複するが確実性のため）
-    this.#supportSlot?.addEventListener('slotchange', () => {
-      this.#setupChildAriaDescribedBy();
-    });
+    this.#defaultSlot?.addEventListener('slotchange', () => this.#handleDefaultSlotChange());
 
     // MutationObserverで子要素の変更を監視（happy-domなど一部環境でslotchangeが発火しないため）
     this.#childObserver = new MutationObserver(() => {
@@ -229,7 +232,7 @@ export class DadsFieldset extends TypographyFormComponent {
         this.#syncLegend();
         break;
       case 'support-text':
-        this.#syncSupportText();
+        this.#handleSupportSlotChange();
         break;
       case 'required':
         this.#syncRequirement();
@@ -268,8 +271,16 @@ export class DadsFieldset extends TypographyFormComponent {
       this.#supportFallback,
       this.getAttribute('support-text')
     );
-    // support-text表示状態変更時にaria再設定
+  }
+
+  #handleSupportSlotChange(): void {
+    this.#syncSupportText();
     this.#setupChildAriaDescribedBy();
+  }
+
+  #handleDefaultSlotChange(): void {
+    this.#setupChildAriaDescribedBy();
+    this.#syncChildRequirements();
   }
 
   #syncRequirement(): void {

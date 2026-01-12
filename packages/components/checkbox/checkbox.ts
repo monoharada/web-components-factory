@@ -115,11 +115,21 @@ export class DadsCheckbox extends TypographyFormComponent {
       {
         id: 'requirement',
         title: '要否ラベル',
-        label: '※必須',
+        label: '要否ラベル',
         description: 'required属性が設定されている場合に「※必須」と表示されます。必須入力であることを視覚的に伝えます。',
         category: 'labels',
         placement: 'top-right',
         target: { scope: 'shadow', selector: '[part="requirement"]' },
+      },
+      {
+        id: 'error-text',
+        title: 'エラーメッセージ',
+        label: 'error-text',
+        description:
+          'バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。',
+        category: 'states',
+        placement: 'bottom-left',
+        target: { scope: 'shadow', selector: '[part="error-text"]' },
       },
     ],
   };
@@ -128,6 +138,7 @@ export class DadsCheckbox extends TypographyFormComponent {
   #input: HTMLInputElement | null = null;
   #labelEl: HTMLElement | null = null;
   #requirement: HTMLElement | null = null;
+  #errorText: HTMLElement | null = null;
 
   #formDisabled = false;
   #validationError = false;
@@ -143,6 +154,9 @@ export class DadsCheckbox extends TypographyFormComponent {
         <span part="label" id="label" class="dads-checkbox__label"></span>
         <span part="requirement" id="requirement"></span>
       </label>
+
+      <!-- エラーメッセージ表示 -->
+      <span part="error-text" id="error-text"></span>
 
       <!-- バリデーション用カスタムエラーメッセージスロット（非表示） -->
       <slot name="required-error" id="required-error-slot" hidden></slot>
@@ -196,6 +210,7 @@ export class DadsCheckbox extends TypographyFormComponent {
     this.#input = this.shadowRoot?.querySelector('#input') as HTMLInputElement | null;
     this.#labelEl = this.shadowRoot?.querySelector('#label') as HTMLElement | null;
     this.#requirement = this.shadowRoot?.querySelector('#requirement') as HTMLElement | null;
+    this.#errorText = this.shadowRoot?.querySelector('#error-text') as HTMLElement | null;
 
     this.#syncAll();
 
@@ -312,6 +327,7 @@ export class DadsCheckbox extends TypographyFormComponent {
     this.#syncSize();
     this.#syncLabel();
     this.#syncRequirement();
+    this.#syncErrorText();
     this.#syncInputFromAttributes();
     this.#syncAria();
     this.#syncAriaInvalid();
@@ -342,6 +358,14 @@ export class DadsCheckbox extends TypographyFormComponent {
     // checkboxはreadonlyがないのでfalse固定
     const showRequirement = this.hasAttribute('required') && !insideRequiredFieldset;
     updateRequirement(this.#requirement, showRequirement, false);
+  }
+
+  #syncErrorText(): void {
+    if (!this.#errorText) return;
+    const hasError = this.hasAttribute('error');
+    const errorMessage = this.getAttribute('error-text') ?? '';
+    // エラーがある場合のみメッセージを表示
+    this.#errorText.textContent = hasError && errorMessage ? `＊${errorMessage}` : '';
   }
 
   #syncInputFromAttributes(): void {
@@ -375,7 +399,8 @@ export class DadsCheckbox extends TypographyFormComponent {
 
   #syncAriaInvalid(): void {
     if (!this.#input) return;
-    this.#input.setAttribute('aria-invalid', this.hasAttribute('error') ? 'true' : 'false');
+    const hasError = this.hasAttribute('error');
+    this.#input.setAttribute('aria-invalid', String(hasError));
   }
 
   #syncFormValue(): void {
@@ -507,32 +532,12 @@ export class DadsCheckbox extends TypographyFormComponent {
         this.#setupFormValidation();
         break;
       case 'error':
-        this.#syncAriaInvalid();
-        if (this.hasAttribute('error')) {
-          // required由来のエラーは valueMissing を維持（#showValidationError が setValidity 済み）
-          if (!this.#validationError) {
-            const message = this.getAttribute('error-text') ?? '';
-            if (message) {
-              this._internals.setValidity({ customError: true }, message, this.#input ?? undefined);
-            }
-          }
-        } else if (!this.#validationError) {
-          this._internals.setValidity({});
-        }
+        this.#handleErrorAttributeChange();
         break;
       case 'error-text':
-        // 外部から error-text が変わった場合でも、anchorにバブルを寄せるため validity message を更新
-        if (this.hasAttribute('error')) {
-          const message = this.getAttribute('error-text') ?? '';
-          if (this.#validationError) {
-            this._internals.setValidity({ valueMissing: true }, message, this.#input ?? undefined);
-          } else {
-            this._internals.setValidity({ customError: true }, message, this.#input ?? undefined);
-          }
-        }
+        this.#handleErrorTextAttributeChange();
         break;
       case 'value':
-        // checked時のみ送信値に影響
         this.#syncFormValue();
         break;
       case 'aria-label':
@@ -541,6 +546,35 @@ export class DadsCheckbox extends TypographyFormComponent {
         this.#syncAria();
         break;
     }
+  }
+
+  #handleErrorAttributeChange(): void {
+    this.#syncAriaInvalid();
+    this.#syncErrorText();
+
+    if (!this.hasAttribute('error')) {
+      if (!this.#validationError) {
+        this._internals.setValidity({});
+      }
+      return;
+    }
+
+    if (!this.#validationError) {
+      const message = this.getAttribute('error-text') ?? '';
+      if (message) {
+        this._internals.setValidity({ customError: true }, message, this.#input ?? undefined);
+      }
+    }
+  }
+
+  #handleErrorTextAttributeChange(): void {
+    this.#syncErrorText();
+
+    if (!this.hasAttribute('error')) return;
+
+    const message = this.getAttribute('error-text') ?? '';
+    const validityFlag = this.#validationError ? { valueMissing: true } : { customError: true };
+    this._internals.setValidity(validityFlag, message, this.#input ?? undefined);
   }
 
   #isDisabled(): boolean {

@@ -17,21 +17,20 @@ export const demos = {
           ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます（Annotateのバッジにバージョン表示）。
         </p>
 
-        <a11y-annotate target-selector="dads-checkbox">
+        <a11y-annotate target-selector="dads-fieldset">
           <form class="checkbox-validation">
-            <p id="checkbox-support" class="support-text">
-              送信ボタンでrequiredバリデーションを確認できます（aria-describedbyで関連付け）。
-            </p>
-
-            <dads-checkbox
-              label="利用規約に同意する"
-              size="sm"
-              name="agreement"
-              value="yes"
-              required
-              auto-validate
-              aria-describedby="checkbox-support"
-            ></dads-checkbox>
+            <dads-fieldset required>
+              <span slot="legend">利用規約</span>
+              <p slot="support-text">送信ボタンでrequiredバリデーションを確認できます。</p>
+              <dads-checkbox
+                label="利用規約に同意する"
+                size="sm"
+                name="agreement"
+                value="yes"
+                required
+                auto-validate
+              ></dads-checkbox>
+            </dads-fieldset>
 
             <div>
               <dads-button type="submit">送信</dads-button>
@@ -45,26 +44,8 @@ export const demos = {
               max-width: 520px;
             }
 
-            .checkbox-validation .support-text {
-              margin: 0;
-              font-size: 0.875rem;
-              line-height: 1.5;
-              color: var(--color-neutral-solid-gray-700, #4d4d4d);
-            }
-
-            /* バリデーション結果を視覚化（checkbox自体はDADS HTMLの見た目を維持） */
             .checkbox-validation dads-checkbox {
               display: block;
-            }
-
-            .checkbox-validation dads-checkbox[error]::after {
-              display: block;
-              margin-top: 4px;
-              font-family: var(--font-family-sans, 'Noto Sans JP', sans-serif);
-              font-size: 0.875rem;
-              line-height: 1.5;
-              color: var(--color-semantic-error-1, #ec0000);
-              content: '＊' attr(error-text);
             }
           </style>
         </a11y-annotate>
@@ -92,16 +73,12 @@ export const demos = {
         <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
           ※ <code>required</code>属性が付与されていると「※必須」ラベルが自動表示されます。
         </p>
-        <fieldset style="border: none; padding: 0; margin: 0;">
-          <legend style="font-weight: 600; font-size: 1rem; margin-bottom: 12px; color: var(--color-neutral-black, #1a1a1c);">東京23区</legend>
-          <p id="checkbox-support-area" style="margin: 0 0 12px; font-size: 0.875rem; line-height: 1.5; color: var(--color-neutral-solid-gray-700, #4d4d4d);">
-            該当するすべての項目を選択してください。
-          </p>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <dads-checkbox label="東京23区" size="sm" required aria-describedby="checkbox-support-area"></dads-checkbox>
-            <dads-checkbox label="その他の地域" size="sm" aria-describedby="checkbox-support-area"></dads-checkbox>
-          </div>
-        </fieldset>
+        <dads-fieldset required>
+          <span slot="legend">東京23区</span>
+          <p slot="support-text">該当するすべての項目を選択してください。</p>
+          <dads-checkbox label="東京23区" size="sm"></dads-checkbox>
+          <dads-checkbox label="その他の地域" size="sm"></dads-checkbox>
+        </dads-fieldset>
       </section>
 
       <section style="margin-bottom: 32px;">
@@ -155,7 +132,7 @@ export const demos = {
 
     <script type="module">
       // custom element定義前にプロパティへ触ると、upgrade後に「自前プロパティ」が残り挙動が壊れるため先に読み込む
-      await Promise.all([import('dads-checkbox'), import('dads-button')]);
+      await Promise.all([import('dads-checkbox'), import('dads-button'), import('dads-fieldset')]);
 
       // デモ用: フォーム送信でページ遷移しないようにする
       document.querySelectorAll('.checkbox-validation').forEach((form) => {
