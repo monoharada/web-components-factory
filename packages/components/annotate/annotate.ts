@@ -86,6 +86,8 @@ function supportsAnchorPositioning(): boolean {
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 export class DadsAnnotate extends TypographyWebComponent {
+  static readonly version = '0.1.0';
+
   static definition = {
     name: 'a11y-annotate',
     shadowOptions: null,
@@ -561,10 +563,14 @@ export class DadsAnnotate extends TypographyWebComponent {
     this.#panelSubtitle.textContent = `${tagName}${summary}`;
 
     this.#panelBadges.textContent = '';
+    const targetVersion = (this.#target.constructor as { version?: unknown }).version;
     const badges = [
       !this.hasAttribute('no-live') && 'Live',
       'Overlay',
       this.#supportsAnchors && 'Anchor-ready',
+      `Annotate v${DadsAnnotate.version}`,
+      spec && `Spec v${spec.version}`,
+      typeof targetVersion === 'string' && `${tagName} v${targetVersion}`,
     ].filter(Boolean) as string[];
 
     for (const label of badges) {
@@ -737,8 +743,14 @@ export class DadsAnnotate extends TypographyWebComponent {
     let n = 0;
 
     for (const callout of raw) {
-      n += 1;
       const targetEl = this.#resolveElementRef(callout.target);
+
+      // ターゲット要素が空または非表示の場合はスキップ
+      if (targetEl && this.#isEmptyOrHidden(targetEl)) {
+        continue;
+      }
+
+      n += 1;
       const anchorName = `--a11y-annotate-${this.#instanceId}-${n}`;
 
       const overlay = document.createElement('div');
@@ -816,6 +828,54 @@ export class DadsAnnotate extends TypographyWebComponent {
     if (el.getClientRects().length === 0) return false;
     const rect = el.getBoundingClientRect();
     return rect.width !== 0 || rect.height !== 0;
+  }
+
+  /**
+   * 要素が空または非表示かを判定（アノテーション対象としてスキップすべきか）
+   *
+   * スキップ対象:
+   * - hidden属性がある
+   * - display: none
+   * - テキストのみを表示する要素（part="requirement"等）で空の場合
+   *
+   * スキップしない:
+   * - ARIA属性を持つ要素（空でもアクセシビリティ的に重要）
+   * - role属性を持つ要素
+   * - 子要素を持つ要素
+   */
+  #isEmptyOrHidden(el: HTMLElement): boolean {
+    // hidden属性
+    if (el.hasAttribute('hidden')) return true;
+
+    // CSSで非表示（getComputedStyleはDOMに接続されている場合のみ有効）
+    if (el.isConnected) {
+      const style = getComputedStyle(el);
+      if (style.display === 'none') return true;
+    }
+
+    // ARIA属性またはrole属性を持つ場合は空でもスキップしない
+    const hasAriaAttrs = getAriaAttrs(el).length > 0;
+    const hasRole = el.hasAttribute('role');
+    if (hasAriaAttrs || hasRole) return false;
+
+    // 子要素がある場合は空ではない（例：アイコンなど）
+    if (el.children.length > 0) return false;
+
+    // スロット要素の場合：assignedNodesが空かチェック
+    if (el instanceof HTMLSlotElement) {
+      const assigned = el.assignedNodes({ flatten: true });
+      const hasContent = assigned.some((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          return node.textContent?.trim() !== '';
+        }
+        return node.nodeType === Node.ELEMENT_NODE;
+      });
+      return !hasContent;
+    }
+
+    // テキストコンテンツが空の場合のみスキップ
+    const hasVisibleText = el.textContent?.trim() !== '';
+    return !hasVisibleText;
   }
 
   #layoutCallouts() {
