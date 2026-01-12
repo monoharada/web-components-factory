@@ -19,3 +19,6 @@ export * from './textarea';
 
 // リセットカードデモ
 export * from './reset-card-demo';
+
+// スイッチ
+export * from './switch';
