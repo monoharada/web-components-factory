@@ -923,6 +923,231 @@ export const demos = {
     </div>
   `,
 
+  switch: () => `
+    <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">スイッチコンポーネント</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        デジタル庁デザインシステム準拠のスイッチ（トグル）コンポーネント。TDD（テスト駆動開発）で実装。
+      </p>
+
+      <!-- 注釈表示切り替え -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
+        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+        <dads-switch id="annotation-toggle" checked>
+          <span slot="label-left">非表示</span>
+          <span slot="label-right">表示</span>
+        </dads-switch>
+      </div>
+      <script>
+        // 注釈表示切り替え機能（コールアウトのみ切り替え、パネルは常時表示）
+        customElements.whenDefined('dads-switch').then(() => {
+          const toggle = document.getElementById('annotation-toggle');
+          if (toggle) {
+            const updateAnnotations = () => {
+              const isChecked = toggle.hasAttribute('checked');
+              const annotations = document.querySelectorAll('a11y-annotate');
+              for (const ann of annotations) {
+                const calloutLayer = ann.querySelector('[part="callout-layer"]');
+                // コールアウト（ビジュアルマーカー）のみ切り替え
+                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+              }
+            };
+            toggle.addEventListener('dads-change', updateAnnotations);
+            // 初期状態を適用
+            updateAnnotations();
+          }
+        });
+      </script>
+
+      <!-- 基本（アクセシビリティ注釈付き） -->
+      <section style="margin-bottom: 60px;">
+        <h3 style="font-size: 20px; margin-bottom: 24px; color: #333;">基本（アクセシビリティ注釈付き）</h3>
+        <style>
+          /* 注釈プレビューを大きくする */
+          .switch-annotate-section a11y-annotate {
+            /* コールアウトの配置距離を広げる */
+            --spacing-6: 64px;
+          }
+          .switch-annotate-section [part="preview"] {
+            padding: 120px 160px;
+            min-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* コールアウトがはみ出せる領域を広げる */
+            --a11y-annotate-callout-gutter: 100px;
+          }
+          .switch-annotate-section [part="preview-inner"] {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .switch-annotate-section [part="layout"] {
+            gap: 32px;
+          }
+        </style>
+        <div class="switch-annotate-section">
+          <a11y-annotate target-selector="dads-switch">
+            <dads-switch checked>
+              <span slot="label-left">OFF</span>
+              <span slot="label-right">ON</span>
+            </dads-switch>
+          </a11y-annotate>
+        </div>
+      </section>
+
+      <!-- 基本（状態比較） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">基本（状態比較）</h3>
+        <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+          <dads-switch>
+            <span slot="label-left">OFF</span>
+            <span slot="label-right">ON</span>
+          </dads-switch>
+          <dads-switch checked>
+            <span slot="label-left">OFF</span>
+            <span slot="label-right">ON</span>
+          </dads-switch>
+        </div>
+      </section>
+
+      <!-- 日本語ラベル -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">日本語ラベル</h3>
+        <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+          <dads-switch>
+            <span slot="label-left">オフ</span>
+            <span slot="label-right">オン</span>
+          </dads-switch>
+          <dads-switch checked>
+            <span slot="label-left">オフ</span>
+            <span slot="label-right">オン</span>
+          </dads-switch>
+        </div>
+      </section>
+
+      <!-- サイズ -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">サイズ</h3>
+        <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-family: monospace; color: #666;">sm:</span>
+            <dads-switch size="sm">
+              <span slot="label-left">OFF</span>
+              <span slot="label-right">ON</span>
+            </dads-switch>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-family: monospace; color: #666;">md:</span>
+            <dads-switch size="md">
+              <span slot="label-left">OFF</span>
+              <span slot="label-right">ON</span>
+            </dads-switch>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-family: monospace; color: #666;">lg:</span>
+            <dads-switch size="lg">
+              <span slot="label-left">OFF</span>
+              <span slot="label-right">ON</span>
+            </dads-switch>
+          </div>
+        </div>
+      </section>
+
+      <!-- 無効状態 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">無効状態</h3>
+        <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
+          <dads-switch disabled>
+            <span slot="label-left">OFF</span>
+            <span slot="label-right">ON</span>
+          </dads-switch>
+          <dads-switch disabled checked>
+            <span slot="label-left">OFF</span>
+            <span slot="label-right">ON</span>
+          </dads-switch>
+        </div>
+      </section>
+
+      <!-- 実際の使用例 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">実際の使用例</h3>
+        <div style="border: 1px solid #ddd; padding: 24px; border-radius: 8px; background: #f9f9f9; max-width: 500px;">
+          <form id="switch-demo-form">
+            <h4 style="font-size: 18px; margin-bottom: 20px; color: #333;">通知設定</h4>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <label for="email-notify">メール通知</label>
+                <dads-switch id="email-notify" name="email-notify" value="enabled" checked>
+                  <span slot="label-left">OFF</span>
+                  <span slot="label-right">ON</span>
+                </dads-switch>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <label for="push-notify">プッシュ通知</label>
+                <dads-switch id="push-notify" name="push-notify" value="enabled">
+                  <span slot="label-left">OFF</span>
+                  <span slot="label-right">ON</span>
+                </dads-switch>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee;">
+                <label for="weekly-report">週次レポート</label>
+                <dads-switch id="weekly-report" name="weekly-report" value="enabled" checked>
+                  <span slot="label-left">OFF</span>
+                  <span slot="label-right">ON</span>
+                </dads-switch>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px;">
+              <dads-button variant="text" type="reset">リセット</dads-button>
+              <dads-button variant="solid" type="submit">保存</dads-button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- イベントテスト -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">イベントテスト</h3>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <dads-switch id="event-test-switch">
+            <span slot="label-left">OFF</span>
+            <span slot="label-right">ON</span>
+          </dads-switch>
+          <span id="event-status" style="font-family: monospace; color: #666;">状態: false</span>
+        </div>
+        <script>
+          // カスタム要素の定義を待ってからイベントリスナーを設定
+          customElements.whenDefined('dads-switch').then(() => {
+            const switchEl = document.getElementById('event-test-switch');
+            const statusEl = document.getElementById('event-status');
+            if (switchEl && statusEl) {
+              switchEl.addEventListener('dads-change', (e) => {
+                statusEl.textContent = '状態: ' + e.detail.checked;
+              });
+            }
+          });
+        </script>
+      </section>
+
+      <!-- 特徴 -->
+      <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; border-left: 4px solid #2196f3;">
+        <h3 style="color: #1565c0; margin-bottom: 10px;">特徴</h3>
+        <ul style="color: #1565c0; line-height: 1.8; padding-left: 20px;">
+          <li><strong>WCAG 2.2 AA準拠:</strong> role="switch"、aria-checked、フォーカス管理</li>
+          <li><strong>キーボード操作:</strong> Enter/Space（トグル）、←（OFF）、→（ON）</li>
+          <li><strong>サイズバリエーション:</strong> sm (40x20px) / md (48x24px) / lg (56x28px)</li>
+          <li><strong>デザイントークン:</strong> セマンティック & ローカルトークンの2層構造</li>
+          <li><strong>Form Associated:</strong> ネイティブフォームに参加</li>
+          <li><strong>ラベルスロット:</strong> label-left / label-right（必須）</li>
+          <li><strong>::part()スタイリング:</strong> wrapper, switch, track, knob, checkbox, label-left, label-right</li>
+          <li><strong>Shadow DOM:</strong> スタイルの完全な隔離</li>
+          <li><strong>TDD開発:</strong> 32テストケースで品質担保</li>
+        </ul>
+      </div>
+    </div>
+  `,
+
   empty: () => `
     <div style="padding: 40px; text-align: center; color: #666;">
       コンポーネントを選択してください
