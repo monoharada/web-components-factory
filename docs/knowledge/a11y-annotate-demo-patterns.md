@@ -366,7 +366,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 ## 参考資料
 
 - a11y-annotate実装: `packages/components/annotate/`
-- 既存実装例: switchデモ（`src/demos.ts` - line 1305~）
+- 既存実装例: switchデモ（`src/demos.ts` の `switch` デモ）
 - アクセシビリティガイドライン: `docs/knowledge/accessibility-guidelines.md`
 
 ## 更新履歴
