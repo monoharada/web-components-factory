@@ -14,34 +14,48 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 <!-- 注釈表示切り替え -->
 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
   <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-  <dads-switch id="annotation-toggle" checked>
+  <dads-switch data-annotation-toggle checked>
     <span slot="label-left">非表示</span>
     <span slot="label-right">表示</span>
   </dads-switch>
 </div>
 <script>
+  // 重要: document.currentScript は同期で捕捉する（then内だとnullになりうる）
+  const script = document.currentScript;
   customElements.whenDefined('dads-switch').then(() => {
-    const toggle = document.getElementById('annotation-toggle');
-    if (toggle) {
-      const updateAnnotations = () => {
-        const isChecked = toggle.hasAttribute('checked');
-        const annotations = document.querySelectorAll('a11y-annotate');
-        for (const ann of annotations) {
-          const calloutLayer = ann.querySelector('[part="callout-layer"]');
-          if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-        }
-      };
-      toggle.addEventListener('dads-change', updateAnnotations);
-      updateAnnotations();
-    }
+    const root = script?.parentElement;
+    if (!root || !root.isConnected) return;
+
+    const toggle = root.querySelector('[data-annotation-toggle]');
+    if (!toggle) return;
+
+    const updateAnnotations = () => {
+      const isChecked = toggle.hasAttribute('checked');
+      const annotations = root.querySelectorAll('a11y-annotate');
+      for (const ann of annotations) {
+        // mode="both" でコールアウト表示、mode="panel" でパネルのみ
+        ann.setAttribute('mode', isChecked ? 'both' : 'panel');
+      }
+    };
+
+    toggle.addEventListener('dads-change', updateAnnotations);
+    updateAnnotations();
   });
 </script>
 ```
 
 **重要**:
-- `[part="callout-layer"]` のみを切り替え（コールアウトマーカー）
+- 公開APIの `mode` 属性で切り替え（内部パーツに依存しない）
 - 右側のパネルは常時表示される
 - デフォルトで `checked` （表示状態）
+
+**`mode` 属性の仕様**:
+
+| 値 | 動作 |
+|---|------|
+| `both`（デフォルト）| パネル + コールアウトマーカー表示 |
+| `panel` | パネルのみ表示（コールアウト非表示） |
+| `callouts` | コールアウトマーカーのみ表示 |
 
 ### 2. アクセシビリティ注釈セクション
 

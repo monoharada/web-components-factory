@@ -10,20 +10,22 @@
 function annotationToggleScript(): string {
   return `
     <script>
-      // 注釈表示切り替え機能（コールアウトのみ切り替え、パネルは常時表示）
+      // 注釈表示切り替え機能（mode属性でコールアウトをトグル）
+      // 重要: document.currentScript は同期で捕捉する（then内だとnullになりうる）
+      const script = document.currentScript;
       customElements.whenDefined('dads-switch').then(() => {
-        const root = document.currentScript?.parentElement;
+        const root = script?.parentElement;
         if (!root || !root.isConnected) return;
 
-        const toggle = root.querySelector('#annotation-toggle');
+        const toggle = root.querySelector('[data-annotation-toggle]');
         if (!toggle) return;
 
         const updateAnnotations = () => {
           const isChecked = toggle.hasAttribute('checked');
           const annotations = root.querySelectorAll('a11y-annotate');
           for (const ann of annotations) {
-            const calloutLayer = ann.querySelector('[part="callout-layer"]');
-            if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+            // mode="both" でコールアウト表示、mode="panel" でパネルのみ
+            ann.setAttribute('mode', isChecked ? 'both' : 'panel');
           }
         };
 
@@ -41,7 +43,7 @@ function annotationToggleUI(): string {
   return `
     <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
       <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-      <dads-switch id="annotation-toggle" checked>
+      <dads-switch data-annotation-toggle checked>
         <span slot="label-left">非表示</span>
         <span slot="label-right">表示</span>
       </dads-switch>
@@ -495,31 +497,32 @@ export const demos = {
             </dads-accordion-details>
           </div>
         </a11y-annotate>
+      </section>
 
-    <div style="margin-top: 40px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px;">
-      <dads-accordion-details>
-        <dads-accordion-item-details>
-          <span slot="header">デジタル庁について</span>
-          <div slot="content">
-            デジタル庁は、2021年9月1日に設置された日本の行政機関です。
-            デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
-          </div>
-        </dads-accordion-item-details>
-        <dads-accordion-item-details>
-          <span slot="header">利用可能なサービス</span>
-          <div slot="content">
-            マイナポータル、e-Tax、各種オンライン申請など、
-            様々な行政サービスをデジタルで利用できます。
-          </div>
-        </dads-accordion-item-details>
-        <dads-accordion-item-details>
-          <span slot="header">お問い合わせ</span>
-          <div slot="content">
-            ご不明な点がございましたら、公式ウェブサイトのお問い合わせフォームよりご連絡ください。
-          </div>
-        </dads-accordion-item-details>
-      </dads-accordion-details>
-    </div>
+      <div style="margin-top: 40px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px;">
+        <dads-accordion-details>
+          <dads-accordion-item-details>
+            <span slot="header">デジタル庁について</span>
+            <div slot="content">
+              デジタル庁は、2021年9月1日に設置された日本の行政機関です。
+              デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
+            </div>
+          </dads-accordion-item-details>
+          <dads-accordion-item-details>
+            <span slot="header">利用可能なサービス</span>
+            <div slot="content">
+              マイナポータル、e-Tax、各種オンライン申請など、
+              様々な行政サービスをデジタルで利用できます。
+            </div>
+          </dads-accordion-item-details>
+          <dads-accordion-item-details>
+            <span slot="header">お問い合わせ</span>
+            <div slot="content">
+              ご不明な点がございましたら、公式ウェブサイトのお問い合わせフォームよりご連絡ください。
+            </div>
+          </dads-accordion-item-details>
+        </dads-accordion-details>
+      </div>
   `,
 
   resetCss: () => `
