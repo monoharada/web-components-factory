@@ -14,6 +14,7 @@ import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { blockquoteTokens } from './blockquote-tokens.js';
 import { blockquoteStyles } from './blockquote-styles.js';
 import { withReset } from '../../styles/reset-css.js';
+import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * 引用ブロックコンポーネント
@@ -85,6 +86,73 @@ export class DadsBlockquote extends TypographyWebComponent {
     shadowOptions: { mode: 'open' as const, slotAssignment: 'manual' as const },
   };
 
+  static readonly a11yAnnotations: A11yAnnotations = {
+    version: 1,
+    summary: '引用ブロックコンポーネント仕様（アクセシビリティ注釈）',
+    categories: {
+      semantics: [
+        'ネイティブの <blockquote> 要素を使用し、引用のセマンティクスを提供します。',
+        'cite属性で引用元URLを内部blockquote要素に転送します。',
+        '3スロット構造（lead/default/close）でコンテンツを意味的に分割できます。',
+      ],
+      keyboard: [
+        '引用コンテンツ内のリンクやインタラクティブ要素はTabでフォーカス可能です。',
+      ],
+      zoom: [
+        'テキストは相対単位(rem)で定義され、拡大時も読みやすさを維持します。',
+        '左ボーダーと余白は視覚的な引用識別を支援します。',
+      ],
+      states: [
+        '空のスロットは自動的に非表示になり、余分な余白が発生しません。',
+      ],
+      labels: [
+        'スロットなし要素は自動的にlead/body/closeに振り分けられます。',
+        'cite属性で引用元情報をメタデータとして提供できます（視覚的には非表示）。',
+      ],
+      motion: [
+        'アニメーションは使用しません。',
+      ],
+    },
+    callouts: [
+      {
+        id: 'blockquote',
+        title: '引用ブロック要素',
+        label: '<blockquote>',
+        description: 'ネイティブのblockquote要素でセマンティックな引用を表現します。',
+        category: 'semantics',
+        placement: 'top-right',
+        target: { scope: 'shadow', selector: '[part="blockquote"]' },
+      },
+      {
+        id: 'lead',
+        title: '冒頭スロット',
+        label: 'slot="lead"',
+        description: '引用の冒頭部分（最初の段落など）を配置します。',
+        category: 'labels',
+        placement: 'top-left',
+        target: { scope: 'shadow', selector: '[part="lead"]' },
+      },
+      {
+        id: 'body',
+        title: '本文スロット',
+        label: 'デフォルトスロット',
+        description: '引用の本文（中間の段落群）を配置します。',
+        category: 'semantics',
+        placement: 'bottom-left',
+        target: { scope: 'shadow', selector: '[part="body"]' },
+      },
+      {
+        id: 'close',
+        title: '締め括りスロット',
+        label: 'slot="close"',
+        description: '引用の締め括り（最後の段落、出典など）を配置します。',
+        category: 'labels',
+        placement: 'bottom-right',
+        target: { scope: 'shadow', selector: '[part="close"]' },
+      },
+    ],
+  };
+
   // cite属性を監視対象として明示的に定義（ベースクラスでは自動処理されないため必須）
   static get observedAttributes(): string[] {
     return ['cite'];
@@ -105,12 +173,7 @@ export class DadsBlockquote extends TypographyWebComponent {
   get #closeSlot(): HTMLSlotElement | null { return this.#getSlot('close-slot'); }
 
   #updateSlotVisibility(slot: HTMLSlotElement): void {
-    const nodes = slot.assignedNodes();
-    if (nodes.length > 0) {
-      slot.removeAttribute('hidden');
-    } else {
-      slot.setAttribute('hidden', '');
-    }
+    slot.toggleAttribute('hidden', slot.assignedNodes().length === 0);
   }
 
   /**

@@ -36,6 +36,7 @@ import {
   setupSlotChangeListeners,
   type FormValidationSetup,
 } from '../../utils/form-component-helpers.js';
+import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * Textareaコンポーネント
@@ -170,6 +171,100 @@ export class DadsTextarea extends TypographyFormComponent {
       // カスタム getter/setter が定義されているため (property フィールドなし)
       { attribute: 'value' },
       BooleanAttr('auto-validate'),
+    ],
+  };
+
+  static readonly a11yAnnotations: A11yAnnotations = {
+    version: 1,
+    summary: 'テキストエリアコンポーネント仕様（アクセシビリティ注釈）',
+    categories: {
+      semantics: [
+        'ネイティブの <textarea> 要素を使用し、複数行テキスト入力のセマンティクスを提供します。',
+        '<label> 要素でラベルとtextareaを関連付けます。',
+        'Form-Associated Custom Elementとしてネイティブフォームに参加します。',
+      ],
+      keyboard: [
+        'Tabでフォーカス可能です。',
+        '標準のテキスト入力キーボード操作が利用できます。',
+        '複数行入力のため、Enterで改行されます。',
+      ],
+      zoom: [
+        'サイズバリエーション: sm / md / lg。',
+        'rows属性で行数を指定できます（デフォルト: 3行）。',
+        'テキストは相対単位で定義され、拡大時も操作可能です。',
+      ],
+      states: [
+        'required属性で「※必須」ラベル表示、aria-required="true"設定。',
+        'readonly属性で「読み取り専用」ラベル表示、編集不可。',
+        'disabled属性で無効状態。',
+        'error属性でエラー状態（aria-invalid="true"、赤枠表示）。',
+        'show-counter属性で文字数カウンター表示。',
+      ],
+      labels: [
+        'label属性またはスロットでラベルを提供します。',
+        'support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。',
+        'error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。',
+        'カウンター表示時はaria-describedbyに追加されます。',
+      ],
+      motion: [
+        'アニメーションは使用しません。',
+      ],
+    },
+    callouts: [
+      {
+        id: 'label',
+        title: 'ラベル要素',
+        label: '<label>',
+        description: 'ネイティブのlabel要素でtextareaと関連付けます。クリックでフォーカス移動。',
+        category: 'semantics',
+        placement: 'top-left',
+        target: { scope: 'shadow', selector: '[part="label"]' },
+      },
+      {
+        id: 'requirement',
+        title: '要否ラベル',
+        label: '※必須/読み取り専用',
+        description: 'required/readonly属性に応じて表示されるラベルです。',
+        category: 'labels',
+        placement: 'top-right',
+        target: { scope: 'shadow', selector: '[part="requirement"]' },
+      },
+      {
+        id: 'support-text',
+        title: 'サポートテキスト',
+        label: 'support-text',
+        description: '入力のヒントや補足説明を提供します。aria-describedbyで関連付け。',
+        category: 'labels',
+        placement: 'bottom-left',
+        target: { scope: 'shadow', selector: '[part="support-text"]' },
+      },
+      {
+        id: 'textarea',
+        title: 'ネイティブテキストエリア要素',
+        label: '<textarea>',
+        description: '複数行テキスト入力を受け付けます。rows属性で行数指定。',
+        category: 'keyboard',
+        placement: 'top-right',
+        target: { scope: 'shadow', selector: '[part="textarea"]' },
+      },
+      {
+        id: 'counter',
+        title: '文字数カウンター',
+        label: 'counter',
+        description: '現在の文字数と上限を「0/100」形式で表示。aria-describedbyで関連付け。',
+        category: 'states',
+        placement: 'bottom-right',
+        target: { scope: 'shadow', selector: '[part="counter"]' },
+      },
+      {
+        id: 'error-text',
+        title: 'エラーメッセージ',
+        label: 'error-text',
+        description: 'バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。',
+        category: 'states',
+        placement: 'bottom-left',
+        target: { scope: 'shadow', selector: '[part="error-text"]' },
+      },
     ],
   };
 
@@ -460,14 +555,12 @@ export class DadsTextarea extends TypographyFormComponent {
         break;
       case 'required':
         updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
-        if (this.#textarea) {
-          // required は内部textareaに転送しない（カスタムバリデーションで制御）
-          // aria-required でアクセシビリティを維持
-          if (this.hasAttribute('required')) {
-            this.#textarea.setAttribute('aria-required', 'true');
-          } else {
-            this.#textarea.removeAttribute('aria-required');
-          }
+        // required は内部textareaに転送しない（カスタムバリデーションで制御）
+        // aria-required でアクセシビリティを維持
+        if (this.hasAttribute('required')) {
+          this.#textarea.setAttribute('aria-required', 'true');
+        } else {
+          this.#textarea.removeAttribute('aria-required');
         }
         break;
       case 'maxlength':
@@ -480,36 +573,26 @@ export class DadsTextarea extends TypographyFormComponent {
       case 'error-text':
         updateErrorFallback(this.#errorSlot, this.#errorText, this.#errorFallback, this.getAttribute('error-text'), this.hasAttribute('error'));
         this.#updateAriaDescribedBy();
-        if (this.#textarea) {
-          this.#textarea.setAttribute('aria-invalid', this.hasAttribute('error') ? 'true' : 'false');
-        }
+        this.#textarea.setAttribute('aria-invalid', this.hasAttribute('error') ? 'true' : 'false');
         break;
       case 'disabled':
-        if (this.#textarea) {
-          this.#textarea.disabled = this.hasAttribute('disabled');
-        }
+        this.#textarea.disabled = this.hasAttribute('disabled');
         break;
       case 'readonly':
         updateRequirement(this.#requirement, this.hasAttribute('required'), this.hasAttribute('readonly'));
-        if (this.#textarea) {
-          this.#textarea.readOnly = this.hasAttribute('readonly');
-        }
+        this.#textarea.readOnly = this.hasAttribute('readonly');
         break;
       case 'name':
-        if (this.#textarea && newValue !== null) {
-          this.#textarea.setAttribute(name, newValue);
-        } else if (this.#textarea) {
-          this.#textarea.removeAttribute(name);
-        }
+        if (newValue !== null) this.#textarea.setAttribute(name, newValue);
+        else this.#textarea.removeAttribute(name);
         break;
-      // placeholder は非推奨: attributeChangedCallback では処理しない
       case 'rows':
-        if (this.#textarea && newValue !== null) {
+        if (newValue !== null) {
           this.#textarea.rows = parseInt(newValue, 10);
         }
         break;
       case 'value':
-        if (this.#textarea && newValue !== null) {
+        if (newValue !== null) {
           this.#textarea.value = newValue;
           this._internals.setFormValue(newValue);
           this.#updateCounter();

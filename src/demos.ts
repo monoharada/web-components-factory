@@ -3,13 +3,63 @@
  * autoloaderと組み合わせて使用される
  */
 
+/**
+ * アクセシビリティ注釈の表示切り替えスクリプト
+ * 各デモで共通して使用される
+ */
+function annotationToggleScript(): string {
+  return `
+    <script>
+      customElements.whenDefined('dads-switch').then(() => {
+        const toggle = document.getElementById('annotation-toggle');
+        if (toggle) {
+          const updateAnnotations = () => {
+            const isChecked = toggle.hasAttribute('checked');
+            const annotations = document.querySelectorAll('a11y-annotate');
+            for (const ann of annotations) {
+              const calloutLayer = ann.querySelector('[part="callout-layer"]');
+              if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+            }
+          };
+          toggle.addEventListener('dads-change', updateAnnotations);
+          updateAnnotations();
+        }
+      });
+    <\\/script>
+  `;
+}
+
+/**
+ * 注釈表示切り替えUIコンポーネント
+ */
+function annotationToggleUI(): string {
+  return `
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
+      <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+      <dads-switch id="annotation-toggle" checked>
+        <span slot="label-left">非表示</span>
+        <span slot="label-right">表示</span>
+      </dads-switch>
+    </div>
+  `;
+}
+
 export const demos = {
   checkbox: () => `
-    <div style="padding: 40px; max-width: 900px; margin: 0 auto;">
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">チェックボックス</h2>
       <p style="color: #666; margin-bottom: 32px;">
         デジタル庁デザインシステム（DADS）HTML版 checkbox.css と同一の見た目になるよう実装したWeb Components版です。
       </p>
+
+      <!-- 注釈表示切り替え -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
+        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+        <dads-switch id="annotation-toggle" checked>
+          <span slot="label-left">非表示</span>
+          <span slot="label-right">表示</span>
+        </dads-switch>
+      </div>
 
       <section style="margin-bottom: 32px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
@@ -18,30 +68,32 @@ export const demos = {
         </p>
 
         <a11y-annotate target-selector="dads-fieldset">
-          <form class="checkbox-validation">
-            <dads-fieldset required>
-              <span slot="legend">利用規約</span>
-              <p slot="support-text">送信ボタンでrequiredバリデーションを確認できます。</p>
-              <dads-checkbox
-                label="利用規約に同意する"
-                size="sm"
-                name="agreement"
-                value="yes"
-                required
-                auto-validate
-              ></dads-checkbox>
-            </dads-fieldset>
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <form class="checkbox-validation">
+              <dads-fieldset required>
+                <span slot="legend">利用規約</span>
+                <p slot="support-text">送信ボタンでrequiredバリデーションを確認できます。</p>
+                <dads-checkbox
+                  label="利用規約に同意する"
+                  size="sm"
+                  name="agreement"
+                  value="yes"
+                  required
+                  auto-validate
+                ></dads-checkbox>
+              </dads-fieldset>
 
-            <div>
-              <dads-button type="submit">送信</dads-button>
-            </div>
-          </form>
+              <div>
+                <dads-button type="submit">送信</dads-button>
+              </div>
+            </form>
+          </div>
 
           <style>
             .checkbox-validation {
               display: grid;
               gap: 12px;
-              max-width: 520px;
+              width: 520px;
             }
 
             .checkbox-validation dads-checkbox {
@@ -132,7 +184,24 @@ export const demos = {
 
     <script type="module">
       // custom element定義前にプロパティへ触ると、upgrade後に「自前プロパティ」が残り挙動が壊れるため先に読み込む
-      await Promise.all([import('dads-checkbox'), import('dads-button'), import('dads-fieldset')]);
+      await Promise.all([import('dads-checkbox'), import('dads-button'), import('dads-fieldset'), import('dads-switch')]);
+
+      // 注釈表示切り替え機能
+      customElements.whenDefined('dads-switch').then(() => {
+        const toggle = document.getElementById('annotation-toggle');
+        if (toggle) {
+          const updateAnnotations = () => {
+            const isChecked = toggle.hasAttribute('checked');
+            const annotations = document.querySelectorAll('a11y-annotate');
+            for (const ann of annotations) {
+              const calloutLayer = ann.querySelector('[part="callout-layer"]');
+              if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+            }
+          };
+          toggle.addEventListener('dads-change', updateAnnotations);
+          updateAnnotations();
+        }
+      });
 
       // デモ用: フォーム送信でページ遷移しないようにする
       document.querySelectorAll('.checkbox-validation').forEach((form) => {
@@ -167,11 +236,31 @@ export const demos = {
   `,
 
   blockquote: () => `
-    <div style="padding: 40px; max-width: 800px; margin: 0 auto;">
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">引用ブロックコンポーネント</h2>
-      <p style="color: #666; margin-bottom: 40px;">
+      <p style="color: #666; margin-bottom: 32px;">
         デジタル庁デザインシステム準拠の引用ブロックコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <!-- アクセシビリティ注釈（a11y-annotate） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-blockquote">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-blockquote style="width: 500px;">
+              <p slot="lead">これは冒頭の段落です。</p>
+              <p>本文の段落です。デジタル庁デザインシステムのスタイルに準拠しています。</p>
+              <p slot="close">締め括りの段落です。</p>
+            </dads-blockquote>
+          </div>
+        </a11y-annotate>
+      </section>
 
       <!-- 基本（デフォルトスロットのみ） -->
       <section style="margin-bottom: 40px;">
@@ -298,15 +387,28 @@ export const demos = {
         </ul>
       </div>
     </div>
+
+    <script type="module">
+      await Promise.all([import('dads-blockquote'), import('dads-switch')]);
+    <\/script>
   `,
 
   fieldset: () => `
-    <div style="padding: 40px; max-width: 900px; margin: 0 auto;">
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">フィールドセット</h2>
       <p style="color: #666; margin-bottom: 32px;">
         デジタル庁デザインシステム（DADS）準拠のフィールドセットWeb Componentです。
         フォーム要素のグループ化と、aria-describedbyの自動設定を行います。
       </p>
+
+      <!-- 注釈表示切り替え -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
+        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+        <dads-switch id="annotation-toggle" checked>
+          <span slot="label-left">非表示</span>
+          <span slot="label-right">表示</span>
+        </dads-switch>
+      </div>
 
       <section style="margin-bottom: 32px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
@@ -315,12 +417,14 @@ export const demos = {
         </p>
 
         <a11y-annotate target-selector="dads-fieldset">
-          <dads-fieldset required>
-            <span slot="legend">東京23区</span>
-            <p slot="support-text">該当するすべての項目を選択してください。</p>
-            <dads-checkbox label="東京23区" size="sm"></dads-checkbox>
-            <dads-checkbox label="その他の地域" size="sm"></dads-checkbox>
-          </dads-fieldset>
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-fieldset required style="width: 500px;">
+              <span slot="legend">東京23区</span>
+              <p slot="support-text">該当するすべての項目を選択してください。</p>
+              <dads-checkbox label="東京23区" size="sm"></dads-checkbox>
+              <dads-checkbox label="その他の地域" size="sm"></dads-checkbox>
+            </dads-fieldset>
+          </div>
         </a11y-annotate>
       </section>
 
@@ -383,22 +487,78 @@ export const demos = {
     </div>
 
     <script type="module">
-      await Promise.all([import('dads-fieldset'), import('dads-checkbox')]);
+      await Promise.all([import('dads-fieldset'), import('dads-checkbox'), import('dads-switch')]);
+
+      // 注釈表示切り替え機能
+      customElements.whenDefined('dads-switch').then(() => {
+        const toggle = document.getElementById('annotation-toggle');
+        if (toggle) {
+          const updateAnnotations = () => {
+            const isChecked = toggle.hasAttribute('checked');
+            const annotations = document.querySelectorAll('a11y-annotate');
+            for (const ann of annotations) {
+              const calloutLayer = ann.querySelector('[part="callout-layer"]');
+              if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+            }
+          };
+          toggle.addEventListener('dads-change', updateAnnotations);
+          updateAnnotations();
+        }
+      });
     </script>
   `,
 
   accordion: () => `
-    <a11y-annotate>
-      <dads-accordion-details>
-        <dads-accordion-item-details expanded>
-          <span slot="header">デジタル庁について</span>
-          <div slot="content">
-            デジタル庁は、2021年9月1日に設置された日本の行政機関です。
-            デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">アコーディオン</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム準拠のアコーディオンコンポーネント。
+      </p>
+
+      <!-- 注釈表示切り替え -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
+        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+        <dads-switch id="annotation-toggle" checked>
+          <span slot="label-left">非表示</span>
+          <span slot="label-right">表示</span>
+        </dads-switch>
+      </div>
+      <script>
+        customElements.whenDefined('dads-switch').then(() => {
+          const toggle = document.getElementById('annotation-toggle');
+          if (toggle) {
+            const updateAnnotations = () => {
+              const isChecked = toggle.hasAttribute('checked');
+              const annotations = document.querySelectorAll('a11y-annotate');
+              for (const ann of annotations) {
+                const calloutLayer = ann.querySelector('[part="callout-layer"]');
+                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+              }
+            };
+            toggle.addEventListener('dads-change', updateAnnotations);
+            updateAnnotations();
+          }
+        });
+      <\/script>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-accordion-details">
+          <div style="padding: 60px 0;">
+            <dads-accordion-details>
+              <dads-accordion-item-details expanded>
+                <span slot="header">デジタル庁について</span>
+                <div slot="content">
+                  デジタル庁は、2021年9月1日に設置された日本の行政機関です。
+                  デジタル社会形成の司令塔として、国・地方行政のデジタル化を推進しています。
+                </div>
+              </dads-accordion-item-details>
+            </dads-accordion-details>
           </div>
-        </dads-accordion-item-details>
-      </dads-accordion-details>
-    </a11y-annotate>
+        </a11y-annotate>
 
     <div style="margin-top: 40px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px;">
       <dads-accordion-details>
@@ -430,7 +590,7 @@ export const demos = {
     <div style="padding: 20px;">
       <h2 style="margin-bottom: 30px; color: #333;">リセットCSS比較デモ</h2>
 
-      <div style="display: grid; gap: 30px; max-width: 1200px;">
+      <div style="display: grid; gap: 30px; max-width: 1280px;">
         <!-- 既存サイトのスタイル影響テスト -->
         <div style="background: #f0f0f0; padding: 20px; border-radius: 8px;">
           <h3 style="color: #666; margin-bottom: 15px;">既存サイトのスタイル（グローバルCSS）</h3>
@@ -501,11 +661,58 @@ export const demos = {
   `,
 
   textarea: () => `
-    <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+    <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">テキストエリアコンポーネント</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステム準拠のテキストエリアコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
+
+      <!-- 注釈表示切り替え -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
+        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+        <dads-switch id="annotation-toggle" checked>
+          <span slot="label-left">非表示</span>
+          <span slot="label-right">表示</span>
+        </dads-switch>
+      </div>
+      <script>
+        customElements.whenDefined('dads-switch').then(() => {
+          const toggle = document.getElementById('annotation-toggle');
+          if (toggle) {
+            const updateAnnotations = () => {
+              const isChecked = toggle.hasAttribute('checked');
+              const annotations = document.querySelectorAll('a11y-annotate');
+              for (const ann of annotations) {
+                const calloutLayer = ann.querySelector('[part="callout-layer"]');
+                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+              }
+            };
+            toggle.addEventListener('dads-change', updateAnnotations);
+            updateAnnotations();
+          }
+        });
+      <\/script>
+
+      <!-- アクセシビリティ注釈 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-textarea">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-textarea
+              label="お問い合わせ内容"
+              support-text="500文字以内で入力してください"
+              required
+              show-counter
+              maxlength="500"
+              rows="3"
+              style="width: 500px;"
+            ></dads-textarea>
+          </div>
+        </a11y-annotate>
+      </section>
 
       <!-- 基本 -->
       <section style="margin-bottom: 40px;">
@@ -661,11 +868,50 @@ export const demos = {
   `,
 
   button: () => `
-    <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+    <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ボタンコンポーネント</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステムv2.7.0準拠のボタンコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
+
+      <!-- 注釈表示切り替え -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
+        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+        <dads-switch id="annotation-toggle" checked>
+          <span slot="label-left">非表示</span>
+          <span slot="label-right">表示</span>
+        </dads-switch>
+      </div>
+      <script>
+        customElements.whenDefined('dads-switch').then(() => {
+          const toggle = document.getElementById('annotation-toggle');
+          if (toggle) {
+            const updateAnnotations = () => {
+              const isChecked = toggle.hasAttribute('checked');
+              const annotations = document.querySelectorAll('a11y-annotate');
+              for (const ann of annotations) {
+                const calloutLayer = ann.querySelector('[part="callout-layer"]');
+                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+              }
+            };
+            toggle.addEventListener('dads-change', updateAnnotations);
+            updateAnnotations();
+          }
+        });
+      <\/script>
+
+      <!-- アクセシビリティ注釈 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-button">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-button variant="solid" size="medium">ボタンテキスト</dads-button>
+          </div>
+        </a11y-annotate>
+      </section>
 
       <!-- バリアント -->
       <section style="margin-bottom: 40px;">
@@ -842,11 +1088,55 @@ export const demos = {
   `,
 
   inputText: () => `
-    <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+    <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">インプットテキストコンポーネント</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステム準拠のインプットテキストコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
+
+      <!-- 注釈表示切り替え -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
+        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+        <dads-switch id="annotation-toggle" checked>
+          <span slot="label-left">非表示</span>
+          <span slot="label-right">表示</span>
+        </dads-switch>
+      </div>
+      <script>
+        customElements.whenDefined('dads-switch').then(() => {
+          const toggle = document.getElementById('annotation-toggle');
+          if (toggle) {
+            const updateAnnotations = () => {
+              const isChecked = toggle.hasAttribute('checked');
+              const annotations = document.querySelectorAll('a11y-annotate');
+              for (const ann of annotations) {
+                const calloutLayer = ann.querySelector('[part="callout-layer"]');
+                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+              }
+            };
+            toggle.addEventListener('dads-change', updateAnnotations);
+            updateAnnotations();
+          }
+        });
+      <\/script>
+
+      <!-- アクセシビリティ注釈 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-input-text">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-input-text
+              label="氏名"
+              support-text="姓と名の間にスペースを入れてください"
+              required
+              style="width: 500px;"
+            ></dads-input-text>
+          </div>
+        </a11y-annotate>
+      </section>
 
       <!-- 基本 -->
       <section style="margin-bottom: 40px;">
@@ -1173,7 +1463,7 @@ export const demos = {
   `,
 
   switch: () => `
-    <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+    <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">スイッチコンポーネント</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステム準拠のスイッチ（トグル）コンポーネント。TDD（テスト駆動開発）で実装。

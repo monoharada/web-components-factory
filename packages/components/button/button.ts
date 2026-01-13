@@ -18,6 +18,7 @@ import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
 import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
+import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * Buttonコンポーネント
@@ -94,6 +95,78 @@ export class DadsButton extends TypographyFormComponent {
     ]
   };
 
+  static readonly a11yAnnotations: A11yAnnotations = {
+    version: 1,
+    summary: 'ボタンコンポーネント仕様（アクセシビリティ注釈）',
+    categories: {
+      semantics: [
+        'ネイティブの <button> 要素を使用し、ボタンのセマンティクスを提供します。',
+        'as="link" または href属性で <a> 要素としてレンダリングできます。',
+        'type属性（button/submit/reset）でフォーム動作を制御します。',
+      ],
+      keyboard: [
+        'Tabでフォーカス可能です。',
+        'Enter/Spaceで操作できます（ネイティブ挙動）。',
+      ],
+      zoom: [
+        '最小44x44pxのタップターゲットを確保（WCAG 2.2 AA準拠）。',
+        'サイズバリエーション: x-small / small / medium / large。',
+        'full-width属性で幅100%表示が可能です。',
+      ],
+      states: [
+        'variant属性: solid（塗り）/ outlined（枠線）/ text（テキスト）。',
+        'disabled属性で無効状態（デジタル庁ガイドラインでは非推奨）。',
+        ':focus-visible でフォーカスリング表示。',
+      ],
+      labels: [
+        'デフォルトスロットでボタンテキストを提供します。',
+        'icon-start / icon-end スロットでアイコンを配置できます。',
+        'aria-label属性でアクセシブルネームをカスタマイズできます。',
+      ],
+      motion: [
+        'ホバー/フォーカス時の色変化は即時適用されます。',
+      ],
+    },
+    callouts: [
+      {
+        id: 'button',
+        title: 'ボタン要素',
+        label: '<button>',
+        description: 'ネイティブのbutton要素でセマンティックなボタンを提供します。',
+        category: 'semantics',
+        placement: 'top-right',
+        target: { scope: 'shadow', selector: '[part="base"]' },
+      },
+      {
+        id: 'icon-start',
+        title: '先頭アイコン',
+        label: 'slot="icon-start"',
+        description: 'ボタンテキストの前にアイコンを配置します。',
+        category: 'labels',
+        placement: 'top-left',
+        target: { scope: 'shadow', selector: '[part="icon-start"]' },
+      },
+      {
+        id: 'label',
+        title: 'ラベルテキスト',
+        label: 'デフォルトスロット',
+        description: 'ボタンのテキストコンテンツを配置します。',
+        category: 'labels',
+        placement: 'bottom-left',
+        target: { scope: 'shadow', selector: '[part="label"]' },
+      },
+      {
+        id: 'icon-end',
+        title: '末尾アイコン',
+        label: 'slot="icon-end"',
+        description: 'ボタンテキストの後にアイコンを配置します。',
+        category: 'labels',
+        placement: 'bottom-right',
+        target: { scope: 'shadow', selector: '[part="icon-end"]' },
+      },
+    ],
+  };
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -161,64 +234,39 @@ export class DadsButton extends TypographyFormComponent {
     return this.hasAttribute('href');
   }
   
-  #renderTemplate() {
+  #renderTemplate(): void {
     if (!this.shadowRoot) return;
-    
-    const isLink = this.#isLink();
-    const template = isLink ? this.#createLinkTemplate() : this.#createButtonTemplate();
-    
-    // Shadow DOMの内容を更新
+
+    const template = this.#createTemplate(this.#isLink());
     this.shadowRoot.innerHTML = '';
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
-  
-  #createButtonTemplate(): HTMLTemplateElement {
+
+  #createTemplate(isLink: boolean): HTMLTemplateElement {
     const template = document.createElement('template');
-    template.innerHTML = `
-      <button 
-        part="base"
-        type="${this.getAttribute('type') || 'button'}"
-      >
-        <span part="icon-start">
-          <slot name="icon-start"></slot>
-        </span>
-        <span part="label">
-          <slot></slot>
-        </span>
-        <span part="icon-end">
-          <slot name="icon-end"></slot>
-        </span>
-      </button>
+    const innerContent = `
+      <span part="icon-start"><slot name="icon-start"></slot></span>
+      <span part="label"><slot></slot></span>
+      <span part="icon-end"><slot name="icon-end"></slot></span>
     `;
-    return template;
-  }
-  
-  #createLinkTemplate(): HTMLTemplateElement {
-    const template = document.createElement('template');
-    const href = this.getAttribute('href') || '#';
-    const target = this.getAttribute('target') || '_self';
-    const rel = this.getAttribute('rel') || '';
-    const download = this.hasAttribute('download');
-    
-    template.innerHTML = `
-      <a 
-        part="base"
-        href="${href}"
-        ${target ? `target="${target}"` : ''}
-        ${rel ? `rel="${rel}"` : ''}
-        ${download ? 'download' : ''}
-      >
-        <span part="icon-start">
-          <slot name="icon-start"></slot>
-        </span>
-        <span part="label">
-          <slot></slot>
-        </span>
-        <span part="icon-end">
-          <slot name="icon-end"></slot>
-        </span>
-      </a>
-    `;
+
+    if (isLink) {
+      const href = this.getAttribute('href') || '#';
+      const target = this.getAttribute('target');
+      const rel = this.getAttribute('rel');
+      const download = this.hasAttribute('download');
+      template.innerHTML = `
+        <a part="base" href="${href}"${target ? ` target="${target}"` : ''}${rel ? ` rel="${rel}"` : ''}${download ? ' download' : ''}>
+          ${innerContent}
+        </a>
+      `;
+    } else {
+      template.innerHTML = `
+        <button part="base" type="${this.getAttribute('type') || 'button'}">
+          ${innerContent}
+        </button>
+      `;
+    }
     return template;
   }
 
