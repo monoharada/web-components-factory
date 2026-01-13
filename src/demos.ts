@@ -10,22 +10,27 @@
 function annotationToggleScript(): string {
   return `
     <script>
+      // 注釈表示切り替え機能（コールアウトのみ切り替え、パネルは常時表示）
       customElements.whenDefined('dads-switch').then(() => {
-        const toggle = document.getElementById('annotation-toggle');
-        if (toggle) {
-          const updateAnnotations = () => {
-            const isChecked = toggle.hasAttribute('checked');
-            const annotations = document.querySelectorAll('a11y-annotate');
-            for (const ann of annotations) {
-              const calloutLayer = ann.querySelector('[part="callout-layer"]');
-              if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-            }
-          };
-          toggle.addEventListener('dads-change', updateAnnotations);
-          updateAnnotations();
-        }
+        const root = document.currentScript?.parentElement;
+        if (!root || !root.isConnected) return;
+
+        const toggle = root.querySelector('#annotation-toggle');
+        if (!toggle) return;
+
+        const updateAnnotations = () => {
+          const isChecked = toggle.hasAttribute('checked');
+          const annotations = root.querySelectorAll('a11y-annotate');
+          for (const ann of annotations) {
+            const calloutLayer = ann.querySelector('[part="callout-layer"]');
+            if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
+          }
+        };
+
+        toggle.addEventListener('dads-change', updateAnnotations);
+        updateAnnotations();
       });
-    </script>
+    <\/script>
   `;
 }
 
@@ -52,14 +57,8 @@ export const demos = {
         デジタル庁デザインシステム（DADS）HTML版 checkbox.css と同一の見た目になるよう実装したWeb Components版です。
       </p>
 
-      <!-- 注釈表示切り替え -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-        <dads-switch id="annotation-toggle" checked>
-          <span slot="label-left">非表示</span>
-          <span slot="label-right">表示</span>
-        </dads-switch>
-      </div>
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
 
       <section style="margin-bottom: 32px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
@@ -185,23 +184,6 @@ export const demos = {
     <script type="module">
       // custom element定義前にプロパティへ触ると、upgrade後に「自前プロパティ」が残り挙動が壊れるため先に読み込む
       await Promise.all([import('dads-checkbox'), import('dads-button'), import('dads-fieldset'), import('dads-switch')]);
-
-      // 注釈表示切り替え機能
-      customElements.whenDefined('dads-switch').then(() => {
-        const toggle = document.getElementById('annotation-toggle');
-        if (toggle) {
-          const updateAnnotations = () => {
-            const isChecked = toggle.hasAttribute('checked');
-            const annotations = document.querySelectorAll('a11y-annotate');
-            for (const ann of annotations) {
-              const calloutLayer = ann.querySelector('[part="callout-layer"]');
-              if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-            }
-          };
-          toggle.addEventListener('dads-change', updateAnnotations);
-          updateAnnotations();
-        }
-      });
 
       // デモ用: フォーム送信でページ遷移しないようにする
       document.querySelectorAll('.checkbox-validation').forEach((form) => {
@@ -401,14 +383,8 @@ export const demos = {
         フォーム要素のグループ化と、aria-describedbyの自動設定を行います。
       </p>
 
-      <!-- 注釈表示切り替え -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-        <dads-switch id="annotation-toggle" checked>
-          <span slot="label-left">非表示</span>
-          <span slot="label-right">表示</span>
-        </dads-switch>
-      </div>
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
 
       <section style="margin-bottom: 32px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
@@ -488,24 +464,7 @@ export const demos = {
 
     <script type="module">
       await Promise.all([import('dads-fieldset'), import('dads-checkbox'), import('dads-switch')]);
-
-      // 注釈表示切り替え機能
-      customElements.whenDefined('dads-switch').then(() => {
-        const toggle = document.getElementById('annotation-toggle');
-        if (toggle) {
-          const updateAnnotations = () => {
-            const isChecked = toggle.hasAttribute('checked');
-            const annotations = document.querySelectorAll('a11y-annotate');
-            for (const ann of annotations) {
-              const calloutLayer = ann.querySelector('[part="callout-layer"]');
-              if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-            }
-          };
-          toggle.addEventListener('dads-change', updateAnnotations);
-          updateAnnotations();
-        }
-      });
-    </script>
+    <\/script>
   `,
 
   accordion: () => `
@@ -515,31 +474,8 @@ export const demos = {
         デジタル庁デザインシステム準拠のアコーディオンコンポーネント。
       </p>
 
-      <!-- 注釈表示切り替え -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-        <dads-switch id="annotation-toggle" checked>
-          <span slot="label-left">非表示</span>
-          <span slot="label-right">表示</span>
-        </dads-switch>
-      </div>
-      <script>
-        customElements.whenDefined('dads-switch').then(() => {
-          const toggle = document.getElementById('annotation-toggle');
-          if (toggle) {
-            const updateAnnotations = () => {
-              const isChecked = toggle.hasAttribute('checked');
-              const annotations = document.querySelectorAll('a11y-annotate');
-              for (const ann of annotations) {
-                const calloutLayer = ann.querySelector('[part="callout-layer"]');
-                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-              }
-            };
-            toggle.addEventListener('dads-change', updateAnnotations);
-            updateAnnotations();
-          }
-        });
-      <\/script>
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
 
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
@@ -667,31 +603,8 @@ export const demos = {
         デジタル庁デザインシステム準拠のテキストエリアコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      <!-- 注釈表示切り替え -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-        <dads-switch id="annotation-toggle" checked>
-          <span slot="label-left">非表示</span>
-          <span slot="label-right">表示</span>
-        </dads-switch>
-      </div>
-      <script>
-        customElements.whenDefined('dads-switch').then(() => {
-          const toggle = document.getElementById('annotation-toggle');
-          if (toggle) {
-            const updateAnnotations = () => {
-              const isChecked = toggle.hasAttribute('checked');
-              const annotations = document.querySelectorAll('a11y-annotate');
-              for (const ann of annotations) {
-                const calloutLayer = ann.querySelector('[part="callout-layer"]');
-                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-              }
-            };
-            toggle.addEventListener('dads-change', updateAnnotations);
-            updateAnnotations();
-          }
-        });
-      <\/script>
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
@@ -874,31 +787,8 @@ export const demos = {
         デジタル庁デザインシステムv2.7.0準拠のボタンコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      <!-- 注釈表示切り替え -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-        <dads-switch id="annotation-toggle" checked>
-          <span slot="label-left">非表示</span>
-          <span slot="label-right">表示</span>
-        </dads-switch>
-      </div>
-      <script>
-        customElements.whenDefined('dads-switch').then(() => {
-          const toggle = document.getElementById('annotation-toggle');
-          if (toggle) {
-            const updateAnnotations = () => {
-              const isChecked = toggle.hasAttribute('checked');
-              const annotations = document.querySelectorAll('a11y-annotate');
-              for (const ann of annotations) {
-                const calloutLayer = ann.querySelector('[part="callout-layer"]');
-                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-              }
-            };
-            toggle.addEventListener('dads-change', updateAnnotations);
-            updateAnnotations();
-          }
-        });
-      <\/script>
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
@@ -1094,31 +984,8 @@ export const demos = {
         デジタル庁デザインシステム準拠のインプットテキストコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      <!-- 注釈表示切り替え -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-        <dads-switch id="annotation-toggle" checked>
-          <span slot="label-left">非表示</span>
-          <span slot="label-right">表示</span>
-        </dads-switch>
-      </div>
-      <script>
-        customElements.whenDefined('dads-switch').then(() => {
-          const toggle = document.getElementById('annotation-toggle');
-          if (toggle) {
-            const updateAnnotations = () => {
-              const isChecked = toggle.hasAttribute('checked');
-              const annotations = document.querySelectorAll('a11y-annotate');
-              for (const ann of annotations) {
-                const calloutLayer = ann.querySelector('[part="callout-layer"]');
-                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-              }
-            };
-            toggle.addEventListener('dads-change', updateAnnotations);
-            updateAnnotations();
-          }
-        });
-      <\/script>
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
@@ -1469,34 +1336,8 @@ export const demos = {
         デジタル庁デザインシステム準拠のスイッチ（トグル）コンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      <!-- 注釈表示切り替え -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-        <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-        <dads-switch id="annotation-toggle" checked>
-          <span slot="label-left">非表示</span>
-          <span slot="label-right">表示</span>
-        </dads-switch>
-      </div>
-      <script>
-        // 注釈表示切り替え機能（コールアウトのみ切り替え、パネルは常時表示）
-        customElements.whenDefined('dads-switch').then(() => {
-          const toggle = document.getElementById('annotation-toggle');
-          if (toggle) {
-            const updateAnnotations = () => {
-              const isChecked = toggle.hasAttribute('checked');
-              const annotations = document.querySelectorAll('a11y-annotate');
-              for (const ann of annotations) {
-                const calloutLayer = ann.querySelector('[part="callout-layer"]');
-                // コールアウト（ビジュアルマーカー）のみ切り替え
-                if (calloutLayer) calloutLayer.style.display = isChecked ? '' : 'none';
-              }
-            };
-            toggle.addEventListener('dads-change', updateAnnotations);
-            // 初期状態を適用
-            updateAnnotations();
-          }
-        });
-      </script>
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
 
       <!-- 基本（アクセシビリティ注釈付き） -->
       <section style="margin-bottom: 60px;">
