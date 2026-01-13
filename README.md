@@ -11,6 +11,21 @@ bun server.ts
 
 http://localhost:3000/ にアクセスして、コンポーネントビューアが表示されます。
 
+## 🌐 GitHub Pages での公開（Project Pages）
+
+`viewer.html` を静的化して `dist-pages/` に出力し、GitHub Pages で表示できます（`dist-pages/` はコミットせず、CIで生成してデプロイします）。
+
+```bash
+# 静的ファイル生成
+npm run pages:build
+
+# ローカルプレビュー（デフォルト: http://localhost:3001/）
+npm run pages:preview
+```
+
+- デプロイは `.github/workflows/pages.yml` で main push をトリガーに実行されます
+- GitHub のリポジトリ設定で Pages の Source を **GitHub Actions** に設定してください
+
 ## 📦 利用可能なコンポーネント
 
 ### Component Viewer (`viewer.html`)
