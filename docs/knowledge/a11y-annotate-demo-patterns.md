@@ -45,7 +45,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 
 ### 2. アクセシビリティ注釈セクション
 
-#### 基本パターン（ボタン・blockquote等の小さい要素）
+#### 基本パターン（ボタン等の小さい要素）
 
 ```html
 <section style="margin-bottom: 40px;">
@@ -93,7 +93,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 - a11y-annotateが横幅いっぱいに広がることで、右側のパネルが適切に表示される
 - gridレイアウトにより縦横両方向で中央配置され、コールアウトマーカーが枠内に収まる
 
-#### 横幅いっぱいパターン（accordion等のfill型コンポーネント）
+#### 横幅いっぱいパターン（accordion・blockquote等のfill型コンポーネント）
 
 ```html
 <section style="margin-bottom: 40px;">
@@ -117,7 +117,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 ```
 
 **ポイント**:
-- accordion等のコンテナ幅いっぱいに広がるべきコンポーネント用パターン
+- accordion・blockquote等のコンテナ幅いっぱいに広がるべきコンポーネント用パターン
 - `display: grid; place-content: center;` を**使用しない**（中央揃えしない）
 - `padding: 60px 0;` のみを適用（コールアウトマーカーが枠線からはみ出さないように）
 - コンポーネントに`width`スタイルを**適用しない**（自然な幅で表示）
@@ -128,7 +128,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 
 ### 1. 横幅制御の方針
 
-#### パターンA: 中央揃え型（button, textarea, input-text, blockquote等）
+#### パターンA: 中央揃え型（button, textarea, input-text等）
 
 | 要素 | 適用箇所 | 理由 |
 |------|----------|------|
@@ -142,7 +142,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 - `padding: 60px 0;` でコールアウトマーカーが枠線からはみ出さない（必須）
 - `display: flex; justify-content: center;` より視覚的に安定
 
-#### パターンB: 横幅いっぱい型（accordion等のfill型コンポーネント）
+#### パターンB: 横幅いっぱい型（accordion・blockquote等のfill型コンポーネント）
 
 | 要素 | 適用箇所 | 理由 |
 |------|----------|------|
@@ -155,7 +155,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 - コンポーネントがコンテナ幅いっぱいに広がる
 - `display: grid; place-content: center;` を**使用しない**
 - コンポーネント自体に`width`スタイルを**適用しない**
-- accordion等のfill型コンポーネントの自然なレイアウトを維持
+- accordion・blockquote等のfill型コンポーネントの自然なレイアウトを維持
 
 **NG例**:
 ```html
@@ -202,10 +202,10 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
   </div>
 </a11y-annotate>
 
-<!-- ✅ パターンA: blockquoteもgridで中央揃え + padding -->
+<!-- ✅ パターンB: blockquoteはpaddingのみ（中央揃えなし） -->
 <a11y-annotate target-selector="dads-blockquote">
-  <div style="display: grid; place-content: center; padding: 60px 0;">
-    <dads-blockquote style="width: 500px;">
+  <div style="padding: 60px 0;">
+    <dads-blockquote>
       <p>引用テキスト</p>
     </dads-blockquote>
   </div>
@@ -241,7 +241,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 | fieldset | ✅ 既存 | ✅ | パターンA | ✅ | ✅ 60px | checkbox含む、width: 500px |
 | accordion | ✅ 既存 | ✅ | **パターンB** | ❌ | ✅ 60px | details/summary、横幅いっぱい |
 | switch | ✅ 既存 | ✅ | - | - | - | 参考実装 |
-| blockquote | ✅ 新規 | ✅ | パターンA | ✅ | ✅ 60px | width: 500px |
+| blockquote | ✅ 新規 | ✅ | **パターンB** | ❌ | ✅ 60px | width指定なし（横幅いっぱい） |
 | button | ✅ 新規 | ✅ | パターンA | ✅ | ✅ 60px | 自動サイズ |
 | textarea | ✅ 新規 | ✅ | パターンA | ✅ | ✅ 60px | width: 500px, rows: 3 |
 | inputText | ✅ 新規 | ✅ | パターンA | ✅ | ✅ 60px | width: 500px |
@@ -266,11 +266,11 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 - [ ] `a11y-annotate` でコンポーネントをラップ
 - [ ] `target-selector` 属性を指定（必須）
 - [ ] **レイアウトタイプの判定**
-  - **パターンA（中央揃え型）**: button, textarea, input-text, blockquote等
+  - **パターンA（中央揃え型）**: button, textarea, input-text等
     - [ ] **必須**: `<div style="display: grid; place-content: center; padding: 60px 0;">` で中央揃え
     - [ ] **必須**: `padding: 60px 0;` を追加（コールアウトマーカーが枠線からはみ出さないように）
     - [ ] フォーム要素の場合、コンポーネント自体に `width: 500px` を適用
-  - **パターンB（横幅いっぱい型）**: accordion等のfill型コンポーネント
+  - **パターンB（横幅いっぱい型）**: accordion・blockquote等のfill型コンポーネント
     - [ ] **必須**: `<div style="padding: 60px 0;">` のみ（中央揃えなし）
     - [ ] **必須**: `padding: 60px 0;` を追加（コールアウトマーカーが枠線からはみ出さないように）
     - [ ] コンポーネント自体に`width`スタイルを**適用しない**（自然な幅で表示）
@@ -365,11 +365,12 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 
 ## 参考資料
 
-- a11y-annotate実装: `packages/components/a11y-annotate/`
+- a11y-annotate実装: `packages/components/annotate/`
 - 既存実装例: switchデモ（`src/demos.ts` - line 1305~）
 - アクセシビリティガイドライン: `docs/knowledge/accessibility-guidelines.md`
 
 ## 更新履歴
 
-- 2025-01-13: 初版作成（blockquote, button, textarea, inputText対応完了）
-- 2025-01-13: パターンB（横幅いっぱい型）追加、accordion対応完了、レイアウトタイプ別の実装パターンを明記
+- 2026-01-13: 初版作成（blockquote, button, textarea, inputText対応完了）
+- 2026-01-13: パターンB（横幅いっぱい型）追加、accordion対応完了、レイアウトタイプ別の実装パターンを明記
+- 2026-01-13: blockquoteをパターンB（fill型）に変更

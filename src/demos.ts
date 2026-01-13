@@ -25,7 +25,7 @@ function annotationToggleScript(): string {
           updateAnnotations();
         }
       });
-    <\\/script>
+    </script>
   `;
 }
 
@@ -252,8 +252,8 @@ export const demos = {
           ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
         </p>
         <a11y-annotate target-selector="dads-blockquote">
-          <div style="display: grid; place-content: center; padding: 60px 0;">
-            <dads-blockquote style="width: 500px;">
+          <div style="padding: 60px 0;">
+            <dads-blockquote>
               <p slot="lead">これは冒頭の段落です。</p>
               <p>本文の段落です。デジタル庁デザインシステムのスタイルに準拠しています。</p>
               <p slot="close">締め括りの段落です。</p>

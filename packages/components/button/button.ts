@@ -131,8 +131,8 @@ export class DadsButton extends TypographyFormComponent {
       {
         id: 'button',
         title: 'ボタン要素',
-        label: '<button>',
-        description: 'ネイティブのbutton要素でセマンティックなボタンを提供します。',
+        label: '<button>/<a>',
+        description: 'デフォルトはbutton要素、as="link" または href指定でa要素としてレンダリングされます。',
         category: 'semantics',
         placement: 'top-right',
         target: { scope: 'shadow', selector: '[part="base"]' },
