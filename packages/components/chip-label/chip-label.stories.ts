@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
-import { defineChipLabel } from './chip-label-define';
+import { defineDefaultChipLabel } from './chip-label-define';
 
-defineChipLabel();
+defineDefaultChipLabel();
 
 type Variant = 'text' | 'outline' | 'filled-outline' | 'fill';
 type Color =

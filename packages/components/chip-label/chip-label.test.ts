@@ -16,8 +16,8 @@ describe('DadsChipLabel - 基本レンダリング', () => {
   });
 
   it('コンポーネントが存在する', async () => {
-    const { defineChipLabel } = await import('./chip-label-define');
-    defineChipLabel();
+    const { defineDefaultChipLabel } = await import('./chip-label-define');
+    defineDefaultChipLabel();
 
     const component = renderWebComponent(`
       <dads-chip-label>ラベル</dads-chip-label>
@@ -28,8 +28,8 @@ describe('DadsChipLabel - 基本レンダリング', () => {
   });
 
   it('Shadow DOMが作成される', async () => {
-    const { defineChipLabel } = await import('./chip-label-define');
-    defineChipLabel();
+    const { defineDefaultChipLabel } = await import('./chip-label-define');
+    defineDefaultChipLabel();
 
     const component = renderWebComponent(`
       <dads-chip-label>ラベル</dads-chip-label>
@@ -40,8 +40,8 @@ describe('DadsChipLabel - 基本レンダリング', () => {
   });
 
   it('baseパートが含まれる', async () => {
-    const { defineChipLabel } = await import('./chip-label-define');
-    defineChipLabel();
+    const { defineDefaultChipLabel } = await import('./chip-label-define');
+    defineDefaultChipLabel();
 
     const component = renderWebComponent(`
       <dads-chip-label>ラベル</dads-chip-label>
@@ -60,8 +60,8 @@ describe('DadsChipLabel - 属性', () => {
   });
 
   it('デフォルトでvariant="text" / color="gray" が設定される', async () => {
-    const { defineChipLabel } = await import('./chip-label-define');
-    defineChipLabel();
+    const { defineDefaultChipLabel } = await import('./chip-label-define');
+    defineDefaultChipLabel();
 
     const component = renderWebComponent(`
       <dads-chip-label>ラベル</dads-chip-label>
@@ -73,8 +73,8 @@ describe('DadsChipLabel - 属性', () => {
   });
 
   it('指定したvariant/colorは上書きされない', async () => {
-    const { defineChipLabel } = await import('./chip-label-define');
-    defineChipLabel();
+    const { defineDefaultChipLabel } = await import('./chip-label-define');
+    defineDefaultChipLabel();
 
     const component = renderWebComponent(`
       <dads-chip-label variant="outline" color="blue">ラベル</dads-chip-label>
@@ -92,8 +92,8 @@ describe('DadsChipLabel - スロット', () => {
   });
 
   it('slot="icon" が割り当てられる', async () => {
-    const { defineChipLabel } = await import('./chip-label-define');
-    defineChipLabel();
+    const { defineDefaultChipLabel } = await import('./chip-label-define');
+    defineDefaultChipLabel();
 
     const component = renderWebComponent(`
       <dads-chip-label>
@@ -113,4 +113,3 @@ describe('DadsChipLabel - スロット', () => {
     expect(assigned[0]?.tagName.toLowerCase()).toBe('svg');
   });
 });
-

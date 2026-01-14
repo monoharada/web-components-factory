@@ -61,13 +61,16 @@ describe('DadsAnnotate', () => {
         ],
       };
     }
-    customElements.define('test-a11y-target', TestTarget);
+    const tagName = 'test-a11y-target';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTarget);
+    }
 
     const el = renderWebComponent(`
       <a11y-annotate>
-        <test-a11y-target>
+        <${tagName}>
           <div id="anchor" aria-label="Before"></div>
-        </test-a11y-target>
+        </${tagName}>
       </a11y-annotate>
     `);
 
