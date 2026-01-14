@@ -61,13 +61,16 @@ describe('DadsAnnotate', () => {
         ],
       };
     }
-    customElements.define('test-a11y-target', TestTarget);
+    const tagName = 'test-a11y-target';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTarget);
+    }
 
     const el = renderWebComponent(`
       <a11y-annotate>
-        <test-a11y-target>
+        <${tagName}>
           <div id="anchor" aria-label="Before"></div>
-        </test-a11y-target>
+        </${tagName}>
       </a11y-annotate>
     `);
 
@@ -91,5 +94,51 @@ describe('DadsAnnotate', () => {
     await waitFor(() => {
       expect(el.textContent).toContain('aria-label: After');
     });
+  });
+
+  it('SVG要素をコールアウト対象にできる', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetSvg extends HTMLElement {
+      static a11yAnnotations: A11yAnnotations = {
+        version: 1,
+        summary: 'SVGターゲット',
+        categories: { labels: ['labels'] },
+        callouts: [
+          {
+            id: 'icon',
+            title: 'アイコン',
+            label: 'アイコン',
+            category: 'labels',
+            target: { selector: '#icon' },
+            placement: 'top-right',
+          },
+        ],
+      };
+    }
+
+    const tagName = 'test-a11y-target-svg';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetSvg);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate>
+        <test-a11y-target-svg>
+          <svg id="icon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z"></path>
+          </svg>
+        </test-a11y-target-svg>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const marker = el.querySelector('.callout-tag-number');
+    expect(marker?.textContent).toBe('1');
+
+    const tag = el.querySelector('.callout-tag code');
+    expect(tag?.textContent).toBe('アイコン');
   });
 });

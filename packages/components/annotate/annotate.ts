@@ -22,7 +22,7 @@ type ElementWithAnnotations = HTMLElement & {
 type CalloutRender = {
   callout: A11yCallout;
   number: number;
-  targetEl: HTMLElement | null;
+  targetEl: Element | null;
   overlayEl: HTMLElement;
   boxEl: HTMLElement;
   tagEl: HTMLElement;
@@ -678,7 +678,7 @@ export class DadsAnnotate extends TypographyWebComponent {
     }
   }
 
-  #formatCalloutTag(callout: A11yCallout, el: HTMLElement | null): string {
+  #formatCalloutTag(callout: A11yCallout, el: Element | null): string {
     if (callout.label) return callout.label;
     if (!el) return callout.title;
 
@@ -711,7 +711,7 @@ export class DadsAnnotate extends TypographyWebComponent {
     return `<${tag}>`;
   }
 
-  #renderSnapshot(el: HTMLElement | null): HTMLElement | null {
+  #renderSnapshot(el: Element | null): HTMLElement | null {
     if (!el) return null;
     const role = el.getAttribute('role');
     const aria = getAriaAttrs(el);
@@ -744,9 +744,12 @@ export class DadsAnnotate extends TypographyWebComponent {
 
     for (const callout of raw) {
       const targetEl = this.#resolveElementRef(callout.target);
+      if (!targetEl) {
+        continue;
+      }
 
       // ターゲット要素が空または非表示の場合はスキップ
-      if (targetEl && this.#isEmptyOrHidden(targetEl)) {
+      if (this.#isEmptyOrHidden(targetEl)) {
         continue;
       }
 
@@ -791,7 +794,7 @@ export class DadsAnnotate extends TypographyWebComponent {
     return out;
   }
 
-  #resolveElementRef(ref: A11yElementRef): HTMLElement | null {
+  #resolveElementRef(ref: A11yElementRef): Element | null {
     const host = ref.host ?? 'target';
     const hostBase = host === 'annotate' ? this : this.#target;
     if (!hostBase) return null;
@@ -806,15 +809,13 @@ export class DadsAnnotate extends TypographyWebComponent {
     if (scope === 'shadow') {
       const root = hostEl.shadowRoot;
       if (!root) return null;
-      const el = root.querySelector(ref.selector);
-      return isHTMLElement(el) ? el : null;
+      return root.querySelector(ref.selector);
     }
 
-    const el = hostEl.querySelector(ref.selector);
-    return isHTMLElement(el) ? el : null;
+    return hostEl.querySelector(ref.selector);
   }
 
-  #hasRenderableBox(el: HTMLElement): boolean {
+  #hasRenderableBox(el: Element): boolean {
     // display:none / detached / not rendered
     if (!el.isConnected) return false;
     const anyEl = el as unknown as { checkVisibility?: (options?: unknown) => boolean };
@@ -843,7 +844,7 @@ export class DadsAnnotate extends TypographyWebComponent {
    * - role属性を持つ要素
    * - 子要素を持つ要素
    */
-  #isEmptyOrHidden(el: HTMLElement): boolean {
+  #isEmptyOrHidden(el: Element): boolean {
     // hidden属性
     if (el.hasAttribute('hidden')) return true;
 
