@@ -112,7 +112,6 @@ export class DadsAccordionDetails extends TypographyWebComponent {
       applySpacingTokens(),
       accordionTokens,
       css`
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap');
         :host {
           display: block;
           width: 100%;
@@ -289,7 +288,6 @@ export class DadsAccordionItemDetails extends TypographyWebComponent {
       accordionTokens,
       accordionItemStyles,
       applyDADSFocusStyles(),
-      css`@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap');`
     ], 'full'),
     attributes: [
       BooleanAttr('expanded'),
