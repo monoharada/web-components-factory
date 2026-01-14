@@ -423,8 +423,8 @@ export class WebComponent extends HTMLElement {
 
   static get observedAttributes(): string[] {
     const def =
-      WebComponentDefinition.forType(WebComponent) ??
-      WebComponentDefinition.compose(WebComponent as unknown as typeof WebComponent, {
+      WebComponentDefinition.forType(this) ??
+      WebComponentDefinition.compose(this as unknown as typeof WebComponent, {
         name: 'dummy',
       });
     return Array.from(def.attributes).map((a) => a.attribute);
