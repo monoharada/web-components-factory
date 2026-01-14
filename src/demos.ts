@@ -11,27 +11,30 @@ function annotationToggleScript(): string {
   return `
     <script>
       // 注釈表示切り替え機能（mode属性でコールアウトをトグル）
-      // 重要: document.currentScript は同期で捕捉する（then内だとnullになりうる）
-      const script = document.currentScript;
-      customElements.whenDefined('dads-switch').then(() => {
-        const root = script?.parentElement;
-        if (!root || !root.isConnected) return;
+      // IIFE でスコープを分離（activateEmbeddedScripts での再実行時の変数衝突を防ぐ）
+      (function() {
+        // 重要: document.currentScript は同期で捕捉する（then内だとnullになりうる）
+        var currentScript = document.currentScript;
+        customElements.whenDefined('dads-switch').then(function() {
+          var root = currentScript?.parentElement;
+          if (!root || !root.isConnected) return;
 
-        const toggle = root.querySelector('[data-annotation-toggle]');
-        if (!toggle) return;
+          var toggle = root.querySelector('[data-annotation-toggle]');
+          if (!toggle) return;
 
-        const updateAnnotations = () => {
-          const isChecked = toggle.hasAttribute('checked');
-          const annotations = root.querySelectorAll('a11y-annotate');
-          for (const ann of annotations) {
-            // mode="both" でコールアウト表示、mode="panel" でパネルのみ
-            ann.setAttribute('mode', isChecked ? 'both' : 'panel');
-          }
-        };
+          var updateAnnotations = function() {
+            var isChecked = toggle.hasAttribute('checked');
+            var annotations = root.querySelectorAll('a11y-annotate');
+            for (var i = 0; i < annotations.length; i++) {
+              // mode="both" でコールアウト表示、mode="panel" でパネルのみ
+              annotations[i].setAttribute('mode', isChecked ? 'both' : 'panel');
+            }
+          };
 
-        toggle.addEventListener('dads-change', updateAnnotations);
-        updateAnnotations();
-      });
+          toggle.addEventListener('dads-change', updateAnnotations);
+          updateAnnotations();
+        });
+      })();
     <\/script>
   `;
 }
