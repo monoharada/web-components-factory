@@ -5,12 +5,12 @@
 import { css } from '../../core/web-components.js';
 
 /**
- * Noto Sans JP WebフォントのCDN読み込み
- * Shape Up: 今週はCDNで対応（最速の解決策）
+ * Web フォント読み込み（互換用）
+ *
+ * Constructable Stylesheets（CSSStyleSheet.replaceSync）では `@import` が使えないため、
+ * ここでは no-op にする（フォント自体は `ensureFontsInitialized()` が <link> 注入で読み込む）。
  */
-const fontImportText = `
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap');
-`;
+const fontImportText = '';
 
 /**
  * プリミティブトークン（基本値）

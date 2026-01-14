@@ -78,7 +78,6 @@ export class DadsButton extends TypographyFormComponent {
       buttonTokens,
       buttonStyles,
       applyDADSFocusStyles(),
-      css`@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap');`
     ], 'minimal'),
     attributes: [
       PropertyAttr('variant'),

@@ -1,7 +1,7 @@
 // behaviors.ts
 // TypeScript port of behaviors.js
 
-import { isNotWhitespace } from './dom';
+import { isNotWhitespace } from './dom.js';
 
 function updateLabel(slot: HTMLSlotElement, target: HTMLElement): void {
   const nodes = slot.assignedNodes().filter(isNotWhitespace);
