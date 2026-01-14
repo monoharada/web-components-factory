@@ -54,6 +54,42 @@ function annotationToggleUI(): string {
   `;
 }
 
+const CHIP_LABEL_ICON_SVG = `
+  <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true">
+    <path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z"/>
+  </svg>
+`;
+
+function renderAllChipLabels(): string {
+  const variants = ['text', 'outline', 'filled-outline', 'fill'] as const;
+  const colors = [
+    'gray',
+    'blue',
+    'light-blue',
+    'cyan',
+    'green',
+    'lime',
+    'yellow',
+    'orange',
+    'red',
+    'magenta',
+    'purple',
+  ] as const;
+
+  let out = '';
+  for (const variant of variants) {
+    for (const color of colors) {
+      out += `
+        <dads-chip-label variant="${variant}" color="${color}">
+          ${CHIP_LABEL_ICON_SVG}
+          ラベル
+        </dads-chip-label>
+      `;
+    }
+  }
+  return out;
+}
+
 export const demos = {
   checkbox: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
@@ -885,6 +921,59 @@ export const demos = {
         </ul>
       </div>
     </div>
+  `,
+
+  chipLabel: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">チップラベル</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        デジタル庁デザインシステム（DADS）HTML版 chip-label.css と同一の見た目になるよう実装したWeb Components版です。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <!-- アクセシビリティ注釈 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-chip-label">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-chip-label variant="filled-outline" color="purple">
+              ${CHIP_LABEL_ICON_SVG}
+              ラベル
+            </dads-chip-label>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本</h3>
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <dads-chip-label>ラベル</dads-chip-label>
+          <dads-chip-label>
+            ${CHIP_LABEL_ICON_SVG}
+            ラベル（アイコンあり）
+          </dads-chip-label>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">全チップラベル</h3>
+        <div style="background: white; border: 1px solid #ddd; border-radius: 12px; padding: 40px;">
+          <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: center;">
+            ${renderAllChipLabels()}
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      // custom element定義前にプロパティへ触ると、upgrade後に「自前プロパティ」が残り挙動が壊れるため先に読み込む
+      await Promise.all([import('dads-chip-label'), import('dads-switch'), import('a11y-annotate')]);
+    </script>
   `,
 
   textareaValidation: () => `
