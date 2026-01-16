@@ -217,7 +217,7 @@ export const calendarStyles = css`
   }
 
   @media (hover: hover) {
-    [part="date"]:hover {
+    [part="date"]:not(:disabled):hover {
       background-color: var(--color-neutral-solid-gray-50);
       text-decoration: underline;
     }
@@ -236,8 +236,19 @@ export const calendarStyles = css`
     color: var(--color-neutral-white);
   }
 
-  [part="date"]:disabled {
+  [part="data-cell"][data-outside-month] [part="date"] {
     visibility: hidden;
+  }
+
+  [part="date"]:disabled {
+    cursor: default;
+    color: var(--color-neutral-solid-gray-420);
+  }
+
+  @media (forced-colors: active) {
+    [part="date"]:disabled {
+      color: GrayText;
+    }
   }
 
   /* ========== Footer ========== */

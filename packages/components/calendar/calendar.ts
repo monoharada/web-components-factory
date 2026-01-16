@@ -30,10 +30,18 @@ function parseYmd(value: string): { year: number; monthIndex0: number; date: num
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
   const [y, m, d] = value.split('-');
   const year = Number.parseInt(y, 10);
-  const monthIndex0 = Number.parseInt(m, 10) - 1;
+  const month = Number.parseInt(m, 10);
   const date = Number.parseInt(d, 10);
-  if (Number.isNaN(year) || Number.isNaN(monthIndex0) || Number.isNaN(date)) return null;
-  return { year, monthIndex0, date };
+  if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(date)) return null;
+  if (year < 1 || year > 9999) return null;
+  if (month < 1 || month > 12) return null;
+  if (date < 1 || date > 31) return null;
+
+  const dt = new Date(year, month - 1, date);
+  if (Number.isNaN(dt.getTime())) return null;
+  if (dt.getFullYear() !== year || dt.getMonth() !== month - 1 || dt.getDate() !== date) return null;
+
+  return { year, monthIndex0: month - 1, date };
 }
 
 function formatJapaneseYear(year: number): string {
@@ -577,10 +585,11 @@ export class DadsCalendar extends TypographyWebComponent {
         const date = new Date(currentDate);
         const dateTime = date.getTime();
         const isCurrentMonth = date.getMonth() === this.#displayMonth;
+        const isOutsideMonth = !isCurrentMonth;
         const isDateInRange = this.#isDateInRange(date);
         const isToday = dateTime === todayTime;
 
-        const isDisabled = !isCurrentMonth || !isDateInRange;
+        const isDisabled = isOutsideMonth || !isDateInRange;
         const isRangeStart = isRangeMode && rangeStartTime !== null && dateTime === rangeStartTime;
         const isRangeEnd = isRangeMode && rangeEndTime !== null && dateTime === rangeEndTime;
         const isInSelectedRange =
@@ -599,6 +608,7 @@ export class DadsCalendar extends TypographyWebComponent {
 
         const cell = this.#createDateCell(date, {
           isDisabled,
+          isOutsideMonth,
           isSelected,
           isFocusable,
           isRangeStart,
@@ -645,6 +655,7 @@ export class DadsCalendar extends TypographyWebComponent {
     date: Date,
     flags: {
       isDisabled: boolean;
+      isOutsideMonth?: boolean;
       isSelected: boolean;
       isFocusable: boolean;
       isRangeStart?: boolean;
@@ -654,6 +665,7 @@ export class DadsCalendar extends TypographyWebComponent {
   ): HTMLElement {
     const {
       isDisabled,
+      isOutsideMonth = false,
       isSelected,
       isFocusable,
       isRangeStart = false,
@@ -688,6 +700,7 @@ export class DadsCalendar extends TypographyWebComponent {
     cell.toggleAttribute('data-in-range', isInRange);
     cell.toggleAttribute('data-range-start', isRangeStart);
     cell.toggleAttribute('data-range-end', isRangeEnd);
+    cell.toggleAttribute('data-outside-month', isOutsideMonth);
 
     if (isSelected) {
       cell.setAttribute('aria-selected', 'true');

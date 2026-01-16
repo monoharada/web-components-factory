@@ -89,6 +89,71 @@ describe('DadsCalendar - 基本レンダリング', () => {
   });
 });
 
+describe('DadsCalendar - min/max（ISO日付バリデーション）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    vi.useRealTimers();
+    if (element) cleanupTestElement(element);
+  });
+
+  it('実在しない日付（例: 2024-02-31）は Date overflow させず無視される', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2024, 0, 15));
+
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-02-31');
+    element.setAttribute('max-date', '2024-12-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+    };
+    calendar.setDisplayMonth(2024, 1);
+
+    const btn = element.shadowRoot?.querySelector(
+      'button[data-year="2024"][data-month="1"][data-date="1"]'
+    ) as HTMLButtonElement | null;
+
+    expect(btn).toBeTruthy();
+    expect(btn?.disabled).toBe(false);
+  });
+});
+
+describe('DadsCalendar - 表示（当月外セル）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('当月外の日付セルは data-outside-month が付与される', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-12-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+
+    const btn = element.shadowRoot?.querySelector(
+      'button[data-year="2023"][data-month="11"][data-date="31"]'
+    ) as HTMLButtonElement | null;
+    const cell = btn?.closest('td') as HTMLElement | null;
+
+    expect(btn).toBeTruthy();
+    expect(cell?.hasAttribute('data-outside-month')).toBe(true);
+  });
+});
+
 describe('DadsCalendar - 日付選択', () => {
   let element: HTMLElement;
 

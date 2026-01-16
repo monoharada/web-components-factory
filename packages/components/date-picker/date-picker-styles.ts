@@ -20,7 +20,7 @@ export const datePickerStyles = css`
   [part="controls"] {
     position: relative;
     display: flex;
-    align-items: end;
+    align-items: flex-end;
     column-gap: var(--spacing-4);
   }
 
@@ -193,12 +193,12 @@ export const datePickerStyles = css`
     line-height: 1;
   }
 
-  :host([data-type="separated"]) [part="field-label"]:has(+ :disabled) {
+  :host([data-type="separated"]) [part="inputs"][data-disabled] [part="field-label"] {
     color: var(--color-neutral-solid-gray-420);
   }
 
   @media (forced-colors: active) {
-    :host([data-type="separated"]) [part="field-label"]:has(+ :disabled) {
+    :host([data-type="separated"]) [part="inputs"][data-disabled] [part="field-label"] {
       color: GrayText;
     }
   }
@@ -352,4 +352,3 @@ export const datePickerStyles = css`
     line-height: 1.7;
   }
 `;
-

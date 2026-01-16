@@ -36,6 +36,13 @@ function parseIsoDate(value: string): { year: number; month: number; day: number
   return { year, month, day };
 }
 
+function parseDigits(value: string, re: RegExp): number | null {
+  const trimmed = value.trim();
+  if (!re.test(trimmed)) return null;
+  const parsed = Number.parseInt(trimmed, 10);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
 function toIsoDateOrEmpty(year: number, month: number, day: number): string {
   if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
   if (year < 1 || year > 9999) return '';
@@ -445,7 +452,7 @@ export class DadsDatePicker extends TypographyFormComponent {
     this.#syncCalendarButtonDisabled();
 
     if (isDisabled) {
-      this.#closeCalendar();
+      this.#closeCalendar({ restoreFocus: false });
     }
   }
 
@@ -463,7 +470,7 @@ export class DadsDatePicker extends TypographyFormComponent {
     this.#syncCalendarButtonDisabled();
 
     if (isReadonly) {
-      this.#closeCalendar();
+      this.#closeCalendar({ restoreFocus: false });
     }
   }
 
@@ -478,8 +485,7 @@ export class DadsDatePicker extends TypographyFormComponent {
 
     this.#calendarButton.style.display = enabled ? '' : 'none';
     if (!enabled) {
-      this.#closeCalendar();
-      this.#calendarPopover.style.display = 'none';
+      this.#closeCalendar({ restoreFocus: false });
     }
   }
 
@@ -544,10 +550,10 @@ export class DadsDatePicker extends TypographyFormComponent {
   #computeIsoValue(): string {
     if (!this.#yearInput || !this.#monthInput || !this.#dayInput) return '';
 
-    const year = Number.parseInt(this.#yearInput.value, 10);
-    const month = Number.parseInt(this.#monthInput.value, 10);
-    const day = Number.parseInt(this.#dayInput.value, 10);
-    if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) return '';
+    const year = parseDigits(this.#yearInput.value, /^\d{4}$/);
+    const month = parseDigits(this.#monthInput.value, /^\d{1,2}$/);
+    const day = parseDigits(this.#dayInput.value, /^\d{1,2}$/);
+    if (year === null || month === null || day === null) return '';
 
     return toIsoDateOrEmpty(year, month, day);
   }
@@ -660,13 +666,19 @@ export class DadsDatePicker extends TypographyFormComponent {
     // カレンダーコンポーネントのPublic APIを型安全に参照
     const calendar = this.#calendar as (HTMLElement & DadsCalendarPublicAPI) | null;
 
-    const year = this.#yearInput ? Number.parseInt(this.#yearInput.value, 10) : Number.NaN;
-    const month = this.#monthInput ? Number.parseInt(this.#monthInput.value, 10) : Number.NaN;
-    const day = this.#dayInput ? Number.parseInt(this.#dayInput.value, 10) : Number.NaN;
-
     if (calendar) {
-      calendar.setSelectedDate(new Date(year, month - 1, day));
-      if (!Number.isNaN(year) && !Number.isNaN(month) && month >= 1 && month <= 12) {
+      const year = this.#yearInput ? parseDigits(this.#yearInput.value, /^\d{4}$/) : null;
+      const month = this.#monthInput ? parseDigits(this.#monthInput.value, /^\d{1,2}$/) : null;
+      const day = this.#dayInput ? parseDigits(this.#dayInput.value, /^\d{1,2}$/) : null;
+
+      if (year !== null && month !== null && day !== null) {
+        const iso = toIsoDateOrEmpty(year, month, day);
+        calendar.setSelectedDate(iso ? new Date(year, month - 1, day) : null);
+      } else {
+        calendar.setSelectedDate(null);
+      }
+
+      if (year !== null && month !== null && month >= 1 && month <= 12) {
         calendar.setDisplayMonth(year, month - 1);
       }
     }
@@ -676,10 +688,17 @@ export class DadsDatePicker extends TypographyFormComponent {
     calendar?.focus?.();
   }
 
-  #closeCalendar(): void {
+  #closeCalendar(options: { restoreFocus?: boolean } = {}): void {
     if (!this.#calendarPopover || !this.#calendarButton) return;
+    const wasOpen = this.#isCalendarOpen();
     this.#calendarPopover.style.display = 'none';
     this.#calendarButton.setAttribute('aria-expanded', 'false');
+
+    const restoreFocus = options.restoreFocus ?? true;
+    if (!wasOpen || !restoreFocus) return;
+    if (this.#calendarButton.disabled) return;
+    if (this.#calendarButton.style.display === 'none') return;
+
     this.#calendarButton.focus();
   }
 

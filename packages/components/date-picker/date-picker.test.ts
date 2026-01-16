@@ -436,3 +436,51 @@ describe('DadsDatePicker - キーボード（フォーカストラップ）', ()
     expect(focusSpy).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('DadsDatePicker - 入力パース（4桁年必須）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('年が4桁でない場合は value を生成しない', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    await waitForCustomElement(element);
+
+    const year = getShadowContent(element, '#year-input') as HTMLInputElement | null;
+    const month = getShadowContent(element, '#month-input') as HTMLInputElement | null;
+    const day = getShadowContent(element, '#day-input') as HTMLInputElement | null;
+    expect(year).toBeTruthy();
+    expect(month).toBeTruthy();
+    expect(day).toBeTruthy();
+
+    year!.value = '24';
+    month!.value = '01';
+    day!.value = '02';
+    expect((element as unknown as { value: string }).value).toBe('');
+  });
+
+  it('数字以外を含む場合は value を生成しない', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    await waitForCustomElement(element);
+
+    const year = getShadowContent(element, '#year-input') as HTMLInputElement | null;
+    const month = getShadowContent(element, '#month-input') as HTMLInputElement | null;
+    const day = getShadowContent(element, '#day-input') as HTMLInputElement | null;
+    expect(year).toBeTruthy();
+    expect(month).toBeTruthy();
+    expect(day).toBeTruthy();
+
+    year!.value = '2024a';
+    month!.value = '01';
+    day!.value = '02';
+    expect((element as unknown as { value: string }).value).toBe('');
+  });
+});
