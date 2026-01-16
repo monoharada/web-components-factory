@@ -182,6 +182,7 @@ export class DadsDatePicker extends TypographyFormComponent {
   #errorText: HTMLElement | null = null;
   #errorSlot: HTMLSlotElement | null = null;
   #errorFallback: HTMLElement | null = null;
+  #describedByProxies: HTMLElement | null = null;
 
   #formDisabled = false;
 
@@ -260,6 +261,8 @@ export class DadsDatePicker extends TypographyFormComponent {
         <slot name="error-text" id="error-slot"></slot>
         <span id="error-fallback"></span>
       </div>
+
+      <div part="visually-hidden" id="describedby-proxies"></div>
     `,
     styles: withReset([applyDADSTokens(), datePickerStyles], 'minimal'),
     attributes: [
@@ -300,6 +303,7 @@ export class DadsDatePicker extends TypographyFormComponent {
     this.#errorText = this.shadowRoot?.querySelector('#error-text') as HTMLElement | null;
     this.#errorSlot = this.shadowRoot?.querySelector('#error-slot') as HTMLSlotElement | null;
     this.#errorFallback = this.shadowRoot?.querySelector('#error-fallback') as HTMLElement | null;
+    this.#describedByProxies = this.shadowRoot?.querySelector('#describedby-proxies') as HTMLElement | null;
 
     this.#setupEventListeners();
     this.#syncAll();
@@ -526,6 +530,8 @@ export class DadsDatePicker extends TypographyFormComponent {
     const external = this.getAttribute('aria-describedby') ?? '';
     const externalIds = external.split(' ').map((s) => s.trim()).filter(Boolean);
 
+    this.#syncExternalAriaDescribedByProxies(externalIds);
+
     const ids = new Set<string>();
     for (const id of externalIds) ids.add(id);
 
@@ -539,6 +545,34 @@ export class DadsDatePicker extends TypographyFormComponent {
       if (!input) continue;
       if (describedBy) input.setAttribute('aria-describedby', describedBy);
       else input.removeAttribute('aria-describedby');
+    }
+  }
+
+  #syncExternalAriaDescribedByProxies(externalIds: string[]): void {
+    const root = this.#describedByProxies;
+    const shadow = this.shadowRoot;
+    if (!root || !shadow) return;
+
+    const desired = new Set(externalIds);
+
+    for (const child of Array.from(root.children)) {
+      const id = (child as HTMLElement).id;
+      if (!id || !desired.has(id)) child.remove();
+    }
+
+    for (const id of desired) {
+      const existing = shadow.getElementById(id);
+      if (existing && !root.contains(existing)) continue;
+
+      let proxy = (existing as HTMLElement | null) ?? null;
+      if (!proxy) {
+        proxy = document.createElement('span');
+        proxy.id = id;
+        root.appendChild(proxy);
+      }
+
+      const source = document.getElementById(id);
+      proxy.textContent = source?.textContent?.trim() ?? '';
     }
   }
 

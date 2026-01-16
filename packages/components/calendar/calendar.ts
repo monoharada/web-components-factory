@@ -235,6 +235,7 @@ export class DadsCalendar extends TypographyWebComponent {
   #rangeEndDate: Date | null = null;
   #minDate: Date | null = null;
   #maxDate: Date | null = null; // exclusive
+  #managedAriaLabel: string | null = null;
 
   #subscriptions: Array<() => void> = [];
 
@@ -640,7 +641,15 @@ export class DadsCalendar extends TypographyWebComponent {
       month: 'long',
     }).format(firstDay);
 
-    this.setAttribute('aria-label', heading);
+    // 利用側が aria-label / aria-labelledby を指定している場合は上書きしない
+    // （未指定時、またはこのコンポーネントが自動で設定した値のみを更新）
+    if (!this.hasAttribute('aria-labelledby')) {
+      const current = this.getAttribute('aria-label');
+      if (current === null || current === this.#managedAriaLabel) {
+        this.setAttribute('aria-label', heading);
+        this.#managedAriaLabel = heading;
+      }
+    }
     if (this.#calendarHeading) this.#calendarHeading.textContent = heading;
     this.#calendarTable.setAttribute('aria-label', heading);
 

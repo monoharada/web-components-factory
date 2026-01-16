@@ -1094,19 +1094,19 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-	      <section style="margin-bottom: 0;">
-	        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本</h3>
-	        <dads-calendar min-date="2024-01-01" max-date="2026-12-31"></dads-calendar>
-	      </section>
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本</h3>
+        <dads-calendar min-date="2024-01-01" max-date="2026-12-31"></dads-calendar>
+      </section>
 
-	      <section style="margin-top: 32px; margin-bottom: 0;">
-	        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">期間選択（range）</h3>
-	        <p style="margin: 0 0 16px; color: #666; font-size: 14px;">
-	          開始日→終了日の順に選択します。選択状態はカレンダー下部に表示され、aria-live で読み上げも行います。
-	        </p>
-	        <dads-calendar range min-date="2024-01-01" max-date="2026-12-31"></dads-calendar>
-	      </section>
-	    </div>
+      <section style="margin-top: 32px; margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">期間選択（range）</h3>
+        <p style="margin: 0 0 16px; color: #666; font-size: 14px;">
+          開始日→終了日の順に選択します。選択状態はカレンダー下部に表示され、aria-live で読み上げも行います。
+        </p>
+        <dads-calendar range min-date="2024-01-01" max-date="2026-12-31"></dads-calendar>
+      </section>
+    </div>
 
     <script type="module">
       await Promise.all([import('dads-calendar'), import('dads-switch'), import('a11y-annotate')]);

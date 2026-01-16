@@ -187,6 +187,27 @@ describe('DadsFieldset - aria-describedby自動設定', () => {
     expect(supportText?.id).toMatch(/^dads-fieldset-.+-support$/);
   });
 
+  it('support-textスロットの既存IDは上書きしない', async () => {
+    const { defineDefaultFieldset } = await import('./fieldset-define');
+    const { defineDefaultCheckbox } = await import('../checkbox/checkbox-define');
+    defineDefaultFieldset();
+    defineDefaultCheckbox();
+
+    element = createTestElement('dads-fieldset');
+    element.innerHTML = `
+      <p slot="support-text" id="my-support-id">サポートテキスト</p>
+      <dads-checkbox label="オプション1"></dads-checkbox>
+    `;
+    await waitForCustomElement(element);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    const checkbox = element.querySelector('dads-checkbox');
+    const supportText = element.querySelector('[slot="support-text"]');
+
+    expect(supportText?.id).toBe('my-support-id');
+    expect(checkbox?.getAttribute('aria-describedby')).toContain('my-support-id');
+  });
+
   it('子のdads-checkboxにaria-describedbyが自動設定される', async () => {
     const { defineDefaultFieldset } = await import('./fieldset-define');
     const { defineDefaultCheckbox } = await import('../checkbox/checkbox-define');
@@ -206,6 +227,36 @@ describe('DadsFieldset - aria-describedby自動設定', () => {
     const supportText = element.querySelector('[slot="support-text"]');
 
     expect(checkbox?.getAttribute('aria-describedby')).toContain(supportText?.id);
+  });
+
+  it('support-text削除で子要素のaria-describedbyから自動付与IDが除去される', async () => {
+    const { defineDefaultFieldset } = await import('./fieldset-define');
+    const { defineDefaultCheckbox } = await import('../checkbox/checkbox-define');
+    defineDefaultFieldset();
+    defineDefaultCheckbox();
+
+    element = createTestElement('dads-fieldset');
+    element.innerHTML = `
+      <p slot="support-text">サポートテキスト</p>
+      <dads-checkbox label="オプション1" aria-describedby="existing-id"></dads-checkbox>
+    `;
+    await waitForCustomElement(element);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    const checkbox = element.querySelector('dads-checkbox');
+    const supportText = element.querySelector('[slot="support-text"]') as HTMLElement | null;
+    const supportId = supportText?.id || '';
+
+    expect(supportId).toBeTruthy();
+    expect(checkbox?.getAttribute('aria-describedby')).toContain('existing-id');
+    expect(checkbox?.getAttribute('aria-describedby')).toContain(supportId);
+
+    supportText?.remove();
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    const updated = checkbox?.getAttribute('aria-describedby') ?? '';
+    expect(updated).toContain('existing-id');
+    expect(updated).not.toContain(supportId);
   });
 
   it('既存のaria-describedbyを上書きしない（拡張する）', async () => {

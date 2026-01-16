@@ -218,6 +218,7 @@ describe('DadsDatePicker - a11y（ARIA属性）', () => {
 
     const external = document.createElement('div');
     external.id = 'external-desc';
+    external.textContent = '外部の説明テキスト';
     document.body.appendChild(external);
 
     element = createTestElement('dads-date-picker');
@@ -237,6 +238,11 @@ describe('DadsDatePicker - a11y（ARIA属性）', () => {
       expect(describedBy).toEqual(expect.arrayContaining(['external-desc', 'error-text']));
     }
     expect(errorText?.style.display).not.toBe('none');
+
+    const proxy = getShadowContent(element, '#external-desc') as HTMLElement | null;
+    expect(proxy?.textContent).toBe('外部の説明テキスト');
+
+    external.remove();
   });
 });
 
