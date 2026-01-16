@@ -111,7 +111,7 @@ export class DadsFieldset extends TypographyFormComponent {
         title: 'サポートテキスト',
         label: 'support-text',
         description:
-          '補足説明を提供します。子要素のaria-describedbyに自動的に関連付けられます。',
+          '補足説明を提供します。support-textスロット利用時のみ、子要素のaria-describedbyに自動的に関連付けられます（属性フォールバックは表示のみ）。',
         category: 'labels',
         placement: 'bottom-left',
         target: { scope: 'shadow', selector: '[part="support-text"]' },

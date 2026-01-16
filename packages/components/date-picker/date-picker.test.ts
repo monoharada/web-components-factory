@@ -244,6 +244,41 @@ describe('DadsDatePicker - a11y（ARIA属性）', () => {
 
     external.remove();
   });
+
+  it('外部 aria-describedby の説明文変更が focus / カレンダーopen で proxy に反映される', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    const external = document.createElement('div');
+    external.id = 'external-desc';
+    external.textContent = ' 外部の説明テキスト ';
+    document.body.appendChild(external);
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('calendar', '');
+    element.setAttribute('aria-describedby', 'external-desc');
+    await waitForCustomElement(element);
+
+    const year = getShadowContent(element, '#year-input') as HTMLInputElement | null;
+
+    let proxy = getShadowContent(element, '#external-desc') as HTMLElement | null;
+    expect(proxy?.textContent).toBe(' 外部の説明テキスト ');
+
+    external.textContent = '更新後の説明';
+    year?.dispatchEvent(new Event('focusin', { bubbles: true }));
+
+    proxy = getShadowContent(element, '#external-desc') as HTMLElement | null;
+    expect(proxy?.textContent).toBe('更新後の説明');
+
+    external.textContent = 'さらに更新';
+    const button = getShadowContent(element, '#calendar-button') as HTMLButtonElement | null;
+    button?.click();
+
+    proxy = getShadowContent(element, '#external-desc') as HTMLElement | null;
+    expect(proxy?.textContent).toBe('さらに更新');
+
+    external.remove();
+  });
 });
 
 describe('DadsDatePicker - キーボード（入力フィールドの左右移動）', () => {

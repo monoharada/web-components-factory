@@ -548,6 +548,12 @@ export class DadsDatePicker extends TypographyFormComponent {
     }
   }
 
+  #refreshExternalAriaDescribedByProxies(): void {
+    const external = this.getAttribute('aria-describedby') ?? '';
+    const externalIds = external.split(' ').map((s) => s.trim()).filter(Boolean);
+    this.#syncExternalAriaDescribedByProxies(externalIds);
+  }
+
   #syncExternalAriaDescribedByProxies(externalIds: string[]): void {
     const root = this.#describedByProxies;
     const shadow = this.shadowRoot;
@@ -572,7 +578,7 @@ export class DadsDatePicker extends TypographyFormComponent {
       }
 
       const source = document.getElementById(id);
-      proxy.textContent = source?.textContent?.trim() ?? '';
+      proxy.textContent = source?.textContent ?? '';
     }
   }
 
@@ -613,6 +619,7 @@ export class DadsDatePicker extends TypographyFormComponent {
       subscribe(input, 'input', this.#handleInput);
       subscribe(input, 'change', this.#handleChange);
       subscribe(input, 'keydown', this.#handleInputKeydown);
+      subscribe(input, 'focusin', this.#handleInputFocusIn);
     }
 
     // カレンダー関連
@@ -621,6 +628,10 @@ export class DadsDatePicker extends TypographyFormComponent {
     subscribe(this.#backdrop, 'click', () => this.#closeCalendar());
     subscribe(this.#calendarPopover, 'keydown', this.#handlePopoverKeydown);
   }
+
+  #handleInputFocusIn = (): void => {
+    this.#refreshExternalAriaDescribedByProxies();
+  };
 
   #handleInput = (): void => {
     this.#syncFormValue();
@@ -696,6 +707,8 @@ export class DadsDatePicker extends TypographyFormComponent {
   #openCalendar(): void {
     if (this.#isDisabled() || this.hasAttribute('readonly')) return;
     if (!this.#calendarPopover || !this.#calendarButton) return;
+
+    this.#refreshExternalAriaDescribedByProxies();
 
     // カレンダーコンポーネントのPublic APIを型安全に参照
     const calendar = this.#calendar as (HTMLElement & DadsCalendarPublicAPI) | null;

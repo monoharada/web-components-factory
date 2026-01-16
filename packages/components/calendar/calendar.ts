@@ -235,7 +235,8 @@ export class DadsCalendar extends TypographyWebComponent {
   #rangeEndDate: Date | null = null;
   #minDate: Date | null = null;
   #maxDate: Date | null = null; // exclusive
-  #managedAriaLabel: string | null = null;
+  #autoManageHostAriaLabel = true;
+  #suppressAriaAttributeCallback = false;
 
   #subscriptions: Array<() => void> = [];
 
@@ -360,6 +361,8 @@ export class DadsCalendar extends TypographyWebComponent {
     this.#rangeEnd = this.shadowRoot?.querySelector('#range-end') as HTMLElement | null;
     this.#rangeLive = this.shadowRoot?.querySelector('#range-live') as HTMLElement | null;
 
+    this.#autoManageHostAriaLabel = !this.hasAttribute('aria-label') && !this.hasAttribute('aria-labelledby');
+
     this.#setupEventListeners();
     this.#initializeCalendar();
   }
@@ -370,11 +373,18 @@ export class DadsCalendar extends TypographyWebComponent {
   }
 
   static get observedAttributes(): string[] {
-    return ['min-date', 'max-date', 'range'];
+    return ['min-date', 'max-date', 'range', 'aria-label', 'aria-labelledby'];
   }
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
     super.attributeChangedCallback(name, oldValue, newValue);
+
+    if (name === 'aria-label' || name === 'aria-labelledby') {
+      if (!this.#suppressAriaAttributeCallback) {
+        this.#autoManageHostAriaLabel = false;
+      }
+      return;
+    }
 
     if (oldValue === newValue) return;
     if (name !== 'min-date' && name !== 'max-date' && name !== 'range') return;
@@ -642,12 +652,13 @@ export class DadsCalendar extends TypographyWebComponent {
     }).format(firstDay);
 
     // 利用側が aria-label / aria-labelledby を指定している場合は上書きしない
-    // （未指定時、またはこのコンポーネントが自動で設定した値のみを更新）
-    if (!this.hasAttribute('aria-labelledby')) {
-      const current = this.getAttribute('aria-label');
-      if (current === null || current === this.#managedAriaLabel) {
+    // （未指定時のみ、このコンポーネントが aria-label を自動管理する）
+    if (this.#autoManageHostAriaLabel && !this.hasAttribute('aria-labelledby')) {
+      this.#suppressAriaAttributeCallback = true;
+      try {
         this.setAttribute('aria-label', heading);
-        this.#managedAriaLabel = heading;
+      } finally {
+        this.#suppressAriaAttributeCallback = false;
       }
     }
     if (this.#calendarHeading) this.#calendarHeading.textContent = heading;

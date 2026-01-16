@@ -403,6 +403,33 @@ describe('DadsCalendar - a11y（ARIAラベル）', () => {
     expect(element.getAttribute('aria-label')).toBe('カスタムラベル');
     expect(table?.getAttribute('aria-label')).toBe(formatMonthLabel(2024, 1));
   });
+
+  it('自動設定後に利用側が aria-label を設定すると以降上書きしない（同値でも）', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-12-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+
+    const initial = formatMonthLabel(2024, 0);
+    expect(element.getAttribute('aria-label')).toBe(initial);
+
+    // 利用側が同じ値で aria-label を設定しても「以降は自動管理しない」扱いにする
+    element.setAttribute('aria-label', initial);
+
+    calendar.setDisplayMonth(2024, 1);
+
+    const table = getShadowContent(element, '#calendar-table') as HTMLElement | null;
+    expect(element.getAttribute('aria-label')).toBe(initial);
+    expect(table?.getAttribute('aria-label')).toBe(formatMonthLabel(2024, 1));
+  });
 });
 
 describe('DadsCalendar - a11y（ナビゲーション）', () => {
