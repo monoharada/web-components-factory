@@ -42,8 +42,8 @@ export const calendarStyles = css`
   [part="controls"] {
     display: flex;
     align-items: center;
-    column-gap: calc(8 / 16 * 1rem);
-    padding: calc(16 / 16 * 1rem);
+    column-gap: var(--spacing-2);
+    padding: var(--spacing-4);
   }
 
   [part="navigation"] {
@@ -61,11 +61,11 @@ export const calendarStyles = css`
   [part="year-select"] {
     vertical-align: middle;
     box-sizing: border-box;
-    border-radius: calc(8 / 16 * 1rem);
+    border-radius: var(--spacing-2);
     border: 1px solid var(--color-neutral-solid-gray-600);
     background-color: var(--color-neutral-white);
-    padding-right: calc(40 / 16 * 1rem);
-    padding-left: calc(16 / 16 * 1rem);
+    padding-right: var(--spacing-10);
+    padding-left: var(--spacing-4);
     color: inherit;
     font: inherit;
     line-height: 1;
@@ -80,9 +80,9 @@ export const calendarStyles = css`
   }
 
   [part="year-select"]:focus-visible {
-    outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
-    outline-offset: calc(2 / 16 * 1rem);
-    box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
+    outline: var(--spacing-1) solid var(--color-neutral-black);
+    outline-offset: var(--spacing-0-5);
+    box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300);
   }
 
   @media (hover: hover) {
@@ -95,12 +95,12 @@ export const calendarStyles = css`
     pointer-events: none;
     position: absolute;
     top: 0;
-    right: calc(16 / 16 * 1rem);
+    right: var(--spacing-4);
     bottom: 0;
     margin-top: auto;
     margin-bottom: auto;
-    width: calc(16 / 16 * 1rem);
-    height: calc(16 / 16 * 1rem);
+    width: var(--spacing-4);
+    height: var(--spacing-4);
   }
 
   [part="year-select"]:disabled + [part="select-chevron"] {
@@ -147,22 +147,22 @@ export const calendarStyles = css`
   [part="current-month"] {
     margin: 0;
     align-self: center;
-    width: calc(56 / 16 * 1rem);
+    width: 3.5rem; /* 56px - 固定幅のため数値指定 */
     text-align: center;
   }
 
   /* ========== Table ========== */
   [part="table"] {
-    margin-right: calc(12 / 16 * 1rem);
-    margin-bottom: calc(8 / 16 * 1rem);
-    margin-left: calc(12 / 16 * 1rem);
+    margin-right: var(--spacing-3);
+    margin-bottom: var(--spacing-2);
+    margin-left: var(--spacing-3);
     width: auto;
     border-collapse: collapse;
   }
 
   [part="header-cell"] {
-    width: calc(48 / 16 * 1rem);
-    height: calc(48 / 16 * 1rem);
+    width: var(--spacing-12);
+    height: var(--spacing-12);
     padding: 0;
     color: var(--color-neutral-solid-gray-700);
     font-weight: 700;
@@ -176,20 +176,20 @@ export const calendarStyles = css`
   }
 
   [part="date"] {
-    margin: calc(4 / 16 * 1rem);
+    margin: var(--spacing-1);
     display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    width: calc(40 / 16 * 1rem);
-    height: calc(40 / 16 * 1rem);
+    width: var(--spacing-10);
+    height: var(--spacing-10);
     border-radius: 50%;
     border: 0;
     background-color: transparent;
     color: inherit;
     font: inherit;
     letter-spacing: inherit;
-    text-underline-offset: calc(3 / 16 * 1rem);
+    text-underline-offset: var(--spacing-0-5);
     cursor: pointer;
     position: relative;
     z-index: 1;
@@ -203,7 +203,7 @@ export const calendarStyles = css`
     left: 0;
     right: 0;
     transform: translateY(-50%);
-    height: calc(2 / 16 * 1rem);
+    height: 2px; /* hairline - ボーダー幅なのでpx指定 */
     background-color: var(--color-primitive-blue-900, #0017c1);
     z-index: 0;
   }
@@ -224,10 +224,10 @@ export const calendarStyles = css`
   }
 
   [part="date"]:focus-visible {
-    outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
-    outline-offset: calc(2 / 16 * 1rem);
+    outline: var(--spacing-1) solid var(--color-neutral-black);
+    outline-offset: var(--spacing-0-5);
     background-color: var(--color-primitive-yellow-300);
-    box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
+    box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300);
   }
 
   [part="date"][data-selected] {
@@ -245,10 +245,10 @@ export const calendarStyles = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    column-gap: calc(16 / 16 * 1rem);
+    column-gap: var(--spacing-4);
     box-sizing: border-box;
     width: 100%;
-    padding: calc(16 / 16 * 1rem);
+    padding: var(--spacing-4);
   }
 
   /* Footer buttons: DADS calendar.css 相当のサイズ感に調整 */
@@ -260,20 +260,20 @@ export const calendarStyles = css`
   [part="range"] {
     box-sizing: border-box;
     width: 100%;
-    padding: 0 calc(16 / 16 * 1rem) calc(16 / 16 * 1rem);
+    padding: 0 var(--spacing-4) var(--spacing-4);
   }
 
   [part="support-text"] {
-    margin: 0 0 calc(8 / 16 * 1rem);
+    margin: 0 0 var(--spacing-2);
     color: var(--color-neutral-solid-gray-700);
-    font-size: calc(14 / 16 * 1rem);
+    font-size: 0.875rem; /* 14px - フォントサイズは固定 */
     line-height: 1.5;
   }
 
   [part="range-item"] {
     margin: 0;
     display: flex;
-    column-gap: calc(8 / 16 * 1rem);
+    column-gap: var(--spacing-2);
     align-items: baseline;
   }
 

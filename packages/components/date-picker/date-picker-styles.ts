@@ -21,7 +21,7 @@ export const datePickerStyles = css`
     position: relative;
     display: flex;
     align-items: end;
-    column-gap: calc(16 / 16 * 1rem);
+    column-gap: var(--spacing-4);
   }
 
   /* ============================================================
@@ -41,22 +41,22 @@ export const datePickerStyles = css`
     --_background-color: var(--color-neutral-white);
     display: inline-flex;
     box-sizing: border-box;
-    border-radius: calc(8 / 16 * 1rem);
+    border-radius: var(--spacing-2);
     border: 1px solid var(--color-neutral-solid-gray-600);
     background-color: var(--_background-color);
-    padding: calc(2 / 16 * 1rem) 0 calc(2 / 16 * 1rem) calc(2 / 16 * 1rem);
+    padding: 2px 0 2px 2px; /* hairline spacing */
   }
 
   :host([size="sm"][data-type="consolidated"]) [part="inputs"] {
-    height: calc(40 / 16 * 1rem);
+    height: var(--spacing-10);
   }
 
   :host([size="md"][data-type="consolidated"]) [part="inputs"] {
-    height: calc(48 / 16 * 1rem);
+    height: var(--spacing-12);
   }
 
   :host([size="lg"][data-type="consolidated"]) [part="inputs"] {
-    height: calc(56 / 16 * 1rem);
+    height: 3.5rem; /* 56px - spacing-14が存在しないため */
   }
 
   :host([data-type="consolidated"]) [part="inputs"]:focus-within {
@@ -118,11 +118,11 @@ export const datePickerStyles = css`
   }
 
   :host([data-type="consolidated"]) :is([part~="month"], [part~="day"]):not(:first-child) {
-    margin-left: calc(-4 / 16 * 1rem);
+    margin-left: calc(var(--spacing-1) * -1);
   }
 
   :host([data-type="consolidated"]) :is([part~="month"], [part~="day"]):last-child {
-    padding-right: calc(16 / 16 * 1rem);
+    padding-right: var(--spacing-4);
   }
 
   :host([data-type="consolidated"]) [part="field-label"] {
@@ -130,50 +130,50 @@ export const datePickerStyles = css`
     z-index: 1;
     align-self: center;
     background-color: var(--_background-color);
-    padding: calc(4 / 16 * 1rem);
+    padding: var(--spacing-1);
     line-height: 1;
   }
 
   :host([data-type="consolidated"]) [part="field-input"] {
-    margin-right: calc(-4 / 16 * 1rem);
+    margin-right: calc(var(--spacing-1) * -1);
     box-sizing: border-box;
-    width: calc(64 / 16 * 1rem);
-    border-radius: calc(8 / 16 * 1rem);
+    width: var(--spacing-16);
+    border-radius: var(--spacing-2);
     border: 1px solid transparent;
     background-color: transparent;
-    padding-right: calc(12 / 16 * 1rem);
+    padding-right: var(--spacing-3);
     text-align: right;
   }
 
   :host([data-type="consolidated"]) [part="field-input"]:focus {
-    outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
-    outline-offset: calc(2 / 16 * 1rem);
+    outline: var(--spacing-1) solid var(--color-neutral-black);
+    outline-offset: var(--spacing-0-5);
     border: 1px solid var(--color-neutral-solid-gray-600);
-    box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
+    box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300);
   }
 
   :host([data-type="consolidated"]) :is([part~="month"], [part~="day"]) [part="field-input"] {
-    width: calc(44 / 16 * 1rem);
+    width: 2.75rem; /* 44px - spacing-11が存在しないため */
   }
 
   /* --- Separated（分割型） --- */
   :host([data-type="separated"]) [part="inputs"] {
     display: inline-flex;
-    column-gap: calc(16 / 16 * 1rem);
+    column-gap: var(--spacing-4);
     box-sizing: content-box;
-    padding-top: calc(12 / 16 * 1rem);
+    padding-top: var(--spacing-3);
   }
 
   :host([size="sm"][data-type="separated"]) [part="inputs"] {
-    height: calc(40 / 16 * 1rem);
+    height: var(--spacing-10);
   }
 
   :host([size="md"][data-type="separated"]) [part="inputs"] {
-    height: calc(48 / 16 * 1rem);
+    height: var(--spacing-12);
   }
 
   :host([size="lg"][data-type="separated"]) [part="inputs"] {
-    height: calc(56 / 16 * 1rem);
+    height: 3.5rem; /* 56px - spacing-14が存在しないため */
   }
 
   :host([data-type="separated"]) [part~="field"] {
@@ -182,14 +182,14 @@ export const datePickerStyles = css`
 
   :host([data-type="separated"]) [part="field-label"] {
     position: absolute;
-    top: calc(-12 / 16 * 1rem);
+    top: calc(var(--spacing-3) * -1);
     right: 0;
     left: 0;
     margin: 0 auto;
     box-sizing: border-box;
-    width: calc(24 / 16 * 1rem);
+    width: var(--spacing-6);
     background-color: var(--color-neutral-white);
-    padding: calc(4 / 16 * 1rem);
+    padding: var(--spacing-1);
     line-height: 1;
   }
 
@@ -205,9 +205,9 @@ export const datePickerStyles = css`
 
   :host([data-type="separated"]) [part="field-input"] {
     box-sizing: border-box;
-    width: calc(72 / 16 * 1rem);
+    width: 4.5rem; /* 72px - spacing-18が存在しないため */
     height: 100%;
-    border-radius: calc(8 / 16 * 1rem);
+    border-radius: var(--spacing-2);
     border: 1px solid var(--color-neutral-solid-gray-600);
     background-color: var(--color-neutral-white);
     text-align: center;
@@ -232,9 +232,9 @@ export const datePickerStyles = css`
   }
 
   :host([data-type="separated"]) [part="field-input"]:focus-visible {
-    outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
-    outline-offset: calc(2 / 16 * 1rem);
-    box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
+    outline: var(--spacing-1) solid var(--color-neutral-black);
+    outline-offset: var(--spacing-0-5);
+    box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300);
   }
 
   :host([data-type="separated"]) [part="field-input"]:disabled {
@@ -244,7 +244,7 @@ export const datePickerStyles = css`
   }
 
   :host([data-type="separated"]) :is([part~="month"], [part~="day"]) [part="field-input"] {
-    width: calc(56 / 16 * 1rem);
+    width: 3.5rem; /* 56px - spacing-14が存在しないため */
   }
 
   @media (forced-colors: active) {
@@ -262,40 +262,40 @@ export const datePickerStyles = css`
     display: flex;
     align-items: center;
     justify-content: center;
-    column-gap: calc(4 / 16 * 1rem);
-    border-radius: calc(6 / 16 * 1rem);
+    column-gap: var(--spacing-1);
+    border-radius: var(--spacing-1-5);
     border: 1px solid;
     background-color: var(--color-neutral-white);
-    padding-right: calc(12 / 16 * 1rem);
-    padding-left: calc(12 / 16 * 1rem);
+    padding-right: var(--spacing-3);
+    padding-left: var(--spacing-3);
     color: var(--color-primitive-blue-900);
   }
 
   :host([size="sm"]) [part="calendar-button"] {
-    height: calc(40 / 16 * 1rem);
+    height: var(--spacing-10);
   }
 
   :host([size="md"]) [part="calendar-button"] {
-    height: calc(48 / 16 * 1rem);
+    height: var(--spacing-12);
   }
 
   :host([size="lg"]) [part="calendar-button"] {
-    height: calc(56 / 16 * 1rem);
+    height: 3.5rem; /* 56px - spacing-14が存在しないため */
   }
 
   @media (hover: hover) {
     [part="calendar-button"]:enabled:hover {
-      border-width: calc(3 / 16 * 1rem);
-      padding-right: calc(10 / 16 * 1rem);
-      padding-left: calc(10 / 16 * 1rem);
+      border-width: 3px; /* hover時のボーダー幅 */
+      padding-right: var(--spacing-2-5);
+      padding-left: var(--spacing-2-5);
     }
   }
 
   [part="calendar-button"]:focus-visible {
-    outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
-    outline-offset: calc(2 / 16 * 1rem);
-    border-radius: calc(4 / 16 * 1rem);
-    box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
+    outline: var(--spacing-1) solid var(--color-neutral-black);
+    outline-offset: var(--spacing-0-5);
+    border-radius: var(--spacing-1);
+    box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300);
   }
 
   [part="calendar-button"]:disabled {
@@ -313,13 +313,13 @@ export const datePickerStyles = css`
   }
 
   [part="calendar-icon"] {
-    width: calc(24 / 16 * 1rem);
-    height: calc(24 / 16 * 1rem);
+    width: var(--spacing-6);
+    height: var(--spacing-6);
   }
 
   [part="calendar-chevron"] {
-    width: calc(16 / 16 * 1rem);
-    height: calc(16 / 16 * 1rem);
+    width: var(--spacing-4);
+    height: var(--spacing-4);
   }
 
   [part="calendar-button"][aria-expanded="true"] [part="calendar-chevron"] {
@@ -340,14 +340,14 @@ export const datePickerStyles = css`
     top: 100%;
     left: 0;
     z-index: 1;
-    border-radius: calc(8 / 16 * 1rem);
+    border-radius: var(--spacing-2);
     border: 1px solid var(--color-neutral-solid-gray-420);
     background-color: var(--color-neutral-white);
     box-shadow: var(--elevation-1);
   }
 
   [part="error-text"] {
-    margin: calc(8 / 16 * 1rem) 0 0;
+    margin: var(--spacing-2) 0 0;
     color: var(--color-semantic-error-1);
     line-height: 1.7;
   }

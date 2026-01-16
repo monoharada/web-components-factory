@@ -826,6 +826,153 @@ Form-Associated Custom Elementsでカスタムバリデーションを実装す�
 
 ---
 
+## [2026-01-16] CSSにおけるSpacing Tokensの徹底活用
+**タグ**: #css #design-tokens #spacing #maintainability
+
+### 概要
+CSSでハードコードされた`calc(X / 16 * 1rem)`形式の値を、`--spacing-*`トークンに置き換えることで保守性と一貫性を向上。CLAUDE.mdのガイドラインに準拠。
+
+### 詳細
+
+#### 1. 置き換えルール
+
+| ハードコード値 | Spacing Token |
+|---------------|---------------|
+| `calc(4 / 16 * 1rem)` (4px) | `var(--spacing-1)` |
+| `calc(8 / 16 * 1rem)` (8px) | `var(--spacing-2)` |
+| `calc(12 / 16 * 1rem)` (12px) | `var(--spacing-3)` |
+| `calc(16 / 16 * 1rem)` (16px) | `var(--spacing-4)` |
+| `calc(24 / 16 * 1rem)` (24px) | `var(--spacing-6)` |
+| `calc(40 / 16 * 1rem)` (40px) | `var(--spacing-10)` |
+| `calc(48 / 16 * 1rem)` (48px) | `var(--spacing-12)` |
+
+#### 2. 例外ケース（px値を許容）
+
+```css
+/* ボーダー幅（1px, 2px, 3px）はpxで指定 */
+border: 1px solid var(--color-neutral-solid-gray-600);
+border-width: 3px; /* hover時のボーダー幅 */
+
+/* hairline（2px未満）の高さ */
+height: 2px; /* hairline - ボーダー幅なのでpx指定 */
+
+/* 存在しないトークンの代替 */
+width: 2.75rem; /* 44px - spacing-11が存在しないため */
+height: 3.5rem; /* 56px - spacing-14が存在しないため */
+```
+
+#### 3. 負の値を使う場合
+
+```css
+/* calc()で負の値に変換 */
+margin-left: calc(var(--spacing-1) * -1);  /* -4px */
+top: calc(var(--spacing-3) * -1);           /* -12px */
+```
+
+### 適用例
+```css
+/* ❌ BAD: ハードコード */
+padding: calc(16 / 16 * 1rem);
+column-gap: calc(8 / 16 * 1rem);
+outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
+
+/* ✅ GOOD: Spacing Tokens */
+padding: var(--spacing-4);
+column-gap: var(--spacing-2);
+outline: var(--spacing-1) solid var(--color-neutral-black);
+```
+
+### 成果物
+- `packages/components/calendar/calendar-styles.ts` - トークン適用
+- `packages/components/date-picker/date-picker-styles.ts` - トークン適用
+
+### 注意点
+- フォーカススタイル（outline, outline-offset, box-shadow）もトークン化する
+- 存在しないトークンはコメントで理由を明記して`rem`値を使用
+- Light DOMコンポーネントではフォールバック値を指定: `var(--spacing-4, 16px)`
+
+---
+
+## [2026-01-16] Web Components間の型安全なPublic API定義
+**タグ**: #typescript #webcomponents #type-safety #interfaces
+
+### 概要
+親コンポーネントが子コンポーネントのメソッドを呼び出す際、`as unknown as {...}`の型アサーションではなく、インターフェースを定義してexportすることで型安全性を確保。
+
+### 詳細
+
+#### 1. 問題: 型アサーションの乱用
+
+```typescript
+// ❌ BAD: インラインの型アサーション
+const calendar = this.#calendar as unknown as {
+  setSelectedDate: (date: Date) => void;
+  setDisplayMonth: (year: number, monthIndex0: number) => void;
+  focus: () => void;
+} | null;
+```
+
+**問題点**:
+- 型定義が重複する可能性
+- APIの変更時に追跡が困難
+- コンポーネント間の契約が不明確
+
+#### 2. 解決策: Public APIインターフェースの定義
+
+```typescript
+// calendar.ts
+/**
+ * DadsCalendarコンポーネントの公開API（型安全な参照用）
+ */
+export interface DadsCalendarPublicAPI {
+  /** 選択日付を設定 */
+  setSelectedDate(date: Date | null): void;
+  /** 表示月を設定 */
+  setDisplayMonth(year: number, monthIndex0: number): void;
+  /** カレンダーにフォーカスを移動 */
+  focus(): void;
+}
+
+// index.ts
+export type { DadsCalendarPublicAPI } from './calendar.js';
+```
+
+#### 3. 利用側での型安全な参照
+
+```typescript
+// date-picker.ts
+import type { DadsCalendarPublicAPI } from '../calendar/index.js';
+
+// 型安全にキャスト
+const calendar = this.#calendar as (HTMLElement & DadsCalendarPublicAPI) | null;
+
+// TypeScriptが型チェックを行う
+calendar?.setSelectedDate(new Date(year, month - 1, day));
+calendar?.setDisplayMonth(year, month - 1);
+calendar?.focus();
+```
+
+### 適用パターン
+
+| シナリオ | パターン |
+|----------|----------|
+| 親→子のメソッド呼び出し | Public APIインターフェースをexport |
+| 子→親のイベント通知 | CustomEventのdetail型を定義 |
+| 動的ロード | defineXxx()関数で登録後に参照 |
+
+### 成果物
+- `packages/components/calendar/calendar.ts` - `DadsCalendarPublicAPI`インターフェース追加
+- `packages/components/calendar/index.ts` - 型のexport追加
+- `packages/components/date-picker/date-picker.ts` - 型安全な参照に修正
+
+### 注意点
+- インターフェースはpublicメソッドのみ定義（privateは含めない）
+- JSDocコメントで各メソッドの用途を明記
+- `type`キーワードでexportすることでランタイムバンドルに影響なし
+- HTMLElementとの交差型`(HTMLElement & PublicAPI)`を使用
+
+---
+
 ## テンプレート（新しい学習記録用）
 
 ## [日付] タイトル

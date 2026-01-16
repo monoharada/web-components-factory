@@ -14,6 +14,18 @@ import { defineButton } from '../button/index.js';
 
 const shadowTarget = (selector: string): A11yElementRef => ({ scope: 'shadow', selector });
 
+/**
+ * DadsCalendarコンポーネントの公開API（型安全な参照用）
+ */
+export interface DadsCalendarPublicAPI {
+  /** 選択日付を設定 */
+  setSelectedDate(date: Date | null): void;
+  /** 表示月を設定 */
+  setDisplayMonth(year: number, monthIndex0: number): void;
+  /** カレンダーにフォーカスを移動 */
+  focus(): void;
+}
+
 function parseYmd(value: string): { year: number; monthIndex0: number; date: number } | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
   const [y, m, d] = value.split('-');

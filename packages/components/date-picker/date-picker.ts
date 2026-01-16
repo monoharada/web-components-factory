@@ -12,6 +12,7 @@ import { datePickerStyles } from './date-picker-styles.js';
 import { setDefaultAttributes, updateErrorFallback } from '../../utils/form-component-helpers.js';
 import type { A11yAnnotations, A11yElementRef } from '../../utils/a11y-annotations.js';
 import { defineCalendar } from '../calendar/calendar-define.js';
+import type { DadsCalendarPublicAPI } from '../calendar/index.js';
 
 type MaybeDate = Date | null;
 
@@ -655,12 +656,8 @@ export class DadsDatePicker extends TypographyFormComponent {
     if (this.#isDisabled() || this.hasAttribute('readonly')) return;
     if (!this.#calendarPopover || !this.#calendarButton) return;
 
-    // カレンダーが未定義の場合は操作できない（defineCalendar()済みの想定）
-    const calendar = this.#calendar as unknown as {
-      setSelectedDate: (date: Date) => void;
-      setDisplayMonth: (year: number, monthIndex0: number) => void;
-      focus: () => void;
-    } | null;
+    // カレンダーコンポーネントのPublic APIを型安全に参照
+    const calendar = this.#calendar as (HTMLElement & DadsCalendarPublicAPI) | null;
 
     const year = this.#yearInput ? Number.parseInt(this.#yearInput.value, 10) : Number.NaN;
     const month = this.#monthInput ? Number.parseInt(this.#monthInput.value, 10) : Number.NaN;
