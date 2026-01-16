@@ -4,6 +4,76 @@
 
 ---
 
+## [2026-01-15] `dads-button` のスタイリングAPI（サイズ/比率）とバリアント別hover/active
+**タグ**: #css #webcomponents #designtokens
+
+### 概要
+複合コンポーネント（例: `dads-calendar`）内部で `dads-button` を「アイコンのみの正方形ボタン」や「コンポーネント固有のpadding/高さ」に合わせる必要が出たため、`dads-button` のスタイリング用CSS変数（API）を整理し、`primary/secondary/tertiary` バリアントでも hover/active が効くようにしました。
+
+### 詳細
+- **`dads-button` のサイズ/レイアウトをCSS変数で調整できるようにする**
+  - `--dads-button-width / --dads-button-min-width / --dads-button-max-width`
+  - `--dads-button-min-height`（外部オーバーライド用）
+  - `--dads-button-min-height-default`（コンポーネント内部のデフォルト用）
+  - `--dads-button-padding`
+  - `--dads-button-aspect-ratio`（例: `1 / 1`）
+- **親コンポーネント側で“揃える”用の変数を用意する（例: `dads-calendar`）**
+  - `--dads-calendar-control-size`（年セレクト / 前後ボタン / フッターの高さを合わせる）
+- **バリアント名の揺れに注意**
+  - トークン側は `variant="primary|secondary|tertiary"` を許容しているため、スタイル（hover/active/disabled）も同様に対応させる必要がある。
+
+### 適用例
+```css
+/* 例: カレンダー全体のコントロール高さを揃える（外から上書き可能） */
+dads-calendar {
+  --dads-calendar-control-size: 44px;
+}
+
+/* 例: 親コンポーネント側で子の dads-button を正方形アイコンボタンにする */
+parent-component::part(nav-button) {
+  --dads-button-padding: 0;
+  --dads-button-min-height: 44px;
+  --dads-button-width: var(--dads-button-min-height);
+  --dads-button-min-width: var(--dads-button-min-height);
+  --dads-button-aspect-ratio: 1 / 1;
+}
+```
+
+### 注意点
+- 子コンポーネントのShadow DOM内部を直接スタイルできないため、**CSS変数（=スタイリングAPI）** と **`part` の公開** で“外から調整できる余地”を残す。
+- `min-height` を“無効化”したい場合は `--dads-button-min-height: initial;`（または `unset`）を設定して初期値に戻す。
+
+---
+
+## [2026-01-15] `dads-calendar` の期間選択（`range`）と読み上げ（aria-live）
+**タグ**: #a11y #calendar #webcomponents
+
+### 概要
+`dads-calendar` に `range` 属性を付与すると、開始日→終了日の順に2点を選択できる“期間選択モード”になります。
+
+### 仕様メモ
+- **表示**: カレンダー下部に「開始日 / 終了日」を表示する（未選択は `未選択`）。
+- **サポートテキスト**:
+  - 開始日未選択: `開始日を選択してください。`
+  - 開始日選択済み: `終了日をお選びください。`
+  - 両方選択済み: `開始日と終了日を選択しました。`
+- **読み上げ**: 選択操作時に `aria-live="polite"` を使って状態変化を読み上げる。
+- **イベント**: `date-range-selected` を発火し、`detail.startDate / detail.endDate`（`Date | null`）を渡す。
+
+### 使用例
+```html
+<dads-calendar range></dads-calendar>
+```
+
+```js
+document.querySelector('dads-calendar')?.addEventListener('date-range-selected', (e) => {
+  const { startDate, endDate } = e.detail;
+  console.log(startDate, endDate);
+});
+```
+
+---
+
 ## [2025-09-02] Claude Code開発フローの確立
 **タグ**: #workflow #claudecode #productivity
 

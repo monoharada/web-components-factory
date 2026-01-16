@@ -305,7 +305,7 @@ export class DadsFieldset extends TypographyFormComponent {
 
     // 2. 子form要素にaria-describedbyを設定
     const formChildren = this.querySelectorAll(
-      'dads-checkbox, dads-radio, dads-input-text, dads-textarea, input, select, textarea'
+      'dads-checkbox, dads-radio, dads-input-text, dads-textarea, dads-date-picker, input, select, textarea'
     );
 
     for (const child of formChildren) {
@@ -327,7 +327,7 @@ export class DadsFieldset extends TypographyFormComponent {
   #propagateDisabled(): void {
     const isDisabled = this.hasAttribute('disabled');
     const formChildren = this.querySelectorAll(
-      'dads-checkbox, dads-radio, dads-input-text, dads-textarea'
+      'dads-checkbox, dads-radio, dads-input-text, dads-textarea, dads-date-picker'
     );
 
     for (const child of formChildren) {
