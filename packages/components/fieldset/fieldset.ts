@@ -69,7 +69,7 @@ export class DadsFieldset extends TypographyFormComponent {
       ],
       labels: [
         'legend属性またはlegendスロットでグループのラベルを指定します。',
-        'support-text属性またはスロットで補足説明を提供し、子要素のaria-describedbyに自動設定されます。',
+        'support-textスロットで補足説明を提供し、子要素のaria-describedbyに自動設定されます（属性フォールバックは表示のみ）。',
       ],
       motion: [
         'アニメーションは使用しません。',
@@ -111,7 +111,7 @@ export class DadsFieldset extends TypographyFormComponent {
         title: 'サポートテキスト',
         label: 'support-text',
         description:
-          '補足説明を提供します。子要素のaria-describedbyに自動的に関連付けられます。',
+          '補足説明を提供します。support-textスロット利用時のみ、子要素のaria-describedbyに自動的に関連付けられます（属性フォールバックは表示のみ）。',
         category: 'labels',
         placement: 'bottom-left',
         target: { scope: 'shadow', selector: '[part="support-text"]' },
@@ -135,6 +135,7 @@ export class DadsFieldset extends TypographyFormComponent {
 
   // 一意ID（aria-describedby用）
   #uniqueId = `dads-fieldset-${crypto.randomUUID().slice(0, 8)}`;
+  #lastSupportTextId: string | null = null;
 
   // Slot references
   #legendSlot: HTMLSlotElement | null = null;
@@ -291,34 +292,42 @@ export class DadsFieldset extends TypographyFormComponent {
    * 核心ロジック: Light DOM側要素へのaria-describedby自動設定
    */
   #setupChildAriaDescribedBy(): void {
-    const supportTextId = `${this.#uniqueId}-support`;
+    const previousId = this.#lastSupportTextId;
 
-    // 1. Light DOM側のsupport-text要素にIDを付与
-    const assignedSupport = this.#supportSlot?.assignedElements()[0];
+    // Light DOM側のsupport-text要素にIDを付与（既存IDがあれば保持）
+    const assignedSupport = this.#supportSlot?.assignedElements()[0] as HTMLElement | undefined;
+    let nextId: string | null = null;
     if (assignedSupport) {
-      assignedSupport.id = supportTextId;
+      const existingId = assignedSupport.id.trim();
+      if (existingId) {
+        nextId = existingId;
+      } else {
+        nextId = `${this.#uniqueId}-support`;
+        assignedSupport.id = nextId;
+      }
     }
 
-    // support-textが存在するか（スロットまたは属性）
-    const hasSupportText = assignedSupport || this.getAttribute('support-text');
-    if (!hasSupportText) return;
+    // スロット要素が無く、かつ過去に設定したIDも無い場合は何もしない
+    if (!previousId && !nextId) return;
 
     // 2. 子form要素にaria-describedbyを設定
     const formChildren = this.querySelectorAll(
-      'dads-checkbox, dads-radio, dads-input-text, dads-textarea, input, select, textarea'
+      'dads-checkbox, dads-radio, dads-input-text, dads-textarea, dads-date-picker, input, select, textarea'
     );
 
     for (const child of formChildren) {
-      // スロット経由のsupport-textがある場合のみ設定
-      if (!assignedSupport) continue;
-
       const existing = child.getAttribute('aria-describedby') || '';
       const ids = new Set(existing.split(' ').filter(Boolean));
 
-      ids.add(supportTextId);
+      if (previousId) ids.delete(previousId);
+      if (nextId) ids.add(nextId);
 
-      child.setAttribute('aria-describedby', [...ids].join(' '));
+      const describedBy = [...ids].join(' ');
+      if (describedBy) child.setAttribute('aria-describedby', describedBy);
+      else child.removeAttribute('aria-describedby');
     }
+
+    this.#lastSupportTextId = nextId;
   }
 
   /**
@@ -327,7 +336,7 @@ export class DadsFieldset extends TypographyFormComponent {
   #propagateDisabled(): void {
     const isDisabled = this.hasAttribute('disabled');
     const formChildren = this.querySelectorAll(
-      'dads-checkbox, dads-radio, dads-input-text, dads-textarea'
+      'dads-checkbox, dads-radio, dads-input-text, dads-textarea, dads-date-picker'
     );
 
     for (const child of formChildren) {

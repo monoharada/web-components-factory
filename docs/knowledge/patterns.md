@@ -89,6 +89,82 @@ MyComponent.define();
 
 ---
 
+## Nested Component Styling Pattern（CSS変数 + `part` 公開）
+**タグ**: #webcomponents #css #designsystem
+**適用場面**: 親コンポーネントの内部で別コンポーネント（例: `dads-button`）を使い、見た目を親側の要件に合わせたい時
+
+### 問題
+- Shadow DOM内の子コンポーネント内部（さらに別のShadow DOM）に対して、親から直接CSSを当てられない。
+- その結果、親が子のスタイルを“再実装”しがちで、保守性が落ちる。
+
+### 解決策
+1. **子コンポーネントにスタイリングAPI（CSS変数）を用意する**
+2. **親コンポーネントは子ホスト要素に `part` を付けて公開し、CSS変数を上書きする**
+
+```html
+<!-- 親（shadow） -->
+<dads-button part="nav-button" variant="secondary" size="small" aria-label="前の月">
+  <svg slot="icon-start" ...></svg>
+</dads-button>
+```
+
+```css
+/* 親（shadow）: 子ホストのCSS変数を調整して“アイコンのみ正方形ボタン”にする */
+[part~="nav-button"] {
+  --dads-button-padding: 0;
+  --dads-button-min-height: 44px;
+  --dads-button-width: var(--dads-button-min-height);
+  --dads-button-min-width: var(--dads-button-min-height);
+  --dads-button-aspect-ratio: 1 / 1;
+}
+```
+
+補足: `dads-button` 側は `min-height: var(--dads-button-min-height, var(--dads-button-min-height-default, ...))` のように、
+外部オーバーライド（`--dads-button-min-height`）と内部デフォルト（`--dads-button-min-height-default`）を分離すると扱いやすい。
+
+```css
+/* 外部（light DOM）: 親が公開したpartを通じて調整することも可能 */
+dads-calendar::part(nav-button) {
+  --dads-button-min-height: 44px;
+}
+
+/* もしくは、親コンポーネント側が“揃える用の変数”を公開している場合 */
+dads-calendar {
+  --dads-calendar-control-size: 44px;
+}
+```
+
+### 結果
+- **メリット**: 子コンポーネントの責務（見た目のロジック）を再実装せず、CSS変数で一貫して調整できる
+- **デメリット**: CSS変数（スタイリングAPI）の設計・命名が必要
+
+### 関連パターン
+- CSS Variable State Pattern
+
+---
+
+## Date Range Selection Pattern（開始日→終了日 + aria-live）
+**タグ**: #a11y #calendar
+**適用場面**: 期間（開始日/終了日）を2ステップで選択し、視覚表示＋読み上げを同時に提供したい時
+
+### 解決策（例: `dads-calendar`）
+- `range` 属性でモードを切り替える
+- 画面下に「開始日/終了日」表示と、次にすべき操作を示すサポートテキストを出す
+- `aria-live="polite"` で選択操作の結果を読み上げる
+
+```html
+<dads-calendar range></dads-calendar>
+```
+
+```js
+document.querySelector('dads-calendar')?.addEventListener('date-range-selected', (e) => {
+  const { startDate, endDate } = e.detail;
+  // startDate が入ったら終了日選択へ誘導、両方揃ったら確定処理へ
+});
+```
+
+---
+
 ## Test Helper Pattern
 **タグ**: #testing #utilities
 **適用場面**: コンポーネントのテストセットアップ
