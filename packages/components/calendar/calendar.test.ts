@@ -2,13 +2,16 @@
  * DadsCalendarコンポーネント テスト
  */
 
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   createTestElement,
   cleanupTestElement,
   getShadowContent,
   waitForCustomElement,
 } from '../../../tests/setup';
+
+const formatMonthLabel = (year: number, monthIndex0: number): string =>
+  new Intl.DateTimeFormat('ja-JP', { year: 'numeric', month: 'long' }).format(new Date(year, monthIndex0, 1));
 
 describe('DadsCalendar - 基本レンダリング', () => {
   let element: HTMLElement;
@@ -25,6 +28,16 @@ describe('DadsCalendar - 基本レンダリング', () => {
     await waitForCustomElement(element);
 
     expect(element).toBeInTheDocument();
+  });
+
+  it('role属性はデフォルトで付与されない', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    await waitForCustomElement(element);
+
+    expect(element.getAttribute('role')).toBeNull();
   });
 
   it('Shadow DOMが作成され、年セレクトとテーブルが含まれる', async () => {
@@ -114,6 +127,32 @@ describe('DadsCalendar - 日付選択', () => {
     expect(selected?.getFullYear()).toBe(2024);
     expect(selected?.getMonth()).toBe(0);
     expect(selected?.getDate()).toBe(15);
+  });
+
+  it('選択中の日付セルに aria-selected と選択状態の aria-label が付与される', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-12-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+      setSelectedDate: (date: Date | null) => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+    calendar.setSelectedDate(new Date(2024, 0, 15));
+
+    const btn = element.shadowRoot?.querySelector(
+      'button[data-year="2024"][data-month="0"][data-date="15"]'
+    ) as HTMLButtonElement | null;
+    const cell = btn?.closest('td') as HTMLElement | null;
+
+    expect(btn).toBeTruthy();
+    expect(cell?.getAttribute('aria-selected')).toBe('true');
+    expect(btn?.getAttribute('aria-label')).toContain('選択中');
   });
 });
 
@@ -246,6 +285,216 @@ describe('DadsCalendar - 期間選択（range）', () => {
 
     expect(payload?.startDate).toBeInstanceOf(Date);
     expect(payload?.endDate).toBeInstanceOf(Date);
+  });
+});
+
+describe('DadsCalendar - a11y（ARIAラベル）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('表示月の更新でホスト/テーブルの aria-label が更新される', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-12-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+
+    const expected = formatMonthLabel(2024, 0);
+
+    const heading = getShadowContent(element, '#calendar-heading') as HTMLElement | null;
+    const table = getShadowContent(element, '#calendar-table') as HTMLElement | null;
+
+    expect(element.getAttribute('aria-label')).toBe(expected);
+    expect(heading?.textContent).toBe(expected);
+    expect(table?.getAttribute('aria-label')).toBe(expected);
+  });
+});
+
+describe('DadsCalendar - a11y（ナビゲーション）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('min/max境界では前/次月ボタンが aria-disabled="true" になる', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-01-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+
+    const prev = getShadowContent(element, '#prev-month-button') as HTMLElement | null;
+    const next = getShadowContent(element, '#next-month-button') as HTMLElement | null;
+
+    expect(prev?.getAttribute('aria-disabled')).toBe('true');
+    expect(prev?.hasAttribute('disabled')).toBe(true);
+    expect(next?.getAttribute('aria-disabled')).toBe('true');
+    expect(next?.hasAttribute('disabled')).toBe(true);
+  });
+});
+
+describe('DadsCalendar - キーボード（矢印キー）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('ArrowRightで同月内の日付へ移動し、tabindexとフォーカスが更新される', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-12-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+      setSelectedDate: (date: Date | null) => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+    calendar.setSelectedDate(new Date(2024, 0, 15));
+
+    const btn15 = element.shadowRoot?.querySelector(
+      'button[data-year="2024"][data-month="0"][data-date="15"]'
+    ) as HTMLButtonElement | null;
+    const btn16 = element.shadowRoot?.querySelector(
+      'button[data-year="2024"][data-month="0"][data-date="16"]'
+    ) as HTMLButtonElement | null;
+    expect(btn15).toBeTruthy();
+    expect(btn16).toBeTruthy();
+    expect(btn15?.getAttribute('tabindex')).toBe('0');
+
+    const focusSpy = vi.spyOn(btn16 as HTMLButtonElement, 'focus');
+    btn15?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+
+    expect(btn15?.getAttribute('tabindex')).toBe('-1');
+    expect(btn16?.getAttribute('tabindex')).toBe('0');
+    expect(focusSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('月末（1/31）でArrowRightすると翌月（2/1）へ移動し、aria-labelが更新される', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-12-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+      setSelectedDate: (date: Date | null) => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+    calendar.setSelectedDate(new Date(2024, 0, 31));
+
+    const btn31 = element.shadowRoot?.querySelector(
+      'button[data-year="2024"][data-month="0"][data-date="31"]'
+    ) as HTMLButtonElement | null;
+    expect(btn31).toBeTruthy();
+
+    const focusSpy = vi.spyOn(HTMLElement.prototype, 'focus');
+    focusSpy.mockClear();
+
+    btn31?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+
+    const btnFeb1 = element.shadowRoot?.querySelector(
+      'button[data-year="2024"][data-month="1"][data-date="1"]'
+    ) as HTMLButtonElement | null;
+    expect(btnFeb1).toBeTruthy();
+    expect(btnFeb1?.getAttribute('tabindex')).toBe('0');
+
+    const expected = formatMonthLabel(2024, 1);
+    const table = getShadowContent(element, '#calendar-table') as HTMLElement | null;
+
+    expect(element.getAttribute('aria-label')).toBe(expected);
+    expect(table?.getAttribute('aria-label')).toBe(expected);
+
+    const lastFocused = focusSpy.mock.instances[focusSpy.mock.instances.length - 1] as HTMLElement | undefined;
+    expect(lastFocused?.dataset.year).toBe('2024');
+    expect(lastFocused?.dataset.month).toBe('1');
+    expect(lastFocused?.dataset.date).toBe('1');
+  });
+
+  it('max境界では範囲外へ矢印移動できない（フォーカス/表示月が変わらない）', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-01-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+      setSelectedDate: (date: Date | null) => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+    calendar.setSelectedDate(new Date(2024, 0, 31));
+
+    const btn31 = element.shadowRoot?.querySelector(
+      'button[data-year="2024"][data-month="0"][data-date="31"]'
+    ) as HTMLButtonElement | null;
+    expect(btn31).toBeTruthy();
+    expect(btn31?.getAttribute('tabindex')).toBe('0');
+
+    const focusSpy = vi.spyOn(HTMLElement.prototype, 'focus');
+    focusSpy.mockClear();
+
+    btn31?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+
+    const expected = formatMonthLabel(2024, 0);
+    expect(element.getAttribute('aria-label')).toBe(expected);
+    expect(btn31?.getAttribute('tabindex')).toBe('0');
+    expect(focusSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('focus() は tabindex=0 の日付ボタンへフォーカスする', async () => {
+    const { defineCalendar } = await import('./calendar-define.js');
+    defineCalendar();
+
+    element = createTestElement('dads-calendar');
+    element.setAttribute('min-date', '2024-01-01');
+    element.setAttribute('max-date', '2024-12-31');
+    await waitForCustomElement(element);
+
+    const calendar = element as unknown as {
+      setDisplayMonth: (year: number, monthIndex0: number) => void;
+      setSelectedDate: (date: Date | null) => void;
+      focus: () => void;
+    };
+    calendar.setDisplayMonth(2024, 0);
+    calendar.setSelectedDate(new Date(2024, 0, 15));
+
+    const btn15 = element.shadowRoot?.querySelector(
+      'button[data-year="2024"][data-month="0"][data-date="15"]'
+    ) as HTMLButtonElement | null;
+    expect(btn15?.getAttribute('tabindex')).toBe('0');
+
+    const focusSpy = vi.spyOn(btn15 as HTMLButtonElement, 'focus');
+    focusSpy.mockClear();
+    calendar.focus();
+    expect(focusSpy).toHaveBeenCalledTimes(1);
   });
 });
 

@@ -335,11 +335,6 @@ export class DadsCalendar extends TypographyWebComponent {
     const prefix = this.#getPrefixFromLocalName();
     defineButton(prefix);
 
-    // DADS HTML版は role="application" を付与しているため、未指定なら付与
-    if (!this.hasAttribute('role')) {
-      this.setAttribute('role', 'application');
-    }
-
     this.#calendarHeading = this.shadowRoot?.querySelector('#calendar-heading') as HTMLElement | null;
     this.#yearSelect = this.shadowRoot?.querySelector('#year-select') as HTMLSelectElement | null;
     this.#prevMonthButton = this.#ensureButtonElement('prev-month-button', prefix);

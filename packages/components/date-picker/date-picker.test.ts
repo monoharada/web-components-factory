@@ -2,7 +2,7 @@
  * DadsDatePickerコンポーネント テスト
  */
 
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   createTestElement,
   cleanupTestElement,
@@ -182,5 +182,257 @@ describe('DadsDatePicker - a11yAnnotations', () => {
         'error-text',
       ])
     );
+  });
+});
+
+describe('DadsDatePicker - a11y（ARIA属性）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('カレンダーポップオーバーが dialog として適切な属性を持つ', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('calendar', '');
+    await waitForCustomElement(element);
+
+    const button = getShadowContent(element, '#calendar-button') as HTMLButtonElement | null;
+    const popover = getShadowContent(element, '#calendar-popover') as HTMLElement | null;
+
+    expect(button?.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(button?.getAttribute('aria-controls')).toBe('calendar-popover');
+    expect(button?.getAttribute('aria-expanded')).toBe('false');
+
+    expect(popover?.getAttribute('role')).toBe('dialog');
+    expect(popover?.getAttribute('aria-modal')).toBe('true');
+    expect(popover?.getAttribute('aria-label')).toBe('カレンダー');
+  });
+
+  it('error属性でinputに aria-invalid と aria-describedby が反映される', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    const external = document.createElement('div');
+    external.id = 'external-desc';
+    document.body.appendChild(external);
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('error', '');
+    element.setAttribute('error-text', '入力に誤りがあります');
+    element.setAttribute('aria-describedby', 'external-desc');
+    await waitForCustomElement(element);
+
+    const year = getShadowContent(element, '#year-input') as HTMLInputElement | null;
+    const month = getShadowContent(element, '#month-input') as HTMLInputElement | null;
+    const day = getShadowContent(element, '#day-input') as HTMLInputElement | null;
+    const errorText = getShadowContent(element, '#error-text') as HTMLElement | null;
+
+    for (const input of [year, month, day]) {
+      expect(input?.getAttribute('aria-invalid')).toBe('true');
+      const describedBy = (input?.getAttribute('aria-describedby') ?? '').split(' ').filter(Boolean);
+      expect(describedBy).toEqual(expect.arrayContaining(['external-desc', 'error-text']));
+    }
+    expect(errorText?.style.display).not.toBe('none');
+  });
+});
+
+describe('DadsDatePicker - キーボード（入力フィールドの左右移動）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('Consolidated: caret末尾でArrowRightすると次フィールドへフォーカス移動する', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    await waitForCustomElement(element);
+
+    const year = getShadowContent(element, '#year-input') as HTMLInputElement | null;
+    const month = getShadowContent(element, '#month-input') as HTMLInputElement | null;
+    const day = getShadowContent(element, '#day-input') as HTMLInputElement | null;
+    expect(year).toBeTruthy();
+    expect(month).toBeTruthy();
+    expect(day).toBeTruthy();
+
+    year!.value = '2024';
+    month!.value = '01';
+    day!.value = '02';
+
+    year!.setSelectionRange(year!.value.length, year!.value.length);
+    const focusMonth = vi.spyOn(month!, 'focus');
+    year!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+    expect(focusMonth).toHaveBeenCalledTimes(1);
+
+    month!.setSelectionRange(month!.value.length, month!.value.length);
+    const focusDay = vi.spyOn(day!, 'focus');
+    month!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+    expect(focusDay).toHaveBeenCalledTimes(1);
+  });
+
+  it('Consolidated: caret先頭でArrowLeftすると前フィールドへフォーカス移動する', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    await waitForCustomElement(element);
+
+    const year = getShadowContent(element, '#year-input') as HTMLInputElement | null;
+    const month = getShadowContent(element, '#month-input') as HTMLInputElement | null;
+    const day = getShadowContent(element, '#day-input') as HTMLInputElement | null;
+    expect(year).toBeTruthy();
+    expect(month).toBeTruthy();
+    expect(day).toBeTruthy();
+
+    year!.value = '2024';
+    month!.value = '01';
+    day!.value = '02';
+
+    day!.setSelectionRange(0, 0);
+    const focusMonth = vi.spyOn(month!, 'focus');
+    day!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }));
+    expect(focusMonth).toHaveBeenCalledTimes(1);
+
+    month!.setSelectionRange(0, 0);
+    const focusYear = vi.spyOn(year!, 'focus');
+    month!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }));
+    expect(focusYear).toHaveBeenCalledTimes(1);
+  });
+
+  it('Separated: 左右キーでフォーカス移動を行わない', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('data-type', 'separated');
+    await waitForCustomElement(element);
+
+    const year = getShadowContent(element, '#year-input') as HTMLInputElement | null;
+    const month = getShadowContent(element, '#month-input') as HTMLInputElement | null;
+    expect(year).toBeTruthy();
+    expect(month).toBeTruthy();
+
+    year!.value = '2024';
+    year!.setSelectionRange(year!.value.length, year!.value.length);
+
+    const focusMonth = vi.spyOn(month!, 'focus');
+    year!.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+    expect(focusMonth).toHaveBeenCalledTimes(0);
+  });
+});
+
+describe('DadsDatePicker - キーボード（フォーカストラップ）', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('末尾要素でTabすると先頭要素へ移動する（Shadow DOM内のボタンも対象）', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('calendar', '');
+    await waitForCustomElement(element);
+
+    const button = getShadowContent(element, '#calendar-button') as HTMLButtonElement | null;
+    expect(button).toBeTruthy();
+    button?.click();
+
+    const calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar?.shadowRoot).toBeTruthy();
+    await waitForCustomElement(calendar as HTMLElement);
+
+    const yearSelect = calendar?.shadowRoot?.querySelector('#year-select') as HTMLSelectElement | null;
+    const todayHost = calendar?.shadowRoot?.querySelector('#today-button') as HTMLElement | null;
+    expect(yearSelect).toBeTruthy();
+    expect(todayHost).toBeTruthy();
+    await waitForCustomElement(todayHost as HTMLElement);
+
+    const todayInner = todayHost?.shadowRoot?.querySelector('[part="base"]') as HTMLElement | null;
+    expect(todayInner).toBeTruthy();
+
+    const popover = getShadowContent(element, '#calendar-popover') as HTMLElement | null;
+    expect(popover).toBeTruthy();
+
+    const focusSpy = vi.spyOn(yearSelect as HTMLSelectElement, 'focus');
+    focusSpy.mockClear();
+    const ke = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true });
+    Object.defineProperty(ke, 'composedPath', { value: () => [todayInner] });
+    popover?.dispatchEvent(ke);
+
+    expect(focusSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('Escapeでポップオーバーが閉じ、トリガーボタンへフォーカスが戻る', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('calendar', '');
+    await waitForCustomElement(element);
+
+    const button = getShadowContent(element, '#calendar-button') as HTMLButtonElement | null;
+    const popover = getShadowContent(element, '#calendar-popover') as HTMLElement | null;
+    expect(button).toBeTruthy();
+    expect(popover).toBeTruthy();
+
+    const focusSpy = vi.spyOn(button as HTMLButtonElement, 'focus');
+
+    button?.click();
+    expect(button?.getAttribute('aria-expanded')).toBe('true');
+    expect(popover?.style.display).toBe('block');
+    focusSpy.mockClear();
+
+    popover?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, composed: true, cancelable: true })
+    );
+
+    expect(button?.getAttribute('aria-expanded')).toBe('false');
+    expect(popover?.style.display).toBe('none');
+    expect(focusSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('先頭要素でShift+Tabすると末尾要素へ移動する（Shadow DOM内のボタンも対象）', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('calendar', '');
+    await waitForCustomElement(element);
+
+    const button = getShadowContent(element, '#calendar-button') as HTMLButtonElement | null;
+    expect(button).toBeTruthy();
+    button?.click();
+
+    const calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar?.shadowRoot).toBeTruthy();
+    await waitForCustomElement(calendar as HTMLElement);
+
+    const yearSelect = calendar?.shadowRoot?.querySelector('#year-select') as HTMLSelectElement | null;
+    const todayHost = calendar?.shadowRoot?.querySelector('#today-button') as HTMLElement | null;
+    expect(yearSelect).toBeTruthy();
+    expect(todayHost).toBeTruthy();
+    await waitForCustomElement(todayHost as HTMLElement);
+
+    const todayInner = todayHost?.shadowRoot?.querySelector('[part="base"]') as HTMLElement | null;
+    expect(todayInner).toBeTruthy();
+
+    const focusSpy = vi.spyOn(todayInner as HTMLElement, 'focus');
+    focusSpy.mockClear();
+    const popover = getShadowContent(element, '#calendar-popover') as HTMLElement | null;
+    expect(popover).toBeTruthy();
+    const ke = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, composed: true });
+    Object.defineProperty(ke, 'composedPath', { value: () => [yearSelect] });
+    popover?.dispatchEvent(ke);
+
+    expect(focusSpy).toHaveBeenCalledTimes(1);
   });
 });

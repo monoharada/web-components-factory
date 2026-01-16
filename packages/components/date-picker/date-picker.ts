@@ -225,6 +225,7 @@ export class DadsDatePicker extends TypographyFormComponent {
           id="calendar-button"
           type="button"
           aria-haspopup="dialog"
+          aria-controls="calendar-popover"
           aria-expanded="false"
         >
           <svg part="calendar-icon" width="24" height="24" viewBox="0 0 24 24" role="img" aria-label="カレンダー">
@@ -698,7 +699,9 @@ export class DadsDatePicker extends TypographyFormComponent {
 
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
-    const active = this.#getDeepActiveElement();
+    const [firstInPath] = typeof ke.composedPath === 'function' ? ke.composedPath() : [];
+    const active =
+      (firstInPath instanceof HTMLElement ? firstInPath : null) ?? this.#getDeepActiveElement();
 
     if (ke.shiftKey) {
       if (active === first) {
@@ -712,24 +715,57 @@ export class DadsDatePicker extends TypographyFormComponent {
   };
 
   #getFocusableElements(): HTMLElement[] {
-    const selectors = ['button:not([disabled])', 'select:not([disabled])', '[tabindex]:not([tabindex="-1"])'];
+    const root = this.#calendarPopover;
+    if (!root) return [];
+
+    // Shadow DOM内の実フォーカス要素（例: <dads-button> 内部の <button>）も含めて取得する
+    // これにより Tab / Shift+Tab のフォーカストラップ判定が安定する
+    const isTabbable = (el: Element): el is HTMLElement => {
+      if (!(el instanceof HTMLElement)) return false;
+      if (el.hasAttribute('hidden')) return false;
+      if (el.getAttribute('aria-hidden') === 'true') return false;
+
+      // disabled / aria-disabled
+      if (
+        el instanceof HTMLButtonElement ||
+        el instanceof HTMLInputElement ||
+        el instanceof HTMLSelectElement ||
+        el instanceof HTMLTextAreaElement
+      ) {
+        if (el.disabled) return false;
+      } else {
+        if (el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true') return false;
+      }
+
+      const isNativelyFocusable = el.matches('button,input,select,textarea,a[href]');
+      const tabIndexAttr = el.getAttribute('tabindex');
+
+      // 通常のdiv/span等は除外（tabindex属性が付いているものだけを対象にする）
+      if (!isNativelyFocusable && tabIndexAttr === null) return false;
+
+      // tabindex が明示されている場合はそれを優先（Shadow DOM / テスト環境差異の影響を避ける）
+      if (tabIndexAttr !== null) {
+        const normalized = tabIndexAttr.trim();
+        if (normalized === '') return true; // tabindex="" は 0 扱い
+        const parsed = Number.parseInt(normalized, 10);
+        return !Number.isNaN(parsed) && parsed >= 0;
+      }
+
+      // natively focusable は tabindex 指定なしでも Tab 対象
+      return isNativelyFocusable;
+    };
 
     const out: HTMLElement[] = [];
 
-    const collect = (root: ParentNode | null): void => {
-      if (!root) return;
-      const elements = root.querySelectorAll(selectors.join(','));
-      for (const el of elements) {
-        if (el instanceof HTMLElement) out.push(el);
+    const walk = (node: ParentNode): void => {
+      for (const child of node.children) {
+        if (isTabbable(child)) out.push(child);
+        if (child instanceof HTMLElement && child.shadowRoot) walk(child.shadowRoot);
+        walk(child);
       }
     };
 
-    // Popover直下（ボタン等がある場合に備え）
-    collect(this.#calendarPopover);
-
-    // カレンダーのShadow DOM内（実際のフォーカス可能要素が存在する）
-    const calendarRoot = this.#calendar?.shadowRoot ?? null;
-    collect(calendarRoot);
+    walk(root);
 
     return out;
   }
