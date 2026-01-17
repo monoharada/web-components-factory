@@ -536,17 +536,33 @@ describe('AdaptiveCard Benchmark Tests', () => {
       runNative();
       runCustom();
 
-      const nativeTime = await measureRenderTime(() => {
-        for (let i = 0; i < iterations; i++) runNative();
-      });
+      const samples = 7;
+      const nativeTimes: number[] = [];
+      const customTimes: number[] = [];
 
-      const customTime = await measureRenderTime(() => {
-        for (let i = 0; i < iterations; i++) runCustom();
-      });
+      for (let sample = 0; sample < samples; sample++) {
+        nativeTimes.push(
+          await measureRenderTime(() => {
+            for (let i = 0; i < iterations; i++) runNative();
+          })
+        );
+
+        customTimes.push(
+          await measureRenderTime(() => {
+            for (let i = 0; i < iterations; i++) runCustom();
+          })
+        );
+      }
+
+      nativeTimes.sort((a, b) => a - b);
+      customTimes.sort((a, b) => a - b);
+
+      const nativeTime = nativeTimes[Math.floor(nativeTimes.length / 2)];
+      const customTime = customTimes[Math.floor(customTimes.length / 2)];
       
       // customElements + Shadow DOM + style の初期化を含むため、ネイティブdivより重いのは許容しつつ、
       // 極端に遅くならないことを比較で担保する（環境差/揺れに強くするため反復＆閾値を緩める）
-      expect(customTime).toBeLessThan(Math.max(nativeTime * 12, 30));
+      expect(customTime).toBeLessThan(Math.max(nativeTime * 12, iterations * 2.5));
     });
 
     it('複数フレームワークとの比較', async () => {
