@@ -33,7 +33,8 @@
     "claude:status": "git status && npm run type-check",
     "claude:verify": "npm run ci && echo '✅ All checks passed'",
     "claude:quick": "npm run type-check && npm run test:run",
-    "claude:all": "npm run claude:check && npm run test:run && npm run build && echo '🎉 Full pipeline complete'"
+    "claude:all": "npm run claude:check && npm run test:run && npm run build && echo '🎉 Full pipeline complete'",
+    "codex:install-skills": "scripts/codex/install-skills.sh"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

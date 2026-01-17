@@ -258,6 +258,138 @@ export const demos = {
     <\/script>
   `,
 
+  radio: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ラジオボタン</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム（DADS）HTML版 radio.css 相当をShadow DOM向けに移植したWeb Components版です。
+        Shadow DOMの制約により、同一nameグルーピング（排他）をコンポーネント側で補完します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+
+        <a11y-annotate target-selector="dads-radio">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-radio label="ラベル" size="sm" name="annotate"></dads-radio>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本（グループ）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ Tabでフォーカス移動、Arrowキー（↑↓←→）で選択移動できます。
+        </p>
+        <div style="display: grid; gap: 8px;">
+          <dads-radio label="足立区" size="sm" name="tokyo-23" value="adachi"></dads-radio>
+          <dads-radio label="荒川区" size="sm" name="tokyo-23" value="arakawa"></dads-radio>
+          <dads-radio label="板橋区" size="sm" name="tokyo-23" value="itabashi"></dads-radio>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">状態（サイズ別）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ <code>size</code> は <code>sm</code> / <code>md</code> / <code>lg</code> をサポートします。
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(6, auto); gap: 2rem; justify-content: start;">
+          <!-- lg -->
+          <dads-radio label="ラベル" size="lg" name="all-lg-1"></dads-radio>
+          <dads-radio label="ラベル" size="lg" name="all-lg-1" checked></dads-radio>
+          <dads-radio label="ラベル" size="lg" name="all-lg-2" error></dads-radio>
+          <dads-radio label="ラベル" size="lg" name="all-lg-2" checked error></dads-radio>
+          <dads-radio label="ラベル" size="lg" name="all-lg-3" disabled></dads-radio>
+          <dads-radio label="ラベル" size="lg" name="all-lg-3" checked disabled></dads-radio>
+
+          <!-- md -->
+          <dads-radio label="ラベル" size="md" name="all-md-1"></dads-radio>
+          <dads-radio label="ラベル" size="md" name="all-md-1" checked></dads-radio>
+          <dads-radio label="ラベル" size="md" name="all-md-2" error></dads-radio>
+          <dads-radio label="ラベル" size="md" name="all-md-2" checked error></dads-radio>
+          <dads-radio label="ラベル" size="md" name="all-md-3" disabled></dads-radio>
+          <dads-radio label="ラベル" size="md" name="all-md-3" checked disabled></dads-radio>
+
+          <!-- sm -->
+          <dads-radio label="ラベル" size="sm" name="all-sm-1"></dads-radio>
+          <dads-radio label="ラベル" size="sm" name="all-sm-1" checked></dads-radio>
+          <dads-radio label="ラベル" size="sm" name="all-sm-2" error></dads-radio>
+          <dads-radio label="ラベル" size="sm" name="all-sm-2" checked error></dads-radio>
+          <dads-radio label="ラベル" size="sm" name="all-sm-3" disabled></dads-radio>
+          <dads-radio label="ラベル" size="sm" name="all-sm-3" checked disabled></dads-radio>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">必須バリデーション（required + auto-validate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          ※ 送信ボタンで required バリデーションを確認できます（未選択ならエラー）。
+        </p>
+
+        <div style="display: grid; place-content: center; padding: 20px 0;">
+          <form class="radio-validation">
+            <dads-fieldset required>
+              <span slot="legend">東京23区</span>
+              <p slot="support-text">該当する区を1つ選択してください。</p>
+              <div style="display: grid; gap: 8px;">
+                <dads-radio
+                  label="足立区"
+                  size="sm"
+                  name="required-group"
+                  value="adachi"
+                  required
+                  auto-validate
+                ></dads-radio>
+                <dads-radio label="荒川区" size="sm" name="required-group" value="arakawa" required></dads-radio>
+                <dads-radio label="板橋区" size="sm" name="required-group" value="itabashi" required></dads-radio>
+              </div>
+            </dads-fieldset>
+
+            <div>
+              <dads-button type="submit">送信</dads-button>
+            </div>
+          </form>
+        </div>
+
+        <style>
+          .radio-validation {
+            display: grid;
+            gap: 12px;
+            width: 520px;
+          }
+
+          .radio-validation dads-radio {
+            display: block;
+          }
+        </style>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">ラベルなし（aria-label）</h3>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+          <dads-radio size="sm" aria-label="ラベルなしラジオ" name="nolabel"></dads-radio>
+          <dads-radio size="sm" checked aria-label="ラベルなし（checked）" name="nolabel"></dads-radio>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-radio'), import('dads-button'), import('dads-fieldset'), import('dads-switch')]);
+
+      // デモ用: フォーム送信でページ遷移しないようにする
+      document.querySelectorAll('.radio-validation').forEach((form) => {
+        form.addEventListener('submit', (e) => e.preventDefault());
+      });
+    <\/script>
+  `,
+
   blockquote: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">引用ブロックコンポーネント</h2>

@@ -16,7 +16,8 @@ export default defineConfig({
     
     // テストファイルパターン
     include: [
-      'tests/**/*.{test,spec}.{js,ts}',
+      'tests/config.test.ts',
+      'tests/components/**/*.{test,spec}.{js,ts}',
       'src/**/*.{test,spec}.{js,ts}',
       'packages/**/*.{test,spec}.{js,ts}'
     ],
