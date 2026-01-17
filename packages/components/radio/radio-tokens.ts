@@ -74,7 +74,7 @@ const radioSemanticTokensText = `
     --radio-font-family: var(--font-family-sans);
     --radio-font-weight: var(--font-weight-400);
     --radio-label-line-height: var(--line-height-130);
-    --radio-error-text-font-size: var(--font-size-14);
+    --radio-error-text-font-size: var(--font-size-16);
     --radio-error-text-line-height: var(--line-height-150);
 
     /* フォーカス（DADS準拠: 黄色リング + 黒アウトライン） */

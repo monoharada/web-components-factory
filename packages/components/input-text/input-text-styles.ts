@@ -55,7 +55,7 @@ export const inputTextStyles = css`
   /* ========== サポートテキスト ========== */
   [part="support-text"] {
     margin: 0;
-    font-size: var(--font-size-14);
+    font-size: var(--font-size-16);
     color: var(--dads-input-support-color);
     line-height: var(--line-height-150);
   }
@@ -135,7 +135,7 @@ export const inputTextStyles = css`
 
   /* ========== エラーテキスト ========== */
   [part="error-text"] {
-    font-size: var(--font-size-14);
+    font-size: var(--font-size-16);
     color: var(--dads-input-error-color);
     line-height: var(--line-height-150);
   }
