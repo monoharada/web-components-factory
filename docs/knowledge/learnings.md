@@ -4,6 +4,80 @@
 
 ---
 
+## [2026-01-17] Web ComponentsのCSSは「Primitive→Semantic→Local→Properties」で責務分離し、フォールバックは原則消す（A11y最小保証のみ例外）
+**タグ**: #css #tokens #a11y #webcomponents #markup
+
+### 概要
+Shadow DOM内のCSSは、Primitive（グローバルトークン注入）→ Semantic（意味的トークン）→ Local（コンポーネント公開トークン）→ Properties（実スタイル）の4段に責務分離すると、レビュー・カスタマイズ・保守が安定する。
+
+同時に `var(--token, fallback)` のフォールバックは「本当に必要なアクセシビリティ上の最低保証」以外は削除し、**必要なPrimitiveを必ず注入する**（例: `applyDADSTokens()` / `applySpacingTokens()`）。
+
+### 詳細
+- ✅ OK: Primitiveは `styles` の先頭で注入する（例: `applyDADSTokens()` / `applySpacingTokens()`）
+- ✅ OK: Semantic tokenで Primitive を意味単位に束ねる（例: `--radio-input-border-color`）
+- ✅ OK: Local token（`--dads-radio-*` など）を外部カスタマイズの窓口にし、variant/sizeは `:host([size])` で切り替える
+- ✅ OK: Stylesでは **Local tokenだけ** を参照し、プロパティ定義は1回・状態変化は変数再代入で表現する
+- ✅ OK: Shadow DOMテンプレート内にBEMクラスを残さず、`part` を唯一のスタイリングAPIにする（クラスは誤誘導になる）
+- ✅ OK: `:has()` は、DOMを増やさずに条件付きスタイル（「ラベルが空ならpadding無し」など）が書けるなら合理的に採用する
+- ❌ NG: Styles内で Primitive（`--color-primitive-*` / `--spacing-*`）を直接参照する（tokenの責務が崩れる）
+- ❌ NG: 「とりあえず」フォールバック値を大量に入れる（本番ではトークン注入の不備を隠してしまう）
+
+### 適用例
+```ts
+styles: withReset([
+  applyDADSTokens(),
+  applySpacingTokens(),
+  radioTokens,
+  radioStyles,
+], 'minimal')
+```
+
+#### A11y: 44pxタップ領域の最低保証（spacing-factor等で縮小しても下回らない）
+`applySpacingTokens()` の `--spacing-11` は `--spacing-factor` の影響を受けるため、最低保証が必要な箇所では `--spacing-scale-*`（unitless）をpx化して `max()` で下限を作る。
+
+```css
+--radio-target-size-lg: max(var(--spacing-11), calc(var(--spacing-scale-11) * 1px));
+```
+
+---
+
+## [2026-01-16] DADS Checkbox/Radioのサイズ分岐は`:host([size])`で管理する
+**タグ**: #css #webcomponents #dads
+
+### 概要
+Shadow DOM内部要素へ`data-size`をコピーして`[part="base"][data-size="lg"]`のように分岐するのではなく、ホスト属性`size`をソースにして`:host([size="lg"])`でサイズトークンを切り替える（例: checkbox/radio）。
+
+### 詳細
+- ✅ OK: `:host([size="lg"]) { --_gap: ... }` のようにホストでトークンを定義し、内部要素は変数参照のみで描画する
+- ✅ OK: px→rem変換の`calc(17 / 16 * 1rem)`は書かず、`--font-size-*` / `--spacing-*` を参照する
+- ✅ OK: 内部要素の選択は`part`を使用する（例: `[part="base"]`）
+- ✅ OK: ホバー状態は`@media (any-hover: hover)`でガードし、タッチ環境に不用意に適用しない
+- ❌ NG: `--_label-font-size: calc(17 / 16 * 1rem);` のようなpx→rem変換を直書きする
+- ❌ NG: `[part="base"][data-size="lg"] { ... }` のように内部要素へサイズ状態を複製してスタイル分岐する（保守コスト増・ルール逸脱の温床）
+- ❌ NG: `@media (hover: hover)` や無条件`:hover`でホバースタイルを適用する（`any-hover`優先）
+
+### 適用例
+```css
+:host([size="lg"]) {
+  /* 前提: Primitive（spacing/font）を注入していること */
+  --_gap: var(--spacing-3);
+  --_label-font-size: var(--font-size-17);
+}
+
+[part="base"] {
+  gap: var(--_gap);
+}
+
+[part="label"] {
+  font-size: var(--_label-font-size);
+}
+```
+
+### 注意点
+- `data-*` はスタイルガイド上の疑似状態表示（例: `data-state="hover"`）など、明確な理由がある場合に限定する。
+
+---
+
 ## [2026-01-15] `dads-button` のスタイリングAPI（サイズ/比率）とバリアント別hover/active
 **タグ**: #css #webcomponents #designtokens
 

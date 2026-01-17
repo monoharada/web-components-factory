@@ -95,6 +95,11 @@ export const fontLoadingStyles = css`
  * グローバルに一度だけ実行
  */
 export function initializeGlobalFonts(): void {
+  const flags = globalThis as unknown as { __DADS_DISABLE_FONT_LOADING__?: boolean };
+  if (flags.__DADS_DISABLE_FONT_LOADING__) {
+    return;
+  }
+
   // 既にフォントが読み込まれているかチェック
   if (document.querySelector('link[href*="fonts.googleapis.com/css2?family=Noto+Sans+JP"]')) {
     return;
@@ -151,6 +156,11 @@ let fontsInitialized = false;
  * フォントを初期化（一度だけ実行）
  */
 export function ensureFontsInitialized(): void {
+  const flags = globalThis as unknown as { __DADS_DISABLE_FONT_LOADING__?: boolean };
+  if (flags.__DADS_DISABLE_FONT_LOADING__) {
+    return;
+  }
+
   if (!fontsInitialized) {
     fontsInitialized = true;
     // DOMContentLoadedを待つか、既に読み込まれていれば即座に実行

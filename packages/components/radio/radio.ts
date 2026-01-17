@@ -1,12 +1,13 @@
 /**
- * @module checkbox
- * デジタル庁デザインシステム Checkboxコンポーネント
+ * @module radio
+ * デジタル庁デザインシステム Radioコンポーネント
  * @version 1.0.0
  */
 
 import { html, BooleanAttr, PropertyAttr } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { withReset } from '../../styles/reset-css.js';
 import {
   setDefaultAttributes,
@@ -15,33 +16,37 @@ import {
   type FormValidationSetup,
 } from '../../utils/form-component-helpers.js';
 import { VALIDATION_RULES, getValidationMessage } from '../../utils/validation.js';
-import { checkboxStyles } from './checkbox-styles.js';
+import { radioStyles } from './radio-styles.js';
+import { radioTokens } from './radio-tokens.js';
 import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
- * Checkboxコンポーネント
+ * Radioコンポーネント
  *
  * DADS HTML版の構造・見た目に準拠しつつ、Form-Associated Custom Elementとしてフォームに参加します。
  *
- * @customElement dads-checkbox
- * @tagname dads-checkbox
+ * ⚠️ 注意: Shadow DOM内のネイティブinput[type="radio"]は、他のShadowRoot内inputとグルーピングされません。
+ * そのため、本コンポーネントは `name` 属性をキーに同一スコープ内の `*-radio` 同士を排他制御します。
+ *
+ * @customElement dads-radio
+ * @tagname dads-radio
  *
  * @csspart base - label相当のラッパー
- * @csspart checkbox - チェックボックス枠（背景ホバー含む）
- * @csspart input - ネイティブinput[type=checkbox]
+ * @csspart radio - ラジオ枠（背景ホバー含む）
+ * @csspart input - ネイティブinput[type=radio]
  * @csspart label - ラベルテキスト
  * @csspart requirement - 要否ラベル（※必須）
+ * @csspart error-text - エラーメッセージ
  *
  * @attr {string} label - ラベルテキスト
  * @attr {string} size - サイズ (sm | md | lg)
  * @attr {boolean} checked - 初期チェック状態（属性はデフォルト値として扱う）
- * @attr {boolean} indeterminate - 不確定状態
  * @attr {boolean} disabled - 無効状態
- * @attr {boolean} required - 必須（未チェックでsubmit時にinvalid）
+ * @attr {boolean} required - 必須（グループ内で未選択のままsubmit時にinvalid）
  * @attr {boolean} auto-validate - submit時の自動バリデーション
  * @attr {boolean} error - エラー状態（aria-invalid="true"）
  * @attr {string} error-text - エラーメッセージ（バリデーション時に設定）
- * @attr {string} name - フォーム名
+ * @attr {string} name - フォーム名（グループ判定に使用）
  * @attr {string} value - 送信値（未指定時は "on"）
  * @attr {string} aria-label - アクセシビリティラベル（ラベルなし時に推奨）
  * @attr {string} aria-labelledby - 外部ラベル参照
@@ -49,29 +54,31 @@ import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
  *
  * @slot required-error - 必須バリデーションのカスタムエラーメッセージ（非表示）
  */
-export class DadsCheckbox extends TypographyFormComponent {
+export class DadsRadio extends TypographyFormComponent {
   static override readonly formAssociated = true;
 
   static readonly version = '1.0.0';
 
   static readonly a11yAnnotations: A11yAnnotations = {
     version: 1,
-    summary: 'コンポーネント仕様（アクセシビリティ注釈）',
+    summary: 'ラジオボタン（単一選択）',
     categories: {
       semantics: [
-        '内部にネイティブの <input type="checkbox"> を持ち、チェックボックスのセマンティクスをブラウザ標準で提供します。',
-        'チェックボックスは <label> 内に配置されるため、ラベルテキストと操作対象が確実に関連付けられます。',
-        'Form-Associated Custom Elementとしてフォームに参加し、checked時のみ値を送信します（ネイティブcheckboxの挙動に準拠）。',
+        '内部にネイティブの <input type="radio"> を持ち、ラジオボタンのセマンティクスをブラウザ標準で提供します。',
+        'Shadow DOMの制約により、同一nameのグルーピングはコンポーネント側で補完します（選択時に他の同一nameのradioを解除）。',
+        'Form-Associated Custom Elementとしてフォームに参加し、checked時のみ値を送信します（ネイティブradioの挙動に準拠）。',
       ],
       keyboard: [
-        'Tabでフォーカス可能です。',
-        'Spaceでチェック状態を切り替えできます（ネイティブ挙動）。',
+        'Tabでフォーカス可能です（グループ内のタブストップはcheckedを優先し、未選択時は先頭を採用します）。',
+        'Spaceで選択できます（ネイティブ挙動）。',
+        'Arrowキー（↑↓←→）で同一nameグループ内を移動して選択できます（Shadow DOMで失われる挙動を補完）。',
+        'Home / End でグループの先頭 / 末尾へ移動して選択できます。',
       ],
       zoom: [
         'サイズ（sm/md/lg）に応じて操作面の大きさを調整し、拡大時も視認性・操作性を確保します。',
       ],
       states: [
-        'checked / indeterminate / disabled をサポートします。',
+        'checked / disabled をサポートします。',
         'error属性で aria-invalid="true" を付与し、エラー状態（赤系）を表示します（DADS HTML版に準拠）。',
       ],
       labels: [
@@ -88,17 +95,17 @@ export class DadsCheckbox extends TypographyFormComponent {
         id: 'base',
         title: 'ラベルラッパー',
         label: '<label>',
-        description: 'クリック領域を含め、チェックボックスとラベルを一体として提供します。',
+        description: 'クリック領域を含め、ラジオボタンとラベルを一体として提供します。',
         category: 'semantics',
         placement: 'top-right',
         target: { scope: 'shadow', selector: '[part="base"]' },
       },
       {
         id: 'native-input',
-        title: 'ネイティブチェックボックス',
-        label: 'input[type="checkbox"]',
+        title: 'ネイティブラジオ',
+        label: 'input[type="radio"]',
         description:
-          'キーボード操作（Space）や状態（checked/indeterminate/disabled）の基本挙動はブラウザ標準に委譲します。',
+          'キーボード操作（Space）や状態（checked/disabled）の基本挙動はブラウザ標準に委譲します。',
         category: 'keyboard',
         placement: 'top-left',
         target: { scope: 'shadow', selector: '[part="input"]' },
@@ -107,7 +114,7 @@ export class DadsCheckbox extends TypographyFormComponent {
         id: 'label-text',
         title: 'ラベルテキスト',
         label: 'label',
-        description: 'label属性（または将来的な拡張）で表示されるテキスト。空の場合はaria-label等で補完します。',
+        description: 'label属性で表示されるテキスト。空の場合はaria-label等で補完します。',
         category: 'labels',
         placement: 'bottom-right',
         target: { scope: 'shadow', selector: '[part="label"]' },
@@ -145,13 +152,13 @@ export class DadsCheckbox extends TypographyFormComponent {
   #formValidation: FormValidationSetup | null = null;
 
   static definition = {
-    name: 'dads-checkbox',
+    name: 'dads-radio',
     template: html`
-      <label part="base" id="base" class="dads-checkbox">
-        <span part="checkbox" id="checkbox" class="dads-checkbox__checkbox">
-          <input part="input" id="input" class="dads-checkbox__input" type="checkbox" />
+      <label part="base" id="base">
+        <span part="radio" id="radio">
+          <input part="input" id="input" type="radio" />
         </span>
-        <span part="label" id="label" class="dads-checkbox__label"></span>
+        <span part="label" id="label"></span>
         <span part="requirement" id="requirement"></span>
       </label>
 
@@ -161,7 +168,7 @@ export class DadsCheckbox extends TypographyFormComponent {
       <!-- バリデーション用カスタムエラーメッセージスロット（非表示） -->
       <slot name="required-error" id="required-error-slot" hidden></slot>
     `,
-    styles: withReset([applyDADSTokens(), checkboxStyles], 'minimal'),
+    styles: withReset([applyDADSTokens(), applySpacingTokens(), radioTokens, radioStyles], 'minimal'),
     attributes: [
       PropertyAttr('label'),
       PropertyAttr('size'),
@@ -171,9 +178,8 @@ export class DadsCheckbox extends TypographyFormComponent {
       BooleanAttr('error'),
       PropertyAttr('error-text'),
       PropertyAttr('name'),
-      // checked/indeterminate/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない
+      // checked/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない
       { attribute: 'checked' },
-      { attribute: 'indeterminate' },
       { attribute: 'value' },
       { attribute: 'aria-label' },
       { attribute: 'aria-labelledby' },
@@ -187,7 +193,6 @@ export class DadsCheckbox extends TypographyFormComponent {
       'label',
       'size',
       'checked',
-      'indeterminate',
       'disabled',
       'required',
       'auto-validate',
@@ -215,12 +220,21 @@ export class DadsCheckbox extends TypographyFormComponent {
     this.#syncAll();
 
     this.#input?.addEventListener('change', this.#handleChange);
+    this.#input?.addEventListener('keydown', this.#handleKeyDown);
 
     this.#setupFormValidation();
+
+    // 他のradioの初期化も完了したタイミングで、グループの状態を整える
+    queueMicrotask(() => {
+      if (!this.isConnected) return;
+      this.#enforceSingleSelection();
+      this.#syncGroupTabStop();
+    });
   }
 
   disconnectedCallback(): void {
     this.#input?.removeEventListener('change', this.#handleChange);
+    this.#input?.removeEventListener('keydown', this.#handleKeyDown);
     this.#formValidation?.cleanup();
     this.#formValidation = null;
   }
@@ -241,26 +255,16 @@ export class DadsCheckbox extends TypographyFormComponent {
     }
 
     this.#input.checked = v;
-    // checked を変更した場合は、視覚的な不確定状態を解除（一般的な挙動）
-    if (!v && this.#input.indeterminate) {
-      this.#input.indeterminate = false;
+
+    if (v) {
+      this.#enforceSingleSelection();
     }
 
     this.#syncFormValue();
-    this.#syncValidationOnUserFix();
-  }
-
-  get indeterminate(): boolean {
-    return this.#input?.indeterminate ?? this.hasAttribute('indeterminate');
-  }
-
-  set indeterminate(v: boolean) {
-    if (!this.#input) {
-      this.toggleAttribute('indeterminate', v);
-      return;
+    this.#syncGroupTabStop();
+    if (v) {
+      this.#clearGroupValidationErrorIfNeeded();
     }
-
-    this.#input.indeterminate = v;
   }
 
   get value(): string {
@@ -294,8 +298,15 @@ export class DadsCheckbox extends TypographyFormComponent {
 
   formResetCallback(): void {
     // checked属性をデフォルト値として扱い、リセット時に復元
-    this.checked = this.hasAttribute('checked');
-    this.indeterminate = this.hasAttribute('indeterminate');
+    // 同一nameで複数のchecked属性が存在する場合でも、復元結果が一意になるようにグループで調整する
+    const group = this.#getGroupRadios();
+    const defaultChecked = this.#getGroupDefaultCheckedRadio(group);
+
+    for (const radio of group) {
+      radio.#setCheckedFromGroup(defaultChecked !== null && radio === defaultChecked);
+    }
+
+    this.#syncGroupTabStop();
     this.#clearValidationError();
   }
 
@@ -305,7 +316,6 @@ export class DadsCheckbox extends TypographyFormComponent {
       return;
     }
     if (typeof state === 'string') {
-      // setFormValue(value) が復元される前提（値の内容には依存しない）
       this.checked = true;
     }
   }
@@ -317,6 +327,7 @@ export class DadsCheckbox extends TypographyFormComponent {
       this.#input.disabled = this.#isDisabled();
     }
     this.#syncFormValue();
+    this.#syncGroupTabStop();
   }
 
   // ============================================================
@@ -331,6 +342,7 @@ export class DadsCheckbox extends TypographyFormComponent {
     this.#syncAria();
     this.#syncAriaInvalid();
     this.#syncFormValue();
+    this.#syncGroupTabStop();
   }
 
   #syncLabel(): void {
@@ -339,15 +351,12 @@ export class DadsCheckbox extends TypographyFormComponent {
   }
 
   #syncRequirement(): void {
-    // connectedCallback前は何もしない
     if (!this.#requirement) return;
 
     // fieldset内にいる場合は、fieldsetのlegendに※必須が表示されるため非表示
     const parentFieldset = this.closest('dads-fieldset');
     const insideRequiredFieldset = parentFieldset?.hasAttribute('required') ?? false;
 
-    // fieldset内で親がrequired → checkbox自身は※必須を表示しない
-    // checkboxはreadonlyがないのでfalse固定
     const showRequirement = this.hasAttribute('required') && !insideRequiredFieldset;
     updateRequirement(this.#requirement, showRequirement, false);
   }
@@ -356,18 +365,13 @@ export class DadsCheckbox extends TypographyFormComponent {
     if (!this.#errorText) return;
     const hasError = this.hasAttribute('error');
     const errorMessage = this.getAttribute('error-text') ?? '';
-    // エラーがある場合のみメッセージを表示
     this.#errorText.textContent = hasError && errorMessage ? `＊${errorMessage}` : '';
   }
 
   #syncInputFromAttributes(): void {
     if (!this.#input) return;
 
-    // 初期値は属性から読み取る（checked/indeterminate は属性をデフォルト値として扱う）
     this.#input.checked = this.hasAttribute('checked');
-    this.#input.indeterminate = this.hasAttribute('indeterminate');
-
-    // disabled は属性・フォームからの無効化を合成
     this.#input.disabled = this.#isDisabled();
   }
 
@@ -396,12 +400,139 @@ export class DadsCheckbox extends TypographyFormComponent {
   }
 
   #syncFormValue(): void {
-    // disabled/unchecked は送信しない（ネイティブcheckbox準拠）
+    // disabled/unchecked は送信しない（ネイティブラジオ準拠）
     if (this.#isDisabled() || !this.checked) {
       this._internals.setFormValue(null);
       return;
     }
     this._internals.setFormValue(this.value);
+  }
+
+  // ============================================================
+  // Group behavior
+  // ============================================================
+
+  #getGroupName(): string | null {
+    const name = this.getAttribute('name') ?? '';
+    const trimmed = name.trim();
+    return trimmed ? trimmed : null;
+  }
+
+  #getRadioQueryRoot(): ParentNode & { querySelectorAll(selectors: string): NodeListOf<Element> } {
+    const form = this._internals.form;
+    if (form) return form;
+    const root = this.getRootNode();
+    if (root instanceof ShadowRoot) return root;
+    return document;
+  }
+
+  #getGroupRadiosForName(name: string): DadsRadio[] {
+    const root = this.#getRadioQueryRoot();
+    const selector = this.localName;
+    const matched: DadsRadio[] = [];
+
+    const nodes = root.querySelectorAll(selector);
+    for (const el of nodes) {
+      if (!(el instanceof DadsRadio)) continue;
+      if (el.hasAttribute('hidden')) continue;
+      if ((el.getAttribute('name') ?? '').trim() !== name) continue;
+      matched.push(el);
+    }
+
+    return matched.length > 0 ? matched : [this];
+  }
+
+  #getGroupRadios(): DadsRadio[] {
+    const name = this.#getGroupName();
+    if (!name) return [this];
+    return this.#getGroupRadiosForName(name);
+  }
+
+  #getGroupErrorAnchor(group: DadsRadio[]): DadsRadio {
+    // エラーメッセージはグループの末尾に表示したい（選択肢の途中に挟まない）
+    // ただし disabled 要素をアンカーにすると、実装/UAによってはバリデーション対象外になる可能性があるため、
+    // 末尾から探索して「有効な要素」を優先する。
+    for (let i = group.length - 1; i >= 0; i -= 1) {
+      const radio = group[i];
+      if (radio.#isDisabled()) continue;
+      return radio;
+    }
+    return group[group.length - 1];
+  }
+
+  #getGroupDefaultCheckedRadio(group: DadsRadio[]): DadsRadio | null {
+    // checked属性は「デフォルト値」。グループ内で複数指定されている場合は末尾を優先する。
+    // ただし disabled を優先してしまうと選択肢として扱いづらいため、末尾から探索して「有効な要素」を優先する。
+    let fallback: DadsRadio | null = null;
+
+    for (let i = group.length - 1; i >= 0; i -= 1) {
+      const radio = group[i];
+      if (!radio.hasAttribute('checked')) continue;
+      if (fallback === null) fallback = radio;
+      if (radio.#isDisabled()) continue;
+      return radio;
+    }
+
+    return fallback;
+  }
+
+  #setCheckedFromGroup(v: boolean): void {
+    if (!this.#input) {
+      this.toggleAttribute('checked', v);
+      return;
+    }
+    this.#input.checked = v;
+    this.#syncFormValue();
+  }
+
+  #enforceSingleSelection(): void {
+    if (!this.checked) return;
+    const name = this.#getGroupName();
+    if (!name) return;
+
+    const group = this.#getGroupRadiosForName(name);
+    for (const radio of group) {
+      if (radio === this) continue;
+      radio.#setCheckedFromGroup(false);
+    }
+  }
+
+  #syncGroupTabStop(): void {
+    if (!this.#input) return;
+    const name = this.#getGroupName();
+    if (!name) {
+      this.#input.tabIndex = 0;
+      return;
+    }
+
+    const group = this.#getGroupRadiosForName(name);
+
+    let selected: DadsRadio | null = null;
+    for (const radio of group) {
+      if (radio.#isDisabled()) continue;
+      if (!radio.checked) continue;
+      selected = radio;
+      break;
+    }
+
+    let firstEnabled: DadsRadio | null = null;
+    if (!selected) {
+      for (const radio of group) {
+        if (radio.#isDisabled()) continue;
+        firstEnabled = radio;
+        break;
+      }
+    }
+
+    for (const radio of group) {
+      if (!radio.#input) continue;
+      if (radio.#isDisabled()) {
+        radio.#input.tabIndex = -1;
+        continue;
+      }
+      const isTabStop = selected ? radio === selected : radio === firstEnabled;
+      radio.#input.tabIndex = isTabStop ? 0 : -1;
+    }
   }
 
   // ============================================================
@@ -420,29 +551,63 @@ export class DadsCheckbox extends TypographyFormComponent {
   }
 
   #handleFormSubmit = (e: Event): void => {
-    // disabled時はバリデーションしない
     if (this.#isDisabled()) return;
-    if (!this.hasAttribute('required')) return;
 
-    const isValid = this.checked;
+    const group = this.#getGroupRadios();
+
+    // グループ内の有効なrequiredが1つでもあれば、グループ必須として扱う
+    let groupRequired = false;
+    for (const radio of group) {
+      if (radio.#isDisabled()) continue;
+      if (!radio.hasAttribute('required')) continue;
+      groupRequired = true;
+      break;
+    }
+    if (!groupRequired) return;
+
+    let isValid = false;
+    for (const radio of group) {
+      if (radio.#isDisabled()) continue;
+      if (!radio.checked) continue;
+      isValid = true;
+      break;
+    }
+
+    const anchor = this.#getGroupErrorAnchor(group);
+
     if (isValid) {
-      this.#clearValidationError();
+      anchor.#clearGroupValidationError(group);
       return;
     }
 
     e.preventDefault();
-    this.#showValidationError();
+    anchor.#showGroupValidationError(group);
   };
 
-  #showValidationError(): void {
-    this.#validationError = true;
+  #showGroupValidationError(group: DadsRadio[]): void {
     const message = this.#getRequiredErrorMessage();
 
-    this.setAttribute('error', '');
-    this.setAttribute('error-text', message);
-    this.#syncAriaInvalid();
+    for (const radio of group) {
+      // 既に手動エラーが入っている場合は上書きしない
+      const hasManualError = radio.hasAttribute('error') && !radio.#validationError;
+      if (hasManualError) continue;
+
+      radio.#validationError = true;
+      radio.setAttribute('error', '');
+      if (radio === this) {
+        radio.setAttribute('error-text', message);
+      } else {
+        radio.removeAttribute('error-text');
+      }
+    }
 
     this._internals.setValidity({ valueMissing: true }, message, this.#input ?? undefined);
+  }
+
+  #clearGroupValidationError(group: DadsRadio[]): void {
+    for (const radio of group) {
+      radio.#clearValidationError();
+    }
   }
 
   #clearValidationError(): void {
@@ -452,16 +617,23 @@ export class DadsCheckbox extends TypographyFormComponent {
     this.removeAttribute('error');
     this.removeAttribute('error-text');
     this.#syncAriaInvalid();
+    this.#syncErrorText();
     this._internals.setValidity({});
   }
 
-  #syncValidationOnUserFix(): void {
-    if (!this.hasAttribute('auto-validate')) return;
-    if (!this.#validationError) return;
-    if (!this.hasAttribute('required')) return;
-    if (!this.checked) return;
+  #clearGroupValidationErrorIfNeeded(): void {
+    const group = this.#getGroupRadios();
 
-    this.#clearValidationError();
+    let hasAnyValidationError = false;
+    for (const radio of group) {
+      if (!radio.#validationError) continue;
+      hasAnyValidationError = true;
+      break;
+    }
+    if (!hasAnyValidationError) return;
+
+    const anchor = this.#getGroupErrorAnchor(group);
+    anchor.#clearGroupValidationError(group);
   }
 
   #getRequiredErrorMessage(): string {
@@ -475,19 +647,80 @@ export class DadsCheckbox extends TypographyFormComponent {
   #handleChange = (): void => {
     if (!this.#input) return;
 
-    // ネイティブ同様、ユーザー操作で不確定状態は解除される
-    if (this.#input.indeterminate) {
-      this.#input.indeterminate = false;
+    if (this.#input.checked) {
+      this.#enforceSingleSelection();
+      this.#clearGroupValidationErrorIfNeeded();
     }
 
     this.#syncFormValue();
-    this.#syncValidationOnUserFix();
+    this.#syncGroupTabStop();
 
     this.emitEvent('dads-change', {
       checked: this.checked,
-      indeterminate: this.indeterminate,
       value: this.value,
     });
+  };
+
+  #handleKeyDown = (e: KeyboardEvent): void => {
+    if (this.#isDisabled()) return;
+
+    const name = this.#getGroupName();
+    if (!name) return;
+
+    const group = this.#getGroupRadiosForName(name);
+    if (group.length <= 1) return;
+
+    const enabled: DadsRadio[] = [];
+    for (const radio of group) {
+      if (radio.#isDisabled()) continue;
+      enabled.push(radio);
+    }
+    if (enabled.length <= 1) return;
+
+    const currentIndex = enabled.indexOf(this);
+    if (currentIndex < 0) return;
+
+    const dir = getComputedStyle(this).direction;
+    const isRtl = dir === 'rtl';
+
+    const prevKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+    const nextKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
+
+    let target: DadsRadio | null = null;
+
+    switch (e.key) {
+      case 'ArrowUp':
+      case prevKey: {
+        e.preventDefault();
+        const idx = (currentIndex - 1 + enabled.length) % enabled.length;
+        target = enabled[idx];
+        break;
+      }
+      case 'ArrowDown':
+      case nextKey: {
+        e.preventDefault();
+        const idx = (currentIndex + 1) % enabled.length;
+        target = enabled[idx];
+        break;
+      }
+      case 'Home':
+        e.preventDefault();
+        target = enabled[0];
+        break;
+      case 'End':
+        e.preventDefault();
+        target = enabled[enabled.length - 1];
+        break;
+      default:
+        break;
+    }
+
+    if (!target || target === this) return;
+    if (!target.#input) return;
+
+    // Shadow DOMで失われるネイティブ挙動を補完: 矢印操作で選択＋フォーカス
+    target.#input.click();
+    target.focus();
   };
 
   // ============================================================
@@ -506,14 +739,17 @@ export class DadsCheckbox extends TypographyFormComponent {
         break;
       case 'checked':
         this.#input.checked = newValue !== null;
+        if (this.#input.checked) {
+          this.#enforceSingleSelection();
+          this.#clearGroupValidationErrorIfNeeded();
+        }
         this.#syncFormValue();
-        break;
-      case 'indeterminate':
-        this.#input.indeterminate = newValue !== null;
+        this.#syncGroupTabStop();
         break;
       case 'disabled':
         this.#input.disabled = this.#isDisabled();
         this.#syncFormValue();
+        this.#syncGroupTabStop();
         break;
       case 'required':
         this.#syncRequirement();
@@ -528,6 +764,25 @@ export class DadsCheckbox extends TypographyFormComponent {
       case 'error-text':
         this.#handleErrorTextAttributeChange();
         break;
+      case 'name': {
+        // name変更時は旧グループと新グループ両方のタブストップを再計算
+        const oldName = (oldValue ?? '').trim();
+        const newNameTrimmed = (newValue ?? '').trim();
+
+        if (oldName && oldName !== newNameTrimmed) {
+          const oldGroup = this.#getGroupRadiosForName(oldName);
+          if (oldGroup.length > 0) {
+            oldGroup[0].#syncGroupTabStop();
+          }
+        }
+
+        if (this.checked) {
+          this.#enforceSingleSelection();
+        }
+        this.#syncFormValue();
+        this.#syncGroupTabStop();
+        break;
+      }
       case 'value':
         this.#syncFormValue();
         break;

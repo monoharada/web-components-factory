@@ -26,6 +26,9 @@ export * from './textarea/index.js';
 // チェックボックス
 export * from './checkbox/index.js';
 
+// ラジオボタン
+export * from './radio/index.js';
+
 // フィールドセット
 export * from './fieldset/index.js';
 

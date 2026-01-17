@@ -18,19 +18,19 @@ const blockquoteSemanticTokensText = `
     --blockquote-gap: var(--spacing-4, 1em);
 
     /* マージン（DADS準拠: 左右40px） */
-    --blockquote-margin-inline: var(--spacing-10, calc(40 / 16 * 1rem));
+    --blockquote-margin-inline: var(--spacing-10, 40px);
 
     /* パディング（DADS準拠: 上下8px、左24px、右16px） */
-    --blockquote-padding-block: var(--spacing-2, calc(8 / 16 * 1rem));
-    --blockquote-padding-inline-start: var(--spacing-6, calc(24 / 16 * 1rem));
-    --blockquote-padding-inline-end: var(--spacing-4, calc(16 / 16 * 1rem));
+    --blockquote-padding-block: var(--spacing-2, 8px);
+    --blockquote-padding-inline-start: var(--spacing-6, 24px);
+    --blockquote-padding-inline-end: var(--spacing-4, 16px);
 
     /* 左ボーダー（DADS準拠: 8px gray） */
     --blockquote-border-width: 8px;
     --blockquote-border-color: var(--color-neutral-solid-gray-536, #757575);
 
     /* タイポグラフィ（DADS準拠: 17px, #333333） */
-    --blockquote-font-size: calc(17 / 16 * 1rem);
+    --blockquote-font-size: var(--font-size-17, 1.0625rem);
     --blockquote-line-height: var(--line-height-170, 1.7);
     --blockquote-text-color: var(--color-neutral-solid-gray-800, #333333);
 

@@ -69,7 +69,7 @@ describe('DadsCheckbox - 属性反映', () => {
     expect(label?.textContent).toBe('テストラベル');
   });
 
-  it('size属性がdata-sizeに反映される', async () => {
+  it('size属性はホストで管理され、baseにdata-sizeをコピーしない', async () => {
     const { defineDefaultCheckbox } = await import('./checkbox-define');
     defineDefaultCheckbox();
 
@@ -78,7 +78,8 @@ describe('DadsCheckbox - 属性反映', () => {
     await waitForCustomElement(element);
 
     const base = getShadowContent(element, '[part="base"]');
-    expect(base?.getAttribute('data-size')).toBe('lg');
+    expect(element.getAttribute('size')).toBe('lg');
+    expect(base?.hasAttribute('data-size')).toBe(false);
   });
 
   it('checked属性でチェック状態になる', async () => {
@@ -293,4 +294,3 @@ describe('DadsCheckbox - Fieldset内での※必須表示', () => {
     expect(checkboxRequirement?.textContent).toBe('※必須');
   });
 });
-

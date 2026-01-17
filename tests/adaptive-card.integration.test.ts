@@ -332,19 +332,33 @@ describe('AdaptiveCard Integration Tests', () => {
       card.setAttribute('interactive', '');
       card.setAttribute('responsive', '');
       
-      const clickTimes: number[] = [];
-      
-      // 10回連続でクリックイベントを処理
-      for (let i = 0; i < 10; i++) {
-        const startTime = await measureRenderTime(async () => {
-          await user.click(card);
-        });
-        clickTimes.push(startTime);
-      }
-      
-      // 平均レスポンス時間が5ms以下
-      const averageTime = clickTimes.reduce((sum, time) => sum + time, 0) / clickTimes.length;
-      expect(averageTime).toBeLessThan(5);
+      const baselineButton = document.createElement('button');
+      baselineButton.textContent = 'baseline';
+      document.body.appendChild(baselineButton);
+
+      const measureAverageClick = async (el: HTMLElement, times: number) => {
+        const clickTimes: number[] = [];
+        for (let i = 0; i < times; i++) {
+          const clickTime = await measureRenderTime(async () => {
+            await user.click(el);
+          });
+          clickTimes.push(clickTime);
+        }
+        return clickTimes.reduce((sum, time) => sum + time, 0) / clickTimes.length;
+      };
+
+      // warm up
+      await user.click(baselineButton);
+      await user.click(card);
+
+      const sampleCount = 10;
+      const baselineAverage = await measureAverageClick(baselineButton, sampleCount);
+      const cardAverage = await measureAverageClick(card, sampleCount);
+
+      baselineButton.remove();
+
+      // 環境依存の絶対値に依存せず、ネイティブ要素と比較して極端に遅くないことを確認する
+      expect(cardAverage).toBeLessThan(baselineAverage * 2);
     });
 
     it('メモリ使用量の最適化', () => {
