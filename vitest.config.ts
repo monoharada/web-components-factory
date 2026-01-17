@@ -1,9 +1,12 @@
 import { defineConfig } from 'vitest/config';
 
+const reporterEnv = (process.env.VITEST_REPORTER ?? '').trim();
+const reporter = (reporterEnv ? reporterEnv : 'verbose').split(',')[0].trim();
+
 export default defineConfig({
   test: {
     // 高速化設定
-    isolate: false,
+    isolate: true,
     
     // テスト環境設定
     environment: 'happy-dom',
@@ -48,9 +51,9 @@ export default defineConfig({
         }
       }
     },
-    
+
     // レポーター設定
-    reporter: ['verbose', 'json'],
+    reporter,
     
     // タイムアウト設定
     testTimeout: 5000,
