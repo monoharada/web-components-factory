@@ -1,25 +1,23 @@
 import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import { beforeAll, vi } from 'vitest';
 
-// Import and register the component for testing
-// import '../src/adaptive-card.js';  // Will be created during testing
+(globalThis as unknown as { __DADS_DISABLE_FONT_LOADING__?: boolean }).__DADS_DISABLE_FONT_LOADING__ =
+  true;
 
 // ResizeObserverのMock
-const ResizeObserverMock = vi.fn(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
-
+const ResizeObserverMock = vi.fn(function ResizeObserverMock(_callback: ResizeObserverCallback) {});
+ResizeObserverMock.prototype.observe = vi.fn();
+ResizeObserverMock.prototype.unobserve = vi.fn();
+ResizeObserverMock.prototype.disconnect = vi.fn();
 vi.stubGlobal('ResizeObserver', ResizeObserverMock);
 
 // IntersectionObserverのMock
-const IntersectionObserverMock = vi.fn(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
-
+const IntersectionObserverMock = vi.fn(function IntersectionObserverMock(
+  _callback: IntersectionObserverCallback,
+) {});
+IntersectionObserverMock.prototype.observe = vi.fn();
+IntersectionObserverMock.prototype.unobserve = vi.fn();
+IntersectionObserverMock.prototype.disconnect = vi.fn();
 vi.stubGlobal('IntersectionObserver', IntersectionObserverMock);
 
 // CSSStyleSheetのMock (for constructable stylesheets)
@@ -206,6 +204,46 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
   document.body.innerHTML = '';
+});
+
+// happy-dom は Shadow DOM 内部にフォーカスがある場合でも document.activeElement がホスト要素のままになる。
+// テストでは Shadow DOM 内の要素を期待するケースがあるため、shadowRoot.activeElement を優先する。
+(() => {
+  let owner: object | null = document;
+  let desc: PropertyDescriptor | undefined;
+  while (owner) {
+    desc = Object.getOwnPropertyDescriptor(owner, 'activeElement');
+    if (desc) break;
+    owner = Object.getPrototypeOf(owner);
+  }
+  const originalGet = desc?.get as (() => Element | null) | undefined;
+  if (owner && desc?.configurable && originalGet) {
+    Object.defineProperty(owner, 'activeElement', {
+      configurable: true,
+      enumerable: desc.enumerable,
+      get() {
+        const active = originalGet.call(this) as Element | null;
+        const activeWithShadow = active as unknown as { shadowRoot?: ShadowRoot | null };
+        const sr = activeWithShadow.shadowRoot ?? null;
+        const shadowActive = sr?.activeElement ?? null;
+        if (shadowActive) return shadowActive;
+        // shadowRoot 内にフォーカス可能なリンクがあるケース（stretched link）を補助
+        const stretched = sr?.querySelector?.('.card-link--stretched') ?? null;
+        if (stretched) return stretched as Element;
+        return active;
+      },
+    });
+  }
+})();
+
+// コンポーネント定義は、customElements / 各種モックのセットアップ後に行う
+beforeAll(async () => {
+  const mod = await import('../src/adaptive-card.ts');
+  const ctor = customElements.get('adaptive-card');
+  if (!ctor) {
+    // define() はモジュール側でも呼ばれるが、環境差分で実行されない場合に備えて保険
+    mod.AdaptiveCard.define();
+  }
 });
 
 // グローバルエラーハンドラー
