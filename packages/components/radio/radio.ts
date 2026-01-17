@@ -298,7 +298,15 @@ export class DadsRadio extends TypographyFormComponent {
 
   formResetCallback(): void {
     // checked属性をデフォルト値として扱い、リセット時に復元
-    this.checked = this.hasAttribute('checked');
+    // 同一nameで複数のchecked属性が存在する場合でも、復元結果が一意になるようにグループで調整する
+    const group = this.#getGroupRadios();
+    const defaultChecked = this.#getGroupDefaultCheckedRadio(group);
+
+    for (const radio of group) {
+      radio.#setCheckedFromGroup(defaultChecked !== null && radio === defaultChecked);
+    }
+
+    this.#syncGroupTabStop();
     this.#clearValidationError();
   }
 
@@ -450,6 +458,22 @@ export class DadsRadio extends TypographyFormComponent {
       return radio;
     }
     return group[group.length - 1];
+  }
+
+  #getGroupDefaultCheckedRadio(group: DadsRadio[]): DadsRadio | null {
+    // checked属性は「デフォルト値」。グループ内で複数指定されている場合は末尾を優先する。
+    // ただし disabled を優先してしまうと選択肢として扱いづらいため、末尾から探索して「有効な要素」を優先する。
+    let fallback: DadsRadio | null = null;
+
+    for (let i = group.length - 1; i >= 0; i -= 1) {
+      const radio = group[i];
+      if (!radio.hasAttribute('checked')) continue;
+      if (fallback === null) fallback = radio;
+      if (radio.#isDisabled()) continue;
+      return radio;
+    }
+
+    return fallback;
   }
 
   #setCheckedFromGroup(v: boolean): void {

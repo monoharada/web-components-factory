@@ -154,6 +154,157 @@ describe('DadsRadio - グループ（name）', () => {
   });
 });
 
+describe('DadsRadio - form reset（checked属性はデフォルト値）', () => {
+  let form: HTMLFormElement | null = null;
+  let element1: HTMLElement;
+  let element2: HTMLElement;
+  let element3: HTMLElement;
+
+  afterEach(() => {
+    if (element1) cleanupTestElement(element1);
+    if (element2) cleanupTestElement(element2);
+    if (element3) cleanupTestElement(element3);
+    if (form) form.remove();
+    form = null;
+  });
+
+  it('同一nameで複数checked属性がある場合、末尾（有効な要素）を採用して一意に復元する', async () => {
+    const { defineDefaultRadio } = await import('./radio-define');
+    defineDefaultRadio();
+
+    form = document.createElement('form');
+    document.body.appendChild(form);
+
+    element1 = document.createElement('dads-radio');
+    element1.setAttribute('name', 'group');
+    element1.setAttribute('label', 'A');
+    element1.setAttribute('checked', '');
+    form.appendChild(element1);
+
+    element2 = document.createElement('dads-radio');
+    element2.setAttribute('name', 'group');
+    element2.setAttribute('label', 'B');
+    element2.setAttribute('checked', '');
+    form.appendChild(element2);
+
+    element3 = document.createElement('dads-radio');
+    element3.setAttribute('name', 'group');
+    element3.setAttribute('label', 'C');
+    form.appendChild(element3);
+
+    await waitForCustomElement(element1);
+    await waitForCustomElement(element2);
+    await waitForCustomElement(element3);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    // 選択状態を変更（リセットで戻ることを確認したい）
+    const input3 = getShadowContent(element3, '[part="input"]') as HTMLInputElement | null;
+    if (!input3) throw new Error('input not found');
+    input3.checked = true;
+    input3.dispatchEvent(new Event('change', { bubbles: true }));
+
+    // reset（happy-domでform.reset()が安定しない環境もあるため、callbackを明示的に呼ぶ）
+    (element1 as any).formResetCallback();
+    (element2 as any).formResetCallback();
+    (element3 as any).formResetCallback();
+
+    const input1 = getShadowContent(element1, '[part="input"]') as HTMLInputElement | null;
+    const input2 = getShadowContent(element2, '[part="input"]') as HTMLInputElement | null;
+    if (!input1 || !input2) throw new Error('input not found');
+
+    // checked属性が複数あっても、末尾（B）に一意化される
+    expect(input1.checked).toBe(false);
+    expect(input2.checked).toBe(true);
+    expect(input3.checked).toBe(false);
+
+    // タブストップも選択に追従する
+    expect(input1.tabIndex).toBe(-1);
+    expect(input2.tabIndex).toBe(0);
+    expect(input3.tabIndex).toBe(-1);
+  });
+
+  it('末尾のcheckedがdisabledの場合、末尾から探索して有効なcheckedを優先する', async () => {
+    const { defineDefaultRadio } = await import('./radio-define');
+    defineDefaultRadio();
+
+    form = document.createElement('form');
+    document.body.appendChild(form);
+
+    element1 = document.createElement('dads-radio');
+    element1.setAttribute('name', 'group');
+    element1.setAttribute('label', 'A');
+    element1.setAttribute('checked', '');
+    form.appendChild(element1);
+
+    element2 = document.createElement('dads-radio');
+    element2.setAttribute('name', 'group');
+    element2.setAttribute('label', 'B');
+    element2.setAttribute('checked', '');
+    element2.setAttribute('disabled', '');
+    form.appendChild(element2);
+
+    element3 = document.createElement('dads-radio');
+    element3.setAttribute('name', 'group');
+    element3.setAttribute('label', 'C');
+    form.appendChild(element3);
+
+    await waitForCustomElement(element1);
+    await waitForCustomElement(element2);
+    await waitForCustomElement(element3);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    // reset
+    (element1 as any).formResetCallback();
+    (element2 as any).formResetCallback();
+    (element3 as any).formResetCallback();
+
+    const input1 = getShadowContent(element1, '[part="input"]') as HTMLInputElement | null;
+    const input2 = getShadowContent(element2, '[part="input"]') as HTMLInputElement | null;
+    const input3 = getShadowContent(element3, '[part="input"]') as HTMLInputElement | null;
+    if (!input1 || !input2 || !input3) throw new Error('input not found');
+
+    // disabled(B)は優先されず、Aが採用される
+    expect(input1.checked).toBe(true);
+    expect(input2.checked).toBe(false);
+    expect(input3.checked).toBe(false);
+  });
+
+  it('checked属性が無いグループはリセットで未選択に戻る', async () => {
+    const { defineDefaultRadio } = await import('./radio-define');
+    defineDefaultRadio();
+
+    form = document.createElement('form');
+    document.body.appendChild(form);
+
+    element1 = document.createElement('dads-radio');
+    element1.setAttribute('name', 'group');
+    element1.setAttribute('label', 'A');
+    form.appendChild(element1);
+
+    element2 = document.createElement('dads-radio');
+    element2.setAttribute('name', 'group');
+    element2.setAttribute('label', 'B');
+    form.appendChild(element2);
+
+    await waitForCustomElement(element1);
+    await waitForCustomElement(element2);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const input2 = getShadowContent(element2, '[part="input"]') as HTMLInputElement | null;
+    if (!input2) throw new Error('input not found');
+    input2.checked = true;
+    input2.dispatchEvent(new Event('change', { bubbles: true }));
+
+    (element1 as any).formResetCallback();
+    (element2 as any).formResetCallback();
+
+    const input1 = getShadowContent(element1, '[part="input"]') as HTMLInputElement | null;
+    if (!input1) throw new Error('input not found');
+    expect(input1.checked).toBe(false);
+    expect(input2.checked).toBe(false);
+  });
+});
+
 describe('DadsRadio - バリデーション', () => {
   let form: HTMLFormElement | null = null;
   let element1: HTMLElement;

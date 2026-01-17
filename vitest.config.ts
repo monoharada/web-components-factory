@@ -13,14 +13,17 @@ export default defineConfig({
     
     // セットアップファイル
     setupFiles: ['./tests/setup.ts'],
-    
+
     // テストファイルパターン
     include: [
-      'tests/config.test.ts',
-      'tests/components/**/*.{test,spec}.{js,ts}',
+      'tests/**/*.{test,spec}.{js,ts}',
       'src/**/*.{test,spec}.{js,ts}',
       'packages/**/*.{test,spec}.{js,ts}'
     ],
+
+    // 意図的に除外するテスト
+    // - 現状 `src/` 側に参照先が存在せず import 解決で落ちるため（復旧は別PRで扱う）
+    exclude: ['tests/adaptive-card*.{test,spec}.{js,ts}'],
     
     // ファイル監視無効化（CIモード用、手動実行時は --watch で有効化）
     watch: false,
