@@ -218,7 +218,7 @@ export function updateRequirement(
  * @param updateAriaFn - aria-describedby更新関数
  */
 export function updateValidationUI(
-  control: HTMLInputElement | HTMLTextAreaElement | null,
+  control: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null,
   hasError: boolean,
   updateErrorFn: () => void,
   updateAriaFn: () => void
@@ -236,8 +236,8 @@ export function updateValidationUI(
 export interface ShowValidationErrorOptions {
   /** ホスト要素 */
   element: HTMLElement;
-  /** 内部input/textarea要素 */
-  control: HTMLInputElement | HTMLTextAreaElement | null;
+  /** 内部input/textarea/select要素 */
+  control: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
   /** ElementInternalsインスタンス */
   internals: ElementInternals;
   /** エラーメッセージ */
@@ -306,7 +306,7 @@ export interface AriaDescribedByConfig {
  * @param config - ID設定
  */
 export function updateAriaDescribedBy(
-  control: HTMLInputElement | HTMLTextAreaElement | null,
+  control: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null,
   supportVisible: boolean,
   errorVisible: boolean,
   counterVisible: boolean = false,

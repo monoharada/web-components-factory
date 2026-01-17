@@ -208,7 +208,7 @@ export const checkboxStyles = css`
     /* サイズに応じて動的に計算（checkbox + gap） */
     padding-inline-start: calc(var(--_checkbox-size) + var(--_gap));
     font-weight: var(--font-weight-400, 400);
-    font-size: var(--font-size-14, 0.875rem);
+    font-size: var(--font-size-16, 1rem);
     line-height: var(--line-height-150, 1.5);
     font-family: var(--font-family-sans);
     color: var(--color-semantic-error-1, #ec0000);

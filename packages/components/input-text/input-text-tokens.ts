@@ -20,9 +20,9 @@ const inputTextSemanticTokensText = `
     --input-label-size-lg: var(--font-size-18, 1.125rem);
 
     /* テキストサイズ */
-    --input-font-size-sm: var(--font-size-14, 0.875rem);
+    --input-font-size-sm: var(--font-size-16, 1rem);
     --input-font-size-md: var(--font-size-16, 1rem);
-    --input-font-size-lg: var(--font-size-18, 1.125rem);
+    --input-font-size-lg: var(--font-size-16, 1rem);
 
     /* 背景色 */
     --input-bg: var(--color-neutral-white, #ffffff);
@@ -134,13 +134,11 @@ const inputTextLocalTokensText = `
   /* サイズバリアント */
   :host([size="sm"]) {
     --dads-input-label-size: var(--input-label-size-sm);
-    --dads-input-font-size: var(--input-font-size-sm);
     --dads-input-height: var(--input-height-sm);
   }
 
   :host([size="lg"]) {
     --dads-input-label-size: var(--input-label-size-lg);
-    --dads-input-font-size: var(--input-font-size-lg);
     --dads-input-height: var(--input-height-lg);
   }
 

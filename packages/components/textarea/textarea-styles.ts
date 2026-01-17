@@ -55,7 +55,7 @@ export const textareaStyles = css`
   /* ========== サポートテキスト ========== */
   [part="support-text"] {
     margin: 0;
-    font-size: var(--font-size-14);
+    font-size: var(--font-size-16);
     color: var(--dads-textarea-support-color);
     line-height: var(--line-height-150);
   }
@@ -140,7 +140,7 @@ export const textareaStyles = css`
   /* ========== 文字数カウンター ========== */
   [part="counter"] {
     display: block;
-    font-size: var(--font-size-14);
+    font-size: var(--font-size-16);
     color: var(--dads-textarea-counter-color);
     line-height: var(--line-height-130);
     min-height: 1.5em;
@@ -159,7 +159,7 @@ export const textareaStyles = css`
 
   /* ========== エラーテキスト ========== */
   [part="error-text"] {
-    font-size: var(--font-size-14);
+    font-size: var(--font-size-16);
     color: var(--dads-textarea-error-color);
     line-height: var(--line-height-150);
   }
