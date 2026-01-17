@@ -1204,6 +1204,111 @@ export const demos = {
     </div>
   `,
 
+  calendar: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">カレンダー</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム（DADS）HTML版 calendar.css と同等の見た目・操作になるよう実装したWeb Components版です。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-calendar">
+          <div style="display: grid; place-content: center; padding: 40px 0;">
+            <dads-calendar min-date="2024-01-01" max-date="2026-12-31"></dads-calendar>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本</h3>
+        <dads-calendar min-date="2024-01-01" max-date="2026-12-31"></dads-calendar>
+      </section>
+
+      <section style="margin-top: 32px; margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">期間選択（range）</h3>
+        <p style="margin: 0 0 16px; color: #666; font-size: 14px;">
+          開始日→終了日の順に選択します。選択状態はカレンダー下部に表示され、aria-live で読み上げも行います。
+        </p>
+        <dads-calendar range min-date="2024-01-01" max-date="2026-12-31"></dads-calendar>
+      </section>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-calendar'), import('dads-switch'), import('a11y-annotate')]);
+    </script>
+  `,
+
+  datePicker: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">日付ピッカー</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム（DADS）HTML版 date-picker.css 相当をShadow DOM向けに移植したWeb Components版です。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-date-picker">
+          <div style="display: grid; place-content: center; padding: 40px 0;">
+            <dads-fieldset required>
+              <span slot="legend">生年月日</span>
+              <p slot="support-text">西暦で記入してください。例）2021年09月01日</p>
+              <dads-date-picker calendar min-date="2024-01-01" max-date="2026-12-31"></dads-date-picker>
+            </dads-fieldset>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">2タイプ（Consolidated / Separated）</h3>
+        <div style="display: grid; gap: 24px;">
+          <div>
+            <p style="margin: 0 0 8px; color: #666; font-size: 14px;">Consolidated</p>
+            <dads-date-picker calendar></dads-date-picker>
+          </div>
+          <div>
+            <p style="margin: 0 0 8px; color: #666; font-size: 14px;">Separated</p>
+            <dads-date-picker calendar data-type="separated"></dads-date-picker>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">状態</h3>
+        <div style="display: grid; gap: 24px;">
+          <div>
+            <p style="margin: 0 0 8px; color: #666; font-size: 14px;">Error</p>
+            <dads-date-picker calendar error error-text="正しい日付を入力してください"></dads-date-picker>
+          </div>
+          <div>
+            <p style="margin: 0 0 8px; color: #666; font-size: 14px;">Readonly</p>
+            <dads-date-picker calendar readonly value="2024-01-02"></dads-date-picker>
+          </div>
+          <div>
+            <p style="margin: 0 0 8px; color: #666; font-size: 14px;">Disabled</p>
+            <dads-date-picker calendar disabled value="2024-01-02"></dads-date-picker>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-date-picker'), import('dads-calendar'), import('dads-fieldset'), import('dads-switch'), import('a11y-annotate')]);
+    </script>
+  `,
+
   inputText: () => `
     <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">インプットテキストコンポーネント</h2>

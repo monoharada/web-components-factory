@@ -104,7 +104,11 @@ const buttonLocalTokensText = `
     --dads-button-background-hover: var(--button-primary-bg-hover);
     --dads-button-background-active: var(--button-primary-bg-active);
     --dads-button-color: var(--button-primary-text);
+    --dads-button-color-hover: var(--dads-button-color);
+    --dads-button-color-active: var(--dads-button-color);
     --dads-button-border-color: var(--button-primary-border);
+    --dads-button-border-color-hover: var(--dads-button-border-color);
+    --dads-button-border-color-active: var(--dads-button-border-color);
     --dads-button-border-width: var(--button-border-width);
     --dads-button-border-radius: var(--button-border-radius);
     
@@ -113,7 +117,7 @@ const buttonLocalTokensText = `
     --dads-button-font-size: var(--button-font-size-medium);
     --dads-button-font-weight: var(--button-font-weight);
     --dads-button-line-height: var(--button-line-height);
-    --dads-button-min-height: var(--button-height-medium);
+    --dads-button-min-height-default: var(--button-height-medium);
     
     /* アイコンカスタマイズ用トークン */
     --dads-button-icon-size: 1.25em;
@@ -138,6 +142,7 @@ const buttonLocalTokensText = `
     --dads-button-width: auto;
     --dads-button-max-width: none;
     --dads-button-min-width: auto;
+    --dads-button-aspect-ratio: auto;
     
     /* テキストカスタマイズ用トークン */
     --dads-button-text-transform: none;
@@ -168,7 +173,11 @@ const buttonLocalTokensText = `
     --dads-button-background-hover: var(--button-secondary-bg-hover);
     --dads-button-background-active: var(--button-secondary-bg-active);
     --dads-button-color: var(--button-secondary-text);
+    --dads-button-color-hover: var(--button-secondary-text-hover);
+    --dads-button-color-active: var(--button-secondary-text-active);
     --dads-button-border-color: var(--button-secondary-border);
+    --dads-button-border-color-hover: var(--button-secondary-border-hover);
+    --dads-button-border-color-active: var(--button-secondary-border-active);
     --dads-button-border-width: 1px;
   }
   
@@ -178,7 +187,11 @@ const buttonLocalTokensText = `
     --dads-button-background-hover: var(--button-tertiary-bg-hover);
     --dads-button-background-active: var(--button-tertiary-bg-active);
     --dads-button-color: var(--button-tertiary-text);
+    --dads-button-color-hover: var(--button-tertiary-text-hover);
+    --dads-button-color-active: var(--button-tertiary-text-active);
     --dads-button-border-color: var(--button-tertiary-border);
+    --dads-button-border-color-hover: var(--button-tertiary-border);
+    --dads-button-border-color-active: var(--button-tertiary-border);
     --dads-button-border-width: 0;
   }
   
@@ -186,19 +199,19 @@ const buttonLocalTokensText = `
   :host([size="x-small"]) {
     --dads-button-padding: var(--button-padding-x-small);
     --dads-button-font-size: var(--button-font-size-x-small);
-    --dads-button-min-height: var(--button-height-x-small);
+    --dads-button-min-height-default: var(--button-height-x-small);
   }
   
   :host([size="small"]) {
     --dads-button-padding: var(--button-padding-small);
     --dads-button-font-size: var(--button-font-size-small);
-    --dads-button-min-height: var(--button-height-small);
+    --dads-button-min-height-default: var(--button-height-small);
   }
   
   :host([size="large"]) {
     --dads-button-padding: var(--button-padding-large);
     --dads-button-font-size: var(--button-font-size-large);
-    --dads-button-min-height: var(--button-height-large);
+    --dads-button-min-height-default: var(--button-height-large);
   }
   
   /* 無効状態のローカルトークン上書き - バリアント別 */

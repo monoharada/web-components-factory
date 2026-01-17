@@ -78,6 +78,76 @@ Shadow DOM内部要素へ`data-size`をコピーして`[part="base"][data-size="
 
 ---
 
+## [2026-01-15] `dads-button` のスタイリングAPI（サイズ/比率）とバリアント別hover/active
+**タグ**: #css #webcomponents #designtokens
+
+### 概要
+複合コンポーネント（例: `dads-calendar`）内部で `dads-button` を「アイコンのみの正方形ボタン」や「コンポーネント固有のpadding/高さ」に合わせる必要が出たため、`dads-button` のスタイリング用CSS変数（API）を整理し、`primary/secondary/tertiary` バリアントでも hover/active が効くようにしました。
+
+### 詳細
+- **`dads-button` のサイズ/レイアウトをCSS変数で調整できるようにする**
+  - `--dads-button-width / --dads-button-min-width / --dads-button-max-width`
+  - `--dads-button-min-height`（外部オーバーライド用）
+  - `--dads-button-min-height-default`（コンポーネント内部のデフォルト用）
+  - `--dads-button-padding`
+  - `--dads-button-aspect-ratio`（例: `1 / 1`）
+- **親コンポーネント側で“揃える”用の変数を用意する（例: `dads-calendar`）**
+  - `--dads-calendar-control-size`（年セレクト / 前後ボタン / フッターの高さを合わせる）
+- **バリアント名の揺れに注意**
+  - トークン側は `variant="primary|secondary|tertiary"` を許容しているため、スタイル（hover/active/disabled）も同様に対応させる必要がある。
+
+### 適用例
+```css
+/* 例: カレンダー全体のコントロール高さを揃える（外から上書き可能） */
+dads-calendar {
+  --dads-calendar-control-size: 44px;
+}
+
+/* 例: 親コンポーネント側で子の dads-button を正方形アイコンボタンにする */
+parent-component::part(nav-button) {
+  --dads-button-padding: 0;
+  --dads-button-min-height: 44px;
+  --dads-button-width: var(--dads-button-min-height);
+  --dads-button-min-width: var(--dads-button-min-height);
+  --dads-button-aspect-ratio: 1 / 1;
+}
+```
+
+### 注意点
+- 子コンポーネントのShadow DOM内部を直接スタイルできないため、**CSS変数（=スタイリングAPI）** と **`part` の公開** で“外から調整できる余地”を残す。
+- `min-height` を“無効化”したい場合は `--dads-button-min-height: initial;`（または `unset`）を設定して初期値に戻す。
+
+---
+
+## [2026-01-15] `dads-calendar` の期間選択（`range`）と読み上げ（aria-live）
+**タグ**: #a11y #calendar #webcomponents
+
+### 概要
+`dads-calendar` に `range` 属性を付与すると、開始日→終了日の順に2点を選択できる“期間選択モード”になります。
+
+### 仕様メモ
+- **表示**: カレンダー下部に「開始日 / 終了日」を表示する（未選択は `未選択`）。
+- **サポートテキスト**:
+  - 開始日未選択: `開始日を選択してください。`
+  - 開始日選択済み: `終了日をお選びください。`
+  - 両方選択済み: `開始日と終了日を選択しました。`
+- **読み上げ**: 選択操作時に `aria-live="polite"` を使って状態変化を読み上げる。
+- **イベント**: `date-range-selected` を発火し、`detail.startDate / detail.endDate`（`Date | null`）を渡す。
+
+### 使用例
+```html
+<dads-calendar range></dads-calendar>
+```
+
+```js
+document.querySelector('dads-calendar')?.addEventListener('date-range-selected', (e) => {
+  const { startDate, endDate } = e.detail;
+  console.log(startDate, endDate);
+});
+```
+
+---
+
 ## [2025-09-02] Claude Code開発フローの確立
 **タグ**: #workflow #claudecode #productivity
 
@@ -827,6 +897,153 @@ Form-Associated Custom Elementsでカスタムバリデーションを実装す�
 - `form.reportValidity()`はShadow DOM内のネイティブ要素もチェックする
 - `_internals.setValidity({})`を呼ばないと次回submitがブロックされる可能性
 - クリティカルなコンポーネント（送信ボタン等）は遅延ロードではなく即座にロード
+
+---
+
+## [2026-01-16] CSSにおけるSpacing Tokensの徹底活用
+**タグ**: #css #design-tokens #spacing #maintainability
+
+### 概要
+CSSでハードコードされた`calc(X / 16 * 1rem)`形式の値を、`--spacing-*`トークンに置き換えることで保守性と一貫性を向上。CLAUDE.mdのガイドラインに準拠。
+
+### 詳細
+
+#### 1. 置き換えルール
+
+| ハードコード値 | Spacing Token |
+|---------------|---------------|
+| `calc(4 / 16 * 1rem)` (4px) | `var(--spacing-1)` |
+| `calc(8 / 16 * 1rem)` (8px) | `var(--spacing-2)` |
+| `calc(12 / 16 * 1rem)` (12px) | `var(--spacing-3)` |
+| `calc(16 / 16 * 1rem)` (16px) | `var(--spacing-4)` |
+| `calc(24 / 16 * 1rem)` (24px) | `var(--spacing-6)` |
+| `calc(40 / 16 * 1rem)` (40px) | `var(--spacing-10)` |
+| `calc(48 / 16 * 1rem)` (48px) | `var(--spacing-12)` |
+
+#### 2. 例外ケース（px値を許容）
+
+```css
+/* ボーダー幅（1px, 2px, 3px）はpxで指定 */
+border: 1px solid var(--color-neutral-solid-gray-600);
+border-width: 3px; /* hover時のボーダー幅 */
+
+/* hairline（2px未満）の高さ */
+height: 2px; /* hairline - ボーダー幅なのでpx指定 */
+
+/* 存在しないトークンの代替 */
+width: 2.75rem; /* 44px - spacing-11が存在しないため */
+height: 3.5rem; /* 56px - spacing-14が存在しないため */
+```
+
+#### 3. 負の値を使う場合
+
+```css
+/* calc()で負の値に変換 */
+margin-left: calc(var(--spacing-1) * -1);  /* -4px */
+top: calc(var(--spacing-3) * -1);           /* -12px */
+```
+
+### 適用例
+```css
+/* ❌ BAD: ハードコード */
+padding: calc(16 / 16 * 1rem);
+column-gap: calc(8 / 16 * 1rem);
+outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
+
+/* ✅ GOOD: Spacing Tokens */
+padding: var(--spacing-4);
+column-gap: var(--spacing-2);
+outline: var(--spacing-1) solid var(--color-neutral-black);
+```
+
+### 成果物
+- `packages/components/calendar/calendar-styles.ts` - トークン適用
+- `packages/components/date-picker/date-picker-styles.ts` - トークン適用
+
+### 注意点
+- フォーカススタイル（outline, outline-offset, box-shadow）もトークン化する
+- 存在しないトークンはコメントで理由を明記して`rem`値を使用
+- Light DOMコンポーネントではフォールバック値を指定: `var(--spacing-4, 16px)`
+
+---
+
+## [2026-01-16] Web Components間の型安全なPublic API定義
+**タグ**: #typescript #webcomponents #type-safety #interfaces
+
+### 概要
+親コンポーネントが子コンポーネントのメソッドを呼び出す際、`as unknown as {...}`の型アサーションではなく、インターフェースを定義してexportすることで型安全性を確保。
+
+### 詳細
+
+#### 1. 問題: 型アサーションの乱用
+
+```typescript
+// ❌ BAD: インラインの型アサーション
+const calendar = this.#calendar as unknown as {
+  setSelectedDate: (date: Date) => void;
+  setDisplayMonth: (year: number, monthIndex0: number) => void;
+  focus: () => void;
+} | null;
+```
+
+**問題点**:
+- 型定義が重複する可能性
+- APIの変更時に追跡が困難
+- コンポーネント間の契約が不明確
+
+#### 2. 解決策: Public APIインターフェースの定義
+
+```typescript
+// calendar.ts
+/**
+ * DadsCalendarコンポーネントの公開API（型安全な参照用）
+ */
+export interface DadsCalendarPublicAPI {
+  /** 選択日付を設定 */
+  setSelectedDate(date: Date | null): void;
+  /** 表示月を設定 */
+  setDisplayMonth(year: number, monthIndex0: number): void;
+  /** カレンダーにフォーカスを移動 */
+  focus(): void;
+}
+
+// index.ts
+export type { DadsCalendarPublicAPI } from './calendar.js';
+```
+
+#### 3. 利用側での型安全な参照
+
+```typescript
+// date-picker.ts
+import type { DadsCalendarPublicAPI } from '../calendar/index.js';
+
+// 型安全にキャスト
+const calendar = this.#calendar as (HTMLElement & DadsCalendarPublicAPI) | null;
+
+// TypeScriptが型チェックを行う
+calendar?.setSelectedDate(new Date(year, month - 1, day));
+calendar?.setDisplayMonth(year, month - 1);
+calendar?.focus();
+```
+
+### 適用パターン
+
+| シナリオ | パターン |
+|----------|----------|
+| 親→子のメソッド呼び出し | Public APIインターフェースをexport |
+| 子→親のイベント通知 | CustomEventのdetail型を定義 |
+| 動的ロード | defineXxx()関数で登録後に参照 |
+
+### 成果物
+- `packages/components/calendar/calendar.ts` - `DadsCalendarPublicAPI`インターフェース追加
+- `packages/components/calendar/index.ts` - 型のexport追加
+- `packages/components/date-picker/date-picker.ts` - 型安全な参照に修正
+
+### 注意点
+- インターフェースはpublicメソッドのみ定義（privateは含めない）
+- JSDocコメントで各メソッドの用途を明記
+- `type`キーワードでexportすることでランタイムバンドルに影響なし
+- HTMLElementとの交差型`(HTMLElement & PublicAPI)`を使用
 
 ---
 

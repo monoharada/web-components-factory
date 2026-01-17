@@ -34,7 +34,11 @@ export const buttonStyles = css`
     border-radius: var(--dads-button-border-radius, 0.5rem);
     
     padding: var(--dads-button-padding, var(--spacing-3, 12px) var(--spacing-6, 24px));
-    min-height: var(--dads-button-min-height, 48px);
+    width: var(--dads-button-width, auto);
+    min-width: var(--dads-button-min-width, auto);
+    max-width: var(--dads-button-max-width, none);
+    min-height: var(--dads-button-min-height, var(--dads-button-min-height-default, 48px));
+    aspect-ratio: var(--dads-button-aspect-ratio, auto);
     
     /* フォント設定 - グローバルトークン参照 */
     font-family: var(--font-family-sans);
@@ -115,24 +119,30 @@ export const buttonStyles = css`
     cursor: pointer;
   }
 
+  /* ========== Hover / Active ========== */
+
+  :host(:not([disabled])) [part="base"]:is(:hover, :active) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  :host(:not([disabled])) [part="base"]:hover {
+    --dads-button-background: var(--dads-button-background-hover);
+    --dads-button-color: var(--dads-button-color-hover);
+    --dads-button-border-color: var(--dads-button-border-color-hover);
+  }
+
+  :host(:not([disabled])) [part="base"]:active {
+    --dads-button-background: var(--dads-button-background-active);
+    --dads-button-color: var(--dads-button-color-active);
+    --dads-button-border-color: var(--dads-button-border-color-active);
+  }
+
   /* ========== Solid (Primary) バリアント ========== */
   
-  /* hover状態で変数を再代入 */
-  :host([variant="solid"]:not([disabled])) [part="base"]:hover {
-    --dads-button-background: var(--button-primary-bg-hover);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-  
-  /* active状態で変数を再代入 */
-  :host([variant="solid"]:not([disabled])) [part="base"]:active {
-    --dads-button-background: var(--button-primary-bg-active);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-  
   /* Solid Disabled状態 */
-  :host([variant="solid"][disabled]) button[part="base"] {
+  :host([variant="solid"][disabled]) button[part="base"],
+  :host([variant="primary"][disabled]) button[part="base"] {
     --dads-button-background: var(--button-disabled-primary-bg);
     --dads-button-color: var(--button-disabled-primary-text);
     --dads-button-border-color: var(--button-disabled-primary-border);
@@ -140,57 +150,34 @@ export const buttonStyles = css`
   
   /* ========== Outlined (Secondary) バリアント ========== */
   
-  /* hover状態で変数を再代入 */
-  :host([variant="outlined"]:not([disabled])) [part="base"]:hover {
-    --dads-button-background: var(--button-secondary-bg-hover);
-    --dads-button-color: var(--button-secondary-text-hover);
-    --dads-button-border-color: var(--button-secondary-border-hover);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-  
-  /* active状態で変数を再代入 */
-  :host([variant="outlined"]:not([disabled])) [part="base"]:active {
-    --dads-button-background: var(--button-secondary-bg-active);
-    --dads-button-color: var(--button-secondary-text-active);
-    --dads-button-border-color: var(--button-secondary-border-active);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-  
   /* Outlined Disabled状態 */
-  :host([variant="outlined"][disabled]) button[part="base"] {
+  :host([variant="outlined"][disabled]) button[part="base"],
+  :host([variant="secondary"][disabled]) button[part="base"] {
     --dads-button-background: var(--button-disabled-secondary-bg);
     --dads-button-color: var(--button-disabled-secondary-text);
     --dads-button-border-color: var(--button-disabled-secondary-border);
   }
-
+  
   /* ========== Text（テキストのみ）バリアント ========== */
   
   /* Text基本状態 - 下線付き */
-  :host([variant="text"]) [part="base"] {
+  :host([variant="text"]) [part="base"],
+  :host([variant="tertiary"]) [part="base"] {
     --dads-button-border-width: 0;
     text-decoration: underline;
     text-underline-offset: 0.2em;
     text-decoration-thickness: 1px;
   }
   
-  /* hover状態で変数を再代入と下線を太く */
-  :host([variant="text"]:not([disabled])) [part="base"]:hover {
-    --dads-button-background: var(--button-tertiary-bg-hover);
-    --dads-button-color: var(--button-tertiary-text-hover);
-    text-decoration-thickness: 2px;
-  }
-  
-  /* active状態で変数を再代入と下線を太く */
-  :host([variant="text"]:not([disabled])) [part="base"]:active {
-    --dads-button-background: var(--button-tertiary-bg-active);
-    --dads-button-color: var(--button-tertiary-text-active);
+  /* hover/active で下線を太く */
+  :host([variant="text"]:not([disabled])) [part="base"]:is(:hover, :active),
+  :host([variant="tertiary"]:not([disabled])) [part="base"]:is(:hover, :active) {
     text-decoration-thickness: 2px;
   }
   
   /* Text Disabled状態 */
-  :host([variant="text"][disabled]) button[part="base"] {
+  :host([variant="text"][disabled]) button[part="base"],
+  :host([variant="tertiary"][disabled]) button[part="base"] {
     --dads-button-background: var(--button-disabled-tertiary-bg);
     --dads-button-color: var(--button-disabled-tertiary-text);
     --dads-button-border-color: var(--button-disabled-tertiary-border);
