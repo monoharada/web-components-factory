@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-01-18T01:12:03.015Z",
+  "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+  "root": {
+    "id": "17949:47429",
+    "name": "サイドステップ表示",
+    "type": "FRAME",
+    "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-47429&m=dev"
+  },
+  "match": {
+    "includeNameIncludes": [
+      "Step Navigation"
+    ],
+    "excludeNameIncludes": []
+  },
+  "instances": [
+    {
+      "id": "17949:47760",
+      "name": "Step Navigation / Vertical",
+      "componentId": "17687:9833",
+      "absoluteBoundingBox": {
+        "x": 9647.705078125,
+        "y": -610,
+        "width": 221.5901641845703,
+        "height": 80
+      },
+      "componentProperties": {
+        "Description#17703:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Position": {
+          "value": "First",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17949:47761",
+      "name": "Step Navigation / Vertical",
+      "componentId": "17687:9838",
+      "absoluteBoundingBox": {
+        "x": 9647.705078125,
+        "y": -530,
+        "width": 221.5901641845703,
+        "height": 80
+      },
+      "componentProperties": {
+        "Description#17703:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17949:47762",
+      "name": "Step Navigation / Vertical",
+      "componentId": "17687:9838",
+      "absoluteBoundingBox": {
+        "x": 9647.705078125,
+        "y": -450,
+        "width": 221.5901641845703,
+        "height": 80
+      },
+      "componentProperties": {
+        "Description#17703:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17949:47763",
+      "name": "Step Navigation / Vertical",
+      "componentId": "17687:9838",
+      "absoluteBoundingBox": {
+        "x": 9647.705078125,
+        "y": -370,
+        "width": 221.5901641845703,
+        "height": 80
+      },
+      "componentProperties": {
+        "Description#17703:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17949:47764",
+      "name": "Step Navigation / Vertical",
+      "componentId": "17687:9838",
+      "absoluteBoundingBox": {
+        "x": 9647.705078125,
+        "y": -290,
+        "width": 221.5901641845703,
+        "height": 80
+      },
+      "componentProperties": {
+        "Description#17703:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17949:47765",
+      "name": "Step Navigation / Vertical",
+      "componentId": "17687:9843",
+      "absoluteBoundingBox": {
+        "x": 9647.705078125,
+        "y": -210,
+        "width": 221.5901641845703,
+        "height": 80
+      },
+      "componentProperties": {
+        "Description#17703:0": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Position": {
+          "value": "Last",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "State": {
+          "value": "Default",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    }
+  ]
+}

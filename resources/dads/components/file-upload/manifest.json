@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-01-17T23:27:11.297Z",
+  "component": {
+    "slug": "file-upload"
+  },
+  "sources": {
+    "dadsDocs": {
+      "baseUrl": "https://design.digital.go.jp/dads/components/file-upload/",
+      "overviewUrl": "https://design.digital.go.jp/dads/components/file-upload/",
+      "usageUrl": "https://design.digital.go.jp/dads/components/file-upload/usage/",
+      "accessibilityUrl": "https://design.digital.go.jp/dads/components/file-upload/accessibility/"
+    },
+    "dadsHtmlStorybook": {
+      "baseUrl": "https://design.digital.go.jp/dads/html/",
+      "indexUrl": "https://design.digital.go.jp/dads/html/index.json"
+    },
+    "upstreamHtmlRepo": {
+      "repoUrl": "https://github.com/digital-go-jp/design-system-example-components-html.git",
+      "ref": "main"
+    }
+  },
+  "docs": {
+    "overview": {
+      "status": "ok",
+      "url": "https://design.digital.go.jp/dads/components/file-upload/",
+      "httpStatus": 200,
+      "files": {
+        "html": "docs/overview/page.html",
+        "text": "docs/overview/page.txt",
+        "screenshot": "docs/overview/screenshot.png"
+      },
+      "images": [
+        {
+          "src": "/dads/images/components/file-upload/overview/file_upload_overview.png",
+          "url": "https://design.digital.go.jp/dads/images/components/file-upload/overview/file_upload_overview.png",
+          "file": "docs/overview/images/file_upload_overview.png",
+          "status": "ok",
+          "error": null
+        }
+      ]
+    },
+    "usage": {
+      "status": "ok",
+      "url": "https://design.digital.go.jp/dads/components/file-upload/usage/",
+      "httpStatus": 200,
+      "files": {
+        "html": "docs/usage/page.html",
+        "text": "docs/usage/page.txt",
+        "screenshot": "docs/usage/screenshot.png"
+      },
+      "images": [
+        {
+          "src": "/dads/images/components/file-upload/usage/file_upload_anatomy_1.png",
+          "url": "https://design.digital.go.jp/dads/images/components/file-upload/usage/file_upload_anatomy_1.png",
+          "file": "docs/usage/images/file_upload_anatomy_1.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/_next/static/media/counter_1.96ce219c.svg",
+          "url": "https://design.digital.go.jp/dads/_next/static/media/counter_1.96ce219c.svg",
+          "file": "docs/usage/images/counter_1.96ce219c.svg",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/_next/static/media/counter_2.73d71e67.svg",
+          "url": "https://design.digital.go.jp/dads/_next/static/media/counter_2.73d71e67.svg",
+          "file": "docs/usage/images/counter_2.73d71e67.svg",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/_next/static/media/counter_3.5e687aba.svg",
+          "url": "https://design.digital.go.jp/dads/_next/static/media/counter_3.5e687aba.svg",
+          "file": "docs/usage/images/counter_3.5e687aba.svg",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/_next/static/media/counter_4.331c29f8.svg",
+          "url": "https://design.digital.go.jp/dads/_next/static/media/counter_4.331c29f8.svg",
+          "file": "docs/usage/images/counter_4.331c29f8.svg",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/_next/static/media/counter_5.22b3841d.svg",
+          "url": "https://design.digital.go.jp/dads/_next/static/media/counter_5.22b3841d.svg",
+          "file": "docs/usage/images/counter_5.22b3841d.svg",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/_next/static/media/counter_6.a71ffe0c.svg",
+          "url": "https://design.digital.go.jp/dads/_next/static/media/counter_6.a71ffe0c.svg",
+          "file": "docs/usage/images/counter_6.a71ffe0c.svg",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/_next/static/media/counter_7.90bd57bb.svg",
+          "url": "https://design.digital.go.jp/dads/_next/static/media/counter_7.90bd57bb.svg",
+          "file": "docs/usage/images/counter_7.90bd57bb.svg",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/file-upload/usage/file_upload_anatomy_2.png",
+          "url": "https://design.digital.go.jp/dads/images/components/file-upload/usage/file_upload_anatomy_2.png",
+          "file": "docs/usage/images/file_upload_anatomy_2.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/file-upload/usage/file_upload_expand_area.png",
+          "url": "https://design.digital.go.jp/dads/images/components/file-upload/usage/file_upload_expand_area.png",
+          "file": "docs/usage/images/file_upload_expand_area.png",
+          "status": "ok",
+          "error": null
+        }
+      ]
+    },
+    "accessibility": {
+      "status": "ok",
+      "url": "https://design.digital.go.jp/dads/components/file-upload/accessibility/",
+      "httpStatus": 200,
+      "files": {
+        "html": "docs/accessibility/page.html",
+        "text": "docs/accessibility/page.txt",
+        "screenshot": "docs/accessibility/screenshot.png"
+      },
+      "images": []
+    }
+  },
+  "storybook": {
+    "status": "not_found",
+    "reason": "No storybook entries found for ./src/components/file-upload/",
+    "entries": [],
+    "files": {
+      "entries": "storybook/entries.json"
+    }
+  },
+  "upstream": {
+    "status": "missing",
+    "reason": "No upstream path: src/components/file-upload",
+    "commit": "27fbfb5b7395b9e0a91132891c6139dda04ad118",
+    "files": {
+      "meta": "upstream/design-system-example-components-html/META.json"
+    }
+  },
+  "notes": [
+    "agent-browser set media failed (ignored): Validation error: action: Invalid discriminator value. Expected 'launch' | 'navigate' | 'click' | 'type' | 'fill' | 'check' | 'uncheck' | 'upload' | 'dblclick' | 'focus' | 'drag' | 'frame' | 'mainframe' | 'getbyrole' | 'getbytext' | 'getbylabel' | 'getbyplaceholder' | 'press' | 'screenshot' | 'snapshot' | 'evaluate' | 'wait' | 'scroll' | 'select' | 'hover' | 'content' | 'close' | 'tab_new' | 'tab_list' | 'tab_switch' | 'tab_close' | 'window_new' | 'cookies_get' | 'cookies_set' | 'cookies_clear' | 'storage_get' | 'storage_set' | 'storage_clear' | 'dialog' | 'pdf' | 'route' | 'unroute' | 'requests' | 'download' | 'geolocation' | 'permissions' | 'viewport' | 'useragent' | 'device' | 'back' | 'forward' | 'reload' | 'url' | 'title' | 'getattribute' | 'gettext' | 'isvisible' | 'isenabled' | 'ischecked' | 'count' | 'boundingbox' | 'video_start' | 'video_stop' | 'trace_start' | 'trace_stop' | 'har_start' | 'har_stop' | 'state_save' | 'state_load' | 'console' | 'errors' | 'keyboard' | 'wheel' | 'tap' | 'clipboard' | 'highlight' | 'clear' | 'selectall' | 'innertext' | 'innerhtml' | 'inputvalue' | 'setvalue' | 'dispatch' | 'evalhandle' | 'expose' | 'addscript' | 'addstyle' | 'emulatemedia' | 'offline' | 'headers' | 'pause' | 'getbyalttext' | 'getbytitle' | 'getbytestid' | 'nth' | 'waitforurl' | 'waitforloadstate' | 'setcontent' | 'timezone' | 'locale' | 'credentials' | 'mousemove' | 'mousedown' | 'mouseup' | 'bringtofront' | 'waitforfunction' | 'scrollintoview' | 'addinitscript' | 'keydown' | 'keyup' | 'inserttext' | 'multiselect' | 'waitfordownload' | 'responsebody'",
+    "openAndWaitForContent retry 1 failed: https://design.digital.go.jp/dads/components/file-upload/usage/"
+  ]
+}

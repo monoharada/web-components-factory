@@ -1,0 +1,21 @@
+<frame id="17687:9795" name="Step Navigation / Horizontal" x="200" y="202" width="1046" height="1610">
+  <symbol id="17687:9796" name="Position=First, Size=Normal, Link=False, State=Default" x="48" y="48" width="280" height="167" />
+  <symbol id="17694:9590" name="Position=Last, Size=Normal, Link=False, State=Default" x="713.333251953125" y="48" width="280" height="167" />
+  <symbol id="17903:10446" name="Position=First, Size=Normal, Link=True, State=Default" x="48" y="308.33331298828125" width="280" height="167" />
+  <symbol id="17903:10451" name="Position=Middle, Size=Normal, Link=True, State=Default" x="380.6666564941406" y="308.33331298828125" width="280" height="167" />
+  <symbol id="17903:10457" name="Position=Last, Size=Normal, Link=True, State=Default" x="713.3333129882812" y="308.33331298828125" width="280" height="167" />
+  <symbol id="17903:26316" name="Position=First, Size=Normal, Link=True, State=Hover" x="48" y="568.6666259765625" width="280" height="167" />
+  <symbol id="17903:26321" name="Position=Middle, Size=Normal, Link=True, State=Hover" x="380.6666564941406" y="568.6666259765625" width="280" height="167" />
+  <symbol id="17903:26327" name="Position=Last, Size=Normal, Link=True, State=Hover" x="713.3333129882812" y="568.6666259765625" width="280" height="167" />
+  <symbol id="17687:9814" name="Position=First, Size=Small, Link=False, State=Default" x="48" y="828.9999389648438" width="150" height="160" />
+  <symbol id="17687:9820" name="Position=Middle, Size=Small, Link=False, State=Default" x="380.6666564941406" y="828.9999389648438" width="150" height="160" />
+  <symbol id="17687:9826" name="Position=Last, Size=Small, Link=False, State=Default" x="713.3333129882812" y="828.9999389648438" width="150" height="160" />
+  <symbol id="17926:42006" name="Position=First, Size=Small, Link=True, State=Default" x="48" y="1089.333251953125" width="150" height="160" />
+  <symbol id="17926:42012" name="Position=Middle, Size=Small, Link=True, State=Default" x="380.666748046875" y="1089.333251953125" width="150" height="160" />
+  <symbol id="17926:42018" name="Position=Last, Size=Small, Link=True, State=Default" x="713.333251953125" y="1089.333251953125" width="150" height="160" />
+  <symbol id="17926:42432" name="Position=Middle, Size=Small, Link=True, State=Hover" x="380.6666564941406" y="1349.6666259765625" width="150" height="160" />
+  <symbol id="17926:42438" name="Position=Last, Size=Small, Link=True, State=Hover" x="713.3333129882812" y="1349.6666259765625" width="150" height="160" />
+  <symbol id="17926:42426" name="Position=First, Size=Small, Link=True, State=Hover" x="48" y="1349.6666259765625" width="150" height="160" />
+  <symbol id="17687:9802" name="Position=Middle, Size=Normal, Link=False, State=Default" x="380.666748046875" y="48" width="280" height="167" />
+</frame>
+

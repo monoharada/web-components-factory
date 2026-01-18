@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-01-18T01:25:29.851Z",
+  "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+  "nodes": [
+    {
+      "id": "17687:9700",
+      "name": "Components",
+      "type": "SECTION",
+      "file": "figma/nodes/17687-9700.json",
+      "instances": 48
+    },
+    {
+      "id": "17687:9795",
+      "name": "Step Navigation / Horizontal",
+      "type": "COMPONENT_SET",
+      "file": "figma/nodes/17687-9795.json",
+      "instances": 18
+    },
+    {
+      "id": "17687:9832",
+      "name": "Step Navigation / Vertical",
+      "type": "COMPONENT_SET",
+      "file": "figma/nodes/17687-9832.json",
+      "instances": 18
+    },
+    {
+      "id": "17934:43545",
+      "name": "Examples",
+      "type": "SECTION",
+      "file": "figma/nodes/17934-43545.json",
+      "instances": 98
+    },
+    {
+      "id": "17938:43547",
+      "name": "リンクなし / ステップ一覧",
+      "type": "FRAME",
+      "file": "figma/nodes/17938-43547.json",
+      "instances": 6
+    },
+    {
+      "id": "17938:43715",
+      "name": "リンクなし / ステップ1 / Descriptionなし",
+      "type": "FRAME",
+      "file": "figma/nodes/17938-43715.json",
+      "instances": 6
+    },
+    {
+      "id": "18620:1283",
+      "name": "リンクなし / ステップ1 / Descriptionあり",
+      "type": "FRAME",
+      "file": "figma/nodes/18620-1283.json",
+      "instances": 6
+    },
+    {
+      "id": "17949:47429",
+      "name": "サイドステップ表示",
+      "type": "FRAME",
+      "file": "figma/nodes/17949-47429.json",
+      "instances": 6
+    },
+    {
+      "id": "17949:46465",
+      "name": "リンクなし / 見切れあり",
+      "type": "FRAME",
+      "file": "figma/nodes/17949-46465.json",
+      "instances": 8
+    },
+    {
+      "id": "17949:47074",
+      "name": "リンクなし / 見切れあり/ 画面幅が大きい場合",
+      "type": "FRAME",
+      "file": "figma/nodes/17949-47074.json",
+      "instances": 8
+    },
+    {
+      "id": "17949:46835",
+      "name": "リンクなし / 見切れあり / スクロール",
+      "type": "FRAME",
+      "file": "figma/nodes/17949-46835.json",
+      "instances": 8
+    },
+    {
+      "id": "17949:45551",
+      "name": "リンクあり / ステップ1",
+      "type": "FRAME",
+      "file": "figma/nodes/17949-45551.json",
+      "instances": 6
+    },
+    {
+      "id": "18460:2887",
+      "name": "リンクあり / ホバー",
+      "type": "FRAME",
+      "file": "figma/nodes/18460-2887.json",
+      "instances": 6
+    },
+    {
+      "id": "17938:44530",
+      "name": "リンクなし / ステップ5",
+      "type": "FRAME",
+      "file": "figma/nodes/17938-44530.json",
+      "instances": 6
+    },
+    {
+      "id": "17946:44714",
+      "name": "リンクなし / ステップ5まで完了してステップ1を閲覧",
+      "type": "FRAME",
+      "file": "figma/nodes/17946-44714.json",
+      "instances": 6
+    },
+    {
+      "id": "17946:44906",
+      "name": "リンクなし / 全部入りステップ4",
+      "type": "FRAME",
+      "file": "figma/nodes/17946-44906.json",
+      "instances": 6
+    },
+    {
+      "id": "17957:48071",
+      "name": "モバイル / リンクなし / ステップ一覧",
+      "type": "FRAME",
+      "file": "figma/nodes/17957-48071.json",
+      "instances": 6
+    },
+    {
+      "id": "17957:48374",
+      "name": "モバイル / リンクなし / ステップ1",
+      "type": "FRAME",
+      "file": "figma/nodes/17957-48374.json",
+      "instances": 6
+    },
+    {
+      "id": "17957:48663",
+      "name": "モバイル / リンクなし / スクロール",
+      "type": "FRAME",
+      "file": "figma/nodes/17957-48663.json",
+      "instances": 8
+    },
+    {
+      "id": "17712:53193",
+      "name": "Building Blocks / Step Navigation Number / Normal",
+      "type": "COMPONENT_SET",
+      "file": "figma/nodes/17712-53193.json",
+      "instances": 0
+    },
+    {
+      "id": "17687:9750",
+      "name": "Building Blocks / Step Navigation Item",
+      "type": "COMPONENT_SET",
+      "file": "figma/nodes/17687-9750.json",
+      "instances": 12
+    }
+  ],
+  "match": {
+    "includeNameIncludes": [
+      "Step Navigation"
+    ],
+    "excludeNameIncludes": []
+  }
+}
