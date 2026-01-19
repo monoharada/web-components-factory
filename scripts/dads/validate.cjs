@@ -41,8 +41,43 @@ function readJson(p) {
 }
 
 function assertFile(p, label, errors) {
+  if (!exists(p)) {
+    errors.push(`Missing ${label}: ${p}`);
+    return;
+  }
+
+  const stat = fs.statSync(p);
+  if (!stat.isFile()) {
+    errors.push(`Not a file ${label}: ${p}`);
+    return;
+  }
+
+  if (stat.size === 0) errors.push(`Empty ${label}: ${p}`);
+}
+
+function assertPath(p, label, errors) {
   if (!exists(p)) errors.push(`Missing ${label}: ${p}`);
-  else if (fs.statSync(p).size === 0) errors.push(`Empty ${label}: ${p}`);
+}
+
+function assertRelPath(rel, label, errors) {
+  if (!rel || typeof rel !== 'string' || rel.trim() === '') {
+    errors.push(`Missing ${label} path in manifest`);
+    return null;
+  }
+
+  if (path.isAbsolute(rel)) {
+    errors.push(`Invalid ${label} path (must be relative): ${rel}`);
+    return null;
+  }
+
+  // Prevent traversing outside of componentRoot.
+  const normalized = rel.replace(/\\/g, '/');
+  if (normalized === '..' || normalized.startsWith('../') || normalized.includes('/../')) {
+    errors.push(`Invalid ${label} path (path traversal): ${rel}`);
+    return null;
+  }
+
+  return rel;
 }
 
 function main() {
@@ -74,28 +109,74 @@ function main() {
       continue;
     }
 
-    if (page.status !== 'ok') continue;
+    if (page.status === 'missing') continue;
+    if (page.status === 'error') {
+      errors.push(`docs.${key} failed: ${page.error || 'unknown error'}`);
+      continue;
+    }
+    if (page.status !== 'ok') {
+      errors.push(`docs.${key} has unknown status: ${page.status}`);
+      continue;
+    }
 
     const files = page.files || {};
-    assertFile(path.join(componentRoot, files.html || ''), `docs.${key}.html`, errors);
-    assertFile(path.join(componentRoot, files.text || ''), `docs.${key}.text`, errors);
-    assertFile(path.join(componentRoot, files.screenshot || ''), `docs.${key}.screenshot`, errors);
+    {
+      const rel = assertRelPath(files.html, `docs.${key}.html`, errors);
+      if (rel) assertFile(path.join(componentRoot, rel), `docs.${key}.html`, errors);
+    }
+    {
+      const rel = assertRelPath(files.text, `docs.${key}.text`, errors);
+      if (rel) assertFile(path.join(componentRoot, rel), `docs.${key}.text`, errors);
+    }
+    {
+      const rel = assertRelPath(files.screenshot, `docs.${key}.screenshot`, errors);
+      if (rel) assertFile(path.join(componentRoot, rel), `docs.${key}.screenshot`, errors);
+    }
 
     for (const img of page.images || []) {
       if (img.status !== 'ok') continue;
-      assertFile(path.join(componentRoot, img.file || ''), `docs.${key}.image`, errors);
+      const rel = assertRelPath(img.file, `docs.${key}.image`, errors);
+      if (rel) assertFile(path.join(componentRoot, rel), `docs.${key}.image`, errors);
     }
   }
 
   // storybook
   const sb = manifest.storybook;
   if (!sb) errors.push('manifest.storybook is missing');
-  else if (sb.status === 'ok') {
-    for (const entry of sb.entries || []) {
-      const files = entry.files || {};
-      assertFile(path.join(componentRoot, files.uiPng || ''), 'storybook ui screenshot', errors);
-      assertFile(path.join(componentRoot, files.canvasPng || ''), 'storybook canvas screenshot', errors);
-      assertFile(path.join(componentRoot, files.canvasHtml || ''), 'storybook canvas html', errors);
+  else {
+    const sbEntriesRel = sb.files?.entries;
+    if (sbEntriesRel) {
+      const rel = assertRelPath(sbEntriesRel, 'storybook entries.json', errors);
+      if (rel) assertFile(path.join(componentRoot, rel), 'storybook entries.json', errors);
+    }
+
+    if (sb.status === 'not_found') {
+      // acceptable: no storybook entries for this component
+    } else if (sb.status === 'error') {
+      errors.push(`storybook failed: ${sb.error || 'unknown error'}`);
+    } else if (sb.status === 'ok') {
+      for (const entry of sb.entries || []) {
+        const entryStatus = entry.status || 'ok';
+        if (entryStatus !== 'ok') {
+          errors.push(`storybook entry failed (${entry.id || 'unknown'}): ${entry.error || entryStatus}`);
+        }
+
+        const files = entry.files || {};
+        {
+          const rel = assertRelPath(files.uiPng, 'storybook ui screenshot', errors);
+          if (rel) assertFile(path.join(componentRoot, rel), 'storybook ui screenshot', errors);
+        }
+        {
+          const rel = assertRelPath(files.canvasPng, 'storybook canvas screenshot', errors);
+          if (rel) assertFile(path.join(componentRoot, rel), 'storybook canvas screenshot', errors);
+        }
+        {
+          const rel = assertRelPath(files.canvasHtml, 'storybook canvas html', errors);
+          if (rel) assertFile(path.join(componentRoot, rel), 'storybook canvas html', errors);
+        }
+      }
+    } else {
+      errors.push(`manifest.storybook has unknown status: ${sb.status}`);
     }
   }
 
@@ -104,8 +185,16 @@ function main() {
   if (!up) errors.push('manifest.upstream is missing');
   else {
     if (up.files?.meta) assertFile(path.join(componentRoot, up.files.meta), 'upstream META.json', errors);
+    {
+      const licensePath = path.join(componentRoot, 'upstream', 'design-system-example-components-html', 'LICENSE');
+      assertFile(licensePath, 'upstream LICENSE', errors);
+    }
     if (up.status === 'ok') {
-      for (const rel of up.copied || []) assertFile(path.join(componentRoot, rel), 'upstream copied path', errors);
+      for (const rel of up.copied || []) {
+        const safe = assertRelPath(rel, 'upstream copied path', errors);
+        if (!safe) continue;
+        assertPath(path.join(componentRoot, safe), 'upstream copied path', errors);
+      }
     }
   }
 

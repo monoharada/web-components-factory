@@ -104,6 +104,15 @@ function tryRunJson(cmd, args, opts = {}) {
   return { ok: true, json };
 }
 
+function summarizeAgentBrowserError(err) {
+  const s = String(err || '').replace(/\s+/g, ' ').trim();
+  if (!s) return 'unknown error';
+  if (s.includes('Validation error: action: Invalid discriminator value')) {
+    return 'Validation error: agent-browser action unsupported in this environment';
+  }
+  return s.length > 220 ? s.slice(0, 220) + '…' : s;
+}
+
 function slugify(s) {
   const v = String(s || '')
     .toLowerCase()
@@ -244,7 +253,7 @@ function extractFigmaInstances(root, { includeNameIncludes, excludeNameIncludes 
   return instances;
 }
 
-function syncFigma({ componentRoot, manifest, force }) {
+function syncFigma({ componentRoot, manifest, force, previousFigma }) {
   const cfgPath = path.join(componentRoot, 'figma', 'config.json');
   if (!exists(cfgPath)) {
     const slug = manifest.component?.slug || '<slug>';
@@ -272,6 +281,12 @@ function syncFigma({ componentRoot, manifest, force }) {
 
   const token = process.env.FIGMA_ACCESS_TOKEN || process.env.FIGMA_TOKEN || null;
   if (!token) {
+    if (previousFigma && previousFigma.status === 'ok') {
+      manifest.figma = previousFigma;
+      manifest.notes = manifest.notes || [];
+      manifest.notes.push('figma sync skipped (missing token); preserved previous figma resources');
+      return;
+    }
     manifest.figma.status = 'skipped';
     manifest.figma.reason = 'missing_env';
     manifest.figma.requiredEnv = ['FIGMA_ACCESS_TOKEN (recommended)', 'FIGMA_TOKEN (legacy)'];
@@ -446,6 +461,16 @@ async function main() {
 
   ensureDir(componentRoot);
 
+  const manifestPath = path.join(componentRoot, 'manifest.json');
+  let previousManifest = null;
+  if (exists(manifestPath)) {
+    try {
+      previousManifest = readJson(manifestPath);
+    } catch {
+      previousManifest = null;
+    }
+  }
+
   const manifest = {
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
@@ -479,11 +504,32 @@ async function main() {
     run: (abArgs, opts = {}) => run('agent-browser', ['--session', session, ...abArgs, '--json'], opts),
   };
 
+  function stabilizePage() {
+    // Prevent transitions/animations from affecting screenshot diffs.
+    const js = `(() => {
+      try {
+        const id = '__dads_sync_stabilize';
+        if (document.getElementById(id)) return true;
+        const style = document.createElement('style');
+        style.id = id;
+        style.textContent = [
+          '*{animation:none !important;transition:none !important;scroll-behavior:auto !important;}',
+          'html:focus-within{scroll-behavior:auto !important;}',
+        ].join('\\n');
+        (document.head || document.documentElement).appendChild(style);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    })()`;
+    ab.tryJson(['eval', js]);
+  }
+
   // Browser session setup (stable screenshots)
   ab.run(['set', 'viewport', String(args.viewport.width), String(args.viewport.height)], { stdio: 'pipe' });
   {
     const media = ab.tryJson(['set', 'media', 'light', 'reduced-motion']);
-    if (!media.ok) manifest.notes.push(`agent-browser set media failed (ignored): ${media.error}`);
+    if (!media.ok) manifest.notes.push(`agent-browser set media failed (ignored): ${summarizeAgentBrowserError(media.error)}`);
   }
 
   function openAndWaitForContent(url) {
@@ -492,10 +538,16 @@ async function main() {
       if (!opened.ok) return { ok: false, error: opened.error };
 
       const waitMain = ab.tryJson(['wait', 'main']);
-      if (waitMain.ok) return { ok: true, selector: 'main' };
+      if (waitMain.ok) {
+        stabilizePage();
+        return { ok: true, selector: 'main' };
+      }
 
       const waitMainContents = ab.tryJson(['wait', '#mainContents']);
-      if (waitMainContents.ok) return { ok: true, selector: '#mainContents' };
+      if (waitMainContents.ok) {
+        stabilizePage();
+        return { ok: true, selector: '#mainContents' };
+      }
 
       manifest.notes.push(`openAndWaitForContent retry ${attempt} failed: ${url}`);
     }
@@ -659,48 +711,90 @@ async function main() {
           const iframeUrl = `${manifest.sources.dadsHtmlStorybook.baseUrl}iframe.html?id=${encodeURIComponent(e.id)}`;
           const canvasRootSelector = type === 'docs' ? '#storybook-docs' : '#storybook-root';
 
-          // UI screenshot
-          if (args.force || !exists(uiPng)) {
-            const opened = ab.tryJson(['open', uiUrl]);
-            if (opened.ok) {
-              const waited = ab.tryJson(['wait', '#storybook-preview-iframe']);
-              if (!waited.ok) manifest.notes.push(`storybook ui wait failed (${e.id}): ${waited.error}`);
-              ab.run(['wait', '300'], { stdio: 'pipe' });
-              ab.run(['screenshot', '--full', uiPng], { stdio: 'pipe' });
-            }
-          }
-
-          // Canvas screenshot + HTML
-          if (args.force || !exists(canvasPng) || !exists(canvasHtml)) {
-            const opened = ab.tryJson(['open', iframeUrl]);
-            if (opened.ok) {
-              const waited = ab.tryJson(['wait', canvasRootSelector]);
-              if (!waited.ok) {
-                manifest.notes.push(`storybook canvas wait failed (${e.id}): ${waited.error}`);
-                continue;
-              }
-              ab.run(['wait', '250'], { stdio: 'pipe' });
-              if (args.force || !exists(canvasPng)) ab.run(['screenshot', '--full', canvasPng], { stdio: 'pipe' });
-              if (args.force || !exists(canvasHtml)) {
-                const htmlRes = ab.tryJson(['get', 'html', canvasRootSelector]);
-                if (htmlRes.ok) fs.writeFileSync(canvasHtml, `${htmlRes.json.data.html}\n`);
-              }
-            }
-          }
-
-          captured.push({
+          const entry = {
             id: e.id,
             type,
             name: e.name,
             title: e.title,
             uiUrl,
             iframeUrl,
+            status: 'ok',
+            error: null,
+            ui: { status: 'skipped', error: null },
+            canvas: { status: 'skipped', error: null },
             files: {
               uiPng: path.relative(componentRoot, uiPng),
               canvasPng: path.relative(componentRoot, canvasPng),
               canvasHtml: path.relative(componentRoot, canvasHtml),
             },
-          });
+          };
+
+          // UI screenshot
+          if (!args.force && exists(uiPng)) {
+            entry.ui.status = 'ok';
+            entry.ui.skipped = true;
+          } else {
+            const opened = ab.tryJson(['open', uiUrl]);
+            if (!opened.ok) {
+              entry.ui.status = 'error';
+              entry.ui.error = summarizeAgentBrowserError(opened.error);
+              entry.status = 'error';
+            } else {
+              stabilizePage();
+              const waited = ab.tryJson(['wait', '#storybook-preview-iframe']);
+              if (!waited.ok) manifest.notes.push(`storybook ui wait failed (${e.id}): ${summarizeAgentBrowserError(waited.error)}`);
+              try {
+                ab.run(['wait', '300'], { stdio: 'pipe' });
+                ab.run(['screenshot', '--full', uiPng], { stdio: 'pipe' });
+                entry.ui.status = 'ok';
+              } catch (err) {
+                entry.ui.status = 'error';
+                entry.ui.error = summarizeAgentBrowserError(err instanceof Error ? err.message : String(err));
+                entry.status = 'error';
+              }
+            }
+          }
+
+          // Canvas screenshot + HTML
+          if (!args.force && exists(canvasPng) && exists(canvasHtml)) {
+            entry.canvas.status = 'ok';
+            entry.canvas.skipped = true;
+          } else {
+            const opened = ab.tryJson(['open', iframeUrl]);
+            if (!opened.ok) {
+              entry.canvas.status = 'error';
+              entry.canvas.error = summarizeAgentBrowserError(opened.error);
+              entry.status = 'error';
+            } else {
+              stabilizePage();
+              const waited = ab.tryJson(['wait', canvasRootSelector]);
+              if (!waited.ok) {
+                entry.canvas.status = 'error';
+                entry.canvas.error = summarizeAgentBrowserError(waited.error);
+                entry.status = 'error';
+              } else {
+                try {
+                  ab.run(['wait', '250'], { stdio: 'pipe' });
+                  if (args.force || !exists(canvasPng)) ab.run(['screenshot', '--full', canvasPng], { stdio: 'pipe' });
+                  if (args.force || !exists(canvasHtml)) {
+                    const htmlRes = ab.tryJson(['get', 'html', canvasRootSelector]);
+                    if (htmlRes.ok) fs.writeFileSync(canvasHtml, `${htmlRes.json.data.html}\n`);
+                  }
+                  entry.canvas.status = 'ok';
+                } catch (err) {
+                  entry.canvas.status = 'error';
+                  entry.canvas.error = summarizeAgentBrowserError(err instanceof Error ? err.message : String(err));
+                  entry.status = 'error';
+                }
+              }
+            }
+          }
+
+          if (entry.status !== 'ok') {
+            entry.error = [entry.ui.error, entry.canvas.error].filter(Boolean).join(' / ') || 'storybook capture failed';
+          }
+
+          captured.push(entry);
         }
 
         manifest.storybook = {
@@ -741,12 +835,21 @@ async function main() {
     syncedAt: new Date().toISOString(),
   });
 
+  const upstreamLicenseSrc = path.join(upstreamTmp, 'LICENSE');
+  const upstreamLicenseDest = path.join(upstreamOutRoot, 'LICENSE');
+  if (exists(upstreamLicenseSrc) && (args.force || !exists(upstreamLicenseDest))) {
+    fs.copyFileSync(upstreamLicenseSrc, upstreamLicenseDest);
+  }
+
   if (!exists(upstreamComponentPath)) {
     manifest.upstream = {
       status: 'missing',
       reason: `No upstream path: src/components/${componentSlug}`,
       commit: upstreamCommit,
-      files: { meta: path.relative(componentRoot, upstreamMetaPath) },
+      files: {
+        meta: path.relative(componentRoot, upstreamMetaPath),
+        ...(exists(upstreamLicenseDest) ? { license: path.relative(componentRoot, upstreamLicenseDest) } : {}),
+      },
     };
   } else {
     const dest = path.join(upstreamOutRoot, 'src', 'components', componentSlug);
@@ -778,13 +881,16 @@ async function main() {
       status: 'ok',
       commit: upstreamCommit,
       copied,
-      files: { meta: path.relative(componentRoot, upstreamMetaPath) },
+      files: {
+        meta: path.relative(componentRoot, upstreamMetaPath),
+        ...(exists(upstreamLicenseDest) ? { license: path.relative(componentRoot, upstreamLicenseDest) } : {}),
+      },
     };
   }
 
   // --- figma (optional; requires config + token) ---------------------------
   try {
-    syncFigma({ componentRoot, manifest, force: args.force });
+    syncFigma({ componentRoot, manifest, force: args.force, previousFigma: previousManifest?.figma || null });
   } catch (e) {
     manifest.figma = {
       status: 'error',
@@ -793,7 +899,6 @@ async function main() {
   }
 
   // Write manifest + update global index
-  const manifestPath = path.join(componentRoot, 'manifest.json');
   writeJson(manifestPath, manifest);
   updateIndexJson(path.join(resourcesRoot, 'index.json'), componentSlug, manifest);
 

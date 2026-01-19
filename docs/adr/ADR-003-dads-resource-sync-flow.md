@@ -71,6 +71,7 @@
     - Canvas（`iframe.html?id=<id>`）全体のキャプチャ
     - `iframe` 内 `#storybook-root` のHTML（スニペット補助）
   - 上流 `digital-go-jp/design-system-example-components-html` は `src/components/<slug>` をスナップショット（存在しない場合は欠損として記録）
+    - 上流の `LICENSE` を同梱する（再配布条件の明示）
   - Figma（任意）:
     - `resources/dads/components/<slug>/figma/config.json` が存在し、かつ `FIGMA_ACCESS_TOKEN` が設定されている場合、該当 node の画像（PNG）と「利用箇所JSON（抽出）」を保存する（巨大になりがちな生の nodes JSON は保存しない）
     - 対象 node は自動探索できないため、URLは人間が渡して `dads:figma:add` で `config.json` を更新する
@@ -81,6 +82,7 @@
 
 - `npm run dads:validate -- --component <slug>`
   - `manifest.json` と実ファイルの欠損（空ファイル含む）を検出する
+  - 上流スナップショットの `LICENSE` 同梱を検証する
 
 ### 4. 実装上の知見（運用ルール）
 

@@ -68,3 +68,7 @@ npm run dads:validate -- --component file-upload
 - DADS側で「提供予定」のリソース（HTML版 Storybook / GitHub 等）は、取得せず **欠損として manifest に記録**します。
 - 画像は差分確認に使うため、同期処理では viewport を固定します。
   - `agent-browser` の `set media ... reduced-motion` は環境により失敗する可能性があるため、manifest の `notes` に記録した上で継続します。
+- 上流 `design-system-example-components-html` のスナップショットを同梱する場合、上流の `LICENSE` を同梱します。
+  - 例: `components/<slug>/upstream/design-system-example-components-html/LICENSE`
+- DADS公式ページのHTML/画像やFigmaエクスポート物を同梱する場合は、利用規約・再配布条件に抵触しないことを確認してください。
+  - 参照元URL/取得日時/上流commit 等の根拠は `manifest.json` に残します。
