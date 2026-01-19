@@ -20,7 +20,7 @@ function isBooleanControl(control: Element): boolean {
   if (control instanceof HTMLInputElement) return control.type === 'checkbox';
 
   const anyControl = control as any;
-  if (typeof anyControl.checked === 'boolean') return anyControl.checked;
+  if (typeof anyControl.checked === 'boolean') return true;
   return control.tagName.toLowerCase() === 'dads-switch';
 }
 

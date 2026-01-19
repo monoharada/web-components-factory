@@ -157,4 +157,35 @@ describe('viewer api controls binder', () => {
     expect(target.getAttribute('label')).toBe('ラベル');
     expect(target.style.getPropertyValue('--dads-input-border-color')).toBe('');
   });
+
+  it('treats controls with checked:boolean as boolean even when checked is false (regression)', async () => {
+    const { defineSwitch } = await import('../packages/components/switch/switch-define');
+    defineSwitch();
+
+    const { bindApiControls } = await loadModule();
+
+    document.body.innerHTML = `
+      <section id="root">
+        <div id="target" data-api-target></div>
+        <dads-switch id="ctrl" data-api-attr="required" data-default="false"></dads-switch>
+        <button type="button" id="reset" data-api-reset>Reset</button>
+      </section>
+    `;
+
+    const root = document.getElementById('root')!;
+    const target = document.getElementById('target')!;
+    const ctrl = document.getElementById('ctrl')!;
+    const reset = document.getElementById('reset')!;
+
+    bindApiControls(root);
+
+    ctrl.dispatchEvent(
+      new CustomEvent('dads-change', { detail: { checked: true }, bubbles: true }),
+    );
+    expect(target.hasAttribute('required')).toBe(true);
+
+    reset.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    expect(target.hasAttribute('required')).toBe(false);
+  });
 });
