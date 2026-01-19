@@ -1,0 +1,523 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-01-18T01:12:03.015Z",
+  "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+  "root": {
+    "id": "17687:9832",
+    "name": "Step Navigation / Vertical",
+    "type": "COMPONENT_SET",
+    "url": null
+  },
+  "match": {
+    "includeNameIncludes": [
+      "Step Navigation"
+    ],
+    "excludeNameIncludes": []
+  },
+  "instances": [
+    {
+      "id": "17687:9834",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9773",
+      "absoluteBoundingBox": {
+        "x": -2375,
+        "y": -728,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "First",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17687:9839",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9776",
+      "absoluteBoundingBox": {
+        "x": -2375,
+        "y": -613,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17687:9844",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9780",
+      "absoluteBoundingBox": {
+        "x": -2375,
+        "y": -498,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Last",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43189",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9751",
+      "absoluteBoundingBox": {
+        "x": -2375,
+        "y": -318,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "First",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43195",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9754",
+      "absoluteBoundingBox": {
+        "x": -2375,
+        "y": -209,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43201",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9758",
+      "absoluteBoundingBox": {
+        "x": -2375,
+        "y": -100,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Last",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43390",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9751",
+      "absoluteBoundingBox": {
+        "x": -1827,
+        "y": -318,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "First",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43396",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9754",
+      "absoluteBoundingBox": {
+        "x": -1827,
+        "y": -209,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43402",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9758",
+      "absoluteBoundingBox": {
+        "x": -1827,
+        "y": -100,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Last",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43509",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9751",
+      "absoluteBoundingBox": {
+        "x": -1279,
+        "y": -318,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "First",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43515",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9754",
+      "absoluteBoundingBox": {
+        "x": -1279,
+        "y": -209,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43521",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9758",
+      "absoluteBoundingBox": {
+        "x": -1279,
+        "y": -100,
+        "width": 38,
+        "height": 87
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Last",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Small",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43043",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9773",
+      "absoluteBoundingBox": {
+        "x": -1827,
+        "y": -724,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "First",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43049",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9776",
+      "absoluteBoundingBox": {
+        "x": -1827,
+        "y": -609,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43055",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9780",
+      "absoluteBoundingBox": {
+        "x": -1827,
+        "y": -494,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Last",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43116",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9773",
+      "absoluteBoundingBox": {
+        "x": -1279,
+        "y": -724,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "First",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43122",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9776",
+      "absoluteBoundingBox": {
+        "x": -1279,
+        "y": -609,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Middle",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "17926:43128",
+      "name": "Building Blocks / Step Navigation Item",
+      "componentId": "17687:9780",
+      "absoluteBoundingBox": {
+        "x": -1279,
+        "y": -494,
+        "width": 52,
+        "height": 99
+      },
+      "componentProperties": {
+        "Position": {
+          "value": "Last",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Orientation": {
+          "value": "Vertical",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Size": {
+          "value": "Normal",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    }
+  ]
+}

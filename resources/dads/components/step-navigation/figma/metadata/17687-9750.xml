@@ -1,0 +1,15 @@
+<frame id="17687:9750" name="Building Blocks / Step Navigation Item" x="2473" y="2103" width="400" height="393">
+  <symbol id="17687:9783" name="Position=First, Orientation=Horizontal, Size=Normal" x="80" y="40" width="64" height="52" />
+  <symbol id="17687:9787" name="Position=Middle, Orientation=Horizontal, Size=Normal" x="168" y="40" width="64" height="52" />
+  <symbol id="17687:9791" name="Position=Last, Orientation=Horizontal, Size=Normal" x="256" y="40" width="64" height="52" />
+  <symbol id="17687:9773" name="Position=First, Orientation=Vertical, Size=Normal" x="80" y="129" width="52" height="64" />
+  <symbol id="17687:9776" name="Position=Middle, Orientation=Vertical, Size=Normal" x="156" y="129" width="52" height="64" />
+  <symbol id="17687:9780" name="Position=Last, Orientation=Vertical, Size=Normal" x="232" y="129" width="52" height="64" />
+  <symbol id="17687:9761" name="Position=First, Orientation=Horizontal, Size=Small" x="80" y="230" width="48" height="38" />
+  <symbol id="17687:9765" name="Position=Middle, Orientation=Horizontal, Size=Small" x="152" y="230" width="48" height="38" />
+  <symbol id="17687:9769" name="Position=Last, Orientation=Horizontal, Size=Small" x="224" y="230" width="48" height="38" />
+  <symbol id="17687:9751" name="Position=First, Orientation=Vertical, Size=Small" x="80" y="305" width="38" height="48" />
+  <symbol id="17687:9754" name="Position=Middle, Orientation=Vertical, Size=Small" x="142" y="305" width="38" height="48" />
+  <symbol id="17687:9758" name="Position=Last, Orientation=Vertical, Size=Small" x="204" y="305" width="38" height="48" />
+</frame>
+

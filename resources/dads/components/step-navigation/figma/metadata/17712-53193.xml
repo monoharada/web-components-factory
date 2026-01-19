@@ -1,0 +1,39 @@
+<frame id="17712:53193" name="Building Blocks / Step Navigation Number / Normal" x="374" y="2103" width="872" height="877">
+  <symbol id="18328:3596" name="State=Completed, Link=False, Current=False, Hover=False" x="80" y="80" width="52" height="52" />
+  <symbol id="18328:3809" name="State=Reached, Link=False, Current=False, Hover=False" x="212" y="80" width="52" height="52" />
+  <symbol id="18331:2715" name="State=Default, Link=False, Current=False, Hover=False" x="344" y="80" width="52" height="52" />
+  <symbol id="18331:2740" name="State=Skipped, Link=False, Current=False, Hover=False" x="476" y="80" width="52" height="52" />
+  <symbol id="18331:2798" name="State=Editing, Link=False, Current=False, Hover=False" x="608" y="80" width="52" height="52" />
+  <symbol id="18331:2982" name="State=Error, Link=False, Current=False, Hover=False" x="740" y="80" width="52" height="52" />
+  <symbol id="18328:3615" name="State=Completed, Link=False, Current=True, Hover=False" x="80" y="212" width="52" height="52" />
+  <symbol id="17920:26799" name="State=Reached, Link=False, Current=True, Hover=False" x="212" y="212" width="52" height="52" />
+  <symbol id="17920:26801" name="State=Default, Link=False, Current=True, Hover=False" x="344" y="212" width="52" height="52" />
+  <symbol id="17920:26808" name="State=Skipped, Link=False, Current=True, Hover=False" x="476" y="212" width="52" height="52" />
+  <symbol id="17920:26810" name="State=Editing, Link=False, Current=True, Hover=False" x="608" y="212" width="52" height="52" />
+  <symbol id="17920:26817" name="State=Error, Link=False, Current=True, Hover=False" x="740" y="212" width="52" height="52" />
+  <symbol id="18328:3631" name="State=Completed, Link=True, Current=False, Hover=False" x="80" y="344" width="52" height="52" />
+  <symbol id="18328:3823" name="State=Reached, Link=True, Current=False, Hover=False" x="212" y="344" width="52" height="52" />
+  <symbol id="18328:3850" name="State=Default, Link=True, Current=False, Hover=False" x="344" y="344" width="52" height="52" />
+  <symbol id="18331:2899" name="State=Skipped, Link=True, Current=False, Hover=False" x="476" y="344" width="52" height="52" />
+  <symbol id="18331:2927" name="State=Editing, Link=True, Current=False, Hover=False" x="608" y="344" width="52" height="52" />
+  <symbol id="18331:3013" name="State=Error, Link=True, Current=False, Hover=False" x="740" y="344" width="52" height="52" />
+  <symbol id="18328:3750" name="State=Completed, Link=True, Current=False, Hover=True" x="80" y="476" width="52" height="52" />
+  <symbol id="18328:3836" name="State=Reached, Link=True, Current=False, Hover=True" x="212" y="476" width="52" height="52" />
+  <symbol id="18328:3863" name="State=Default, Link=True, Current=False, Hover=True" x="344" y="476" width="52" height="52" />
+  <symbol id="18331:3066" name="State=Skipped, Link=True, Current=False, Hover=True" x="476" y="476" width="52" height="52" />
+  <symbol id="18331:3025" name="State=Editing, Link=True, Current=False, Hover=True" x="608" y="476" width="52" height="52" />
+  <symbol id="18331:3046" name="State=Error, Link=True, Current=False, Hover=True" x="740" y="476" width="52" height="52" />
+  <symbol id="17920:40978" name="State=Completed, Link=True, Current=True, Hover=False" x="80" y="608" width="52" height="52" />
+  <symbol id="17920:40984" name="State=Reached, Link=True, Current=True, Hover=False" x="212" y="608" width="52" height="52" />
+  <symbol id="17920:40987" name="State=Default, Link=True, Current=True, Hover=False" x="344" y="608" width="52" height="52" />
+  <symbol id="17920:40990" name="State=Skipped, Link=True, Current=True, Hover=False" x="476" y="608" width="52" height="52" />
+  <symbol id="17920:40993" name="State=Editing, Link=True, Current=True, Hover=False" x="608" y="608" width="52" height="52" />
+  <symbol id="17920:41001" name="State=Error, Link=True, Current=True, Hover=False" x="740" y="608" width="52" height="52" />
+  <symbol id="17920:41098" name="State=Completed, Link=True, Current=True, Hover=True" x="80" y="740" width="52" height="52" />
+  <symbol id="17920:41104" name="State=Reached, Link=True, Current=True, Hover=True" x="212" y="740" width="52" height="52" />
+  <symbol id="17920:41107" name="State=Default, Link=True, Current=True, Hover=True" x="344" y="740" width="52" height="52" />
+  <symbol id="17920:41110" name="State=Skipped, Link=True, Current=True, Hover=True" x="476" y="740" width="52" height="52" />
+  <symbol id="17920:41113" name="State=Editing, Link=True, Current=True, Hover=True" x="608" y="740" width="52" height="52" />
+  <symbol id="17920:41121" name="State=Error, Link=True, Current=True, Hover=True" x="740" y="740" width="52" height="52" />
+</frame>
+

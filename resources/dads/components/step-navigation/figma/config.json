@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+  "baseUrl": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0",
+  "export": {
+    "format": "png",
+    "scale": 2
+  },
+  "nodes": [
+    {
+      "id": "17687:9700",
+      "label": "Components (Step Navigation section)",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17687-9700&m=dev"
+    },
+    {
+      "id": "17687:9795",
+      "label": "Step Navigation / Horizontal"
+    },
+    {
+      "id": "17687:9832",
+      "label": "Step Navigation / Vertical"
+    },
+    {
+      "id": "17934:43545",
+      "label": "Examples (screen composition)",
+      "export": {
+        "scale": 1
+      },
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17934-43545&m=dev"
+    },
+    {
+      "id": "17938:43547",
+      "label": "Examples / リンクなし / ステップ一覧",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17938-43547&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17938:43715",
+      "label": "Examples / リンクなし / ステップ1 / Descriptionなし",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17938-43715&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "18620:1283",
+      "label": "Examples / リンクなし / ステップ1 / Descriptionあり",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=18620-1283&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17949:47429",
+      "label": "Examples / サイドステップ表示",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-47429&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17949:46465",
+      "label": "Examples / リンクなし / 見切れあり",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-46465&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17949:47074",
+      "label": "Examples / リンクなし / 見切れあり/ 画面幅が大きい場合",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-47074&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17949:46835",
+      "label": "Examples / リンクなし / 見切れあり / スクロール",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-46835&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17949:45551",
+      "label": "Examples / リンクあり / ステップ1",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-45551&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "18460:2887",
+      "label": "Examples / リンクあり / ホバー",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=18460-2887&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17938:44530",
+      "label": "Examples / リンクなし / ステップ5",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17938-44530&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17946:44714",
+      "label": "Examples / リンクなし / ステップ5まで完了してステップ1を閲覧",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17946-44714&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17946:44906",
+      "label": "Examples / リンクなし / 全部入りステップ4",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17946-44906&m=dev",
+      "export": {
+        "scale": 1
+      }
+    },
+    {
+      "id": "17957:48071",
+      "label": "Examples / モバイル / リンクなし / ステップ一覧",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17957-48071&m=dev"
+    },
+    {
+      "id": "17957:48374",
+      "label": "Examples / モバイル / リンクなし / ステップ1",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17957-48374&m=dev"
+    },
+    {
+      "id": "17957:48663",
+      "label": "Examples / モバイル / リンクなし / スクロール",
+      "parentId": "17934:43545",
+      "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17957-48663&m=dev"
+    },
+    {
+      "id": "17712:53193",
+      "label": "Building Blocks / Step Navigation Number / Normal"
+    },
+    {
+      "id": "17687:9750",
+      "label": "Building Blocks / Step Navigation Item"
+    }
+  ]
+}
