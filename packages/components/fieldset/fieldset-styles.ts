@@ -39,7 +39,7 @@ export const fieldsetStyles = css`
   /* ========== 要否ラベル ========== */
   [part='requirement'] {
     font-weight: 400;
-    font-size: 0.875rem;
+    font-size: var(--font-size-16, 1rem);
     line-height: 1.5;
     font-family: var(--font-family-sans);
     color: var(--color-semantic-error-1, #ec0000);
@@ -52,7 +52,7 @@ export const fieldsetStyles = css`
   /* ========== Support Text ========== */
   [part='support-text'] {
     margin-bottom: var(--spacing-3, 12px);
-    font-size: 0.875rem;
+    font-size: var(--font-size-16, 1rem);
     line-height: 1.5;
     font-family: var(--font-family-sans);
     color: var(--color-neutral-solid-gray-700, #4d4d4d);

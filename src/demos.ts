@@ -2809,6 +2809,229 @@ ${dadsDataRows(6, 6)}
     </div>
   `,
 
+  select: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">セレクトボックス</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        デジタル庁デザインシステム（DADS）HTML版 select.css 相当をShadow DOM向けに移植したWeb Components版です。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <!-- アクセシビリティ注釈 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-select">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-select
+              label="東京23区"
+              support-text="該当する区を選択してください。"
+              required
+              size="md 420"
+            >
+              <option value="">選択してください</option>
+              <option value="1">足立区</option>
+              <option value="2">荒川区</option>
+              <option value="3">板橋区</option>
+              <option value="4">江戸川区</option>
+            </dads-select>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <!-- 基本 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">基本</h3>
+        <div style="max-width: 420px;">
+          <dads-select label="都道府県" support-text="お住まいの都道府県を選択してください。">
+            <option value="">選択してください</option>
+            <option value="tokyo">東京都</option>
+            <option value="kanagawa">神奈川県</option>
+            <option value="chiba">千葉県</option>
+            <option value="saitama">埼玉県</option>
+          </dads-select>
+        </div>
+      </section>
+
+      <!-- サイズ -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">サイズ（sm / md / lg）</h3>
+        <div style="display: grid; gap: 24px; max-width: 420px;">
+          <dads-select size="sm" label="サイズ sm" support-text='size="sm"（高さ40px相当）'>
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+          </dads-select>
+
+          <dads-select size="md" label="サイズ md" support-text='size="md"（高さ48px相当）'>
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+          </dads-select>
+
+          <dads-select size="lg" label="サイズ lg" support-text='size="lg"（高さ56px相当）'>
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+          </dads-select>
+        </div>
+      </section>
+
+      <!-- optgroup -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">グルーピング（optgroup）</h3>
+        <div style="max-width: 420px;">
+          <dads-select label="種目" support-text="optgroupを含む選択肢例">
+            <option value="">選択してください</option>
+            <optgroup label="球技">
+              <option value="soccer">サッカー</option>
+              <option value="baseball">野球</option>
+              <option value="basketball">バスケットボール</option>
+            </optgroup>
+            <optgroup label="その他">
+              <option value="swim">水泳</option>
+              <option value="run">陸上</option>
+            </optgroup>
+          </dads-select>
+        </div>
+      </section>
+
+      <!-- 状態 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">状態</h3>
+        <div style="display: grid; gap: 24px; max-width: 420px;">
+          <dads-select label="エラー" required error error-text="選択してください">
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+          </dads-select>
+
+          <dads-select label="Disabled（disabled）" disabled>
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+          </dads-select>
+
+          <dads-select label="Aria Disabled（aria-disabled）" aria-disabled="true" value="2">
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2（固定）</option>
+          </dads-select>
+        </div>
+      </section>
+
+      <!-- 幅 -->
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">幅例</h3>
+        <div style="display: grid; gap: 24px;">
+          <dads-select label="100%幅" support-text='size="md full"' size="md full">
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+          </dads-select>
+
+          <dads-select label="固定幅（256px）" support-text='size="md 256"' size="md 256">
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+          </dads-select>
+
+          <dads-select label="内容にフィット（fit-content）" support-text='size="md fit-content"' size="md fit-content">
+            <option value="">選択してください</option>
+            <option value="1">短い</option>
+            <option value="2">やや長い選択肢</option>
+          </dads-select>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-select'), import('dads-switch'), import('a11y-annotate')]);
+    </script>
+  `,
+
+  selectValidation: () => `
+    <div style="padding: 40px; max-width: 600px; margin: 0 auto;">
+      <h2 style="font-size: 24px; margin-bottom: 20px; color: #333;">Select Validation Test</h2>
+      <p style="color: #666; margin-bottom: 30px;">
+        auto-validate属性による必須バリデーション機能のテスト（セレクトボックス）
+      </p>
+
+      <form id="select-validation-form" novalidate>
+        <!-- 必須バリデーション -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">必須バリデーション</h3>
+          <dads-select
+            label="必須項目"
+            support-text="空のまま送信するとエラー表示されます"
+            required
+            auto-validate
+          >
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+            <option value="3">選択肢3</option>
+          </dads-select>
+        </section>
+
+        <!-- カスタムエラーメッセージ -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">カスタムエラーメッセージ（required-error）</h3>
+          <dads-select
+            label="お住まいの地域"
+            support-text="required-errorスロットでメッセージをカスタマイズ"
+            required
+            auto-validate
+          >
+            <option value="">選択してください</option>
+            <option value="east">東日本</option>
+            <option value="west">西日本</option>
+            <span slot="required-error">地域を選択してください（カスタム）</span>
+          </dads-select>
+        </section>
+
+        <!-- バリデーション無効（比較用） -->
+        <section style="margin-bottom: 32px;">
+          <h3 style="font-size: 16px; margin-bottom: 12px; color: #555;">バリデーション無効（比較用）</h3>
+          <dads-select
+            label="auto-validateなし"
+            support-text="auto-validate属性がないため、バリデーションされません"
+            required
+          >
+            <option value="">選択してください</option>
+            <option value="1">選択肢1</option>
+            <option value="2">選択肢2</option>
+          </dads-select>
+        </section>
+
+        <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+          <dads-button type="reset">リセット</dads-button>
+          <dads-button type="submit" variant="solid">送信</dads-button>
+        </div>
+      </form>
+
+      <div style="margin-top: 40px; background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107;">
+        <h3 style="color: #856404; margin-bottom: 10px;">テスト手順</h3>
+        <ol style="color: #856404; line-height: 1.8; padding-left: 20px;">
+          <li>「必須項目」を未選択のまま「送信」ボタン → エラー表示</li>
+          <li>選択肢を選んで再送信 → エラークリア</li>
+          <li>カスタムメッセージの表示確認（required-errorスロット）</li>
+          <li>auto-validateなしのフィールドでは、バリデーションが発生しないことを確認</li>
+        </ol>
+      </div>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-select'), import('dads-button')]);
+      const form = document.getElementById('select-validation-form');
+      if (form) form.addEventListener('submit', (e) => e.preventDefault());
+    </script>
+  `,
+
   switch: () => `
     <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">スイッチコンポーネント</h2>

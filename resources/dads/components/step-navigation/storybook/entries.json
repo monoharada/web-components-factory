@@ -1,0 +1,43 @@
+{
+  "component": "step-navigation",
+  "generatedAt": "2026-01-18T01:25:31.855Z",
+  "entries": [
+    {
+      "id": "components-ステップナビゲーション--docs",
+      "title": "Components/ステップナビゲーション",
+      "name": "Docs",
+      "importPath": "./src/components/step-navigation/step-navigation.mdx",
+      "storiesImports": [
+        "./src/components/step-navigation/step-navigation.stories.ts"
+      ],
+      "type": "docs",
+      "tags": [
+        "dev",
+        "test",
+        "attached-mdx"
+      ]
+    },
+    {
+      "type": "story",
+      "id": "components-ステップナビゲーション--playground-single",
+      "name": "Playground (Single)",
+      "title": "Components/ステップナビゲーション",
+      "importPath": "./src/components/step-navigation/step-navigation.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ]
+    },
+    {
+      "type": "story",
+      "id": "components-ステップナビゲーション--playground-full",
+      "name": "Playground (Full)",
+      "title": "Components/ステップナビゲーション",
+      "importPath": "./src/components/step-navigation/step-navigation.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ]
+    }
+  ]
+}

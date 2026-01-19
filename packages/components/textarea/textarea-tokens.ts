@@ -20,9 +20,9 @@ const textareaSemanticTokensText = `
     --textarea-label-size-lg: var(--font-size-18, 1.125rem);
 
     /* テキストサイズ */
-    --textarea-font-size-sm: var(--font-size-14, 0.875rem);
+    --textarea-font-size-sm: var(--font-size-16, 1rem);
     --textarea-font-size-md: var(--font-size-16, 1rem);
-    --textarea-font-size-lg: var(--font-size-18, 1.125rem);
+    --textarea-font-size-lg: var(--font-size-16, 1rem);
 
     /* 背景色 */
     --textarea-bg: var(--color-neutral-white, #ffffff);
@@ -134,13 +134,11 @@ const textareaLocalTokensText = `
   /* サイズバリアント */
   :host([size="sm"]) {
     --dads-textarea-label-size: var(--textarea-label-size-sm);
-    --dads-textarea-font-size: var(--textarea-font-size-sm);
     --dads-textarea-min-height: var(--textarea-min-height-sm);
   }
 
   :host([size="lg"]) {
     --dads-textarea-label-size: var(--textarea-label-size-lg);
-    --dads-textarea-font-size: var(--textarea-font-size-lg);
     --dads-textarea-min-height: var(--textarea-min-height-lg);
   }
 

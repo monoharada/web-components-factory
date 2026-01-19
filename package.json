@@ -35,7 +35,11 @@
     "claude:verify": "npm run ci && echo '✅ All checks passed'",
     "claude:quick": "npm run type-check && npm run test:run",
     "claude:all": "npm run claude:check && npm run test:run && npm run build && echo '🎉 Full pipeline complete'",
-    "codex:install-skills": "scripts/codex/install-skills.sh"
+    "codex:install-skills": "scripts/codex/install-skills.sh",
+    "dads:sync": "node scripts/dads/sync.cjs",
+    "dads:validate": "node scripts/dads/validate.cjs",
+    "dads:figma:add": "node scripts/dads/figma-add.cjs",
+    "dads:figma:expand": "node scripts/dads/figma-expand.cjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

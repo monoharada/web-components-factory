@@ -8,6 +8,7 @@
 |-----|---------|----------|------|
 | [ADR-001](./ADR-001-placeholder-deprecation.md) | フォーム入力要素のplaceholder属性非推奨化 | 承認済み | 2025-01-07 |
 | [ADR-002](./ADR-002-form-validation-architecture.md) | Form-Associated Web Componentsのバリデーションアーキテクチャ | 承認済み | 2026-01-08 |
+| [ADR-003](./ADR-003-dads-resource-sync-flow.md) | DADS外部資料のローカル資材化フロー | 承認済み | 2026-01-17 |
 
 ## ADRとは
 

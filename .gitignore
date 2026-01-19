@@ -52,6 +52,7 @@ tmp/
 temp/
 .tmp/
 .temp/
+.context/
 
 # Test files
 *.tsbuildinfo

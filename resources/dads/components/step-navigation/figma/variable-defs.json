@@ -1,0 +1,25 @@
+{
+  "var(--color-neutral-solid-gray-800)": "#333333",
+  "var(--font-size-20)": "20",
+  "var(--font-family-sans)": "Noto Sans JP",
+  "var(--font-weight-700)": "700",
+  "Standard/Std-20B-150": "Font(family: \"var(--font-family-sans)\", style: Bold, size: var(--font-size-20), weight: var(--font-weight-700), lineHeight: 1.5, letterSpacing: 2)",
+  "var(--color-neutral-white)": "#ffffff",
+  "var(--font-size-18)": "18",
+  "Standard/Std-18B-160": "Font(family: \"var(--font-family-sans)\", style: Bold, size: var(--font-size-18), weight: var(--font-weight-700), lineHeight: 1.600000023841858, letterSpacing: 2)",
+  "var(--font-size-16)": "16",
+  "var(--font-weight-400)": "400",
+  "Standard/Std-16N-170": "Font(family: \"var(--font-family-sans)\", style: Regular, size: var(--font-size-16), weight: var(--font-weight-400), lineHeight: 1.7000000476837158, letterSpacing: 2)",
+  "var(--color-neutral-black)": "#000000",
+  "Oneline/Oln-16B-100": "Font(family: \"var(--font-family-sans)\", style: Bold, size: var(--font-size-16), weight: var(--font-weight-700), lineHeight: 1, letterSpacing: 2)",
+  "Dense/Dns-16B-130": "Font(family: \"var(--font-family-sans)\", style: Bold, size: var(--font-size-16), weight: var(--font-weight-700), lineHeight: 1.2999999523162842, letterSpacing: 0)",
+  "Link/Dns/Dns-16B-130": "Font(family: \"var(--font-family-sans)\", style: Bold, size: var(--font-size-16), weight: var(--font-weight-700), lineHeight: 1.2999999523162842, letterSpacing: 0)",
+  "var(--color-neutral-solid-gray-600)": "#666666",
+  "var(--color-neutral-solid-gray-50)": "#f2f2f2",
+  "var(--border-radius-full)": "9999",
+  "var(--font-size-14)": "14",
+  "Dense/Dns-14N-120": "Font(family: \"var(--font-family-sans)\", style: Regular, size: var(--font-size-14), weight: var(--font-weight-400), lineHeight: 1.2000000476837158, letterSpacing: 0)",
+  "var(--color-semantic-error-1)": "#ec0000",
+  "Dense/Dns-16N-130": "Font(family: \"var(--font-family-sans)\", style: Regular, size: var(--font-size-16), weight: var(--font-weight-400), lineHeight: 1.2999999523162842, letterSpacing: 0)"
+}
+

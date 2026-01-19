@@ -14,6 +14,9 @@ export * from './button/index.js';
 // インプットテキスト
 export * from './input-text/index.js';
 
+// セレクトボックス
+export * from './select/index.js';
+
 // カレンダー
 export * from './calendar/index.js';
 

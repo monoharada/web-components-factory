@@ -1,0 +1,735 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-01-18T01:25:38.163Z",
+  "components": {
+    "file-upload": {
+      "updatedAt": "2026-01-17T23:27:40.637Z",
+      "docs": {
+        "overview": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/file-upload/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/overview/page.html",
+            "text": "docs/overview/page.txt",
+            "screenshot": "docs/overview/screenshot.png"
+          },
+          "images": [
+            {
+              "src": "/dads/images/components/file-upload/overview/file_upload_overview.png",
+              "url": "https://design.digital.go.jp/dads/images/components/file-upload/overview/file_upload_overview.png",
+              "file": "docs/overview/images/file_upload_overview.png",
+              "status": "ok",
+              "error": null
+            }
+          ]
+        },
+        "usage": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/file-upload/usage/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/usage/page.html",
+            "text": "docs/usage/page.txt",
+            "screenshot": "docs/usage/screenshot.png"
+          },
+          "images": [
+            {
+              "src": "/dads/images/components/file-upload/usage/file_upload_anatomy_1.png",
+              "url": "https://design.digital.go.jp/dads/images/components/file-upload/usage/file_upload_anatomy_1.png",
+              "file": "docs/usage/images/file_upload_anatomy_1.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_1.96ce219c.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_1.96ce219c.svg",
+              "file": "docs/usage/images/counter_1.96ce219c.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_2.73d71e67.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_2.73d71e67.svg",
+              "file": "docs/usage/images/counter_2.73d71e67.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_3.5e687aba.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_3.5e687aba.svg",
+              "file": "docs/usage/images/counter_3.5e687aba.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_4.331c29f8.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_4.331c29f8.svg",
+              "file": "docs/usage/images/counter_4.331c29f8.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_5.22b3841d.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_5.22b3841d.svg",
+              "file": "docs/usage/images/counter_5.22b3841d.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_6.a71ffe0c.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_6.a71ffe0c.svg",
+              "file": "docs/usage/images/counter_6.a71ffe0c.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_7.90bd57bb.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_7.90bd57bb.svg",
+              "file": "docs/usage/images/counter_7.90bd57bb.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/file-upload/usage/file_upload_anatomy_2.png",
+              "url": "https://design.digital.go.jp/dads/images/components/file-upload/usage/file_upload_anatomy_2.png",
+              "file": "docs/usage/images/file_upload_anatomy_2.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/file-upload/usage/file_upload_expand_area.png",
+              "url": "https://design.digital.go.jp/dads/images/components/file-upload/usage/file_upload_expand_area.png",
+              "file": "docs/usage/images/file_upload_expand_area.png",
+              "status": "ok",
+              "error": null
+            }
+          ]
+        },
+        "accessibility": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/file-upload/accessibility/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/accessibility/page.html",
+            "text": "docs/accessibility/page.txt",
+            "screenshot": "docs/accessibility/screenshot.png"
+          },
+          "images": []
+        }
+      },
+      "storybook": {
+        "status": "not_found",
+        "reason": "No storybook entries found for ./src/components/file-upload/",
+        "entries": [],
+        "files": {
+          "entries": "storybook/entries.json"
+        }
+      },
+      "upstream": {
+        "status": "missing",
+        "reason": "No upstream path: src/components/file-upload",
+        "commit": "27fbfb5b7395b9e0a91132891c6139dda04ad118",
+        "files": {
+          "meta": "upstream/design-system-example-components-html/META.json"
+        }
+      }
+    },
+    "step-navigation": {
+      "updatedAt": "2026-01-18T01:25:38.163Z",
+      "docs": {
+        "overview": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/step-navigation/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/overview/page.html",
+            "text": "docs/overview/page.txt",
+            "screenshot": "docs/overview/screenshot.png"
+          },
+          "images": []
+        },
+        "usage": {
+          "status": "missing",
+          "url": "https://design.digital.go.jp/dads/components/step-navigation/usage/",
+          "httpStatus": 404
+        },
+        "accessibility": {
+          "status": "missing",
+          "url": "https://design.digital.go.jp/dads/components/step-navigation/accessibility/",
+          "httpStatus": 404
+        }
+      },
+      "storybook": {
+        "status": "ok",
+        "entries": [
+          {
+            "id": "components-ステップナビゲーション--docs",
+            "type": "docs",
+            "name": "Docs",
+            "title": "Components/ステップナビゲーション",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/docs/components-%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%83%8A%E3%83%93%E3%82%B2%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3--docs",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%83%8A%E3%83%93%E3%82%B2%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3--docs",
+            "files": {
+              "uiPng": "storybook/ui/docs--docs--2e7e54f5.png",
+              "canvasPng": "storybook/canvas/docs--docs--2e7e54f5.png",
+              "canvasHtml": "storybook/html/docs--docs--2e7e54f5.html"
+            }
+          },
+          {
+            "id": "components-ステップナビゲーション--playground-single",
+            "type": "story",
+            "name": "Playground (Single)",
+            "title": "Components/ステップナビゲーション",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%83%8A%E3%83%93%E3%82%B2%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3--playground-single",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%83%8A%E3%83%93%E3%82%B2%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3--playground-single",
+            "files": {
+              "uiPng": "storybook/ui/story--playground-single--4f7e49c7.png",
+              "canvasPng": "storybook/canvas/story--playground-single--4f7e49c7.png",
+              "canvasHtml": "storybook/html/story--playground-single--4f7e49c7.html"
+            }
+          },
+          {
+            "id": "components-ステップナビゲーション--playground-full",
+            "type": "story",
+            "name": "Playground (Full)",
+            "title": "Components/ステップナビゲーション",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%83%8A%E3%83%93%E3%82%B2%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3--playground-full",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%83%8A%E3%83%93%E3%82%B2%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3--playground-full",
+            "files": {
+              "uiPng": "storybook/ui/story--playground-full--6dc1f9be.png",
+              "canvasPng": "storybook/canvas/story--playground-full--6dc1f9be.png",
+              "canvasHtml": "storybook/html/story--playground-full--6dc1f9be.html"
+            }
+          }
+        ],
+        "files": {
+          "entries": "storybook/entries.json"
+        }
+      },
+      "upstream": {
+        "status": "ok",
+        "commit": "27fbfb5b7395b9e0a91132891c6139dda04ad118",
+        "copied": [
+          "upstream/design-system-example-components-html/src/components/step-navigation",
+          "upstream/design-system-example-components-html/src/global.css",
+          "upstream/design-system-example-components-html/src/helpers/html-fragment.ts"
+        ],
+        "files": {
+          "meta": "upstream/design-system-example-components-html/META.json"
+        }
+      },
+      "figma": {
+        "status": "ok",
+        "config": {
+          "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+          "nodes": [
+            {
+              "id": "17687:9700",
+              "label": "Components (Step Navigation section)",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17687-9700&m=dev"
+            },
+            {
+              "id": "17687:9795",
+              "label": "Step Navigation / Horizontal"
+            },
+            {
+              "id": "17687:9832",
+              "label": "Step Navigation / Vertical"
+            },
+            {
+              "id": "17934:43545",
+              "label": "Examples (screen composition)",
+              "export": {
+                "scale": 1
+              },
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17934-43545&m=dev"
+            },
+            {
+              "id": "17938:43547",
+              "label": "Examples / リンクなし / ステップ一覧",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17938-43547&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17938:43715",
+              "label": "Examples / リンクなし / ステップ1 / Descriptionなし",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17938-43715&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "18620:1283",
+              "label": "Examples / リンクなし / ステップ1 / Descriptionあり",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=18620-1283&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17949:47429",
+              "label": "Examples / サイドステップ表示",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-47429&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17949:46465",
+              "label": "Examples / リンクなし / 見切れあり",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-46465&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17949:47074",
+              "label": "Examples / リンクなし / 見切れあり/ 画面幅が大きい場合",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-47074&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17949:46835",
+              "label": "Examples / リンクなし / 見切れあり / スクロール",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-46835&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17949:45551",
+              "label": "Examples / リンクあり / ステップ1",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17949-45551&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "18460:2887",
+              "label": "Examples / リンクあり / ホバー",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=18460-2887&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17938:44530",
+              "label": "Examples / リンクなし / ステップ5",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17938-44530&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17946:44714",
+              "label": "Examples / リンクなし / ステップ5まで完了してステップ1を閲覧",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17946-44714&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17946:44906",
+              "label": "Examples / リンクなし / 全部入りステップ4",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17946-44906&m=dev",
+              "export": {
+                "scale": 1
+              }
+            },
+            {
+              "id": "17957:48071",
+              "label": "Examples / モバイル / リンクなし / ステップ一覧",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17957-48071&m=dev"
+            },
+            {
+              "id": "17957:48374",
+              "label": "Examples / モバイル / リンクなし / ステップ1",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17957-48374&m=dev"
+            },
+            {
+              "id": "17957:48663",
+              "label": "Examples / モバイル / リンクなし / スクロール",
+              "parentId": "17934:43545",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.0?node-id=17957-48663&m=dev"
+            },
+            {
+              "id": "17712:53193",
+              "label": "Building Blocks / Step Navigation Number / Normal"
+            },
+            {
+              "id": "17687:9750",
+              "label": "Building Blocks / Step Navigation Item"
+            }
+          ]
+        },
+        "export": {
+          "format": "png",
+          "scale": 2
+        },
+        "files": {
+          "config": "figma/config.json",
+          "nodes": "figma/nodes/index.json"
+        },
+        "nodeMeta": {
+          "17687:9700": {
+            "name": "Components",
+            "type": "SECTION"
+          },
+          "17687:9795": {
+            "name": "Step Navigation / Horizontal",
+            "type": "COMPONENT_SET"
+          },
+          "17687:9832": {
+            "name": "Step Navigation / Vertical",
+            "type": "COMPONENT_SET"
+          },
+          "17934:43545": {
+            "name": "Examples",
+            "type": "SECTION"
+          },
+          "17938:43547": {
+            "name": "リンクなし / ステップ一覧",
+            "type": "FRAME"
+          },
+          "17938:43715": {
+            "name": "リンクなし / ステップ1 / Descriptionなし",
+            "type": "FRAME"
+          },
+          "18620:1283": {
+            "name": "リンクなし / ステップ1 / Descriptionあり",
+            "type": "FRAME"
+          },
+          "17949:47429": {
+            "name": "サイドステップ表示",
+            "type": "FRAME"
+          },
+          "17949:46465": {
+            "name": "リンクなし / 見切れあり",
+            "type": "FRAME"
+          },
+          "17949:47074": {
+            "name": "リンクなし / 見切れあり/ 画面幅が大きい場合",
+            "type": "FRAME"
+          },
+          "17949:46835": {
+            "name": "リンクなし / 見切れあり / スクロール",
+            "type": "FRAME"
+          },
+          "17949:45551": {
+            "name": "リンクあり / ステップ1",
+            "type": "FRAME"
+          },
+          "18460:2887": {
+            "name": "リンクあり / ホバー",
+            "type": "FRAME"
+          },
+          "17938:44530": {
+            "name": "リンクなし / ステップ5",
+            "type": "FRAME"
+          },
+          "17946:44714": {
+            "name": "リンクなし / ステップ5まで完了してステップ1を閲覧",
+            "type": "FRAME"
+          },
+          "17946:44906": {
+            "name": "リンクなし / 全部入りステップ4",
+            "type": "FRAME"
+          },
+          "17957:48071": {
+            "name": "モバイル / リンクなし / ステップ一覧",
+            "type": "FRAME"
+          },
+          "17957:48374": {
+            "name": "モバイル / リンクなし / ステップ1",
+            "type": "FRAME"
+          },
+          "17957:48663": {
+            "name": "モバイル / リンクなし / スクロール",
+            "type": "FRAME"
+          },
+          "17712:53193": {
+            "name": "Building Blocks / Step Navigation Number / Normal",
+            "type": "COMPONENT_SET"
+          },
+          "17687:9750": {
+            "name": "Building Blocks / Step Navigation Item",
+            "type": "COMPONENT_SET"
+          }
+        },
+        "assets": [
+          {
+            "id": "17687:9700",
+            "label": "Components (Step Navigation section)",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/1bbb96a9-df23-4e2a-8118-9078c4bf0d20",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/17687-9700@2x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17687:9795",
+            "label": "Step Navigation / Horizontal",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b7e8c0a9-2a54-4ae0-afe8-afa2ed32b929",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/17687-9795@2x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17687:9832",
+            "label": "Step Navigation / Vertical",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a9caf547-138c-4de4-80fc-1153e80128ec",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/17687-9832@2x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17957:48071",
+            "label": "Examples / モバイル / リンクなし / ステップ一覧",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/cc7c0667-0b34-4a5d-9f91-4ebb79c27202",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/17957-48071@2x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17957:48374",
+            "label": "Examples / モバイル / リンクなし / ステップ1",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/3e7fed81-ffc5-4106-aed0-d5951ef3544d",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/17957-48374@2x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17957:48663",
+            "label": "Examples / モバイル / リンクなし / スクロール",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/84b0d76e-8465-4ae4-8e4b-c520cf0c8f76",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/17957-48663@2x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17712:53193",
+            "label": "Building Blocks / Step Navigation Number / Normal",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/04affeaf-7b4f-4709-a403-98b746dfdc2a",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/17712-53193@2x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17687:9750",
+            "label": "Building Blocks / Step Navigation Item",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/733ce537-a6cc-4ce5-9f66-8e677846635d",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/17687-9750@2x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17934:43545",
+            "label": "Examples (screen composition)",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/82f3d820-285d-4bce-9e10-1b8ac692fb21",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17934-43545@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17938:43547",
+            "label": "Examples / リンクなし / ステップ一覧",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a17c9353-bc34-4799-8547-bf089f8e50e2",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17938-43547@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17938:43715",
+            "label": "Examples / リンクなし / ステップ1 / Descriptionなし",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/4401ffbc-f379-4bd7-ada7-d84401085ac8",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17938-43715@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "18620:1283",
+            "label": "Examples / リンクなし / ステップ1 / Descriptionあり",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/97aaa1a4-4373-40d7-9abe-f96c199d4c4d",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/18620-1283@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17949:47429",
+            "label": "Examples / サイドステップ表示",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f51399ea-adcd-4332-baf2-410f92de53f3",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17949-47429@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17949:46465",
+            "label": "Examples / リンクなし / 見切れあり",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/4bd26e98-93d3-4012-a982-de3d13d4640c",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17949-46465@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17949:47074",
+            "label": "Examples / リンクなし / 見切れあり/ 画面幅が大きい場合",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b2740120-bc98-4f76-ada8-c5d84c8f92c0",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17949-47074@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17949:46835",
+            "label": "Examples / リンクなし / 見切れあり / スクロール",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a576d690-9b0f-4d4f-8acc-ba96c6e28ab4",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17949-46835@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17949:45551",
+            "label": "Examples / リンクあり / ステップ1",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/cdcbf871-4417-40ef-b221-e121030bae7f",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17949-45551@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "18460:2887",
+            "label": "Examples / リンクあり / ホバー",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/e516c021-f4b4-4a89-aae2-0a9c83456605",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/18460-2887@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17938:44530",
+            "label": "Examples / リンクなし / ステップ5",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/3d067795-a33f-4c1a-9d71-270a608854b8",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17938-44530@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17946:44714",
+            "label": "Examples / リンクなし / ステップ5まで完了してステップ1を閲覧",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/a69ce0d0-eb9d-4334-9672-04cb1c9a94a3",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17946-44714@1x.png",
+            "status": "ok",
+            "skipped": true
+          },
+          {
+            "id": "17946:44906",
+            "label": "Examples / リンクなし / 全部入りステップ4",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/98b2565f-e54a-4fcd-a431-161207095c6f",
+            "export": {
+              "format": "png",
+              "scale": 1
+            },
+            "file": "figma/images/17946-44906@1x.png",
+            "status": "ok",
+            "skipped": true
+          }
+        ]
+      }
+    }
+  }
+}

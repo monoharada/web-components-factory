@@ -1,0 +1,21 @@
+<frame id="17687:9832" name="Step Navigation / Vertical" x="1346" y="200" width="1636" height="755">
+  <symbol id="17687:9833" name="Position=First, Size=Normal, Link=False, State=Default" x="20" y="20" width="500" height="99" />
+  <symbol id="17687:9838" name="Position=Middle, Size=Normal, Link=False, State=Default" x="20" y="135" width="500" height="99" />
+  <symbol id="17687:9843" name="Position=Last, Size=Normal, Link=False, State=Default" x="20" y="250" width="500" height="99" />
+  <symbol id="17926:43188" name="Position=First, Size=Small, Link=False, State=Default" x="20" y="430" width="404" height="87" />
+  <symbol id="17926:43194" name="Position=Middle, Size=Small, Link=False, State=Default" x="20" y="539" width="404" height="87" />
+  <symbol id="17926:43200" name="Position=Last, Size=Small, Link=False, State=Default" x="20" y="648" width="404" height="87" />
+  <symbol id="17926:43389" name="Position=First, Size=Small, Link=True, State=Default" x="568" y="430" width="404" height="87" />
+  <symbol id="17926:43395" name="Position=Middle, Size=Small, Link=True, State=Default" x="568" y="539" width="404" height="87" />
+  <symbol id="17926:43401" name="Position=Last, Size=Small, Link=True, State=Default" x="568" y="648" width="404" height="87" />
+  <symbol id="17926:43508" name="Position=First, Size=Small, Link=True, State=Hover" x="1116" y="430" width="404" height="87" />
+  <symbol id="17926:43514" name="Position=Middle, Size=Small, Link=True, State=Hover" x="1116" y="539" width="404" height="87" />
+  <symbol id="17926:43520" name="Position=Last, Size=Small, Link=True, State=Hover" x="1116" y="648" width="404" height="87" />
+  <symbol id="17926:43042" name="Position=First, Size=Normal, Link=True, State=Default" x="568" y="24" width="500" height="99" />
+  <symbol id="17926:43048" name="Position=Middle, Size=Normal, Link=True, State=Default" x="568" y="139" width="500" height="99" />
+  <symbol id="17926:43054" name="Position=Last, Size=Normal, Link=True, State=Default" x="568" y="254" width="500" height="99" />
+  <symbol id="17926:43115" name="Position=First, Size=Normal, Link=True, State=Hover" x="1116" y="24" width="500" height="99" />
+  <symbol id="17926:43121" name="Position=Middle, Size=Normal, Link=True, State=Hover" x="1116" y="139" width="500" height="99" />
+  <symbol id="17926:43127" name="Position=Last, Size=Normal, Link=True, State=Hover" x="1116" y="254" width="500" height="99" />
+</frame>
+
