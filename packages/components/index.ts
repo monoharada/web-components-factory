@@ -43,3 +43,6 @@ export * from './switch/index.js';
 
 // チップラベル
 export * from './chip-label/index.js';
+
+// ステップナビゲーション
+export * from './step-navigation/index.js';

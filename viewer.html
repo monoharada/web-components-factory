@@ -28,6 +28,8 @@
       "dads-radio": "/@components/dads/radio.js",
       "dads-fieldset": "/@components/dads/fieldset.js",
       "dads-chip-label": "/@components/dads/chip-label.js",
+      "dads-step-navigation": "/@components/dads/step-navigation.js?v=20260119c",
+      "dads-step-navigation-item": "/@components/dads/step-navigation-item.js?v=20260119c",
       "a11y-annotate": "/@components/meta/annotate.js"
     }
   }
@@ -232,6 +234,7 @@
             <option value="textarea">Textarea</option>
             <option value="textareaValidation">Textarea Validation</option>
             <option value="switch">Switch</option>
+            <option value="stepNavigation">Step Navigation</option>
             <option value="resetCss">Reset CSS Demo</option>
           </select>
         </div>
@@ -250,10 +253,30 @@
 
   <!-- Service Worker登録（キャッシュ戦略） -->
   <script>
-    if ('serviceWorker' in navigator) {
+    const params = new URLSearchParams(window.location.search);
+    const disableServiceWorker = params.get('nosw') === '1' || params.get('sw') === '0';
+
+    async function disableServiceWorkerAndClearCaches() {
+      if (!('serviceWorker' in navigator)) return;
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+
+      if (!('caches' in window)) return;
+      const keys = await window.caches.keys();
+      await Promise.all(keys.map((key) => window.caches.delete(key)));
+    }
+
+    if ('serviceWorker' in navigator && !disableServiceWorker) {
       navigator.serviceWorker.register('/sw.js')
         .then((reg) => console.log('[SW] Registered:', reg.scope))
         .catch((err) => console.log('[SW] Registration failed:', err));
+    }
+
+    // Dev helper: /?nosw=1 で Service Worker を無効化（登録解除 + Cache Storage削除）
+    if (disableServiceWorker) {
+      disableServiceWorkerAndClearCaches()
+        .then(() => console.log('[SW] Disabled (nosw=1)'))
+        .catch((err) => console.log('[SW] Disable failed:', err));
     }
   </script>
 
