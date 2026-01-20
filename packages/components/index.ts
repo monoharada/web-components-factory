@@ -44,5 +44,8 @@ export * from './switch/index.js';
 // チップラベル
 export * from './chip-label/index.js';
 
+// ページナビゲーション
+export * from './page-navigation/index.js';
+
 // テーブル
 export * from './table/index.js';
