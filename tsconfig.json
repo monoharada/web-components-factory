@@ -22,7 +22,6 @@
     "vitest.config.ts",
     "node_modules",
     "**/*.test.ts",
-    "**/*.stories.ts",
     "tests/**/*"
   ]
 }

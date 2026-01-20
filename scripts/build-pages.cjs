@@ -19,7 +19,6 @@ function shouldTranspileTsFile(filePath) {
   if (!filePath.endsWith('.ts')) return false;
   if (filePath.endsWith('.d.ts')) return false;
   if (filePath.endsWith('.test.ts')) return false;
-  if (filePath.endsWith('.stories.ts')) return false;
   return true;
 }
 
@@ -179,4 +178,3 @@ main().catch((error) => {
   console.error('[pages] Build failed:', error);
   process.exitCode = 1;
 });
-

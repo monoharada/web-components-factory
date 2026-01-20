@@ -90,6 +90,54 @@ function renderAllChipLabels(): string {
   return out;
 }
 
+function repeatLines(line: string, count: number): string {
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    out += `${i === 0 ? '' : '\n'}${line}`;
+  }
+  return out;
+}
+
+function repeatBlocks(block: string, count: number): string {
+  let out = '';
+  for (let i = 0; i < count; i++) {
+    out += `${i === 0 ? '' : '\n'}${block}`;
+  }
+  return out;
+}
+
+function dadsColHeaderLine(label = 'ラベル', attrs?: string): string {
+  return `                  <th class="dads-table__col-header" scope="col"${attrs ? ` ${attrs}` : ''}>${label}</th>`;
+}
+
+function dadsColHeaderLines(count: number, label = 'ラベル'): string {
+  return repeatLines(dadsColHeaderLine(label), count);
+}
+
+function dadsHeaderRow(colCount: number, label = 'ラベル'): string {
+  return `                <tr>\n${dadsColHeaderLines(colCount, label)}\n                </tr>`;
+}
+
+function dadsDataCellLines(count: number, text = 'データ'): string {
+  return repeatLines(`                  <td>${text}</td>`, count);
+}
+
+function dadsDataRow(colCount: number, text = 'データ'): string {
+  return `                <tr>\n${dadsDataCellLines(colCount, text)}\n                </tr>`;
+}
+
+function dadsDataRows(rowCount: number, colCount: number, text = 'データ'): string {
+  return repeatBlocks(dadsDataRow(colCount, text), rowCount);
+}
+
+function dadsRowHeaderRow(colCount: number, headerText = 'データ', cellText = 'データ'): string {
+  return `                <tr>\n                  <th class="dads-table__row-header" scope="row">${headerText}</th>\n${dadsDataCellLines(colCount - 1, cellText)}\n                </tr>`;
+}
+
+function dadsRowHeaderRows(rowCount: number, colCount: number, headerText = 'データ', cellText = 'データ'): string {
+  return repeatBlocks(dadsRowHeaderRow(colCount, headerText, cellText), rowCount);
+}
+
 type StepDefinition = {
   title: string;
   description?: string;
@@ -1067,6 +1115,264 @@ export const demos = {
         </a11y-annotate>
       </section>
 
+      <!-- API / Controls（Storybook風） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風・サンプル）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          テーブル内の操作が、同じパネル内のターゲット要素へ即時反映されます。
+          以降のコンポーネントデモへ横展開するための作例です。
+        </p>
+
+        <div class="wc-api-panel">
+          <div class="wc-api-panel__header">
+            <div class="wc-api-panel__title">Controls</div>
+            <dads-button data-api-reset type="button" variant="outlined" size="small">Reset</dads-button>
+          </div>
+
+          <div class="wc-api-panel__body">
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-button
+                  data-api-target
+                  variant="solid"
+                  size="medium"
+                >ボタンテキスト</dads-button>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Kind</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Control</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>variant</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>"solid" | "outlined" | "text"</code></td>
+                        <td><code>solid</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="variant" data-api-attr="variant" data-default="solid">
+                              <option value="solid" selected>solid</option>
+                              <option value="outlined">outlined</option>
+                              <option value="text">text</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>見た目のバリアント</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>"x-small" | "small" | "medium" | "large"</code></td>
+                        <td><code>medium</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="size" data-api-attr="size" data-default="medium">
+                              <option value="x-small">x-small</option>
+                              <option value="small">small</option>
+                              <option value="medium" selected>medium</option>
+                              <option value="large">large</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>サイズ（最小44px高）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>full-width</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="full-width" data-api-attr="full-width" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>幅100%（親要素基準）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>disabled</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="disabled" data-api-prop="disabled" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>無効状態（デジタル庁では非推奨）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>textContent</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>"ボタンテキスト"</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="textContent"
+                              value="ボタンテキスト"
+                              data-api-prop="textContent"
+                              data-default="ボタンテキスト"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>デフォルトスロット（ラベル文字列）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>aria-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>(unset)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="aria-label"
+                              value=""
+                              data-api-attr="aria-label"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アクセシブルネーム（必要時のみ）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                <p class="wc-api-panel__section-note">
+                  ※ 制御は <code>data-api-attr</code> / <code>data-api-prop</code> に宣言し、イベント（<code>dads-input</code>/<code>dads-change</code>）で反映します。
+                </p>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-button-background</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-button-background"
+                              value=""
+                              data-api-css-var="--dads-button-background"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>背景色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-button-color</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-button-color"
+                              value=""
+                              data-api-css-var="--dads-button-color"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>文字色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-button-border-color</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-button-border-color"
+                              value=""
+                              data-api-css-var="--dads-button-border-color"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>枠線色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-button-border-radius</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-button-border-radius"
+                              value=""
+                              data-api-css-var="--dads-button-border-radius"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>角丸</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                <p class="wc-api-panel__section-note">
+                  ※ 空にすると <code>style.removeProperty()</code> で元のトークン値に戻ります。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            (function() {
+              var currentScript = document.currentScript;
+              Promise.all([
+                import('dads-button'),
+                import('dads-table'),
+                import('dads-switch'),
+                import('dads-input-text'),
+                import('/src/viewer-api-controls.js')
+              ]).then(function(mods) {
+                var root = currentScript?.parentElement;
+                if (!root || !root.isConnected) return;
+                var api = mods[4];
+                if (api && api.bindApiControls) api.bindApiControls(root);
+              });
+            })();
+          <\/script>
+        </div>
+      </section>
+
       <!-- バリアント -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">バリアント</h3>
@@ -1748,6 +2054,848 @@ export const demos = {
           <li>auto-validateなしのフィールドでは、バリデーションが発生しないことを確認</li>
         </ol>
       </div>
+    </div>
+  `,
+
+  table: () => `
+    <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">テーブル／データテーブル</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        ネイティブの&lt;table&gt;をそのまま使い、DADS準拠の見た目とページ利用時の利便性（水平スクロール、行選択、ソートUI）を提供します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <!-- 基本 -->
+      <section class="table-annotate-basic" style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本</h3>
+
+        <a11y-annotate target-selector="dads-table">
+          <dads-table hover>
+            <table>
+              <caption>テーブルタイトル</caption>
+              <thead>
+                <tr>
+                  <th scope="col">ラベル</th>
+                  <th scope="col">ラベル</th>
+                  <th scope="col">ラベル</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>データ1</td>
+                  <td>データ2</td>
+                  <td>データ3</td>
+                </tr>
+                <tr>
+                  <td>データ4</td>
+                  <td>データ5</td>
+                  <td>データ6</td>
+                </tr>
+              </tbody>
+            </table>
+          </dads-table>
+
+          <style>
+            .table-annotate-basic a11y-annotate {
+              display: block;
+              --a11y-annotate-preview-min-height: 360px;
+            }
+          </style>
+        </a11y-annotate>
+      </section>
+
+      <!-- データテーブル（行選択 + ソート + ストライプ） -->
+      <section class="table-annotate-section" style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">データテーブル（行選択・ソート）</h3>
+
+        <a11y-annotate target-selector="dads-table">
+          <dads-table selectable striped hover sort-behavior="dom">
+            <table>
+              <caption>利用者一覧</caption>
+              <thead>
+                <tr>
+                  <th>
+                    <input type="checkbox" data-select-all aria-label="すべて選択" />
+                  </th>
+                  <th scope="col" data-column="id">
+                    <button type="button" data-sort>利用者ID</button>
+                  </th>
+                  <th scope="col" data-column="name">
+                    <button type="button" data-sort>氏名</button>
+                  </th>
+                  <th scope="col">電話番号</th>
+                  <th scope="col" data-column="createdAt" data-sort-type="date">
+                    <button type="button" data-sort>登録日</button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-row-id="A003">
+                  <td><input type="checkbox" data-select-row aria-label="行を選択: A003" /></td>
+                  <td>A003</td>
+                  <td>鈴木 次郎</td>
+                  <td>03-9999-0000</td>
+                  <td>2026-01-03</td>
+                </tr>
+                <tr data-row-id="A001">
+                  <td><input type="checkbox" data-select-row aria-label="行を選択: A001" /></td>
+                  <td>A001</td>
+                  <td>山田 太郎</td>
+                  <td>03-1234-5678</td>
+                  <td>2026-01-01</td>
+                </tr>
+                <tr data-row-id="A002">
+                  <td><input type="checkbox" data-select-row aria-label="行を選択: A002" /></td>
+                  <td>A002</td>
+                  <td>佐藤 花子</td>
+                  <td>03-2222-3333</td>
+                  <td>2026-01-02</td>
+                </tr>
+              </tbody>
+            </table>
+          </dads-table>
+
+          <style>
+            .table-annotate-section a11y-annotate {
+              display: block;
+              /* プレビュー領域を広げる */
+              --a11y-annotate-preview-min-height: 520px;
+            }
+
+            .table-annotate-section dads-table {
+              max-width: 1100px;
+            }
+          </style>
+        </a11y-annotate>
+      </section>
+
+      <!-- オーバーフロー（横スクロール） -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">オーバーフロー（横スクロール）</h3>
+        <div style="max-width: 520px; border: 1px dashed #ccc; padding: 16px;">
+          <dads-table hover>
+            <table>
+              <caption>横幅が足りない場合の例</caption>
+              <thead>
+                <tr>
+                  <th scope="col">ラベル</th>
+                  <th scope="col">ラベル</th>
+                  <th scope="col">ラベル</th>
+                  <th scope="col">ラベル</th>
+                  <th scope="col">ラベル</th>
+                  <th scope="col">ラベル</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                </tr>
+                <tr>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                </tr>
+              </tbody>
+            </table>
+          </dads-table>
+        </div>
+      </section>
+
+      <!-- DADS公式（HTML Storybook）作例 -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">DADS公式（HTML Storybook）作例</h3>
+        <p style="color: #666; margin-bottom: 0;">
+          公式のHTML作例（<code>.dads-table</code> / <code>data-*</code> 属性 / <code>data-js-*</code> セレクタ）を
+          <code>&lt;dads-table&gt;</code> の中へ貼り付けて動作する形で網羅しています。
+        </p>
+      </section>
+
+      <!-- Playground -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Playground</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table">
+              <thead>
+${dadsHeaderRow(4)}
+              </thead>
+              <tbody>
+${dadsDataRows(4, 4)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Plain -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Plain</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table">
+              <tbody>
+${dadsDataRows(4, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- First Row As Header Cell -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">First Row As Header Cell</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table">
+              <thead>
+${dadsHeaderRow(6)}
+              </thead>
+              <tbody data-cell-border="bottom">
+${dadsDataRows(3, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- First Column As Header Cell -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">First Column As Header Cell</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table" data-cell-border="right">
+              <tbody>
+${dadsRowHeaderRows(4, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- First Row And Column As Header Cell -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">First Row And Column As Header Cell</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table" data-cell-border="bottom">
+              <thead>
+                <tr>
+                  <td data-bg="solid-gray-100" data-border="right"></td>
+${dadsColHeaderLines(5)}
+                </tr>
+              </thead>
+              <tbody>
+${dadsRowHeaderRows(3, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Condensed Table -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Condensed Table</h3>
+        <dads-table>
+          <div class="dads-table" data-size="dense">
+            <table class="dads-table__table" data-cell-border="bottom">
+              <thead>
+${dadsHeaderRow(6)}
+              </thead>
+              <tbody>
+${dadsDataRows(3, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Border On Row And Column -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Border On Row And Column</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table" data-border="hidden" data-cell-border>
+              <thead>
+${dadsHeaderRow(6)}
+              </thead>
+              <tbody>
+${dadsDataRows(3, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Table Header With Colspan -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Table Header With Colspan</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table" data-border data-cell-border="bottom">
+              <thead data-cell-border="right">
+                <tr>
+${repeatLines(dadsColHeaderLine('親ラベル', 'colspan="3"'), 2)}
+                </tr>
+                <tr>
+${dadsColHeaderLines(6, '子ラベル')}
+                </tr>
+              </thead>
+              <tbody>
+${dadsDataRows(3, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Table Header With Rowspan -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Table Header With Rowspan</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table" data-border data-cell-border="bottom">
+              <tbody>
+                <tr>
+                  <th class="dads-table__row-header" scope="row" rowspan="2" data-border="right">親ラベル</th>
+                  <th class="dads-table__row-header" scope="row">子ラベル</th>
+${dadsDataCellLines(4)}
+                </tr>
+                <tr>
+                  <th class="dads-table__row-header" scope="row">子ラベル</th>
+${dadsDataCellLines(4)}
+                </tr>
+                <tr>
+                  <th class="dads-table__row-header" scope="row" rowspan="2" data-border="right">親ラベル</th>
+                  <th class="dads-table__row-header" scope="row">子ラベル</th>
+${dadsDataCellLines(4)}
+                </tr>
+                <tr>
+                  <th class="dads-table__row-header" scope="row">子ラベル</th>
+${dadsDataCellLines(4)}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Indented Rows -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Indented Rows</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table" data-cell-border="bottom">
+              <col style="width: calc(32 / 16 * 1rem);">
+              <thead>
+                <tr>
+                  <td class="dads-table__col-header"></td>
+                  <td class="dads-table__col-header"></td>
+                  <th class="dads-table__col-header" scope="col">代表者名</th>
+                  <th class="dads-table__col-header" scope="col">電話番号</th>
+                  <th class="dads-table__col-header" scope="col">住所</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" colspan="2">東京本社</th>
+                  <td>山田太郎</td>
+                  <td>03-1234-5678</td>
+                  <td>東京都新宿区1-2-3</td>
+                </tr>
+                <tr>
+                  <th scope="row"><span class="dads-u-visually-hidden">東京本社</span></th>
+                  <th scope="row">営業部</th>
+                  <td>佐藤花子</td>
+                  <td>03-2345-6789</td>
+                  <td>東京都渋谷区4-5-6</td>
+                </tr>
+                <tr>
+                  <th scope="row"><span class="dads-u-visually-hidden">東京本社</span></th>
+                  <th scope="row">開発部</th>
+                  <td>鈴木一郎</td>
+                  <td>03-3456-7890</td>
+                  <td>東京都港区7-8-9</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Stripe Table -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Stripe Table</h3>
+        <dads-table>
+          <div class="dads-table" data-row-stripe>
+            <table class="dads-table__table" data-cell-border="bottom">
+              <thead>
+${dadsHeaderRow(6)}
+              </thead>
+              <tbody>
+${dadsDataRows(6, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Highlight Hovered Row -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Highlight Hovered Row</h3>
+        <dads-table>
+          <div class="dads-table" data-row-stripe data-row-hover-highlight>
+            <table class="dads-table__table" data-cell-border="bottom">
+              <thead>
+${dadsHeaderRow(6)}
+              </thead>
+              <tbody>
+${dadsDataRows(6, 6)}
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Selectable Table -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Selectable Table</h3>
+        <dads-table>
+          <div class="dads-table" data-size="dense" data-selectable data-js-indeterminate-example>
+            <table class="dads-table__table" data-cell-border="bottom">
+              <thead>
+                <tr>
+                  <th class="dads-table__col-header" scope="col">
+                    <label class="dads-checkbox" data-size="sm">
+                      <span class="dads-checkbox__checkbox">
+                        <input class="dads-checkbox__input" type="checkbox" aria-label="行を選択" aria-description="すべての行を選択する" data-js-check-all>
+                      </span>
+                    </label>
+                  </th>
+                  <th class="dads-table__col-header" scope="col">タイトル</th>
+                  <th class="dads-table__col-header" scope="col">状態</th>
+                  <th class="dads-table__col-header" scope="col">コメント数</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <label class="dads-checkbox" data-size="sm">
+                      <span class="dads-checkbox__checkbox">
+                        <input class="dads-checkbox__input" type="checkbox" aria-labelledby="selectable-table-title-1" data-js-check>
+                      </span>
+                    </label>
+                  </td>
+                  <td id="selectable-table-title-1">記事タイトル1</td>
+                  <td>公開中</td>
+                  <td>10</td>
+                </tr>
+                <tr>
+                  <td>
+                    <label class="dads-checkbox" data-size="sm">
+                      <span class="dads-checkbox__checkbox">
+                        <input class="dads-checkbox__input" type="checkbox" checked aria-labelledby="selectable-table-title-2" data-js-check>
+                      </span>
+                    </label>
+                  </td>
+                  <td id="selectable-table-title-2">記事タイトル2</td>
+                  <td>下書き</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>
+                    <label class="dads-checkbox" data-size="sm">
+                      <span class="dads-checkbox__checkbox">
+                        <input class="dads-checkbox__input" type="checkbox" aria-labelledby="selectable-table-title-3" data-js-check>
+                      </span>
+                    </label>
+                  </td>
+                  <td id="selectable-table-title-3">記事タイトル3</td>
+                  <td>非公開</td>
+                  <td>3</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Sortable Header -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Sortable Header</h3>
+        <dads-table sort-behavior="dom">
+          <div class="dads-table" data-js-sortable-table>
+            <table class="dads-table__table" data-border data-cell-border>
+              <thead>
+                <tr>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header>
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header data-sort-type="number">
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.12L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM14 8.92L11.73 11L9 8.52V20H6V8.52L3.27 11L1 8.93L7.5 3L14 8.93Z" />
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                      <button class="dads-table__action" type="button" aria-haspopup="true">
+                        <svg class="dads-table__action-svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" role="img" aria-label="列メニュー">
+                          <circle cx="12" cy="4.5" r="1.5"/>
+                          <circle cx="12" cy="12" r="1.5"/>
+                          <circle cx="12" cy="19.5" r="1.5"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </th>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header data-sort-type="date">
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header>
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header>
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>記事タイトルA</td>
+                  <td>10</td>
+                  <td>2026-01-03</td>
+                  <td>公開中</td>
+                  <td>担当C</td>
+                </tr>
+                <tr>
+                  <td>記事タイトルB</td>
+                  <td>2</td>
+                  <td>2026-01-01</td>
+                  <td>下書き</td>
+                  <td>担当A</td>
+                </tr>
+                <tr>
+                  <td>記事タイトルC</td>
+                  <td>30</td>
+                  <td>2026-01-02</td>
+                  <td>非公開</td>
+                  <td>担当B</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Sortable Header Dense -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Sortable Header Dense</h3>
+        <dads-table sort-behavior="dom">
+          <div class="dads-table" data-size="dense" data-js-sortable-table>
+            <table class="dads-table__table" data-border data-cell-border>
+              <thead>
+                <tr>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header>
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header data-sort-type="number">
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.12L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM14 8.92L11.73 11L9 8.52V20H6V8.52L3.27 11L1 8.93L7.5 3L14 8.93Z" />
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                      <button class="dads-table__action" type="button" aria-haspopup="true">
+                        <svg class="dads-table__action-svg" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" role="img" aria-label="列メニュー">
+                          <circle cx="12" cy="4.5" r="1.5"/>
+                          <circle cx="12" cy="12" r="1.5"/>
+                          <circle cx="12" cy="19.5" r="1.5"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </th>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header data-sort-type="date">
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header>
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="dads-table__sort-header" scope="col" data-js-sort-header>
+                    <div class="dads-table__sort-inner">
+                      <div class="dads-table__sort-label">
+                        <button class="dads-table__sort-button" data-js-sort>
+                          ラベル
+                          <span class="dads-table__sort-icon">
+                            <svg class="dads-table__sort-svg" width="24" height="24" fill="currentcolor" aria-hidden="true">
+                              <path d="M17 18.11L21.27 14L22 14.7L16.5 20L11 14.7L11.73 14L16 18.12V4H17V18.12ZM8 5.88L12.27 10L13 9.3L7.5 4L2 9.3L2.73 10L7 5.88V20H8V5.88Z"/>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>記事タイトルA</td>
+                  <td>10</td>
+                  <td>2026-01-03</td>
+                  <td>公開中</td>
+                  <td>担当C</td>
+                </tr>
+                <tr>
+                  <td>記事タイトルB</td>
+                  <td>2</td>
+                  <td>2026-01-01</td>
+                  <td>下書き</td>
+                  <td>担当A</td>
+                </tr>
+                <tr>
+                  <td>記事タイトルC</td>
+                  <td>30</td>
+                  <td>2026-01-02</td>
+                  <td>非公開</td>
+                  <td>担当B</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- Linked Text In Cell -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Linked Text In Cell</h3>
+        <dads-table>
+          <div class="dads-table">
+            <table class="dads-table__table" data-width="full" data-layout="fixed" data-cell-border="bottom">
+              <thead>
+                <tr>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a class="dads-link" href="#">デジタル庁</a></td>
+                  <td>データ</td>
+                  <td>データ</td>
+                </tr>
+                <tr>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                </tr>
+                <tr>
+                  <td>
+                    <ul class="dads-list">
+                      <li class="dads-list__item"><a class="dads-link" href="#">デジタル庁</a></li>
+                      <li class="dads-list__item"><a class="dads-link" href="#">デジタル庁デザインシステム</a></li>
+                    </ul>
+                  </td>
+                  <td>データ</td>
+                  <td>データ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </dads-table>
+      </section>
+
+      <!-- With Caption -->
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">With Caption</h3>
+        <dads-table>
+          <figure class="dads-table">
+            <figcaption class="dads-table__caption">表1: テーブルキャプション</figcaption>
+            <table class="dads-table__table" data-cell-border="bottom">
+              <thead>
+                <tr>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                  <th class="dads-table__col-header" scope="col">ラベル</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                </tr>
+                <tr>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                </tr>
+                <tr>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                  <td>データ</td>
+                </tr>
+              </tbody>
+            </table>
+          </figure>
+        </dads-table>
+      </section>
+
+      <!-- Overflow On Mobile -->
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Overflow On Mobile</h3>
+        <div style="max-width: 520px; border: 1px dashed #ccc; padding: 16px;">
+          <dads-table>
+            <div class="dads-table">
+              <table class="dads-table__table" data-cell-border="bottom" style="min-width: calc(640 / 16 * 1rem);">
+                <thead>
+                  <tr>
+                    <th class="dads-table__col-header" scope="col" style="width: 25%;">項目</th>
+                    <th class="dads-table__col-header" scope="col">例</th>
+                    <th class="dads-table__col-header" scope="col">説明</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>チャネルの種類</td>
+                    <td>オンラインポータル、電話サポート、メール窓口、情報パンフ、動画案内、SNSアカウント、イベント告知、FAQページ</td>
+                    <td>市民は自分に適した手段で情報取得やサービス利用が可能で、行政も効果的なコミュニケーションとサポートを提供できます</td>
+                  </tr>
+                  <tr>
+                    <td>プロバイダー</td>
+                    <td>光ファイバー、DSL、ケーブル、ワイヤレスなど</td>
+                    <td>ユーザーは異なるプロバイダータイプから、自分のニーズに合った高速インターネット接続を選択できます</td>
+                  </tr>
+                  <tr>
+                    <td>サービスを提供する地域</td>
+                    <td>
+                      <ol class="dads-list">
+                        <li class="dads-list__item">りんご区</li>
+                        <li class="dads-list__item">みかん区</li>
+                        <li class="dads-list__item">ぶどう区</li>
+                        <li class="dads-list__item">いちご区</li>
+                        <li class="dads-list__item">なし区</li>
+                      </ol>
+                    </td>
+                    <td>特有のニーズに応えながら、高品質かつ効率的なサポートを目指しています。地元のコミュニティと密接に連携し、信頼性とアクセシビリティを大切にしています。</td>
+                  </tr>
+                  <tr>
+                    <td>チャネルアイコン</td>
+                    <td>テレビ、ラジオ、スマートフォン、パソコン、ニュース、ゲーム、料理、アート、音楽、カメラ</td>
+                    <td>これらのアイコンは利用者が興味を持ちそうなチャンネルを素早く特定し、アクセスしやすくするのに役立ちます。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </dads-table>
+        </div>
+      </section>
     </div>
   `,
 

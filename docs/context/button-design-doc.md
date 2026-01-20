@@ -54,7 +54,6 @@ packages/components/button/
 ├── button-styles.ts       # スタイル定義
 ├── button-define.ts       # 登録関数
 ├── button.test.ts         # テスト（TDD）
-├── button.stories.ts      # Storybook
 └── index.ts              # エクスポート
 
 packages/styles/design-tokens/
