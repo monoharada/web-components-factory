@@ -49,3 +49,6 @@ export * from './page-navigation/index.js';
 
 // テーブル
 export * from './table/index.js';
+
+// ステップナビゲーション
+export * from './step-navigation/index.js';
