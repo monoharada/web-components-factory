@@ -46,3 +46,6 @@ export * from './chip-label/index.js';
 
 // テーブル
 export * from './table/index.js';
+
+// ステップナビゲーション
+export * from './step-navigation/index.js';
