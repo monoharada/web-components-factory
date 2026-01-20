@@ -3992,6 +3992,604 @@ ${dadsDataRows(6, 6)}
     </script>
   `,
 
+  pageNavigation: () => `
+    <div style="padding: 40px; max-width: 1120px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ページナビゲーション</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        前/次の移動と、任意のステータス表示（例: 1/24, 9,999 / 9,999, ページ名など）を組み合わせるコンポーネント。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <!-- アクセシビリティ注釈 -->
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-page-navigation">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-page-navigation
+              type="text"
+              prev-href="#"
+              next-href="#"
+              current="9999"
+              total="9999"
+              status-separator=" / "
+            ></dads-page-navigation>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <!-- API / Controls（Storybook風） -->
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風・サンプル）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          テーブル内の操作が、同じパネル内のターゲット要素へ即時反映されます。
+          ステータスは <code>slot="status"</code> / <code>status</code> / <code>current+total</code> から選べます（優先順: slot → status → current/total）。
+        </p>
+
+        <div class="wc-api-panel">
+          <div class="wc-api-panel__header">
+            <div class="wc-api-panel__title">Controls</div>
+            <dads-button data-api-reset type="button" variant="outlined" size="small">Reset</dads-button>
+          </div>
+
+          <div class="wc-api-panel__body">
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-page-navigation
+                  data-api-target
+                  type="text"
+                  size="m"
+                  prev-href="#"
+                  next-href="#"
+                  prev-label="前のページ"
+                  next-label="次のページ"
+                  current="1"
+                  total="24"
+                  status-separator="/"
+                ></dads-page-navigation>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>type</code></th>
+                        <td><code>text</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select data-api-attr="type" data-default="text" aria-label="type">
+                              <option value="text" selected>text</option>
+                              <option value="arrow">arrow</option>
+                              <option value="outlined">outlined</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>表示タイプ</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>m</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select data-api-attr="size" data-default="m" aria-label="size">
+                              <option value="l">l</option>
+                              <option value="m" selected>m</option>
+                              <option value="s">s</option>
+                              <option value="xs">xs</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>arrow時のサイズ</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>prev-href</code></th>
+                        <td><code>#</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="prev-href"
+                              value="#"
+                              data-api-attr="prev-href"
+                              data-default="#"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>前へリンク先（空で非表示）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>next-href</code></th>
+                        <td><code>#</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="next-href"
+                              value="#"
+                              data-api-attr="next-href"
+                              data-default="#"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>次へリンク先（空で非表示）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>prev-label</code></th>
+                        <td><code>前のページ</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="prev-label"
+                              value="前のページ"
+                              data-api-attr="prev-label"
+                              data-default="前のページ"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>前へラベル（例: 前の3件）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>next-label</code></th>
+                        <td><code>次のページ</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="next-label"
+                              value="次のページ"
+                              data-api-attr="next-label"
+                              data-default="次のページ"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>次へラベル（例: 次の3件）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>status</code></th>
+                        <td><code>(empty)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="status"
+                              value=""
+                              data-api-attr="status"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>任意のステータス文字列（空なら current/total）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>current</code></th>
+                        <td><code>1</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="current"
+                              value="1"
+                              data-api-attr="current"
+                              data-default="1"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>現在値（status未指定時）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>total</code></th>
+                        <td><code>24</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="total"
+                              value="24"
+                              data-api-attr="total"
+                              data-default="24"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>総数（status未指定時）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>status-separator</code></th>
+                        <td><code>/</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="status-separator"
+                              value="/"
+                              data-api-attr="status-separator"
+                              data-default="/"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>current/total の区切り（例: <code> / </code>）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>hide-status</code></th>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch data-api-attr="hide-status" data-default="false" aria-label="hide-status">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>ステータスを強制非表示</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>aria-label</code></th>
+                        <td><code>ページナビゲーション</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="aria-label"
+                              value=""
+                              data-api-attr="aria-label"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>nav のラベル（空ならデフォルト）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-page-navigation-width</code></th>
+                        <td><code>fit-content</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-page-navigation-width"
+                              value=""
+                              data-api-css-var="--dads-page-navigation-width"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>nav の幅（例: <code>100%</code>, <code>fit-content</code>）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-page-navigation-justify-content</code></th>
+                        <td><code>flex-start</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select
+                              data-api-css-var="--dads-page-navigation-justify-content"
+                              data-default=""
+                              aria-label="--dads-page-navigation-justify-content"
+                            >
+                              <option value="" selected>(default)</option>
+                              <option value="flex-start">flex-start</option>
+                              <option value="center">center</option>
+                              <option value="flex-end">flex-end</option>
+                              <option value="space-between">space-between</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>コントロールの寄せ方（flexの <code>justify-content</code>）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-page-navigation-gap</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-page-navigation-gap"
+                              value=""
+                              data-api-css-var="--dads-page-navigation-gap"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>前/ステータス/次の間隔</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-page-navigation-control-color</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-page-navigation-control-color"
+                              value=""
+                              data-api-css-var="--dads-page-navigation-control-color"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>コントロールの文字/アイコン色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-page-navigation-control-background-hover</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-page-navigation-control-background-hover"
+                              value=""
+                              data-api-css-var="--dads-page-navigation-control-background-hover"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>hover 背景色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-page-navigation-control-border-radius</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-page-navigation-control-border-radius"
+                              value=""
+                              data-api-css-var="--dads-page-navigation-control-border-radius"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>角丸（outlined/arrow など）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                <p class="wc-api-panel__section-note">
+                  ※ 空にすると <code>style.removeProperty()</code> で元のトークン値に戻ります。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            (function() {
+              var currentScript = document.currentScript;
+              Promise.all([
+                import('dads-page-navigation'),
+                import('dads-table'),
+                import('dads-switch'),
+                import('dads-input-text'),
+                import('dads-button'),
+                import('/src/viewer-api-controls.js')
+              ]).then(function(mods) {
+                var root = currentScript?.parentElement;
+                if (!root || !root.isConnected) return;
+                var api = mods[5];
+                if (api && api.bindApiControls) api.bindApiControls(root);
+              });
+            })();
+          <\/script>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Text（current/total + status-separator）</h3>
+        <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px;">
+          <dads-page-navigation
+            type="text"
+            prev-href="#"
+            next-href="#"
+            current="9999"
+            total="9999"
+            status-separator=" / "
+          ></dads-page-navigation>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Arrow（アイコンのみ + ステータス）</h3>
+        <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; display: grid; gap: 16px;">
+          <dads-page-navigation
+            type="arrow"
+            size="m"
+            prev-href="#"
+            next-href="#"
+            current="9999"
+            total="9999"
+            status-separator=" / "
+          ></dads-page-navigation>
+
+          <dads-page-navigation type="arrow" size="xs" prev-href="#" next-href="#">
+            <span slot="status">カスタム</span>
+          </dads-page-navigation>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Outlined（status slot / status attr）</h3>
+        <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; display: grid; gap: 16px;">
+          <dads-page-navigation type="outlined" prev-href="#" next-href="#">
+            <span slot="status">ページ 1/24（全120件）</span>
+          </dads-page-navigation>
+
+          <dads-page-navigation
+            type="outlined"
+            prev-href="#"
+            next-href="#"
+            status="9,999 / 9,999"
+          ></dads-page-navigation>
+
+          <dads-page-navigation
+            type="outlined"
+            prev-href="#"
+            next-href="#"
+            prev-label="申請情報の事前準備"
+            next-label="申請情報の確認"
+            hide-status
+          ></dads-page-navigation>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">ボタンモード (as="button")</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          テーブルのページネーションなど、AJAX更新に対応するボタンモード。
+          クリック時に <code>prev</code> / <code>next</code> イベントが発火します。
+        </p>
+        <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; display: grid; gap: 16px;">
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Arrow タイプ（disabled-prev で前ボタン非表示）</p>
+            <dads-page-navigation
+              id="button-demo-1"
+              as="button"
+              type="arrow"
+              size="m"
+              current="1"
+              total="12"
+              disabled-prev
+            ></dads-page-navigation>
+          </div>
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Text タイプ</p>
+            <dads-page-navigation
+              id="button-demo-2"
+              as="button"
+              type="text"
+              current="6"
+              total="12"
+            ></dads-page-navigation>
+          </div>
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Outlined タイプ（disabled-next で次ボタン非表示）</p>
+            <dads-page-navigation
+              id="button-demo-3"
+              as="button"
+              type="outlined"
+              current="12"
+              total="12"
+              disabled-next
+            ></dads-page-navigation>
+          </div>
+          <div style="margin-top: 16px; padding: 12px; background: #f3f4f6; border-radius: 8px;">
+            <p style="font-size: 12px; color: #666; margin-bottom: 8px;">イベントログ（DevTools Consoleでも確認可能）</p>
+            <pre id="button-event-log" style="font-family: monospace; font-size: 12px; color: #333; margin: 0; white-space: pre-wrap;">イベント未発生</pre>
+          </div>
+        </div>
+        <script>
+          (function() {
+            var log = document.getElementById('button-event-log');
+            var demos = ['button-demo-1', 'button-demo-2', 'button-demo-3'];
+            demos.forEach(function(id) {
+              var el = document.getElementById(id);
+              if (el) {
+                el.addEventListener('prev', function(e) {
+                  var msg = '[prev] ' + id + ' clicked';
+                  console.log(msg, e.detail);
+                  if (log) log.textContent = msg;
+                });
+                el.addEventListener('next', function(e) {
+                  var msg = '[next] ' + id + ' clicked';
+                  console.log(msg, e.detail);
+                  if (log) log.textContent = msg;
+                });
+              }
+            });
+          })();
+        <\/script>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Fill レイアウト (fill)</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          2つのコントロールがコンテナ幅を50%ずつ埋めるレイアウト。
+        </p>
+        <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; display: grid; gap: 16px;">
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Outlined + fill（リンクモード）</p>
+            <dads-page-navigation
+              type="outlined"
+              prev-href="#"
+              next-href="#"
+              prev-label="申請情報の事前準備"
+              next-label="申請情報の確認"
+              hide-status
+              fill
+            ></dads-page-navigation>
+          </div>
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Outlined + fill（ボタンモード）</p>
+            <dads-page-navigation
+              as="button"
+              type="outlined"
+              prev-label="前のステップ"
+              next-label="次のステップ"
+              hide-status
+              fill
+            ></dads-page-navigation>
+          </div>
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Text + fill</p>
+            <dads-page-navigation
+              type="text"
+              prev-href="#"
+              next-href="#"
+              hide-status
+              fill
+            ></dads-page-navigation>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">片側のみ / ラベル差し替え</h3>
+        <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; display: grid; gap: 16px;">
+          <dads-page-navigation type="text" next-href="#" current="1" total="24"></dads-page-navigation>
+          <dads-page-navigation
+            type="text"
+            prev-href="#"
+            next-href="#"
+            prev-label="前の3件"
+            next-label="次の3件"
+          ></dads-page-navigation>
+        </div>
+      </section>
+    </div>
+  `,
+
   empty: () => `
     <div style="padding: 40px; text-align: center; color: #666;">
       コンポーネントを選択してください
