@@ -114,7 +114,8 @@ const menuListBoxLocalTokensText = `
     --dads-menu-list-box-popup-item-divider: var(--menu-list-box-popup-item-divider);
     --dads-menu-list-box-popup-item-divider-scroll: var(--menu-list-box-popup-item-divider-scroll);
     --dads-menu-list-box-popup-shadow: var(--elevation-1);
-    --dads-menu-list-box-popup-z-index: 1;
+    /* Dropdown menus need to appear above most page content but below modals */
+    --dads-menu-list-box-popup-z-index: 1000;
   }
 
   :host([size="md"]) {

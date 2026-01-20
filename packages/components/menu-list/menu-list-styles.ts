@@ -63,13 +63,13 @@ export const menuListItemStyles = css`
   /* Variants */
   :host([variant="standard"]) [part="base"] {
     border-radius: var(--dads-menu-list-item-border-radius);
-    margin-left: calc(1rem * var(--dads-menu-list-indentation));
+    margin-left: calc(var(--spacing-4, 1rem) * var(--dads-menu-list-indentation));
   }
 
   :host([variant="box"]) [part="base"] {
     border-radius: 0;
     padding-left: calc(
-      var(--dads-menu-list-item-padding-x) + 1rem * var(--dads-menu-list-indentation)
+      var(--dads-menu-list-item-padding-x) + var(--spacing-4, 1rem) * var(--dads-menu-list-indentation)
     );
   }
 

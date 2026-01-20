@@ -159,4 +159,107 @@ describe('DadsMenuListBox - 基本', () => {
     expect(popup.hidden).toBe(true);
     expect(document.activeElement).toBe(opener);
   });
+
+  it('Home/End キーで先頭・末尾に移動する', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <dads-menu-list-item>One</dads-menu-list-item>
+        <dads-menu-list-item>Two</dads-menu-list-item>
+        <dads-menu-list-item>Three</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+
+    const items = Array.from(element.querySelectorAll('dads-menu-list-item')) as HTMLElement[];
+    for (const item of items) await waitForCustomElement(item);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const opener = getShadowContent(element, '#opener') as HTMLButtonElement | null;
+    const menu = getShadowContent(element, '#menu') as HTMLElement | null;
+    if (!opener || !menu) throw new Error('shadow parts not found');
+
+    opener.click();
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const firstBase = getShadowContent(items[0], '#base') as HTMLElement | null;
+    const lastBase = getShadowContent(items[2], '#base') as HTMLElement | null;
+    if (!firstBase || !lastBase) throw new Error('menu item base not found');
+
+    // End key moves to last item
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+    expect(document.activeElement).toBe(lastBase);
+
+    // Home key moves to first item
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+    expect(document.activeElement).toBe(firstBase);
+  });
+
+  it('ArrowUp で open すると末尾にフォーカスする', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <dads-menu-list-item>One</dads-menu-list-item>
+        <dads-menu-list-item>Two</dads-menu-list-item>
+        <dads-menu-list-item>Three</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+
+    const items = Array.from(element.querySelectorAll('dads-menu-list-item')) as HTMLElement[];
+    for (const item of items) await waitForCustomElement(item);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const opener = getShadowContent(element, '#opener') as HTMLButtonElement | null;
+    const popup = getShadowContent(element, '#popup') as HTMLElement | null;
+    if (!opener || !popup) throw new Error('shadow parts not found');
+
+    expect(popup.hidden).toBe(true);
+
+    opener.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    expect(popup.hidden).toBe(false);
+
+    const lastBase = getShadowContent(items[2], '#base') as HTMLElement | null;
+    if (!lastBase) throw new Error('menu item base not found');
+    expect(document.activeElement).toBe(lastBase);
+  });
+
+  it('label 属性が opener に表示される', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="テストラベル">
+        <dads-menu-list-item>Item</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+
+    const labelFallback = getShadowContent(element, '#label-fallback') as HTMLElement | null;
+    if (!labelFallback) throw new Error('label fallback not found');
+    expect(labelFallback.textContent).toBe('テストラベル');
+  });
+
+  it('icon スロットがない場合 data-has-opener-icon は付与されない', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <dads-menu-list-item>Item</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    expect(element.hasAttribute('data-has-opener-icon')).toBe(false);
+  });
 });

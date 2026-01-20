@@ -167,4 +167,52 @@ describe('DadsMenuListItem - 基本', () => {
 
     expect(focusTarget).toBe(base);
   });
+
+  it('javascript: URL はブロックされ # にフォールバックする', async () => {
+    const { defineDefaultMenuList } = await import('./menu-list-define');
+    defineDefaultMenuList();
+
+    // Suppress expected console warning
+    const originalWarn = console.warn;
+    const warnings: string[] = [];
+    console.warn = (msg: string) => warnings.push(msg);
+
+    element = renderWebComponent(
+      '<dads-menu-list-item href="javascript:alert(1)">XSS attempt</dads-menu-list-item>',
+    );
+    await waitForCustomElement(element);
+
+    const base = getShadowContent(element, '#base') as HTMLAnchorElement | null;
+    expect(base).toBeInstanceOf(HTMLAnchorElement);
+    expect(base?.getAttribute('href')).toBe('#');
+    expect(warnings.some((w) => w.includes('Invalid href value blocked'))).toBe(true);
+
+    console.warn = originalWarn;
+  });
+
+  it('有効な URL (http/https/相対パス) は許可される', async () => {
+    const { defineDefaultMenuList } = await import('./menu-list-define');
+    defineDefaultMenuList();
+
+    const validUrls = [
+      'https://example.com',
+      'http://example.com',
+      '/path/to/page',
+      './relative',
+      '../parent',
+      '#anchor',
+    ];
+
+    for (const url of validUrls) {
+      const testEl = renderWebComponent(
+        `<dads-menu-list-item href="${url}">Link</dads-menu-list-item>`,
+      );
+      await waitForCustomElement(testEl);
+
+      const base = getShadowContent(testEl, '#base') as HTMLAnchorElement | null;
+      expect(base?.getAttribute('href')).toBe(url);
+
+      cleanupTestElement(testEl);
+    }
+  });
 });

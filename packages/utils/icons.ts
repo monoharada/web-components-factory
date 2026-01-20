@@ -52,8 +52,10 @@ export const iconPaths = {
   /**
    * 新規タブで開くアイコン
    * 外部リンクの表示に使用
+   * Note: 24x24 viewBox用パス
    */
-  externalLink: 'M22 6V20H39V11.2L21 29L19 27L36.8 9H28V6H42Z',
+  externalLink:
+    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',
 } as const;
 
 export type IconName = keyof typeof iconPaths;

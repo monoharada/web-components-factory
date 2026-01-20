@@ -294,13 +294,34 @@ export class DadsMenuListItem extends TypographyWebComponent {
     const inner = menuListItemInnerHtml;
 
     if (isLink) {
-      const href = this.getAttribute('href') || '#';
+      // Create anchor element safely to prevent XSS via javascript: URLs
+      const anchor = document.createElement('a');
+      anchor.setAttribute('part', 'base');
+      anchor.setAttribute('id', 'base');
 
-      template.innerHTML = `
-        <a part="base" id="base" href="${href}">
-          ${inner}
-        </a>
-      `;
+      const href = this.getAttribute('href') || '#';
+      // Validate URL scheme - only allow http(s), relative paths, and hash links
+      const isValidUrl =
+        href === '#' ||
+        href.startsWith('/') ||
+        href.startsWith('#') ||
+        href.startsWith('./') ||
+        href.startsWith('../') ||
+        /^https?:\/\//i.test(href);
+
+      if (isValidUrl) {
+        anchor.href = href;
+      } else {
+        // Fallback to '#' for potentially malicious URLs (e.g., javascript:)
+        anchor.href = '#';
+        console.warn(`[dads-menu-list-item] Invalid href value blocked: "${href}"`);
+      }
+
+      anchor.innerHTML = inner;
+
+      const wrapper = document.createElement('div');
+      wrapper.appendChild(anchor);
+      template.innerHTML = wrapper.innerHTML;
     } else {
       template.innerHTML = `
         <button part="base" id="base" type="button">

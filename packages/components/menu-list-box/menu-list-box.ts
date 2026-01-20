@@ -401,7 +401,10 @@ export class DadsMenuListBox extends TypographyWebComponent {
         el.setAttribute('role', 'separator');
       }
 
-      // Ensure default vertical spacing isn't wiped out by page-level resets.
+      // External CSS resets (e.g., `* { margin: 0 }`) may override our CSS variables.
+      // Setting inline styles ensures correct spacing even in reset-heavy environments.
+      // The CSS already defines these margins (menu-list-box-styles.ts:157-158), but
+      // inline styles take precedence and guarantee the divider spacing is preserved.
       const marginValue = 'var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem))';
       if (!el.style.getPropertyValue('margin-block')) {
         el.style.setProperty('margin-block', marginValue);
