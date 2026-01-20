@@ -2,11 +2,20 @@
 
 TypeScriptで実装された Web Components ライブラリとコンポーネント集。デジタル庁デザインシステムに準拠した高品質なコンポーネントを提供します。
 
+## 🧰 セットアップ
+
+```bash
+npm ci
+```
+
 ## 🚀 起動方法
 
 ```bash
 # Bunで開発サーバーを起動（TypeScript自動トランスパイル対応）
 bun server.ts
+
+# npm 経由でもOK（Bunが必要）
+npm run dev
 ```
 
 http://localhost:3000/ にアクセスして、コンポーネントビューアが表示されます。

@@ -86,9 +86,9 @@ npm run test:watch     # Watch mode
 npm run test:ui        # UI test runner
 npm run test:coverage  # Coverage report
 
-# Storybook
-npm run storybook       # Development mode
-npm run build-storybook # Build static Storybook
+# Component Viewer (Bun)
+npm run dev             # Start viewer (requires Bun)
+# http://localhost:3000/?component=button
 ```
 
 ## 🔄 Claude Code Workflow Commands

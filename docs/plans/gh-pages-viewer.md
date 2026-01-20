@@ -110,7 +110,6 @@ dist-pages/
 
 - `**/*.d.ts`（型定義）
 - `**/*.test.ts`（テスト）
-- `**/*.stories.ts`（Storybook）
 
 ### 4) npm scripts 追加
 
