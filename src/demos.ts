@@ -133,9 +133,9 @@ function menuListBoxDescriptionItems(count: number): string {
     const value = String(i + 1);
     const current = i === 0 ? " current" : "";
     out += `${i === 0 ? "" : "\n\n"}            <dads-menu-list-item${current} data-value="${value}">
-${MENU_LIST_BOX_DUMMY_START_ICON_SVG}              <span style="display: flex; flex-direction: column; gap: 2px;">
-                <span style="font-weight: 600;">リストアイテム</span>
-                <span style="font-size: 0.875rem; color: #666;">ディスクリプション</span>
+${MENU_LIST_BOX_DUMMY_START_ICON_SVG}              <span style="display: flex; flex-direction: column; gap: var(--spacing-0-5, 2px);">
+                <span style="font-weight: var(--font-weight-600, 600);">リストアイテム</span>
+                <span style="font-size: var(--font-size-14, 0.875rem); color: var(--color-neutral-solid-gray-536, #666);">ディスクリプション</span>
               </span>
             </dads-menu-list-item>`;
   }

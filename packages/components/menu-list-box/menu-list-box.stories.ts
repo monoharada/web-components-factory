@@ -137,9 +137,9 @@ export const ItemStartIconsWithDescription: Story = {
       ${Array.from({ length: 8 }, (_, i) => html`
         <dads-menu-list-item ?current="${i === 0}" data-value="${i + 1}">
           ${startIcon('dummy')}
-          <span style="display: flex; flex-direction: column; gap: 2px;">
-            <span style="font-weight: 600;">リストアイテム</span>
-            <span style="font-size: 0.875rem; color: #666;">ディスクリプション</span>
+          <span style="display: flex; flex-direction: column; gap: var(--spacing-0-5, 2px);">
+            <span style="font-weight: var(--font-weight-600, 600);">リストアイテム</span>
+            <span style="font-size: var(--font-size-14, 0.875rem); color: var(--color-neutral-solid-gray-536, #666);">ディスクリプション</span>
           </span>
         </dads-menu-list-item>
       `)}
