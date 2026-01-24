@@ -11,6 +11,8 @@ import { withReset } from '../../styles/reset-css.js';
 import { datePickerStyles } from './date-picker-styles.js';
 import { setDefaultAttributes, updateErrorFallback } from '../../utils/form-component-helpers.js';
 import type { A11yAnnotations, A11yElementRef } from '../../utils/a11y-annotations.js';
+import { getPrefixFromLocalName } from '../../utils/custom-element-name.js';
+import { parseIsoDate, toIsoDateOrEmpty } from '../../utils/iso-date.js';
 import { defineCalendar } from '../calendar/calendar-define.js';
 import type { DadsCalendarPublicAPI } from '../calendar/index.js';
 
@@ -26,37 +28,11 @@ function isValidSize(v: string | null): v is 'sm' | 'md' | 'lg' {
   return v === 'sm' || v === 'md' || v === 'lg';
 }
 
-function parseIsoDate(value: string): { year: number; month: number; day: number } | null {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-  const [y, m, d] = value.split('-');
-  const year = Number.parseInt(y, 10);
-  const month = Number.parseInt(m, 10);
-  const day = Number.parseInt(d, 10);
-  if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) return null;
-  return { year, month, day };
-}
-
 function parseDigits(value: string, re: RegExp): number | null {
   const trimmed = value.trim();
   if (!re.test(trimmed)) return null;
   const parsed = Number.parseInt(trimmed, 10);
   return Number.isNaN(parsed) ? null : parsed;
-}
-
-function toIsoDateOrEmpty(year: number, month: number, day: number): string {
-  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) return '';
-  if (year < 1 || year > 9999) return '';
-  if (month < 1 || month > 12) return '';
-  if (day < 1 || day > 31) return '';
-
-  const dt = new Date(year, month - 1, day);
-  if (Number.isNaN(dt.getTime())) return '';
-  if (dt.getFullYear() !== year || dt.getMonth() !== month - 1 || dt.getDate() !== day) return '';
-
-  const yyyy = String(year).padStart(4, '0');
-  const mm = String(month).padStart(2, '0');
-  const dd = String(day).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
 }
 
 export class DadsDatePicker extends TypographyFormComponent {
@@ -284,7 +260,7 @@ export class DadsDatePicker extends TypographyFormComponent {
     super.connectedCallback();
 
     // 依存コンポーネントを先に登録（ポップオーバー内で利用）
-    const prefix = this.#getPrefixFromLocalName();
+    const prefix = getPrefixFromLocalName(this.localName, '-date-picker');
     defineCalendar(prefix);
 
     setDefaultAttributes(this, { 'data-type': 'consolidated', size: 'md' });
@@ -347,13 +323,6 @@ export class DadsDatePicker extends TypographyFormComponent {
   set value(v: string) {
     const parsed = parseIsoDate(v);
     if (!parsed) {
-      this.#clearInputs();
-      this.#syncFormValue();
-      return;
-    }
-
-    const iso = toIsoDateOrEmpty(parsed.year, parsed.month, parsed.day);
-    if (!iso) {
       this.#clearInputs();
       this.#syncFormValue();
       return;
@@ -582,20 +551,32 @@ export class DadsDatePicker extends TypographyFormComponent {
     }
   }
 
+  #getInputYearMonth(): { year: number; month: number } | null {
+    if (!this.#yearInput || !this.#monthInput) return null;
+    const year = parseDigits(this.#yearInput.value, /^\d{4}$/);
+    const month = parseDigits(this.#monthInput.value, /^\d{1,2}$/);
+    if (year === null || month === null) return null;
+    return { year, month };
+  }
+
+  #getInputYearMonthDay(): { year: number; month: number; day: number } | null {
+    if (!this.#dayInput) return null;
+    const ym = this.#getInputYearMonth();
+    if (!ym) return null;
+    const day = parseDigits(this.#dayInput.value, /^\d{1,2}$/);
+    if (day === null) return null;
+    return { ...ym, day };
+  }
+
   #syncFormValue(): void {
     const v = this.#computeIsoValue();
     this._internals.setFormValue(v ? v : null);
   }
 
   #computeIsoValue(): string {
-    if (!this.#yearInput || !this.#monthInput || !this.#dayInput) return '';
-
-    const year = parseDigits(this.#yearInput.value, /^\d{4}$/);
-    const month = parseDigits(this.#monthInput.value, /^\d{1,2}$/);
-    const day = parseDigits(this.#dayInput.value, /^\d{1,2}$/);
-    if (year === null || month === null || day === null) return '';
-
-    return toIsoDateOrEmpty(year, month, day);
+    const ymd = this.#getInputYearMonthDay();
+    if (!ymd) return '';
+    return toIsoDateOrEmpty(ymd.year, ymd.month, ymd.day);
   }
 
   // ============================================================
@@ -714,19 +695,17 @@ export class DadsDatePicker extends TypographyFormComponent {
     const calendar = this.#calendar as (HTMLElement & DadsCalendarPublicAPI) | null;
 
     if (calendar) {
-      const year = this.#yearInput ? parseDigits(this.#yearInput.value, /^\d{4}$/) : null;
-      const month = this.#monthInput ? parseDigits(this.#monthInput.value, /^\d{1,2}$/) : null;
-      const day = this.#dayInput ? parseDigits(this.#dayInput.value, /^\d{1,2}$/) : null;
-
-      if (year !== null && month !== null && day !== null) {
-        const iso = toIsoDateOrEmpty(year, month, day);
-        calendar.setSelectedDate(iso ? new Date(year, month - 1, day) : null);
+      const ymd = this.#getInputYearMonthDay();
+      if (ymd) {
+        const iso = toIsoDateOrEmpty(ymd.year, ymd.month, ymd.day);
+        calendar.setSelectedDate(iso ? new Date(ymd.year, ymd.month - 1, ymd.day) : null);
       } else {
         calendar.setSelectedDate(null);
       }
 
-      if (year !== null && month !== null && month >= 1 && month <= 12) {
-        calendar.setDisplayMonth(year, month - 1);
+      const ym = this.#getInputYearMonth();
+      if (ym && ym.month >= 1 && ym.month <= 12) {
+        calendar.setDisplayMonth(ym.year, ym.month - 1);
       }
     }
 
@@ -879,16 +858,6 @@ export class DadsDatePicker extends TypographyFormComponent {
 
   #isDisabled(): boolean {
     return this.hasAttribute('disabled') || this.#formDisabled;
-  }
-
-  #getPrefixFromLocalName(): string {
-    const suffix = '-date-picker';
-    const name = this.localName;
-    if (name.endsWith(suffix)) {
-      return name.slice(0, Math.max(0, name.length - suffix.length));
-    }
-    // フォールバック（想定外の名前の場合）
-    return 'dads';
   }
 
   #ensureCalendarElement(prefix: string): void {
