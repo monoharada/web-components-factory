@@ -17,7 +17,6 @@
 - `<component>-define.ts`：define関数（依存コンポーネントもここで定義）
 - `index.ts`：export集約
 - `<component>.test.ts`：Vitest（基本操作/イベント/ARIA など）
-- `<component>.stories.ts`：Storybook（必要な場合）
 
 ### `packages/autoload/dads/<component>.ts`
 
@@ -248,4 +247,3 @@ static readonly a11yAnnotations: A11yAnnotations = {
 - `docs/knowledge/e2e-evidence-guide.md`
 - `docs/css-variable-pattern.md`
 - `docs/showcase-template.md`
-
