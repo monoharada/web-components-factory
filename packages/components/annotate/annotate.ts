@@ -120,6 +120,16 @@ export class DadsAnnotate extends TypographyWebComponent {
         --a11y-annotate-callout-color: rgba(220, 38, 38, 0.95);
         --a11y-annotate-callout-color-solid: rgb(220, 38, 38);
 
+        /* Typography */
+        --a11y-annotate-font-size: var(--font-size-16, 1rem);
+        --a11y-annotate-circle-size: var(--spacing-6, 24px);
+        --a11y-annotate-body-line-height: var(--line-height-170, 1.7);
+
+        /* Spacing */
+        --a11y-annotate-space-xs: var(--spacing-2, 8px);
+        --a11y-annotate-space-sm: var(--spacing-3, 12px);
+        --a11y-annotate-space-md: var(--spacing-4, 16px);
+
         /* パネル・レイアウト用カラー */
         --a11y-annotate-border-color: var(--color-border-light, #e5e7eb);
         --a11y-annotate-background: var(--color-neutral-white, #ffffff);
@@ -191,7 +201,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       }
 
       a11y-annotate [part="panel-title"] {
-        font-size: 14px;
+        font-size: var(--a11y-annotate-font-size);
         line-height: 1.2;
         font-weight: 700;
         margin: 0;
@@ -207,24 +217,24 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate [part="panel-subtitle"] {
         margin: var(--spacing-2, 8px) 0 0;
-        font-size: 12px;
+        font-size: var(--a11y-annotate-font-size);
         line-height: 1.4;
         color: var(--a11y-annotate-text-secondary);
       }
 
       a11y-annotate [part="panel-body"] {
-        padding: var(--spacing-3, 12px);
+        padding: var(--a11y-annotate-space-md);
         display: grid;
-        gap: var(--spacing-3, 12px);
+        gap: var(--a11y-annotate-space-md);
       }
 
       a11y-annotate section {
         display: grid;
-        gap: var(--spacing-1-5, 6px);
+        gap: var(--a11y-annotate-space-xs);
       }
 
       a11y-annotate section > h3 {
-        font-size: 12px;
+        font-size: var(--a11y-annotate-font-size);
         line-height: 1.2;
         font-weight: 700;
         margin: 0;
@@ -235,21 +245,21 @@ export class DadsAnnotate extends TypographyWebComponent {
         margin: 0;
         padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px));
         display: grid;
-        gap: var(--spacing-1, 4px);
+        gap: var(--a11y-annotate-space-xs);
         color: var(--a11y-annotate-text-primary);
-        font-size: 12px;
-        line-height: 1.5;
+        font-size: var(--a11y-annotate-font-size);
+        line-height: var(--a11y-annotate-body-line-height);
       }
 
       a11y-annotate section > p {
         margin: 0;
         color: var(--a11y-annotate-text-primary);
-        font-size: 12px;
-        line-height: 1.6;
+        font-size: var(--a11y-annotate-font-size);
+        line-height: var(--a11y-annotate-body-line-height);
       }
 
       a11y-annotate .badge {
-        font-size: 11px;
+        font-size: var(--a11y-annotate-font-size);
         line-height: 1;
         padding: var(--spacing-1, 4px) var(--spacing-2, 8px);
         border-radius: 999px;
@@ -299,7 +309,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         background: var(--a11y-annotate-callout-color);
         border: 1px solid var(--a11y-annotate-callout-color);
         color: var(--a11y-annotate-background);
-        font-size: 12px;
+        font-size: var(--a11y-annotate-font-size);
         line-height: 1.3;
         font-weight: 700;
         box-shadow: var(--a11y-annotate-shadow);
@@ -313,13 +323,13 @@ export class DadsAnnotate extends TypographyWebComponent {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 20px;
-        height: 20px;
+        min-width: var(--a11y-annotate-circle-size);
+        height: var(--a11y-annotate-circle-size);
         padding: 0 var(--spacing-1, 4px);
         border-radius: 999px;
         background: var(--a11y-annotate-background);
         color: var(--a11y-annotate-callout-color-solid);
-        font-size: 11px;
+        font-size: var(--a11y-annotate-font-size);
         font-weight: 700;
         flex-shrink: 0;
       }
@@ -339,42 +349,42 @@ export class DadsAnnotate extends TypographyWebComponent {
         padding: 0;
         list-style: none;
         display: grid;
-        gap: var(--spacing-1-5, 6px);
+        gap: var(--a11y-annotate-space-sm);
       }
 
       a11y-annotate .callout-item {
         display: grid;
-        grid-template-columns: 22px minmax(0, 1fr);
+        grid-template-columns: var(--a11y-annotate-circle-size) minmax(0, 1fr);
         gap: var(--spacing-2-5, 10px);
         align-items: start;
       }
 
       a11y-annotate .callout-number {
-        width: 22px;
-        height: 22px;
+        width: var(--a11y-annotate-circle-size);
+        height: var(--a11y-annotate-circle-size);
         border-radius: 999px;
         background: var(--a11y-annotate-text-primary);
         color: var(--a11y-annotate-background);
         display: grid;
         place-items: center;
-        font-size: 12px;
+        font-size: var(--a11y-annotate-font-size);
         font-weight: 700;
       }
 
       a11y-annotate .callout-text {
         display: grid;
-        gap: var(--spacing-1, 4px);
+        gap: var(--a11y-annotate-space-xs);
       }
 
       a11y-annotate .callout-title {
-        font-size: 12px;
+        font-size: var(--a11y-annotate-font-size);
         line-height: 1.4;
         font-weight: 700;
         color: var(--a11y-annotate-text-primary);
       }
 
       a11y-annotate .callout-desc {
-        font-size: 12px;
+        font-size: var(--a11y-annotate-font-size);
         line-height: 1.5;
         color: var(--a11y-annotate-text-muted);
       }
@@ -385,7 +395,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         border-radius: 10px;
         border: 1px solid var(--a11y-annotate-snapshot-border);
         background: var(--a11y-annotate-background-muted);
-        font-size: 12px;
+        font-size: var(--a11y-annotate-font-size);
         line-height: 1.5;
         color: var(--a11y-annotate-text-primary);
       }
@@ -393,7 +403,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       a11y-annotate .snapshot code {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
           'Courier New', monospace;
-        font-size: 11px;
+        font-size: var(--a11y-annotate-font-size);
       }
 
       @media (max-width: 900px) {
