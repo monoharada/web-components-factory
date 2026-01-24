@@ -65,5 +65,5 @@ temp/
 .serena/
 
 # E2E evidence (screenshots, videos - for user review only)
-e2e-evidence/
+playwright-report/
 test-results/

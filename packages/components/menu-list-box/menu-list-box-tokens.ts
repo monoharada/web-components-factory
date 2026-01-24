@@ -16,12 +16,12 @@ const menuListBoxSemanticTokensText = `
     --menu-list-box-line-height: var(--line-height-120, 1.2);
 
     /* Opener layout */
-    --menu-list-box-min-width: calc(200 / 16 * 1rem);
+    --menu-list-box-min-width: auto;
     --menu-list-box-opener-border-radius: var(--border-radius-8, 0.5rem);
     --menu-list-box-opener-padding-y: var(--spacing-1, 0.25rem); /* 4px */
     --menu-list-box-opener-min-height-sm: var(--spacing-9, 2.25rem); /* 36px */
     --menu-list-box-opener-min-height-md: var(--spacing-11, 2.75rem); /* 44px */
-    --menu-list-box-opener-padding-x-sm: var(--spacing-4, 1rem); /* 16px */
+    --menu-list-box-opener-padding-x-sm: var(--spacing-1, 0.25rem); /* 4px */
     --menu-list-box-opener-padding-x-md: var(--spacing-4, 1rem); /* 16px */
     --menu-list-box-opener-gap-sm: var(--spacing-1, 0.25rem); /* 4px */
     --menu-list-box-opener-gap-md: var(--spacing-2, 0.5rem); /* 8px */
@@ -40,18 +40,17 @@ const menuListBoxSemanticTokensText = `
     --menu-list-box-opener-icon-size: calc(20 / 16 * 1rem);
     --menu-list-box-opener-arrow-size: calc(16 / 16 * 1rem);
     --menu-list-box-opener-arrow-margin-top: calc(4 / 16 * 1rem);
-    /* Figma仕様: テキスト↔矢印 = 8px（gap 4px + margin-left 4px） */
-    --menu-list-box-opener-arrow-margin-left: var(--spacing-1, 0.25rem); /* 4px */
+    --menu-list-box-opener-arrow-margin-left: 0;
 
     /* Popup */
-    --menu-list-box-popup-min-width: calc(240 / 16 * 1rem);
-    --menu-list-box-popup-min-width-scroll: calc(257 / 16 * 1rem);
-    --menu-list-box-popup-border: var(--color-neutral-solid-gray-536, #767676);
+    --menu-list-box-popup-min-width: auto;
+    --menu-list-box-popup-min-width-scroll: auto;
+    --menu-list-box-popup-border: var(--color-neutral-solid-gray-420, #949494);
     --menu-list-box-popup-border-scroll: var(--color-neutral-solid-gray-420, #949494);
     --menu-list-box-popup-background: var(--color-neutral-white, #ffffff);
-    --menu-list-box-popup-border-radius: var(--border-radius-8, 0.5rem);
+    --menu-list-box-popup-border-radius: var(--border-radius-8, 0.5rem) 0 0 var(--border-radius-8, 0.5rem);
     --menu-list-box-popup-max-height: calc((16 + 44 * 6.5) / 16 * 1rem);
-    --menu-list-box-popup-padding-y: 0;
+    --menu-list-box-popup-padding-y: var(--spacing-4, 1rem); /* 16px */
     --menu-list-box-popup-padding-x: 0;
     --menu-list-box-popup-scrollbar-padding-right: calc(17 / 16 * 1rem);
     --menu-list-box-popup-item-divider: none;

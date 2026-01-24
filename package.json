@@ -17,6 +17,8 @@
     "test:coverage": "vitest --coverage",
     "test:run": "vitest run",
     "test:run:json": "mkdir -p test-results && vitest run --reporter=json --outputFile=test-results/vitest.json",
+    "test:e2e": "playwright test",
+    "test:e2e:menu-list-box": "playwright test e2e-evidence/menu-list-box.fidelity.spec.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",

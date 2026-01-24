@@ -117,7 +117,24 @@ export class DadsMenuListBox extends TypographyWebComponent {
         'アニメーションは使用しません。',
       ],
     },
-    callouts: [],
+    callouts: [
+      {
+        id: 'opener',
+        title: 'opener',
+        description:
+          'aria-haspopup="menu" と aria-expanded を持つトリガーボタン。開閉状態をスクリーンリーダーに伝えます。',
+        target: { scope: 'shadow', selector: '[part="opener"]' },
+        placement: 'top-left' as const,
+      },
+      {
+        id: 'popup',
+        title: 'popup',
+        description:
+          'role="menu" を持つポップアップ。項目はキーボードナビゲーション（矢印キー / Home / End）で移動できます。',
+        target: { scope: 'shadow', selector: '[part="popup"]' },
+        placement: 'bottom-right' as const,
+      },
+    ],
   };
 
   declare size: MenuListBoxSize;
@@ -420,16 +437,16 @@ export class DadsMenuListBox extends TypographyWebComponent {
 
   #syncPopupScrollState(): void {
     if (!this.#isOpen()) return;
-    const menu = this.#menu;
-    if (!menu) return;
+    const popup = this.#popup;
+    if (!popup) return;
 
     // In non-layout test environments, clientHeight/scrollHeight may be 0.
-    if (menu.clientHeight === 0) {
+    if (popup.clientHeight === 0) {
       this.removeAttribute('data-has-popup-scrollbar');
       return;
     }
 
-    const hasScrollbar = menu.scrollHeight > menu.clientHeight + 1;
+    const hasScrollbar = popup.scrollHeight > popup.clientHeight + 1;
     this.toggleAttribute('data-has-popup-scrollbar', hasScrollbar);
   }
 

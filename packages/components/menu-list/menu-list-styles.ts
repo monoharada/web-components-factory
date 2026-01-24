@@ -42,9 +42,9 @@ export const menuListItemStyles = css`
     padding-left: var(--dads-menu-list-item-padding-x);
     min-height: var(--dads-menu-list-item-min-height);
     color: var(--dads-menu-list-item-color);
+    font: inherit;
     font-weight: var(--dads-menu-list-item-font-weight);
     text-align: left;
-    font: inherit;
     letter-spacing: inherit;
     line-height: var(--dads-menu-list-item-line-height);
     text-decoration: none;

@@ -132,10 +132,11 @@ function menuListBoxDescriptionItems(count: number): string {
   for (let i = 0; i < count; i++) {
     const value = String(i + 1);
     const current = i === 0 ? " current" : "";
+    const labelStyle = i === 0 ? "" : ' style="font-weight: var(--font-weight-600, 600);"';
     out += `${i === 0 ? "" : "\n\n"}            <dads-menu-list-item${current} data-value="${value}">
 ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}              <span style="display: flex; flex-direction: column; gap: var(--spacing-0-5, 2px);">
-                <span style="font-weight: var(--font-weight-600, 600);">リストアイテム</span>
-                <span style="font-size: var(--font-size-14, 0.875rem); color: var(--color-neutral-solid-gray-536, #666);">ディスクリプション</span>
+                <span${labelStyle}>リストアイテム</span>
+                <span style="font-weight: var(--font-weight-400, 400); font-size: var(--font-size-14, 0.875rem); color: var(--color-neutral-solid-gray-536, #666);">ディスクリプション</span>
               </span>
             </dads-menu-list-item>`;
   }
@@ -3339,6 +3340,11 @@ ${dadsDataRows(6, 6)}
     </div>
   `,
 
+  /**
+   * Menu List Box - 人間向けショーケース
+   * API / Controls + 実務的な作例（2〜3件）
+   * E2E/Figma検証用デモは menuListBoxFidelity に分離
+   */
   menuListBox: () => `
     <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">メニューリストボックス</h2>
@@ -3349,7 +3355,17 @@ ${dadsDataRows(6, 6)}
       ${annotationToggleUI()}
       ${annotationToggleScript()}
 
-      <!-- アクセシビリティ注釈 -->
+      <!-- 1. Overview -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Overview</h3>
+        <ul style="color: #666; line-height: 1.8; padding-left: 20px;">
+          <li><strong>用途</strong>: ドロップダウンメニュー、セレクトボックスの代替、アクションリスト</li>
+          <li><strong>操作</strong>: クリックで開閉、矢印キーで移動、Enter/Spaceで選択、Escapeで閉じる</li>
+          <li><strong>注意</strong>: 選択状態は <code>current</code> 属性で表現、値の取得は <code>menuitemselect</code> イベント</li>
+        </ul>
+      </section>
+
+      <!-- 2. A11y -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
         <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
@@ -3367,7 +3383,7 @@ ${dadsDataRows(6, 6)}
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls -->
+      <!-- 3. API / Controls -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls</h3>
         <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
@@ -3381,6 +3397,7 @@ ${dadsDataRows(6, 6)}
           </div>
 
           <div class="wc-api-panel__body">
+            <!-- 3.1 Preview -->
             <div class="wc-api-panel__section">
               <h4 class="wc-api-panel__section-title">Preview</h4>
               <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
@@ -3398,6 +3415,7 @@ ${dadsDataRows(6, 6)}
               </div>
             </div>
 
+            <!-- 3.2 Attributes / Properties -->
             <div class="wc-api-panel__section">
               <h4 class="wc-api-panel__section-title">Attributes / Properties</h4>
               <dads-table>
@@ -3482,9 +3500,509 @@ ${dadsDataRows(6, 6)}
                   </tbody>
                 </table>
               </dads-table>
-              <p class="wc-api-panel__section-note">
-                ※ 制御は <code>data-api-attr</code> / <code>data-api-prop</code> に宣言し、イベント（<code>dads-input</code>/<code>dads-change</code>）で反映します。
+            </div>
+
+            <!-- 3.3 CSS Variables -->
+            <div class="wc-api-panel__section">
+              <h4 class="wc-api-panel__section-title">CSS Variables</h4>
+              <p style="font-size: 13px; color: #666; margin-bottom: 12px;">
+                <code>--dads-menu-list-box-*</code> で外部からスタイルをカスタマイズできます。空にするとトークン初期値に戻ります。
               </p>
+
+              <!-- Opener 関連 -->
+              <details style="margin-bottom: 16px;" open>
+                <summary style="font-weight: 600; cursor: pointer; margin-bottom: 8px; color: #555;">Opener（トリガーボタン）</summary>
+                <dads-table>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">変数名</th>
+                        <th scope="col">値</th>
+                        <th scope="col">説明</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>--dads-menu-list-box-min-width</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="min-width" value="" data-api-css-var="--dads-menu-list-box-min-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>全体最小幅（auto）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-min-height</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="min-height" value="" data-api-css-var="--dads-menu-list-box-opener-min-height" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>最小高さ（36px/44px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-padding-x</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="padding-x" value="" data-api-css-var="--dads-menu-list-box-opener-padding-x" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>水平パディング（4px/16px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-padding-y</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="padding-y" value="" data-api-css-var="--dads-menu-list-box-opener-padding-y" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>垂直パディング（4px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-gap</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="gap" value="" data-api-css-var="--dads-menu-list-box-opener-gap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>要素間ギャップ（4px/8px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-border-radius</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="border-radius" value="" data-api-css-var="--dads-menu-list-box-opener-border-radius" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>角丸（8px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-background</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="background" value="" data-api-css-var="--dads-menu-list-box-opener-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>背景色（transparent）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-border-width</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="border-width" value="" data-api-css-var="--dads-menu-list-box-opener-border-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ボーダー幅（0/1px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-border-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="border-color" value="" data-api-css-var="--dads-menu-list-box-opener-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ボーダー色（transparent）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-font-weight</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="font-weight" value="" data-api-css-var="--dads-menu-list-box-opener-font-weight" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォントウェイト（400/700）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-hover-background</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="hover-background" value="" data-api-css-var="--dads-menu-list-box-opener-hover-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ホバー時背景（gray-50）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-hover-border-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="hover-border-color" value="" data-api-css-var="--dads-menu-list-box-opener-hover-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ホバー時ボーダー（black）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-icon-size</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="icon-size" value="" data-api-css-var="--dads-menu-list-box-opener-icon-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アイコンサイズ（20px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-arrow-size</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="arrow-size" value="" data-api-css-var="--dads-menu-list-box-opener-arrow-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>矢印サイズ（16px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-arrow-margin-top</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="arrow-margin-top" value="" data-api-css-var="--dads-menu-list-box-opener-arrow-margin-top" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>矢印上マージン（4px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-arrow-margin-left</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="arrow-margin-left" value="" data-api-css-var="--dads-menu-list-box-opener-arrow-margin-left" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>矢印左マージン（0）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-underline-offset</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="underline-offset" value="" data-api-css-var="--dads-menu-list-box-opener-underline-offset" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>下線オフセット（3px）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </details>
+
+              <!-- Popup 関連 -->
+              <details style="margin-bottom: 16px;">
+                <summary style="font-weight: 600; cursor: pointer; margin-bottom: 8px; color: #555;">Popup（ドロップダウン）</summary>
+                <dads-table>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">変数名</th>
+                        <th scope="col">値</th>
+                        <th scope="col">説明</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-min-width</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="min-width" value="" data-api-css-var="--dads-menu-list-box-popup-min-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>最小幅（auto）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-min-width-scroll</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="min-width-scroll" value="" data-api-css-var="--dads-menu-list-box-popup-min-width-scroll" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>スクロール時最小幅（auto）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-max-height</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="max-height" value="" data-api-css-var="--dads-menu-list-box-popup-max-height" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>最大高さ（約302px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-padding-y</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="padding-y" value="" data-api-css-var="--dads-menu-list-box-popup-padding-y" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>垂直パディング（16px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-padding-x</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="padding-x" value="" data-api-css-var="--dads-menu-list-box-popup-padding-x" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>水平パディング（0）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-border-radius</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="border-radius" value="" data-api-css-var="--dads-menu-list-box-popup-border-radius" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>角丸（8px 0 0 8px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-border-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="border-color" value="" data-api-css-var="--dads-menu-list-box-popup-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ボーダー色（gray-420）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-border-color-scroll</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="border-color-scroll" value="" data-api-css-var="--dads-menu-list-box-popup-border-color-scroll" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>スクロール時ボーダー色</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-background</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="background" value="" data-api-css-var="--dads-menu-list-box-popup-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>背景色（white）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-shadow</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="shadow" value="" data-api-css-var="--dads-menu-list-box-popup-shadow" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>シャドウ（elevation-1）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-z-index</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="z-index" value="" data-api-css-var="--dads-menu-list-box-popup-z-index" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>z-index（1000）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-scrollbar-padding-right</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="scrollbar-padding-right" value="" data-api-css-var="--dads-menu-list-box-popup-scrollbar-padding-right" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>スクロールバー余白（17px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-item-divider</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="item-divider" value="" data-api-css-var="--dads-menu-list-box-popup-item-divider" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>項目区切り線（none）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-popup-item-divider-scroll</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="item-divider-scroll" value="" data-api-css-var="--dads-menu-list-box-popup-item-divider-scroll" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>スクロール時区切り線（none）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </details>
+
+              <!-- Divider 関連 -->
+              <details style="margin-bottom: 16px;">
+                <summary style="font-weight: 600; cursor: pointer; margin-bottom: 8px; color: #555;">Divider（区切り線）</summary>
+                <dads-table>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">変数名</th>
+                        <th scope="col">値</th>
+                        <th scope="col">説明</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>--dads-menu-list-box-divider-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="divider-color" value="" data-api-css-var="--dads-menu-list-box-divider-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>区切り線色（gray-420 42%）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-divider-margin-block</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="divider-margin-block" value="" data-api-css-var="--dads-menu-list-box-divider-margin-block" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>区切り線上下余白（16px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-divider-margin-inline</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="divider-margin-inline" value="" data-api-css-var="--dads-menu-list-box-divider-margin-inline" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>区切り線左右余白（16px）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </details>
+
+              <!-- Typography 関連 -->
+              <details style="margin-bottom: 16px;">
+                <summary style="font-weight: 600; cursor: pointer; margin-bottom: 8px; color: #555;">Typography（文字）</summary>
+                <dads-table>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">変数名</th>
+                        <th scope="col">値</th>
+                        <th scope="col">説明</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>--dads-menu-list-box-font-family</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="font-family" value="" data-api-css-var="--dads-menu-list-box-font-family" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォントファミリー（sans）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-font-size</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="font-size" value="" data-api-css-var="--dads-menu-list-box-font-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォントサイズ（16px）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-line-height</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="line-height" value="" data-api-css-var="--dads-menu-list-box-line-height" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>行高（1.2）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-letter-spacing</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="letter-spacing" value="" data-api-css-var="--dads-menu-list-box-letter-spacing" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>字間（0.02em）</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="color" value="" data-api-css-var="--dads-menu-list-box-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>テキスト色（gray-900）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </details>
+
+              <!-- Focus 関連 -->
+              <details>
+                <summary style="font-weight: 600; cursor: pointer; margin-bottom: 8px; color: #555;">Focus（フォーカス）</summary>
+                <dads-table>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">変数名</th>
+                        <th scope="col">値</th>
+                        <th scope="col">説明</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-focus-outline-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="outline-color" value="" data-api-css-var="--dads-menu-list-box-opener-focus-outline-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アウトライン色</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-focus-outline-width</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="outline-width" value="" data-api-css-var="--dads-menu-list-box-opener-focus-outline-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アウトライン幅</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-focus-outline-offset</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="outline-offset" value="" data-api-css-var="--dads-menu-list-box-opener-focus-outline-offset" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アウトラインオフセット</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-focus-ring-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="ring-color" value="" data-api-css-var="--dads-menu-list-box-opener-focus-ring-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカスリング色</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-focus-ring-width</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="ring-width" value="" data-api-css-var="--dads-menu-list-box-opener-focus-ring-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカスリング幅</td>
+                      </tr>
+                      <tr>
+                        <td><code>--dads-menu-list-box-opener-focus-background</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="focus-background" value="" data-api-css-var="--dads-menu-list-box-opener-focus-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカス時背景</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </details>
             </div>
           </div>
 
@@ -3509,6 +4027,154 @@ ${dadsDataRows(6, 6)}
         </div>
       </section>
 
+      <!-- 4. Examples（実務的な作例 2〜3件） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Examples</h3>
+
+        <!-- Example 1: プロジェクト切替 -->
+        <div style="margin-bottom: 32px;">
+          <h4 style="font-size: 16px; margin-bottom: 8px; color: #555;">例1: プロジェクト切替（カテゴリ + divider + current）</h4>
+          <p style="font-size: 13px; color: #666; margin-bottom: 12px;">
+            カテゴリ見出し・区切り線・選択状態を組み合わせた実務的なパターンです。
+          </p>
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <dads-menu-list-box
+              data-sync-current
+              variant="outlined"
+              size="sm"
+              label="プロジェクト"
+            >
+              ${MENU_LIST_BOX_OPENER_ICON}
+              <dads-menu-list-item style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);">
+                ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+                最近のプロジェクト
+              </dads-menu-list-item>
+              <dads-menu-list-item current data-value="proj-a">プロジェクトA</dads-menu-list-item>
+              <dads-menu-list-item data-value="proj-b">プロジェクトB</dads-menu-list-item>
+              <hr />
+              <dads-menu-list-item style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);">
+                ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+                アーカイブ
+              </dads-menu-list-item>
+              <dads-menu-list-item data-value="proj-old">旧プロジェクト</dads-menu-list-item>
+            </dads-menu-list-box>
+          </div>
+        </div>
+
+        <!-- Example 2: 環境選択 -->
+        <div style="margin-bottom: 32px;">
+          <h4 style="font-size: 16px; margin-bottom: 8px; color: #555;">例2: 環境選択（2行説明付き）</h4>
+          <p style="font-size: 13px; color: #666; margin-bottom: 12px;">
+            各項目に説明文を付与するパターンです。flexbox + column でラベル・説明を縦に並べます。
+          </p>
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <dads-menu-list-box
+              data-sync-current
+              variant="outlined"
+              size="sm"
+              label="環境"
+            >
+              ${MENU_LIST_BOX_OPENER_ICON}
+              <dads-menu-list-item current data-value="production">
+                ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+                <span style="display: flex; flex-direction: column; gap: var(--spacing-0-5, 2px);">
+                  <span style="font-weight: var(--font-weight-600, 600);">Production</span>
+                  <span style="font-weight: var(--font-weight-400, 400); font-size: var(--font-size-14, 0.875rem); color: var(--color-neutral-solid-gray-536, #666);">本番環境（api.example.com）</span>
+                </span>
+              </dads-menu-list-item>
+              <dads-menu-list-item data-value="staging">
+                ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+                <span style="display: flex; flex-direction: column; gap: var(--spacing-0-5, 2px);">
+                  <span style="font-weight: var(--font-weight-600, 600);">Staging</span>
+                  <span style="font-weight: var(--font-weight-400, 400); font-size: var(--font-size-14, 0.875rem); color: var(--color-neutral-solid-gray-536, #666);">ステージング環境</span>
+                </span>
+              </dads-menu-list-item>
+              <dads-menu-list-item data-value="development">
+                ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+                <span style="display: flex; flex-direction: column; gap: var(--spacing-0-5, 2px);">
+                  <span style="font-weight: var(--font-weight-600, 600);">Development</span>
+                  <span style="font-weight: var(--font-weight-400, 400); font-size: var(--font-size-14, 0.875rem); color: var(--color-neutral-solid-gray-536, #666);">開発環境（localhost）</span>
+                </span>
+              </dads-menu-list-item>
+            </dads-menu-list-box>
+          </div>
+        </div>
+
+        <!-- Example 3: 選択肢が多い場合 -->
+        <div style="margin-bottom: 0;">
+          <h4 style="font-size: 16px; margin-bottom: 8px; color: #555;">例3: 選択肢が多い場合（スクロール）</h4>
+          <p style="font-size: 13px; color: #666; margin-bottom: 12px;">
+            項目数が多い場合は max-height + overflow-y でスクロールが発生します。
+          </p>
+          <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+            <dads-menu-list-box variant="outlined" size="sm" label="都道府県">
+              ${MENU_LIST_BOX_OPENER_ICON}
+              ${menuListBoxNumberedItems(20)}
+            </dads-menu-list-box>
+            <span style="color: #666; font-size: 13px;">※ポップアップは max-height 超過でスクロール</span>
+          </div>
+        </div>
+      </section>
+
+      <script>
+        customElements.whenDefined('dads-menu-list-box').then(() => {
+          const boxes = Array.from(document.querySelectorAll('dads-menu-list-box'));
+
+          // デモ表示上、初期状態で複数 open だと重なって見づらいため、1つだけ開く
+          const initiallyOpen = boxes.filter((box) => box.hasAttribute('open'));
+          for (const box of initiallyOpen.slice(1)) box.removeAttribute('open');
+
+          // open されたら他は閉じる（重なり防止）
+          for (const box of boxes) {
+            const observer = new MutationObserver(() => {
+              if (!box.hasAttribute('open')) return;
+              for (const other of boxes) {
+                if (other === box) continue;
+                other.removeAttribute('open');
+              }
+            });
+            observer.observe(box, { attributes: true, attributeFilter: ['open'] });
+          }
+
+          for (const box of boxes) {
+            box.addEventListener('menuitemselect', (e) => {
+              if (box.hasAttribute('data-sync-current')) {
+                const items = Array.from(box.querySelectorAll('dads-menu-list-item'));
+                for (const item of items) item.removeAttribute('current');
+                if (e.detail.selectedItem) e.detail.selectedItem.setAttribute('current', '');
+              }
+            });
+          }
+        });
+      </script>
+
+      <script type="module">
+        // a11y-annotate が target の a11yAnnotations を読めるよう、
+        // dads-menu-list-box を先に import してから a11y-annotate を import する。
+        await import('dads-menu-list-box');
+        await Promise.all([
+          import('dads-switch'),
+          import('dads-button'),
+          import('dads-input-text'),
+          import('dads-table'),
+          import('a11y-annotate')
+        ]);
+      </script>
+    </div>
+  `,
+
+  /**
+   * Menu List Box - Fidelity Tests (E2E/Figma検証用)
+   * ID安定性を優先。ショーケースとは分離。
+   */
+  menuListBoxFidelity: () => `
+    <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Menu List Box - Fidelity Tests</h2>
+      <p style="color: #666; margin-bottom: 24px;">
+        E2E・Figma検証用デモ（ID安定性優先）。人間向けショーケースは <code>menuListBox</code> を参照してください。
+      </p>
+
+      <!-- E2E参照デモ群 -->
       <section style="margin-bottom: 32px;">
         <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">Standard（Figma: icon + label）</h3>
         <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
@@ -3531,57 +4197,6 @@ ${dadsDataRows(6, 6)}
 
           <button type="button">外側クリック確認用</button>
           <span id="menu-list-box-status-basic" style="font-family: monospace; color: #666;">選択: -</span>
-        </div>
-      </section>
-
-      <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">Opener variants（Figma: text / outlined / filled）</h3>
-        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-          <dads-menu-list-box variant="text" size="sm" label="text">
-            ${MENU_LIST_BOX_OPENER_ICON}
-            ${MENU_LIST_BOX_PLAIN_ITEMS_3}
-          </dads-menu-list-box>
-
-          <dads-menu-list-box variant="outlined" size="sm" label="outlined">
-            ${MENU_LIST_BOX_OPENER_ICON}
-            ${MENU_LIST_BOX_PLAIN_ITEMS_3}
-          </dads-menu-list-box>
-
-          <dads-menu-list-box variant="filled" size="sm" label="filled">
-            ${MENU_LIST_BOX_OPENER_ICON}
-            ${MENU_LIST_BOX_PLAIN_ITEMS_3}
-          </dads-menu-list-box>
-        </div>
-      </section>
-
-      <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">Size + bold</h3>
-        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-          <dads-menu-list-box variant="outlined" size="sm" label="sm">
-            ${MENU_LIST_BOX_OPENER_ICON}
-            ${MENU_LIST_BOX_PLAIN_ITEMS_3}
-          </dads-menu-list-box>
-
-          <dads-menu-list-box variant="outlined" size="md" label="md">
-            ${MENU_LIST_BOX_OPENER_ICON}
-            ${MENU_LIST_BOX_PLAIN_ITEMS_3}
-          </dads-menu-list-box>
-
-          <dads-menu-list-box variant="filled" size="md" bold label="bold">
-            ${MENU_LIST_BOX_OPENER_ICON}
-            ${MENU_LIST_BOX_PLAIN_ITEMS_3}
-          </dads-menu-list-box>
-        </div>
-      </section>
-
-      <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">Popup scroll（Figma: long list）</h3>
-        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
-          <dads-menu-list-box variant="outlined" size="sm" label="スクロール例">
-            ${MENU_LIST_BOX_OPENER_ICON}
-            ${menuListBoxNumberedItems(20)}
-          </dads-menu-list-box>
-          <span style="color: #666; font-size: 13px;">※ポップアップは max-height + overflow-y でスクロールします</span>
         </div>
       </section>
 
@@ -3680,7 +4295,7 @@ ${dadsDataRows(6, 6)}
         </div>
       </section>
 
-      <section style="margin-bottom: 0;">
+      <section style="margin-bottom: 32px;">
         <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">Current（選択状態の表現）</h3>
         <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
           <dads-menu-list-box
@@ -3697,6 +4312,134 @@ ${dadsDataRows(6, 6)}
           </dads-menu-list-box>
 
           <span id="menu-list-box-status-current" style="font-family: monospace; color: #666;">選択: a</span>
+        </div>
+      </section>
+
+      <!-- Figma Fidelity Test Demos -->
+      <section style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Figma Fidelity Test Demos</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 24px;">
+          以下はFigmaデザインとの比較テスト用デモです。テスト実行時にopen属性が動的に付与されます。
+        </p>
+
+        <!-- 19766: Basic Menu List (plain items) -->
+        <div style="margin-bottom: 32px;">
+          <h4 style="font-size: 16px; margin-bottom: 8px; color: #555;">Figma 8263:19766 - Basic Menu List (plain items)</h4>
+          <dads-menu-list-box
+            id="demo-menu-list-box-figma-19766"
+            variant="text"
+            size="sm"
+            label="選択リストタイトル"
+          >
+            ${MENU_LIST_BOX_OPENER_ICON}
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+          </dads-menu-list-box>
+        </div>
+
+        <!-- 19781: Basic Menu List (start icons + current) -->
+        <div style="margin-bottom: 32px;">
+          <h4 style="font-size: 16px; margin-bottom: 8px; color: #555;">Figma 8263:19781 - Basic Menu List (start icons + current)</h4>
+          <dads-menu-list-box
+            id="demo-menu-list-box-figma-19781"
+            variant="outlined"
+            size="sm"
+            label="選択リストタイトル"
+          >
+            ${MENU_LIST_BOX_OPENER_ICON}
+            <dads-menu-list-item current data-value="edit">${menuListItemStartIcon('edit')}リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item data-value="download">${menuListItemStartIcon('download')}リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item data-value="duplicate">${menuListItemStartIcon('duplicate')}リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item data-value="delete">${menuListItemStartIcon('delete')}リストアイテム</dads-menu-list-item>
+          </dads-menu-list-box>
+        </div>
+
+        <!-- 19788: Menu List with Scrollbar -->
+        <div style="margin-bottom: 32px;">
+          <h4 style="font-size: 16px; margin-bottom: 8px; color: #555;">Figma 8263:19788 - Menu List with Scrollbar</h4>
+          <dads-menu-list-box
+            id="demo-menu-list-box-figma-19788"
+            variant="text"
+            size="sm"
+            label="選択リストタイトル"
+          >
+            ${MENU_LIST_BOX_OPENER_ICON}
+            ${menuListBoxNumberedItems(12)}
+          </dads-menu-list-box>
+        </div>
+
+        <!-- 19800: Menu List with Scrollbar & Categories -->
+        <div style="margin-bottom: 32px;">
+          <h4 style="font-size: 16px; margin-bottom: 8px; color: #555;">Figma 8263:19800 - Menu List with Scrollbar & Categories</h4>
+          <dads-menu-list-box
+            id="demo-menu-list-box-figma-19800"
+            variant="outlined"
+            size="sm"
+            label="選択リストタイトル"
+          >
+            ${MENU_LIST_BOX_OPENER_ICON}
+            <dads-menu-list-item
+              style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);"
+            >
+              ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+              カテゴリータイトル
+            </dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <hr />
+            <dads-menu-list-item
+              style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);"
+            >
+              ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+              カテゴリータイトル
+            </dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <hr />
+            <dads-menu-list-item
+              style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);"
+            >
+              ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+              カテゴリータイトル
+            </dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+          </dads-menu-list-box>
+        </div>
+
+        <!-- 19832: Menu List with Categories -->
+        <div style="margin-bottom: 32px;">
+          <h4 style="font-size: 16px; margin-bottom: 8px; color: #555;">Figma 8263:19832 - Menu List with Categories</h4>
+          <dads-menu-list-box
+            id="demo-menu-list-box-figma-19832"
+            variant="outlined"
+            size="sm"
+            label="選択リストタイトル"
+          >
+            ${MENU_LIST_BOX_OPENER_ICON}
+            <dads-menu-list-item
+              style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);"
+            >
+              ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+              カテゴリータイトル
+            </dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <hr />
+            <dads-menu-list-item
+              style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);"
+            >
+              ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
+              カテゴリータイトル
+            </dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+            <dads-menu-list-item>リストアイテム</dads-menu-list-item>
+          </dads-menu-list-box>
         </div>
       </section>
 
@@ -3740,12 +4483,7 @@ ${dadsDataRows(6, 6)}
 
       <script type="module">
         await Promise.all([
-          import('dads-menu-list-box'),
-          import('dads-switch'),
-          import('dads-button'),
-          import('dads-input-text'),
-          import('dads-table'),
-          import('a11y-annotate')
+          import('dads-menu-list-box')
         ]);
       </script>
     </div>

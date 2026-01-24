@@ -301,7 +301,7 @@ async function resolveFilePath(path: string): Promise<string> {
 }
 
 // サーバー起動（ポート自動選択対応）
-function startServer(preferredPort: number = 3000): void {
+function startServer(preferredPort: number = 3000, opts: { strictPort?: boolean } = {}): void {
   try {
     const server = serve({
       port: preferredPort,
@@ -312,6 +312,7 @@ function startServer(preferredPort: number = 3000): void {
   } catch (error) {
     const err = error as { code?: string };
     if (err.code === 'EADDRINUSE') {
+      if (opts.strictPort) throw error;
       console.log(`⚠️ Port ${preferredPort} is in use, trying alternative...`);
       const server = serve({
         port: 0, // OSが空きポートを割り当て
@@ -325,4 +326,7 @@ function startServer(preferredPort: number = 3000): void {
   }
 }
 
-startServer();
+const envPortRaw = process.env.PORT;
+const envPort = envPortRaw ? Number(envPortRaw) : Number.NaN;
+const preferredPort = Number.isInteger(envPort) && envPort > 0 ? envPort : 3000;
+startServer(preferredPort, { strictPort: Boolean(envPortRaw) });

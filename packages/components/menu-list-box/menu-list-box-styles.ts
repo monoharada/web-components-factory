@@ -18,7 +18,14 @@ export const menuListBoxStyles = css`
 
     --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width);
     --_dads-menu-list-box-popup-border-radius: var(--dads-menu-list-box-popup-border-radius);
+    --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color);
     --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider);
+  }
+
+  :host([data-has-popup-scrollbar]) {
+    --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width-scroll);
+    --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color-scroll);
+    --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider-scroll);
   }
 
   [part="opener"] {
@@ -85,7 +92,6 @@ export const menuListBoxStyles = css`
 
   [part="opener-arrow"] {
     margin-top: var(--dads-menu-list-box-opener-arrow-margin-top);
-    /* Figma仕様: テキスト↔矢印 = 8px（gap 4px + margin-left 4px） */
     margin-left: var(--dads-menu-list-box-opener-arrow-margin-left);
     flex-shrink: 0;
     width: var(--dads-menu-list-box-opener-arrow-size);
@@ -98,21 +104,19 @@ export const menuListBoxStyles = css`
 
   [part="popup"] {
     position: absolute;
-    top: calc(100% + 1px);
+    top: 100%;
     left: 0;
     z-index: var(--dads-menu-list-box-popup-z-index);
     box-sizing: border-box;
     width: max-content;
     max-height: var(--dads-menu-list-box-popup-max-height);
-    min-width: max(100%, var(--_dads-menu-list-box-popup-min-width));
-    overflow: hidden;
+    min-width: var(--_dads-menu-list-box-popup-min-width);
+    overflow-y: auto;
     border-radius: var(--_dads-menu-list-box-popup-border-radius);
-    border: 1px solid var(--dads-menu-list-box-popup-border-color);
+    border: 1px solid var(--_dads-menu-list-box-popup-border-color);
     background-color: var(--dads-menu-list-box-popup-background);
     padding: var(--dads-menu-list-box-popup-padding-y) var(--dads-menu-list-box-popup-padding-x);
     box-shadow: var(--dads-menu-list-box-popup-shadow);
-    display: flex;
-    flex-direction: column;
   }
 
   /* hidden 属性は minimal reset の display 指定で上書きされるため、明示的に非表示にする */
@@ -122,9 +126,6 @@ export const menuListBoxStyles = css`
 
   [part="menu"] {
     display: block;
-    overflow-y: auto;
-    max-height: 100%;
-    min-height: 0;
   }
 
   :host([data-reserve-item-start-icon-space]) ::slotted(dads-menu-list-item) {
