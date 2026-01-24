@@ -87,7 +87,7 @@ export const menuListItemStyles = css`
   }
 
   /* Hover */
-  @media (hover: hover) {
+  @media (any-hover: hover) {
     [part="base"]:hover {
       --dads-menu-list-item-background: var(--dads-menu-list-item-hover-background);
       cursor: pointer;

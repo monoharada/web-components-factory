@@ -383,14 +383,6 @@ export class DadsMenuListBox extends TypographyWebComponent {
     for (const [index, entry] of entries.entries()) {
       const { host, target } = entry;
 
-      // default to Menu List Box item styles
-      if (host.localName.endsWith('-menu-list-item')) {
-        // Menu List Box items are "box" style with no end icon by default.
-        host.setAttribute('variant', 'box');
-        host.setAttribute('size', 'regular');
-        host.setAttribute('end-icon', 'none');
-      }
-
       target.setAttribute('role', 'menuitem');
 
       this.#menuItemSubscriptions.push(
@@ -402,14 +394,9 @@ export class DadsMenuListBox extends TypographyWebComponent {
   }
 
   #syncDividers(): void {
-    const slot = this.#itemsSlot;
-    if (!slot) return;
+    const children = Array.from(this.children).filter((el) => el instanceof HTMLElement) as HTMLElement[];
 
-    const assigned = slot
-      .assignedElements({ flatten: true })
-      .filter((el) => el instanceof HTMLElement) as HTMLElement[];
-
-    for (const el of assigned) {
+    for (const el of children) {
       if (el.getAttribute('slot')) continue;
       if (!el.matches('[data-menu-list-box-divider], hr, [role="separator"]')) continue;
 
@@ -451,13 +438,12 @@ export class DadsMenuListBox extends TypographyWebComponent {
   }
 
   #getMenuItemEntries(): MenuItemEntry[] {
-    const slot = this.#itemsSlot;
-    if (!slot) return [];
-
-    const assigned = slot.assignedElements({ flatten: true }).filter((el) => el instanceof HTMLElement) as HTMLElement[];
+    // Note: rely on light DOM children instead of slot assignment to support test environments
+    // where slot distribution/slotchange are not fully implemented (e.g. happy-dom).
+    const children = Array.from(this.children).filter((el) => el instanceof HTMLElement) as HTMLElement[];
 
     const entries: MenuItemEntry[] = [];
-    for (const host of assigned) {
+    for (const host of children) {
       if (host.getAttribute('slot')) continue;
       // Allow non-interactive content (e.g. dividers) inside the menu slot.
       if (host.matches('[data-menu-list-box-divider], hr, [role="separator"]')) continue;
@@ -484,9 +470,6 @@ export class DadsMenuListBox extends TypographyWebComponent {
   }
 
   #focusItem(index: number): void {
-    // Ensure we have the latest focus targets (and click bindings) before moving focus.
-    this.#syncMenuItems();
-
     const entries = this.#getMenuItemEntries();
     if (index < 0 || index >= entries.length) return;
 
@@ -507,6 +490,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
     this.dispatchEvent(
       new CustomEvent<MenuItemSelectDetail>('menuitemselect', {
         bubbles: true,
+        composed: true,
         detail: {
           selectedItem: host,
           selectedValue: value,

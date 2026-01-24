@@ -56,7 +56,7 @@ export const menuListBoxStyles = css`
     align-items: center;
   }
 
-  @media (hover: hover) {
+  @media (any-hover: hover) {
     [part="opener"]:hover {
       --dads-menu-list-box-opener-background: var(--dads-menu-list-box-opener-hover-background);
       --dads-menu-list-box-opener-border-color: var(--dads-menu-list-box-opener-hover-border-color);

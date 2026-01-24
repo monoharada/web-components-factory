@@ -81,6 +81,31 @@ describe('DadsMenuListItem - 基本', () => {
     expect((base as HTMLAnchorElement).getAttribute('href')).toBe('https://example.com/');
   });
 
+  it('href 指定時でも children slot が描画され、子の dads-menu-list が slot="children" に自動配置される', async () => {
+    const { defineDefaultMenuList } = await import('./menu-list-define');
+    defineDefaultMenuList();
+
+    element = renderWebComponent(`
+      <dads-menu-list-item href="https://example.com/">
+        リンク
+        <dads-menu-list indentation="1"></dads-menu-list>
+      </dads-menu-list-item>
+    `);
+    await waitForCustomElement(element);
+
+    const child = element.querySelector('dads-menu-list') as HTMLElement | null;
+    expect(child).toBeInTheDocument();
+    if (!child) return;
+
+    await waitForCustomElement(child);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    expect(child.getAttribute('slot')).toBe('children');
+
+    const childrenSlot = getShadowContent(element, 'slot[name="children"]') as HTMLSlotElement | null;
+    expect(childrenSlot).toBeInTheDocument();
+  });
+
   it('start-icon の slot ありで data-has-start-icon が付与される', async () => {
     const { defineDefaultMenuList } = await import('./menu-list-define');
     defineDefaultMenuList();
@@ -150,6 +175,27 @@ describe('DadsMenuListItem - 基本', () => {
     element.appendChild(child);
 
     await waitForCustomElement(child);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    expect(child.getAttribute('slot')).toBe('children');
+  });
+
+  it('slot 属性が外されても slot="children" が復元される（MutationObserver fallback）', async () => {
+    const { defineDefaultMenuList } = await import('./menu-list-define');
+    defineDefaultMenuList();
+
+    element = createTestElement('dads-menu-list-item');
+    await waitForCustomElement(element);
+
+    const child = document.createElement('dads-menu-list');
+    element.appendChild(child);
+    await waitForCustomElement(child);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    expect(child.getAttribute('slot')).toBe('children');
+
+    // Remove slot attr and ensure the fallback observer re-slots it.
+    child.removeAttribute('slot');
     await new Promise((resolve) => setTimeout(resolve, 10));
 
     expect(child.getAttribute('slot')).toBe('children');

@@ -102,12 +102,36 @@ describe('DadsMenuListBox - 基本', () => {
     expect(received.length).toBe(1);
 
     const e = received[0] as CustomEvent;
+    expect(e.composed).toBe(true);
     expect(e.detail?.selectedIndex).toBe(1);
     expect(e.detail?.selectedValue).toBe('Two');
     expect(e.detail?.selectedItem).toBe(items[1]);
 
     expect(popup.hidden).toBe(true);
     expect(document.activeElement).toBe(opener);
+  });
+
+  it('menu item の明示指定属性（variant/size/end-icon）を上書きしない', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <dads-menu-list-item variant="standard" end-icon="arrow-right">One</dads-menu-list-item>
+        <dads-menu-list-item size="small" end-icon="caret">Two</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+
+    const items = Array.from(element.querySelectorAll('dads-menu-list-item')) as HTMLElement[];
+    for (const item of items) await waitForCustomElement(item);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    expect(items[0].getAttribute('variant')).toBe('standard');
+    expect(items[0].getAttribute('end-icon')).toBe('arrow-right');
+
+    expect(items[1].getAttribute('size')).toBe('small');
+    expect(items[1].getAttribute('end-icon')).toBe('caret');
   });
 
   it('divider を含む場合でも focus/選択対象から除外される', async () => {

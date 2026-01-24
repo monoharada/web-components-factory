@@ -53,8 +53,8 @@ export class DadsMenuList extends TypographyWebComponent {
 
   declare indentation: string | null;
 
-  connectedCallback(): void {
-    super.connectedCallback();
+	  connectedCallback(): void {
+	    super.connectedCallback();
     this.#syncIndentation();
   }
 
@@ -187,36 +187,42 @@ export class DadsMenuListItem extends TypographyWebComponent {
     super.connectedCallback();
 
     const hasExplicitEndIcon = this.hasAttribute('end-icon');
+    const isInsideMenuListBox = this.#isInsideMenuListBox();
     const hasChildrenMenuList = this.#syncChildSlotting();
 
     setDefaultAttributes(this, {
-      variant: 'standard',
+      variant: isInsideMenuListBox ? 'box' : 'standard',
       size: 'regular',
       'tail-icon': 'none',
     });
 
-    if (!hasExplicitEndIcon) {
+    if (isInsideMenuListBox && !hasExplicitEndIcon) {
+      // Menu List Box items are "box" style and have no end icon by default.
+      // (If needed, users can explicitly set end-icon.)
+      this.setAttribute('end-icon', 'none');
+    } else if (!hasExplicitEndIcon) {
       this.#isEndIconAuto = true;
       this.#syncAutoEndIcon(hasChildrenMenuList);
-    }
+	    }
 
-    this.#renderTemplate();
+	    this.#renderTemplate();
 
-    // MutationObserver fallback (happy-dom などで slotchange が発火しないケースに対応)
-    if (!this.#childObserver) {
-      this.#childObserver = new MutationObserver(() => {
-        const hasChildren = this.#syncChildSlotting();
-        this.#syncAutoEndIcon(hasChildren);
-        this.#syncIconFallbackVisibility();
-      });
-      this.#childObserver.observe(this, {
-        childList: true,
-        subtree: false,
-        attributes: true,
-        attributeFilter: ['slot'],
-      });
-    }
-  }
+	    // MutationObserver fallback (happy-dom などで slotchange が発火しないケースに対応)
+	    if (!this.#childObserver) {
+	      this.#childObserver = new MutationObserver(() => {
+	        const hasChildren = this.#syncChildSlotting();
+	        this.#syncAutoEndIcon(hasChildren);
+	        this.#syncIconFallbackVisibility();
+	      });
+	      this.#childObserver.observe(this, {
+	        childList: true,
+	        // slot 属性変更を子要素で検知するため subtree を有効化する
+	        subtree: true,
+	        attributes: true,
+	        attributeFilter: ['slot'],
+	      });
+	    }
+	  }
 
   disconnectedCallback(): void {
     if (this.#startSlot) this.#startSlot.removeEventListener('slotchange', this.#handleSlotsChanged);
@@ -274,6 +280,15 @@ export class DadsMenuListItem extends TypographyWebComponent {
     return this.hasAttribute('href');
   }
 
+  #isInsideMenuListBox(): boolean {
+    let current = this.parentElement;
+    while (current) {
+      if (current.localName.endsWith('-menu-list-box')) return true;
+      current = current.parentElement;
+    }
+    return false;
+  }
+
   #renderTemplate(): void {
     if (!this.shadowRoot) return;
     const template = this.#createTemplate(this.#isLink());
@@ -285,54 +300,53 @@ export class DadsMenuListItem extends TypographyWebComponent {
     this.#tailSlot = this.shadowRoot.querySelector('#tail-icon-slot') as HTMLSlotElement | null;
 
     this.#setupSlotListeners();
-    this.#syncIconFallbackVisibility();
-    this.#syncLinkAttributes();
-  }
+	    this.#syncIconFallbackVisibility();
+	    this.#syncLinkAttributes();
+	  }
 
-  #createTemplate(isLink: boolean): HTMLTemplateElement {
-    const template = document.createElement('template');
-    const inner = menuListItemInnerHtml;
+	  #createTemplate(isLink: boolean): HTMLTemplateElement {
+	    const template = document.createElement('template');
+	    const inner = menuListItemInnerHtml;
 
-    if (isLink) {
-      // Create anchor element safely to prevent XSS via javascript: URLs
-      const anchor = document.createElement('a');
-      anchor.setAttribute('part', 'base');
-      anchor.setAttribute('id', 'base');
+	    if (isLink) {
+	      // Create anchor element safely to prevent XSS via javascript: URLs
+	      const anchor = document.createElement('a');
+	      anchor.setAttribute('part', 'base');
+	      anchor.setAttribute('id', 'base');
 
-      const href = this.getAttribute('href') || '#';
-      // Validate URL scheme - only allow http(s), relative paths, and hash links
-      const isValidUrl =
-        href === '#' ||
-        href.startsWith('/') ||
-        href.startsWith('#') ||
-        href.startsWith('./') ||
-        href.startsWith('../') ||
-        /^https?:\/\//i.test(href);
+	      const href = this.getAttribute('href') || '#';
+	      // Validate URL scheme - only allow http(s), relative paths, and hash links
+	      const isValidUrl =
+	        href === '#' ||
+	        href.startsWith('/') ||
+	        href.startsWith('#') ||
+	        href.startsWith('./') ||
+	        href.startsWith('../') ||
+	        /^https?:\/\//i.test(href);
 
-      if (isValidUrl) {
-        anchor.href = href;
-      } else {
-        // Fallback to '#' for potentially malicious URLs (e.g., javascript:)
-        anchor.href = '#';
-        console.warn(`[dads-menu-list-item] Invalid href value blocked: "${href}"`);
-      }
+	      if (isValidUrl) {
+	        anchor.href = href;
+	      } else {
+	        // Fallback to '#' for potentially malicious URLs (e.g., javascript:)
+	        anchor.href = '#';
+	        console.warn(`[dads-menu-list-item] Invalid href value blocked: "${href}"`);
+	      }
 
-      anchor.innerHTML = inner;
+	      anchor.innerHTML = inner;
+	      const childrenSlot = document.createElement('slot');
+	      childrenSlot.setAttribute('name', 'children');
+	      template.content.append(anchor, childrenSlot);
+	    } else {
+	      template.innerHTML = `
+	        <button part="base" id="base" type="button">
+	          ${inner}
+	        </button>
+	        <slot name="children"></slot>
+	      `;
+	    }
 
-      const wrapper = document.createElement('div');
-      wrapper.appendChild(anchor);
-      template.innerHTML = wrapper.innerHTML;
-    } else {
-      template.innerHTML = `
-        <button part="base" id="base" type="button">
-          ${inner}
-        </button>
-        <slot name="children"></slot>
-      `;
-    }
-
-    return template;
-  }
+	    return template;
+	  }
 
   #syncChildSlotting(): boolean {
     const children = Array.from(this.children) as HTMLElement[];
