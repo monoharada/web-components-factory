@@ -218,25 +218,26 @@ describe('DadsMenuListItem - 基本', () => {
     const { defineDefaultMenuList } = await import('./menu-list-define');
     defineDefaultMenuList();
 
-    // Suppress expected console warning
     const originalWarn = console.warn;
-    const warnings: string[] = [];
-    console.warn = (msg: string) => warnings.push(msg);
+    const warnings: unknown[] = [];
+    console.warn = (...args: unknown[]) => warnings.push(args);
 
-    element = renderWebComponent(
-      '<dads-menu-list-item href="javascript:alert(1)">XSS attempt</dads-menu-list-item>',
-    );
-    await waitForCustomElement(element);
+    try {
+      element = renderWebComponent(
+        '<dads-menu-list-item href="javascript:alert(1)">XSS attempt</dads-menu-list-item>',
+      );
+      await waitForCustomElement(element);
 
-    const base = getShadowContent(element, '#base') as HTMLAnchorElement | null;
-    expect(base).toBeInstanceOf(HTMLAnchorElement);
-    expect(base?.getAttribute('href')).toBe('#');
-    expect(warnings.some((w) => w.includes('Invalid href value blocked'))).toBe(true);
-
-    console.warn = originalWarn;
+      const base = getShadowContent(element, '#base') as HTMLAnchorElement | null;
+      expect(base).toBeInstanceOf(HTMLAnchorElement);
+      expect(base?.getAttribute('href')).toBe('#');
+      expect(warnings.length).toBe(0);
+    } finally {
+      console.warn = originalWarn;
+    }
   });
 
-  it('有効な URL (http/https/相対パス) は許可される', async () => {
+  it('有効な URL (http/https/相対パス/mailto/tel) は許可される', async () => {
     const { defineDefaultMenuList } = await import('./menu-list-define');
     defineDefaultMenuList();
 
@@ -247,6 +248,8 @@ describe('DadsMenuListItem - 基本', () => {
       './relative',
       '../parent',
       '#anchor',
+      'mailto:hello@example.com',
+      'tel:+81-90-0000-0000',
     ];
 
     for (const url of validUrls) {

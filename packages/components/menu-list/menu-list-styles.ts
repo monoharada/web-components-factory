@@ -80,7 +80,22 @@ export const menuListItemStyles = css`
     --dads-menu-list-item-font-weight: var(--font-weight-700, 700);
   }
 
-  /* Parent of current (DADS: :has(+ * [data-current])) */
+  /*
+   * Parent of current
+   *
+   * - Nested list (this component's default demo structure):
+   *   <dads-menu-list-item>
+   *     ...
+   *     <dads-menu-list slot="children">
+   *       <dads-menu-list-item current>...</dads-menu-list-item>
+   *     </dads-menu-list>
+   *   </dads-menu-list-item>
+   *
+   * - DADS HTML-like sibling list:
+   *   <dads-menu-list-item>...</dads-menu-list-item>
+   *   <dads-menu-list>...<dads-menu-list-item current>...</dads-menu-list-item>...</dads-menu-list>
+   */
+  :host(:has(> [slot="children"] [current])),
   :host(:has(+ * [current])) {
     --dads-menu-list-item-background: var(--dads-menu-list-item-current-parent-background);
     --dads-menu-list-item-color: var(--dads-menu-list-item-current-color);
@@ -96,6 +111,7 @@ export const menuListItemStyles = css`
     }
 
     :host([current]) [part="base"]:hover,
+    :host(:has(> [slot="children"] [current])) [part="base"]:hover,
     :host(:has(+ * [current])) [part="base"]:hover {
       --dads-menu-list-item-background: var(--dads-menu-list-item-current-hover-background);
       --dads-menu-list-item-color: var(--dads-menu-list-item-current-hover-color);
@@ -131,6 +147,10 @@ export const menuListItemStyles = css`
 
   :host([current]) [part="base"]:focus-visible {
     --dads-menu-list-item-background: var(--dads-menu-list-item-current-background);
+  }
+
+  :host(:has(> [slot="children"] [current])) [part="base"]:focus-visible {
+    --dads-menu-list-item-background: var(--dads-menu-list-item-current-parent-background);
   }
 
   :host(:has(+ * [current])) [part="base"]:focus-visible {

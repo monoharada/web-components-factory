@@ -50,6 +50,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
   #itemsSlot: HTMLSlotElement | null = null;
   #labelFallback: HTMLElement | null = null;
   #subscriptions: Array<() => void> = [];
+  #documentSubscriptions: Array<() => void> = [];
   #menuItemSubscriptions: Array<() => void> = [];
 
   static definition = {
@@ -169,6 +170,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
   disconnectedCallback(): void {
     super.disconnectedCallback();
     unsubscribeAll(this.#subscriptions);
+    unsubscribeAll(this.#documentSubscriptions);
     unsubscribeAll(this.#menuItemSubscriptions);
   }
 
@@ -240,9 +242,6 @@ export class DadsMenuListBox extends TypographyWebComponent {
       subscribe(opener, 'click', (e) => this.#handleOpenerClick(e)),
       subscribe(opener, 'keydown', (e) => this.#handleOpenerKeydown(e as KeyboardEvent)),
       subscribe(menu, 'keydown', (e) => this.#handleMenuKeydown(e as KeyboardEvent)),
-      subscribe(document, 'click', (e) => this.#handleClickOutside(e as MouseEvent)),
-      subscribe(document, 'keydown', (e) => this.#handleEscape(e as KeyboardEvent)),
-      subscribe(document, 'focusin', (e) => this.#handleFocusIn(e as FocusEvent), true),
     );
 
     if (iconSlot) {
@@ -252,6 +251,19 @@ export class DadsMenuListBox extends TypographyWebComponent {
     if (itemsSlot) {
       this.#subscriptions.push(subscribe(itemsSlot, 'slotchange', () => this.#syncMenuItems()));
     }
+
+    this.#syncDocumentListeners(this.#isOpen());
+  }
+
+  #syncDocumentListeners(isOpen: boolean): void {
+    unsubscribeAll(this.#documentSubscriptions);
+    if (!isOpen) return;
+
+    this.#documentSubscriptions.push(
+      subscribe(document, 'click', (e) => this.#handleClickOutside(e as MouseEvent)),
+      subscribe(document, 'keydown', (e) => this.#handleEscape(e as KeyboardEvent)),
+      subscribe(document, 'focusin', (e) => this.#handleFocusIn(e as FocusEvent), true),
+    );
   }
 
   #isEventInside(event: Event): boolean {
@@ -355,6 +367,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
 
     popup.hidden = !isOpen;
     opener.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    this.#syncDocumentListeners(isOpen);
     if (!isOpen) {
       this.removeAttribute('data-has-popup-scrollbar');
       return;

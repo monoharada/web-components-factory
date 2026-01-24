@@ -53,8 +53,8 @@ export class DadsMenuList extends TypographyWebComponent {
 
   declare indentation: string | null;
 
-	  connectedCallback(): void {
-	    super.connectedCallback();
+  connectedCallback(): void {
+    super.connectedCallback();
     this.#syncIndentation();
   }
 
@@ -203,26 +203,26 @@ export class DadsMenuListItem extends TypographyWebComponent {
     } else if (!hasExplicitEndIcon) {
       this.#isEndIconAuto = true;
       this.#syncAutoEndIcon(hasChildrenMenuList);
-	    }
+    }
 
-	    this.#renderTemplate();
+    this.#renderTemplate();
 
-	    // MutationObserver fallback (happy-dom などで slotchange が発火しないケースに対応)
-	    if (!this.#childObserver) {
-	      this.#childObserver = new MutationObserver(() => {
-	        const hasChildren = this.#syncChildSlotting();
-	        this.#syncAutoEndIcon(hasChildren);
-	        this.#syncIconFallbackVisibility();
-	      });
-	      this.#childObserver.observe(this, {
-	        childList: true,
-	        // slot 属性変更を子要素で検知するため subtree を有効化する
-	        subtree: true,
-	        attributes: true,
-	        attributeFilter: ['slot'],
-	      });
-	    }
-	  }
+    // MutationObserver fallback (happy-dom などで slotchange が発火しないケースに対応)
+    if (!this.#childObserver) {
+      this.#childObserver = new MutationObserver(() => {
+        const hasChildren = this.#syncChildSlotting();
+        this.#syncAutoEndIcon(hasChildren);
+        this.#syncIconFallbackVisibility();
+      });
+      this.#childObserver.observe(this, {
+        childList: true,
+        // slot 属性変更を子要素で検知するため subtree を有効化する
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['slot'],
+      });
+    }
+  }
 
   disconnectedCallback(): void {
     if (this.#startSlot) this.#startSlot.removeEventListener('slotchange', this.#handleSlotsChanged);
@@ -300,53 +300,54 @@ export class DadsMenuListItem extends TypographyWebComponent {
     this.#tailSlot = this.shadowRoot.querySelector('#tail-icon-slot') as HTMLSlotElement | null;
 
     this.#setupSlotListeners();
-	    this.#syncIconFallbackVisibility();
-	    this.#syncLinkAttributes();
-	  }
+    this.#syncIconFallbackVisibility();
+    this.#syncLinkAttributes();
+  }
 
-	  #createTemplate(isLink: boolean): HTMLTemplateElement {
-	    const template = document.createElement('template');
-	    const inner = menuListItemInnerHtml;
+  #createTemplate(isLink: boolean): HTMLTemplateElement {
+    const template = document.createElement('template');
+    const inner = menuListItemInnerHtml;
 
-	    if (isLink) {
-	      // Create anchor element safely to prevent XSS via javascript: URLs
-	      const anchor = document.createElement('a');
-	      anchor.setAttribute('part', 'base');
-	      anchor.setAttribute('id', 'base');
+    if (isLink) {
+      // Create anchor element safely to prevent XSS via javascript: URLs
+      const anchor = document.createElement('a');
+      anchor.setAttribute('part', 'base');
+      anchor.setAttribute('id', 'base');
 
-	      const href = this.getAttribute('href') || '#';
-	      // Validate URL scheme - only allow http(s), relative paths, and hash links
-	      const isValidUrl =
-	        href === '#' ||
-	        href.startsWith('/') ||
-	        href.startsWith('#') ||
-	        href.startsWith('./') ||
-	        href.startsWith('../') ||
-	        /^https?:\/\//i.test(href);
+      const href = this.getAttribute('href') || '#';
+      // Validate URL scheme - only allow safe URL types
+      const isValidUrl =
+        href === '#' ||
+        href.startsWith('/') ||
+        href.startsWith('#') ||
+        href.startsWith('./') ||
+        href.startsWith('../') ||
+        /^https?:\/\//i.test(href) ||
+        /^mailto:/i.test(href) ||
+        /^tel:/i.test(href);
 
-	      if (isValidUrl) {
-	        anchor.href = href;
-	      } else {
-	        // Fallback to '#' for potentially malicious URLs (e.g., javascript:)
-	        anchor.href = '#';
-	        console.warn(`[dads-menu-list-item] Invalid href value blocked: "${href}"`);
-	      }
+      if (isValidUrl) {
+        anchor.href = href;
+      } else {
+        // Fallback to '#' for potentially malicious URLs (e.g., javascript:)
+        anchor.href = '#';
+      }
 
-	      anchor.innerHTML = inner;
-	      const childrenSlot = document.createElement('slot');
-	      childrenSlot.setAttribute('name', 'children');
-	      template.content.append(anchor, childrenSlot);
-	    } else {
-	      template.innerHTML = `
-	        <button part="base" id="base" type="button">
-	          ${inner}
-	        </button>
-	        <slot name="children"></slot>
-	      `;
-	    }
+      anchor.innerHTML = inner;
+      const childrenSlot = document.createElement('slot');
+      childrenSlot.setAttribute('name', 'children');
+      template.content.append(anchor, childrenSlot);
+    } else {
+      template.innerHTML = `
+        <button part="base" id="base" type="button">
+          ${inner}
+        </button>
+        <slot name="children"></slot>
+      `;
+    }
 
-	    return template;
-	  }
+    return template;
+  }
 
   #syncChildSlotting(): boolean {
     const children = Array.from(this.children) as HTMLElement[];

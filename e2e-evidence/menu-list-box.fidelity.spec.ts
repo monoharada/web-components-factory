@@ -78,7 +78,8 @@ async function ensureMenuListBoxOpen(
   }, selector);
 
   // Allow post-open microtask measurements to settle (e.g., scrollbar state).
-  await page.waitForTimeout(0);
+  // Avoid time-based waits; a single microtask tick is enough here.
+  await page.evaluate(() => new Promise<void>((resolve) => queueMicrotask(() => resolve())));
 }
 
 async function getMenuListBoxRects(
@@ -796,7 +797,16 @@ test.describe('Menu List Box — fidelity (geometry + diagnostics)', () => {
       if (c.hover) {
         const firstItem = page.locator(c.selector).locator('dads-menu-list-item').first();
         await firstItem.hover();
-        await page.waitForTimeout(100); // Allow hover state to render
+        await page.waitForFunction((sel) => {
+          const host = document.querySelector(sel);
+          if (!(host instanceof HTMLElement)) return false;
+          const item = host.querySelector('dads-menu-list-item');
+          if (!(item instanceof HTMLElement)) return false;
+          const base = item.shadowRoot?.querySelector('#base');
+          if (!(base instanceof HTMLElement)) return false;
+          const style = getComputedStyle(base);
+          return style.textDecorationLine.includes('underline') || style.textDecoration.includes('underline');
+        }, c.selector);
       }
 
       const figmaPng = fs.readFileSync(figmaPath);
