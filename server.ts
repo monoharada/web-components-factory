@@ -90,10 +90,16 @@ async function handleRequest(req: Request): Promise<Response> {
         }
         try {
           const { content, mtime } = await transpileWithCache(filePath);
+          const shouldNoCache =
+            path.startsWith('/@components/') || path.startsWith('/components/') || path.startsWith('/src/');
+          const cacheControl = shouldNoCache
+            ? "no-cache, must-revalidate"
+            : "public, max-age=31536000, immutable";
+
           return new Response(content, {
             headers: {
               "Content-Type": "application/javascript",
-              "Cache-Control": "public, max-age=31536000, immutable",
+              "Cache-Control": cacheControl,
               "ETag": mtime.toString(16)
             }
           });
@@ -126,7 +132,7 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 
     // キャッシュヘッダーを設定（JS/CSS は長期キャッシュ、HTML は短期）
-    const cacheControl = ext === 'html'
+    const cacheControl = path === '/sw.js' || ext === 'html'
       ? "no-cache, must-revalidate"
       : "public, max-age=31536000, immutable";
 

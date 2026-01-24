@@ -117,8 +117,8 @@ export class DadsAnnotate extends TypographyWebComponent {
         display: block;
 
         /* カスタマイズ可能な注釈カラー */
-        --a11y-annotate-callout-color: rgba(239, 68, 68, 0.9);
-        --a11y-annotate-callout-color-solid: rgb(239, 68, 68);
+        --a11y-annotate-callout-color: rgba(220, 38, 38, 0.95);
+        --a11y-annotate-callout-color-solid: rgb(220, 38, 38);
 
         /* パネル・レイアウト用カラー */
         --a11y-annotate-border-color: var(--color-border-light, #e5e7eb);
@@ -328,6 +328,10 @@ export class DadsAnnotate extends TypographyWebComponent {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
           'Courier New', monospace;
         font-weight: 700;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        color: inherit;
       }
 
       a11y-annotate .callout-list {

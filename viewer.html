@@ -6,6 +6,14 @@
   <title>Web Components Viewer (Autoload)</title>
   <link rel="icon" href="data:,">
 
+  <!-- Fonts (optional)
+    - Needed for design-intent rendering on machines without Noto Sans JP
+    - If you need offline/corporate-network operation, remove the following <link> tags
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap" rel="stylesheet">
+
   <!-- Import Maps: コンポーネントタグ名からモジュールパスへのマッピング -->
   <script type="importmap">
   {
@@ -32,6 +40,9 @@
       "dads-menu-list": "/@components/dads/menu-list.js",
       "dads-menu-list-item": "/@components/dads/menu-list.js",
       "dads-menu-list-box": "/@components/dads/menu-list-box.js",
+      "dads-page-navigation": "/@components/dads/page-navigation.js",
+      "dads-step-navigation": "/@components/dads/step-navigation.js?v=20260119c",
+      "dads-step-navigation-item": "/@components/dads/step-navigation-item.js?v=20260119c",
       "a11y-annotate": "/@components/meta/annotate.js"
     }
   }
@@ -63,7 +74,7 @@
     }
 
     body {
-      font-family: 'Noto Sans JP', sans-serif;
+      font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
       background: #f5f5f5;
       min-height: 100vh;
     }
@@ -344,6 +355,7 @@
             <option value="fieldset">Fieldset</option>
             <option value="button">Button</option>
             <option value="table">Table</option>
+            <option value="pageNavigation">Page Navigation</option>
             <option value="chipLabel">チップラベル</option>
             <option value="calendar">カレンダー</option>
             <option value="datePicker">日付ピッカー</option>
@@ -357,6 +369,7 @@
             <option value="menuListBox">Menu List Box</option>
             <option value="menuListBoxFidelity">Menu List Box (Fidelity)</option>
             <option value="switch">Switch</option>
+            <option value="stepNavigation">Step Navigation</option>
             <option value="resetCss">Reset CSS Demo</option>
           </select>
         </div>
@@ -375,10 +388,30 @@
 
   <!-- Service Worker登録（キャッシュ戦略） -->
   <script>
-    if ('serviceWorker' in navigator) {
+    const params = new URLSearchParams(window.location.search);
+    const disableServiceWorker = params.get('nosw') === '1' || params.get('sw') === '0';
+
+    async function disableServiceWorkerAndClearCaches() {
+      if (!('serviceWorker' in navigator)) return;
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+
+      if (!('caches' in window)) return;
+      const keys = await window.caches.keys();
+      await Promise.all(keys.map((key) => window.caches.delete(key)));
+    }
+
+    if ('serviceWorker' in navigator && !disableServiceWorker) {
       navigator.serviceWorker.register('/sw.js')
         .then((reg) => console.log('[SW] Registered:', reg.scope))
         .catch((err) => console.log('[SW] Registration failed:', err));
+    }
+
+    // Dev helper: /?nosw=1 で Service Worker を無効化（登録解除 + Cache Storage削除）
+    if (disableServiceWorker) {
+      disableServiceWorkerAndClearCaches()
+        .then(() => console.log('[SW] Disabled (nosw=1)'))
+        .catch((err) => console.log('[SW] Disable failed:', err));
     }
   </script>
 

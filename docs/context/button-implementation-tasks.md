@@ -222,10 +222,10 @@ npm run test:coverage
 - パフォーマンス最適化
 - 型定義の改善
 
-### Task 8.4: viewer確認
+### Task 8.4: Viewer確認
 ```bash
-bun server.ts
-# viewer.htmlでバリアント確認
+npm run dev
+# http://localhost:3000/?component=button でバリアント確認
 ```
 
 ---
@@ -257,7 +257,7 @@ graph TD
 - [ ] 全テストが通る（グリーン）
 - [ ] コードカバレッジ90%以上
 - [ ] TypeScript型エラーなし
-- [ ] viewer.htmlで全バリアント表示
+- [ ] Viewer（viewer.html）で全バリアント表示
 - [ ] Figmaデザインとピクセルパーフェクト
 
 ### 品質基準
