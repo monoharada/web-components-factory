@@ -63,9 +63,25 @@ function transpileTsToJs(content, fileName) {
   return result.outputText;
 }
 
+/**
+ * dist-pages用にインポートパスを書き換える
+ * packages/ は dist-pages では直下に展開されるため、パスを修正
+ */
+function rewriteImportsForDistPages(js) {
+  // ../packages/xxx/ → ../xxx/
+  // ../../packages/xxx/ → ../../xxx/
+  // etc.
+  return js.replace(
+    /(from\s+['"])((?:\.\.\/)+)packages\/(core|utils|styles|components)\//g,
+    (_match, prefix, dots, moduleType) => `${prefix}${dots}${moduleType}/`
+  );
+}
+
 async function transpileFile(srcPath, destPath) {
   const content = await fs.readFile(srcPath, 'utf8');
-  const js = transpileTsToJs(content, srcPath);
+  let js = transpileTsToJs(content, srcPath);
+  // dist-pages用にインポートパスを書き換え
+  js = rewriteImportsForDistPages(js);
   await ensureDir(path.dirname(destPath));
   await fs.writeFile(destPath, js, 'utf8');
 }
