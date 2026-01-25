@@ -77,12 +77,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -99,15 +99,6 @@
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
               }
             },
             {
@@ -177,22 +168,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -433,12 +412,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -455,15 +434,6 @@
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
               }
             },
             {
@@ -555,22 +525,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -877,12 +835,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -1009,15 +967,6 @@
                   }
                 }
               ]
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -1284,22 +1233,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -1696,12 +1633,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -1746,15 +1683,6 @@
                 "text": "HTMLSlotElement | null"
               },
               "readonly": true
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -1850,22 +1778,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -2150,12 +2066,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -2204,15 +2120,6 @@
                 "type": {
                   "text": "boolean"
                 }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
               }
             },
             {
@@ -2810,12 +2717,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -2997,15 +2904,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "method",
@@ -3324,22 +3222,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -3718,12 +3604,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -3827,15 +3713,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -4555,12 +4432,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -4577,15 +4454,6 @@
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
               }
             },
             {
@@ -4655,22 +4523,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -5116,12 +4972,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -5266,15 +5122,6 @@
                 "text": "HTMLInputElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "method",
@@ -6078,12 +5925,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -6148,15 +5995,6 @@
                 "text": "HTMLSlotElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "method",
@@ -6792,12 +6630,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -6894,15 +6732,6 @@
                 "text": "HTMLSlotElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -7665,12 +7494,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -7897,15 +7726,6 @@
                 "text": "Array<() => void>"
               },
               "default": "[]"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -8143,22 +7963,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -8492,12 +8300,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -8514,15 +8322,6 @@
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
               }
             },
             {
@@ -8602,22 +8401,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -8898,12 +8685,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -8998,15 +8785,6 @@
                 "text": "boolean"
               },
               "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "method",
@@ -9161,22 +8939,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -9621,12 +9387,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -9732,15 +9498,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -10014,22 +9771,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -10596,12 +10341,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -10794,15 +10539,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -11632,12 +11368,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -11774,15 +11510,6 @@
                 "text": "HTMLSlotElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -12534,12 +12261,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -12586,15 +12313,6 @@
                 "text": "MutationObserver | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "method",
@@ -12729,22 +12447,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -13033,12 +12739,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -13094,15 +12800,6 @@
                 "type": {
                   "text": "boolean"
                 }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
               }
             },
             {
@@ -13250,22 +12947,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -13745,12 +13430,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -13811,15 +13496,6 @@
                 "text": "HTMLElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "method",
@@ -14490,12 +14166,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -14715,15 +14391,6 @@
                   }
                 }
               ]
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -14977,22 +14644,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -15401,12 +15056,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyFormComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -15499,15 +15154,6 @@
                 "text": "HTMLSlotElement | null"
               },
               "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyFormComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
             },
             {
               "kind": "field",
@@ -16208,12 +15854,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null",
+              "default": "{ observer: null }",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
@@ -16230,15 +15876,6 @@
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
               }
             },
             {
@@ -16298,22 +15935,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加",
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
@@ -22449,6 +22074,98 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/core/typography/font-loading-helper.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "cleanupFontObserver",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "state",
+              "type": {
+                "text": "FontObserverState"
+              }
+            }
+          ],
+          "description": "オブザーバーをクリーンアップ"
+        },
+        {
+          "kind": "function",
+          "name": "observeFontLoadingState",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "state",
+              "type": {
+                "text": "FontObserverState"
+              }
+            }
+          ],
+          "description": "bodyのclass変更を監視し、フォント状態を同期"
+        },
+        {
+          "kind": "function",
+          "name": "syncFontState",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "現在のフォント読み込み状態をコンポーネントに同期"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cleanupFontObserver",
+          "declaration": {
+            "name": "cleanupFontObserver",
+            "module": "packages/core/typography/font-loading-helper.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "observeFontLoadingState",
+          "declaration": {
+            "name": "observeFontLoadingState",
+            "module": "packages/core/typography/font-loading-helper.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "syncFontState",
+          "declaration": {
+            "name": "syncFontState",
+            "module": "packages/core/typography/font-loading-helper.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/core/typography/index.ts",
       "declarations": [],
       "exports": [
@@ -22532,7 +22249,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "",
+          "description": "FormComponent版\nForm-Associated Custom Elementsのベースクラス",
           "name": "TypographyFormComponent",
           "members": [
             {
@@ -22605,12 +22322,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null"
+              "default": "{ observer: null }"
             },
             {
               "kind": "field",
@@ -22624,11 +22341,6 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private"
             },
             {
               "kind": "method",
@@ -22938,12 +22650,12 @@
             },
             {
               "kind": "field",
-              "name": "#fontObserver",
+              "name": "#fontState",
               "privacy": "private",
               "type": {
-                "text": "MutationObserver | null"
+                "text": "FontObserverState"
               },
-              "default": "null"
+              "default": "{ observer: null }"
             },
             {
               "kind": "field",
@@ -22957,11 +22669,6 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
-            },
-            {
-              "kind": "method",
-              "name": "#observeFontLoadingState",
-              "privacy": "private"
             },
             {
               "kind": "method",
@@ -23020,22 +22727,10 @@
               }
             },
             {
-              "kind": "method",
+              "kind": "field",
               "name": "composeWithTypography",
               "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentConfig"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
+              "default": "composeWithTypography",
               "description": "スタイルにベースタイポグラフィスタイルを自動追加"
             },
             {
