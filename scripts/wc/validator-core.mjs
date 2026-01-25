@@ -39,8 +39,7 @@ function indexToLineCol(lineStarts, index) {
     const mid = (lo + hi) >> 1;
     const start = lineStarts[mid];
     if (start === index) {
-      lo = mid;
-      break;
+      return { line: mid + 1, col: 1 };
     }
     if (start < index) lo = mid + 1;
     else hi = mid - 1;

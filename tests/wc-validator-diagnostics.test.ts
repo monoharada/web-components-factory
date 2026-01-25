@@ -42,5 +42,25 @@ describe('validateTextAgainstCem diagnostics schema', () => {
     expect(diags[0].range.start).toEqual({ line: 1, col: 11 });
     expect(diags[0].range.end).toEqual({ line: 1, col: 14 });
   });
-});
 
+  it('handles attributes that start at the beginning of a new line (regression)', () => {
+    const cem = new Map([['dads-foo', { attributes: new Set(['bar']) }]]);
+    const diags = validateTextAgainstCem({
+      filePath: 'x.html',
+      text: '<dads-foo\nbaz></dads-foo>',
+      cem,
+      severity: { unknownAttribute: 'warning' },
+    });
+
+    expect(diags).toHaveLength(1);
+    expect(diags[0]).toMatchObject({
+      file: 'x.html',
+      severity: 'warning',
+      code: 'unknownAttribute',
+      tagName: 'dads-foo',
+      attrName: 'baz',
+    });
+    expect(diags[0].range.start).toEqual({ line: 2, col: 1 });
+    expect(diags[0].range.end).toEqual({ line: 2, col: 4 });
+  });
+});

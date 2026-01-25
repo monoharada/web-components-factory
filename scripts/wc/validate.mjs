@@ -55,6 +55,7 @@ async function main() {
   const cem = collectCemCustomElements(manifest);
 
   const allDiagnostics = [];
+  let validatedCount = 0;
 
   for (const t of targets) {
     const abs = path.resolve(process.cwd(), t);
@@ -64,6 +65,7 @@ async function main() {
     if (isExcluded) continue;
 
     const text = await fs.readFile(abs, 'utf8');
+    validatedCount += 1;
     const diags = validateTextAgainstCem({
       filePath: rel,
       text,
@@ -89,7 +91,7 @@ async function main() {
   }
 
   console.log(
-    `\nFound ${errors.length} error(s) and ${warnings.length} warning(s) in ${targets.length} file(s).`,
+    `\nFound ${errors.length} error(s) and ${warnings.length} warning(s) in ${validatedCount} file(s).`,
   );
 
   process.exit(errors.length > 0 ? 1 : 0);

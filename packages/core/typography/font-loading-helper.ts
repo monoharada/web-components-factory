@@ -17,6 +17,7 @@ export interface FontObserverState {
  */
 export function syncFontState(element: HTMLElement): void {
   const body = document.body;
+  element.classList.remove('fonts-loaded', 'fonts-loading', 'fonts-error');
   if (body.classList.contains('fonts-loaded')) {
     element.classList.add('fonts-loaded');
   } else if (body.classList.contains('fonts-loading')) {
