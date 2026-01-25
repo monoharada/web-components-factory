@@ -20,6 +20,57 @@ npm run dev
 
 http://localhost:3000/ にアクセスして、コンポーネントビューアが表示されます。
 
+## 🧩 CEM（Custom Elements Manifest）/ 検証 / MCP（AIネイティブ）
+
+この repo は **CEM を “単一の真実”** として、コンポーネント API・検証・AI向けツールを駆動します。
+
+### 1) CEM（`custom-elements.json`）
+
+- 生成（コミット運用）
+
+```bash
+npm run cem:analyze
+```
+
+- `package.json` の `"customElements": "custom-elements.json"` を維持し、外部ツールが CEM を発見できるようにしています。
+- 詳細: `docs/knowledge/custom-elements-manifest.md`
+
+### 2) CEM 駆動のマークアップ検証（`validate:wc`）
+
+viewer / demos のマークアップを CEM と突き合わせて、unknown element / unknown attribute を検出します。
+
+```bash
+npm run validate:wc
+```
+
+- 設定: `wc.config.js`（対象は `viewer.html` と `src/demos.ts`）
+- 詳細: `docs/knowledge/wctools-validate.md`
+
+### 3) prefix 変更ユーザー向け（CEM の tagName 変換）
+
+canonical は `dads-*` ですが、prefix を変えて運用する利用者向けに tagName だけ置換した CEM を生成できます。
+
+```bash
+npm run cem:prefix -- --prefix my-ui
+```
+
+### 4) Design System MCP（stdio）
+
+CEM を読み込んで、Design System 向けの “skills（安定した道具）” を提供する MCP サーバーを同梱しています。
+
+```bash
+npm run mcp:design-system
+```
+
+- tools: `list_components`, `get_component_api`, `generate_usage_snippet`, `validate_markup`
+- 詳細: `docs/knowledge/design-system-mcp.md`
+
+### 5) Chrome DevTools MCP（実行時検証）
+
+実行時の Shadow DOM / イベント / a11y を確認したい場合は、Chrome DevTools MCP と `viewer.html` を併用します。
+
+- 詳細: `docs/knowledge/chrome-devtools-mcp.md`
+
 ## 🌐 GitHub Pages での公開（Project Pages）
 
 `viewer.html` を静的化して `dist-pages/` に出力し、GitHub Pages で表示できます（`dist-pages/` はコミットせず、CIで生成してデプロイします）。
@@ -136,11 +187,20 @@ defineAllComponents();
 # 開発サーバー起動
 bun server.ts
 
-# TypeScriptの型チェック
-tsc --noEmit packages/core/web-components.ts --strict
+# CEM生成（custom-elements.json）
+npm run cem:analyze
 
-# 特定コンポーネントのコンパイル（必要な場合）
-tsc packages/components/accordion.ts --target ES2020 --module ES2020
+# CEM駆動のマークアップ検証
+npm run validate:wc
+
+# TypeScriptの型チェック
+npm run type-check
+
+# テスト
+npm run test:run
+
+# 一括（type-check + test + build）
+npm run ci
 ```
 
 ## ⚠️ 注意事項

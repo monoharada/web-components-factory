@@ -35,6 +35,37 @@ function parseDigits(value: string, re: RegExp): number | null {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
+/**
+ * 日付ピッカーコンポーネント
+ *
+ * @customElement dads-date-picker
+ * @tagname dads-date-picker
+ *
+ * @slot error-text - エラーテキスト
+ *
+ * @csspart root - ルート
+ * @csspart inputs - 入力欄グループ
+ * @csspart input - 入力欄
+ * @csspart calendar-button - カレンダーボタン
+ * @csspart calendar-popover - カレンダー（role="dialog"）
+ * @csspart calendar - 内包カレンダー
+ * @csspart error-text - エラーテキスト領域
+ *
+ * @attr {string} data-type - 表示タイプ（consolidated | separated）
+ * @attr {string} size - サイズ（sm | md | lg）
+ * @attr {boolean} calendar - カレンダー表示を有効化
+ * @attr {boolean} disabled - 無効状態
+ * @attr {boolean} readonly - 読み取り専用
+ * @attr {boolean} error - エラー状態
+ * @attr {string} error-text - エラーテキスト（スロット未使用時のフォールバック）
+ * @attr {string} min-date - 最小日付（YYYY-MM-DD）
+ * @attr {string} max-date - 最大日付（YYYY-MM-DD）
+ * @attr {string} value - 値（YYYY-MM-DD）
+ * @attr {string} aria-describedby - 外部説明要素の関連付け
+ *
+ * @fires dads-input - 入力時に発火（detail: { value: string }）
+ * @fires dads-change - 値確定時に発火（detail: { value: string }）
+ */
 export class DadsDatePicker extends TypographyFormComponent {
   static override readonly formAssociated = true;
 

@@ -65,6 +65,23 @@ function normalizeSortDirection(value: string | null): SortDirection {
   return 'none';
 }
 
+/**
+ * テーブル（Data Table）コンポーネント
+ *
+ * @customElement dads-table
+ * @tagname dads-table
+ *
+ * @slot default - テーブルマークアップ（<table> 等）
+ *
+ * @attr {string} size - サイズ
+ * @attr {string} sort-behavior - ソート挙動（例: dom）
+ * @attr {boolean} striped - 交互行背景
+ * @attr {boolean} hover - 行ホバー
+ * @attr {boolean} selectable - 行選択を有効化
+ *
+ * @fires dads-selection-change - 行選択変更時に発火（detail: { selectedRowIds, selectedRowIndexes, selectedCount, totalSelectableRows }）
+ * @fires dads-sort-change - ソート変更時に発火（detail: { columnId, columnIndex, direction }）
+ */
 export class DadsTable extends TypographyWebComponent {
   static readonly version = '0.1.0';
 

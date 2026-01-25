@@ -68,6 +68,7 @@ import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
  * @attr {boolean} disabled - 無効状態
  * @attr {boolean} readonly - 読み取り専用
  * @attr {string} name - フォーム名
+ * @attr {string} value - 値
  * @attr {string} size - サイズ (sm | md | lg)
  * @attr {string} input-width - 幅バリアント (short | medium | full | カスタム値)
  * @attr {boolean} auto-validate - 自動バリデーションを有効化

@@ -19,6 +19,14 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Generate Custom Elements Manifest
+        run: npm run cem:analyze
+
+      - name: Ensure custom-elements.json is up to date
+        run: git diff --exit-code custom-elements.json
+
+      - name: Validate Web Components markup
+        run: npm run validate:wc
+
       - name: Type Check / Test / Build
         run: npm run ci
-

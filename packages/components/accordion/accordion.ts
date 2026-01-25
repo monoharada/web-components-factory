@@ -24,6 +24,17 @@ import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * アコーディオンコンテナコンポーネント
+ *
+ * @customElement dads-accordion-details
+ * @tagname dads-accordion-details
+ *
+ * @slot default - アコーディオンアイテム（dads-accordion-item-details）
+ *
+ * @csspart container - アイテムを内包するコンテナ
+ *
+ * @attr {boolean} allow-multiple - 複数アイテムの同時展開を許可
+ * @attr {string} animation - アニメーション方針（例: none）
+ * @attr {boolean} respect-motion-preference - prefers-reduced-motion に追従
  */
 export class DadsAccordionDetails extends TypographyWebComponent {
   #allowMultiple = false;
@@ -179,6 +190,28 @@ export class DadsAccordionDetails extends TypographyWebComponent {
 
 /**
  * アコーディオンアイテムコンポーネント
+ *
+ * @customElement dads-accordion-item-details
+ * @tagname dads-accordion-item-details
+ *
+ * @slot header - 見出し
+ * @slot content - 本文
+ *
+ * @csspart details - <details> 要素
+ * @csspart summary - <summary> 要素
+ * @csspart icon - 開閉状態アイコン
+ * @csspart header - 見出しラッパー
+ * @csspart content - 本文領域
+ * @csspart content-inner - 本文内側
+ * @csspart return-button - 先頭に戻るリンク
+ * @csspart return-icon - 戻るアイコン
+ * @csspart return-text - 戻るテキスト
+ *
+ * @attr {boolean} expanded - 初期展開状態
+ * @attr {boolean} disabled - 無効状態
+ * @attr {string} icon-position - アイコン位置
+ *
+ * @fires toggle - 展開/折りたたみ時に発火（bubbles）
  */
 export class DadsAccordionItemDetails extends TypographyWebComponent {
   #details?: HTMLDetailsElement;

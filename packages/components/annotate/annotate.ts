@@ -85,6 +85,22 @@ function supportsAnchorPositioning(): boolean {
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
+/**
+ * アクセシビリティ注釈（ドキュメンテーション用途）コンポーネント
+ *
+ * @customElement a11y-annotate
+ * @tagname a11y-annotate
+ *
+ * @csspart layout - 全体レイアウト
+ * @csspart preview - プレビュー領域
+ * @csspart target-root - 注釈対象の描画ルート
+ * @csspart callout-layer - コールアウト描画レイヤ
+ * @csspart panel - サイドパネル
+ *
+ * @attr {string} target-selector - 対象要素セレクタ
+ * @attr {string} mode - 表示モード
+ * @attr {boolean} no-live - aria-live を無効化
+ */
 export class DadsAnnotate extends TypographyWebComponent {
   static readonly version = '0.1.0';
 

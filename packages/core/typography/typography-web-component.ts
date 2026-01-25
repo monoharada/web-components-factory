@@ -2,8 +2,27 @@
  * TypographyWebComponent
  * Noto Sans JPを自動的に適用するWeb Componentベースクラス
  */
-import { WebComponent, type WebComponentConfig } from '../web-components.js';
+import { WebComponent, FormComponent, type WebComponentConfig } from '../web-components.js';
 import { baseTypographyStyles, fontLoadingStyles, ensureFontsInitialized } from './base-typography-styles.js';
+import {
+  type FontObserverState,
+  syncFontState,
+  observeFontLoadingState,
+  cleanupFontObserver,
+} from './font-loading-helper.js';
+
+/**
+ * スタイルにベースタイポグラフィスタイルを自動追加
+ */
+function composeWithTypography(cfg: WebComponentConfig): WebComponentConfig {
+  const originalStyles = cfg.styles || [];
+  const stylesArray = Array.isArray(originalStyles) ? originalStyles : [originalStyles];
+
+  return {
+    ...cfg,
+    styles: [baseTypographyStyles, fontLoadingStyles, ...stylesArray],
+  };
+}
 
 /**
  * タイポグラフィ対応のWebComponentベースクラス
@@ -11,146 +30,63 @@ import { baseTypographyStyles, fontLoadingStyles, ensureFontsInitialized } from 
  * Noto Sans JPが自動的に適用される
  */
 export class TypographyWebComponent extends WebComponent {
+  #fontState: FontObserverState = { observer: null };
+
   constructor() {
     super();
-    // フォント初期化を確実に実行
     ensureFontsInitialized();
   }
-  
+
   connectedCallback() {
     super.connectedCallback();
-    
-    // フォント読み込み状態に応じたクラスを適用
-    if (document.body.classList.contains('fonts-loaded')) {
-      this.classList.add('fonts-loaded');
-    } else if (document.body.classList.contains('fonts-loading')) {
-      this.classList.add('fonts-loading');
-    } else if (document.body.classList.contains('fonts-error')) {
-      this.classList.add('fonts-error');
-    }
-    
-    // フォント読み込み状態の変更を監視
-    this.#observeFontLoadingState();
+    syncFontState(this);
+    observeFontLoadingState(this, this.#fontState);
   }
-  
+
   disconnectedCallback() {
-    // クリーンアップ
-    if (this.#fontObserver) {
-      this.#fontObserver.disconnect();
-      this.#fontObserver = null;
-    }
+    cleanupFontObserver(this.#fontState);
   }
-  
-  #fontObserver: MutationObserver | null = null;
-  
-  #observeFontLoadingState() {
-    // 既にオブザーバーが存在する場合はスキップ
-    if (this.#fontObserver) return;
-    
-    // bodyのクラス変更を監視
-    this.#fontObserver = new MutationObserver(() => {
-      if (document.body.classList.contains('fonts-loaded')) {
-        this.classList.remove('fonts-loading', 'fonts-error');
-        this.classList.add('fonts-loaded');
-      } else if (document.body.classList.contains('fonts-error')) {
-        this.classList.remove('fonts-loading', 'fonts-loaded');
-        this.classList.add('fonts-error');
-      }
-    });
-    
-    this.#fontObserver.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-  }
-  
+
   /**
    * スタイルにベースタイポグラフィスタイルを自動追加
    */
-  static composeWithTypography(cfg: WebComponentConfig): WebComponentConfig {
-    const originalStyles = cfg.styles || [];
-    const stylesArray = Array.isArray(originalStyles) ? originalStyles : [originalStyles];
-    
-    // ベースタイポグラフィスタイルを先頭に追加
-    return {
-      ...cfg,
-      styles: [
-        baseTypographyStyles,
-        fontLoadingStyles,
-        ...stylesArray
-      ]
-    };
-  }
-  
+  static composeWithTypography = composeWithTypography;
+
   /**
    * defineメソッドをオーバーライド
    * 自動的にタイポグラフィスタイルを追加
    */
   static define(cfg?: WebComponentConfig): typeof WebComponent {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const config = cfg ?? (this as any).definition;
     if (!config) {
       throw new Error('WebComponentConfig が指定されていません。');
     }
-    
-    // タイポグラフィスタイルを追加
-    const enhancedConfig = TypographyWebComponent.composeWithTypography(config);
-    
-    // 親クラスのdefineを呼び出し
+
+    const enhancedConfig = composeWithTypography(config);
     return super.define(enhancedConfig);
   }
 }
 
 /**
- * FormComponent版も提供
+ * FormComponent版
+ * Form-Associated Custom Elementsのベースクラス
  */
-import { FormComponent } from '../web-components.js';
-
 export class TypographyFormComponent extends FormComponent {
+  #fontState: FontObserverState = { observer: null };
+
   constructor() {
     super();
     ensureFontsInitialized();
   }
-  
+
   connectedCallback() {
     super.connectedCallback();
-    
-    // フォント読み込み状態に応じたクラスを適用
-    if (document.body.classList.contains('fonts-loaded')) {
-      this.classList.add('fonts-loaded');
-    } else if (document.body.classList.contains('fonts-loading')) {
-      this.classList.add('fonts-loading');
-    } else if (document.body.classList.contains('fonts-error')) {
-      this.classList.add('fonts-error');
-    }
-    
-    this.#observeFontLoadingState();
+    syncFontState(this);
+    observeFontLoadingState(this, this.#fontState);
   }
-  
+
   disconnectedCallback() {
-    if (this.#fontObserver) {
-      this.#fontObserver.disconnect();
-      this.#fontObserver = null;
-    }
-  }
-  
-  #fontObserver: MutationObserver | null = null;
-  
-  #observeFontLoadingState() {
-    if (this.#fontObserver) return;
-    
-    this.#fontObserver = new MutationObserver(() => {
-      if (document.body.classList.contains('fonts-loaded')) {
-        this.classList.remove('fonts-loading', 'fonts-error');
-        this.classList.add('fonts-loaded');
-      } else if (document.body.classList.contains('fonts-error')) {
-        this.classList.remove('fonts-loading', 'fonts-loaded');
-        this.classList.add('fonts-error');
-      }
-    });
-    
-    this.#fontObserver.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
+    cleanupFontObserver(this.#fontState);
   }
 }
