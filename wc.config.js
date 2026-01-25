@@ -8,11 +8,10 @@
 
 export default {
   manifestSrc: './custom-elements.json',
-  include: ['viewer.html', 'src/demos.ts'],
+  include: ['viewer.html', 'src/demos.ts', 'src/entry.ts'],
   exclude: ['node_modules/**', 'dist/**', 'dist-pages/**'],
   diagnosticSeverity: {
     unknownElement: 'error',
     unknownAttribute: 'warning',
   },
 };
-

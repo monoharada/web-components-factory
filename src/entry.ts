@@ -165,13 +165,16 @@ export const demos = {
               <label for="demo-email" style="display: block; margin-bottom: 4px; font-weight: 500;">
                 メールアドレス
               </label>
-              <input 
-                id="demo-email" 
-                type="email" 
-                placeholder="example@email.com"
-                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"
-              >
-            </div>
+	              <input 
+	                id="demo-email" 
+	                type="email" 
+	                aria-describedby="demo-email-hint"
+	                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"
+	              >
+	              <p id="demo-email-hint" style="margin: 4px 0 0; font-size: 14px; color: #666;">
+	                例: example@email.com
+	              </p>
+	            </div>
             <div style="display: flex; gap: 8px; justify-content: flex-end;">
               <dads-button variant="text" type="button">キャンセル</dads-button>
               <dads-button variant="solid" type="submit">送信</dads-button>

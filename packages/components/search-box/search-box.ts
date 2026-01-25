@@ -71,7 +71,6 @@ const shadowTarget = (selector: string): A11yElementRef => ({ scope: 'shadow', s
  * @cssprop --dads-search-box-input-bg - input 背景
  * @cssprop --dads-search-box-input-min-width - input 最小幅（デフォルト: 8rem）
  * @cssprop --dads-search-box-input-padding - input padding
- * @cssprop --dads-search-box-placeholder-color - プレースホルダー色
  * @cssprop --dads-search-box-search-icon-color - 虫眼鏡色
  * @cssprop --dads-search-box-search-icon-size - 虫眼鏡アイコンサイズ（デフォルト: 24px）
  * @cssprop --dads-search-box-button-bg - ボタン背景色
@@ -191,7 +190,7 @@ export class DadsSearchBox extends TypographyFormComponent {
           </label>
         </div>
 
-        <dads-button part="button" id="submit-button" type="submit" variant="solid" size="large">検索</dads-button>
+        <dads-button part="button" id="submit-button" type="button" variant="solid" size="large">検索</dads-button>
       </div>
     `,
     styles: withReset(
@@ -359,7 +358,12 @@ export class DadsSearchBox extends TypographyFormComponent {
       this.emitEvent<SearchDetail>('dads-change', this.#detail());
     }, { signal });
 
-    this.#submitButton?.addEventListener('click', () => this.#triggerSearch(), { signal });
+    this.#submitButton?.addEventListener('click', (event: Event) => {
+      // <dads-button> はネイティブclick（MouseEvent）に加えて
+      // detail付きの CustomEvent('click') を発火するため、二重実行を防ぐ
+      if (!(event instanceof MouseEvent)) return;
+      this.#triggerSearch();
+    }, { signal });
   }
 
   #triggerSearch(): void {

@@ -227,10 +227,6 @@ export const searchBoxStyles = css`
     font: inherit;
   }
 
-  [part="input"]::placeholder {
-    color: var(--dads-search-box-placeholder-color);
-  }
-
   :host([data-has-scope]) [part="input"] {
     margin-left: calc(-1 / 16 * 1rem);
     border-top-left-radius: 0;

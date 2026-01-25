@@ -29,7 +29,6 @@ const searchBoxSemanticTokensText = `
 
     --search-box-input-bg: var(--color-neutral-white);
     --search-box-search-icon-color: var(--color-neutral-solid-gray-600);
-    --search-box-placeholder-color: var(--color-neutral-solid-gray-600);
 
     /* 枠線幅 */
     --search-box-border-width: 1px;
@@ -78,7 +77,6 @@ const searchBoxLocalTokensText = `
 
     --dads-search-box-input-bg: var(--search-box-input-bg);
     --dads-search-box-search-icon-color: var(--search-box-search-icon-color);
-    --dads-search-box-placeholder-color: var(--search-box-placeholder-color);
 
     /* padding は参照HTML値をデフォルトとして持つ（上書き可能） */
     --dads-search-box-input-padding: calc(12 / 16 * 1rem) calc(16 / 16 * 1rem) calc(12 / 16 * 1rem) calc(48 / 16 * 1rem);

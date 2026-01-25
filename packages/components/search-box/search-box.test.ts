@@ -154,7 +154,11 @@ describe('DadsSearchBox - dads-search', () => {
     (element as unknown as { scopeValue: string }).scopeValue = 'images';
 
     const button = getShadowContent(element, '[part="button"]') as HTMLElement | null;
-    button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    if (button) await waitForCustomElement(button);
+
+    // <dads-button> の内部ボタン（[part="base"]）をクリックして、実際のクリック経路を再現する
+    const innerButton = button ? (getShadowContent(button, '[part="base"]') as HTMLElement | null) : null;
+    innerButton?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
 
     expect(handler).toHaveBeenCalledTimes(1);
     expect(requestSubmitSpy).toHaveBeenCalledTimes(0);
@@ -179,9 +183,17 @@ describe('DadsSearchBox - dads-search', () => {
     `).querySelector('dads-search-box') as HTMLElement;
     await waitForCustomElement(element);
 
-    const button = getShadowContent(element, '[part="button"]') as HTMLElement | null;
-    button?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    const handler = vi.fn();
+    element.addEventListener('dads-search', handler);
 
+    const button = getShadowContent(element, '[part="button"]') as HTMLElement | null;
+    if (button) await waitForCustomElement(button);
+
+    // <dads-button> の内部ボタン（[part="base"]）をクリックして、実際のクリック経路を再現する
+    const innerButton = button ? (getShadowContent(button, '[part="base"]') as HTMLElement | null) : null;
+    innerButton?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+
+    expect(handler).toHaveBeenCalledTimes(1);
     expect(requestSubmitSpy).toHaveBeenCalledTimes(1);
   });
 });

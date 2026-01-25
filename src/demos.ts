@@ -1106,9 +1106,12 @@ export const demos = {
               <input
                 id="demo-subject"
                 type="text"
-                placeholder="件名を入力してください"
+                aria-describedby="demo-subject-hint"
                 style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box;"
               >
+              <p id="demo-subject-hint" style="margin: 4px 0 0; font-size: 14px; color: #666;">
+                例: 申請書類について
+              </p>
             </div>
 
             <dads-textarea
@@ -1458,9 +1461,12 @@ export const demos = {
               <input
                 id="demo-email"
                 type="email"
-                placeholder="example@email.com"
+                aria-describedby="demo-email-hint"
                 style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px;"
               >
+              <p id="demo-email-hint" style="margin: 4px 0 0; font-size: 14px; color: #666;">
+                例: example@email.com
+              </p>
             </div>
             <div style="display: flex; gap: 8px; justify-content: flex-end;">
               <dads-button variant="text" type="button">キャンセル</dads-button>
@@ -3230,30 +3236,20 @@ ${dadsDataRows(6, 6)}
                         </td>
                         <td>枠線幅</td>
                       </tr>
-                      <tr>
-                        <th scope="row"><code>--dads-search-box-input-min-width</code></th>
-                        <td><code>8rem</code><br><small style="color:#666">(128px)</small></td>
-                        <td>
-                          <div class="wc-api-control">
-                            <dads-input-text label="--dads-search-box-input-min-width" value="" data-api-css-var="--dads-search-box-input-min-width" data-default=""></dads-input-text>
-                          </div>
-                        </td>
-                        <td>input 最小幅</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><code>--dads-search-box-placeholder-color</code></th>
-                        <td><code>--color-neutral-solid-gray-600</code><br><small style="color:#666">(#666)</small></td>
-                        <td>
-                          <div class="wc-api-control">
-                            <dads-input-text label="--dads-search-box-placeholder-color" value="" data-api-css-var="--dads-search-box-placeholder-color" data-default=""></dads-input-text>
-                          </div>
-                        </td>
-                        <td>プレースホルダー色</td>
-                      </tr>
-                      <tr>
-                        <th scope="row"><code>--dads-search-box-search-icon-size</code></th>
-                        <td><code>1.5rem</code><br><small style="color:#666">(24px)</small></td>
-                        <td>
+	                      <tr>
+	                        <th scope="row"><code>--dads-search-box-input-min-width</code></th>
+	                        <td><code>8rem</code><br><small style="color:#666">(128px)</small></td>
+	                        <td>
+	                          <div class="wc-api-control">
+	                            <dads-input-text label="--dads-search-box-input-min-width" value="" data-api-css-var="--dads-search-box-input-min-width" data-default=""></dads-input-text>
+	                          </div>
+	                        </td>
+	                        <td>input 最小幅</td>
+	                      </tr>
+	                      <tr>
+	                        <th scope="row"><code>--dads-search-box-search-icon-size</code></th>
+	                        <td><code>1.5rem</code><br><small style="color:#666">(24px)</small></td>
+	                        <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-search-box-search-icon-size" value="" data-api-css-var="--dads-search-box-search-icon-size" data-default=""></dads-input-text>
                           </div>
