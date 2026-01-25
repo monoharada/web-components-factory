@@ -50,3 +50,21 @@ Codex の Skills は `~/.codex/skills` を参照するため、初回のみ以�
 - `docs/knowledge/wctools-validate.md`
 - `docs/knowledge/design-system-mcp.md`
 - `docs/knowledge/chrome-devtools-mcp.md`
+
+## 新規コンポーネント作成
+
+新規コンポーネントを追加する際は、以下のドキュメントを参照してください：
+
+- **DoD（Definition of Done）**: `docs/rules/new-component-dod.md`
+  - 必須チェックリスト
+  - JSDoc テンプレート
+  - 検証コマンド
+- **コンポーネント雛形**: `docs/knowledge/component-skeleton.md`
+  - ファイル構成
+  - トークン設計
+  - Autoloader アダプタ
+
+新規コンポーネントは以下を満たす必要があります：
+1. CEM（`custom-elements.json`）に正しく登録される
+2. `validate:wc` がパスする
+3. `npm run ci` がパスする

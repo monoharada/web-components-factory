@@ -229,19 +229,37 @@ static readonly a11yAnnotations: A11yAnnotations = {
 
 ## 10. 最終チェックリスト
 
+完全なチェックリストは **[DoD (Definition of Done)](../rules/new-component-dod.md)** を参照してください。
+
+### 必須（CEM / Validation）
+- [ ] JSDoc に `@customElement` + `@tagname dads-<name>` を記載
+- [ ] `@attr` / `@slot` / `@csspart` / `@fires` を記載
+- [ ] `npm run cem:analyze` を実行し `custom-elements.json` をコミット
+- [ ] `npm run validate:wc` がパス
+- [ ] `npm run ci` がパス
+
+### 必須（実装）
 - [ ] `part` がスタイリングAPIになっている（クラス依存しない）
 - [ ] 状態は属性で表現している（状態クラスを作らない）
 - [ ] `--dads-*` のlocal tokensが揃っている（外部override可能）
-- [ ] a11yAnnotations（categories）を記載している
-- [ ] calloutが最低1つある（インタラクティブ要素）
+- [ ] viewerデモが `src/demos.ts` に追加されている
+- [ ] `packages/autoload/dads/<component>.ts` が追加されている
+- [ ] unit test が最小限揃っている
+
+### 推奨
+- [ ] a11yAnnotations（categories / callouts）を記載している
+- [ ] `@cssprop` で CSS 変数 API を記載
 - [ ] viewerデモが `componentName` / `componentNameFidelity` に分離されている
 - [ ] CSS vars が `data-api-css-var` で編集できる
-- [ ] unit / e2e が最小限揃っている
+- [ ] e2e / Fidelity テストが揃っている
 
 ---
 
 ## 関連ドキュメント
 
+- **[DoD (Definition of Done)](../rules/new-component-dod.md)** - 完全なチェックリストとJSDocテンプレート
+- [Custom Elements Manifest 運用](./custom-elements-manifest.md)
+- [Web Components 検証](./wctools-validate.md)
 - `docs/knowledge/a11y-annotate-demo-patterns.md`
 - `docs/knowledge/viewer-api-controls-table.md`
 - `docs/knowledge/e2e-evidence-guide.md`

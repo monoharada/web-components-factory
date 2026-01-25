@@ -695,6 +695,10 @@ class MyComponent extends WebComponent {
 MyComponent.define();
 ```
 
+**MUST**: 新規コンポーネント作成時は **[DoD (Definition of Done)](docs/rules/new-component-dod.md)** を参照してください。
+- JSDoc テンプレート、必須チェックリスト、検証コマンドが記載されています
+- CEM への登録、demos 追加、テスト作成が必須です
+
 ### Form-Associated Component
 ```typescript
 class MyInput extends FormComponent {
