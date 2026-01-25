@@ -65,6 +65,7 @@ export default DadsMyComponent;
 
 - [ ] `src/demos.ts` にデモ関数追加
 - [ ] `viewer.html` にセレクタオプション追加
+- [ ] **操作可能な API / Controls テーブル**を追加（`docs/knowledge/viewer-api-controls-table.md` を参照）
 - [ ] **新規HTMLファイルは作成禁止**
 
 **参照**: [コンポーネント雛形](../knowledge/component-skeleton.md)
@@ -192,6 +193,7 @@ PRコメントや自己レビュー用：
 - [ ] `@fires` で公開イベントを記載
 - [ ] `npm run cem:analyze` 実行、`custom-elements.json` 更新・コミット
 - [ ] `src/demos.ts` にデモ追加
+- [ ] `src/demos.ts` に **操作可能な API / Controls テーブル**を追加（`docs/knowledge/viewer-api-controls-table.md` を参照）
 - [ ] `viewer.html` にセレクタ追加
 - [ ] `packages/autoload/dads/<component>.ts` 追加
 - [ ] `<component>.test.ts` 追加

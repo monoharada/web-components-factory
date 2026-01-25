@@ -2951,6 +2951,564 @@ ${dadsDataRows(6, 6)}
     </div>
   `,
 
+  searchBox: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">検索ボックス</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム（DADS）HTML版 search-box.css 相当をShadow DOM向けに移植したWeb Components版です。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-search-box">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <form
+              id="search-box-form"
+              role="search"
+              aria-labelledby="site-search-heading"
+              style="display: grid; gap: 16px; width: 720px;"
+            >
+              <div>
+                <h1 id="site-search-heading" style="font-size: 20px; margin: 0 0 12px;">サイト内検索</h1>
+                <dads-search-box>
+                  <option value="">すべて</option>
+                  <option value="images">画像</option>
+                  <option value="files">ファイル</option>
+                  <option value="map">地図</option>
+                  <option value="videos">動画</option>
+                </dads-search-box>
+              </div>
+              <pre id="search-box-output" style="margin: 0; padding: 12px; background: #f7f7f7; border-radius: 8px;"></pre>
+            </form>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">ランドマーク（role=&quot;search&quot; をコンポーネントに付与）</h3>
+        <div style="max-width: 720px;">
+          <form style="display: grid; gap: 12px;">
+            <h4 id="site-search-heading-component" style="font-size: 16px; margin: 0;">サイト内検索（コンポーネントがsearchランドマーク）</h4>
+            <dads-search-box role="search" aria-labelledby="site-search-heading-component">
+              <option value="">すべて</option>
+              <option value="images">画像</option>
+              <option value="files">ファイル</option>
+            </dads-search-box>
+          </form>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本（検索対象あり）</h3>
+        <div style="max-width: 720px;">
+          <dads-search-box>
+            <option value="">すべて</option>
+            <option value="images">画像</option>
+            <option value="files">ファイル</option>
+          </dads-search-box>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">検索対象なし</h3>
+        <div style="max-width: 720px;">
+          <dads-search-box></dads-search-box>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          テーブル内の操作が Preview のターゲット要素へ即時反映されます。
+          検索対象（scope）は <code>&lt;dads-search-box&gt;</code> の子要素として <code>&lt;option&gt;</code>/<code>&lt;optgroup&gt;</code> を指定します。
+          option が 0 件の場合は scope UI を表示せず、フォーム送信（FormData）にも含めません。
+        </p>
+
+        <div class="wc-api-panel">
+          <div class="wc-api-panel__header">
+            <div class="wc-api-panel__title">Controls</div>
+            <dads-button data-api-reset type="button" variant="outlined" size="small">Reset</dads-button>
+          </div>
+
+          <div class="wc-api-panel__body">
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; gap: 12px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <form data-search-box-preview-form style="display: grid; gap: 12px; width: 720px; max-width: 100%; margin: 0;">
+                  <dads-search-box data-api-target>
+                    <option value="">すべて</option>
+                    <option value="images">画像</option>
+                    <option value="files">ファイル</option>
+                  </dads-search-box>
+                  <pre data-search-box-preview-output style="margin: 0; padding: 12px; background: #f7f7f7; border-radius: 8px;"></pre>
+                </form>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Kind</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Control</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>scope options</code></th>
+                        <td><code>children</code></td>
+                        <td><code>option/optgroup</code></td>
+                        <td><code>true</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="scope options" data-search-box-scope-options data-default="true" checked>
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>Light DOM の option/optgroup を追加/削除して検索対象 UI を出し分け</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>name</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>q</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="name" value="q" data-api-attr="name" data-default="q"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>検索語（query）を FormData に追加する際の name</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>value</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>""</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="value" value="" data-api-prop="value" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>検索語（query）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>検索</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="label" value="検索" data-api-attr="label" data-default="検索"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>検索語 input の視覚的に非表示ラベル（アクセシブルネーム）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>button-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>検索</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="button-label" value="検索" data-api-attr="button-label" data-default="検索"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>送信ボタンのラベル</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>scope-value</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>""</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="scope-value" data-api-attr="scope-value" data-default="">
+                              <option value="" selected>(empty)</option>
+                              <option value="images">画像</option>
+                              <option value="files">ファイル</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>検索対象（scope）の選択値（初期値）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>scope-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>検索対象</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="scope-label" value="検索対象" data-api-attr="scope-label" data-default="検索対象"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>検索対象 select の可視ラベル</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>aria-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>(unset)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="aria-label" value="" data-api-attr="aria-label" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>検索語 input へ転写（label の代替）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-gap</code></th>
+                        <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-gap" value="" data-api-css-var="--dads-search-box-gap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>fields と button の間隔</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-border-color</code></th>
+                        <td><code>--color-neutral-solid-gray-600</code><br><small style="color:#666">(#666)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="--dads-search-box-border-color"
+                              value=""
+                              data-api-css-var="--dads-search-box-border-color"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>枠線色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-border-width</code></th>
+                        <td><code>1px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-border-width" value="" data-api-css-var="--dads-search-box-border-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>枠線幅</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-input-min-width</code></th>
+                        <td><code>8rem</code><br><small style="color:#666">(128px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-input-min-width" value="" data-api-css-var="--dads-search-box-input-min-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>input 最小幅</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-placeholder-color</code></th>
+                        <td><code>--color-neutral-solid-gray-600</code><br><small style="color:#666">(#666)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-placeholder-color" value="" data-api-css-var="--dads-search-box-placeholder-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>プレースホルダー色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-search-icon-size</code></th>
+                        <td><code>1.5rem</code><br><small style="color:#666">(24px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-search-icon-size" value="" data-api-css-var="--dads-search-box-search-icon-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>虫眼鏡アイコンサイズ</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-scope-icon-size</code></th>
+                        <td><code>1rem</code><br><small style="color:#666">(16px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-scope-icon-size" value="" data-api-css-var="--dads-search-box-scope-icon-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>scope アイコンサイズ</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-scope-padding</code></th>
+                        <td><code>20px 40px 0 16px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-scope-padding" value="" data-api-css-var="--dads-search-box-scope-padding" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>scope パディング</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-button-bg</code></th>
+                        <td><code>--color-primitive-blue-900</code><br><small style="color:#666">(#1a4ccc)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-button-bg" value="" data-api-css-var="--dads-search-box-button-bg" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ボタン背景色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-button-color</code></th>
+                        <td><code>--color-neutral-white</code><br><small style="color:#666">(#fff)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-button-color" value="" data-api-css-var="--dads-search-box-button-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ボタン文字色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-button-bg-hover</code></th>
+                        <td><code>--color-primitive-blue-1000</code><br><small style="color:#666">(#143da3)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-button-bg-hover" value="" data-api-css-var="--dads-search-box-button-bg-hover" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ボタンホバー時背景色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-search-box-button-border-color</code></th>
+                        <td><code>transparent</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-search-box-button-border-color" value="" data-api-css-var="--dads-search-box-button-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ボタン枠線色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                <p class="wc-api-panel__section-note">
+                  ※ 空にすると <code>style.removeProperty()</code> で元のトークン値に戻ります。
+                </p>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">Events</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Detail</th>
+                        <th scope="col">Cancelable</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>dads-input</code></th>
+                        <td><code>{ query: string; scope: string }</code></td>
+                        <td><code>true</code></td>
+                        <td>入力中に発火（検索語/検索対象）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>dads-change</code></th>
+                        <td><code>{ query: string; scope: string }</code></td>
+                        <td><code>true</code></td>
+                        <td>値変更確定時に発火（検索語/検索対象）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>dads-search</code></th>
+                        <td><code>{ query: string; scope: string }</code></td>
+                        <td><code>true</code></td>
+                        <td>Enter/クリックで発火。<code>preventDefault()</code> されなければ <code>form.requestSubmit()</code> を呼びます。</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS Parts</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><th scope="row"><code>base</code></th><td>ルート（横並びコンテナ）</td></tr>
+                      <tr><th scope="row"><code>fields</code></th><td>フィールド群（scope + query）</td></tr>
+                      <tr><th scope="row"><code>scope</code></th><td>検索対象セレクトのラベルコンテナ</td></tr>
+                      <tr><th scope="row"><code>scope-label</code></th><td>検索対象ラベルテキスト</td></tr>
+                      <tr><th scope="row"><code>scope-select</code></th><td>検索対象セレクト</td></tr>
+                      <tr><th scope="row"><code>scope-icon</code></th><td>検索対象セレクトの矢印アイコン</td></tr>
+                      <tr><th scope="row"><code>query</code></th><td>検索語入力のラベルコンテナ</td></tr>
+                      <tr><th scope="row"><code>search-icon</code></th><td>虫眼鏡アイコン</td></tr>
+                      <tr><th scope="row"><code>visually-hidden</code></th><td>スクリーンリーダー向けラベル</td></tr>
+                      <tr><th scope="row"><code>input</code></th><td>検索語 input[type="search"]</td></tr>
+                      <tr><th scope="row"><code>button</code></th><td>送信ボタン（&lt;dads-button&gt;）</td></tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            (function() {
+              var currentScript = document.currentScript;
+              Promise.all([
+                import('dads-search-box'),
+                import('dads-button'),
+                import('dads-table'),
+                import('dads-switch'),
+                import('dads-input-text'),
+                import('/src/viewer-api-controls.js')
+              ]).then(function(mods) {
+                var root = currentScript?.parentElement;
+                if (!root || !root.isConnected) return;
+
+                var api = mods[5];
+                if (api && api.bindApiControls) api.bindApiControls(root);
+
+                var target = root.querySelector('[data-api-target]');
+                var scopeToggle = root.querySelector('[data-search-box-scope-options]');
+                var reset = root.querySelector('[data-api-reset]');
+                var form = root.querySelector('[data-search-box-preview-form]');
+                var out = root.querySelector('[data-search-box-preview-output]');
+
+                var setScopeOptions = function(enabled) {
+                  if (!(target instanceof HTMLElement)) return;
+
+                  var children = Array.from(target.children);
+                  for (var i = 0; i < children.length; i++) {
+                    var el = children[i];
+                    if (el.tagName === 'OPTION' || el.tagName === 'OPTGROUP') target.removeChild(el);
+                  }
+
+                  if (!enabled) return;
+
+                  target.insertAdjacentHTML(
+                    'beforeend',
+                    '<option value="">すべて</option>' +
+                      '<option value="images">画像</option>' +
+                      '<option value="files">ファイル</option>'
+                  );
+                };
+
+                var syncOutput = function() {
+                  if (!(form instanceof HTMLFormElement)) return;
+                  if (!(out instanceof HTMLElement)) return;
+
+                  var lines = [];
+                  var data = new FormData(form);
+                  data.forEach(function(v, k) {
+                    lines.push(String(k) + '=' + String(v));
+                  });
+                  out.textContent = lines.join('\\n');
+                };
+
+                var updateScope = function() {
+                  var enabled = scopeToggle ? scopeToggle.hasAttribute('checked') : true;
+                  setScopeOptions(enabled);
+                  syncOutput();
+                };
+
+                if (form instanceof HTMLFormElement) {
+                  form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    syncOutput();
+                  });
+                  form.addEventListener('dads-search', syncOutput);
+                }
+
+                if (scopeToggle) scopeToggle.addEventListener('dads-change', updateScope);
+                if (reset) {
+                  reset.addEventListener('click', function() {
+                    if (scopeToggle) {
+                      var def = scopeToggle.getAttribute('data-default');
+                      scopeToggle.toggleAttribute('checked', def !== 'false');
+                    }
+                    updateScope();
+                  });
+                }
+
+                root.addEventListener('dads-change', function() { setTimeout(syncOutput); });
+                root.addEventListener('dads-input', function() { setTimeout(syncOutput); });
+                root.addEventListener('change', function() { setTimeout(syncOutput); });
+                root.addEventListener('input', function() { setTimeout(syncOutput); });
+
+                updateScope();
+              });
+            })();
+          <\/script>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-search-box'), import('dads-switch'), import('a11y-annotate')]);
+
+      const form = document.querySelector('#search-box-form');
+      const out = document.querySelector('#search-box-output');
+      if (form instanceof HTMLFormElement && out instanceof HTMLElement) {
+        const write = (data) => {
+          const lines = [];
+          for (const [k, v] of data.entries()) lines.push(String(k) + '=' + String(v));
+          out.textContent = lines.join('\\n');
+        };
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          write(new FormData(form));
+        });
+
+        form.addEventListener('dads-search', () => {
+          write(new FormData(form));
+        });
+      }
+    </script>
+  `,
+
   select: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">セレクトボックス</h2>
