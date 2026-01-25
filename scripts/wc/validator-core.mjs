@@ -19,6 +19,12 @@ const GLOBAL_ATTR_ALLOW_SET = Object.freeze(
   ]),
 );
 
+const FORBIDDEN_ATTR_SET = Object.freeze(new Set(['placeholder']));
+
+function isForbiddenAttr(attrName) {
+  return FORBIDDEN_ATTR_SET.has(attrName.toLowerCase());
+}
+
 function escapeRegex(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -179,11 +185,32 @@ export function validateTextAgainstCem({
   // eslint-disable-next-line no-cond-assign
   while ((m = tagRe.exec(text))) {
     const tag = String(m[1] ?? '').toLowerCase();
-    if (!tag.includes('-')) continue;
-    if (ignoreTags.has(tag)) continue;
 
     const tagOffset = m.index + 1; // after '<'
     const attrChunk = String(m[2] ?? '');
+
+    const attrNames = parseAttributeNames(attrChunk);
+    for (const { name, offset } of attrNames) {
+      const attrName = name.toLowerCase();
+      if (!isForbiddenAttr(attrName)) continue;
+
+      const rawAttrsStart = m.index + 1 + tag.length;
+      const startIndex = rawAttrsStart + offset;
+      const endIndex = startIndex + attrName.length;
+      const range = makeRange(lineStarts, startIndex, endIndex);
+      diagnostics.push({
+        file: filePath,
+        range,
+        severity: 'error',
+        code: 'forbiddenAttribute',
+        message: `Forbidden attribute: ${attrName} (use explicit labels/support text instead)`,
+        tagName: tag,
+        attrName,
+      });
+    }
+
+    if (!tag.includes('-')) continue;
+    if (ignoreTags.has(tag)) continue;
 
     const meta = cem.get(tag);
     if (!meta) {
@@ -199,9 +226,9 @@ export function validateTextAgainstCem({
       continue;
     }
 
-    const attrNames = parseAttributeNames(attrChunk);
     for (const { name, offset } of attrNames) {
       const attrName = name.toLowerCase();
+      if (isForbiddenAttr(attrName)) continue;
       if (shouldSkipAttr(attrName)) continue;
       if (meta.attributes.has(attrName)) continue;
 

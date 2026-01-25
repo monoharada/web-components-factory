@@ -56,6 +56,12 @@ export const iconPaths = {
    */
   externalLink:
     'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',
+
+  /**
+   * 検索（虫眼鏡）アイコン
+   */
+  search:
+    'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z',
 } as const;
 
 export type IconName = keyof typeof iconPaths;
