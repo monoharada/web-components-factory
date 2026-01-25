@@ -56,11 +56,15 @@ async function getCemTagNames(): Promise<Set<string>> {
 
 /**
  * packages/components/ 下のディレクトリ一覧を取得
+ * アンダースコア始まりのディレクトリ（_internal, __fixtures__ 等）は除外
  */
 async function getComponentDirectories(): Promise<string[]> {
   const componentsDir = path.resolve(process.cwd(), 'packages/components');
   const entries = await fs.readdir(componentsDir, { withFileTypes: true });
-  return entries.filter((e) => e.isDirectory()).map((e) => e.name);
+  return entries
+    .filter((e) => e.isDirectory())
+    .filter((e) => !e.name.startsWith('_'))  // exclude _internal, __fixtures__, etc.
+    .map((e) => e.name);
 }
 
 describe('CEM component coverage', () => {
@@ -82,13 +86,11 @@ describe('CEM component coverage', () => {
           missing.push({ directory: dir, expected: expectedTags });
         }
       } else {
-        // デフォルト: dads-<directory-name> または dads-<directory-name>-* のパターン
-        const expectedPattern = `dads-${dir}`;
-        const hasMatch = [...tagNames].some(
-          (t) => t === expectedPattern || t.startsWith(`${expectedPattern}-`),
-        );
-        if (!hasMatch) {
-          missing.push({ directory: dir, expected: expectedPattern });
+        // デフォルト: dads-<directory-name> の完全一致のみ
+        // 複数タグや変則パターンは DIRECTORY_TO_TAG_MAPPING に明示的に追加する
+        const expectedTag = `dads-${dir}`;
+        if (!tagNames.has(expectedTag)) {
+          missing.push({ directory: dir, expected: expectedTag });
         }
       }
     }

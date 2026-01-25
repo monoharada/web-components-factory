@@ -32,8 +32,8 @@ Custom Elements Manifest (`custom-elements.json`) はこのリポジトリにお
 
 | タグ | 必須 | 説明 |
 |-----|------|------|
-| `@customElement` | ✅ | CEM抽出のマーカー |
-| `@tagname dads-<name>` | ✅ | タグ名（canonical prefix） |
+| `@customElement` | ✅ | CEM抽出のマーカー（値なし） |
+| `@tagname dads-<name>` | ✅ | タグ名（canonical prefix、こちらに tagName を書く） |
 | `@attr {type} name - 説明` | ✅ | 公開属性（型付き） |
 | `@slot name - 説明` | ✅ | 公開スロット |
 | `@csspart name - 説明` | ✅ | 公開 CSS Part |
@@ -42,9 +42,9 @@ Custom Elements Manifest (`custom-elements.json`) はこのリポジトリにお
 | `@deprecated reason` | 条件付 | 非推奨APIがある場合 |
 
 **属性の型記法例**:
-- `@attr {string} variant - バリアント ('solid' \| 'outlined')`
+- `@attr {'solid' | 'outlined'} variant - バリアント`（union型を型側に書く）
 - `@attr {boolean} disabled - 無効状態`
-- `@attr {'sm' \| 'md' \| 'lg'} size - サイズ`
+- `@attr {'sm' | 'md' | 'lg'} size - サイズ`
 
 ### (C) Prefix / Define / Import
 
@@ -121,7 +121,7 @@ import { componentStyles } from './<component>-styles.js';
 /**
  * <ComponentName>コンポーネント
  *
- * @customElement dads-<component-name>
+ * @customElement
  * @tagname dads-<component-name>
  *
  * @slot default - デフォルトスロットの説明
@@ -130,7 +130,7 @@ import { componentStyles } from './<component>-styles.js';
  * @csspart base - ルート要素
  * @csspart label - ラベル要素
  *
- * @attr {string} variant - バリアント ('solid' | 'outlined')
+ * @attr {'solid' | 'outlined'} variant - バリアント
  * @attr {'sm' | 'md' | 'lg'} size - サイズ
  * @attr {boolean} disabled - 無効状態
  *
@@ -142,9 +142,9 @@ import { componentStyles } from './<component>-styles.js';
  *
  * @example
  * ```html
- * <dads-<component-name> variant="solid" size="md">
+ * <dads-component-name variant="solid" size="md">
  *   コンテンツ
- * </dads-<component-name>>
+ * </dads-component-name>
  * ```
  */
 export class Dads<ComponentName> extends TypographyWebComponent {
@@ -185,7 +185,7 @@ PRコメントや自己レビュー用：
 ## 新規コンポーネント DoD チェックリスト
 
 ### 必須
-- [ ] `@customElement dads-<name>` + `@tagname dads-<name>` をJSDocに記載
+- [ ] `@customElement` + `@tagname dads-<name>` をJSDocに記載
 - [ ] `@attr` で公開属性を型付き記載
 - [ ] `@slot` で公開スロットを記載
 - [ ] `@csspart` で公開partを記載
@@ -221,7 +221,15 @@ PRコメントや自己レビュー用：
 | `attrName` | string? | 対象属性名 |
 | `hint` | string? | 修正ヒント |
 
-新しい診断コードを追加する場合は、このドキュメントを更新してください。
+**range の基準**:
+- `line`: 1-based（1行目 = 1）
+- `col`: 0-based（行頭 = 0）
+- `end`: exclusive（終端文字の次の位置）
+
+新しい診断コードを追加する場合は：
+1. `scripts/wc/validator-core.mjs` に実装を追加
+2. `tests/wc-validator-diagnostics.test.ts` にテストを追加
+3. このドキュメントの表を更新
 
 ---
 

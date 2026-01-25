@@ -30,7 +30,7 @@ npm run cem:analyze
 /**
  * コンポーネント概要説明
  *
- * @customElement dads-component-name
+ * @customElement
  * @tagname dads-component-name
  *
  * @slot default - デフォルトスロットの説明
@@ -39,7 +39,7 @@ npm run cem:analyze
  * @csspart base - ベース要素
  * @csspart other-part - その他のpart
  *
- * @attr {string} variant - バリアント (value1 | value2)
+ * @attr {'solid' | 'outlined'} variant - バリアント
  * @attr {boolean} disabled - 無効化状態
  *
  * @cssprop [--dads-component-background=var(--color-default)] - 背景色
