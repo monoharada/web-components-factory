@@ -22,6 +22,39 @@ npm run cem:analyze
 - `tagName` を推論できない定義方式の場合があります（この repo は独自の基盤クラス + `static definition` パターン）。
 - 原則として、各コンポーネントの JSDoc に `@customElement` / `@tagname`（または等価な情報）を揃えることで CEM 抽出の成功率が上がります。
 
+## JSDoc テンプレート（必須）
+
+新規コンポーネントを CEM に正しく登録するには、以下の JSDoc アノテーションが必要です：
+
+```typescript
+/**
+ * コンポーネント概要説明
+ *
+ * @customElement
+ * @tagname dads-component-name
+ *
+ * @slot default - デフォルトスロットの説明
+ * @slot named-slot - 名前付きスロットの説明
+ *
+ * @csspart base - ベース要素
+ * @csspart other-part - その他のpart
+ *
+ * @attr {'solid' | 'outlined'} variant - バリアント
+ * @attr {boolean} disabled - 無効化状態
+ *
+ * @cssprop [--dads-component-background=var(--color-default)] - 背景色
+ * @cssprop [--dads-component-color=var(--color-text)] - テキスト色
+ *
+ * @fires change - 値変更時に発火
+ * @fires custom-event - カスタムイベント（detail: {prop: value}）
+ */
+export class DadsComponentName extends TypographyWebComponent {
+  // ...
+}
+```
+
+**完全なテンプレートとチェックリストは [新規コンポーネント DoD](../rules/new-component-dod.md) を参照してください。**
+
 ## prefix 戦略（canonical は `dads-*`）
 
 - CEM は **デフォルト prefix の `dads-*` を canonical** として生成します。
