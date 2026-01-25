@@ -67,19 +67,13 @@ function transpileTsToJs(content, fileName) {
  * dist-pages用にインポートパスを書き換える
  * packages/ は dist-pages では直下に展開されるため、パスを修正
  */
-function rewriteImportsForDistPages(js, srcPath) {
+function rewriteImportsForDistPages(js) {
   // ../packages/xxx/ → ../xxx/
   // ../../packages/xxx/ → ../../xxx/
   // etc.
   return js.replace(
-    /(from\s+['"])(\.\.\/)+packages\/(core|utils|styles|components)\//g,
-    (match, prefix, dots) => {
-      // dots部分（../）をそのまま保持し、packages/を削除
-      const dotCount = (match.match(/\.\.\//g) || []).length;
-      const dotsStr = '../'.repeat(dotCount);
-      const moduleType = match.match(/packages\/(core|utils|styles|components)\//)?.[1];
-      return `${prefix}${dotsStr}${moduleType}/`;
-    }
+    /(from\s+['"])((?:\.\.\/)+)packages\/(core|utils|styles|components)\//g,
+    (_match, prefix, dots, moduleType) => `${prefix}${dots}${moduleType}/`
   );
 }
 
@@ -87,7 +81,7 @@ async function transpileFile(srcPath, destPath) {
   const content = await fs.readFile(srcPath, 'utf8');
   let js = transpileTsToJs(content, srcPath);
   // dist-pages用にインポートパスを書き換え
-  js = rewriteImportsForDistPages(js, srcPath);
+  js = rewriteImportsForDistPages(js);
   await ensureDir(path.dirname(destPath));
   await fs.writeFile(destPath, js, 'utf8');
 }
