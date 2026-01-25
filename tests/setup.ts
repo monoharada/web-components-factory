@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { beforeAll, vi } from 'vitest';
+import { vi } from 'vitest';
 
 (globalThis as unknown as { __DADS_DISABLE_FONT_LOADING__?: boolean }).__DADS_DISABLE_FONT_LOADING__ =
   true;
@@ -218,33 +218,20 @@ afterEach(() => {
   }
   const originalGet = desc?.get as (() => Element | null) | undefined;
   if (owner && desc?.configurable && originalGet) {
-    Object.defineProperty(owner, 'activeElement', {
-      configurable: true,
-      enumerable: desc.enumerable,
-      get() {
-        const active = originalGet.call(this) as Element | null;
-        const activeWithShadow = active as unknown as { shadowRoot?: ShadowRoot | null };
-        const sr = activeWithShadow.shadowRoot ?? null;
-        const shadowActive = sr?.activeElement ?? null;
-        if (shadowActive) return shadowActive;
-        // shadowRoot 内にフォーカス可能なリンクがあるケース（stretched link）を補助
-        const stretched = sr?.querySelector?.('.card-link--stretched') ?? null;
-        if (stretched) return stretched as Element;
-        return active;
-      },
-    });
-  }
+	    Object.defineProperty(owner, 'activeElement', {
+	      configurable: true,
+	      enumerable: desc.enumerable,
+	      get() {
+	        const active = originalGet.call(this) as Element | null;
+	        const activeWithShadow = active as unknown as { shadowRoot?: ShadowRoot | null };
+	        const sr = activeWithShadow.shadowRoot ?? null;
+	        const shadowActive = sr?.activeElement ?? null;
+	        if (shadowActive) return shadowActive;
+	        return active;
+	      },
+	    });
+	  }
 })();
-
-// コンポーネント定義は、customElements / 各種モックのセットアップ後に行う
-beforeAll(async () => {
-  const mod = await import('../src/adaptive-card.ts');
-  const ctor = customElements.get('adaptive-card');
-  if (!ctor) {
-    // define() はモジュール側でも呼ばれるが、環境差分で実行されない場合に備えて保険
-    mod.AdaptiveCard.define();
-  }
-});
 
 // グローバルエラーハンドラー
 globalThis.addEventListener('error', (event) => {

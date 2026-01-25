@@ -96,6 +96,59 @@ describe('DadsAnnotate', () => {
     });
   });
 
+  it('10件以上のコールアウトでも2桁番号が表示される', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetManyCallouts extends HTMLElement {
+      static a11yAnnotations: A11yAnnotations = {
+        version: 1,
+        summary: '10件以上',
+        categories: { labels: ['labels'] },
+        callouts: Array.from({ length: 10 }, (_, i) => {
+          const n = i + 1;
+          return {
+            id: `anchor-${n}`,
+            title: `項目${n}`,
+            description: `説明${n}`,
+            category: 'labels',
+            target: { selector: `#anchor-${n}` },
+            placement: 'top-right',
+          };
+        }),
+      };
+    }
+    const tagName = 'test-a11y-target-many-callouts';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetManyCallouts);
+    }
+
+    const anchors = Array.from(
+      { length: 10 },
+      (_, i) => `<div id="anchor-${i + 1}" aria-label="Anchor ${i + 1}">x</div>`,
+    ).join('');
+
+    const el = renderWebComponent(`
+      <a11y-annotate>
+        <${tagName}>
+          ${anchors}
+        </${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const panelNumbers = Array.from(el.querySelectorAll('.callout-number')).map((node) =>
+      node.textContent?.trim(),
+    );
+    expect(panelNumbers).toContain('10');
+
+    const overlayNumbers = Array.from(el.querySelectorAll('.callout-tag-number')).map((node) =>
+      node.textContent?.trim(),
+    );
+    expect(overlayNumbers).toContain('10');
+  });
+
   it('SVG要素をコールアウト対象にできる', async () => {
     const { defineDefaultAnnotate } = await import('./annotate-define');
     defineDefaultAnnotate();
