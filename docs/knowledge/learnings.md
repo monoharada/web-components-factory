@@ -4,6 +4,23 @@
 
 ---
 
+## [2026-01-20] Menu List / Menu List Box のFigma再現メモ（divider/hr・余白・ダミーアイコン・スクロールバー）
+**タグ**: #css #webcomponents #dads #figma
+
+### 概要
+Menu List / Menu List Box の見た目を DADS / Figma に寄せる際、実装でハマりやすいポイントを整理。
+
+### 詳細
+- **ディバイダーは border で擬似表現しない**: DADS Divider のガイドに合わせ、メニュー内の区切りは `<hr>` を使用する（`role="separator"` は必要に応じて付与）。
+  - 参考: https://design.digital.go.jp/dads/components/divider/
+- **インセットディバイダー（左右余白）**: コンテナいっぱいではなく左右に余白を残す（`::slotted(hr)` を inset で制御）。
+- **ディバイダーの上下余白**: DADSの指針として「リスト: 8px以上 / セクション: 16px以上」。Menu List Box のポップアップ内は 16px をデフォルト値に寄せた。
+- **`hr` の余白がリセットで潰れる問題**: ページ側の `* { margin: 0 }` などで `<hr>` の `margin-block` が消えることがある。
+  - 対策: Shadow DOM の `::slotted(hr)` で指定するだけでなく、`dads-menu-list-box` 側で slotchange 時に divider へ `margin-block` を inline style で補強する（外部影響下でも余白が維持される）。
+- **スクロールバーは“見せるために余白を確保”しない**: Figmaの右側余白はスクロール表現だが、実装ではOS/ブラウザのネイティブ挙動に任せる（固定で reserved space を作らない）。
+- **作例のダミーアイコンは DADS 作例に合わせる**: Menu List の作例では「ダミーアイコン」として同じSVG（front/end）を使っているため、リポジトリ内の作例でも同じSVGパスに統一する。
+  - 参考: https://design.digital.go.jp/dads/html/?path=/docs/components-%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E3%83%AA%E3%82%B9%E3%83%88--docs
+
 ## [2026-01-17] Web ComponentsのCSSは「Primitive→Semantic→Local→Properties」で責務分離し、フォールバックは原則消す（A11y最小保証のみ例外）
 **タグ**: #css #tokens #a11y #webcomponents #markup
 

@@ -10,6 +10,8 @@ import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { withReset } from '../../styles/reset-css.js';
 import { calendarStyles } from './calendar-styles.js';
 import type { A11yAnnotations, A11yElementRef } from '../../utils/a11y-annotations.js';
+import { getPrefixFromLocalName } from '../../utils/custom-element-name.js';
+import { parseIsoDate } from '../../utils/iso-date.js';
 import { defineButton } from '../button/index.js';
 
 const shadowTarget = (selector: string): A11yElementRef => ({ scope: 'shadow', selector });
@@ -24,24 +26,6 @@ export interface DadsCalendarPublicAPI {
   setDisplayMonth(year: number, monthIndex0: number): void;
   /** カレンダーにフォーカスを移動 */
   focus(): void;
-}
-
-function parseYmd(value: string): { year: number; monthIndex0: number; date: number } | null {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-  const [y, m, d] = value.split('-');
-  const year = Number.parseInt(y, 10);
-  const month = Number.parseInt(m, 10);
-  const date = Number.parseInt(d, 10);
-  if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(date)) return null;
-  if (year < 1 || year > 9999) return null;
-  if (month < 1 || month > 12) return null;
-  if (date < 1 || date > 31) return null;
-
-  const dt = new Date(year, month - 1, date);
-  if (Number.isNaN(dt.getTime())) return null;
-  if (dt.getFullYear() !== year || dt.getMonth() !== month - 1 || dt.getDate() !== date) return null;
-
-  return { year, monthIndex0: month - 1, date };
 }
 
 function formatJapaneseYear(year: number): string {
@@ -342,7 +326,7 @@ export class DadsCalendar extends TypographyWebComponent {
     super.connectedCallback();
 
     // 依存コンポーネントを先に登録（内部でdads-buttonを利用）
-    const prefix = this.#getPrefixFromLocalName();
+    const prefix = getPrefixFromLocalName(this.localName, '-calendar');
     defineButton(prefix);
 
     this.#calendarHeading = this.shadowRoot?.querySelector('#calendar-heading') as HTMLElement | null;
@@ -494,15 +478,15 @@ export class DadsCalendar extends TypographyWebComponent {
       maxDateAttr = null;
     }
 
-    const minParsed = minDateAttr ? parseYmd(minDateAttr) : null;
+    const minParsed = minDateAttr ? parseIsoDate(minDateAttr) : null;
     this.#minDate = minParsed
-      ? new Date(minParsed.year, minParsed.monthIndex0, minParsed.date)
+      ? new Date(minParsed.year, minParsed.month - 1, minParsed.day)
       : new Date(nowYear - 1, nowMonth, nowDate);
 
-    const maxParsed = maxDateAttr ? parseYmd(maxDateAttr) : null;
+    const maxParsed = maxDateAttr ? parseIsoDate(maxDateAttr) : null;
     this.#maxDate = maxParsed
       ? // max-date は「当日まで選択可能」にするため、排他的上限として +1 日
-        new Date(maxParsed.year, maxParsed.monthIndex0, maxParsed.date + 1)
+        new Date(maxParsed.year, maxParsed.month - 1, maxParsed.day + 1)
       : new Date(nowYear + 1, nowMonth, nowDate);
 
     const closest = this.#getClosestDateInRange(now);
@@ -1005,15 +989,6 @@ export class DadsCalendar extends TypographyWebComponent {
           : '開始日と終了日を選択しました。';
 
     if (this.#rangeSupport) this.#rangeSupport.textContent = support;
-  }
-
-  #getPrefixFromLocalName(): string {
-    const suffix = '-calendar';
-    const name = this.localName;
-    if (name.endsWith(suffix)) {
-      return name.slice(0, Math.max(0, name.length - suffix.length));
-    }
-    return 'dads';
   }
 
   #ensureButtonElement(id: string, prefix: string): HTMLElement | null {
