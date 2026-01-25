@@ -72,6 +72,7 @@ import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
  * @attr {string} name - フォーム名
  * @attr {number} rows - 行数（デフォルト: 3）
  * @attr {string} size - サイズ (sm | md | lg)
+ * @attr {string} value - 値
  * @attr {boolean} auto-validate - 自動バリデーションを有効化
  *
  * @fires dads-input - 入力時に発火

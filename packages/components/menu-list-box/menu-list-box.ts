@@ -42,6 +42,31 @@ function unsubscribeAll(subscriptions: Array<() => void>): void {
   subscriptions.length = 0;
 }
 
+/**
+ * メニューリストボックスコンポーネント
+ *
+ * @customElement dads-menu-list-box
+ * @tagname dads-menu-list-box
+ *
+ * @slot icon - opener 先頭アイコン
+ * @slot label - opener ラベル
+ * @slot default - メニュー項目（例: dads-menu-list-item）
+ *
+ * @csspart opener - opener ボタン
+ * @csspart opener-icon - 先頭アイコン領域
+ * @csspart opener-label - ラベル領域
+ * @csspart opener-arrow - 末尾矢印アイコン
+ * @csspart popup - ポップアップ領域
+ * @csspart menu - role="menu" のメニュー領域
+ *
+ * @attr {string} size - サイズ（sm | md）
+ * @attr {string} variant - バリアント（text | outlined | filled）
+ * @attr {boolean} bold - 太字表示
+ * @attr {string} label - ラベル（slot未使用時のフォールバック）
+ * @attr {boolean} open - 開閉状態
+ *
+ * @fires menuitemselect - 項目選択時に発火（detail: { selectedItem, selectedValue, selectedIndex }）
+ */
 export class DadsMenuListBox extends TypographyWebComponent {
   #opener: HTMLButtonElement | null = null;
   #popup: HTMLElement | null = null;

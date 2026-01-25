@@ -13,6 +13,18 @@ import { menuListStyles, menuListItemStyles } from './menu-list-styles.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
+/**
+ * メニューリストコンポーネント
+ *
+ * @customElement dads-menu-list
+ * @tagname dads-menu-list
+ *
+ * @slot default - メニュー項目（dads-menu-list-item）
+ *
+ * @csspart base - role="list" のルート
+ *
+ * @attr {number} indentation - インデント（CSS変数 --menu-list-indentation に反映）
+ */
 export class DadsMenuList extends TypographyWebComponent {
   static definition = {
     name: 'dads-menu-list',
@@ -110,6 +122,35 @@ const menuListItemInnerHtml = `
   </span>
 `;
 
+/**
+ * メニューリスト項目コンポーネント
+ *
+ * @customElement dads-menu-list-item
+ * @tagname dads-menu-list-item
+ *
+ * @slot default - ラベル
+ * @slot start-icon - 先頭アイコン
+ * @slot tail-icon - ラベル末尾アイコン（デフォルト: 新規タブで開く）
+ * @slot end-icon - 末尾アイコン（arrow-right / caret）
+ * @slot children - 子メニュー（ネスト）
+ *
+ * @csspart base - ボタン/リンク本体
+ * @csspart start-icon - 先頭アイコン領域
+ * @csspart label - ラベル領域
+ * @csspart tail-icon - ラベル末尾アイコン領域
+ * @csspart end-icon - 末尾アイコン領域
+ *
+ * @attr {string} variant - 表示タイプ（standard | box）
+ * @attr {string} size - サイズ（regular | small）
+ * @attr {boolean} current - 現在地
+ * @attr {boolean} expanded - 展開状態
+ * @attr {string} end-icon - 末尾アイコン（arrow-right | caret | none）
+ * @attr {string} tail-icon - ラベル末尾アイコン（new-window | none）
+ * @attr {string} href - リンクURL（指定時は <a> として動作）
+ * @attr {string} target - リンクターゲット
+ * @attr {string} rel - リンクrel
+ * @attr {boolean} download - download属性
+ */
 export class DadsMenuListItem extends TypographyWebComponent {
   #base: HTMLElement | null = null;
   #startSlot: HTMLSlotElement | null = null;

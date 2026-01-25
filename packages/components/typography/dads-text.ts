@@ -8,6 +8,21 @@ import { TypographyWebComponent } from '../../core/typography/typography-web-com
 import { typographyTokens, type TypographyVariant, type TypographySize, type TypographyWeight } from '../../styles/design-tokens/typography-tokens.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 
+/**
+ * 基本テキストコンポーネント
+ *
+ * @customElement dads-text
+ * @tagname dads-text
+ *
+ * @slot default - テキストコンテンツ
+ *
+ * @csspart text - テキストラッパー
+ *
+ * @attr {string} variant - バリアント（standard | display | dense）
+ * @attr {string} size - サイズ（16 | 20 | 32）
+ * @attr {string} weight - 太さ（normal | bold）
+ * @attr {string} display - 表示（inline | block）
+ */
 export class DadsText extends TypographyWebComponent {
   static definition = {
     name: 'dads-text',

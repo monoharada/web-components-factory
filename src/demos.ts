@@ -998,7 +998,7 @@ export const demos = {
         <div style="max-width: 500px;">
           <dads-textarea
             label="お問い合わせ内容"
-            placeholder="内容を入力してください"
+            support-text="内容を入力してください"
           ></dads-textarea>
         </div>
       </section>
@@ -1058,9 +1058,9 @@ export const demos = {
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">サイズ</h3>
         <div style="display: grid; gap: 24px; max-width: 500px;">
-          <dads-textarea label="Small" size="sm" placeholder="小サイズ"></dads-textarea>
-          <dads-textarea label="Medium（デフォルト）" size="md" placeholder="中サイズ"></dads-textarea>
-          <dads-textarea label="Large" size="lg" placeholder="大サイズ"></dads-textarea>
+          <dads-textarea label="Small" size="sm" support-text="小サイズ"></dads-textarea>
+          <dads-textarea label="Medium（デフォルト）" size="md" support-text="中サイズ"></dads-textarea>
+          <dads-textarea label="Large" size="lg" support-text="大サイズ"></dads-textarea>
         </div>
       </section>
 
@@ -1068,8 +1068,8 @@ export const demos = {
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">行数</h3>
         <div style="display: grid; gap: 24px; max-width: 500px;">
-          <dads-textarea label="3行（デフォルト）" rows="3" placeholder="デフォルトの行数"></dads-textarea>
-          <dads-textarea label="5行" rows="5" placeholder="5行表示"></dads-textarea>
+          <dads-textarea label="3行（デフォルト）" rows="3" support-text="デフォルトの行数"></dads-textarea>
+          <dads-textarea label="5行" rows="5" support-text="5行表示"></dads-textarea>
         </div>
       </section>
 
@@ -1118,7 +1118,6 @@ export const demos = {
               show-counter
               maxlength="500"
               rows="5"
-              placeholder="ご質問やご要望をお書きください"
               style="margin-bottom: 24px;"
             ></dads-textarea>
 

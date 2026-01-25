@@ -57,6 +57,27 @@ function formatJapaneseDate(date: Date): string {
   }).format(date);
 }
 
+/**
+ * カレンダーコンポーネント
+ *
+ * @customElement dads-calendar
+ * @tagname dads-calendar
+ *
+ * @csspart controls - 上部コントロール
+ * @csspart year-select - 年セレクト
+ * @csspart navigation - 月移動ナビゲーション
+ * @csspart table - カレンダーテーブル（role="grid"）
+ * @csspart date - 日付ボタン
+ * @csspart footer - フッター
+ * @csspart range - 期間選択表示
+ *
+ * @attr {string} min-date - 最小日付（YYYY-MM-DD）
+ * @attr {string} max-date - 最大日付（YYYY-MM-DD）
+ * @attr {string} range - 範囲選択モード（値の有無で有効化）
+ *
+ * @fires date-selected - 日付選択時に発火（detail: { date: Date | null }）
+ * @fires date-range-selected - 範囲選択時に発火（detail: { startDate: Date | null, endDate: Date | null }）
+ */
 export class DadsCalendar extends TypographyWebComponent {
   static readonly version = '1.0.0';
 
