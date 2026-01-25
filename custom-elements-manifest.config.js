@@ -12,6 +12,42 @@ function ensureDotSlash(p) {
   return `./${p}`;
 }
 
+function sanitizeCustomElementsManifest(customElementsManifest) {
+  const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
+
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      if (!decl || typeof decl !== 'object') continue;
+
+      // The analyzer marks any class extending HTMLElement as `customElement: true`.
+      // Base classes without a tagName should not be treated as custom elements.
+      if (decl.customElement === true) {
+        const tagName = typeof decl.tagName === 'string' ? decl.tagName.trim() : '';
+        if (!tagName) delete decl.customElement;
+      }
+
+      if (typeof decl.tagName === 'string' && decl.tagName.trim() === '') {
+        delete decl.tagName;
+      }
+
+      // The analyzer currently infers events by inspecting `dispatchEvent(new CustomEvent(...))`.
+      // In our base class `emitEvent(type, ...)`, the first argument is an identifier (`type`),
+      // which can be misinterpreted as an event name and then inherited to all components.
+      if (Array.isArray(decl.events) && decl.events.length > 0) {
+        decl.events = decl.events.filter((e) => {
+          if (!e || typeof e !== 'object') return false;
+          if (e.name !== 'type') return true;
+          if (e?.type?.text !== 'CustomEvent') return true;
+          const inheritedFrom = e?.inheritedFrom?.name;
+          const isFromWebComponent = inheritedFrom === 'WebComponent' || decl.name === 'WebComponent';
+          return !isFromWebComponent;
+        });
+      }
+    }
+  }
+}
+
 export default {
   globs: ['packages/**/*.ts'],
   exclude: [
@@ -45,6 +81,12 @@ export default {
       },
     }),
     cemInheritancePlugin(),
+    {
+      name: 'wcf-sanitize-manifest',
+      packageLinkPhase({ customElementsManifest }) {
+        sanitizeCustomElementsManifest(customElementsManifest);
+      },
+    },
     cemValidatorPlugin({
       cemFileName: 'custom-elements.json',
       packageJsonPath: './package.json',

@@ -303,7 +303,16 @@ async function main() {
     },
     async ({ html, prefix }) => {
       const p = normalizePrefix(prefix);
-      const cemIndex = applyPrefixToCemIndex(canonicalCemIndex, p);
+      // When a prefix is specified, allow validating both:
+      // - canonical tags (dads-*)
+      // - prefixed tags (<prefix>-*)
+      let cemIndex = canonicalCemIndex;
+      if (p !== CANONICAL_PREFIX) {
+        const combined = new Map(canonicalCemIndex);
+        const prefixed = applyPrefixToCemIndex(canonicalCemIndex, p);
+        for (const [tag, meta] of prefixed.entries()) combined.set(tag, meta);
+        cemIndex = combined;
+      }
 
       const diagnostics = validateTextAgainstCem({
         filePath: '<markup>',
@@ -314,11 +323,14 @@ async function main() {
           unknownAttribute: 'warning',
         },
       }).map((d) => ({
-        line: d.line,
-        col: d.col,
+        file: d.file,
+        range: d.range,
         severity: d.severity,
         code: d.code,
         message: d.message,
+        tagName: d.tagName,
+        attrName: d.attrName,
+        hint: d.hint,
       }));
 
       return {
@@ -335,4 +347,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-

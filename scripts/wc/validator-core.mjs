@@ -88,6 +88,12 @@ function shouldSkipAttr(attrName) {
   return false;
 }
 
+function makeRange(lineStarts, startIndex, endIndex) {
+  const start = indexToLineCol(lineStarts, startIndex);
+  const end = indexToLineCol(lineStarts, endIndex);
+  return { start, end };
+}
+
 function parseAttributeNames(rawAttrs) {
   /** @type {{ name: string, offset: number }[]} */
   const out = [];
@@ -182,14 +188,14 @@ export function validateTextAgainstCem({
 
     const meta = cem.get(tag);
     if (!meta) {
-      const { line, col } = indexToLineCol(lineStarts, tagOffset);
+      const range = makeRange(lineStarts, tagOffset, tagOffset + tag.length);
       diagnostics.push({
         file: filePath,
-        line,
-        col,
+        range,
         severity: severity.unknownElement ?? 'error',
         code: 'unknownElement',
         message: `Unknown element: ${tag}`,
+        tagName: tag,
       });
       continue;
     }
@@ -201,14 +207,17 @@ export function validateTextAgainstCem({
       if (meta.attributes.has(attrName)) continue;
 
       const rawAttrsStart = m.index + 1 + tag.length;
-      const { line, col } = indexToLineCol(lineStarts, rawAttrsStart + offset);
+      const startIndex = rawAttrsStart + offset;
+      const endIndex = startIndex + attrName.length;
+      const range = makeRange(lineStarts, startIndex, endIndex);
       diagnostics.push({
         file: filePath,
-        line,
-        col,
+        range,
         severity: severity.unknownAttribute ?? 'warning',
         code: 'unknownAttribute',
         message: `Unknown attribute on <${tag}>: ${attrName}`,
+        tagName: tag,
+        attrName,
       });
     }
   }
@@ -227,7 +236,10 @@ export function matchesGlob(filePath, pattern) {
   if (!isGlobLike(pat)) return file === pat;
 
   // Cheap fast paths for common patterns.
-  if (pat.endsWith('/**')) return file.startsWith(pat.slice(0, -3));
+  if (pat.endsWith('/**')) {
+    const prefix = pat.slice(0, -3);
+    return file === prefix || file.startsWith(`${prefix}/`);
+  }
   if (pat.startsWith('**/')) return file.endsWith(pat.slice(3));
 
   // Minimal glob -> regex (supports *, **, ?).

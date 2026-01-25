@@ -7,6 +7,7 @@ import {
   matchesGlob,
   validateTextAgainstCem,
 } from './validator-core.mjs';
+import { parseValidateArgs } from './validate-args.mjs';
 
 const DEFAULT_CONFIG_PATH = path.resolve(process.cwd(), 'wc.config.js');
 
@@ -25,11 +26,7 @@ async function loadConfig(configPath) {
 
 async function main() {
   const argv = process.argv.slice(2);
-  const configFlagIndex = argv.findIndex((a) => a === '--config' || a === '-c');
-  const configPath =
-    configFlagIndex >= 0 && argv[configFlagIndex + 1]
-      ? argv[configFlagIndex + 1]
-      : DEFAULT_CONFIG_PATH;
+  const { configPath, patterns } = parseValidateArgs(argv, { defaultConfigPath: DEFAULT_CONFIG_PATH });
 
   const cfg = await loadConfig(configPath);
 
@@ -38,7 +35,6 @@ async function main() {
   const manifestSrc = typeof cfg.manifestSrc === 'string' ? cfg.manifestSrc : './custom-elements.json';
   const diagnosticSeverity = cfg.diagnosticSeverity ?? {};
 
-  const patterns = argv.filter((a, i) => i !== configFlagIndex && i !== configFlagIndex + 1);
   const targets = patterns.length > 0 ? patterns : include;
 
   if (targets.length === 0) {
@@ -87,7 +83,8 @@ async function main() {
   }
 
   for (const d of allDiagnostics) {
-    const loc = `${d.file}:${d.line}:${d.col}`;
+    const start = d.range?.start ?? { line: 0, col: 0 };
+    const loc = `${d.file}:${start.line}:${start.col}`;
     console.log(`${loc}  ${d.severity}  ${d.code}  ${d.message}`);
   }
 

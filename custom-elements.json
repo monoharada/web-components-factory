@@ -322,18 +322,7 @@
           },
           "tagName": "dads-accordion-details",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/accordion/accordion.ts",
           "definitionPath": "./packages/components/accordion/accordion.ts",
           "typeDefinitionPath": "./packages/components/accordion/accordion.ts"
@@ -697,16 +686,6 @@
                 "text": "Event"
               },
               "description": "展開/折りたたみ時に発火（bubbles）"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -1460,18 +1439,7 @@
           },
           "tagName": "a11y-annotate",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/annotate/annotate.ts",
           "definitionPath": "./packages/components/annotate/annotate.ts",
           "typeDefinitionPath": "./packages/components/annotate/annotate.ts"
@@ -2013,18 +1981,7 @@
           },
           "tagName": "dads-blockquote",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/blockquote/blockquote.ts",
           "definitionPath": "./packages/components/blockquote/blockquote.ts",
           "typeDefinitionPath": "./packages/components/blockquote/blockquote.ts"
@@ -2542,16 +2499,6 @@
                 "text": "CustomEvent"
               },
               "description": "クリック時に発火（detail: {variant, size}）"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -3566,16 +3513,6 @@
                 "text": "CustomEvent"
               },
               "description": "日付選択時に発火（detail: { date: Date | null }）"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -4506,18 +4443,7 @@
           },
           "tagName": "dads-checkbox",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/checkbox/checkbox.ts",
           "definitionPath": "./packages/components/checkbox/checkbox.ts",
           "typeDefinitionPath": "./packages/components/checkbox/checkbox.ts"
@@ -4867,18 +4793,7 @@
           },
           "tagName": "dads-chip-label",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/chip-label/chip-label.ts",
           "definitionPath": "./packages/components/chip-label/chip-label.ts",
           "typeDefinitionPath": "./packages/components/chip-label/chip-label.ts"
@@ -5902,16 +5817,6 @@
             {
               "description": "入力時に発火（detail: { value: string }）",
               "name": "dads-input"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -6681,18 +6586,7 @@
           },
           "tagName": "dads-fieldset",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/fieldset/fieldset.ts",
           "definitionPath": "./packages/components/fieldset/fieldset.ts",
           "typeDefinitionPath": "./packages/components/fieldset/fieldset.ts"
@@ -7491,16 +7385,6 @@
             {
               "description": "入力時に発火",
               "name": "dads-input"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -8464,16 +8348,6 @@
                 "text": "CustomEvent"
               },
               "description": "項目選択時に発火（detail: { selectedItem, selectedValue, selectedIndex }）"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -8875,18 +8749,7 @@
           },
           "tagName": "dads-menu-list",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/menu-list/menu-list.ts",
           "definitionPath": "./packages/components/menu-list/menu-list.ts",
           "typeDefinitionPath": "./packages/components/menu-list/menu-list.ts"
@@ -9576,18 +9439,7 @@
           },
           "tagName": "dads-menu-list-item",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/menu-list/menu-list.ts",
           "definitionPath": "./packages/components/menu-list/menu-list.ts",
           "typeDefinitionPath": "./packages/components/menu-list/menu-list.ts"
@@ -10412,16 +10264,6 @@
             {
               "description": "前ボタンクリック時（as=\"button\" 時のみ）",
               "name": "prev"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -11580,18 +11422,7 @@
           },
           "tagName": "dads-radio",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/radio/radio.ts",
           "definitionPath": "./packages/components/radio/radio.ts",
           "typeDefinitionPath": "./packages/components/radio/radio.ts"
@@ -12496,16 +12327,6 @@
             {
               "description": "入力時に発火",
               "name": "dads-input"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -13090,18 +12911,7 @@
           },
           "tagName": "dads-step-navigation",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/step-navigation/step-navigation.ts",
           "definitionPath": "./packages/components/step-navigation/step-navigation.ts",
           "typeDefinitionPath": "./packages/components/step-navigation/step-navigation.ts"
@@ -13663,16 +13473,6 @@
                 "text": "CustomEvent"
               },
               "description": "interaction=\"button\" のアクティベート時に発火（detail: {step, state, trigger}）"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -14415,16 +14215,6 @@
             {
               "description": "状態変更時に発火",
               "name": "dads-change"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -15237,15 +15027,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-table', shadowOptions: null, styles: [ createTableTokens('dads-table'), createTableStyles('dads-table'), ], attributes: [ PropertyAttr('size'), PropertyAttr('sortBehavior', 'sort-behavior'), BooleanAttr('striped'), BooleanAttr('hover'), BooleanAttr('selectable'), ], }"
+              "default": "{ name: 'dads-table', shadowOptions: null, styles: [ createTableTokens('dads-table'), createTableStyles('dads-table'), ], attributes: [ PropertyAttr('size'), PropertyAttr('sortBehavior', 'sort-behavior'), BooleanAttr('striped'), BooleanAttr('hover'), BooleanAttr('selectable'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -15336,16 +15126,6 @@
                 "text": "CustomEvent"
               },
               "description": "ソート変更時に発火（detail: { columnId, columnIndex, direction }）"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -16214,16 +15994,6 @@
             {
               "description": "入力時に発火",
               "name": "dads-input"
-            },
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
             }
           ],
           "attributes": [
@@ -16578,15 +16348,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }"
+              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -16800,18 +16570,7 @@
           },
           "tagName": "dads-text",
           "customElement": true,
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ],
+          "events": [],
           "modulePath": "./packages/components/typography/dads-text.ts",
           "definitionPath": "./packages/components/typography/dads-text.ts",
           "typeDefinitionPath": "./packages/components/typography/dads-text.ts"
@@ -17346,18 +17105,7 @@
             "name": "WebComponent",
             "module": "packages/core/web-components.ts"
           },
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ]
+          "events": []
         },
         {
           "kind": "function",
@@ -17738,18 +17486,10 @@
               "readonly": true
             }
           ],
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              }
-            }
-          ],
+          "events": [],
           "superclass": {
             "name": "HTMLElement"
           },
-          "customElement": true,
           "modulePath": "./packages/core/web-components.ts",
           "definitionPath": "./packages/core/web-components.ts",
           "typeDefinitionPath": "./packages/core/web-components.ts"
@@ -20481,18 +20221,7 @@
             "name": "WebComponent",
             "module": "/packages/core/web-components.js"
           },
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ]
+          "events": []
         },
         {
           "kind": "class",
@@ -20708,18 +20437,7 @@
             "name": "WebComponent",
             "module": "/packages/core/web-components.js"
           },
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ]
+          "events": []
         },
         {
           "kind": "class",
@@ -20935,18 +20653,7 @@
             "name": "WebComponent",
             "module": "/packages/core/web-components.js"
           },
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ]
+          "events": []
         }
       ],
       "exports": [
@@ -23179,18 +22886,7 @@
             "name": "FormComponent",
             "module": "/packages/core/web-components.js"
           },
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ]
+          "events": []
         },
         {
           "kind": "class",
@@ -23435,18 +23131,7 @@
             "name": "WebComponent",
             "module": "/packages/core/web-components.js"
           },
-          "events": [
-            {
-              "name": "type",
-              "type": {
-                "text": "CustomEvent"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            }
-          ]
+          "events": []
         }
       ],
       "exports": [
