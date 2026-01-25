@@ -6,8 +6,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'AdaptiveCard',
-      fileName: 'adaptive-card',
+      name: 'WebComponentsFactory',
+      fileName: 'web-components-factory',
       formats: ['es', 'umd']
     },
     rollupOptions: {

@@ -1,7 +1,7 @@
 {
   "name": "web-components-factory",
   "version": "0.1.0",
-  "description": "Adaptive Card Component with TDD approach using web-components.ts",
+  "description": "Web Components library with TDD approach",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -64,7 +64,6 @@
   },
   "keywords": [
     "web-components",
-    "adaptive-card",
     "tdd",
     "typescript",
     "accessibility",

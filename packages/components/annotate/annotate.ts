@@ -313,10 +313,11 @@ export class DadsAnnotate extends TypographyWebComponent {
         line-height: 1.3;
         font-weight: 700;
         box-shadow: var(--a11y-annotate-shadow);
-        white-space: nowrap;
         display: flex;
-        align-items: center;
+        flex-wrap: wrap;
+        align-items: flex-start;
         gap: var(--spacing-1-5, 6px);
+        white-space: normal;
       }
 
       a11y-annotate .callout-tag-number {
@@ -337,11 +338,15 @@ export class DadsAnnotate extends TypographyWebComponent {
       a11y-annotate .callout-tag code {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
           'Courier New', monospace;
+        flex: 1 1 auto;
+        min-width: 0;
         font-weight: 700;
         background: transparent;
         border: 0;
         padding: 0;
         color: inherit;
+        white-space: normal;
+        overflow-wrap: anywhere;
       }
 
       a11y-annotate .callout-list {
@@ -354,19 +359,21 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate .callout-item {
         display: grid;
-        grid-template-columns: var(--a11y-annotate-circle-size) minmax(0, 1fr);
+        grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr);
         gap: var(--spacing-2-5, 10px);
         align-items: start;
       }
 
       a11y-annotate .callout-number {
-        width: var(--a11y-annotate-circle-size);
+        min-width: var(--a11y-annotate-circle-size);
         height: var(--a11y-annotate-circle-size);
+        padding: 0 var(--spacing-1, 4px);
         border-radius: 999px;
         background: var(--a11y-annotate-text-primary);
         color: var(--a11y-annotate-background);
-        display: grid;
-        place-items: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         font-size: var(--a11y-annotate-font-size);
         font-weight: 700;
       }
