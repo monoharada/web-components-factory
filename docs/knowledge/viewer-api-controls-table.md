@@ -21,6 +21,7 @@
 ### ターゲット指定
 - `data-api-target`：この属性が付いた要素が反映先になります
 - 代替（任意）：ルート要素に `data-api-target-selector="..."` を置く（`querySelector()` できるセレクタ）
+- 追加（任意）：各コントロール要素に `data-api-target-selector="..."` を置くと、**そのコントロールだけ**指定した要素へ反映します（ルートの反映先より優先）
 
 ### Controls（Attributes / Properties）
 - `data-api-attr="attr-name"`：属性として反映（boolean は presence）
@@ -70,6 +71,23 @@
 <\/script>
 ```
 
+## 応用：コントロール単位の反映先（slotテキスト編集など）
+ターゲット要素（`data-api-target`）とは別に、**一部の行だけ別の要素へ反映**したい場合は、
+コントロール要素に `data-api-target-selector` を指定します。
+
+```html
+<div data-api-target><!-- preview target --></div>
+<span data-summary>見出し</span>
+
+<dads-input-text
+  label="summaryText"
+  value="見出し"
+  data-api-prop="textContent"
+  data-api-target-selector="[data-summary]"
+  data-default="見出し"
+></dads-input-text>
+```
+
 ## レイアウト / 見た目（固定デザイン）
 - パネルCSSは `viewer.html` の `.wc-api-*` セクションにあります
 - テーブルは `<dads-table>` を “器” として使います（水平スクロール等を活用）
@@ -81,4 +99,3 @@
 - **空文字の扱い**：
   - `data-api-attr`：空文字は `removeAttribute()`（未指定に戻す）
   - `data-api-css-var`：空文字は `removeProperty()`（トークンへ戻す）
-

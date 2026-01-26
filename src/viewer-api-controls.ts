@@ -5,6 +5,7 @@ type ControlDescriptor = Readonly<{
   name: string;
   el: Element;
   defaultValue: string | null;
+  targetSelector: string | null;
 }>;
 
 type Cleanup = () => void;
@@ -113,46 +114,63 @@ function resolveTarget(root: Element): Element | null {
   return null;
 }
 
+function resolveEffectiveTarget(root: Element, defaultTarget: Element, desc: ControlDescriptor): Element | null {
+  if (!desc.targetSelector) return defaultTarget;
+  return root.querySelector(desc.targetSelector);
+}
+
+function collectControls(root: Element): ControlDescriptor[] {
+  const controls: ControlDescriptor[] = [];
+  const push = (kind: ControlKind, nameAttr: string) => {
+    root.querySelectorAll(`[${nameAttr}]`).forEach((el) => {
+      const name = el.getAttribute(nameAttr);
+      if (!name) return;
+      controls.push({
+        kind,
+        name,
+        el,
+        defaultValue: el.getAttribute('data-default'),
+        targetSelector: el.getAttribute('data-api-target-selector'),
+      });
+    });
+  };
+
+  push('attr', 'data-api-attr');
+  push('prop', 'data-api-prop');
+  push('css-var', 'data-api-css-var');
+
+  return controls;
+}
+
+function onControlEvents(el: Element, listener: EventListener): Cleanup {
+  for (const eventName of CONTROL_EVENTS) {
+    el.addEventListener(eventName, listener);
+  }
+  return () => {
+    for (const eventName of CONTROL_EVENTS) {
+      el.removeEventListener(eventName, listener);
+    }
+  };
+}
+
 export function bindApiControls(root: Element): Cleanup {
   const target = resolveTarget(root);
   if (!target) return () => {};
 
-  const controls: ControlDescriptor[] = [];
-  root.querySelectorAll('[data-api-attr]').forEach((el) => {
-    const name = el.getAttribute('data-api-attr');
-    if (!name) return;
-    controls.push({ kind: 'attr', name, el, defaultValue: el.getAttribute('data-default') });
-  });
-  root.querySelectorAll('[data-api-prop]').forEach((el) => {
-    const name = el.getAttribute('data-api-prop');
-    if (!name) return;
-    controls.push({ kind: 'prop', name, el, defaultValue: el.getAttribute('data-default') });
-  });
-  root.querySelectorAll('[data-api-css-var]').forEach((el) => {
-    const name = el.getAttribute('data-api-css-var');
-    if (!name) return;
-    controls.push({ kind: 'css-var', name, el, defaultValue: el.getAttribute('data-default') });
-  });
+  const controls = collectControls(root);
 
   const cleanups: Cleanup[] = [];
 
   const handle = (desc: ControlDescriptor) => (event: Event) => {
     const value = readControlValue(desc.el, event);
-    applyToTarget(target, desc, value);
+    const effectiveTarget = resolveEffectiveTarget(root, target, desc);
+    if (!effectiveTarget) return;
+    applyToTarget(effectiveTarget, desc, value);
   };
 
   for (const desc of controls) {
-    const onChange = handle(desc);
-
-    for (const eventName of CONTROL_EVENTS) {
-      desc.el.addEventListener(eventName, onChange as EventListener);
-    }
-
-    cleanups.push(() => {
-      for (const eventName of CONTROL_EVENTS) {
-        desc.el.removeEventListener(eventName, onChange as EventListener);
-      }
-    });
+    const onChange = handle(desc) as EventListener;
+    cleanups.push(onControlEvents(desc.el, onChange));
   }
 
   const resetters = root.querySelectorAll('[data-api-reset]');
@@ -161,7 +179,9 @@ export function bindApiControls(root: Element): Cleanup {
       for (const desc of controls) {
         const nextValue = parseDefaultValue(desc);
         setControlValue(desc.el, nextValue);
-        applyToTarget(target, desc, nextValue);
+        const effectiveTarget = resolveEffectiveTarget(root, target, desc);
+        if (!effectiveTarget) continue;
+        applyToTarget(effectiveTarget, desc, nextValue);
       }
     };
     el.addEventListener('click', onClick);

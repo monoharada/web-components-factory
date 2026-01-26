@@ -5786,6 +5786,467 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/disclosure/disclosure.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Disclosure（ディスクロージャー）コンポーネント",
+          "name": "DadsDisclosure",
+          "cssProperties": [
+            {
+              "description": "summary内のgap",
+              "name": "--dads-disclosure-gap"
+            },
+            {
+              "description": "アイコンサイズ",
+              "name": "--dads-disclosure-icon-size"
+            },
+            {
+              "description": "アイコン色",
+              "name": "--dads-disclosure-icon-color"
+            },
+            {
+              "description": "本文のインライン開始padding",
+              "name": "--dads-disclosure-content-padding-inline-start"
+            },
+            {
+              "description": "戻るリンク色",
+              "name": "--dads-disclosure-back-link-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "先頭に戻るリンク（任意）",
+              "name": "back-link"
+            },
+            {
+              "description": "戻るリンクのアイコン",
+              "name": "back-link-icon"
+            },
+            {
+              "description": "本文領域",
+              "name": "content"
+            },
+            {
+              "description": "<details> 要素",
+              "name": "details"
+            },
+            {
+              "description": "開閉状態アイコン",
+              "name": "icon"
+            },
+            {
+              "description": "アイコン内側の円（hover時の反転用）",
+              "name": "icon-circle"
+            },
+            {
+              "description": "アイコン内の三角形（hover時の反転用）",
+              "name": "icon-triangle"
+            },
+            {
+              "description": "<summary> 要素",
+              "name": "summary"
+            },
+            {
+              "description": "見出しテキストラッパー",
+              "name": "summary-text"
+            }
+          ],
+          "slots": [
+            {
+              "description": "先頭に戻るリンクのラベル（任意、未指定なら表示しない）",
+              "name": "back-link"
+            },
+            {
+              "description": "本文",
+              "name": "content"
+            },
+            {
+              "description": "見出し（summary内）",
+              "name": "summary"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#backLink",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLAnchorElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#backLinkObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#details",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDetailsElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleBackLinkClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleToggle",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#summary",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#syncBackLinkVisibility",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#syncOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "a11yAnnotations",
+              "type": {
+                "text": "A11yAnnotations"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "{ version: 1, summary: 'ディスクロージャーコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部は <details>/<summary> で実装し、ネイティブの開閉セマンティクス（open）を利用します。', '見出し（slot=\"summary\"）が summary の主要ラベルになります。', '本文（slot=\"content\"）は open のときに表示されます（detailsのネイティブ挙動）。', 'back-link（slot=\"back-link\"）は任意で、未指定の場合は表示しません。', ], keyboard: [ 'summary は Tab でフォーカスでき、Enter/Space で開閉できます（ネイティブ挙動）。', 'back-link が表示されている場合、Tab でフォーカスでき、クリック/Enter で見出しへ戻れます。', ], zoom: [ '見出し/本文はテキストの折り返しを前提にし、ズーム/文字サイズ変更でも情報が欠けないことを想定します。', ], states: [ 'open 属性で初期状態を制御でき、ユーザー操作と同期します。', 'アイコンは open 状態で回転し、開閉状態を視覚的に補助します。', ], labels: [ 'summary のラベルは slot=\"summary\" のテキストで決まります。', 'back-link のラベルは slot=\"back-link\" で提供します。', ], motion: [ 'back-link は summary へスクロール+フォーカスします（prefers-reduced-motion を考慮します）。', ], }, callouts: [ { id: 'summary', title: 'summary（見出し）', label: '<summary>', description: '展開/折りたたみの操作起点。', category: 'keyboard', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"summary\"]' }, }, { id: 'icon', title: '開閉状態アイコン', label: 'aria-hidden=\"true\"', description: '開閉状態を視覚的に示すアイコン（aria-hidden）。', category: 'states', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"icon\"]' }, }, { id: 'content', title: 'content（本文）', label: 'slot=\"content\"', description: '展開時に表示される本文領域。', category: 'semantics', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"content\"]' }, }, { id: 'back-link', title: '先頭に戻るリンク（任意）', label: 'slot=\"back-link\"', description: '本文内から見出しへ戻る補助リンク。未指定の場合は表示しません。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"back-link\"]' }, }, ], }"
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-disclosure', template: html` <details part=\"details\"> <summary part=\"summary\"> <svg part=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <circle cx=\"12\" cy=\"12\" r=\"11\" fill=\"currentcolor\" /> <circle part=\"icon-circle\" cx=\"12\" cy=\"12\" r=\"8\" fill=\"currentcolor\" /> <path part=\"icon-triangle\" d=\"M17 10H7L12 15L17 10Z\" fill=\"Canvas\" /> </svg> <span part=\"summary-text\"> <slot name=\"summary\"></slot> </span> </summary> <div part=\"content\"> <slot name=\"content\"></slot> <a part=\"back-link\" href=\"#\"> <svg part=\"back-link-icon\" width=\"24\" height=\"24\" fill=\"none\" aria-hidden=\"true\"> <path d=\"M6 7V14.5C6 16.8 8.2 19 10.5 19C12.8 19 15 16.8 15 14.5V6M10.709 9.7L15 5.414L19.291 9.7\" stroke=\"currentcolor\" stroke-width=\"2\" /> </svg> <slot name=\"back-link\"></slot> </a> </div> </details> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), disclosureTokens, disclosureStyles, applyDADSFocusStyles()], 'minimal', ), attributes: [BooleanAttr('open')], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "openChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "開閉状態変更時に発火（bubbles）",
+              "name": "toggle"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "開閉状態（trueでopen）",
+              "name": "open"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-disclosure",
+          "customElement": true,
+          "modulePath": "./packages/components/disclosure/disclosure.ts",
+          "definitionPath": "./packages/components/disclosure/disclosure.ts",
+          "typeDefinitionPath": "./packages/components/disclosure/disclosure.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDisclosure",
+          "declaration": {
+            "name": "DadsDisclosure",
+            "module": "packages/components/disclosure/disclosure.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/disclosure/disclosure.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/disclosure/disclosure.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-disclosure",
+          "declaration": {
+            "name": "DadsDisclosure",
+            "module": "./packages/components/disclosure/disclosure.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/fieldset/fieldset.ts",
       "declarations": [
         {
@@ -19464,6 +19925,172 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/disclosure/disclosure-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultDisclosure",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "function",
+          "name": "defineDisclosure",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "Disclosureコンポーネントを定義"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-disclosure`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultDisclosure",
+          "declaration": {
+            "name": "defineDefaultDisclosure",
+            "module": "packages/components/disclosure/disclosure-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDisclosure",
+          "declaration": {
+            "name": "defineDisclosure",
+            "module": "packages/components/disclosure/disclosure-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/disclosure/disclosure-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "disclosureStyles",
+          "default": "css` :host { display: block; } :host(:not([data-has-back-link])) [part='back-link'] { display: none; } [part='summary'] { display: flex; align-items: start; justify-content: start; gap: var(--dads-disclosure-gap); width: fit-content; cursor: default; list-style-type: none; } @media (hover: hover) { [part='summary']:hover { text-decoration: underline; text-underline-offset: var(--dads-disclosure-summary-underline-offset); } } [part='summary']:focus-visible { border-radius: var(--dads-disclosure-focus-border-radius); } [part='summary']::marker { content: ''; } [part='summary']::-webkit-details-marker { display: none; } [part='icon'] { flex-shrink: 0; margin-top: calc((1lh - var(--dads-disclosure-icon-size)) / 2); width: var(--dads-disclosure-icon-size); height: var(--dads-disclosure-icon-size); color: var(--dads-disclosure-icon-color); } @media (forced-colors: active) { [part='icon'] { color: inherit; } } [part='details'][open] [part='icon'] { rotate: 180deg; } @media (hover: hover) { [part='summary']:hover [part='icon-circle'] { fill: Canvas; } [part='summary']:hover [part='icon-triangle'] { fill: currentcolor; } } [part='content'] { padding-inline-start: var(--dads-disclosure-content-padding-inline-start); margin: var(--dads-disclosure-content-margin-block) 0; } [part='back-link']:any-link { display: flex; align-items: start; gap: var(--dads-disclosure-back-link-gap); width: fit-content; color: var(--dads-disclosure-back-link-color); text-decoration: underline; text-decoration-thickness: var(--dads-disclosure-back-link-underline-thickness); text-underline-offset: var(--dads-disclosure-back-link-underline-offset); text-spacing-trim: trim-start; } @media (hover: hover) { [part='back-link']:any-link:hover { color: var(--dads-disclosure-back-link-color-hover); text-decoration-thickness: var(--dads-disclosure-back-link-underline-thickness-hover); } } [part='back-link']:any-link:active { color: var(--dads-disclosure-back-link-color-active); text-decoration-thickness: var(--dads-disclosure-back-link-underline-thickness); } [part='back-link']:focus-visible { border-radius: var(--dads-disclosure-focus-border-radius); } [part='back-link-icon'] { margin-top: calc((1lh - var(--dads-disclosure-icon-size)) / 2); flex-shrink: 0; width: var(--dads-disclosure-icon-size); height: var(--dads-disclosure-icon-size); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "disclosureStyles",
+          "declaration": {
+            "name": "disclosureStyles",
+            "module": "packages/components/disclosure/disclosure-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/disclosure/disclosure-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "disclosureLocalTokens",
+          "default": "css`${disclosureLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "disclosureSemanticTokens",
+          "default": "css`${disclosureSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "disclosureTokens",
+          "default": "css` ${disclosureSemanticTokensText} ${disclosureLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "disclosureLocalTokens",
+          "declaration": {
+            "name": "disclosureLocalTokens",
+            "module": "packages/components/disclosure/disclosure-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "disclosureSemanticTokens",
+          "declaration": {
+            "name": "disclosureSemanticTokens",
+            "module": "packages/components/disclosure/disclosure-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "disclosureTokens",
+          "declaration": {
+            "name": "disclosureTokens",
+            "module": "packages/components/disclosure/disclosure-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/disclosure/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/disclosure/disclosure.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultDisclosure",
+          "declaration": {
+            "name": "defineDefaultDisclosure",
+            "module": "./disclosure-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDisclosure",
+          "declaration": {
+            "name": "defineDisclosure",
+            "module": "./disclosure-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/fieldset/fieldset-define.ts",
       "declarations": [
         {
@@ -19752,6 +20379,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/search-box/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/disclosure/index.js"
           }
         }
       ]

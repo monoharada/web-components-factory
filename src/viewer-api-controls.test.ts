@@ -14,6 +14,15 @@ async function loadModule() {
   }
 }
 
+function dispatchDadsInput(el: Element, value: string): void {
+  (el as any).value = value;
+  el.dispatchEvent(new CustomEvent('dads-input', { detail: { value }, bubbles: true }));
+}
+
+function dispatchDadsChange(el: Element, checked: boolean): void {
+  el.dispatchEvent(new CustomEvent('dads-change', { detail: { checked }, bubbles: true }));
+}
+
 describe('viewer api controls binder', () => {
   it('binds boolean attribute controls (dads-switch → data-api-attr)', async () => {
     const { bindApiControls } = await loadModule();
@@ -31,14 +40,10 @@ describe('viewer api controls binder', () => {
 
     bindApiControls(root);
 
-    ctrl.dispatchEvent(
-      new CustomEvent('dads-change', { detail: { checked: true }, bubbles: true }),
-    );
+    dispatchDadsChange(ctrl, true);
     expect(target.hasAttribute('required')).toBe(true);
 
-    ctrl.dispatchEvent(
-      new CustomEvent('dads-change', { detail: { checked: false }, bubbles: true }),
-    );
+    dispatchDadsChange(ctrl, false);
     expect(target.hasAttribute('required')).toBe(false);
   });
 
@@ -58,12 +63,10 @@ describe('viewer api controls binder', () => {
 
     bindApiControls(root);
 
-    ctrl.value = '見出し';
-    ctrl.dispatchEvent(new CustomEvent('dads-input', { detail: { value: '見出し' }, bubbles: true }));
+    dispatchDadsInput(ctrl, '見出し');
     expect(target.getAttribute('label')).toBe('見出し');
 
-    ctrl.value = '';
-    ctrl.dispatchEvent(new CustomEvent('dads-input', { detail: { value: '' }, bubbles: true }));
+    dispatchDadsInput(ctrl, '');
     expect(target.hasAttribute('label')).toBe(false);
   });
 
@@ -83,8 +86,7 @@ describe('viewer api controls binder', () => {
 
     bindApiControls(root);
 
-    ctrl.value = 'hello';
-    ctrl.dispatchEvent(new CustomEvent('dads-input', { detail: { value: 'hello' }, bubbles: true }));
+    dispatchDadsInput(ctrl, 'hello');
     expect(target.value).toBe('hello');
   });
 
@@ -108,12 +110,10 @@ describe('viewer api controls binder', () => {
 
     bindApiControls(root);
 
-    ctrl.value = 'red';
-    ctrl.dispatchEvent(new CustomEvent('dads-input', { detail: { value: 'red' }, bubbles: true }));
+    dispatchDadsInput(ctrl, 'red');
     expect(target.style.getPropertyValue('--dads-input-border-color')).toBe('red');
 
-    ctrl.value = '';
-    ctrl.dispatchEvent(new CustomEvent('dads-input', { detail: { value: '' }, bubbles: true }));
+    dispatchDadsInput(ctrl, '');
     expect(target.style.getPropertyValue('--dads-input-border-color')).toBe('');
   });
 
@@ -139,13 +139,9 @@ describe('viewer api controls binder', () => {
 
     bindApiControls(root);
 
-    required.dispatchEvent(
-      new CustomEvent('dads-change', { detail: { checked: true }, bubbles: true }),
-    );
-    label.value = '見出し';
-    label.dispatchEvent(new CustomEvent('dads-input', { detail: { value: '見出し' }, bubbles: true }));
-    css.value = 'red';
-    css.dispatchEvent(new CustomEvent('dads-input', { detail: { value: 'red' }, bubbles: true }));
+    dispatchDadsChange(required, true);
+    dispatchDadsInput(label, '見出し');
+    dispatchDadsInput(css, 'red');
 
     expect(target.hasAttribute('required')).toBe(true);
     expect(target.getAttribute('label')).toBe('見出し');
@@ -156,6 +152,34 @@ describe('viewer api controls binder', () => {
     expect(target.hasAttribute('required')).toBe(false);
     expect(target.getAttribute('label')).toBe('ラベル');
     expect(target.style.getPropertyValue('--dads-input-border-color')).toBe('');
+  });
+
+  it('supports per-control target override via [data-api-target-selector]', async () => {
+    const { bindApiControls } = await loadModule();
+
+    document.body.innerHTML = `
+      <section id="root">
+        <div id="target" data-api-target></div>
+        <span id="secondary">old</span>
+        <dads-input-text
+          id="ctrl"
+          data-api-prop="textContent"
+          data-api-target-selector="#secondary"
+          data-default="old"
+        ></dads-input-text>
+      </section>
+    `;
+
+    const root = document.getElementById('root')!;
+    const target = document.getElementById('target')!;
+    const secondary = document.getElementById('secondary')!;
+    const ctrl = document.getElementById('ctrl') as any;
+
+    bindApiControls(root);
+
+    dispatchDadsInput(ctrl, 'new');
+    expect(secondary.textContent).toBe('new');
+    expect(target.textContent).not.toBe('new');
   });
 
   it('treats controls with checked:boolean as boolean even when checked is false (regression)', async () => {
@@ -179,9 +203,7 @@ describe('viewer api controls binder', () => {
 
     bindApiControls(root);
 
-    ctrl.dispatchEvent(
-      new CustomEvent('dads-change', { detail: { checked: true }, bubbles: true }),
-    );
+    dispatchDadsChange(ctrl, true);
     expect(target.hasAttribute('required')).toBe(true);
 
     reset.dispatchEvent(new MouseEvent('click', { bubbles: true }));

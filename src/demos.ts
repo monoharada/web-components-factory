@@ -887,6 +887,302 @@ export const demos = {
       </div>
   `,
 
+  disclosure: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ディスクロージャー</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        デジタル庁デザインシステム（DADS）HTML版 disclosure.css と同一の見た目になるよう実装したWeb Components版です。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-disclosure">
+          <div style="padding: 60px 0;">
+            <dads-disclosure open>
+              <span slot="summary">ダミーテキストとは何ですか？</span>
+              <div slot="content">
+                <div style="margin-bottom: 1lh;">これはダミーテキストです。</div>
+                <div style="margin-bottom: 0;">
+                  ダミーテキストは、デザインやレイアウトの作成時に使用される仮の文章です。
+                  ダミーテキストを使用すると、デザインの全体像を評価したり、テキストの配置や長さを確認したりすることができます。
+                  ダミーテキストは実際の文章ではないので、内容には意味がありません。
+                </div>
+              </div>
+              <span slot="back-link">「ダミーテキストとは何ですか？」の先頭に戻る</span>
+            </dads-disclosure>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          テーブル内の操作が Preview のターゲット要素へ即時反映されます。
+        </p>
+
+        <div class="wc-api-panel">
+          <div class="wc-api-panel__header">
+            <div class="wc-api-panel__title">Controls</div>
+            <dads-button data-api-reset type="button" variant="outlined" size="small">Reset</dads-button>
+          </div>
+
+          <div class="wc-api-panel__body">
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-disclosure data-api-target open style="max-width: 720px;">
+                  <span slot="summary" data-disclosure-summary>ダミーテキストとは何ですか？</span>
+                  <div slot="content">
+                    <div data-disclosure-content-lead style="margin-bottom: 1lh;">これはダミーテキストです。</div>
+                    <div style="margin-bottom: 0;">
+                      <span data-disclosure-content-body>ダミーテキストは、デザインやレイアウトの作成時に使用される仮の文章です。</span>
+                    </div>
+                  </div>
+                  <span slot="back-link" data-disclosure-back-link>「ダミーテキストとは何ですか？」の先頭に戻る</span>
+                </dads-disclosure>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Kind</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Control</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>open</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="open" data-api-attr="open" data-default="false" checked>
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>開閉状態（trueでopen）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>summaryText</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>"ダミーテキストとは何ですか？"</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="summaryText"
+                              value="ダミーテキストとは何ですか？"
+                              data-api-prop="textContent"
+                              data-api-target-selector="[data-disclosure-summary]"
+                              data-default="ダミーテキストとは何ですか？"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td><code>slot="summary"</code> のテキスト</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>contentLeadText</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>"これはダミーテキストです。"</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="contentLeadText"
+                              value="これはダミーテキストです。"
+                              data-api-prop="textContent"
+                              data-api-target-selector="[data-disclosure-content-lead]"
+                              data-default="これはダミーテキストです。"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td><code>slot="content"</code> 冒頭のテキスト</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>contentBodyText</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>"ダミーテキストは、デザインやレイアウトの作成時に使用される仮の文章です。"</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="contentBodyText"
+                              value="ダミーテキストは、デザインやレイアウトの作成時に使用される仮の文章です。"
+                              data-api-prop="textContent"
+                              data-api-target-selector="[data-disclosure-content-body]"
+                              data-default="ダミーテキストは、デザインやレイアウトの作成時に使用される仮の文章です。"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td><code>slot="content"</code> 本文のテキスト</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>backLinkText</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>"「ダミーテキストとは何ですか？」の先頭に戻る"</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="backLinkText"
+                              value="「ダミーテキストとは何ですか？」の先頭に戻る"
+                              data-api-prop="textContent"
+                              data-api-target-selector="[data-disclosure-back-link]"
+                              data-default="「ダミーテキストとは何ですか？」の先頭に戻る"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td><code>slot="back-link"</code>（空文字で非表示）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>backLinkSlot</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>"back-link" | (unset)</code></td>
+                        <td><code>back-link</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select
+                              aria-label="backLinkSlot"
+                              data-api-attr="slot"
+                              data-api-target-selector="[data-disclosure-back-link]"
+                              data-default="back-link"
+                            >
+                              <option value="back-link" selected>slot="back-link"</option>
+                              <option value="">(unset)</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>戻るリンク用スロットの有無</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Default</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-disclosure-gap</code></th>
+                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-disclosure-gap" value="" data-api-css-var="--dads-disclosure-gap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>summary内のgap</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-disclosure-icon-size</code></th>
+                        <td><code>1.5rem</code><br><small style="color:#666">(24px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-disclosure-icon-size" value="" data-api-css-var="--dads-disclosure-icon-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アイコンサイズ</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-disclosure-icon-color</code></th>
+                        <td><code>--color-primitive-blue-1000</code><br><small style="color:#666">(#00118f)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-disclosure-icon-color" value="" data-api-css-var="--dads-disclosure-icon-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アイコン色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-disclosure-content-padding-inline-start</code></th>
+                        <td><code>--spacing-8</code><br><small style="color:#666">(32px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-disclosure-content-padding-inline-start" value="" data-api-css-var="--dads-disclosure-content-padding-inline-start" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>本文のインライン開始padding</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-disclosure-back-link-color</code></th>
+                        <td><code>--color-primitive-blue-1000</code><br><small style="color:#666">(#00118f)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-disclosure-back-link-color" value="" data-api-css-var="--dads-disclosure-back-link-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>戻るリンク色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                <p class="wc-api-panel__section-note">
+                  ※ 空にすると <code>style.removeProperty()</code> で元のトークン値に戻ります。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            (function() {
+              var currentScript = document.currentScript;
+              Promise.all([
+                import('dads-disclosure'),
+                import('dads-button'),
+                import('dads-table'),
+                import('dads-switch'),
+                import('dads-input-text'),
+                import('a11y-annotate'),
+                import('/src/viewer-api-controls.js')
+              ]).then(function(mods) {
+                var root = currentScript?.parentElement;
+                if (!root || !root.isConnected) return;
+                var api = mods[6];
+                if (api && api.bindApiControls) api.bindApiControls(root);
+              });
+            })();
+          <\/script>
+        </div>
+      </section>
+    </div>
+  `,
+
   resetCss: () => `
     <div style="padding: 20px;">
       <h2 style="margin-bottom: 30px; color: #333;">リセットCSS比較デモ</h2>

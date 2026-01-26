@@ -61,3 +61,6 @@ export * from './menu-list-box/index.js';
 
 // 検索ボックス
 export * from './search-box/index.js';
+
+// ディスクロージャー
+export * from './disclosure/index.js';
