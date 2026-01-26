@@ -180,6 +180,7 @@ function annotationToggleScript(): string {
 ## チェックリスト
 
 - [ ] Overview セクションがある
+- [ ] Usage（HTML）コードブロック（`<dads-code-block>`）がある
 - [ ] a11y-annotate が表示される
 - [ ] API / Controls に Props/Attrs テーブルがある
 - [ ] API / Controls に CSS Variables テーブルがある（折りたたみ）

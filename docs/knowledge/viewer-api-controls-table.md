@@ -22,6 +22,10 @@
 - `data-api-target`：この属性が付いた要素が反映先になります
 - 代替（任意）：ルート要素に `data-api-target-selector="..."` を置く（`querySelector()` できるセレクタ）
 
+### Usage（HTML）コードブロック連動（任意）
+- `<dads-code-block data-api-code>` を同じパネル内に置くと、`bindApiControls()` が `<dads-code-block>` 内の `<template>` を **Usage（HTML）の正**として扱い、Controls 操作（attrs / inline style / 一部prop）に追従してHTMLスニペットを生成・整形して表示します
+- 連動させる場合は、初期化スクリプトで `import('dads-code-block')` を追加してください（定義前に `setCode()` を呼ばないため）
+
 ### Controls（Attributes / Properties）
 - `data-api-attr="attr-name"`：属性として反映（boolean は presence）
 - `data-api-prop="propName"`：プロパティとして反映（`el[propName] = ...`）
@@ -70,6 +74,28 @@
 <\/script>
 ```
 
+### Usage（HTML）コードブロック連動版（コピペ）
+
+```html
+<script>
+  (function() {
+    var currentScript = document.currentScript;
+    Promise.all([
+      import('dads-table'),
+      import('dads-switch'),
+      import('dads-input-text'),
+      import('dads-code-block'),
+      import('/src/viewer-api-controls.js')
+    ]).then(function(mods) {
+      var root = currentScript?.parentElement;
+      if (!root || !root.isConnected) return;
+      var api = mods[4];
+      if (api && api.bindApiControls) api.bindApiControls(root);
+    });
+  })();
+<\/script>
+```
+
 ## レイアウト / 見た目（固定デザイン）
 - パネルCSSは `viewer.html` の `.wc-api-*` セクションにあります
 - テーブルは `<dads-table>` を “器” として使います（水平スクロール等を活用）
@@ -81,4 +107,3 @@
 - **空文字の扱い**：
   - `data-api-attr`：空文字は `removeAttribute()`（未指定に戻す）
   - `data-api-css-var`：空文字は `removeProperty()`（トークンへ戻す）
-

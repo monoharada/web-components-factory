@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "keys": [
+    "checkbox",
+    "radio",
+    "blockquote",
+    "fieldset",
+    "accordion",
+    "resetCss",
+    "textarea",
+    "button",
+    "chipLabel",
+    "textareaValidation",
+    "calendar",
+    "datePicker",
+    "inputText",
+    "inputTextValidation",
+    "table",
+    "select",
+    "selectValidation",
+    "switch",
+    "menuList",
+    "menuListBox",
+    "menuListBoxFidelity",
+    "stepNavigation",
+    "pageNavigation",
+    "empty"
+  ]
+}

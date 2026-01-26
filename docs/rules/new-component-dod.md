@@ -64,6 +64,7 @@ export default DadsMyComponent;
 ### (D) Demos (Viewer Rule)
 
 - [ ] `src/demos.ts` にデモ関数追加
+- [ ] `src/demos.ts` の説明ページに **Usage（HTML）コードブロック（`<dads-code-block>`）** を追加
 - [ ] `viewer.html` にセレクタオプション追加
 - [ ] **新規HTMLファイルは作成禁止**
 
@@ -192,6 +193,7 @@ PRコメントや自己レビュー用：
 - [ ] `@fires` で公開イベントを記載
 - [ ] `npm run cem:analyze` 実行、`custom-elements.json` 更新・コミット
 - [ ] `src/demos.ts` にデモ追加
+- [ ] `src/demos.ts` の説明ページに **Usage（HTML）コードブロック（`<dads-code-block>`）** を追加
 - [ ] `viewer.html` にセレクタ追加
 - [ ] `packages/autoload/dads/<component>.ts` 追加
 - [ ] `<component>.test.ts` 追加

@@ -4685,6 +4685,402 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/code-block/code-block.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "HTMLコード表示（コピー機能つき）コンポーネント",
+          "name": "DadsCodeBlock",
+          "cssParts": [
+            {
+              "description": "コード要素（code）",
+              "name": "code"
+            },
+            {
+              "description": "Copyボタン",
+              "name": "copy-button"
+            },
+            {
+              "description": "ヘッダー（ラベル + Copyボタン）",
+              "name": "header"
+            },
+            {
+              "description": "全体ラッパー",
+              "name": "layout"
+            },
+            {
+              "description": "コード領域（pre）",
+              "name": "pre"
+            },
+            {
+              "description": "Copy結果の通知領域（aria-live）",
+              "name": "status"
+            }
+          ],
+          "slots": [
+            {
+              "description": "左上ラベル（例: HTML）",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#clearTimer",
+              "privacy": "private",
+              "type": {
+                "text": "number | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#codeOverride",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#copyResult",
+              "privacy": "private",
+              "type": {
+                "text": "CopyResult"
+              },
+              "default": "'idle'"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onCopy",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#readTemplateHtml",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setCopyResult",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "CopyResult"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncCode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncStatus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-code-block', template: html` <div part=\"layout\"> <div part=\"header\"> <div part=\"label\"> <slot name=\"label\">HTML</slot> </div> <button id=\"copy\" part=\"copy-button\" type=\"button\">Copy</button> </div> <pre part=\"pre\"><code id=\"code\" part=\"code\"></code></pre> <div id=\"status\" part=\"status\" aria-live=\"polite\"></div> </div> `, styles: css` :host { display: block; min-width: 0; } :host { --wc-code-block-border-color: var(--color-border-light, #e5e7eb); --wc-code-block-border-radius: 12px; --wc-code-block-background: var(--color-background-hover, #f8fafc); --wc-code-block-header-background: var(--color-background-secondary, #ffffff); --wc-code-block-text-color: var(--color-text-primary, #0f172a); --wc-code-block-muted-color: var(--color-text-secondary, #475569); --wc-code-block-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; --wc-code-block-font-size: 12px; --wc-code-block-line-height: 1.6; --wc-code-block-padding-x: 12px; --wc-code-block-padding-y: 10px; } [part=\"layout\"] { border: 1px solid var(--wc-code-block-border-color); border-radius: var(--wc-code-block-border-radius); background: var(--wc-code-block-background); overflow: hidden; min-width: 0; } [part=\"header\"] { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px var(--wc-code-block-padding-x); background: var(--wc-code-block-header-background); border-bottom: 1px solid var(--wc-code-block-border-color); } [part=\"label\"] { font-size: 12px; font-weight: 600; color: var(--wc-code-block-muted-color); } [part=\"copy-button\"] { font: inherit; font-size: 12px; line-height: 1; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--wc-code-block-border-color); background: #fff; color: var(--wc-code-block-text-color); cursor: pointer; } [part=\"copy-button\"]:focus-visible { outline: 0.25rem solid var(--dads-focus-outline-color, #0f172a); outline-offset: 0.125rem; box-shadow: 0 0 0 0.125rem var(--dads-focus-ring-color, #ffd43d); } [part=\"pre\"] { margin: 0; padding: var(--wc-code-block-padding-y) var(--wc-code-block-padding-x); overflow-x: auto; overflow-y: auto; min-width: 0; } [part=\"code\"] { display: block; white-space: pre; font-family: var(--wc-code-block-font-family); font-size: var(--wc-code-block-font-size); line-height: var(--wc-code-block-line-height); color: var(--wc-code-block-text-color); } [part=\"status\"] { padding: 6px var(--wc-code-block-padding-x); font-size: 12px; color: var(--wc-code-block-muted-color); } :host([data-copy-result=\"idle\"]) [part=\"status\"] { display: none; } `, }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "setCode",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "code",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'0.1.0'"
+            }
+          ],
+          "superclass": {
+            "name": "WebComponent",
+            "module": "/packages/core/web-components.js"
+          },
+          "tagName": "dads-code-block",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/code-block/code-block.ts",
+          "definitionPath": "./packages/components/code-block/code-block.ts",
+          "typeDefinitionPath": "./packages/components/code-block/code-block.ts",
+          "cssProperties": [],
+          "cssStates": [],
+          "attributes": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsCodeBlock",
+          "declaration": {
+            "name": "DadsCodeBlock",
+            "module": "packages/components/code-block/code-block.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/code-block/code-block.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/code-block/code-block.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-code-block",
+          "declaration": {
+            "name": "DadsCodeBlock",
+            "module": "./packages/components/code-block/code-block.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/date-picker/date-picker.ts",
       "declarations": [
         {
@@ -15973,15 +16369,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
+              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }"
             },
             {
               "kind": "field",
@@ -18374,6 +18770,99 @@
           "declaration": {
             "name": "defineDefaultChipLabel",
             "module": "./chip-label-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/code-block/code-block-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineCodeBlock",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "dads-code-block を定義"
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultCodeBlock",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "type": {
+            "text": "string"
+          },
+          "default": "'dads-code-block'"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineCodeBlock",
+          "declaration": {
+            "name": "defineCodeBlock",
+            "module": "packages/components/code-block/code-block-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCodeBlock",
+          "declaration": {
+            "name": "defineDefaultCodeBlock",
+            "module": "packages/components/code-block/code-block-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/code-block/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsCodeBlock",
+          "declaration": {
+            "name": "DadsCodeBlock",
+            "module": "./code-block.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineCodeBlock",
+          "declaration": {
+            "name": "defineCodeBlock",
+            "module": "./code-block-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCodeBlock",
+          "declaration": {
+            "name": "defineDefaultCodeBlock",
+            "module": "./code-block-define.js"
           }
         }
       ]
