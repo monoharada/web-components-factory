@@ -9,6 +9,7 @@ import {
   menuListBoxDescriptionItems,
   menuListBoxNumberedItems,
   menuListItemStartIcon,
+  modulePreloadScript,
   renderApiPanelWrapper,
 } from './shared.js';
 
@@ -1320,11 +1321,7 @@ export const demos = {
         });
       </script>
 
-      <script type="module">
-        await Promise.all([
-          import('dads-menu-list-box')
-        ]);
-      </script>
+      ${modulePreloadScript(['dads-menu-list-box'])}
     </div>
   `,
 

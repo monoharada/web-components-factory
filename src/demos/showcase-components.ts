@@ -12,6 +12,7 @@ import {
   dadsDataRows,
   dadsHeaderRow,
   dadsRowHeaderRows,
+  modulePreloadScript,
   renderAllChipLabels,
   renderApiPanelWrapper,
   repeatLines,
@@ -339,9 +340,7 @@ export const demos = {
       </div>
     </div>
 
-    <script type="module">
-      await Promise.all([import('dads-blockquote'), import('dads-switch')]);
-    <\/script>
+    ${modulePreloadScript(['dads-blockquote', 'dads-switch'])}
   `,
 
 

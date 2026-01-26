@@ -77,6 +77,15 @@ ${lines}
   `;
 }
 
+function modulePreloadScript(imports: readonly string[]): string {
+  const calls = imports.map((specifier) => `import('${specifier}')`).join(', ');
+  return `
+    <script type="module">
+      await Promise.all([${calls}]);
+    <\/script>
+  `;
+}
+
 const API_PANEL_BASE_IMPORTS = [
   'dads-button',
   'dads-table',
@@ -397,6 +406,7 @@ function renderStepNavigationItems(options: StepNavigationItemRenderOptions): st
 export {
   annotationToggleScript,
   annotationToggleUI,
+  modulePreloadScript,
   renderApiPanelWrapper,
   API_TABLE_PROPS_HEADER,
   API_TABLE_PROPS_WITH_TYPE_HEADER,

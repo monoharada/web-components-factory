@@ -4,6 +4,7 @@ import {
   API_TABLE_PROPS_HEADER,
   annotationToggleScript,
   annotationToggleUI,
+  modulePreloadScript,
   renderApiPanelWrapper,
 } from './shared.js';
 
@@ -180,9 +181,7 @@ export const demos = {
       </section>
     </div>
 
-    <script type="module">
-      await Promise.all([import('dads-calendar'), import('dads-switch'), import('a11y-annotate')]);
-    </script>
+    ${modulePreloadScript(['dads-calendar', 'dads-switch', 'a11y-annotate'])}
   `,
 
 
@@ -509,8 +508,6 @@ export const demos = {
       </section>
     </div>
 
-    <script type="module">
-      await Promise.all([import('dads-date-picker'), import('dads-calendar'), import('dads-fieldset'), import('dads-switch'), import('a11y-annotate')]);
-    </script>
+    ${modulePreloadScript(['dads-date-picker', 'dads-calendar', 'dads-fieldset', 'dads-switch', 'a11y-annotate'])}
   `,
 } as const;

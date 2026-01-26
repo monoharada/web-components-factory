@@ -4,19 +4,21 @@ import path from 'node:path';
 const BASELINE_PATH = path.resolve(process.cwd(), 'scripts/wc/demo-keys-baseline.json');
 const DEMOS_DIR = path.resolve(process.cwd(), 'src/demos');
 
-function asStringArray(v) {
-  if (!Array.isArray(v)) return [];
-  return v.filter((x) => typeof x === 'string');
+function isString(value) {
+  return typeof value === 'string';
+}
+
+function asStringArray(value) {
+  if (!Array.isArray(value)) return [];
+  return value.filter(isString);
 }
 
 function extractDemoEntries(text) {
   const re = /^\s*([A-Za-z_$][\w$]*)\s*:\s*\(\)\s*=>/gm;
-  const matches = Array.from(text.matchAll(re)).map((m) => ({
+  return Array.from(text.matchAll(re)).map((m) => ({
     key: String(m[1]),
     start: m.index ?? 0,
   }));
-
-  return matches;
 }
 
 function sliceForKey(text, entries, idx) {
@@ -63,7 +65,7 @@ async function main() {
     }
   }
 
-  const currentKeys = Array.from(slicesByKey.keys());
+  const currentKeys = [...slicesByKey.keys()];
   if (currentKeys.length === 0) {
     console.log('✅ validate:demo-code-block: no demo entries found (skipped).');
     return;
@@ -72,14 +74,10 @@ async function main() {
   const newKeys = currentKeys.filter((k) => !baselineKeys.has(k));
 
   const failures = [];
-  for (const k of newKeys) {
-    if (!shouldRequireCodeBlock(k)) continue;
-
-    const slice = slicesByKey.get(k) ?? '';
-
-    if (!slice.includes('<dads-code-block')) {
-      failures.push(k);
-    }
+  for (const key of newKeys) {
+    if (!shouldRequireCodeBlock(key)) continue;
+    const slice = slicesByKey.get(key);
+    if (!slice?.includes('<dads-code-block')) failures.push(key);
   }
 
   if (failures.length === 0) {

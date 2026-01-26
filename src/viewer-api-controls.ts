@@ -74,26 +74,16 @@ function parseDefaultValue(desc: ControlDescriptor): string | boolean {
 }
 
 function setControlValue(control: Element, value: string | boolean): void {
+  const controlLike = control as ControlLikeElement;
+
   if (typeof value === 'boolean') {
-    const controlLike = control as ControlLikeElement;
     if (typeof controlLike.checked === 'boolean') controlLike.checked = value;
     control.toggleAttribute('checked', value);
     return;
   }
 
-  const controlLike = control as ControlLikeElement;
   if (typeof controlLike.value === 'string') {
     controlLike.value = value;
-    return;
-  }
-
-  if (control instanceof HTMLInputElement) {
-    control.value = value;
-    return;
-  }
-
-  if (control instanceof HTMLSelectElement) {
-    control.value = value;
   }
 }
 
@@ -422,28 +412,33 @@ export function bindApiControls(root: Element): Cleanup {
 
   const cleanups: Cleanup[] = [];
 
-  const handle = (desc: ControlDescriptor) => (event: Event) => {
-    const value = readControlValue(desc.el, event);
+  const applyControlValue = (desc: ControlDescriptor, value: string | boolean): void => {
     const effectiveTarget = resolveEffectiveTarget(root, target, desc);
     if (effectiveTarget) applyToTarget(effectiveTarget, desc, value);
 
-    if (usage?.fragment) {
-      const usageTarget = desc.targetSelector ? usage.fragment.querySelector(desc.targetSelector) : usage.target;
-      if (usageTarget) applyToUsage(usageTarget, desc, value);
-    }
-    syncUsageCode(block, usage, target);
+    if (!usage) return;
+    const usageTarget = desc.targetSelector ? usage.fragment.querySelector(desc.targetSelector) : usage.target;
+    if (usageTarget) applyToUsage(usageTarget, desc, value);
+  };
+
+  const handle = (desc: ControlDescriptor): EventListener => {
+    return (event: Event): void => {
+      const value = readControlValue(desc.el, event);
+      applyControlValue(desc, value);
+      syncUsageCode(block, usage, target);
+    };
   };
 
   for (const desc of controls) {
     const onChange = handle(desc);
 
     for (const eventName of CONTROL_EVENTS) {
-      desc.el.addEventListener(eventName, onChange as EventListener);
+      desc.el.addEventListener(eventName, onChange);
     }
 
     cleanups.push(() => {
       for (const eventName of CONTROL_EVENTS) {
-        desc.el.removeEventListener(eventName, onChange as EventListener);
+        desc.el.removeEventListener(eventName, onChange);
       }
     });
   }
@@ -453,13 +448,7 @@ export function bindApiControls(root: Element): Cleanup {
       for (const desc of controls) {
         const nextValue = parseDefaultValue(desc);
         setControlValue(desc.el, nextValue);
-        const effectiveTarget = resolveEffectiveTarget(root, target, desc);
-        if (effectiveTarget) applyToTarget(effectiveTarget, desc, nextValue);
-
-        if (usage?.fragment) {
-          const usageTarget = desc.targetSelector ? usage.fragment.querySelector(desc.targetSelector) : usage.target;
-          if (usageTarget) applyToUsage(usageTarget, desc, nextValue);
-        }
+        applyControlValue(desc, nextValue);
       }
       syncUsageCode(block, usage, target);
     };
