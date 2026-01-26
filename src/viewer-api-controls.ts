@@ -21,6 +21,12 @@ type UsageModel = Readonly<{
   target: Element | null;
 }>;
 
+const CODE_BLOCK_COLLAPSE_MIN_LINES = 5;
+const CODE_BLOCK_DISCLOSURE_ATTR = 'data-api-code-disclosure';
+const CODE_BLOCK_COLLAPSE_ATTR = 'data-api-code-collapse';
+const CODE_BLOCK_COLLAPSE_OPT_OUT_VALUE = 'off';
+const CODE_BLOCK_DISCLOSURE_SUMMARY_TEXT = 'コードを表示';
+
 interface CustomEventDetail {
   checked?: boolean;
   value?: string;
@@ -306,12 +312,63 @@ function syncUsageCode(block: CodeBlockLike | null, usage: UsageModel | null, li
     ? formatHtmlNodes(Array.from(usage.fragment.childNodes))
     : formatHtmlNodes([liveTarget.cloneNode(true)]);
 
+  const shouldCollapse =
+    !isCodeBlockCollapseOptedOut(block) &&
+    countLines(snippet) >= CODE_BLOCK_COLLAPSE_MIN_LINES;
+  ensureCodeBlockDisclosure(block, shouldCollapse);
+
   if (typeof block.setCode === 'function') {
     block.setCode(snippet);
     return;
   }
 
   block.textContent = snippet;
+}
+
+function isCodeBlockCollapseOptedOut(block: Element): boolean {
+  return block.getAttribute(CODE_BLOCK_COLLAPSE_ATTR) === CODE_BLOCK_COLLAPSE_OPT_OUT_VALUE;
+}
+
+function countLines(text: string): number {
+  const trimmed = text.trim();
+  if (trimmed === '') return 0;
+  return trimmed.split('\n').length;
+}
+
+function resolveCodeBlockDisclosure(block: Element): HTMLElement | null {
+  return block.closest(`dads-disclosure[${CODE_BLOCK_DISCLOSURE_ATTR}]`) as HTMLElement | null;
+}
+
+function createDisclosureSummary(): HTMLSpanElement {
+  const summary = document.createElement('span');
+  summary.setAttribute('slot', 'summary');
+  summary.textContent = CODE_BLOCK_DISCLOSURE_SUMMARY_TEXT;
+  return summary;
+}
+
+function ensureCodeBlockDisclosure(block: CodeBlockLike, shouldCollapse: boolean): void {
+  const wrapper = resolveCodeBlockDisclosure(block);
+
+  if (!shouldCollapse) {
+    if (!wrapper) return;
+    block.removeAttribute('slot');
+    wrapper.replaceWith(block);
+    return;
+  }
+
+  block.setAttribute('slot', 'content');
+
+  if (wrapper) {
+    if (!wrapper.querySelector('[slot="summary"]')) {
+      wrapper.prepend(createDisclosureSummary());
+    }
+    return;
+  }
+
+  const disclosure = document.createElement('dads-disclosure');
+  disclosure.setAttribute(CODE_BLOCK_DISCLOSURE_ATTR, '');
+  block.replaceWith(disclosure);
+  disclosure.append(createDisclosureSummary(), block);
 }
 
 function applyToUsage(usageTarget: Element, desc: ControlDescriptor, value: string | boolean): void {
@@ -343,40 +400,24 @@ export function bindApiControls(root: Element): Cleanup {
 
   const controls: ControlDescriptor[] = [];
 
-  for (const el of root.querySelectorAll('[data-api-attr]')) {
-    const name = el.getAttribute('data-api-attr');
-    if (!name) continue;
-    controls.push({
-      kind: 'attr',
-      name,
-      el,
-      defaultValue: el.getAttribute('data-default'),
-      targetSelector: el.getAttribute('data-api-target-selector'),
-    });
-  }
+  const CONTROL_KINDS: readonly [ControlKind, string][] = [
+    ['attr', 'data-api-attr'],
+    ['prop', 'data-api-prop'],
+    ['css-var', 'data-api-css-var'],
+  ];
 
-  for (const el of root.querySelectorAll('[data-api-prop]')) {
-    const name = el.getAttribute('data-api-prop');
-    if (!name) continue;
-    controls.push({
-      kind: 'prop',
-      name,
-      el,
-      defaultValue: el.getAttribute('data-default'),
-      targetSelector: el.getAttribute('data-api-target-selector'),
-    });
-  }
-
-  for (const el of root.querySelectorAll('[data-api-css-var]')) {
-    const name = el.getAttribute('data-api-css-var');
-    if (!name) continue;
-    controls.push({
-      kind: 'css-var',
-      name,
-      el,
-      defaultValue: el.getAttribute('data-default'),
-      targetSelector: el.getAttribute('data-api-target-selector'),
-    });
+  for (const [kind, dataAttr] of CONTROL_KINDS) {
+    for (const el of root.querySelectorAll(`[${dataAttr}]`)) {
+      const name = el.getAttribute(dataAttr);
+      if (!name) continue;
+      controls.push({
+        kind,
+        name,
+        el,
+        defaultValue: el.getAttribute('data-default'),
+        targetSelector: el.getAttribute('data-api-target-selector'),
+      });
+    }
   }
 
   const cleanups: Cleanup[] = [];

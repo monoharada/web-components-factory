@@ -181,3 +181,127 @@ describe('bindApiControls() per-control target override', () => {
     expect(target.textContent).not.toBe('new');
   });
 });
+
+describe('bindApiControls() code block auto-collapse', () => {
+  it('wraps long code blocks (>= 5 lines) in dads-disclosure (default closed)', () => {
+    const root = document.createElement('div');
+    root.innerHTML = `
+      <div class="wc-api-panel">
+        <div class="wc-api-panel__body">
+          <dads-button data-api-target variant="solid">
+            <span>ボタン</span>
+          </dads-button>
+
+          <select aria-label="variant" data-api-attr="variant" data-default="solid">
+            <option value="solid" selected>solid</option>
+            <option value="outlined">outlined</option>
+          </select>
+
+          <dads-code-block data-api-code>
+            <template>
+              <dads-button variant="solid">
+                <span>ボタン</span>
+                <span>追加</span>
+                <span>さらに</span>
+              </dads-button>
+            </template>
+          </dads-code-block>
+        </div>
+      </div>
+    `;
+
+    const codeBlock = root.querySelector<HTMLElement>('dads-code-block');
+    expect(codeBlock).toBeTruthy();
+    if (!codeBlock) return;
+    stubCodeBlockSetCode(codeBlock);
+
+    bindApiControls(root);
+
+    const disclosure = root.querySelector<HTMLElement>('dads-disclosure[data-api-code-disclosure]');
+    expect(disclosure).toBeTruthy();
+    if (!disclosure) return;
+    expect(disclosure.hasAttribute('open')).toBe(false);
+
+    const summary = disclosure.querySelector<HTMLElement>('[slot="summary"]');
+    expect(summary?.textContent).toBe('コードを表示');
+
+    expect(codeBlock.closest('dads-disclosure[data-api-code-disclosure]')).toBe(disclosure);
+    expect(codeBlock.getAttribute('slot')).toBe('content');
+
+    // keep open state on subsequent updates
+    disclosure.setAttribute('open', '');
+    const select = root.querySelector('select') as HTMLSelectElement | null;
+    expect(select).toBeTruthy();
+    if (!select) return;
+    select.value = 'outlined';
+    select.dispatchEvent(new Event('change'));
+
+    const disclosureAfter = root.querySelector<HTMLElement>('dads-disclosure[data-api-code-disclosure]');
+    expect(disclosureAfter).toBe(disclosure);
+    expect(disclosureAfter?.hasAttribute('open')).toBe(true);
+  });
+
+  it('does not wrap when the formatted snippet is 4 lines', () => {
+    const root = document.createElement('div');
+    root.innerHTML = `
+      <div class="wc-api-panel">
+        <div class="wc-api-panel__body">
+          <dads-button data-api-target variant="solid">
+            <span>ボタン</span>
+          </dads-button>
+
+          <dads-code-block data-api-code>
+            <template>
+              <dads-button variant="solid">
+                <span>ボタン</span>
+              </dads-button>
+            </template>
+          </dads-code-block>
+        </div>
+      </div>
+    `;
+
+    const codeBlock = root.querySelector<HTMLElement>('dads-code-block');
+    expect(codeBlock).toBeTruthy();
+    if (!codeBlock) return;
+    stubCodeBlockSetCode(codeBlock);
+
+    bindApiControls(root);
+
+    expect(root.querySelector('dads-disclosure[data-api-code-disclosure]')).toBeNull();
+    expect(codeBlock.getAttribute('slot')).toBeNull();
+  });
+
+  it('supports opt-out via data-api-code-collapse="off"', () => {
+    const root = document.createElement('div');
+    root.innerHTML = `
+      <div class="wc-api-panel">
+        <div class="wc-api-panel__body">
+          <dads-button data-api-target variant="solid">
+            <span>ボタン</span>
+          </dads-button>
+
+          <dads-code-block data-api-code data-api-code-collapse="off">
+            <template>
+              <dads-button variant="solid">
+                <span>ボタン</span>
+                <span>追加</span>
+                <span>さらに</span>
+              </dads-button>
+            </template>
+          </dads-code-block>
+        </div>
+      </div>
+    `;
+
+    const codeBlock = root.querySelector<HTMLElement>('dads-code-block');
+    expect(codeBlock).toBeTruthy();
+    if (!codeBlock) return;
+    stubCodeBlockSetCode(codeBlock);
+
+    bindApiControls(root);
+
+    expect(root.querySelector('dads-disclosure[data-api-code-disclosure]')).toBeNull();
+    expect(codeBlock.getAttribute('slot')).toBeNull();
+  });
+});

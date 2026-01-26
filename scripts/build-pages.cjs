@@ -186,6 +186,11 @@ async function main() {
   );
 
   await transpileFile(path.join(projectRoot, 'src/demos.ts'), path.join(outDir, 'src/demos.js'));
+  await transpileTree(path.join(projectRoot, 'src/demos'), path.join(outDir, 'src/demos'));
+  await transpileFile(
+    path.join(projectRoot, 'src/viewer-api-controls.ts'),
+    path.join(outDir, 'src/viewer-api-controls.js')
+  );
 
   console.log('[pages] Done: dist-pages/');
 }

@@ -403,20 +403,43 @@
   <!-- Service Worker登録（キャッシュ戦略） -->
   <script>
     const params = new URLSearchParams(window.location.search);
-    const disableServiceWorker = params.get('nosw') === '1' || params.get('sw') === '0';
+    const hasSwCleared = params.get('swcleared') === '1';
+    const forceEnableServiceWorker = params.get('sw') === '1';
+    const isLocalhost = (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname === '0.0.0.0' ||
+      window.location.hostname === '[::1]' ||
+      window.location.hostname === '' ||
+      window.location.hostname.endsWith('.local')
+    );
+    // Dev default: localhost では Service Worker を無効化（デモ更新がキャッシュで見えなくなる事故を防ぐ）
+    const disableServiceWorker =
+      params.get('nosw') === '1' ||
+      params.get('sw') === '0' ||
+      (isLocalhost && !forceEnableServiceWorker);
 
     async function disableServiceWorkerAndClearCaches() {
       if (!('serviceWorker' in navigator)) return;
       const regs = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map((reg) => reg.unregister()));
+      await Promise.all(regs.filter((reg) => {
+        const url = reg.active?.scriptURL || reg.installing?.scriptURL || reg.waiting?.scriptURL;
+        if (!url) return false;
+        try {
+          return new URL(url).pathname.endsWith('/sw.js');
+        } catch {
+          return String(url).endsWith('/sw.js');
+        }
+      }).map((reg) => reg.unregister()));
 
       if (!('caches' in window)) return;
       const keys = await window.caches.keys();
-      await Promise.all(keys.map((key) => window.caches.delete(key)));
+      const prefixes = ['core-', 'components-'];
+      await Promise.all(keys.filter((key) => prefixes.some((p) => key.startsWith(p))).map((key) => window.caches.delete(key)));
     }
 
     if ('serviceWorker' in navigator && !disableServiceWorker) {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register('./sw.js')
         .then((reg) => console.log('[SW] Registered:', reg.scope))
         .catch((err) => console.log('[SW] Registration failed:', err));
     }
@@ -424,7 +447,16 @@
     // Dev helper: /?nosw=1 で Service Worker を無効化（登録解除 + Cache Storage削除）
     if (disableServiceWorker) {
       disableServiceWorkerAndClearCaches()
-        .then(() => console.log('[SW] Disabled (nosw=1)'))
+        .then(() => {
+          console.log('[SW] Disabled (nosw=1 | sw=0 | localhost default)');
+          // 既にロード中のJSがSWキャッシュで古い場合があるため、一度だけリロードして揃える
+          if (isLocalhost && !hasSwCleared && navigator.serviceWorker.controller) {
+            const next = new URL(window.location.href);
+            next.searchParams.set('nosw', '1');
+            next.searchParams.set('swcleared', '1');
+            window.location.replace(next.toString());
+          }
+        })
         .catch((err) => console.log('[SW] Disable failed:', err));
     }
   </script>
