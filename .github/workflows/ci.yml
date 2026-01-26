@@ -28,5 +28,8 @@ jobs:
       - name: Validate Web Components markup
         run: npm run validate:wc
 
+      - name: Validate demo code blocks
+        run: npm run validate:demo-code-block
+
       - name: Type Check / Test / Build
         run: npm run ci

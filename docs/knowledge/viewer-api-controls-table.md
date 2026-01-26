@@ -23,6 +23,10 @@
 - 代替（任意）：ルート要素に `data-api-target-selector="..."` を置く（`querySelector()` できるセレクタ）
 - 追加（任意）：各コントロール要素に `data-api-target-selector="..."` を置くと、**そのコントロールだけ**指定した要素へ反映します（ルートの反映先より優先）
 
+### Usage（HTML）コードブロック連動（任意）
+- `<dads-code-block data-api-code>` を同じパネル内に置くと、`bindApiControls()` が `<dads-code-block>` 内の `<template>` を **Usage（HTML）の正**として扱い、Controls 操作（attrs / inline style / 一部prop）に追従してHTMLスニペットを生成・整形して表示します
+- 連動させる場合は、初期化スクリプトで `import('dads-code-block')` を追加してください（定義前に `setCode()` を呼ばないため）
+
 ### Controls（Attributes / Properties）
 - `data-api-attr="attr-name"`：属性として反映（boolean は presence）
 - `data-api-prop="propName"`：プロパティとして反映（`el[propName] = ...`）
@@ -65,6 +69,28 @@
       var root = currentScript?.parentElement;
       if (!root || !root.isConnected) return;
       var api = mods[3];
+      if (api && api.bindApiControls) api.bindApiControls(root);
+    });
+  })();
+<\/script>
+```
+
+### Usage（HTML）コードブロック連動版（コピペ）
+
+```html
+<script>
+  (function() {
+    var currentScript = document.currentScript;
+    Promise.all([
+      import('dads-table'),
+      import('dads-switch'),
+      import('dads-input-text'),
+      import('dads-code-block'),
+      import('/src/viewer-api-controls.js')
+    ]).then(function(mods) {
+      var root = currentScript?.parentElement;
+      if (!root || !root.isConnected) return;
+      var api = mods[4];
       if (api && api.bindApiControls) api.bindApiControls(root);
     });
   })();
