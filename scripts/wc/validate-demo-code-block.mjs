@@ -38,11 +38,11 @@ function extractDemoEntries(blockText, baseOffset) {
   return matches;
 }
 
-function sliceForKey(text, entries, idx) {
+function sliceForKey(text, entries, idx, blockEnd) {
   const entry = entries[idx];
   const next = entries[idx + 1];
   const start = entry.start;
-  const end = next ? next.start : text.length;
+  const end = next ? next.start : blockEnd;
   return text.slice(start, end);
 }
 
@@ -61,7 +61,7 @@ async function main() {
   const baseline = JSON.parse(baselineText);
   const baselineKeys = new Set(asStringArray(baseline?.keys));
 
-  const { start: blockStart, block } = extractDemosBlock(demosText);
+  const { start: blockStart, end: blockEnd, block } = extractDemosBlock(demosText);
   const entries = extractDemoEntries(block, blockStart);
 
   if (entries.length === 0) {
@@ -78,7 +78,7 @@ async function main() {
 
     const idx = entries.findIndex((e) => e.key === k);
     if (idx < 0) continue;
-    const slice = sliceForKey(demosText, entries, idx);
+    const slice = sliceForKey(demosText, entries, idx, blockEnd);
 
     if (!slice.includes('<dads-code-block')) {
       failures.push(k);

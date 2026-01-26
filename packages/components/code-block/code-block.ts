@@ -208,7 +208,7 @@ export class DadsCodeBlock extends WebComponent {
   connectedCallback(): void {
     super.connectedCallback();
     this.#syncCode();
-    this.#syncStatus();
+    this.#setCopyResult('idle');
 
     const copyBtn = this.refs?.copy;
     if (isElement(copyBtn)) {
