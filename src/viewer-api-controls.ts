@@ -21,6 +21,12 @@ type UsageModel = Readonly<{
   target: Element | null;
 }>;
 
+const CODE_BLOCK_COLLAPSE_MIN_LINES = 5;
+const CODE_BLOCK_DISCLOSURE_ATTR = 'data-api-code-disclosure';
+const CODE_BLOCK_COLLAPSE_ATTR = 'data-api-code-collapse';
+const CODE_BLOCK_COLLAPSE_OPT_OUT_VALUE = 'off';
+const CODE_BLOCK_DISCLOSURE_SUMMARY_TEXT = 'コードを表示';
+
 interface CustomEventDetail {
   checked?: boolean;
   value?: string;
@@ -68,26 +74,16 @@ function parseDefaultValue(desc: ControlDescriptor): string | boolean {
 }
 
 function setControlValue(control: Element, value: string | boolean): void {
+  const controlLike = control as ControlLikeElement;
+
   if (typeof value === 'boolean') {
-    const controlLike = control as ControlLikeElement;
     if (typeof controlLike.checked === 'boolean') controlLike.checked = value;
     control.toggleAttribute('checked', value);
     return;
   }
 
-  const controlLike = control as ControlLikeElement;
   if (typeof controlLike.value === 'string') {
     controlLike.value = value;
-    return;
-  }
-
-  if (control instanceof HTMLInputElement) {
-    control.value = value;
-    return;
-  }
-
-  if (control instanceof HTMLSelectElement) {
-    control.value = value;
   }
 }
 
@@ -306,12 +302,63 @@ function syncUsageCode(block: CodeBlockLike | null, usage: UsageModel | null, li
     ? formatHtmlNodes(Array.from(usage.fragment.childNodes))
     : formatHtmlNodes([liveTarget.cloneNode(true)]);
 
+  const shouldCollapse =
+    !isCodeBlockCollapseOptedOut(block) &&
+    countLines(snippet) >= CODE_BLOCK_COLLAPSE_MIN_LINES;
+  ensureCodeBlockDisclosure(block, shouldCollapse);
+
   if (typeof block.setCode === 'function') {
     block.setCode(snippet);
     return;
   }
 
   block.textContent = snippet;
+}
+
+function isCodeBlockCollapseOptedOut(block: Element): boolean {
+  return block.getAttribute(CODE_BLOCK_COLLAPSE_ATTR) === CODE_BLOCK_COLLAPSE_OPT_OUT_VALUE;
+}
+
+function countLines(text: string): number {
+  const trimmed = text.trim();
+  if (trimmed === '') return 0;
+  return trimmed.split('\n').length;
+}
+
+function resolveCodeBlockDisclosure(block: Element): HTMLElement | null {
+  return block.closest(`dads-disclosure[${CODE_BLOCK_DISCLOSURE_ATTR}]`) as HTMLElement | null;
+}
+
+function createDisclosureSummary(): HTMLSpanElement {
+  const summary = document.createElement('span');
+  summary.setAttribute('slot', 'summary');
+  summary.textContent = CODE_BLOCK_DISCLOSURE_SUMMARY_TEXT;
+  return summary;
+}
+
+function ensureCodeBlockDisclosure(block: CodeBlockLike, shouldCollapse: boolean): void {
+  const wrapper = resolveCodeBlockDisclosure(block);
+
+  if (!shouldCollapse) {
+    if (!wrapper) return;
+    block.removeAttribute('slot');
+    wrapper.replaceWith(block);
+    return;
+  }
+
+  block.setAttribute('slot', 'content');
+
+  if (wrapper) {
+    if (!wrapper.querySelector('[slot="summary"]')) {
+      wrapper.prepend(createDisclosureSummary());
+    }
+    return;
+  }
+
+  const disclosure = document.createElement('dads-disclosure');
+  disclosure.setAttribute(CODE_BLOCK_DISCLOSURE_ATTR, '');
+  block.replaceWith(disclosure);
+  disclosure.append(createDisclosureSummary(), block);
 }
 
 function applyToUsage(usageTarget: Element, desc: ControlDescriptor, value: string | boolean): void {
@@ -343,66 +390,55 @@ export function bindApiControls(root: Element): Cleanup {
 
   const controls: ControlDescriptor[] = [];
 
-  for (const el of root.querySelectorAll('[data-api-attr]')) {
-    const name = el.getAttribute('data-api-attr');
-    if (!name) continue;
-    controls.push({
-      kind: 'attr',
-      name,
-      el,
-      defaultValue: el.getAttribute('data-default'),
-      targetSelector: el.getAttribute('data-api-target-selector'),
-    });
-  }
+  const CONTROL_KINDS: readonly [ControlKind, string][] = [
+    ['attr', 'data-api-attr'],
+    ['prop', 'data-api-prop'],
+    ['css-var', 'data-api-css-var'],
+  ];
 
-  for (const el of root.querySelectorAll('[data-api-prop]')) {
-    const name = el.getAttribute('data-api-prop');
-    if (!name) continue;
-    controls.push({
-      kind: 'prop',
-      name,
-      el,
-      defaultValue: el.getAttribute('data-default'),
-      targetSelector: el.getAttribute('data-api-target-selector'),
-    });
-  }
-
-  for (const el of root.querySelectorAll('[data-api-css-var]')) {
-    const name = el.getAttribute('data-api-css-var');
-    if (!name) continue;
-    controls.push({
-      kind: 'css-var',
-      name,
-      el,
-      defaultValue: el.getAttribute('data-default'),
-      targetSelector: el.getAttribute('data-api-target-selector'),
-    });
+  for (const [kind, dataAttr] of CONTROL_KINDS) {
+    for (const el of root.querySelectorAll(`[${dataAttr}]`)) {
+      const name = el.getAttribute(dataAttr);
+      if (!name) continue;
+      controls.push({
+        kind,
+        name,
+        el,
+        defaultValue: el.getAttribute('data-default'),
+        targetSelector: el.getAttribute('data-api-target-selector'),
+      });
+    }
   }
 
   const cleanups: Cleanup[] = [];
 
-  const handle = (desc: ControlDescriptor) => (event: Event) => {
-    const value = readControlValue(desc.el, event);
+  const applyControlValue = (desc: ControlDescriptor, value: string | boolean): void => {
     const effectiveTarget = resolveEffectiveTarget(root, target, desc);
     if (effectiveTarget) applyToTarget(effectiveTarget, desc, value);
 
-    if (usage?.fragment) {
-      const usageTarget = desc.targetSelector ? usage.fragment.querySelector(desc.targetSelector) : usage.target;
-      if (usageTarget) applyToUsage(usageTarget, desc, value);
-    }
-    syncUsageCode(block, usage, target);
+    if (!usage) return;
+    const usageTarget = desc.targetSelector ? usage.fragment.querySelector(desc.targetSelector) : usage.target;
+    if (usageTarget) applyToUsage(usageTarget, desc, value);
+  };
+
+  const handle = (desc: ControlDescriptor): EventListener => {
+    return (event: Event): void => {
+      const value = readControlValue(desc.el, event);
+      applyControlValue(desc, value);
+      syncUsageCode(block, usage, target);
+    };
   };
 
   for (const desc of controls) {
     const onChange = handle(desc);
 
     for (const eventName of CONTROL_EVENTS) {
-      desc.el.addEventListener(eventName, onChange as EventListener);
+      desc.el.addEventListener(eventName, onChange);
     }
 
     cleanups.push(() => {
       for (const eventName of CONTROL_EVENTS) {
-        desc.el.removeEventListener(eventName, onChange as EventListener);
+        desc.el.removeEventListener(eventName, onChange);
       }
     });
   }
@@ -412,13 +448,7 @@ export function bindApiControls(root: Element): Cleanup {
       for (const desc of controls) {
         const nextValue = parseDefaultValue(desc);
         setControlValue(desc.el, nextValue);
-        const effectiveTarget = resolveEffectiveTarget(root, target, desc);
-        if (effectiveTarget) applyToTarget(effectiveTarget, desc, nextValue);
-
-        if (usage?.fragment) {
-          const usageTarget = desc.targetSelector ? usage.fragment.querySelector(desc.targetSelector) : usage.target;
-          if (usageTarget) applyToUsage(usageTarget, desc, nextValue);
-        }
+        applyControlValue(desc, nextValue);
       }
       syncUsageCode(block, usage, target);
     };

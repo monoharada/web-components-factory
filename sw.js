@@ -1,7 +1,7 @@
 // Service Worker for Web Components Factory
 // キャッシュ戦略: Core → Cache-First, Components → Stale-While-Revalidate
 
-const CACHE_VERSION = 'v11';
+const CACHE_VERSION = 'v12';
 const CORE_CACHE = `core-${CACHE_VERSION}`;
 const COMPONENT_CACHE = `components-${CACHE_VERSION}`;
 
@@ -84,6 +84,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // viewer / demos（頻繁に変わる） → Network-First（即時反映 + フォールバック）
+  if (path.includes('/src/') && (path.endsWith('.js') || path.endsWith('.css'))) {
+    event.respondWith(networkFirstWithCache(event.request, COMPONENT_CACHE));
+    return;
+  }
+
   // その他のJS/CSS → Stale-While-Revalidate
   if (path.endsWith('.js') || path.endsWith('.css')) {
     event.respondWith(staleWhileRevalidate(event.request, COMPONENT_CACHE));
@@ -158,6 +164,22 @@ async function networkFirst(request) {
   } catch (error) {
     console.log('[SW] Network-First fallback to cache:', request.url);
     const cached = await caches.match(request);
+    return cached || new Response('Offline', { status: 503 });
+  }
+}
+
+// Network-First + Cache fallback（ネットワーク成功時は更新）
+async function networkFirstWithCache(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    console.log('[SW] Network-First (cache) fallback:', request.url);
+    const cached = await cache.match(request);
     return cached || new Response('Offline', { status: 503 });
   }
 }

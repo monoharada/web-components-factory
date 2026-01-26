@@ -26,6 +26,8 @@
 ### Usage（HTML）コードブロック連動（任意）
 - `<dads-code-block data-api-code>` を同じパネル内に置くと、`bindApiControls()` が `<dads-code-block>` 内の `<template>` を **Usage（HTML）の正**として扱い、Controls 操作（attrs / inline style / 一部prop）に追従してHTMLスニペットを生成・整形して表示します
 - 連動させる場合は、初期化スクリプトで `import('dads-code-block')` を追加してください（定義前に `setCode()` を呼ばないため）
+- 生成された Usage snippet が **5行以上**の場合は、自動で `dads-disclosure` に包まれ、デフォルトで折りたたまれます（summary: 「コードを表示」）
+  - opt-out: `<dads-code-block data-api-code data-api-code-collapse="off">` で自動折りたたみを無効化できます
 
 ### Controls（Attributes / Properties）
 - `data-api-attr="attr-name"`：属性として反映（boolean は presence）
@@ -64,11 +66,12 @@
       import('dads-table'),
       import('dads-switch'),
       import('dads-input-text'),
-      import('/src/viewer-api-controls.js')
+      import('dads-disclosure'),
+      import('./src/viewer-api-controls.js')
     ]).then(function(mods) {
       var root = currentScript?.parentElement;
       if (!root || !root.isConnected) return;
-      var api = mods[3];
+      var api = mods[mods.length - 1];
       if (api && api.bindApiControls) api.bindApiControls(root);
     });
   })();
@@ -86,11 +89,12 @@
       import('dads-switch'),
       import('dads-input-text'),
       import('dads-code-block'),
-      import('/src/viewer-api-controls.js')
+      import('dads-disclosure'),
+      import('./src/viewer-api-controls.js')
     ]).then(function(mods) {
       var root = currentScript?.parentElement;
       if (!root || !root.isConnected) return;
-      var api = mods[4];
+      var api = mods[mods.length - 1];
       if (api && api.bindApiControls) api.bindApiControls(root);
     });
   })();

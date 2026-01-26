@@ -2,47 +2,30 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const BASELINE_PATH = path.resolve(process.cwd(), 'scripts/wc/demo-keys-baseline.json');
-const DEMOS_PATH = path.resolve(process.cwd(), 'src/demos.ts');
+const DEMOS_DIR = path.resolve(process.cwd(), 'src/demos');
 
-function asStringArray(v) {
-  if (!Array.isArray(v)) return [];
-  return v.filter((x) => typeof x === 'string');
+function isString(value) {
+  return typeof value === 'string';
 }
 
-function extractDemosBlock(text) {
-  const start = text.indexOf('export const demos = {');
-  if (start < 0) {
-    throw new Error('Could not find `export const demos = {` in src/demos.ts');
-  }
-
-  const typeIdx = text.indexOf('export type DemoName');
-  if (typeIdx < 0) {
-    throw new Error('Could not find `export type DemoName` in src/demos.ts');
-  }
-
-  const end = text.lastIndexOf('\n};', typeIdx);
-  if (end < 0 || end <= start) {
-    throw new Error('Could not find end of demos object (`};`) in src/demos.ts');
-  }
-
-  return { start, end, block: text.slice(start, end) };
+function asStringArray(value) {
+  if (!Array.isArray(value)) return [];
+  return value.filter(isString);
 }
 
-function extractDemoEntries(blockText, baseOffset) {
+function extractDemoEntries(text) {
   const re = /^\s*([A-Za-z_$][\w$]*)\s*:\s*\(\)\s*=>/gm;
-  const matches = Array.from(blockText.matchAll(re)).map((m) => ({
+  return Array.from(text.matchAll(re)).map((m) => ({
     key: String(m[1]),
-    start: baseOffset + (m.index ?? 0),
+    start: m.index ?? 0,
   }));
-
-  return matches;
 }
 
-function sliceForKey(text, entries, idx, blockEnd) {
+function sliceForKey(text, entries, idx) {
   const entry = entries[idx];
   const next = entries[idx + 1];
   const start = entry.start;
-  const end = next ? next.start : blockEnd;
+  const end = next ? next.start : text.length;
   return text.slice(start, end);
 }
 
@@ -53,36 +36,48 @@ function shouldRequireCodeBlock(key) {
 }
 
 async function main() {
-  const [baselineText, demosText] = await Promise.all([
-    fs.readFile(BASELINE_PATH, 'utf8'),
-    fs.readFile(DEMOS_PATH, 'utf8'),
-  ]);
+  const baselineText = await fs.readFile(BASELINE_PATH, 'utf8');
+  const dirEntries = await fs.readdir(DEMOS_DIR, { withFileTypes: true });
+  const demoFiles = dirEntries
+    .filter((ent) => ent.isFile() && ent.name.endsWith('.ts') && ent.name !== 'shared.ts')
+    .map((ent) => path.join(DEMOS_DIR, ent.name))
+    .sort();
+
+  const demoTexts = await Promise.all(demoFiles.map((file) => fs.readFile(file, 'utf8')));
 
   const baseline = JSON.parse(baselineText);
   const baselineKeys = new Set(asStringArray(baseline?.keys));
 
-  const { start: blockStart, end: blockEnd, block } = extractDemosBlock(demosText);
-  const entries = extractDemoEntries(block, blockStart);
+  const slicesByKey = new Map();
 
-  if (entries.length === 0) {
+  for (let i = 0; i < demoFiles.length; i++) {
+    const filePath = demoFiles[i];
+    const text = demoTexts[i];
+    const entries = extractDemoEntries(text);
+    if (entries.length === 0) continue;
+
+    for (let idx = 0; idx < entries.length; idx++) {
+      const { key } = entries[idx];
+      if (slicesByKey.has(key)) {
+        throw new Error(`Duplicate demo key: ${key}`);
+      }
+      slicesByKey.set(key, sliceForKey(text, entries, idx));
+    }
+  }
+
+  const currentKeys = [...slicesByKey.keys()];
+  if (currentKeys.length === 0) {
     console.log('✅ validate:demo-code-block: no demo entries found (skipped).');
     return;
   }
 
-  const currentKeys = entries.map((e) => e.key);
   const newKeys = currentKeys.filter((k) => !baselineKeys.has(k));
 
   const failures = [];
-  for (const k of newKeys) {
-    if (!shouldRequireCodeBlock(k)) continue;
-
-    const idx = entries.findIndex((e) => e.key === k);
-    if (idx < 0) continue;
-    const slice = sliceForKey(demosText, entries, idx, blockEnd);
-
-    if (!slice.includes('<dads-code-block')) {
-      failures.push(k);
-    }
+  for (const key of newKeys) {
+    if (!shouldRequireCodeBlock(key)) continue;
+    const slice = slicesByKey.get(key);
+    if (!slice?.includes('<dads-code-block')) failures.push(key);
   }
 
   if (failures.length === 0) {
