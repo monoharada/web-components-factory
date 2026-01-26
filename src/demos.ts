@@ -947,6 +947,23 @@ export const demos = {
                   <span slot="back-link" data-disclosure-back-link>「ダミーテキストとは何ですか？」の先頭に戻る</span>
                 </dads-disclosure>
               </div>
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-disclosure open>
+                      <span slot="summary">ダミーテキストとは何ですか？</span>
+                      <div slot="content">
+                        <div style="margin-bottom: 1lh;">これはダミーテキストです。</div>
+                        <div style="margin-bottom: 0;">
+                          ダミーテキストは、デザインやレイアウトの作成時に使用される仮の文章です。
+                        </div>
+                      </div>
+                      <span slot="back-link">「ダミーテキストとは何ですか？」の先頭に戻る</span>
+                    </dads-disclosure>
+                  </template>
+                </dads-code-block>
+              </div>
             </div>
 
             <div class="wc-api-panel__tables">
@@ -1169,11 +1186,12 @@ export const demos = {
                 import('dads-switch'),
                 import('dads-input-text'),
                 import('a11y-annotate'),
+                import('dads-code-block'),
                 import('/src/viewer-api-controls.js')
               ]).then(function(mods) {
                 var root = currentScript?.parentElement;
                 if (!root || !root.isConnected) return;
-                var api = mods[6];
+                var api = mods[7];
                 if (api && api.bindApiControls) api.bindApiControls(root);
               });
             })();
