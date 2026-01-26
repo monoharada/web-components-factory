@@ -195,7 +195,18 @@ static readonly a11yAnnotations: A11yAnnotations = {
 
 ### `src/demos.ts` の追加ポイント
 - Overview / A11y / API Controls / Examples の章立て（推奨）
+- Usage（HTML）コードブロック（`<dads-code-block>`）で、コピペ用スニペットを必ず用意する
 - `data-api-target` + `data-api-attr|prop|css-var` でライブ編集可能にする
+
+**Usage（HTML）最小例**
+
+```html
+<dads-code-block>
+  <template>
+    <dads-component-name></dads-component-name>
+  </template>
+</dads-code-block>
+```
 
 ### `viewer.html` のセレクタ
 

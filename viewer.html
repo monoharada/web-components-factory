@@ -44,7 +44,8 @@
       "dads-page-navigation": "/@components/dads/page-navigation.js",
       "dads-step-navigation": "/@components/dads/step-navigation.js?v=20260119c",
       "dads-step-navigation-item": "/@components/dads/step-navigation-item.js?v=20260119c",
-      "a11y-annotate": "/@components/meta/annotate.js"
+      "a11y-annotate": "/@components/meta/annotate.js",
+      "dads-code-block": "/@components/dads/code-block.js"
     }
   }
   </script>
@@ -221,6 +222,15 @@
       display: grid;
       gap: 24px;
       padding: 20px;
+    }
+
+    /* Allow grid items to shrink so inner overflow-x (code blocks) can scroll. */
+    .wc-api-panel__body > * {
+      min-width: 0;
+    }
+
+    .wc-api-panel__tables > * {
+      min-width: 0;
     }
 
     .wc-api-panel__section-title {

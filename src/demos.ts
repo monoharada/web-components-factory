@@ -1194,6 +1194,14 @@ export const demos = {
                   size="medium"
                 >ボタンテキスト</dads-button>
               </div>
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-button variant="solid" size="medium">ボタンテキスト</dads-button>
+                  </template>
+                </dads-code-block>
+              </div>
             </div>
 
             <div class="wc-api-panel__tables">
@@ -1416,11 +1424,12 @@ export const demos = {
                 import('dads-table'),
                 import('dads-switch'),
                 import('dads-input-text'),
+                import('dads-code-block'),
                 import('/src/viewer-api-controls.js')
               ]).then(function(mods) {
                 var root = currentScript?.parentElement;
                 if (!root || !root.isConnected) return;
-                var api = mods[4];
+                var api = mods[5];
                 if (api && api.bindApiControls) api.bindApiControls(root);
               });
             })();
@@ -3042,20 +3051,32 @@ ${dadsDataRows(6, 6)}
             <dads-button data-api-reset type="button" variant="outlined" size="small">Reset</dads-button>
           </div>
 
-          <div class="wc-api-panel__body">
-            <div>
-              <h4 class="wc-api-panel__section-title">Preview</h4>
-              <div style="display: grid; gap: 12px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
-                <form data-search-box-preview-form style="display: grid; gap: 12px; width: 720px; max-width: 100%; margin: 0;">
-                  <dads-search-box data-api-target>
-                    <option value="">すべて</option>
-                    <option value="images">画像</option>
-                    <option value="files">ファイル</option>
-                  </dads-search-box>
-                  <pre data-search-box-preview-output style="margin: 0; padding: 12px; background: #f7f7f7; border-radius: 8px;"></pre>
-                </form>
-              </div>
-            </div>
+	          <div class="wc-api-panel__body">
+	            <div>
+	              <h4 class="wc-api-panel__section-title">Preview</h4>
+	              <div style="display: grid; gap: 12px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+	                <form data-search-box-preview-form style="display: grid; gap: 12px; width: 720px; max-width: 100%; margin: 0;">
+	                  <dads-search-box data-api-target>
+	                    <option value="">すべて</option>
+	                    <option value="images">画像</option>
+	                    <option value="files">ファイル</option>
+	                  </dads-search-box>
+	                  <pre data-search-box-preview-output style="margin: 0; padding: 12px; background: #f7f7f7; border-radius: 8px;"></pre>
+	                </form>
+	              </div>
+	              <div style="margin-top: 16px;">
+	                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+	                <dads-code-block data-api-code>
+	                  <template>
+	                    <dads-search-box>
+	                      <option value="">すべて</option>
+	                      <option value="images">画像</option>
+	                      <option value="files">ファイル</option>
+	                    </dads-search-box>
+	                  </template>
+	                </dads-code-block>
+	              </div>
+	            </div>
 
             <div class="wc-api-panel__tables">
               <div>
@@ -3389,22 +3410,23 @@ ${dadsDataRows(6, 6)}
             </div>
           </div>
 
-          <script>
-            (function() {
-              var currentScript = document.currentScript;
-              Promise.all([
-                import('dads-search-box'),
-                import('dads-button'),
-                import('dads-table'),
-                import('dads-switch'),
-                import('dads-input-text'),
-                import('/src/viewer-api-controls.js')
-              ]).then(function(mods) {
-                var root = currentScript?.parentElement;
-                if (!root || !root.isConnected) return;
-
-                var api = mods[5];
-                if (api && api.bindApiControls) api.bindApiControls(root);
+	          <script>
+	            (function() {
+	              var currentScript = document.currentScript;
+	              Promise.all([
+	                import('dads-search-box'),
+	                import('dads-button'),
+	                import('dads-table'),
+	                import('dads-switch'),
+	                import('dads-input-text'),
+	                import('dads-code-block'),
+	                import('/src/viewer-api-controls.js')
+	              ]).then(function(mods) {
+	                var root = currentScript?.parentElement;
+	                if (!root || !root.isConnected) return;
+	
+	                var api = mods[6];
+	                if (api && api.bindApiControls) api.bindApiControls(root);
 
                 var target = root.querySelector('[data-api-target]');
                 var scopeToggle = root.querySelector('[data-search-box-scope-options]');
@@ -4056,6 +4078,19 @@ ${dadsDataRows(6, 6)}
                   <dads-menu-list-item>メニュー項目3</dads-menu-list-item>
                 </dads-menu-list-box>
               </div>
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-menu-list-box variant="outlined" size="sm" label="メニュー">
+                      ${MENU_LIST_BOX_OPENER_ICON}
+                      <dads-menu-list-item>メニュー項目1</dads-menu-list-item>
+                      <dads-menu-list-item>メニュー項目2</dads-menu-list-item>
+                      <dads-menu-list-item>メニュー項目3</dads-menu-list-item>
+                    </dads-menu-list-box>
+                  </template>
+                </dads-code-block>
+              </div>
             </div>
 
             <!-- 3.2 Attributes / Properties -->
@@ -4649,26 +4684,27 @@ ${dadsDataRows(6, 6)}
             </div>
           </div>
 
-          <script>
-            (function() {
-              var currentScript = document.currentScript;
-              Promise.all([
-                import('dads-menu-list-box'),
-                import('dads-table'),
-                import('dads-switch'),
-                import('dads-input-text'),
-                import('dads-button'),
-                import('/src/viewer-api-controls.js')
-              ]).then(function(mods) {
-                var root = currentScript?.parentElement;
-                if (!root || !root.isConnected) return;
-                var api = mods[5];
-                if (api && api.bindApiControls) api.bindApiControls(root);
-              });
-            })();
-          <\/script>
-        </div>
-      </section>
+	          <script>
+	            (function() {
+	              var currentScript = document.currentScript;
+	              Promise.all([
+	                import('dads-menu-list-box'),
+	                import('dads-table'),
+	                import('dads-switch'),
+	                import('dads-input-text'),
+	                import('dads-button'),
+	                import('dads-code-block'),
+	                import('/src/viewer-api-controls.js')
+	              ]).then(function(mods) {
+	                var root = currentScript?.parentElement;
+	                if (!root || !root.isConnected) return;
+	                var api = mods[6];
+	                if (api && api.bindApiControls) api.bindApiControls(root);
+	              });
+	            })();
+	          <\/script>
+	        </div>
+	      </section>
 
       <!-- 4. Examples（実務的な作例 2〜3件） -->
       <section style="margin-bottom: 40px;">

@@ -16,6 +16,7 @@
     "cem:analyze": "cem analyze --config custom-elements-manifest.config.js",
     "cem:prefix": "node scripts/cem/transform-prefix.mjs",
     "validate:wc": "node scripts/wc/validate.mjs",
+    "validate:demo-code-block": "node scripts/wc/validate-demo-code-block.mjs",
     "mcp:design-system": "node scripts/mcp/design-system-mcp.mjs",
     "test": "vitest",
     "test:watch": "vitest --watch",
