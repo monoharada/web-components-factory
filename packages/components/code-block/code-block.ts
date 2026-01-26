@@ -251,15 +251,16 @@ export class DadsCodeBlock extends WebComponent {
     const statusEl = this.refs?.status;
     if (!isElement(statusEl)) return;
 
-    if (this.#copyResult === 'success') {
-      statusEl.textContent = 'Copied';
-      return;
+    switch (this.#copyResult) {
+      case 'success':
+        statusEl.textContent = 'Copied';
+        break;
+      case 'error':
+        statusEl.textContent = 'Copy failed';
+        break;
+      default:
+        statusEl.textContent = '';
     }
-    if (this.#copyResult === 'error') {
-      statusEl.textContent = 'Copy failed';
-      return;
-    }
-    statusEl.textContent = '';
   }
 
   #onCopy = async (): Promise<void> => {

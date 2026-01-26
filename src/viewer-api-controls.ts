@@ -20,21 +20,31 @@ type UsageModel = Readonly<{
   target: Element | null;
 }>;
 
-function getEventDetail(event?: Event): unknown {
+interface CustomEventDetail {
+  checked?: boolean;
+  value?: string;
+}
+
+interface ControlLikeElement extends Element {
+  checked?: boolean;
+  value?: string;
+}
+
+function getEventDetail(event?: Event): CustomEventDetail | null {
   if (!event) return null;
-  return (event as CustomEvent).detail;
+  return (event as CustomEvent<CustomEventDetail>).detail ?? null;
 }
 
 function isBooleanControl(control: Element): boolean {
   if (control instanceof HTMLInputElement) return control.type === 'checkbox';
 
-  const anyControl = control as any;
-  if (typeof anyControl.checked === 'boolean') return true;
+  const controlLike = control as ControlLikeElement;
+  if (typeof controlLike.checked === 'boolean') return true;
   return control.tagName.toLowerCase() === 'dads-switch';
 }
 
 function readControlValue(control: Element, event?: Event): string | boolean {
-  const detail = getEventDetail(event) as any;
+  const detail = getEventDetail(event);
   if (detail && typeof detail.checked === 'boolean') return detail.checked;
   if (detail && typeof detail.value === 'string') return detail.value;
 
@@ -44,9 +54,9 @@ function readControlValue(control: Element, event?: Event): string | boolean {
 
   if (control instanceof HTMLSelectElement) return control.value;
 
-  const anyControl = control as any;
-  if (typeof anyControl.checked === 'boolean') return anyControl.checked;
-  if (typeof anyControl.value === 'string') return anyControl.value;
+  const controlLike = control as ControlLikeElement;
+  if (typeof controlLike.checked === 'boolean') return controlLike.checked;
+  if (typeof controlLike.value === 'string') return controlLike.value;
 
   return isBooleanControl(control) ? control.hasAttribute('checked') : '';
 }
@@ -58,15 +68,15 @@ function parseDefaultValue(desc: ControlDescriptor): string | boolean {
 
 function setControlValue(control: Element, value: string | boolean): void {
   if (typeof value === 'boolean') {
-    const anyControl = control as any;
-    if (typeof anyControl.checked === 'boolean') anyControl.checked = value;
+    const controlLike = control as ControlLikeElement;
+    if (typeof controlLike.checked === 'boolean') controlLike.checked = value;
     control.toggleAttribute('checked', value);
     return;
   }
 
-  const anyControl = control as any;
-  if (typeof anyControl.value === 'string') {
-    anyControl.value = value;
+  const controlLike = control as ControlLikeElement;
+  if (typeof controlLike.value === 'string') {
+    controlLike.value = value;
     return;
   }
 
@@ -80,34 +90,50 @@ function setControlValue(control: Element, value: string | boolean): void {
   }
 }
 
+interface PropertyTarget {
+  [key: string]: unknown;
+}
+
+function applyAttributeValue(el: Element, name: string, value: string | boolean, preserveOrder = false): void {
+  if (typeof value === 'boolean') {
+    el.toggleAttribute(name, value);
+    return;
+  }
+  if (value === '') {
+    el.removeAttribute(name);
+    return;
+  }
+  if (preserveOrder) {
+    const attrNode = el.getAttributeNode(name);
+    if (attrNode) {
+      attrNode.value = value;
+      return;
+    }
+  }
+  el.setAttribute(name, value);
+}
+
+function applyCssVariable(el: Element, name: string, value: string | boolean): void {
+  if (!(el instanceof HTMLElement)) return;
+  if (typeof value !== 'string' || value === '') {
+    el.style.removeProperty(name);
+    return;
+  }
+  el.style.setProperty(name, value);
+}
+
 function applyToTarget(target: Element, desc: ControlDescriptor, value: string | boolean): void {
   if (desc.kind === 'attr') {
-    if (typeof value === 'boolean') {
-      target.toggleAttribute(desc.name, value);
-      return;
-    }
-
-    if (value === '') {
-      target.removeAttribute(desc.name);
-      return;
-    }
-
-    target.setAttribute(desc.name, value);
+    applyAttributeValue(target, desc.name, value);
     return;
   }
 
   if (desc.kind === 'prop') {
-    (target as any)[desc.name] = value;
+    (target as unknown as PropertyTarget)[desc.name] = value;
     return;
   }
 
-  // css-var
-  if (!(target instanceof HTMLElement)) return;
-  if (typeof value !== 'string' || value === '') {
-    target.style.removeProperty(desc.name);
-    return;
-  }
-  target.style.setProperty(desc.name, value);
+  applyCssVariable(target, desc.name, value);
 }
 
 function resolveTarget(root: Element): Element | null {
@@ -284,20 +310,7 @@ function syncUsageCode(block: CodeBlockLike | null, usage: UsageModel | null, li
 
 function applyToUsage(usageTarget: Element, desc: ControlDescriptor, value: string | boolean): void {
   if (desc.kind === 'attr') {
-    if (typeof value === 'boolean') {
-      usageTarget.toggleAttribute(desc.name, value);
-      return;
-    }
-    if (value === '') {
-      usageTarget.removeAttribute(desc.name);
-      return;
-    }
-    const attrNode = usageTarget.getAttributeNode(desc.name);
-    if (attrNode) {
-      attrNode.value = value;
-      return;
-    }
-    usageTarget.setAttribute(desc.name, value);
+    applyAttributeValue(usageTarget, desc.name, value, true);
     return;
   }
 
@@ -308,27 +321,11 @@ function applyToUsage(usageTarget: Element, desc: ControlDescriptor, value: stri
     }
 
     const attrName = kebabCase(desc.name);
-    if (typeof value === 'boolean') {
-      usageTarget.toggleAttribute(attrName, value);
-      return;
-    }
-    if (typeof value === 'string') {
-      if (value === '') {
-        usageTarget.removeAttribute(attrName);
-        return;
-      }
-      usageTarget.setAttribute(attrName, value);
-    }
+    applyAttributeValue(usageTarget, attrName, value, true);
     return;
   }
 
-  // css-var
-  if (!(usageTarget instanceof HTMLElement)) return;
-  if (typeof value !== 'string' || value === '') {
-    usageTarget.style.removeProperty(desc.name);
-    return;
-  }
-  usageTarget.style.setProperty(desc.name, value);
+  applyCssVariable(usageTarget, desc.name, value);
 }
 
 export function bindApiControls(root: Element): Cleanup {
@@ -339,21 +336,21 @@ export function bindApiControls(root: Element): Cleanup {
   const usage = block ? createUsageModel(block, target) : null;
 
   const controls: ControlDescriptor[] = [];
-  root.querySelectorAll('[data-api-attr]').forEach((el) => {
+
+  for (const el of root.querySelectorAll('[data-api-attr]')) {
     const name = el.getAttribute('data-api-attr');
-    if (!name) return;
-    controls.push({ kind: 'attr', name, el, defaultValue: el.getAttribute('data-default') });
-  });
-  root.querySelectorAll('[data-api-prop]').forEach((el) => {
+    if (name) controls.push({ kind: 'attr', name, el, defaultValue: el.getAttribute('data-default') });
+  }
+
+  for (const el of root.querySelectorAll('[data-api-prop]')) {
     const name = el.getAttribute('data-api-prop');
-    if (!name) return;
-    controls.push({ kind: 'prop', name, el, defaultValue: el.getAttribute('data-default') });
-  });
-  root.querySelectorAll('[data-api-css-var]').forEach((el) => {
+    if (name) controls.push({ kind: 'prop', name, el, defaultValue: el.getAttribute('data-default') });
+  }
+
+  for (const el of root.querySelectorAll('[data-api-css-var]')) {
     const name = el.getAttribute('data-api-css-var');
-    if (!name) return;
-    controls.push({ kind: 'css-var', name, el, defaultValue: el.getAttribute('data-default') });
-  });
+    if (name) controls.push({ kind: 'css-var', name, el, defaultValue: el.getAttribute('data-default') });
+  }
 
   const cleanups: Cleanup[] = [];
 
@@ -378,9 +375,8 @@ export function bindApiControls(root: Element): Cleanup {
     });
   }
 
-  const resetters = root.querySelectorAll('[data-api-reset]');
-  resetters.forEach((el) => {
-    const onClick = () => {
+  for (const el of root.querySelectorAll('[data-api-reset]')) {
+    const onClick = (): void => {
       for (const desc of controls) {
         const nextValue = parseDefaultValue(desc);
         setControlValue(desc.el, nextValue);
@@ -391,7 +387,7 @@ export function bindApiControls(root: Element): Cleanup {
     };
     el.addEventListener('click', onClick);
     cleanups.push(() => el.removeEventListener('click', onClick));
-  });
+  }
 
   syncUsageCode(block, usage, target);
 
