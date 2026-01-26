@@ -63,4 +63,26 @@ describe('validateTextAgainstCem diagnostics schema', () => {
     expect(diags[0].range.start).toEqual({ line: 2, col: 1 });
     expect(diags[0].range.end).toEqual({ line: 2, col: 4 });
   });
+
+  it('returns forbiddenAttribute with file+range+code+message+tagName+attrName', () => {
+    const cem = new Map();
+    const diags = validateTextAgainstCem({
+      filePath: 'x.html',
+      text: '<input placeholder="x">',
+      cem,
+      severity: { unknownElement: 'error', unknownAttribute: 'warning' },
+    });
+
+    expect(diags).toHaveLength(1);
+    expect(diags[0]).toMatchObject({
+      file: 'x.html',
+      severity: 'error',
+      code: 'forbiddenAttribute',
+      tagName: 'input',
+      attrName: 'placeholder',
+    });
+    expect(diags[0].message).toContain('Forbidden attribute');
+    expect(diags[0].range.start).toEqual({ line: 1, col: 8 });
+    expect(diags[0].range.end).toEqual({ line: 1, col: 19 });
+  });
 });

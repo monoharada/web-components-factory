@@ -66,7 +66,9 @@ export default DadsMyComponent;
 - [ ] `src/demos.ts` にデモ関数追加
 - [ ] `src/demos.ts` の説明ページに **Usage（HTML）コードブロック（`<dads-code-block>`）** を追加
 - [ ] `viewer.html` にセレクタオプション追加
+- [ ] **操作可能な API / Controls テーブル**を追加（`docs/knowledge/viewer-api-controls-table.md` を参照）
 - [ ] **新規HTMLファイルは作成禁止**
+- [ ] `placeholder` 属性は使用禁止（ネイティブ `<input>` 含む）。ヒントは `support-text` / `aria-describedby` などで提供する
 
 **参照**: [コンポーネント雛形](../knowledge/component-skeleton.md)
 
@@ -194,6 +196,8 @@ PRコメントや自己レビュー用：
 - [ ] `npm run cem:analyze` 実行、`custom-elements.json` 更新・コミット
 - [ ] `src/demos.ts` にデモ追加
 - [ ] `src/demos.ts` の説明ページに **Usage（HTML）コードブロック（`<dads-code-block>`）** を追加
+- [ ] `src/demos.ts` に **操作可能な API / Controls テーブル**を追加（`docs/knowledge/viewer-api-controls-table.md` を参照）
+- [ ] `placeholder` 属性は使用禁止（ネイティブ `<input>` 含む）。ヒントは `support-text` / `aria-describedby` などで提供する
 - [ ] `viewer.html` にセレクタ追加
 - [ ] `packages/autoload/dads/<component>.ts` 追加
 - [ ] `<component>.test.ts` 追加
@@ -217,7 +221,7 @@ PRコメントや自己レビュー用：
 | `file` | string | ファイルパス |
 | `range` | `{ start: { line, col }, end: { line, col } }` | 位置情報 |
 | `severity` | `'error' \| 'warning'` | 重要度 |
-| `code` | `'unknownElement' \| 'unknownAttribute'` | 診断コード |
+| `code` | `'unknownElement' \| 'unknownAttribute' \| 'forbiddenAttribute'` | 診断コード |
 | `message` | string | メッセージ |
 | `tagName` | string? | 対象タグ名 |
 | `attrName` | string? | 対象属性名 |

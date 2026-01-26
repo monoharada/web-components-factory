@@ -11590,6 +11590,963 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/search-box/search-box.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "SearchBoxコンポーネント",
+          "name": "DadsSearchBox",
+          "cssProperties": [
+            {
+              "description": "fields と button の間隔",
+              "name": "--dads-search-box-gap"
+            },
+            {
+              "description": "全体の文字色",
+              "name": "--dads-search-box-color"
+            },
+            {
+              "description": "ベース文字サイズ",
+              "name": "--dads-search-box-font-size"
+            },
+            {
+              "description": "文字詰め",
+              "name": "--dads-search-box-letter-spacing"
+            },
+            {
+              "description": "枠線色",
+              "name": "--dads-search-box-border-color"
+            },
+            {
+              "description": "hover時の枠線色",
+              "name": "--dads-search-box-border-color-hover"
+            },
+            {
+              "description": "角丸（8px）",
+              "name": "--dads-search-box-border-radius"
+            },
+            {
+              "description": "枠線幅（デフォルト: 1px）",
+              "name": "--dads-search-box-border-width"
+            },
+            {
+              "description": "input/select の最小高さ（44px相当）",
+              "name": "--dads-search-box-control-min-height"
+            },
+            {
+              "description": "scope select 幅",
+              "name": "--dads-search-box-scope-width"
+            },
+            {
+              "description": "scope select 背景",
+              "name": "--dads-search-box-scope-bg"
+            },
+            {
+              "description": "scopeラベル色",
+              "name": "--dads-search-box-scope-label-color"
+            },
+            {
+              "description": "scopeアイコン色",
+              "name": "--dads-search-box-scope-icon-color"
+            },
+            {
+              "description": "scopeアイコンサイズ（デフォルト: 16px）",
+              "name": "--dads-search-box-scope-icon-size"
+            },
+            {
+              "description": "scope select のパディング",
+              "name": "--dads-search-box-scope-padding"
+            },
+            {
+              "description": "input 背景",
+              "name": "--dads-search-box-input-bg"
+            },
+            {
+              "description": "input 最小幅（デフォルト: 8rem）",
+              "name": "--dads-search-box-input-min-width"
+            },
+            {
+              "description": "input padding",
+              "name": "--dads-search-box-input-padding"
+            },
+            {
+              "description": "虫眼鏡色",
+              "name": "--dads-search-box-search-icon-color"
+            },
+            {
+              "description": "虫眼鏡アイコンサイズ（デフォルト: 24px）",
+              "name": "--dads-search-box-search-icon-size"
+            },
+            {
+              "description": "ボタン背景色",
+              "name": "--dads-search-box-button-bg"
+            },
+            {
+              "description": "ボタン文字色",
+              "name": "--dads-search-box-button-color"
+            },
+            {
+              "description": "ボタンホバー時背景色",
+              "name": "--dads-search-box-button-bg-hover"
+            },
+            {
+              "description": "ボタン枠線色",
+              "name": "--dads-search-box-button-border-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルート（横並びコンテナ）",
+              "name": "base"
+            },
+            {
+              "description": "送信ボタン（<dads-button>）",
+              "name": "button"
+            },
+            {
+              "description": "フィールド群（scope + query）",
+              "name": "fields"
+            },
+            {
+              "description": "検索語 input[type=\"search\"]",
+              "name": "input"
+            },
+            {
+              "description": "検索語入力のラベルコンテナ",
+              "name": "query"
+            },
+            {
+              "description": "検索対象セレクトのラベルコンテナ",
+              "name": "scope"
+            },
+            {
+              "description": "検索対象セレクトの矢印アイコン",
+              "name": "scope-icon"
+            },
+            {
+              "description": "検索対象ラベルテキスト",
+              "name": "scope-label"
+            },
+            {
+              "description": "検索対象セレクト",
+              "name": "scope-select"
+            },
+            {
+              "description": "虫眼鏡アイコン",
+              "name": "search-icon"
+            },
+            {
+              "description": "スクリーンリーダー向けラベル",
+              "name": "visually-hidden"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#abortController",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#detail",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "SearchDetail"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#disabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureButtonElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "prefix",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyFormComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getLightDomOptionElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Array<HTMLOptionElement | HTMLOptGroupElement>"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#input",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#labelText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#optionsObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#scopeLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#scopeSelect",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSelectElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupEventListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupOptionsObserver",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#shouldSyncOptionsFromMutation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "mutation",
+                  "type": {
+                    "text": "MutationRecord"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#submitButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncButtonLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncInputAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncScopeLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValueFromAttr",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#triggerSearch",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "a11yAnnotations",
+              "type": {
+                "text": "A11yAnnotations"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "{ version: 1, summary: '検索ボックスコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部に検索語入力（<input type=\"search\">）と（任意の）検索対象（<select>）を持つ複合コンポーネントです。', 'Form-Associated Custom Elementとしてネイティブフォームに参加し、FormData（query + scope）を送信します。', 'searchランドマークが必要な場合は、ホストに role=\"search\" を付与するか、利用側の <form> に role=\"search\" を付与してください。同一ページに複数ある場合は aria-label / aria-labelledby で命名してください。', 'forced-colors: active ではアイコン色を CanvasText にフォールバックします。', ], labels: [ '検索語inputは label（視覚的に非表示）でラベル付けします。', '画面上にラベルがある場合は aria-labelledby を指定して外部ラベルを参照できます。', 'aria-label / aria-describedby は検索語inputへ転写されます。', ], keyboard: [ 'Tabで scope（存在する場合）→ query → button の順にフォーカス移動します。', 'Enter またはボタン操作で dads-search が発火し、フォーム内では requestSubmit() で送信します。', ], zoom: [ 'デフォルトで最小44x44px相当のタップターゲット（高さ）を確保します（--dads-search-box-control-min-height で上書き可能）。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'scope', title: '検索対象（任意）', label: '<select>', description: 'Light DOMの option/optgroup を複製して内部selectに表示します。', category: 'semantics', placement: 'top-left', target: shadowTarget('[part=\"scope-select\"]'), }, { id: 'query', title: '検索語', label: '<input type=\"search\">', description: '検索語を入力します。label/aria-* によりアクセシブルネームが提供されます。', category: 'labels', placement: 'top-left', target: shadowTarget('[part=\"input\"]'), }, { id: 'button', title: '検索ボタン', label: '<dads-button>', description: 'クリックまたはEnterで検索実行（dads-search）を行います。', category: 'keyboard', placement: 'top-right', target: shadowTarget('[part=\"button\"]'), }, ], }"
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              },
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-search-box', template: html` <div part=\"base\" id=\"base\"> <div part=\"fields\" id=\"fields\"> <label part=\"scope\" id=\"scope\"> <span part=\"scope-label\" id=\"scope-label\">検索対象</span> <select part=\"scope-select\" id=\"scope-select\"></select> <svg part=\"scope-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </label> <label part=\"query\" id=\"query\"> <svg part=\"search-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"m21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z\" fill=\"currentcolor\" /> </svg> <span part=\"visually-hidden\" id=\"label-text\">検索</span> <input part=\"input\" id=\"input\" type=\"search\" /> </label> </div> <dads-button part=\"button\" id=\"submit-button\" type=\"button\" variant=\"solid\" size=\"large\">検索</dads-button> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), searchBoxTokens, searchBoxStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('name'), PropertyAttr('label'), { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, { attribute: 'scope-name' }, { attribute: 'scope-value' }, { attribute: 'scope-label' }, { attribute: 'button-label' }, ], }"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "scopeValue",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "値変更確定時に発火（detail: { query: string, scope: string }）",
+              "name": "dads-change"
+            },
+            {
+              "description": "入力時に発火（detail: { query: string, scope: string }）",
+              "name": "dads-input"
+            },
+            {
+              "description": "検索実行時に発火（detail: { query: string, scope: string }、cancelable）",
+              "name": "dads-search"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索語inputへ転写（外部説明参照）",
+              "name": "aria-describedby"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索語inputへ転写（labelの代替）",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索語inputへ転写（外部ラベル参照）",
+              "name": "aria-labelledby"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "送信ボタンのラベル（デフォルト: 検索）",
+              "name": "button-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索語の視覚的に非表示ラベル（デフォルト: 検索）",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索語のフォーム名（デフォルト: q）",
+              "name": "name"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索対象の可視ラベル（デフォルト: 検索対象）",
+              "name": "scope-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索対象のフォーム名（デフォルト: scope）",
+              "name": "scope-name"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索対象の選択値",
+              "name": "scope-value"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "検索語",
+              "name": "value"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyFormComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-search-box",
+          "customElement": true,
+          "modulePath": "./packages/components/search-box/search-box.ts",
+          "definitionPath": "./packages/components/search-box/search-box.ts",
+          "typeDefinitionPath": "./packages/components/search-box/search-box.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsSearchBox",
+          "declaration": {
+            "name": "DadsSearchBox",
+            "module": "packages/components/search-box/search-box.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/search-box/search-box.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/search-box/search-box.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-search-box",
+          "declaration": {
+            "name": "DadsSearchBox",
+            "module": "./packages/components/search-box/search-box.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/select/select.ts",
       "declarations": [
         {
@@ -19277,6 +20234,14 @@
             "name": "*",
             "module": "packages/components/menu-list-box/index.js"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/search-box/index.js"
+          }
         }
       ]
     },
@@ -20793,6 +21758,172 @@
           "declaration": {
             "name": "ResetCard",
             "module": "packages/components/reset-card-demo.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/search-box/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/search-box/search-box.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultSearchBox",
+          "declaration": {
+            "name": "defineDefaultSearchBox",
+            "module": "./search-box-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineSearchBox",
+          "declaration": {
+            "name": "defineSearchBox",
+            "module": "./search-box-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/search-box/search-box-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultSearchBox",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "function",
+          "name": "defineSearchBox",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "SearchBoxコンポーネントを定義"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-search-box`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultSearchBox",
+          "declaration": {
+            "name": "defineDefaultSearchBox",
+            "module": "packages/components/search-box/search-box-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineSearchBox",
+          "declaration": {
+            "name": "defineSearchBox",
+            "module": "packages/components/search-box/search-box-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/search-box/search-box-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "searchBoxStyles",
+          "default": "css` :host { display: block; color: var(--dads-search-box-color); font-weight: 400; font-size: var(--dads-search-box-font-size); line-height: 1; font-family: var(--font-family-sans); letter-spacing: var(--dads-search-box-letter-spacing); /* element-scoped state vars */ --_dads-search-box-input-border-color: var(--dads-search-box-border-color); --_dads-search-box-scope-border-color: var(--dads-search-box-border-color); } [part=\"base\"] { display: flex; gap: var(--dads-search-box-gap); } [part=\"fields\"] { position: relative; z-index: 0; display: flex; flex-grow: 1; } /* ========== Scope select（任意） ========== */ :host(:not([data-has-scope])) [part=\"scope\"] { display: none; } [part=\"scope\"] { position: relative; display: flex; flex-shrink: 0; } [part=\"scope-label\"] { position: absolute; top: calc(50% - 1.25rem); left: calc(17 / 16 * 1rem); color: var(--dads-search-box-scope-label-color); pointer-events: none; z-index: 2; } [part=\"scope-select\"] { appearance: none; display: flex; align-items: center; overflow: hidden; box-sizing: border-box; width: var(--dads-search-box-scope-width); min-height: var(--dads-search-box-control-min-height); border-radius: var(--dads-search-box-border-radius) 0 0 var(--dads-search-box-border-radius); border: var(--dads-search-box-border-width) solid var(--_dads-search-box-scope-border-color); background-color: var(--dads-search-box-scope-bg); padding: var(--dads-search-box-scope-padding); color: inherit; font: inherit; font-size: calc(17 / 16 * 1rem); line-height: 1; letter-spacing: var(--dads-search-box-letter-spacing); white-space: nowrap; text-overflow: ellipsis; } @supports (appearance: base-select) { [part=\"scope-select\"] { appearance: base-select; } [part=\"scope-select\"]::picker-icon { display: none; } [part=\"scope-select\"]::picker(select) { appearance: base-select; border: 1px solid var(--color-neutral-solid-gray-420); box-shadow: var(--elevation-1); padding: calc(16 / 16 * 1rem) 0; } } [part=\"scope-icon\"] { position: absolute; top: 0; right: calc(16 / 16 * 1rem); bottom: 0; z-index: 1; margin-top: auto; margin-bottom: auto; display: flex; align-items: center; width: var(--dads-search-box-scope-icon-size); height: var(--dads-search-box-scope-icon-size); color: var(--dads-search-box-scope-icon-color); pointer-events: none; } [part=\"scope-select\"]:focus { outline: none; } [part=\"scope-select\"]:focus-visible { position: relative; z-index: 1; outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); } @media (hover: hover) { [part=\"scope-select\"]:hover { --_dads-search-box-scope-border-color: var(--dads-search-box-border-color-hover); } } [part=\"scope-select\"] option { display: flex; align-items: center; box-sizing: border-box; min-height: calc(44 / 16 * 1rem); padding: calc(10 / 16 * 1rem) calc(16 / 16 * 1rem); color: var(--color-neutral-solid-gray-900); } [part=\"scope-select\"] option::checkmark { display: none; } @media (hover: hover) { [part=\"scope-select\"] option:hover { background-color: var(--color-neutral-solid-gray-50); text-decoration: underline; text-decoration-thickness: calc(1 / 16 * 1rem); text-underline-offset: calc(3 / 16 * 1rem); } } [part=\"scope-select\"] option:checked { font-weight: 700; background-color: var(--color-primitive-blue-100); color: var(--color-primitive-blue-1000); } @media (hover: hover) { [part=\"scope-select\"] option:checked:hover { background-color: var(--color-primitive-blue-50); color: var(--color-primitive-blue-900); } } [part=\"scope-select\"] option:focus-visible { border-radius: 0; outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: calc(var(--dads-focus-outline-width) * -1); box-shadow: none; } [part=\"scope-select\"] option:not(:checked):focus-visible { background-color: var(--dads-focus-text-element-bg); } [part=\"scope-select\"] option:checked:focus-visible { box-shadow: inset 0 0 0 calc(6 / 16 * 1rem) var(--dads-focus-text-element-bg); } /* ========== Query input ========== */ [part=\"query\"] { flex-grow: 1; position: relative; display: flex; } [part=\"search-icon\"] { position: absolute; top: 0; bottom: 0; left: calc(16 / 16 * 1rem); z-index: 1; margin: auto 0; width: var(--dads-search-box-search-icon-size); height: var(--dads-search-box-search-icon-size); color: var(--dads-search-box-search-icon-color); pointer-events: none; } /* スクリーンリーダー向けラベル */ [part=\"visually-hidden\"] { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; } @media (forced-colors: active) { [part=\"search-icon\"], [part=\"scope-icon\"] { color: CanvasText; } } [part=\"input\"] { flex-grow: 1; box-sizing: border-box; min-width: var(--dads-search-box-input-min-width); min-height: var(--dads-search-box-control-min-height); border: var(--dads-search-box-border-width) solid var(--_dads-search-box-input-border-color); border-radius: var(--dads-search-box-border-radius); background-color: var(--dads-search-box-input-bg); padding: var(--dads-search-box-input-padding); color: inherit; font: inherit; } :host([data-has-scope]) [part=\"input\"] { margin-left: calc(-1 / 16 * 1rem); border-top-left-radius: 0; border-bottom-left-radius: 0; } @media (hover: hover) { [part=\"input\"]:hover { --_dads-search-box-input-border-color: var(--dads-search-box-border-color-hover); } } [part=\"input\"]::-webkit-search-cancel-button { display: none; } /* フォーカス状態 - applyDADSFocusStyles()ミックスインで共通スタイル適用 */ [part=\"input\"]:focus { outline: none; } /* ========== Button ========== */ [part=\"button\"] { --dads-button-background: var(--dads-search-box-button-bg); --dads-button-color: var(--dads-search-box-button-color); --dads-button-border-color: var(--dads-search-box-button-border-color); } @media (hover: hover) { [part=\"button\"]:hover { --dads-button-background: var(--dads-search-box-button-bg-hover); } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "searchBoxStyles",
+          "declaration": {
+            "name": "searchBoxStyles",
+            "module": "packages/components/search-box/search-box-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/search-box/search-box-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "searchBoxLocalTokens",
+          "default": "css`${searchBoxLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "searchBoxSemanticTokens",
+          "default": "css`${searchBoxSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "searchBoxTokens",
+          "default": "css` ${searchBoxSemanticTokensText} ${searchBoxLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "searchBoxLocalTokens",
+          "declaration": {
+            "name": "searchBoxLocalTokens",
+            "module": "packages/components/search-box/search-box-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "searchBoxSemanticTokens",
+          "declaration": {
+            "name": "searchBoxSemanticTokens",
+            "module": "packages/components/search-box/search-box-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "searchBoxTokens",
+          "declaration": {
+            "name": "searchBoxTokens",
+            "module": "packages/components/search-box/search-box-tokens.ts"
           }
         }
       ]
@@ -24971,9 +26102,9 @@
           "kind": "variable",
           "name": "iconPaths",
           "type": {
-            "text": "{\n  /**\n   * DADSダミーアイコン（斜線パターン）\n   * 作例やプレースホルダーに使用\n   */\n  dummy:\n    'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z',\n\n  /**\n   * チェックマーク\n   * 選択状態、完了状態の表示に使用\n   */\n  checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /**\n   * 編集（鉛筆）アイコン\n   */\n  edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z',\n\n  /**\n   * ダウンロードアイコン\n   */\n  download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z',\n\n  /**\n   * 複製（コピー）アイコン\n   */\n  duplicate:\n    'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z',\n\n  /**\n   * 削除（ゴミ箱）アイコン\n   */\n  delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z',\n\n  /**\n   * 開閉矢印（キャレット）アイコン\n   * ドロップダウン、アコーディオンに使用\n   */\n  caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z',\n\n  /**\n   * 新規タブで開くアイコン\n   * 外部リンクの表示に使用\n   * Note: 24x24 viewBox用パス\n   */\n  externalLink:\n    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',\n}"
+            "text": "{\n  /**\n   * DADSダミーアイコン（斜線パターン）\n   * 作例やプレースホルダーに使用\n   */\n  dummy:\n    'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z',\n\n  /**\n   * チェックマーク\n   * 選択状態、完了状態の表示に使用\n   */\n  checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /**\n   * 編集（鉛筆）アイコン\n   */\n  edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z',\n\n  /**\n   * ダウンロードアイコン\n   */\n  download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z',\n\n  /**\n   * 複製（コピー）アイコン\n   */\n  duplicate:\n    'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z',\n\n  /**\n   * 削除（ゴミ箱）アイコン\n   */\n  delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z',\n\n  /**\n   * 開閉矢印（キャレット）アイコン\n   * ドロップダウン、アコーディオンに使用\n   */\n  caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z',\n\n  /**\n   * 新規タブで開くアイコン\n   * 外部リンクの表示に使用\n   * Note: 24x24 viewBox用パス\n   */\n  externalLink:\n    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',\n\n  /**\n   * 検索（虫眼鏡）アイコン\n   */\n  search:\n    'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z',\n}"
           },
-          "default": "{ /** * DADSダミーアイコン（斜線パターン） * 作例やプレースホルダーに使用 */ dummy: 'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z', /** * チェックマーク * 選択状態、完了状態の表示に使用 */ checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** * 編集（鉛筆）アイコン */ edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z', /** * ダウンロードアイコン */ download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z', /** * 複製（コピー）アイコン */ duplicate: 'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z', /** * 削除（ゴミ箱）アイコン */ delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z', /** * 開閉矢印（キャレット）アイコン * ドロップダウン、アコーディオンに使用 */ caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z', /** * 新規タブで開くアイコン * 外部リンクの表示に使用 * Note: 24x24 viewBox用パス */ externalLink: 'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z', }",
+          "default": "{ /** * DADSダミーアイコン（斜線パターン） * 作例やプレースホルダーに使用 */ dummy: 'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z', /** * チェックマーク * 選択状態、完了状態の表示に使用 */ checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** * 編集（鉛筆）アイコン */ edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z', /** * ダウンロードアイコン */ download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z', /** * 複製（コピー）アイコン */ duplicate: 'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z', /** * 削除（ゴミ箱）アイコン */ delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z', /** * 開閉矢印（キャレット）アイコン * ドロップダウン、アコーディオンに使用 */ caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z', /** * 新規タブで開くアイコン * 外部リンクの表示に使用 * Note: 24x24 viewBox用パス */ externalLink: 'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z', /** * 検索（虫眼鏡）アイコン */ search: 'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z', }",
           "description": "アイコンのSVGパス定義"
         }
       ],
