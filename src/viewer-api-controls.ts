@@ -5,6 +5,7 @@ type ControlDescriptor = Readonly<{
   name: string;
   el: Element;
   defaultValue: string | null;
+  targetSelector: string | null;
 }>;
 
 type Cleanup = () => void;
@@ -146,6 +147,11 @@ function resolveTarget(root: Element): Element | null {
   if (selector) return root.querySelector(selector);
 
   return null;
+}
+
+function resolveEffectiveTarget(root: Element, defaultTarget: Element, desc: ControlDescriptor): Element | null {
+  if (!desc.targetSelector) return defaultTarget;
+  return root.querySelector(desc.targetSelector);
 }
 
 function resolveCodeBlock(root: Element): CodeBlockLike | null {
@@ -339,25 +345,51 @@ export function bindApiControls(root: Element): Cleanup {
 
   for (const el of root.querySelectorAll('[data-api-attr]')) {
     const name = el.getAttribute('data-api-attr');
-    if (name) controls.push({ kind: 'attr', name, el, defaultValue: el.getAttribute('data-default') });
+    if (!name) continue;
+    controls.push({
+      kind: 'attr',
+      name,
+      el,
+      defaultValue: el.getAttribute('data-default'),
+      targetSelector: el.getAttribute('data-api-target-selector'),
+    });
   }
 
   for (const el of root.querySelectorAll('[data-api-prop]')) {
     const name = el.getAttribute('data-api-prop');
-    if (name) controls.push({ kind: 'prop', name, el, defaultValue: el.getAttribute('data-default') });
+    if (!name) continue;
+    controls.push({
+      kind: 'prop',
+      name,
+      el,
+      defaultValue: el.getAttribute('data-default'),
+      targetSelector: el.getAttribute('data-api-target-selector'),
+    });
   }
 
   for (const el of root.querySelectorAll('[data-api-css-var]')) {
     const name = el.getAttribute('data-api-css-var');
-    if (name) controls.push({ kind: 'css-var', name, el, defaultValue: el.getAttribute('data-default') });
+    if (!name) continue;
+    controls.push({
+      kind: 'css-var',
+      name,
+      el,
+      defaultValue: el.getAttribute('data-default'),
+      targetSelector: el.getAttribute('data-api-target-selector'),
+    });
   }
 
   const cleanups: Cleanup[] = [];
 
   const handle = (desc: ControlDescriptor) => (event: Event) => {
     const value = readControlValue(desc.el, event);
-    applyToTarget(target, desc, value);
-    if (usage?.target) applyToUsage(usage.target, desc, value);
+    const effectiveTarget = resolveEffectiveTarget(root, target, desc);
+    if (effectiveTarget) applyToTarget(effectiveTarget, desc, value);
+
+    if (usage?.fragment) {
+      const usageTarget = desc.targetSelector ? usage.fragment.querySelector(desc.targetSelector) : usage.target;
+      if (usageTarget) applyToUsage(usageTarget, desc, value);
+    }
     syncUsageCode(block, usage, target);
   };
 
@@ -380,8 +412,13 @@ export function bindApiControls(root: Element): Cleanup {
       for (const desc of controls) {
         const nextValue = parseDefaultValue(desc);
         setControlValue(desc.el, nextValue);
-        applyToTarget(target, desc, nextValue);
-        if (usage?.target) applyToUsage(usage.target, desc, nextValue);
+        const effectiveTarget = resolveEffectiveTarget(root, target, desc);
+        if (effectiveTarget) applyToTarget(effectiveTarget, desc, nextValue);
+
+        if (usage?.fragment) {
+          const usageTarget = desc.targetSelector ? usage.fragment.querySelector(desc.targetSelector) : usage.target;
+          if (usageTarget) applyToUsage(usageTarget, desc, nextValue);
+        }
       }
       syncUsageCode(block, usage, target);
     };

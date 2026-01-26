@@ -146,3 +146,38 @@ describe('bindApiControls() usage (HTML) formatting', () => {
     expect(codeBlock.textContent).toBe('<dads-button variant="solid" aria-label="ラベル">ボタン</dads-button>');
   });
 });
+
+describe('bindApiControls() per-control target override', () => {
+  it('updates the element resolved by data-api-target-selector', () => {
+    const root = document.createElement('div');
+    root.innerHTML = `
+      <div class="wc-api-panel">
+        <div class="wc-api-panel__body">
+          <div id="target" data-api-target></div>
+          <span id="secondary">old</span>
+
+          <dads-input-text
+            id="ctrl"
+            data-api-prop="textContent"
+            data-api-target-selector="#secondary"
+            data-default="old"
+          ></dads-input-text>
+        </div>
+      </div>
+    `;
+
+    const target = root.querySelector<HTMLElement>('#target');
+    const secondary = root.querySelector<HTMLElement>('#secondary');
+    const ctrl = root.querySelector<HTMLElement>('#ctrl');
+    expect(target).toBeTruthy();
+    expect(secondary).toBeTruthy();
+    expect(ctrl).toBeTruthy();
+    if (!target || !secondary || !ctrl) return;
+
+    bindApiControls(root);
+
+    ctrl.dispatchEvent(new CustomEvent('dads-input', { detail: { value: 'new' } }));
+    expect(secondary.textContent).toBe('new');
+    expect(target.textContent).not.toBe('new');
+  });
+});
