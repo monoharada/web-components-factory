@@ -133,8 +133,8 @@ export class DadsAnnotate extends TypographyWebComponent {
         display: block;
 
         /* カスタマイズ可能な注釈カラー */
-        --a11y-annotate-callout-color: rgba(220, 38, 38, 0.95);
-        --a11y-annotate-callout-color-solid: rgb(220, 38, 38);
+        --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000);
+        --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid);
 
         /* Typography */
         --a11y-annotate-font-size: var(--font-size-16, 1rem);
@@ -152,7 +152,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc);
         --a11y-annotate-text-primary: var(--color-text-primary, #0f172a);
         --a11y-annotate-text-secondary: var(--color-text-secondary, #475569);
-        --a11y-annotate-text-muted: #334155;
+        --a11y-annotate-text-muted: var(--color-text-secondary, #475569);
 
         /* バッジ用カラー */
         --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe);
@@ -160,10 +160,17 @@ export class DadsAnnotate extends TypographyWebComponent {
         --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd);
 
         /* スナップショット用 */
-        --a11y-annotate-snapshot-border: #e2e8f0;
+        --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color);
 
         /* シャドウ */
-        --a11y-annotate-shadow: 0 10px 30px rgba(2, 6, 23, 0.25);
+        --a11y-annotate-shadow: var(
+          --component-shadow,
+          var(
+            --elevation-2,
+            0 2px 12px 2px rgba(0, 0, 0, 0.1),
+            0 1px 6px 0 rgba(0, 0, 0, 0.3)
+          )
+        );
       }
 
       a11y-annotate [part="layout"] {
@@ -175,12 +182,12 @@ export class DadsAnnotate extends TypographyWebComponent {
       a11y-annotate [part="preview"] {
         min-width: 0;
         border: 1px solid var(--a11y-annotate-border-color);
-        border-radius: 12px;
+        border-radius: var(--border-radius-12, 0.75rem);
         background: var(--a11y-annotate-background);
         padding: var(--spacing-12, 48px);
         position: relative;
         overflow: visible;
-        --a11y-annotate-callout-gutter: 64px;
+        --a11y-annotate-callout-gutter: var(--spacing-16, 64px);
       }
 
       a11y-annotate [part="preview-inner"] {
@@ -198,7 +205,7 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate [part="panel"] {
         border: 1px solid var(--a11y-annotate-border-color);
-        border-radius: 12px;
+        border-radius: var(--border-radius-12, 0.75rem);
         background: var(--a11y-annotate-background);
         overflow: hidden;
       }
@@ -312,7 +319,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       a11y-annotate .callout-box {
         position: absolute;
         border: 2px dashed var(--a11y-annotate-callout-color);
-        border-radius: 10px;
+        border-radius: var(--border-radius-8, 0.5rem);
         background: transparent;
       }
 
@@ -321,7 +328,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         z-index: 50;
         max-width: min(320px, calc(100vw - 40px));
         padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px);
-        border-radius: 10px;
+        border-radius: var(--border-radius-8, 0.5rem);
         background: var(--a11y-annotate-callout-color);
         border: 1px solid var(--a11y-annotate-callout-color);
         color: var(--a11y-annotate-background);
@@ -352,11 +359,13 @@ export class DadsAnnotate extends TypographyWebComponent {
       }
 
       a11y-annotate .callout-tag code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-          'Courier New', monospace;
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: inherit;
         flex: 1 1 auto;
         min-width: 0;
-        font-weight: 700;
+        font-weight: inherit;
         background: transparent;
         border: 0;
         padding: 0;
@@ -381,12 +390,14 @@ export class DadsAnnotate extends TypographyWebComponent {
       }
 
       a11y-annotate .callout-number {
+        box-sizing: border-box;
         min-width: var(--a11y-annotate-circle-size);
         height: var(--a11y-annotate-circle-size);
         padding: 0 var(--spacing-1, 4px);
         border-radius: 999px;
-        background: var(--a11y-annotate-text-primary);
-        color: var(--a11y-annotate-background);
+        border: 2px solid var(--a11y-annotate-callout-color);
+        background: var(--a11y-annotate-background);
+        color: var(--a11y-annotate-callout-color-solid);
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -415,7 +426,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       a11y-annotate .snapshot {
         margin: 0;
         padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px);
-        border-radius: 10px;
+        border-radius: var(--border-radius-8, 0.5rem);
         border: 1px solid var(--a11y-annotate-snapshot-border);
         background: var(--a11y-annotate-background-muted);
         font-size: var(--a11y-annotate-font-size);
@@ -921,6 +932,29 @@ export class DadsAnnotate extends TypographyWebComponent {
     const containerRect = this.#calloutLayer.getBoundingClientRect();
     if (containerRect.width === 0 || containerRect.height === 0) return;
 
+    const parseRadiusPx = (value: string, fontSize: number): number => {
+      const trimmed = value.trim();
+      if (!trimmed) return 0;
+      const first = trimmed.split(/\s+/)[0] ?? '';
+      if (!first || first.endsWith('%')) return 0;
+      if (first.endsWith('px')) {
+        const n = Number.parseFloat(first);
+        return Number.isFinite(n) ? n : 0;
+      }
+      if (first.endsWith('rem')) {
+        const n = Number.parseFloat(first);
+        return Number.isFinite(n) ? n * fontSize : 0;
+      }
+      if (first.endsWith('em')) {
+        const n = Number.parseFloat(first);
+        return Number.isFinite(n) ? n * fontSize : 0;
+      }
+      const n = Number.parseFloat(first);
+      return Number.isFinite(n) ? n : 0;
+    };
+
+    const rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+
     if (this.#calloutSvg) {
       this.#calloutSvg.setAttribute('viewBox', `0 0 ${containerRect.width} ${containerRect.height}`);
       this.#calloutSvg.setAttribute('width', String(containerRect.width));
@@ -959,6 +993,26 @@ export class DadsAnnotate extends TypographyWebComponent {
       item.boxEl.style.top = `${localTop - pad}px`;
       item.boxEl.style.width = `${localWidth + pad * 2}px`;
       item.boxEl.style.height = `${localHeight + pad * 2}px`;
+
+      const computed = getComputedStyle(anchorEl);
+      const baseRadii = {
+        topLeft: parseRadiusPx(computed.borderTopLeftRadius, rootFontSize),
+        topRight: parseRadiusPx(computed.borderTopRightRadius, rootFontSize),
+        bottomRight: parseRadiusPx(computed.borderBottomRightRadius, rootFontSize),
+        bottomLeft: parseRadiusPx(computed.borderBottomLeftRadius, rootFontSize),
+      };
+
+      const maxRadius = Math.min((localWidth + pad * 2) / 2, (localHeight + pad * 2) / 2);
+      const toBoxRadius = (base: number): number => {
+        if (base <= 0) return 0;
+        const padded = base + pad;
+        return Math.max(0, Math.min(padded, maxRadius));
+      };
+
+      item.boxEl.style.borderTopLeftRadius = `${toBoxRadius(baseRadii.topLeft)}px`;
+      item.boxEl.style.borderTopRightRadius = `${toBoxRadius(baseRadii.topRight)}px`;
+      item.boxEl.style.borderBottomRightRadius = `${toBoxRadius(baseRadii.bottomRight)}px`;
+      item.boxEl.style.borderBottomLeftRadius = `${toBoxRadius(baseRadii.bottomLeft)}px`;
 
       const placement = item.callout.placement ?? 'top-right';
       const isLeft = placement === 'top-left' || placement === 'bottom-left';

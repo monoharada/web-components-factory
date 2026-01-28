@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-01-18T01:25:38.163Z",
+  "generatedAt": "2026-01-27T07:16:12.136Z",
   "components": {
     "file-upload": {
       "updatedAt": "2026-01-17T23:27:40.637Z",
@@ -728,6 +728,329 @@
             "status": "ok",
             "skipped": true
           }
+        ]
+      }
+    },
+    "card": {
+      "updatedAt": "2026-01-27T07:16:12.136Z",
+      "docs": {
+        "overview": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/card/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/overview/page.html",
+            "text": "docs/overview/page.txt",
+            "screenshot": "docs/overview/screenshot.png"
+          },
+          "images": [
+            {
+              "src": "/dads/images/components/card/overview/card_overview.png",
+              "url": "https://design.digital.go.jp/dads/images/components/card/overview/card_overview.png",
+              "file": "docs/overview/images/card_overview.png",
+              "status": "ok",
+              "error": null
+            }
+          ]
+        },
+        "usage": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/card/usage/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/usage/page.html",
+            "text": "docs/usage/page.txt",
+            "screenshot": "docs/usage/screenshot.png"
+          },
+          "images": [
+            {
+              "src": "/dads/images/components/card/usage/card_anatomy.png",
+              "url": "https://design.digital.go.jp/dads/images/components/card/usage/card_anatomy.png",
+              "file": "docs/usage/images/card_anatomy.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_1.96ce219c.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_1.96ce219c.svg",
+              "file": "docs/usage/images/counter_1.96ce219c.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_2.73d71e67.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_2.73d71e67.svg",
+              "file": "docs/usage/images/counter_2.73d71e67.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_3.5e687aba.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_3.5e687aba.svg",
+              "file": "docs/usage/images/counter_3.5e687aba.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_4.331c29f8.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_4.331c29f8.svg",
+              "file": "docs/usage/images/counter_4.331c29f8.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/card/usage/card_border_1.png",
+              "url": "https://design.digital.go.jp/dads/images/components/card/usage/card_border_1.png",
+              "file": "docs/usage/images/card_border_1.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/card/usage/card_border_2.png",
+              "url": "https://design.digital.go.jp/dads/images/components/card/usage/card_border_2.png",
+              "file": "docs/usage/images/card_border_2.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/card/usage/card_main_area.png",
+              "url": "https://design.digital.go.jp/dads/images/components/card/usage/card_main_area.png",
+              "file": "docs/usage/images/card_main_area.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/card/usage/card_media_area.png",
+              "url": "https://design.digital.go.jp/dads/images/components/card/usage/card_media_area.png",
+              "file": "docs/usage/images/card_media_area.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/card/usage/card_sub_area.png",
+              "url": "https://design.digital.go.jp/dads/images/components/card/usage/card_sub_area.png",
+              "file": "docs/usage/images/card_sub_area.png",
+              "status": "ok",
+              "error": null
+            }
+          ]
+        },
+        "accessibility": {
+          "status": "missing",
+          "url": "https://design.digital.go.jp/dads/components/card/accessibility/",
+          "httpStatus": 404
+        }
+      },
+      "storybook": {
+        "status": "ok",
+        "entries": [
+          {
+            "id": "components-カード--docs",
+            "type": "docs",
+            "name": "Docs",
+            "title": "Components/カード",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/docs/components-%E3%82%AB%E3%83%BC%E3%83%89--docs",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%AB%E3%83%BC%E3%83%89--docs",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/docs--docs--3c7f4990.png",
+              "canvasPng": "storybook/canvas/docs--docs--3c7f4990.png",
+              "canvasHtml": "storybook/html/docs--docs--3c7f4990.html"
+            }
+          },
+          {
+            "id": "components-カード--example-1",
+            "type": "story",
+            "name": "Example 1",
+            "title": "Components/カード",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E3%82%AB%E3%83%BC%E3%83%89--example-1",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%AB%E3%83%BC%E3%83%89--example-1",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/story--example-1--4d3f6edf.png",
+              "canvasPng": "storybook/canvas/story--example-1--4d3f6edf.png",
+              "canvasHtml": "storybook/html/story--example-1--4d3f6edf.html"
+            }
+          },
+          {
+            "id": "components-カード--example-2",
+            "type": "story",
+            "name": "Example 2",
+            "title": "Components/カード",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E3%82%AB%E3%83%BC%E3%83%89--example-2",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%AB%E3%83%BC%E3%83%89--example-2",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/story--example-2--aa2328a4.png",
+              "canvasPng": "storybook/canvas/story--example-2--aa2328a4.png",
+              "canvasHtml": "storybook/html/story--example-2--aa2328a4.html"
+            }
+          },
+          {
+            "id": "components-カード--example-3",
+            "type": "story",
+            "name": "Example 3",
+            "title": "Components/カード",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E3%82%AB%E3%83%BC%E3%83%89--example-3",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%AB%E3%83%BC%E3%83%89--example-3",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/story--example-3--1a4b6ab2.png",
+              "canvasPng": "storybook/canvas/story--example-3--1a4b6ab2.png",
+              "canvasHtml": "storybook/html/story--example-3--1a4b6ab2.html"
+            }
+          },
+          {
+            "id": "components-カード--example-4",
+            "type": "story",
+            "name": "Example 4",
+            "title": "Components/カード",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E3%82%AB%E3%83%BC%E3%83%89--example-4",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%AB%E3%83%BC%E3%83%89--example-4",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/story--example-4--4645dfea.png",
+              "canvasPng": "storybook/canvas/story--example-4--4645dfea.png",
+              "canvasHtml": "storybook/html/story--example-4--4645dfea.html"
+            }
+          },
+          {
+            "id": "components-カード--example-5",
+            "type": "story",
+            "name": "Example 5",
+            "title": "Components/カード",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E3%82%AB%E3%83%BC%E3%83%89--example-5",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%AB%E3%83%BC%E3%83%89--example-5",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/story--example-5--e694eb1a.png",
+              "canvasPng": "storybook/canvas/story--example-5--e694eb1a.png",
+              "canvasHtml": "storybook/html/story--example-5--e694eb1a.html"
+            }
+          },
+          {
+            "id": "components-カード--example-6",
+            "type": "story",
+            "name": "Example 6",
+            "title": "Components/カード",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E3%82%AB%E3%83%BC%E3%83%89--example-6",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E3%82%AB%E3%83%BC%E3%83%89--example-6",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/story--example-6--28527d72.png",
+              "canvasPng": "storybook/canvas/story--example-6--28527d72.png",
+              "canvasHtml": "storybook/html/story--example-6--28527d72.html"
+            }
+          }
+        ],
+        "files": {
+          "entries": "storybook/entries.json"
+        }
+      },
+      "upstream": {
+        "status": "ok",
+        "commit": "ee3045557aaea99a255f46d106d467f60dc4b110",
+        "copied": [
+          "upstream/design-system-example-components-html/src/components/card",
+          "upstream/design-system-example-components-html/src/global.css",
+          "upstream/design-system-example-components-html/src/helpers/html-fragment.ts"
+        ],
+        "files": {
+          "meta": "upstream/design-system-example-components-html/META.json",
+          "license": "upstream/design-system-example-components-html/LICENSE"
+        }
+      },
+      "figma": {
+        "status": "skipped",
+        "config": {
+          "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+          "nodes": [
+            {
+              "id": "11360:28331",
+              "label": "Figma node 11360:28331",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.1?node-id=11360-28331&m=dev"
+            },
+            {
+              "id": "11360:29149",
+              "label": "Figma node 11360:29149",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.1?node-id=11360-29149&m=dev"
+            }
+          ]
+        },
+        "export": {
+          "format": "png",
+          "scale": 2
+        },
+        "files": {
+          "config": "figma/config.json"
+        },
+        "reason": "missing_env",
+        "requiredEnv": [
+          "FIGMA_ACCESS_TOKEN (recommended)",
+          "FIGMA_TOKEN (legacy)"
         ]
       }
     }

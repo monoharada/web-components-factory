@@ -673,6 +673,910 @@ export const demos = {
     </div>
   `,
 
+  card: () => `
+    <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">カードコンポーネント</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        デジタル庁デザインシステム（DADS）準拠のカードコンポーネント。カードの構成ルール（コンテナ/メイン/イメージ/サブ）をWeb Componentsとして提供します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <style>
+        /* カードデモ共通: リンク下線スタイル */
+        .card-demo-section dads-card h2 a {
+          color: inherit;
+          text-decoration: underline;
+          text-decoration-thickness: calc(1 / 16 * 1rem);
+          text-underline-offset: calc(3 / 16 * 1rem);
+        }
+
+        @media (hover: hover) {
+          .card-demo-section dads-card:hover h2 a {
+            text-decoration-thickness: calc(3 / 16 * 1rem);
+          }
+        }
+      </style>
+
+      <!-- アクセシビリティ注釈 -->
+      <section class="card-demo-section" style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-card">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-card style="width: min(420px, 100%);">
+              <div slot="media" style="aspect-ratio: 3/2; background: linear-gradient(114deg, var(--color-primitive-cyan-400) 0%, var(--color-primitive-purple-500) 100%); display: grid; place-content: center; color: white; font-weight: 700;">
+                Media
+              </div>
+              <h2><a href="#" data-dads-card-primary data-dads-card-delegate>主リンク（カード面クリックON）</a></h2>
+              <p>クリックは主リンクへ委譲されます（テキスト選択/内部ボタン操作は阻害しません）。</p>
+              <div slot="sub" style="display: flex; gap: 16px; justify-content: flex-end; flex-wrap: wrap;">
+                <dads-button size="small" variant="outlined">関連情報</dads-button>
+                <dads-button size="small" variant="solid">詳しくみる</dads-button>
+              </div>
+            </dads-card>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <!-- API / Controls（Storybook風） -->
+      <section class="card-demo-section" style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          <code>layout</code> と CSS vars を変更し、見た目のカスタマイズを確認できます。
+          "カード面クリック"は主リンク要素に <code>data-dads-card-delegate</code> を付けることで有効化します。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-card',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; gap: 24px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-card data-api-target style="width: min(420px, 100%);">
+                  <div slot="media" style="aspect-ratio: 3/2; background: var(--color-neutral-solid-gray-100); display: grid; place-content: center; color: #333;">
+                    Media
+                  </div>
+                  <h2><a href="#" data-demo-card-title data-dads-card-primary data-dads-card-delegate>主リンク（delegate）</a></h2>
+                  <p data-demo-card-content>layout と CSS vars を調整して確認してください。</p>
+                  <div slot="sub" style="display: flex; gap: 16px; justify-content: flex-end; flex-wrap: wrap;">
+                    <dads-button size="small" variant="outlined" data-demo-card-sub-button-1>関連情報</dads-button>
+                    <dads-button size="small" variant="solid" data-demo-card-sub-button-2>詳しくみる</dads-button>
+                  </div>
+                </dads-card>
+
+                <div style="border-top: 1px solid #e5e7eb; padding-top: 16px;">
+                  <p style="margin: 0; color: #666; font-size: 12px;">
+                    ※ 主リンクから <code>data-dads-card-delegate</code> を外すと、カード面クリックはOFFになります（リンク自体は通常どおりクリック/Enter可能）。
+                  </p>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-card>
+                      <div slot="media">...</div>
+                      <h2><a href="#" data-demo-card-title data-dads-card-primary data-dads-card-delegate>主リンク（delegate）</a></h2>
+                      <p data-demo-card-content>layout と CSS vars を調整して確認してください。</p>
+                      <div slot="sub" style="display: flex; gap: 16px; justify-content: flex-end; flex-wrap: wrap;">
+                        <dads-button size="small" variant="outlined" data-demo-card-sub-button-1>関連情報</dads-button>
+                        <dads-button size="small" variant="solid" data-demo-card-sub-button-2>詳しくみる</dads-button>
+                      </div>
+                    </dads-card>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>layout</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>"vertical" | "horizontal"</code></td>
+                        <td><code>vertical</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="layout" data-api-attr="layout" data-default="">
+                              <option value="" selected>vertical (default)</option>
+                              <option value="horizontal">horizontal</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>レイアウト（縦/横）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>data-dads-card-primary</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>true</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch
+                              aria-label="data-dads-card-primary"
+                              data-api-attr="data-dads-card-primary"
+                              data-api-target-selector="dads-card [data-demo-card-title]"
+                              data-default="true"
+                              checked
+                            >
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>主リンク要素を指定（主リンクは1つ）。主リンクに付与します。</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>data-dads-card-delegate</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>true</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch
+                              aria-label="data-dads-card-delegate"
+                              data-api-attr="data-dads-card-delegate"
+                              data-api-target-selector="dads-card [data-demo-card-title]"
+                              data-default="true"
+                              checked
+                            >
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>カード面クリック（pointer）を主リンクへ委譲します（主リンクに付与）。</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">Content (Demo)</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>slot:title</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>主リンク（delegate）</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="title text"
+                              value="主リンク（delegate）"
+                              data-api-prop="textContent"
+                              data-api-target-selector="dads-card [data-demo-card-title]"
+                              data-default="主リンク（delegate）"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>主リンクのテキスト（デフォルトスロット内）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>slot:content</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>layout と CSS vars を調整して確認してください。</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="content text"
+                              value="layout と CSS vars を調整して確認してください。"
+                              data-api-prop="textContent"
+                              data-api-target-selector="dads-card [data-demo-card-content]"
+                              data-default="layout と CSS vars を調整して確認してください。"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>メイン本文のテキスト（デフォルトスロット内）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>slot:sub (button 1)</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>関連情報</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="sub button 1"
+                              value="関連情報"
+                              data-api-prop="textContent"
+                              data-api-target-selector="dads-card [data-demo-card-sub-button-1]"
+                              data-default="関連情報"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>サブエリア（slot="sub"）1つ目のボタンラベル</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>slot:sub (button 2)</code></th>
+                        <td><code>prop</code></td>
+                        <td><code>string</code></td>
+                        <td><code>詳しくみる</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="sub button 2"
+                              value="詳しくみる"
+                              data-api-prop="textContent"
+                              data-api-target-selector="dads-card [data-demo-card-sub-button-2]"
+                              data-default="詳しくみる"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>サブエリア（slot="sub"）2つ目のボタンラベル</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                <p class="wc-api-panel__section-note">
+                  ※ slot 内の要素へ <code>textContent</code> を適用してテキストを差し替えます（デモ用）。
+                </p>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-card-background</code></th>
+                        <td><code>--color-neutral-white</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-background" value="" data-api-css-var="--dads-card-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>背景色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-border-color</code></th>
+                        <td><code>--color-neutral-solid-gray-420</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-border-color" value="" data-api-css-var="--dads-card-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>外周色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-border-width</code></th>
+                        <td><code>1px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-border-width" value="" data-api-css-var="--dads-card-border-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>外周の線幅</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-border-radius</code></th>
+                        <td><code>--border-radius-16</code><br><small style="color:#666">(16px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-border-radius" value="" data-api-css-var="--dads-card-border-radius" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>角丸</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-divider-color</code></th>
+                        <td><code>--color-neutral-solid-gray-420</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-divider-color" value="" data-api-css-var="--dads-card-divider-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>エリア間の区切り線色（media/sub の境界）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-divider-width</code></th>
+                        <td><code>1px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-divider-width" value="" data-api-css-var="--dads-card-divider-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>エリア間の区切り線幅</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-media-width</code></th>
+                        <td><code>calc(352 / 16 * 1rem)</code><br><small style="color:#666">(352px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-media-width" value="" data-api-css-var="--dads-card-media-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>layout="horizontal" のメディア列幅</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-media-aspect-ratio</code></th>
+                        <td><code>auto</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-media-aspect-ratio" value="" data-api-css-var="--dads-card-media-aspect-ratio" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>メディア領域の aspect-ratio（未指定は slot 側に委譲）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-padding-block</code></th>
+                        <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-padding-block" value="" data-api-css-var="--dads-card-padding-block" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>上下パディング（main/sub/media overlay）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-padding-inline</code></th>
+                        <td><code>--spacing-6</code><br><small style="color:#666">(24px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-padding-inline" value="" data-api-css-var="--dads-card-padding-inline" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>左右パディング</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-gap</code></th>
+                        <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-gap" value="" data-api-css-var="--dads-card-gap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>エリア内の余白（見出し/本文/ボタン等）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-color</code></th>
+                        <td><code>--color-neutral-solid-gray-800</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-color" value="" data-api-css-var="--dads-card-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>本文/ラベルなどの文字色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-title-color</code></th>
+                        <td><code>--color-neutral-solid-gray-900</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-title-color" value="" data-api-css-var="--dads-card-title-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>タイトル文字色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-title-font-size</code></th>
+                        <td><code>--font-size-20</code><br><small style="color:#666">(1.25rem)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-title-font-size" value="" data-api-css-var="--dads-card-title-font-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>タイトル文字サイズ</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-title-font-weight</code></th>
+                        <td><code>--font-weight-700</code><br><small style="color:#666">(700)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-title-font-weight" value="" data-api-css-var="--dads-card-title-font-weight" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>タイトルの太さ</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-title-line-height</code></th>
+                        <td><code>1.5</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-title-line-height" value="" data-api-css-var="--dads-card-title-line-height" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>タイトルの行高</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-title-underline-offset</code></th>
+                        <td><code>calc(3 / 16 * 1rem)</code><br><small style="color:#666">(3px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-title-underline-offset" value="" data-api-css-var="--dads-card-title-underline-offset" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>主リンク時の下線オフセット</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-title-underline-thickness</code></th>
+                        <td><code>calc(1 / 16 * 1rem)</code><br><small style="color:#666">(1px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-title-underline-thickness" value="" data-api-css-var="--dads-card-title-underline-thickness" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>主リンク時の下線太さ</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-title-underline-thickness-hover</code></th>
+                        <td><code>calc(3 / 16 * 1rem)</code><br><small style="color:#666">(3px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-title-underline-thickness-hover" value="" data-api-css-var="--dads-card-title-underline-thickness-hover" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ホバー時の下線太さ（主リンク時）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-focus-outline-color</code></th>
+                        <td><code>--dads-focus-outline-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-focus-outline-color" value="" data-api-css-var="--dads-card-focus-outline-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカスアウトライン色（委譲ON時）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-focus-outline-width</code></th>
+                        <td><code>--dads-focus-outline-width</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-focus-outline-width" value="" data-api-css-var="--dads-card-focus-outline-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカスアウトライン幅（委譲ON時）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-focus-outline-offset</code></th>
+                        <td><code>--dads-focus-outline-offset</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-focus-outline-offset" value="" data-api-css-var="--dads-card-focus-outline-offset" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカスアウトラインのオフセット（委譲ON時）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-focus-ring-color</code></th>
+                        <td><code>--dads-focus-ring-color</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-focus-ring-color" value="" data-api-css-var="--dads-card-focus-ring-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカスリング色（委譲ON時）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-card-focus-ring-width</code></th>
+                        <td><code>--dads-focus-ring-width</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-card-focus-ring-width" value="" data-api-css-var="--dads-card-focus-ring-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカスリング幅（委譲ON時）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <!-- カード作例1（DADS公式） -->
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">カード作例1（DADS公式）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          DADS HTML Storybook の「作例1」を <code>&lt;dads-card&gt;</code> で再現しています。
+        </p>
+
+        <style>
+          .card-example-1-list {
+            /* DADS: card example 1 */
+            --card-example-1-gap: calc(24 / 16 * 1rem);
+            --card-example-1-card-width: calc(352 / 16 * 1rem);
+            --card-example-1-border-width: 1px;
+            --card-example-1-main-overlap: calc(-24 / 16 * 1rem);
+            --card-example-1-main-row-gap: calc(16 / 16 * 1rem);
+            --card-example-1-main-padding-block: calc(16 / 16 * 1rem);
+            --card-example-1-main-padding-inline: calc(24 / 16 * 1rem);
+            --card-example-1-icon-size: calc(64 / 16 * 1rem);
+            --card-example-1-icon-offset: calc(-12 / 16 * 1rem);
+
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--card-example-1-gap);
+            padding: 0;
+            list-style: none;
+          }
+
+          .card-example-1-list > li {
+            display: flex;
+            min-width: 0;
+          }
+
+          dads-card.card-example-1 {
+            box-sizing: border-box;
+            min-width: 0;
+            width: var(--card-example-1-card-width);
+            max-width: 100%;
+            --dads-card-border-width: var(--spacing-0-px, 0px);
+            --dads-card-divider-width: var(--spacing-0-px, 0px);
+            --dads-card-padding-block: var(--spacing-0, 0);
+            --dads-card-padding-inline: var(--spacing-0, 0);
+            --dads-card-gap: var(--spacing-0, 0);
+            --dads-card-background: transparent;
+            --dads-card-media-aspect-ratio: 3 / 2;
+
+            --card-example-1-media-overlay: color-mix(
+              in srgb,
+              var(--color-neutral-white) 10%,
+              transparent
+            );
+          }
+
+          dads-card.card-example-1::part(media) {
+            position: relative;
+            box-sizing: content-box;
+            border: var(--card-example-1-border-width) solid var(--dads-card-border-color);
+            border-start-start-radius: var(--dads-card-border-radius);
+            border-start-end-radius: var(--dads-card-border-radius);
+            background:
+              linear-gradient(
+                0deg,
+                var(--card-example-1-media-overlay) 0%,
+                var(--card-example-1-media-overlay) 100%
+              ),
+              linear-gradient(
+                114deg,
+                var(--color-primitive-cyan-400) 0%,
+                var(--color-primitive-purple-500) 100%
+              );
+            display: grid;
+            place-content: center;
+            color: var(--color-neutral-white);
+            aspect-ratio: var(--dads-card-media-aspect-ratio);
+          }
+
+          .card-example-1__icon {
+            width: var(--card-example-1-icon-size);
+            height: var(--card-example-1-icon-size);
+            translate: 0 var(--card-example-1-icon-offset);
+          }
+
+          dads-card.card-example-1::part(main) {
+            position: relative;
+            margin-top: var(--card-example-1-main-overlap);
+            display: grid;
+            align-content: start;
+            row-gap: var(--card-example-1-main-row-gap);
+            border: var(--card-example-1-border-width) solid var(--dads-card-border-color);
+            border-radius: var(--dads-card-border-radius);
+            background-color: var(--color-neutral-white);
+            padding: var(--card-example-1-main-padding-block) var(--card-example-1-main-padding-inline);
+          }
+
+          .card-example-1__content {
+            color: var(--color-neutral-solid-gray-800);
+            font-weight: var(--font-weight-400);
+            font-size: var(--font-size-16);
+            line-height: var(--line-height-170);
+          }
+
+          /* 作例1固有: リンク下線スタイル */
+          dads-card.card-example-1 h2 a {
+            color: inherit;
+            text-decoration: underline;
+            text-decoration-thickness: calc(1 / 16 * 1rem);
+            text-underline-offset: calc(3 / 16 * 1rem);
+          }
+
+          @media (hover: hover) {
+            dads-card.card-example-1:hover h2 a {
+              text-decoration-thickness: calc(3 / 16 * 1rem);
+            }
+          }
+        </style>
+
+        <ul class="card-example-1-list">
+          <li>
+            <dads-card class="card-example-1">
+              <svg
+                slot="media"
+                class="card-example-1__icon"
+                width="64"
+                height="64"
+                viewBox="0 0 64 64"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M29.9 8C31.2 6.1 33 6.1 34 8c1.1 1.9 2.2 5 2.2 8.8v6.1l20.5 12.3c1 .8 1.9 2.1 1.9 3.5v4l-23-7.5-.9 12.1-3 2.6h.7l-.5.3-.3-.2-1.7 1.4 2-1.2 6.1 3.7Q39.7 55 40 57l-16 .2q.1-2 1.9-3.4l3.7-2.3L28.3 35l-23 7.8v-4q.1-2.2 1.9-3.5l20.5-12.3v-6.1c0-3.7 1.1-7 2.2-8.8"
+                  fill="currentcolor"
+                ></path>
+              </svg>
+              <h2><a href="#" data-dads-card-primary data-dads-card-delegate>機内サービス</a></h2>
+              <p class="card-example-1__content">快適なシートや機内食で空の旅をより快適にお過ごしいただけます</p>
+            </dads-card>
+          </li>
+
+          <li>
+            <dads-card class="card-example-1">
+              <svg
+                slot="media"
+                class="card-example-1__icon"
+                width="64"
+                height="64"
+                viewBox="0 0 64 64"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M32 31.6q2 0 3.4-1.4 1.5-1.4 1.4-3.4 0-2-1.4-3.4Q34 22 32 22q-2 0-3.4 1.4-1.4 1.5-1.4 3.4 0 2 1.4 3.4 1.4 1.5 3.4 1.4m0 25.8A85 85 0 0 1 16.9 41q-5-7.5-5-13.8 0-9.1 6-15 6-5.6 14.1-5.6t14.2 5.7q6 5.7 6 15 0 6.2-5.1 13.7T32 57.4"
+                  fill="currentcolor"
+                ></path>
+              </svg>
+              <h2><a href="#" data-dads-card-primary data-dads-card-delegate>乗り継ぎサポート</a></h2>
+              <p class="card-example-1__content">お乗り継ぎ時の際に日本人のガイドがご案内いたします</p>
+            </dads-card>
+          </li>
+
+          <li>
+            <dads-card class="card-example-1">
+              <svg
+                slot="media"
+                class="card-example-1__icon"
+                width="64"
+                height="64"
+                viewBox="0 0 64 64"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M40 5.3H24v8H13.3v40h7q-.4.7-.3 1.4c0 2.1 1.9 4 4 4s4-1.9 4-4q0-.7-.3-1.4h8.6q-.4.7-.3 1.4c0 2.1 1.9 4 4 4s4-1.9 4-4q0-.7-.3-1.4h7v-40H40zM25.3 44h-2.6V24h2.6zm8 0h-2.6V24h2.6zM36 13.3h-8v-4h8zM41.3 24v20h-2.6V24z"
+                  fill="currentcolor"
+                ></path>
+              </svg>
+              <h2><a href="#" data-dads-card-primary data-dads-card-delegate>機内持ち込み手荷物検査</a></h2>
+              <p class="card-example-1__content">機内にお持ち込みいただける手荷物について係員が検査いたします</p>
+            </dads-card>
+          </li>
+        </ul>
+
+        <!-- カード作例2（DADS公式） -->
+        <section style="margin-bottom: 0;">
+          <h3>カード作例2（DADS公式）</h3>
+          <p>DADS HTML Storybook の「作例2」を再現。横型レイアウトで左に画像、右にコンテンツを配置し、ホバー/フォーカス時にスタイル変化</p>
+
+          <style>
+            .card-example-2-list {
+              --card-example-2-gap: calc(24 / 16 * 1rem);
+              --card-example-2-card-max-width: calc(1024 / 16 * 1rem);
+              --card-example-2-media-max-width: calc(352 / 16 * 1rem);
+              --card-example-2-main-padding-block: calc(16 / 16 * 1rem);
+              --card-example-2-main-padding-inline: calc(24 / 16 * 1rem);
+              --card-example-2-row-gap: calc(16 / 16 * 1rem);
+              --card-example-2-button-size: calc(44 / 16 * 1rem);
+              --card-example-2-divider-margin: calc(8 / 16 * 1rem);
+
+              list-style: none;
+              padding: 0;
+              margin: 0;
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+              gap: var(--card-example-2-gap);
+            }
+
+            .card-example-2-list > li {
+              display: flex;
+              align-items: stretch;
+            }
+
+            dads-card.card-example-2 {
+              max-width: var(--card-example-2-card-max-width);
+              --dads-card-media-width: minmax(auto, min(50%, var(--card-example-2-media-max-width)));
+              --dads-card-padding-block: var(--card-example-2-main-padding-block);
+              --dads-card-padding-inline: var(--card-example-2-main-padding-inline);
+              --dads-card-gap: var(--card-example-2-row-gap);
+              --dads-card-divider-width: 0;
+              width: 100%;
+            }
+
+            dads-card.card-example-2::part(media) {
+              aspect-ratio: 3 / 2;
+            }
+
+            .card-example-2__header {
+              display: flex;
+              align-items: flex-start;
+              justify-content: space-between;
+              gap: calc(8 / 16 * 1rem);
+            }
+
+            .card-example-2__menu-button {
+              flex-shrink: 0;
+              background: none;
+              border: none;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: var(--card-example-2-button-size);
+              height: var(--card-example-2-button-size);
+              color: #333;
+              padding: 0;
+              border-radius: 4px;
+              transition: background-color 200ms;
+            }
+
+            @media (hover: hover) {
+              .card-example-2__menu-button:hover {
+                background-color: var(--color-neutral-solid-gray-100, #f3f4f6);
+              }
+            }
+
+            .card-example-2__menu-button:focus {
+              outline: 2px solid #000;
+              outline-offset: 2px;
+            }
+
+            .card-example-2__divider {
+              width: 100%;
+              height: 1px;
+              background-color: var(--color-primitive-gray-536, #bdbdbd);
+              margin: var(--card-example-2-divider-margin) 0;
+            }
+
+            .card-example-2__learn-more:any-link {
+              display: inline-flex;
+              align-self: flex-end;
+              border: 4px double transparent;
+              padding: calc(6 / 16 * 1rem) calc(8 / 16 * 1rem);
+              background: var(--color-primitive-light-blue-900, #004098);
+              color: var(--color-neutral-white, #ffffff);
+              text-decoration: none;
+              font-size: calc(16 / 16 * 1rem);
+              line-height: 1;
+              border-radius: 4px;
+              cursor: pointer;
+              transition: background-color 200ms, color 200ms;
+            }
+
+            @media (hover: hover) {
+              .card-example-2__learn-more:any-link:hover {
+                background-color: var(--color-primitive-light-blue-800, #003366);
+                color: var(--color-neutral-white, #ffffff);
+              }
+            }
+
+            .card-example-2__learn-more:any-link:focus {
+              outline: 2px solid #000;
+              outline-offset: 2px;
+              border-color: #ffd700;
+            }
+          </style>
+
+          <ul class="card-example-2-list">
+            <li>
+              <dads-card class="card-example-2">
+                <img slot="media"
+                     src="https://images.unsplash.com/photo-1522383225653-ed111181a951?w=352&h=235&fit=crop"
+                     width="352" height="235"
+                     alt="満開の桜の枝が青い水面を背景に咲き誇る春の風景写真">
+                <div class="card-example-2__header">
+                  <h2><a href="#" data-dads-card-primary data-dads-card-delegate>地域緑化事業</a></h2>
+                  <button class="card-example-2__menu-button" aria-label="メニュー">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" role="presentation">
+                      <circle cx="12" cy="4.5" r="1.5"/>
+                      <circle cx="12" cy="12" r="1.5"/>
+                      <circle cx="12" cy="19.5" r="1.5"/>
+                    </svg>
+                  </button>
+                </div>
+                <p>住民の皆さまが参加できる地域緑化事業を実施しています</p>
+                <div class="card-example-2__divider"></div>
+                <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+              </dads-card>
+            </li>
+            <li>
+              <dads-card class="card-example-2">
+                <img slot="media"
+                     src="https://images.unsplash.com/photo-1503454537688-e47a4937545d?w=352&h=235&fit=crop"
+                     width="352" height="235"
+                     alt="子どもたちが一緒に遊んでいる公園の風景">
+                <div class="card-example-2__header">
+                  <h2><a href="#" data-dads-card-primary data-dads-card-delegate>子育て支援プログラム</a></h2>
+                  <button class="card-example-2__menu-button" aria-label="メニュー">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" role="presentation">
+                      <circle cx="12" cy="4.5" r="1.5"/>
+                      <circle cx="12" cy="12" r="1.5"/>
+                      <circle cx="12" cy="19.5" r="1.5"/>
+                    </svg>
+                  </button>
+                </div>
+                <p>子育て世代の皆さまを応援する各種支援プログラムを提供しています</p>
+                <div class="card-example-2__divider"></div>
+                <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+              </dads-card>
+            </li>
+            <li>
+              <dads-card class="card-example-2">
+                <img slot="media"
+                     src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=352&h=235&fit=crop"
+                     width="352" height="235"
+                     alt="パソコンで作業をしている様子">
+                <div class="card-example-2__header">
+                  <h2><a href="#" data-dads-card-primary data-dads-card-delegate>デジタル化推進事業</a></h2>
+                  <button class="card-example-2__menu-button" aria-label="メニュー">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" role="presentation">
+                      <circle cx="12" cy="4.5" r="1.5"/>
+                      <circle cx="12" cy="12" r="1.5"/>
+                      <circle cx="12" cy="19.5" r="1.5"/>
+                    </svg>
+                  </button>
+                </div>
+                <p>市民サービスのデジタル化を推進し、より便利で効率的なサービス提供を目指します</p>
+                <div class="card-example-2__divider"></div>
+                <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+              </dads-card>
+            </li>
+          </ul>
+        </section>
+      </section>
+    </div>
+  `,
 
   chipLabel: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
