@@ -1618,9 +1618,9 @@ export const demos = {
               list-style: none;
               padding: 0;
               margin: 0;
-              display: flex;
-              flex-wrap: wrap;
-              gap: var(--spacing-6, 1.5rem);
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: var(--spacing-8, 2rem) var(--spacing-6, 1.5rem);
             }
 
             .card-example-3-list > li {
@@ -1721,7 +1721,7 @@ export const demos = {
             .card-example-3__avatar {
               width: calc(64 / 16 * 1rem);
               height: calc(64 / 16 * 1rem);
-              border-radius: 50%;
+              border-radius: 0;
               object-fit: cover;
               flex-shrink: 0;
               order: -1;
@@ -1743,7 +1743,7 @@ export const demos = {
               display: block;
               width: 100%;
               height: auto;
-              border-radius: var(--border-radius-8, 0.5rem);
+              border-radius: 0;
               object-fit: cover;
             }
 
@@ -1796,7 +1796,7 @@ export const demos = {
                   </div>
                   <img
                     class="card-example-3__avatar"
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=face"
+                    src="https://design.digital.go.jp/dads/html/assets/card-3-1-DlYbs6z8.png"
                     width="64" height="64"
                     alt="著者のアイコン"
                   >
@@ -1806,7 +1806,7 @@ export const demos = {
                 </p>
                 <img
                   class="card-example-3__image"
-                  src="https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=304&h=235&fit=crop"
+                  src="https://design.digital.go.jp/dads/html/assets/card-3-2-NWWtZhQN.png"
                   width="304" height="235"
                   alt="ポストに書類を投函する人物のイラスト"
                 >
@@ -1834,7 +1834,7 @@ export const demos = {
                   </div>
                   <img
                     class="card-example-3__avatar"
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face"
+                    src="https://design.digital.go.jp/dads/html/assets/card-3-1-DlYbs6z8.png"
                     width="64" height="64"
                     alt="著者のアイコン"
                   >
@@ -1844,7 +1844,7 @@ export const demos = {
                 </p>
                 <img
                   class="card-example-3__image"
-                  src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=304&h=235&fit=crop"
+                  src="https://design.digital.go.jp/dads/html/assets/card-3-2-NWWtZhQN.png"
                   width="304" height="235"
                   alt="パソコンでオンライン申請をする人物のイラスト"
                 >
@@ -1872,7 +1872,7 @@ export const demos = {
                   </div>
                   <img
                     class="card-example-3__avatar"
-                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face"
+                    src="https://design.digital.go.jp/dads/html/assets/card-3-1-DlYbs6z8.png"
                     width="64" height="64"
                     alt="著者のアイコン"
                   >
@@ -1882,7 +1882,7 @@ export const demos = {
                 </p>
                 <img
                   class="card-example-3__image"
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=304&h=235&fit=crop"
+                  src="https://design.digital.go.jp/dads/html/assets/card-3-2-NWWtZhQN.png"
                   width="304" height="235"
                   alt="よくある質問に答えるサポートスタッフのイラスト"
                 >
