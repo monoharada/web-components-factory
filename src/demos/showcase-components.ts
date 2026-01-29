@@ -1724,6 +1724,7 @@ export const demos = {
               border-radius: 50%;
               object-fit: cover;
               flex-shrink: 0;
+              order: -1;
             }
 
             /* 説明文 */
@@ -1758,12 +1759,12 @@ export const demos = {
               display: inline-flex;
               align-items: center;
               gap: var(--spacing-2, 0.5rem);
-              padding: var(--spacing-1-5, 0.375rem) var(--spacing-3, 0.75rem);
+              padding: 2px var(--spacing-3, 0.75rem);
               background-color: var(--color-neutral-white, #ffffff);
-              border: 1px solid var(--color-neutral-solid-gray-420, #949494);
+              border: 1px solid var(--color-primitive-blue-900, #0017c1);
               border-radius: var(--border-radius-6, 0.375rem);
-              color: var(--color-neutral-solid-gray-900, #1a1a1c);
-              font-size: var(--font-size-14, 0.875rem);
+              color: var(--color-primitive-blue-900, #0017c1);
+              font-size: var(--font-size-16, 1rem);
               font-weight: var(--font-weight-400, 400);
               line-height: var(--line-height-150, 1.5);
               cursor: pointer;
@@ -1771,8 +1772,7 @@ export const demos = {
 
             @media (hover: hover) {
               .card-example-3__favorite-button:hover {
-                border-color: var(--color-neutral-black, #000000);
-                background-color: var(--color-neutral-solid-gray-50, #f8f8fb);
+                background-color: var(--color-primitive-blue-50, #e8f1fe);
               }
             }
 
