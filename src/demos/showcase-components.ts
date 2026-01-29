@@ -1613,23 +1613,30 @@ export const demos = {
              * Card Example 3 - DADS公式作例3
              * ======================================== */
 
-            /* リストコンテナ */
+            /* リストコンテナ - subgridで高さ揃え（4行: header, contents, image, actions） */
             .card-example-3-list {
               list-style: none;
               padding: 0;
               margin: 0;
               display: grid;
               grid-template-columns: repeat(3, calc(354 / 16 * 1rem));
+              grid-template-rows: repeat(4, auto);
               gap: var(--spacing-8, 2rem) var(--spacing-6, 1.5rem);
             }
 
+            /* 各リストアイテム - subgridで親の行を継承 */
             .card-example-3-list > li {
-              display: flex;
+              display: grid;
+              grid-row: span 4;
+              grid-template-rows: subgrid;
               min-width: 0;
             }
 
-            /* カード本体 */
+            /* カード本体 - subgridで高さ揃え */
             dads-card.card-example-3 {
+              display: grid;
+              grid-row: span 4;
+              grid-template-rows: subgrid;
               width: calc(354 / 16 * 1rem);
               max-width: 100%;
               box-sizing: border-box;
@@ -1645,8 +1652,11 @@ export const demos = {
               --dads-card-gap: var(--spacing-4, 1rem);
             }
 
-            /* フォーカスリング表示のため */
+            /* フォーカスリング表示 + subgrid対応 */
             dads-card.card-example-3::part(base) {
+              display: grid;
+              grid-template-rows: subgrid;
+              grid-row: span 4;
               overflow: visible;
             }
 
@@ -1749,32 +1759,16 @@ export const demos = {
               gap: var(--spacing-4, 1rem);
             }
 
-            /* お気に入りボタン */
-            .card-example-3__favorite-button {
-              display: inline-flex;
-              align-items: center;
-              gap: var(--spacing-2, 0.5rem);
-              padding: 2px var(--spacing-3, 0.75rem);
-              background-color: var(--color-neutral-white, #ffffff);
-              border: 1px solid var(--color-primitive-blue-900, #0017c1);
-              border-radius: var(--border-radius-6, 0.375rem);
-              color: var(--color-primitive-blue-900, #0017c1);
-              font-size: var(--font-size-16, 1rem);
-              font-weight: var(--font-weight-400, 400);
-              line-height: var(--line-height-150, 1.5);
-              cursor: pointer;
-            }
-
-            @media (hover: hover) {
-              .card-example-3__favorite-button:hover {
-                background-color: var(--color-primitive-blue-50, #e8f1fe);
-              }
-            }
-
-            .card-example-3__favorite-button:focus-visible {
-              outline: var(--spacing-1, 0.25rem) solid var(--color-neutral-black, #000000);
-              outline-offset: var(--spacing-0-5, 0.125rem);
-              box-shadow: 0 0 0 var(--spacing-0-5, 0.125rem) var(--color-primitive-yellow-300, #ffd43d);
+            /* お気に入りボタン（dads-button カスタマイズ） */
+            dads-card.card-example-3 dads-button.card-example-3__favorite-button {
+              /* DADS公式仕様に合わせたトークン上書き */
+              --dads-button-padding: 2px var(--spacing-3, 0.75rem);
+              --dads-button-min-height: auto;
+              --dads-button-border-radius: var(--border-radius-6, 0.375rem);
+              --dads-button-font-size: var(--font-size-16, 1rem);
+              --dads-button-font-weight: var(--font-weight-400, 400);
+              --dads-button-line-height: var(--line-height-150, 1.5);
+              --dads-button-icon-gap: var(--spacing-2, 0.5rem);
             }
           </style>
 
@@ -1808,12 +1802,12 @@ export const demos = {
 
                 <!-- sub スロット: お気に入りボタン -->
                 <div slot="sub" class="card-example-3__actions">
-                  <button class="card-example-3__favorite-button" type="button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                  <dads-button class="card-example-3__favorite-button" variant="outlined">
+                    <svg slot="icon-start" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                       <path d="m12 21-1.4-1.3a113 113 0 0 1-6.8-6.9 9 9 0 0 1-1.4-2.4Q2 9.3 2 8.2q0-2.4 1.6-4Q5 2.7 7.5 2.7a6 6 0 0 1 4.5 2 6 6 0 0 1 4.5-2q2.4 0 4 1.5 1.5 1.5 1.5 4 0 1.1-.4 2.2-.3 1-1.4 2.4t-2.6 3l-4.2 3.9zm0-2.7 6.4-6.4q.9-1 1.3-2l.3-1.7a3.4 3.4 0 0 0-3.5-3.5A4 4 0 0 0 12.9 7h-1.8q-.5-1-1.4-1.7-1-.6-2.2-.6A3.4 3.4 0 0 0 4 8.2l.3 1.7q.4 1 1.3 2 .9 1.2 2.5 2.7z" fill="currentcolor"/>
                     </svg>
                     お気に入り
-                  </button>
+                  </dads-button>
                 </div>
               </dads-card>
             </li>
@@ -1846,12 +1840,12 @@ export const demos = {
 
                 <!-- sub スロット: お気に入りボタン -->
                 <div slot="sub" class="card-example-3__actions">
-                  <button class="card-example-3__favorite-button" type="button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                  <dads-button class="card-example-3__favorite-button" variant="outlined">
+                    <svg slot="icon-start" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                       <path d="m12 21-1.4-1.3a113 113 0 0 1-6.8-6.9 9 9 0 0 1-1.4-2.4Q2 9.3 2 8.2q0-2.4 1.6-4Q5 2.7 7.5 2.7a6 6 0 0 1 4.5 2 6 6 0 0 1 4.5-2q2.4 0 4 1.5 1.5 1.5 1.5 4 0 1.1-.4 2.2-.3 1-1.4 2.4t-2.6 3l-4.2 3.9zm0-2.7 6.4-6.4q.9-1 1.3-2l.3-1.7a3.4 3.4 0 0 0-3.5-3.5A4 4 0 0 0 12.9 7h-1.8q-.5-1-1.4-1.7-1-.6-2.2-.6A3.4 3.4 0 0 0 4 8.2l.3 1.7q.4 1 1.3 2 .9 1.2 2.5 2.7z" fill="currentcolor"/>
                     </svg>
                     お気に入り
-                  </button>
+                  </dads-button>
                 </div>
               </dads-card>
             </li>
@@ -1884,12 +1878,12 @@ export const demos = {
 
                 <!-- sub スロット: お気に入りボタン -->
                 <div slot="sub" class="card-example-3__actions">
-                  <button class="card-example-3__favorite-button" type="button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                  <dads-button class="card-example-3__favorite-button" variant="outlined">
+                    <svg slot="icon-start" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                       <path d="m12 21-1.4-1.3a113 113 0 0 1-6.8-6.9 9 9 0 0 1-1.4-2.4Q2 9.3 2 8.2q0-2.4 1.6-4Q5 2.7 7.5 2.7a6 6 0 0 1 4.5 2 6 6 0 0 1 4.5-2q2.4 0 4 1.5 1.5 1.5 1.5 4 0 1.1-.4 2.2-.3 1-1.4 2.4t-2.6 3l-4.2 3.9zm0-2.7 6.4-6.4q.9-1 1.3-2l.3-1.7a3.4 3.4 0 0 0-3.5-3.5A4 4 0 0 0 12.9 7h-1.8q-.5-1-1.4-1.7-1-.6-2.2-.6A3.4 3.4 0 0 0 4 8.2l.3 1.7q.4 1 1.3 2 .9 1.2 2.5 2.7z" fill="currentcolor"/>
                     </svg>
                     お気に入り
-                  </button>
+                  </dads-button>
                 </div>
               </dads-card>
             </li>
