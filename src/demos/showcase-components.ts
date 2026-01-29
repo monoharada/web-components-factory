@@ -1396,7 +1396,7 @@ export const demos = {
         </ul>
 
         <!-- カード作例2（DADS公式） -->
-        <section style="margin-bottom: 0;">
+        <section style="margin-top: 40px;">
           <h3>カード作例2（DADS公式）</h3>
           <p>DADS HTML Storybook の「作例2」を再現。横型レイアウトで左に画像、右にコンテンツを配置し、ホバー/フォーカス時にスタイル変化</p>
 
@@ -1414,8 +1414,8 @@ export const demos = {
               list-style: none;
               padding: 0;
               margin: 0;
+              margin-top: calc(16 / 16 * 1rem);
               display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
               gap: var(--card-example-2-gap);
             }
 
@@ -1430,7 +1430,8 @@ export const demos = {
               --dads-card-padding-block: var(--card-example-2-main-padding-block);
               --dads-card-padding-inline: var(--card-example-2-main-padding-inline);
               --dads-card-gap: var(--card-example-2-row-gap);
-              --dads-card-divider-width: 0;
+              --dads-card-divider-width: 1px;
+              --dads-card-border-radius: 0;
               width: 100%;
             }
 
@@ -1442,81 +1443,107 @@ export const demos = {
               display: flex;
               align-items: flex-start;
               justify-content: space-between;
-              gap: calc(8 / 16 * 1rem);
+              gap: calc(16 / 16 * 1rem);
+              margin-right: calc(-24 / 16 * 1rem);
+            }
+
+            .card-example-2__heading {
+              margin: 0;
+              min-width: 0;
+              padding-top: calc(4 / 16 * 1rem);
+              color: var(--color-neutral-solid-gray-900);
+              font-weight: bold;
+              font-size: calc(20 / 16 * 1rem);
+              line-height: 1.5;
+              letter-spacing: 0.02em;
             }
 
             .card-example-2__menu-button {
               flex-shrink: 0;
-              background: none;
-              border: none;
+              background-color: var(--color-neutral-white);
+              border: 1px solid transparent;
               cursor: pointer;
               display: flex;
               align-items: center;
               justify-content: center;
               width: var(--card-example-2-button-size);
               height: var(--card-example-2-button-size);
-              color: #333;
+              color: var(--color-neutral-solid-gray-800);
               padding: 0;
-              border-radius: 4px;
-              transition: background-color 200ms;
+              border-radius: calc(6 / 16 * 1rem);
             }
 
             @media (hover: hover) {
               .card-example-2__menu-button:hover {
-                background-color: var(--color-neutral-solid-gray-100, #f3f4f6);
+                border-color: var(--color-neutral-black);
+                background-color: var(--color-neutral-solid-gray-50);
               }
             }
 
-            .card-example-2__menu-button:focus {
-              outline: 2px solid #000;
-              outline-offset: 2px;
+            .card-example-2__menu-button:focus-visible {
+              outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
+              outline-offset: calc(2 / 16 * 1rem);
+              box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
+            }
+
+            .card-example-2__contents {
+              margin-top: 0;
+              margin-bottom: 0;
+              min-width: 0;
             }
 
             .card-example-2__divider {
-              width: 100%;
-              height: 1px;
-              background-color: var(--color-primitive-gray-536, #bdbdbd);
-              margin: var(--card-example-2-divider-margin) 0;
+              padding-top: calc(8 / 16 * 1rem);
+              padding-bottom: calc(8 / 16 * 1rem);
+              border-top: 1px solid var(--color-neutral-solid-gray-536);
+            }
+
+            .card-example-2__links {
+              display: flex;
+              column-gap: calc(16 / 16 * 1rem);
+              justify-content: end;
             }
 
             .card-example-2__learn-more:any-link {
-              display: inline-flex;
-              align-self: flex-end;
+              display: flex;
               border: 4px double transparent;
               padding: calc(6 / 16 * 1rem) calc(8 / 16 * 1rem);
               background: var(--color-primitive-light-blue-900, #004098);
               color: var(--color-neutral-white, #ffffff);
               text-decoration: none;
+              font-weight: normal;
               font-size: calc(16 / 16 * 1rem);
               line-height: 1;
-              border-radius: 4px;
+              letter-spacing: 0.02em;
               cursor: pointer;
-              transition: background-color 200ms, color 200ms;
             }
 
             @media (hover: hover) {
               .card-example-2__learn-more:any-link:hover {
-                background-color: var(--color-primitive-light-blue-800, #003366);
-                color: var(--color-neutral-white, #ffffff);
+                background: var(--color-primitive-light-blue-1000);
+                text-decoration: underline;
+                text-decoration-thickness: calc(1 / 16 * 1rem);
+                text-underline-offset: calc(3 / 16 * 1rem);
               }
             }
 
-            .card-example-2__learn-more:any-link:focus {
-              outline: 2px solid #000;
-              outline-offset: 2px;
-              border-color: #ffd700;
+            .card-example-2__learn-more:focus-visible {
+              outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
+              outline-offset: calc(2 / 16 * 1rem);
+              border-radius: calc(4 / 16 * 1rem);
+              box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
             }
           </style>
 
           <ul class="card-example-2-list">
             <li>
-              <dads-card class="card-example-2">
+              <dads-card class="card-example-2" layout="horizontal">
                 <img slot="media"
                      src="https://images.unsplash.com/photo-1522383225653-ed111181a951?w=352&h=235&fit=crop"
                      width="352" height="235"
                      alt="満開の桜の枝が青い水面を背景に咲き誇る春の風景写真">
                 <div class="card-example-2__header">
-                  <h2><a href="#" data-dads-card-primary data-dads-card-delegate>地域緑化事業</a></h2>
+                  <h2 class="card-example-2__heading">地域緑化事業</h2>
                   <button class="card-example-2__menu-button" aria-label="メニュー">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" role="presentation">
                       <circle cx="12" cy="4.5" r="1.5"/>
@@ -1525,19 +1552,21 @@ export const demos = {
                     </svg>
                   </button>
                 </div>
-                <p>住民の皆さまが参加できる地域緑化事業を実施しています</p>
+                <p class="card-example-2__contents">住民の皆さまが参加できる地域緑化事業を行っています。地域交流を促進するとともに、地域の景観美化を目的としています。</p>
                 <div class="card-example-2__divider"></div>
-                <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+                <div class="card-example-2__links">
+                  <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+                </div>
               </dads-card>
             </li>
             <li>
-              <dads-card class="card-example-2">
+              <dads-card class="card-example-2" layout="horizontal">
                 <img slot="media"
-                     src="https://images.unsplash.com/photo-1503454537688-e47a4937545d?w=352&h=235&fit=crop"
+                     src="https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=352&h=235&fit=crop"
                      width="352" height="235"
                      alt="子どもたちが一緒に遊んでいる公園の風景">
                 <div class="card-example-2__header">
-                  <h2><a href="#" data-dads-card-primary data-dads-card-delegate>子育て支援プログラム</a></h2>
+                  <h2 class="card-example-2__heading">子育て支援プログラム</h2>
                   <button class="card-example-2__menu-button" aria-label="メニュー">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" role="presentation">
                       <circle cx="12" cy="4.5" r="1.5"/>
@@ -1546,19 +1575,21 @@ export const demos = {
                     </svg>
                   </button>
                 </div>
-                <p>子育て世代の皆さまを応援する各種支援プログラムを提供しています</p>
+                <p class="card-example-2__contents">子育て世代の皆さまを応援する包括的なサポートプログラムです。育児相談から保育サービスまで幅広い支援を提供しています。</p>
                 <div class="card-example-2__divider"></div>
-                <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+                <div class="card-example-2__links">
+                  <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+                </div>
               </dads-card>
             </li>
             <li>
-              <dads-card class="card-example-2">
+              <dads-card class="card-example-2" layout="horizontal">
                 <img slot="media"
                      src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=352&h=235&fit=crop"
                      width="352" height="235"
                      alt="パソコンで作業をしている様子">
                 <div class="card-example-2__header">
-                  <h2><a href="#" data-dads-card-primary data-dads-card-delegate>デジタル化推進事業</a></h2>
+                  <h2 class="card-example-2__heading">デジタル化推進事業</h2>
                   <button class="card-example-2__menu-button" aria-label="メニュー">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" role="presentation">
                       <circle cx="12" cy="4.5" r="1.5"/>
@@ -1567,9 +1598,11 @@ export const demos = {
                     </svg>
                   </button>
                 </div>
-                <p>市民サービスのデジタル化を推進し、より便利で効率的なサービス提供を目指します</p>
+                <p class="card-example-2__contents">市民サービスのデジタル化を推進し、より便利で効率的な行政サービスの提供を目指しています。オンライン申請やAI相談など最新技術を活用しています。</p>
                 <div class="card-example-2__divider"></div>
-                <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+                <div class="card-example-2__links">
+                  <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+                </div>
               </dads-card>
             </li>
           </ul>
