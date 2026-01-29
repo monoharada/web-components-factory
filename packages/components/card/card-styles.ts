@@ -1,6 +1,8 @@
 /**
  * カードコンポーネント用スタイル定義
  * デジタル庁デザインシステムに準拠
+ *
+ * 最小限のShadow DOM構造（3セクション）に対応
  */
 import { css } from '../../core/web-components.js';
 
@@ -61,33 +63,14 @@ export const cardStyles = css`
     display: none;
   }
 
-  [part="media-body"] {
-    min-width: 0;
-    aspect-ratio: var(--dads-card-media-aspect-ratio);
-  }
-
-  [part="media-body"] ::slotted(img),
-  [part="media-body"] ::slotted(video) {
+  /* メディアスロット内の画像/動画 */
+  [part="media"] ::slotted(img),
+  [part="media"] ::slotted(video) {
     display: block;
     width: 100%;
     height: auto;
-  }
-
-  /* Overlay: label / function (optional) */
-  [part="media-overlay"] {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: start;
-    justify-content: space-between;
-    padding: var(--dads-card-padding-block) var(--dads-card-padding-inline);
-    gap: var(--dads-card-gap);
-    pointer-events: none;
-  }
-
-  [part="media-label"],
-  [part="media-function"] {
-    pointer-events: auto;
+    aspect-ratio: var(--dads-card-media-aspect-ratio);
+    object-fit: cover;
   }
 
   [part="main"] {
@@ -99,79 +82,28 @@ export const cardStyles = css`
     align-content: start;
   }
 
-  [part="main-header"] {
-    display: flex;
-    align-items: start;
-    justify-content: space-between;
-    gap: var(--dads-card-gap);
-    min-width: 0;
-  }
-
-  [part="main-heading"] {
-    display: grid;
-    gap: calc(var(--dads-card-gap) / 2);
-    min-width: 0;
-  }
-
-  [part="title"] {
-    min-width: 0;
-  }
-
-  #title-slot::slotted(*) {
+  /* スロットに投入された要素のデフォルトマージンをリセット */
+  [part="main"] ::slotted(*) {
     margin: 0;
     min-width: 0;
+  }
+
+  /* 見出し要素のスタイル（DADSトークン適用） */
+  [part="main"] ::slotted(:is(h1, h2, h3, h4, h5, h6)) {
     color: var(--dads-card-title-color);
-    font-weight: var(--dads-card-title-font-weight);
     font-size: var(--dads-card-title-font-size);
+    font-weight: var(--dads-card-title-font-weight);
     line-height: var(--dads-card-title-line-height);
-    text-decoration-line: none;
+    letter-spacing: var(--dads-card-title-letter-spacing);
   }
 
-  /* DADS: underline title when clickable */
-  :host([data-title-clickable]) #title-slot::slotted(*) {
-    text-decoration-line: underline;
-    text-decoration-thickness: var(--dads-card-title-underline-thickness);
-    text-underline-offset: var(--dads-card-title-underline-offset);
-  }
-
-  @media (any-hover: hover) {
-    :host([data-title-clickable]:not([data-suppress-title-hover]))
-      [part="base"]:hover
-      #title-slot::slotted(*) {
-      text-decoration-thickness: var(--dads-card-title-underline-thickness-hover);
-    }
-  }
-
-  /* Content & labels */
-  #main-label-slot::slotted(*),
-  #sub-label-slot::slotted(*) {
-    margin: 0;
-    min-width: 0;
-  }
-
-  #content-slot::slotted(*),
-  #sub-slot::slotted(*) {
-    margin: 0;
-    min-width: 0;
-  }
-
-  /* Prevent default margins inside common text nodes */
-  #content-slot::slotted(p),
-  #sub-slot::slotted(p),
-  #content-slot::slotted(ul),
-  #sub-slot::slotted(ul),
-  #content-slot::slotted(ol),
-  #sub-slot::slotted(ol),
-  #content-slot::slotted(dl),
-  #sub-slot::slotted(dl) {
-    margin: 0;
-    padding: 0;
-  }
-
-  /* Function slots: align to edge */
-  [part="main-function"],
-  [part="sub-function"] {
-    flex-shrink: 0;
+  /* 本文要素のスタイル（DADSトークン適用） */
+  [part="main"] ::slotted(p) {
+    color: var(--dads-card-content-color);
+    font-size: var(--dads-card-content-font-size);
+    font-weight: var(--dads-card-content-font-weight);
+    line-height: var(--dads-card-content-line-height);
+    letter-spacing: var(--dads-card-content-letter-spacing);
   }
 
   [part="sub"] {
@@ -187,11 +119,8 @@ export const cardStyles = css`
     display: none;
   }
 
-  [part="sub-header"] {
-    display: flex;
-    align-items: start;
-    justify-content: space-between;
-    gap: var(--dads-card-gap);
+  [part="sub"] ::slotted(*) {
+    margin: 0;
     min-width: 0;
   }
 

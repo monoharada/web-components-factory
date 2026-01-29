@@ -1789,10 +1789,10 @@ export const demos = {
                 <!-- main スロット（デフォルト）: ヘッダー + 説明 + 画像 -->
                 <div class="card-example-3__header">
                   <div class="card-example-3__heading">
+                    <span class="card-example-3__label">お役立ち情報</span>
                     <h2 class="card-example-3__title">
                       <a href="#" data-dads-card-primary data-dads-card-delegate>郵送する際のポイント</a>
                     </h2>
-                    <span class="card-example-3__label">お役立ち情報</span>
                   </div>
                   <img
                     class="card-example-3__avatar"
@@ -1827,10 +1827,10 @@ export const demos = {
                 <!-- main スロット（デフォルト）: ヘッダー + 説明 + 画像 -->
                 <div class="card-example-3__header">
                   <div class="card-example-3__heading">
+                    <span class="card-example-3__label">手続きガイド</span>
                     <h2 class="card-example-3__title">
                       <a href="#" data-dads-card-primary data-dads-card-delegate>オンライン申請の手順</a>
                     </h2>
-                    <span class="card-example-3__label">手続きガイド</span>
                   </div>
                   <img
                     class="card-example-3__avatar"
@@ -1865,10 +1865,10 @@ export const demos = {
                 <!-- main スロット（デフォルト）: ヘッダー + 説明 + 画像 -->
                 <div class="card-example-3__header">
                   <div class="card-example-3__heading">
+                    <span class="card-example-3__label">FAQ</span>
                     <h2 class="card-example-3__title">
                       <a href="#" data-dads-card-primary data-dads-card-delegate>よくある質問と回答</a>
                     </h2>
-                    <span class="card-example-3__label">FAQ</span>
                   </div>
                   <img
                     class="card-example-3__avatar"
@@ -1882,7 +1882,7 @@ export const demos = {
                 </p>
                 <img
                   class="card-example-3__image"
-                  src="https://images.unsplash.com/photo-1516321725253-23dd26c6da04?w=304&h=235&fit=crop"
+                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=304&h=235&fit=crop"
                   width="304" height="235"
                   alt="よくある質問に答えるサポートスタッフのイラスト"
                 >

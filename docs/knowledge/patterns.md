@@ -737,4 +737,404 @@ attributeChangedCallback(name: string, oldValue: string | null, newValue: string
 
 ---
 
+## ::slotted() Limitation Pattern
+**タグ**: #css #slots #webcomponents #shadowdom
+**適用場面**: スロットに投入されたLight DOM要素にスタイルを適用する時
+**追加日**: 2026-01-29
+
+### 問題
+`::slotted()`は**直接の子要素**にしかスタイルを適用できない。`::slotted(h2 a)`のような子孫セレクタは無効。
+
+### 解決策
+**直接の子要素のみスタイル可能:**
+```css
+/* ✅ OK: h2直接に適用 */
+[part="main"] ::slotted(h2) {
+  color: var(--dads-card-title-color);
+  font-size: var(--dads-card-title-font-size);
+}
+
+/* ❌ NG: h2内のaには適用不可 */
+[part="main"] ::slotted(h2 a) { /* 無効 */ }
+[part="main"] ::slotted(h2) a { /* 無効 */ }
+```
+
+**:is()で複数要素をグループ化可能:**
+```css
+[part="main"] ::slotted(:is(h1, h2, h3, h4, h5, h6)) {
+  color: var(--dads-card-title-color);
+}
+```
+
+### 子孫要素のスタイリングが必要な場合
+→ **Light DOM Styling for Descendant Elements Pattern** を参照
+
+### 結果
+- **メリット**: Shadow DOMのカプセル化を維持、明示的なスタイリングAPI
+- **デメリット**: 子孫要素のスタイリングには別の方法が必要
+
+### 関連パターン
+- Light DOM Styling for Descendant Elements Pattern
+- Slot Content Detection Pattern
+
+---
+
+## Light DOM Styling for Descendant Elements Pattern
+**タグ**: #css #slots #lightdom #demos
+**適用場面**: スロット内の子孫要素（`::slotted()`で届かない要素）にスタイルを適用する時
+**追加日**: 2026-01-29
+
+### 問題
+`::slotted()`の制限により、`<h2><a>...</a></h2>`のような構造で`a`タグに直接スタイルを適用できない。
+
+### 解決策
+**デモ/利用側のLight DOMでスタイルを定義:**
+```css
+/* showcase-components.ts や利用者のCSS */
+dads-card.card-example-1 h2 a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: calc(1 / 16 * 1rem);
+  text-underline-offset: calc(3 / 16 * 1rem);
+}
+
+@media (hover: hover) {
+  dads-card.card-example-1:hover h2 a {
+    text-decoration-thickness: calc(3 / 16 * 1rem);
+  }
+}
+```
+
+### 設計指針
+1. **コンポーネントの責務**: `::slotted()`で直接の子要素をスタイリング
+2. **利用者の責務**: 子孫要素のスタイリングはLight DOMで行う
+3. **作例固有のスタイル**: デモ側に配置（他の作例では異なる構造の可能性あり）
+
+### 適用例（カード作例1）
+```
+DADS公式構造:           現在のWC構造:
+<a class="card">        <dads-card>
+  <h2>タイトル</h2>       <h2><a>タイトル</a></h2>
+</a>                    </dads-card>
+
+→ h2内のaへのスタイルはLight DOMで適用
+```
+
+### 結果
+- **メリット**: Shadow DOMの制約を回避、作例ごとのカスタマイズが容易
+- **デメリット**: スタイルが分散する（コンポーネント内 + 利用側）
+
+### 関連パターン
+- ::slotted() Limitation Pattern
+- CSS Variable State Pattern
+
+---
+
+## CSS Token 3-Layer Architecture Pattern
+**タグ**: #css #tokens #designsystem #dads
+**適用場面**: デザインシステムに準拠したCSS変数設計
+**追加日**: 2026-01-29
+
+### 問題
+ハードコードされた値（`#000000`、`calc(20/16 * 1rem)`）は保守性が低く、テーマ対応が困難。
+
+### 解決策
+**3層トークン構造:**
+```
+Primitive Tokens → Semantic Tokens → Local Tokens → Properties
+--color-blue-900    --card-title-color    --dads-card-title-color    color
+```
+
+**実装例（card-tokens.ts）:**
+```typescript
+const cardSemanticTokensText = `
+  :host {
+    /* Semantic: グローバルトークンを参照 */
+    --card-title-color: var(--color-neutral-solid-gray-900);
+    --card-title-font-size: var(--font-size-20);
+    --card-title-font-weight: var(--font-weight-700);
+    --card-title-line-height: var(--line-height-150);
+    --card-title-letter-spacing: 0.02em; /* グローバルトークンなし */
+  }
+`;
+
+const cardLocalTokensText = `
+  :host {
+    /* Local: 外部公開API（カスタマイズ用） */
+    --dads-card-title-color: var(--card-title-color);
+    --dads-card-title-font-size: var(--card-title-font-size);
+  }
+`;
+
+export const cardTokens = css`
+  ${cardSemanticTokensText}
+  ${cardLocalTokensText}
+`;
+```
+
+**スタイルでの使用:**
+```css
+[part="main"] ::slotted(:is(h1, h2, h3, h4, h5, h6)) {
+  color: var(--dads-card-title-color);
+  font-size: var(--dads-card-title-font-size);
+}
+```
+
+### 重要ルール
+1. **ハードコード禁止**: 色値は必ずグローバルトークン参照
+2. **例外**: `letter-spacing: 0.02em`（グローバルトークンなし）、`transparent`、`currentColor`、`inherit`
+3. **文字列→css関数**: CSSStyleSheetを直接展開しない
+
+### 結果
+- **メリット**: 一貫性、テーマ対応、保守性、トレーサビリティ
+- **デメリット**: 初期設計コスト
+
+### 関連パターン
+- CSS Variable State Pattern
+- Focus Style Mixin Pattern
+
+---
+
+## Div Soup Reduction Pattern
+**タグ**: #webcomponents #shadowdom #html #accessibility
+**適用場面**: Shadow DOMの構造をシンプルに保つ時
+**追加日**: 2026-01-29
+
+### 問題
+Shadow DOM内に不要なdivが増えると（Div Soup）、DOMが肥大化し、アクセシビリティやパフォーマンスに悪影響。
+
+### 解決策
+**最小限のShadow DOM + Light DOMの活用:**
+
+```html
+<!-- ❌ Div Soup（7階層） -->
+<article part="base">
+  <section part="media">
+    <div part="media-inner">
+      <slot name="media"></slot>
+    </div>
+  </section>
+  <section part="main">
+    <div part="title">
+      <slot name="title"></slot>
+    </div>
+    <div part="content">
+      <slot name="content"></slot>
+    </div>
+  </section>
+</article>
+
+<!-- ✅ 最小限（3セクション） -->
+<article part="base">
+  <section part="media">
+    <slot name="media"></slot>
+  </section>
+  <section part="main">
+    <slot></slot>  <!-- デフォルトスロット -->
+  </section>
+  <section part="sub">
+    <slot name="sub"></slot>
+  </section>
+</article>
+```
+
+**Light DOMでの自由なマークアップ:**
+```html
+<dads-card>
+  <img slot="media" src="..." alt="...">
+  <h2><a href="#">タイトル</a></h2>  <!-- 見出しタグを自由に選択 -->
+  <p>本文テキスト</p>
+  <button slot="sub">アクション</button>
+</dads-card>
+```
+
+### 設計指針
+1. **Shadow DOM**: 構造的なコンテナのみ（article、section）
+2. **Light DOM**: セマンティックな要素（h1-h6、p、a等）は利用者が配置
+3. **スロット**: デフォルトスロットで複数要素を受け入れ
+4. **スタイリング**: `::slotted()`で直接の子要素にスタイル適用
+
+### 結果
+- **メリット**: シンプルなDOM、セマンティックなHTML、アクセシビリティ向上
+- **デメリット**: 子孫要素のスタイリングは利用者側で行う必要あり
+
+### 関連パターン
+- ::slotted() Limitation Pattern
+- Light DOM Styling for Descendant Elements Pattern
+- Slot Content Detection Pattern
+
+---
+
+## Slotted Margin Reset Workaround Pattern
+**タグ**: #webcomponents #css #slotted
+**適用場面**: `::slotted(*)` でマージンがリセットされる要素にスペーシングを適用したい時
+**発見日**: 2026-01-29（Card Example 2実装）
+
+### 問題
+コンポーネント内で `::slotted(*)` を使って全スロット要素のマージンをリセットしている場合、Light DOM側で設定したマージンが無効化される。
+
+```css
+/* コンポーネントのShadow DOM */
+[part="main"] ::slotted(*) {
+  margin: 0;  /* すべてのスロット要素のマージンをリセット */
+}
+```
+
+```html
+<!-- Light DOM -->
+<my-component>
+  <div class="divider" style="margin: 8px 0">...</div>  <!-- 効かない -->
+</my-component>
+```
+
+### 解決策
+マージンの代わりにパディングを使用する。
+
+```css
+/* ❌ NG: マージンは ::slotted(*) でリセットされる */
+.divider {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-top: 1px solid gray;
+}
+
+/* ✅ OK: パディングは影響を受けない */
+.divider {
+  padding-top: var(--spacing-2);
+  padding-bottom: var(--spacing-2);
+  border-top: 1px solid gray;
+}
+```
+
+### 結果
+- **メリット**: コンポーネントの内部実装に依存しないスペーシング
+- **デメリット**: パディングとマージンの使い分けを意識する必要あり
+
+### 関連パターン
+- ::slotted() Limitation Pattern
+- Light DOM Styling for Descendant Elements Pattern
+
+### 詳細
+→ [Card Example 2 実装からの学び](card-example-2-learnings.md)
+
+---
+
+## Overflow and Focus Ring Pattern
+**タグ**: #webcomponents #css #accessibility #focus
+**適用場面**: コンポーネント内のフォーカスリングがコンテナ外にはみ出す場合
+**発見日**: 2026-01-29（Card Example 2実装）
+
+### 問題
+コンポーネントに `overflow: clip` や `overflow: hidden` が設定されていると、内部要素のフォーカスリング（outline、box-shadow）がクリップされる。
+
+```css
+/* コンポーネントのShadow DOM */
+[part="base"] {
+  overflow: clip;  /* フォーカスリングをクリップしてしまう */
+}
+```
+
+### 解決策
+デモや利用側で `::part()` を使って overflow を上書きする。
+
+```css
+/* 利用側のCSS */
+my-component::part(base) {
+  overflow: visible;
+}
+```
+
+### 設計への示唆
+コンポーネント設計時、overflow の設定は慎重に行う：
+
+```css
+/* コンポーネント側での対策案 */
+[part="base"] {
+  /* overflow: clip; の代わりに */
+  overflow-x: clip;  /* 必要な方向のみ */
+
+  /* または、フォーカス用の余白を確保 */
+  padding: 4px;
+  margin: -4px;
+}
+```
+
+### 結果
+- **メリット**: フォーカスが正しく表示され、アクセシビリティ向上
+- **デメリット**: コンテンツがはみ出す可能性がある
+
+### 詳細
+→ [Card Example 2 実装からの学び](card-example-2-learnings.md)
+
+---
+
+## CSS Token Simplification Pattern
+**タグ**: #css #designtokens #refactoring
+**適用場面**: ハードコードされたCSS値をデザイントークンに置き換える時
+**発見日**: 2026-01-29（Card Example 2実装）
+
+### 問題
+CSS内にハードコードされた `calc()` 値やカスタム変数が散在し、保守性が低い。
+
+```css
+/* ❌ NG: ハードコードされた値 */
+:host {
+  --my-component-gap: calc(16 / 16 * 1rem);
+  --my-component-padding: calc(24 / 16 * 1rem);
+}
+
+.element {
+  gap: var(--my-component-gap);
+  padding: var(--my-component-padding);
+}
+```
+
+### 解決策
+デザイントークンを直接使用し、中間変数を削除する。
+
+```css
+/* ✅ OK: デザイントークンを直接使用 */
+.element {
+  gap: var(--spacing-4);        /* 16px */
+  padding: var(--spacing-6);    /* 24px */
+}
+```
+
+### スペーシングトークン対応表
+
+| 値 | トークン | 用途 |
+|---|---------|------|
+| 4px | `--spacing-1` | 極小余白 |
+| 8px | `--spacing-2` | 小余白 |
+| 12px | `--spacing-3` | 中小余白 |
+| 16px | `--spacing-4` | 標準余白 |
+| 20px | `--spacing-5` | 中余白 |
+| 24px | `--spacing-6` | 大余白 |
+| 32px | `--spacing-8` | 特大余白 |
+| 44px | `--touch-target-min` | タッチターゲット |
+
+### セマンティックトークンの活用
+
+```css
+/* 数値でなく意味で指定 */
+width: var(--touch-target-min);   /* 44px タッチターゲット最小サイズ */
+color: var(--color-neutral-solid-gray-900);  /* #1a1a1c ではなく */
+```
+
+### 結果
+- **メリット**: 保守性向上、一貫性、意図の明確化
+- **デメリット**: トークン名を覚える必要あり
+
+### 実績（Card Example 2）
+| 指標 | Before | After | 削減率 |
+|------|--------|-------|--------|
+| CSS行数 | ~137行 | ~107行 | 22% |
+| カスタム変数 | 8個 | 0個 | 100% |
+| ハードコード calc() | 25箇所 | 0箇所 | 100% |
+
+### 詳細
+→ [Card Example 2 実装からの学び](card-example-2-learnings.md)
+
+---
+
 *継続的に更新されます*

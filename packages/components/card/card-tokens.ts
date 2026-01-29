@@ -2,12 +2,39 @@
  * カードコンポーネント用デザイントークン
  * デジタル庁デザインシステム準拠
  *
- * セマンティックトークンとローカルコンポーネントトークンの2層構造
+ * ## トークン構造（2層）
+ *
+ * 1. **セマンティックトークン**（`--card-*`）
+ *    - 内部使用のみ、外部からの変更は非推奨
+ *    - DADSプリミティブトークンを意味的な名前にマッピング
+ *
+ * 2. **ローカルコンポーネントトークン**（`--dads-card-*`）
+ *    - **公開API**: 外部からのカスタマイズ用
+ *    - セマンティックトークンをデフォルト値として参照
+ *    - これらのトークンを上書きすることでスタイルをカスタマイズ
+ *
+ * ## カスタマイズ例
+ *
+ * ```css
+ * dads-card {
+ *   --dads-card-background: transparent;
+ *   --dads-card-border-width: 0;
+ *   --dads-card-padding-block: var(--spacing-6);
+ * }
+ * ```
+ *
+ * ## 注意事項
+ *
+ * - `--card-*`（セマンティック）は内部実装詳細のため、直接上書きしない
+ * - `--dads-card-*`（ローカル）のみを外部カスタマイズに使用
+ * - Grid template等のレイアウト詳細は非公開（card-styles.tsで管理）
  */
 import { css } from '../../core/web-components.js';
 
 /**
  * カードセマンティックトークン（意味的な値）
+ *
+ * @internal 内部使用のみ - 外部からは`--dads-card-*`トークンを使用してください
  */
 const cardSemanticTokensText = `
   :host {
@@ -32,17 +59,37 @@ const cardSemanticTokensText = `
     --card-padding-inline: var(--spacing-6, 1.5rem);
     --card-gap: var(--spacing-4, 1rem);
 
-    /* Typography */
-    --card-text-color: var(--color-neutral-solid-gray-800, #333333);
-    --card-title-color: var(--color-neutral-solid-gray-900, #1a1a1a);
-    --card-title-font-size: var(--font-size-20, 1.25rem);
-    --card-title-font-weight: var(--font-weight-700, 700);
-    --card-title-line-height: 1.5;
+    /* Typography - Base */
+    --card-text-color: var(--color-neutral-solid-gray-800);
+
+    /* Typography - Title (h1-h6) */
+    --card-title-color: var(--color-neutral-solid-gray-900);
+    --card-title-font-size: var(--font-size-20);
+    --card-title-font-weight: var(--font-weight-700);
+    --card-title-line-height: var(--line-height-150);
+    --card-title-letter-spacing: 0.02em;
+
+    /* Typography - Content (p) */
+    --card-content-color: var(--color-neutral-solid-gray-800);
+    --card-content-font-size: var(--font-size-16);
+    --card-content-font-weight: var(--font-weight-400);
+    --card-content-line-height: var(--line-height-170);
+    --card-content-letter-spacing: 0.02em;
   }
 `;
 
 /**
  * カードローカルコンポーネントトークン（外部公開API）
+ *
+ * @public これらのトークンは外部からのカスタマイズに使用できます
+ *
+ * ## カテゴリ
+ * - **Container**: 背景、ボーダー、角丸
+ * - **Divider**: エリア間の区切り線
+ * - **Layout**: メディア幅、アスペクト比
+ * - **Spacing**: パディング、ギャップ
+ * - **Typography**: タイトル・コンテンツの文字スタイル
+ * - **Focus**: フォーカスリング（委譲モード時）
  */
 const cardLocalTokensText = `
   :host {
@@ -67,17 +114,22 @@ const cardLocalTokensText = `
     --dads-card-padding-inline: var(--card-padding-inline);
     --dads-card-gap: var(--card-gap);
 
-    /* Typography */
+    /* Typography - Base */
     --dads-card-color: var(--card-text-color);
+
+    /* Typography - Title */
     --dads-card-title-color: var(--card-title-color);
     --dads-card-title-font-size: var(--card-title-font-size);
     --dads-card-title-font-weight: var(--card-title-font-weight);
     --dads-card-title-line-height: var(--card-title-line-height);
+    --dads-card-title-letter-spacing: var(--card-title-letter-spacing);
 
-    /* Title underline (DADS: when clickable) */
-    --dads-card-title-underline-offset: calc(3 / 16 * 1rem);
-    --dads-card-title-underline-thickness: calc(1 / 16 * 1rem);
-    --dads-card-title-underline-thickness-hover: calc(3 / 16 * 1rem);
+    /* Typography - Content */
+    --dads-card-content-color: var(--card-content-color);
+    --dads-card-content-font-size: var(--card-content-font-size);
+    --dads-card-content-font-weight: var(--card-content-font-weight);
+    --dads-card-content-line-height: var(--card-content-line-height);
+    --dads-card-content-letter-spacing: var(--card-content-letter-spacing);
 
     /* Focus (uses shared focus tokens; values provided by applyDADSFocusStyles) */
     --dads-card-focus-outline-color: var(--dads-focus-outline-color, var(--color-neutral-black, #000000));
