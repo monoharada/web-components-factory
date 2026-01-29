@@ -1619,7 +1619,7 @@ export const demos = {
               padding: 0;
               margin: 0;
               display: grid;
-              grid-template-columns: repeat(3, 1fr);
+              grid-template-columns: repeat(3, calc(354 / 16 * 1rem));
               gap: var(--spacing-8, 2rem) var(--spacing-6, 1.5rem);
             }
 
@@ -1630,7 +1630,7 @@ export const demos = {
 
             /* カード本体 */
             dads-card.card-example-3 {
-              width: calc(352 / 16 * 1rem);
+              width: calc(354 / 16 * 1rem);
               max-width: 100%;
               box-sizing: border-box;
 
@@ -1653,11 +1653,6 @@ export const demos = {
             /* main上部のパディング調整 */
             dads-card.card-example-3::part(main) {
               padding-bottom: 0;
-            }
-
-            /* sub下部のパディング調整 */
-            dads-card.card-example-3::part(sub) {
-              padding-top: 0;
             }
 
             /* ヘッダー（アバター + heading） */
