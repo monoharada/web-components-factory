@@ -1402,21 +1402,12 @@ export const demos = {
 
           <style>
             .card-example-2-list {
-              --card-example-2-gap: calc(24 / 16 * 1rem);
-              --card-example-2-card-max-width: calc(1024 / 16 * 1rem);
-              --card-example-2-media-max-width: calc(352 / 16 * 1rem);
-              --card-example-2-main-padding-block: calc(16 / 16 * 1rem);
-              --card-example-2-main-padding-inline: calc(24 / 16 * 1rem);
-              --card-example-2-row-gap: calc(16 / 16 * 1rem);
-              --card-example-2-button-size: calc(44 / 16 * 1rem);
-              --card-example-2-divider-margin: calc(8 / 16 * 1rem);
-
               list-style: none;
               padding: 0;
               margin: 0;
-              margin-top: calc(16 / 16 * 1rem);
+              margin-top: var(--spacing-4, 1rem);
               display: grid;
-              gap: var(--card-example-2-gap);
+              gap: var(--spacing-6, 1.5rem);
             }
 
             .card-example-2-list > li {
@@ -1425,11 +1416,11 @@ export const demos = {
             }
 
             dads-card.card-example-2 {
-              max-width: var(--card-example-2-card-max-width);
-              --dads-card-media-width: minmax(auto, min(50%, var(--card-example-2-media-max-width)));
-              --dads-card-padding-block: var(--card-example-2-main-padding-block);
-              --dads-card-padding-inline: var(--card-example-2-main-padding-inline);
-              --dads-card-gap: var(--card-example-2-row-gap);
+              max-width: 64rem;
+              --dads-card-media-width: minmax(auto, min(50%, 22rem));
+              --dads-card-padding-block: var(--spacing-4, 1rem);
+              --dads-card-padding-inline: var(--spacing-6, 1.5rem);
+              --dads-card-gap: var(--spacing-4, 1rem);
               --dads-card-divider-width: 1px;
               --dads-card-border-radius: 0;
               width: 100%;
@@ -1439,80 +1430,82 @@ export const demos = {
               aspect-ratio: 3 / 2;
             }
 
+            dads-card.card-example-2::part(base) {
+              overflow: visible;
+            }
+
             .card-example-2__header {
               display: flex;
               align-items: flex-start;
               justify-content: space-between;
-              gap: calc(16 / 16 * 1rem);
-              margin-right: calc(-24 / 16 * 1rem);
+              gap: var(--spacing-4, 1rem);
+              margin-right: calc(-1 * var(--spacing-6, 1.5rem));
             }
 
             .card-example-2__heading {
               margin: 0;
               min-width: 0;
-              padding-top: calc(4 / 16 * 1rem);
-              color: var(--color-neutral-solid-gray-900);
+              padding-top: var(--spacing-1, 0.25rem);
+              color: var(--color-neutral-solid-gray-900, #1a1a1c);
               font-weight: bold;
-              font-size: calc(20 / 16 * 1rem);
+              font-size: var(--font-size-20, 1.25rem);
               line-height: 1.5;
               letter-spacing: 0.02em;
             }
 
             .card-example-2__menu-button {
               flex-shrink: 0;
-              background-color: var(--color-neutral-white);
+              background-color: var(--color-neutral-white, #ffffff);
               border: 1px solid transparent;
               cursor: pointer;
               display: flex;
               align-items: center;
               justify-content: center;
-              width: var(--card-example-2-button-size);
-              height: var(--card-example-2-button-size);
-              color: var(--color-neutral-solid-gray-800);
+              width: 2.75rem;
+              height: 2.75rem;
+              color: var(--color-neutral-solid-gray-800, #414143);
               padding: 0;
-              border-radius: calc(6 / 16 * 1rem);
+              border-radius: var(--spacing-1-5, 0.375rem);
             }
 
             @media (hover: hover) {
               .card-example-2__menu-button:hover {
-                border-color: var(--color-neutral-black);
-                background-color: var(--color-neutral-solid-gray-50);
+                border-color: var(--color-neutral-black, #000000);
+                background-color: var(--color-neutral-solid-gray-50, #f8f8fb);
               }
             }
 
             .card-example-2__menu-button:focus-visible {
-              outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
-              outline-offset: calc(2 / 16 * 1rem);
-              box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
+              outline: var(--spacing-1, 0.25rem) solid var(--color-neutral-black, #000000);
+              outline-offset: var(--spacing-0-5, 0.125rem);
+              box-shadow: 0 0 0 var(--spacing-0-5, 0.125rem) var(--color-primitive-yellow-300, #ffd43d);
             }
 
             .card-example-2__contents {
-              margin-top: 0;
-              margin-bottom: 0;
+              margin: 0;
               min-width: 0;
             }
 
             .card-example-2__divider {
-              padding-top: calc(8 / 16 * 1rem);
-              padding-bottom: calc(8 / 16 * 1rem);
-              border-top: 1px solid var(--color-neutral-solid-gray-536);
+              padding-block: var(--spacing-2, 0.5rem);
+              border-top: 1px solid var(--color-neutral-solid-gray-536, #757578);
             }
 
             .card-example-2__links {
               display: flex;
-              column-gap: calc(16 / 16 * 1rem);
+              column-gap: var(--spacing-4, 1rem);
               justify-content: end;
             }
 
             .card-example-2__learn-more:any-link {
               display: flex;
               border: 4px double transparent;
-              padding: calc(6 / 16 * 1rem) calc(8 / 16 * 1rem);
+              padding: var(--spacing-1-5, 0.375rem) var(--spacing-2, 0.5rem);
               background: var(--color-primitive-light-blue-900, #004098);
               color: var(--color-neutral-white, #ffffff);
               text-decoration: none;
               font-weight: normal;
-              font-size: calc(16 / 16 * 1rem);
+              font-size: var(--font-size-16, 1rem);
               line-height: 1;
               letter-spacing: 0.02em;
               cursor: pointer;
@@ -1520,18 +1513,18 @@ export const demos = {
 
             @media (hover: hover) {
               .card-example-2__learn-more:any-link:hover {
-                background: var(--color-primitive-light-blue-1000);
+                background: var(--color-primitive-light-blue-1000, #002d6c);
                 text-decoration: underline;
-                text-decoration-thickness: calc(1 / 16 * 1rem);
-                text-underline-offset: calc(3 / 16 * 1rem);
+                text-decoration-thickness: 1px;
+                text-underline-offset: 3px;
               }
             }
 
             .card-example-2__learn-more:focus-visible {
-              outline: calc(4 / 16 * 1rem) solid var(--color-neutral-black);
-              outline-offset: calc(2 / 16 * 1rem);
-              border-radius: calc(4 / 16 * 1rem);
-              box-shadow: 0 0 0 calc(2 / 16 * 1rem) var(--color-primitive-yellow-300);
+              outline: var(--spacing-1, 0.25rem) solid var(--color-neutral-black, #000000);
+              outline-offset: var(--spacing-0-5, 0.125rem);
+              border-radius: var(--spacing-1, 0.25rem);
+              box-shadow: 0 0 0 var(--spacing-0-5, 0.125rem) var(--color-primitive-yellow-300, #ffd43d);
             }
           </style>
 
@@ -1602,6 +1595,306 @@ export const demos = {
                 <div class="card-example-2__divider"></div>
                 <div class="card-example-2__links">
                   <a href="#" class="card-example-2__learn-more">詳しくみる</a>
+                </div>
+              </dads-card>
+            </li>
+          </ul>
+        </section>
+
+        <!-- カード作例3（DADS公式） -->
+        <section style="margin-top: 40px;">
+          <h3>カード作例3（DADS公式）</h3>
+          <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+            DADS HTML Storybook の「作例3」を再現。縦型カードでヘッダー・説明・画像・アクションを配置。
+          </p>
+
+          <style>
+            /* ========================================
+             * Card Example 3 - DADS公式作例3
+             * ======================================== */
+
+            /* リストコンテナ */
+            .card-example-3-list {
+              list-style: none;
+              padding: 0;
+              margin: 0;
+              display: flex;
+              flex-wrap: wrap;
+              gap: var(--spacing-6, 1.5rem);
+            }
+
+            .card-example-3-list > li {
+              display: flex;
+              min-width: 0;
+            }
+
+            /* カード本体 */
+            dads-card.card-example-3 {
+              width: calc(352 / 16 * 1rem);
+              max-width: 100%;
+              box-sizing: border-box;
+
+              /* カードトークン */
+              --dads-card-border-width: 1px;
+              --dads-card-border-color: var(--color-neutral-solid-gray-420, #949494);
+              --dads-card-border-radius: var(--border-radius-16, 1rem);
+              --dads-card-divider-width: 0;
+              --dads-card-background: var(--color-neutral-white, #ffffff);
+              --dads-card-padding-block: var(--spacing-4, 1rem);
+              --dads-card-padding-inline: var(--spacing-6, 1.5rem);
+              --dads-card-gap: var(--spacing-4, 1rem);
+            }
+
+            /* フォーカスリング表示のため */
+            dads-card.card-example-3::part(base) {
+              overflow: visible;
+            }
+
+            /* main上部のパディング調整 */
+            dads-card.card-example-3::part(main) {
+              padding-bottom: 0;
+            }
+
+            /* sub下部のパディング調整 */
+            dads-card.card-example-3::part(sub) {
+              padding-top: 0;
+            }
+
+            /* ヘッダー（アバター + heading） */
+            .card-example-3__header {
+              display: flex;
+              gap: var(--spacing-4, 1rem);
+              align-items: flex-start;
+            }
+
+            /* heading: ラベル + タイトル（上からラベル、タイトル） */
+            .card-example-3__heading {
+              display: flex;
+              flex-direction: column;
+              gap: var(--spacing-2, 0.5rem);
+              flex: 1;
+              min-width: 0;
+            }
+
+            /* ラベル（カテゴリ） */
+            .card-example-3__label {
+              color: var(--color-neutral-solid-gray-800, #333333);
+              font-size: var(--font-size-16, 1rem);
+              font-weight: var(--font-weight-400, 400);
+              line-height: var(--line-height-170, 1.7);
+              letter-spacing: 0.02em;
+            }
+
+            /* タイトル */
+            .card-example-3__title {
+              color: var(--color-neutral-solid-gray-900, #1a1a1c);
+              font-size: var(--font-size-20, 1.25rem);
+              font-weight: var(--font-weight-700, 700);
+              line-height: var(--line-height-150, 1.5);
+              letter-spacing: 0.02em;
+              margin: 0;
+              min-width: 0;
+            }
+
+            /* タイトルリンク */
+            .card-example-3__title a {
+              color: var(--color-primitive-blue-1000, #00118f);
+              text-decoration: underline;
+              text-decoration-thickness: 1px;
+              text-underline-offset: calc(3 / 16 * 1rem);
+            }
+
+            @media (hover: hover) {
+              .card-example-3__title a:hover {
+                text-decoration-thickness: calc(3 / 16 * 1rem);
+              }
+            }
+
+            .card-example-3__title a:focus-visible {
+              outline: var(--spacing-1, 0.25rem) solid var(--color-neutral-black, #000000);
+              outline-offset: var(--spacing-0-5, 0.125rem);
+              box-shadow: 0 0 0 var(--spacing-0-5, 0.125rem) var(--color-primitive-yellow-300, #ffd43d);
+              border-radius: var(--spacing-1, 0.25rem);
+            }
+
+            /* アバター */
+            .card-example-3__avatar {
+              width: calc(64 / 16 * 1rem);
+              height: calc(64 / 16 * 1rem);
+              border-radius: 50%;
+              object-fit: cover;
+              flex-shrink: 0;
+            }
+
+            /* 説明文 */
+            .card-example-3__contents {
+              color: var(--color-neutral-solid-gray-800, #333333);
+              font-size: var(--font-size-16, 1rem);
+              font-weight: var(--font-weight-400, 400);
+              line-height: var(--line-height-170, 1.7);
+              letter-spacing: 0.02em;
+              margin: 0;
+              min-width: 0;
+            }
+
+            /* 画像 */
+            .card-example-3__image {
+              display: block;
+              width: 100%;
+              height: auto;
+              border-radius: var(--border-radius-8, 0.5rem);
+              object-fit: cover;
+            }
+
+            /* アクション */
+            .card-example-3__actions {
+              display: flex;
+              justify-content: flex-end;
+              gap: var(--spacing-4, 1rem);
+            }
+
+            /* お気に入りボタン */
+            .card-example-3__favorite-button {
+              display: inline-flex;
+              align-items: center;
+              gap: var(--spacing-2, 0.5rem);
+              padding: var(--spacing-1-5, 0.375rem) var(--spacing-3, 0.75rem);
+              background-color: var(--color-neutral-white, #ffffff);
+              border: 1px solid var(--color-neutral-solid-gray-420, #949494);
+              border-radius: var(--border-radius-6, 0.375rem);
+              color: var(--color-neutral-solid-gray-900, #1a1a1c);
+              font-size: var(--font-size-14, 0.875rem);
+              font-weight: var(--font-weight-400, 400);
+              line-height: var(--line-height-150, 1.5);
+              cursor: pointer;
+            }
+
+            @media (hover: hover) {
+              .card-example-3__favorite-button:hover {
+                border-color: var(--color-neutral-black, #000000);
+                background-color: var(--color-neutral-solid-gray-50, #f8f8fb);
+              }
+            }
+
+            .card-example-3__favorite-button:focus-visible {
+              outline: var(--spacing-1, 0.25rem) solid var(--color-neutral-black, #000000);
+              outline-offset: var(--spacing-0-5, 0.125rem);
+              box-shadow: 0 0 0 var(--spacing-0-5, 0.125rem) var(--color-primitive-yellow-300, #ffd43d);
+            }
+          </style>
+
+          <ul class="card-example-3-list">
+            <li>
+              <dads-card class="card-example-3">
+                <!-- main スロット（デフォルト）: ヘッダー + 説明 + 画像 -->
+                <div class="card-example-3__header">
+                  <div class="card-example-3__heading">
+                    <h2 class="card-example-3__title">
+                      <a href="#" data-dads-card-primary data-dads-card-delegate>郵送する際のポイント</a>
+                    </h2>
+                    <span class="card-example-3__label">お役立ち情報</span>
+                  </div>
+                  <img
+                    class="card-example-3__avatar"
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=face"
+                    width="64" height="64"
+                    alt="著者のアイコン"
+                  >
+                </div>
+                <p class="card-example-3__contents">
+                  重要な書類を郵送する際に注意すべきポイントをご紹介します
+                </p>
+                <img
+                  class="card-example-3__image"
+                  src="https://images.unsplash.com/photo-1586769852044-692d6e3703f0?w=304&h=235&fit=crop"
+                  width="304" height="235"
+                  alt="ポストに書類を投函する人物のイラスト"
+                >
+
+                <!-- sub スロット: お気に入りボタン -->
+                <div slot="sub" class="card-example-3__actions">
+                  <button class="card-example-3__favorite-button" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m12 21-1.4-1.3a113 113 0 0 1-6.8-6.9 9 9 0 0 1-1.4-2.4Q2 9.3 2 8.2q0-2.4 1.6-4Q5 2.7 7.5 2.7a6 6 0 0 1 4.5 2 6 6 0 0 1 4.5-2q2.4 0 4 1.5 1.5 1.5 1.5 4 0 1.1-.4 2.2-.3 1-1.4 2.4t-2.6 3l-4.2 3.9zm0-2.7 6.4-6.4q.9-1 1.3-2l.3-1.7a3.4 3.4 0 0 0-3.5-3.5A4 4 0 0 0 12.9 7h-1.8q-.5-1-1.4-1.7-1-.6-2.2-.6A3.4 3.4 0 0 0 4 8.2l.3 1.7q.4 1 1.3 2 .9 1.2 2.5 2.7z" fill="currentcolor"/>
+                    </svg>
+                    お気に入り
+                  </button>
+                </div>
+              </dads-card>
+            </li>
+            <li>
+              <dads-card class="card-example-3">
+                <!-- main スロット（デフォルト）: ヘッダー + 説明 + 画像 -->
+                <div class="card-example-3__header">
+                  <div class="card-example-3__heading">
+                    <h2 class="card-example-3__title">
+                      <a href="#" data-dads-card-primary data-dads-card-delegate>オンライン申請の手順</a>
+                    </h2>
+                    <span class="card-example-3__label">手続きガイド</span>
+                  </div>
+                  <img
+                    class="card-example-3__avatar"
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face"
+                    width="64" height="64"
+                    alt="著者のアイコン"
+                  >
+                </div>
+                <p class="card-example-3__contents">
+                  マイナンバーカードを使った各種オンライン申請の基本的な手順を分かりやすく解説します
+                </p>
+                <img
+                  class="card-example-3__image"
+                  src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=304&h=235&fit=crop"
+                  width="304" height="235"
+                  alt="パソコンでオンライン申請をする人物のイラスト"
+                >
+
+                <!-- sub スロット: お気に入りボタン -->
+                <div slot="sub" class="card-example-3__actions">
+                  <button class="card-example-3__favorite-button" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m12 21-1.4-1.3a113 113 0 0 1-6.8-6.9 9 9 0 0 1-1.4-2.4Q2 9.3 2 8.2q0-2.4 1.6-4Q5 2.7 7.5 2.7a6 6 0 0 1 4.5 2 6 6 0 0 1 4.5-2q2.4 0 4 1.5 1.5 1.5 1.5 4 0 1.1-.4 2.2-.3 1-1.4 2.4t-2.6 3l-4.2 3.9zm0-2.7 6.4-6.4q.9-1 1.3-2l.3-1.7a3.4 3.4 0 0 0-3.5-3.5A4 4 0 0 0 12.9 7h-1.8q-.5-1-1.4-1.7-1-.6-2.2-.6A3.4 3.4 0 0 0 4 8.2l.3 1.7q.4 1 1.3 2 .9 1.2 2.5 2.7z" fill="currentcolor"/>
+                    </svg>
+                    お気に入り
+                  </button>
+                </div>
+              </dads-card>
+            </li>
+            <li>
+              <dads-card class="card-example-3">
+                <!-- main スロット（デフォルト）: ヘッダー + 説明 + 画像 -->
+                <div class="card-example-3__header">
+                  <div class="card-example-3__heading">
+                    <h2 class="card-example-3__title">
+                      <a href="#" data-dads-card-primary data-dads-card-delegate>よくある質問と回答</a>
+                    </h2>
+                    <span class="card-example-3__label">FAQ</span>
+                  </div>
+                  <img
+                    class="card-example-3__avatar"
+                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face"
+                    width="64" height="64"
+                    alt="著者のアイコン"
+                  >
+                </div>
+                <p class="card-example-3__contents">
+                  お客様からよくお寄せいただくご質問とその回答をまとめました
+                </p>
+                <img
+                  class="card-example-3__image"
+                  src="https://images.unsplash.com/photo-1516321725253-23dd26c6da04?w=304&h=235&fit=crop"
+                  width="304" height="235"
+                  alt="よくある質問に答えるサポートスタッフのイラスト"
+                >
+
+                <!-- sub スロット: お気に入りボタン -->
+                <div slot="sub" class="card-example-3__actions">
+                  <button class="card-example-3__favorite-button" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m12 21-1.4-1.3a113 113 0 0 1-6.8-6.9 9 9 0 0 1-1.4-2.4Q2 9.3 2 8.2q0-2.4 1.6-4Q5 2.7 7.5 2.7a6 6 0 0 1 4.5 2 6 6 0 0 1 4.5-2q2.4 0 4 1.5 1.5 1.5 1.5 4 0 1.1-.4 2.2-.3 1-1.4 2.4t-2.6 3l-4.2 3.9zm0-2.7 6.4-6.4q.9-1 1.3-2l.3-1.7a3.4 3.4 0 0 0-3.5-3.5A4 4 0 0 0 12.9 7h-1.8q-.5-1-1.4-1.7-1-.6-2.2-.6A3.4 3.4 0 0 0 4 8.2l.3 1.7q.4 1 1.3 2 .9 1.2 2.5 2.7z" fill="currentcolor"/>
+                    </svg>
+                    お気に入り
+                  </button>
                 </div>
               </dads-card>
             </li>
