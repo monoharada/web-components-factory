@@ -67,3 +67,4 @@ temp/
 # E2E evidence (screenshots, videos - for user review only)
 playwright-report/
 test-results/
+/.worktrees/
