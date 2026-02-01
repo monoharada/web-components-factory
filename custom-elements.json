@@ -1275,7 +1275,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color: rgba(220, 38, 38, 0.95); --a11y-annotate-callout-color-solid: rgb(220, 38, 38); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: #334155; /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: #e2e8f0; /* シャドウ */ --a11y-annotate-shadow: 0 10px 30px rgba(2, 6, 23, 0.25); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: 12px; background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; --a11y-annotate-callout-gutter: 64px; } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; inset: calc(var(--a11y-annotate-callout-gutter) * -1) 0 calc(var(--a11y-annotate-callout-gutter) * -1) calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: 12px; background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: 10px; background: transparent; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: 10px; background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; flex: 1 1 auto; min-width: 0; font-weight: 700; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-text-primary); color: var(--a11y-annotate-background); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: 10px; border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
+              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000); --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: var(--color-text-secondary, #475569); /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color); /* シャドウ */ --a11y-annotate-shadow: var( --component-shadow, var( --elevation-2, 0 2px 12px 2px rgba(0, 0, 0, 0.1), 0 1px 6px 0 rgba(0, 0, 0, 0.3) ) ); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; --a11y-annotate-callout-gutter: var(--spacing-16, 64px); } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; inset: calc(var(--a11y-annotate-callout-gutter) * -1) 0 calc(var(--a11y-annotate-callout-gutter) * -1) calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: var(--border-radius-8, 0.5rem); background: transparent; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: var(--border-radius-8, 0.5rem); background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; flex: 1 1 auto; min-width: 0; font-weight: inherit; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { box-sizing: border-box; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; border: 2px solid var(--a11y-annotate-callout-color); background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: var(--border-radius-8, 0.5rem); border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -3465,6 +3465,599 @@
           "declaration": {
             "name": "DadsCalendar",
             "module": "./packages/components/calendar/calendar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/card/card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Cardコンポーネント\n\nDADS「カード」の構造（コンテナ/メイン/イメージ/サブ）を Web Components として提供します。\n最小限のShadow DOM構造（3セクション）で、利用者がLight DOMで自由にマークアップできます。\n\n## 設計思想: Token-Driven Customization\n\nカードは視覚的バリエーションが多いレイアウトコンテナのため、`variant`属性は提供しません。\n代わりにCSSトークンと`::part()`による柔軟なカスタマイズを推奨します。\n\n```css\n// \"Elevated\" スタイルの例\ndads-card.elevated {\n  --dads-card-border-width: 0;\n  box-shadow: var(--elevation-4);\n}\n\n// \"Bordered\" スタイルの例\ndads-card.bordered {\n  --dads-card-border-width: 1px;\n  --dads-card-border-color: var(--color-neutral-solid-gray-420);\n}\n```\n\n## クリック委譲（カード面クリック）\n\n- 主リンク要素に `data-dads-card-primary` を付与します\n- さらに `data-dads-card-delegate` を付与すると、カード面クリック（pointer）を主リンクへ委譲します\n- キーボード操作は「主リンクへフォーカスしてEnter」で成立するため、カード自体はフォーカス可能にしません\n\n## 既知の課題と対処法\n\n### overflow: clip問題\n`::part(base)`の`overflow: clip`がfocus ringやbox-shadowをクリップします。\n対処: `dads-card::part(base) { overflow: visible; }` でオーバーライド\n\n### ::slotted() margin問題\nShadow DOM内の`::slotted(*) { margin: 0 }`が外部marginを上書きします。\n対処: Light DOM要素では`margin`の代わりに`padding`を使用してください。",
+          "name": "DadsCard",
+          "cssProperties": [
+            {
+              "description": "背景色",
+              "name": "--dads-card-background"
+            },
+            {
+              "description": "外周色",
+              "name": "--dads-card-border-color"
+            },
+            {
+              "description": "外周の線幅",
+              "name": "--dads-card-border-width"
+            },
+            {
+              "description": "角丸",
+              "name": "--dads-card-border-radius"
+            },
+            {
+              "description": "エリア間の区切り線色（media/sub の境界）",
+              "name": "--dads-card-divider-color"
+            },
+            {
+              "description": "エリア間の区切り線幅",
+              "name": "--dads-card-divider-width"
+            },
+            {
+              "description": "layout=\"horizontal\" のメディア列幅",
+              "name": "--dads-card-media-width"
+            },
+            {
+              "description": "メディア領域の aspect-ratio",
+              "name": "--dads-card-media-aspect-ratio"
+            },
+            {
+              "description": "パディング（上下）",
+              "name": "--dads-card-padding-block"
+            },
+            {
+              "description": "パディング（左右）",
+              "name": "--dads-card-padding-inline"
+            },
+            {
+              "description": "エリア内の余白",
+              "name": "--dads-card-gap"
+            },
+            {
+              "description": "本文/ラベルなどの文字色",
+              "name": "--dads-card-color"
+            },
+            {
+              "description": "タイトル（h1-h6）の文字色",
+              "name": "--dads-card-title-color"
+            },
+            {
+              "description": "タイトルのフォントサイズ",
+              "name": "--dads-card-title-font-size"
+            },
+            {
+              "description": "タイトルのフォントウェイト",
+              "name": "--dads-card-title-font-weight"
+            },
+            {
+              "description": "タイトルの行高",
+              "name": "--dads-card-title-line-height"
+            },
+            {
+              "description": "タイトルの字間",
+              "name": "--dads-card-title-letter-spacing"
+            },
+            {
+              "description": "コンテンツ（p）の文字色",
+              "name": "--dads-card-content-color"
+            },
+            {
+              "description": "コンテンツのフォントサイズ",
+              "name": "--dads-card-content-font-size"
+            },
+            {
+              "description": "コンテンツのフォントウェイト",
+              "name": "--dads-card-content-font-weight"
+            },
+            {
+              "description": "コンテンツの行高",
+              "name": "--dads-card-content-line-height"
+            },
+            {
+              "description": "コンテンツの字間",
+              "name": "--dads-card-content-letter-spacing"
+            },
+            {
+              "description": "フォーカスアウトライン色（委譲ON時）",
+              "name": "--dads-card-focus-outline-color"
+            },
+            {
+              "description": "フォーカスアウトライン幅（委譲ON時）",
+              "name": "--dads-card-focus-outline-width"
+            },
+            {
+              "description": "フォーカスアウトラインのオフセット（委譲ON時）",
+              "name": "--dads-card-focus-outline-offset"
+            },
+            {
+              "description": "フォーカスリング色（委譲ON時）",
+              "name": "--dads-card-focus-ring-color"
+            },
+            {
+              "description": "フォーカスリング幅（委譲ON時）",
+              "name": "--dads-card-focus-ring-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "コンテナ（overflow制御に使用）",
+              "name": "base"
+            },
+            {
+              "description": "メインエリア（padding・背景のカスタマイズ）",
+              "name": "main"
+            },
+            {
+              "description": "イメージエリア（背景・ボーダー等のカスタマイズ）",
+              "name": "media"
+            },
+            {
+              "description": "サブエリア（アクション領域のカスタマイズ）",
+              "name": "sub"
+            }
+          ],
+          "slots": [
+            {
+              "description": "メインコンテンツ（デフォルトスロット、h2/p等を自由にマークアップ）",
+              "name": ""
+            },
+            {
+              "description": "イメージエリア（任意）",
+              "name": "media"
+            },
+            {
+              "description": "サブエリア（任意）",
+              "name": "sub"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusOut",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerMove",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerUp",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isDelegateEnabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "委譲モードが有効かどうかを判定"
+            },
+            {
+              "kind": "method",
+              "name": "#isSelectionInsideHost",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mainSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#media",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#mediaSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#mutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pointer",
+              "privacy": "private",
+              "type": {
+                "text": "PointerState"
+              },
+              "default": "{ id: null, startX: 0, startY: 0, moved: false }"
+            },
+            {
+              "kind": "field",
+              "name": "#primary",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sub",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#subSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAreasVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPrimary",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "a11yAnnotations",
+              "type": {
+                "text": "A11yAnnotations"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "{ version: 1, summary: 'カードコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'カードはコンテナ/メイン/イメージ/サブの領域を持つレイアウトコンポーネントです。', 'キーボード操作は、カード内のリンク（主リンク）へフォーカスして Enter で遷移します。', ], keyboard: [ 'カード自体はフォーカス可能にしません。', 'カード面クリック（pointer委譲）は data 属性で任意に有効化できます。', ], zoom: [ '余白やサイズは rem と CSS 変数で定義され、拡大時も読みやすさを維持します。', ], states: [ 'layout=\"horizontal\" で横並び（イメージ左・メイン右）にできます。', ], labels: [ 'デフォルトスロットにh2等の見出しや本文を配置します。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'container', title: 'カードコンテナ', label: 'container', description: '外周・背景を持つカードのコンテナです。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"base\"]' }, }, { id: 'media', title: 'イメージエリア', label: 'media', description: '画像や動画などのメディアを配置するエリアです（任意）。', category: 'semantics', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"media\"]' }, }, { id: 'main', title: 'メインエリア', label: 'main', description: 'タイトルや本文などの主要コンテンツを配置します。', category: 'semantics', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"main\"]' }, }, { id: 'sub', title: 'サブエリア', label: 'sub', description: '関連情報やボタンなどの補助要素を配置するエリアです（任意）。', category: 'semantics', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"sub\"]' }, }, ], }"
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-card', template: html` <article part=\"base\" id=\"base\"> <section part=\"media\" id=\"media\" hidden> <slot name=\"media\" id=\"media-slot\"></slot> </section> <section part=\"main\"> <slot id=\"main-slot\"></slot> </section> <section part=\"sub\" id=\"sub\" hidden> <slot name=\"sub\" id=\"sub-slot\"></slot> </section> </article> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), cardTokens, cardStyles, applyDADSFocusStyles(), ], 'minimal', ), attributes: [PropertyAttr('layout')], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "layout",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "description": "レイアウト（デフォルト: vertical）"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-card",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/card/card.ts",
+          "definitionPath": "./packages/components/card/card.ts",
+          "typeDefinitionPath": "./packages/components/card/card.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsCard",
+          "declaration": {
+            "name": "DadsCard",
+            "module": "packages/components/card/card.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/card/card.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/card/card.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-card",
+          "declaration": {
+            "name": "DadsCard",
+            "module": "./packages/components/card/card.ts"
           }
         }
       ]
@@ -19940,6 +20533,154 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/card/card-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineCard",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "Cardコンポーネントを定義"
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultCard",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-card`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineCard",
+          "declaration": {
+            "name": "defineCard",
+            "module": "packages/components/card/card-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCard",
+          "declaration": {
+            "name": "defineDefaultCard",
+            "module": "packages/components/card/card-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/card/card-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "cardStyles",
+          "default": "css` :host { display: block; } /* ========== Container ========== */ [part=\"base\"] { display: grid; grid-template-areas: \"media\" \"main\" \"sub\"; grid-template-rows: auto auto auto; background-color: var(--dads-card-background); border: var(--dads-card-border-width) solid var(--dads-card-border-color); border-radius: var(--dads-card-border-radius); color: var(--dads-card-color); overflow: clip; overflow-wrap: anywhere; } :host([layout=\"horizontal\"]) [part=\"base\"] { grid-template-columns: minmax(0, min(50%, var(--dads-card-media-width))) minmax(0, 1fr); grid-template-areas: \"media main\" \". sub\"; grid-template-rows: auto auto; } :host([layout=\"horizontal\"]:not([data-has-media])) [part=\"base\"] { grid-template-columns: minmax(0, 1fr); grid-template-areas: \"main\" \"sub\"; grid-template-rows: auto auto; } /* pointer-only convenience: make it feel clickable when delegation is enabled */ :host([data-dads-card-delegate]) [part=\"base\"] { cursor: pointer; } /* ========== Areas ========== */ [part=\"media\"] { grid-area: media; position: relative; min-width: 0; } :host(:not([layout=\"horizontal\"])) [part=\"media\"] { border-bottom: var(--dads-card-divider-width) solid var(--dads-card-divider-color); } :host([layout=\"horizontal\"]) [part=\"media\"] { border-right: var(--dads-card-divider-width) solid var(--dads-card-divider-color); width: 100%; } [part=\"media\"][hidden] { display: none; } /* メディアスロット内の画像/動画 */ [part=\"media\"] ::slotted(img), [part=\"media\"] ::slotted(video) { display: block; width: 100%; height: auto; aspect-ratio: var(--dads-card-media-aspect-ratio); object-fit: cover; } [part=\"main\"] { grid-area: main; min-width: 0; padding: var(--dads-card-padding-block) var(--dads-card-padding-inline); display: grid; gap: var(--dads-card-gap); align-content: start; } /* スロットに投入された要素のデフォルトマージンをリセット */ [part=\"main\"] ::slotted(*) { margin: 0; min-width: 0; } /* 見出し要素のスタイル（DADSトークン適用） */ [part=\"main\"] ::slotted(:is(h1, h2, h3, h4, h5, h6)) { color: var(--dads-card-title-color); font-size: var(--dads-card-title-font-size); font-weight: var(--dads-card-title-font-weight); line-height: var(--dads-card-title-line-height); letter-spacing: var(--dads-card-title-letter-spacing); } /* 本文要素のスタイル（DADSトークン適用） */ [part=\"main\"] ::slotted(p) { color: var(--dads-card-content-color); font-size: var(--dads-card-content-font-size); font-weight: var(--dads-card-content-font-weight); line-height: var(--dads-card-content-line-height); letter-spacing: var(--dads-card-content-letter-spacing); } [part=\"sub\"] { grid-area: sub; min-width: 0; padding: var(--dads-card-padding-block) var(--dads-card-padding-inline); display: grid; gap: var(--dads-card-gap); align-content: start; } [part=\"sub\"][hidden] { display: none; } [part=\"sub\"] ::slotted(*) { margin: 0; min-width: 0; } /* ========== Focus ring (delegate mode) ========== */ :host([data-dads-card-delegate][data-primary-focus]) [part=\"base\"] { outline: var(--dads-card-focus-outline-width) solid var(--dads-card-focus-outline-color); outline-offset: var(--dads-card-focus-outline-offset); box-shadow: 0 0 0 var(--dads-card-focus-ring-width) var(--dads-card-focus-ring-color); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cardStyles",
+          "declaration": {
+            "name": "cardStyles",
+            "module": "packages/components/card/card-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/card/card-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "cardTokens",
+          "default": "css` ${cardSemanticTokensText} ${cardLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cardTokens",
+          "declaration": {
+            "name": "cardTokens",
+            "module": "packages/components/card/card-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/card/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cardStyles",
+          "declaration": {
+            "name": "cardStyles",
+            "module": "./card-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCard",
+          "declaration": {
+            "name": "DadsCard",
+            "module": "./card.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineCard",
+          "declaration": {
+            "name": "defineCard",
+            "module": "./card-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCard",
+          "declaration": {
+            "name": "defineDefaultCard",
+            "module": "./card-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/checkbox/checkbox-define.ts",
       "declarations": [
         {
@@ -20732,6 +21473,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/button/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/card/index.js"
           }
         },
         {
