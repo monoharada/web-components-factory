@@ -38,6 +38,14 @@ export const cardStyles = css`
     grid-template-rows: auto auto;
   }
 
+  :host([layout="horizontal"]:not([data-has-media])) [part="base"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "main"
+      "sub";
+    grid-template-rows: auto auto;
+  }
+
   /* pointer-only convenience: make it feel clickable when delegation is enabled */
   :host([data-dads-card-delegate]) [part="base"] {
     cursor: pointer;

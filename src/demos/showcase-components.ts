@@ -2275,7 +2275,15 @@ export const demos = {
                 target.textContent = String(value);
               };
 
-              var deltaText = data.delta ? data.delta + '%' : data.delta;
+              var deltaText = data.delta;
+              if (typeof data.delta === 'number' && Number.isFinite(data.delta)) {
+                deltaText = data.delta + '%';
+              } else if (typeof data.delta === 'string') {
+                var trimmedDelta = data.delta.trim();
+                if (trimmedDelta !== '' && Number.isFinite(Number(trimmedDelta))) {
+                  deltaText = Number(trimmedDelta) + '%';
+                }
+              }
               [
                 ['[data-card-example-4-title]', data.title],
                 ['[data-card-example-4-value]', data.value],
