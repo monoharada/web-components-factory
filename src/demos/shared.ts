@@ -2,7 +2,7 @@
  * コンポーネントのデモマークアップ定義
  * autoloaderと組み合わせて使用される
  */
-import { createIconWithSlot } from '../../packages/utils/icons.js';
+import { createIconWithSlot, iconPaths } from '../../packages/utils/icons.js';
 
 /**
  * アクセシビリティ注釈の表示切り替えスクリプト
@@ -118,13 +118,15 @@ type ApiPanelWrapperOptions = Readonly<{
   body: string;
   imports?: readonly string[];
   footer?: string;
+  rootAttrs?: string;
 }>;
 
 function renderApiPanelWrapper(options: ApiPanelWrapperOptions): string {
   const imports = options.imports ?? [];
   const footer = options.footer ?? '';
+  const rootAttrs = options.rootAttrs ? ` ${options.rootAttrs}` : '';
   return `
-        <div class="wc-api-panel">
+        <div class="wc-api-panel"${rootAttrs}>
           <div class="wc-api-panel__header">
             <div class="wc-api-panel__title">Controls</div>
             <dads-button data-api-reset type="button" variant="outlined" size="small">Reset</dads-button>
@@ -183,6 +185,18 @@ const API_TABLE_CSS_VARS_NOTE = `
 `;
 
 const CHIP_LABEL_ICON_SVG = createIconWithSlot('dummy', 'icon', 24);
+
+const HEADING_ICON_PATH_OPTIONS = [
+  { label: 'dummy', value: iconPaths.dummy },
+  { label: 'search', value: iconPaths.search },
+  { label: 'checkmark', value: iconPaths.checkmark },
+  { label: 'edit', value: iconPaths.edit },
+  { label: 'download', value: iconPaths.download },
+  { label: 'duplicate', value: iconPaths.duplicate },
+  { label: 'delete', value: iconPaths.delete },
+  { label: 'caret', value: iconPaths.caret },
+  { label: 'externalLink', value: iconPaths.externalLink },
+] as const;
 
 function renderAllChipLabels(): string {
   const variants = ["text", "outline", "filled-outline", "fill"] as const;
@@ -413,6 +427,7 @@ export {
   API_TABLE_CSS_VARS_HEADER,
   API_TABLE_CSS_VARS_NOTE,
   CHIP_LABEL_ICON_SVG,
+  HEADING_ICON_PATH_OPTIONS,
   renderAllChipLabels,
   repeat,
   repeatLines,
