@@ -190,9 +190,8 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate [part="callout-layer"] {
         position: absolute;
-        inset: calc(var(--a11y-annotate-callout-gutter) * -1) 0
-          calc(var(--a11y-annotate-callout-gutter) * -1)
-          calc(var(--a11y-annotate-callout-gutter) * -1);
+        /* Expand all sides so callout tags can be placed outside the preview frame (including the right side). */
+        inset: calc(var(--a11y-annotate-callout-gutter) * -1);
         pointer-events: none;
       }
 
