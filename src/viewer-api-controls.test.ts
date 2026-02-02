@@ -79,6 +79,32 @@ describe('bindApiControls() usage (HTML) formatting', () => {
     expect(codeBlock.textContent).toBe(expectedFilled);
   });
 
+  it('strips internal attributes from template-based usage snippets', () => {
+    const root = createRoot(`
+      <div class="wc-api-panel">
+        <div class="wc-api-panel__body">
+          <dads-button data-api-target variant="solid">ボタン</dads-button>
+
+          <dads-code-block data-api-code>
+            <template>
+              <dads-button data-api-target data-has-chip data-test="ok" variant="solid">ボタン</dads-button>
+            </template>
+          </dads-code-block>
+        </div>
+      </div>
+    `);
+    const codeBlock = setupCodeBlock(root);
+    const panel = queryRequired<HTMLElement>(root, '.wc-api-panel');
+    panel.setAttribute('data-api-strip-attrs', 'data-test');
+
+    bindApiControls(panel);
+
+    expect(codeBlock.textContent).toBe('<dads-button variant="solid">ボタン</dads-button>');
+    expect(codeBlock.textContent).not.toContain('data-api-target');
+    expect(codeBlock.textContent).not.toContain('data-has-chip');
+    expect(codeBlock.textContent).not.toContain('data-test');
+  });
+
   it('reflects prop controls (boolean + textContent) into HTML usage', () => {
     const root = createRoot(`
       <div class="wc-api-panel">

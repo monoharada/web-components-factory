@@ -319,21 +319,21 @@ function parseStripAttrs(value: string | null): Set<string> {
 }
 
 function stripUsageAttrs(node: Node, stripAttrs: Set<string>): void {
-  if (!(node instanceof Element)) return;
+  if (node instanceof Element) {
+    // Usage snippet should not include internal wiring attributes.
+    for (const { name } of Array.from(node.attributes)) {
+      if (ALWAYS_STRIP_EXACT_ATTRS.has(name)) {
+        node.removeAttribute(name);
+        continue;
+      }
 
-  // Usage snippet should not include internal wiring attributes.
-  for (const { name } of Array.from(node.attributes)) {
-    if (ALWAYS_STRIP_EXACT_ATTRS.has(name)) {
-      node.removeAttribute(name);
-      continue;
+      if (STRIP_ATTR_PREFIXES.some((prefix) => name.startsWith(prefix))) {
+        node.removeAttribute(name);
+        continue;
+      }
+
+      if (stripAttrs.has(name)) node.removeAttribute(name);
     }
-
-    if (STRIP_ATTR_PREFIXES.some((prefix) => name.startsWith(prefix))) {
-      node.removeAttribute(name);
-      continue;
-    }
-
-    if (stripAttrs.has(name)) node.removeAttribute(name);
   }
 
   for (const child of Array.from(node.childNodes)) stripUsageAttrs(child, stripAttrs);
