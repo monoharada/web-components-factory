@@ -253,6 +253,18 @@ export class DadsInputText extends TypographyFormComponent {
   connectedCallback() {
     super.connectedCallback();
 
+    // Upgrade pre-defined properties.
+    // If someone sets `el.value = ...` before the custom element is defined,
+    // it becomes an own-property and shadows the accessor, breaking `this.value`.
+    // (This happens easily in demos that run before the autoloader imports.)
+    const hasOwnValue = Object.prototype.hasOwnProperty.call(this, 'value');
+    const ownValue = hasOwnValue ? (this as unknown as { value?: unknown }).value : undefined;
+    if (hasOwnValue) {
+      // Expose the class accessor again.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (this as any).value;
+    }
+
     // 非推奨属性のチェック（警告を出力）
     checkDeprecatedAttrs(this, DEPRECATED_FORM_ATTRS);
 
@@ -276,6 +288,11 @@ export class DadsInputText extends TypographyFormComponent {
     // 初期化
     this.#initInput();
     this.#initSlots();
+
+    // Re-apply the upgraded value after internal refs are ready.
+    if (hasOwnValue) {
+      this.value = ownValue == null ? '' : String(ownValue);
+    }
 
     // フォームバリデーションのセットアップ
     this.#formValidation = setupFormValidation(

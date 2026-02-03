@@ -1275,7 +1275,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000); --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: var(--color-text-secondary, #475569); /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color); /* シャドウ */ --a11y-annotate-shadow: var( --component-shadow, var( --elevation-2, 0 2px 12px 2px rgba(0, 0, 0, 0.1), 0 1px 6px 0 rgba(0, 0, 0, 0.3) ) ); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; --a11y-annotate-callout-gutter: var(--spacing-16, 64px); } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; inset: calc(var(--a11y-annotate-callout-gutter) * -1) 0 calc(var(--a11y-annotate-callout-gutter) * -1) calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: var(--border-radius-8, 0.5rem); background: transparent; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: var(--border-radius-8, 0.5rem); background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; flex: 1 1 auto; min-width: 0; font-weight: inherit; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { box-sizing: border-box; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; border: 2px solid var(--a11y-annotate-callout-color); background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: var(--border-radius-8, 0.5rem); border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
+              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000); --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: var(--color-text-secondary, #475569); /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color); /* シャドウ */ --a11y-annotate-shadow: var( --component-shadow, var( --elevation-2, 0 2px 12px 2px rgba(0, 0, 0, 0.1), 0 1px 6px 0 rgba(0, 0, 0, 0.3) ) ); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; --a11y-annotate-callout-gutter: var(--spacing-16, 64px); } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; /* Expand all sides so callout tags can be placed outside the preview frame (including the right side). */ inset: calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: var(--border-radius-8, 0.5rem); background: transparent; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: var(--border-radius-8, 0.5rem); background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; flex: 1 1 auto; min-width: 0; font-weight: inherit; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { box-sizing: border-box; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; border: 2px solid var(--a11y-annotate-callout-color); background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: var(--border-radius-8, 0.5rem); border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -7904,6 +7904,682 @@
           "declaration": {
             "name": "DadsFieldset",
             "module": "./packages/components/fieldset/fieldset.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/heading/heading.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "見出しコンポーネント",
+          "name": "DadsHeading",
+          "cssProperties": [
+            {
+              "description": "文字色",
+              "name": "--dads-heading-color"
+            },
+            {
+              "description": "見出しフォントサイズ",
+              "name": "--dads-heading-font-size"
+            },
+            {
+              "description": "行高",
+              "name": "--dads-heading-line-height"
+            },
+            {
+              "description": "文字間隔",
+              "name": "--dads-heading-letter-spacing"
+            },
+            {
+              "description": "ショルダーのフォントサイズ",
+              "name": "--dads-heading-shoulder-font-size"
+            },
+            {
+              "description": "アイコンサイズ",
+              "name": "--dads-heading-icon-size"
+            },
+            {
+              "description": "アイコンと本文の間隔",
+              "name": "--dads-heading-icon-gap"
+            },
+            {
+              "description": "アイコンのベースライン補正（vertical-align）",
+              "name": "--dads-heading-icon-vertical-align"
+            },
+            {
+              "description": "上マージン",
+              "name": "--dads-heading-margin-block-start"
+            },
+            {
+              "description": "チップ色",
+              "name": "--dads-heading-chip-color"
+            },
+            {
+              "description": "チップの幅",
+              "name": "--dads-heading-chip-width"
+            },
+            {
+              "description": "チップのインライン余白",
+              "name": "--dads-heading-chip-padding-inline"
+            },
+            {
+              "description": "チップの上位置",
+              "name": "--dads-heading-chip-top"
+            },
+            {
+              "description": "チップの下位置",
+              "name": "--dads-heading-chip-bottom"
+            },
+            {
+              "description": "ルール色",
+              "name": "--dads-heading-rule-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "左チップ（装飾）※ 注釈用アンカーも兼ねる",
+              "name": "chip"
+            },
+            {
+              "description": "見出しグループ",
+              "name": "group"
+            },
+            {
+              "description": "見出し本体",
+              "name": "heading"
+            },
+            {
+              "description": "アイコンラッパー",
+              "name": "icon"
+            },
+            {
+              "description": "ショルダーテキスト",
+              "name": "shoulder"
+            }
+          ],
+          "slots": [
+            {
+              "description": "見出しテキスト",
+              "name": "default"
+            },
+            {
+              "description": "先頭アイコン 挙動メモ: - `slot=\"shoulder\"` と `slot=\"icon\"` は同時に指定できます（shoulderは上、iconは見出し行の先頭）。 - slot が無い場合は該当パーツは表示されません（内部で `data-has-*` を付与して制御）。 - `chip` / `rule` は装飾（意匠）です。情報の唯一の手掛かりにしないでください。",
+              "name": "icon"
+            },
+            {
+              "description": "ショルダーテキスト",
+              "name": "shoulder"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "#cleanupSlots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#iconSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupSlots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#shoulderSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#slotObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLevel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncMargin",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncRule",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSize",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "a11yAnnotations",
+              "type": {
+                "text": "A11yAnnotations"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "{ version: 1, summary: '見出しコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ホスト要素に role=\"heading\" と aria-level を付与し、見出しのセマンティクスを提供します。', 'level 属性で見出しレベルを指定します（1-6）。', ], labels: [ 'ショルダーテキストは slot=\"shoulder\" に配置します。', '先頭アイコンは slot=\"icon\" に配置します。', ], states: [ 'chip 属性で左側の装飾バー（チップ）を表示できます。装飾は情報の唯一の手掛かりにしないよう注意します。', 'rule 属性で下線（ルール）を表示できます。', ], zoom: [ 'フォントサイズと余白は相対単位で設定され、ズーム時の可読性を維持します。', ], motion: ['アニメーションは使用しません。'], }, callouts: [ { id: 'heading', title: '見出し', label: 'heading', description: '本文のセマンティック見出しとして扱われます。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"heading\"]' }, }, { id: 'shoulder', title: 'ショルダー', label: 'slot=\"shoulder\"', description: '補助的な見出し（カテゴリなど）を提示します。', category: 'labels', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"shoulder\"]' }, }, { id: 'icon', title: '先頭アイコン', label: 'slot=\"icon\"', description: '見出しの補助記号。意味を持たない場合は aria-hidden の扱いに注意します。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"icon\"]' }, }, { id: 'chip', title: 'チップ（装飾）', label: 'chip', description: '左側の装飾バー。情報の唯一の手掛かりにしないよう注意します。', category: 'states', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"chip\"]' }, }, ], }"
+            },
+            {
+              "kind": "field",
+              "name": "chip",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "chipChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "_newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-heading', template: html` <div part=\"group\"> <span part=\"chip\" aria-hidden=\"true\"></span> <span part=\"shoulder\" id=\"shoulder\"> <slot name=\"shoulder\"></slot> </span> <span part=\"heading\" id=\"heading\"> <span part=\"icon\" id=\"icon\"> <slot name=\"icon\"></slot> </span> <slot></slot> </span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), headingTokens, headingStyles, ], 'minimal'), attributes: [ PropertyAttr('level'), PropertyAttr('size'), PropertyAttr('margin'), PropertyAttr('rule'), BooleanAttr('chip'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "level",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "levelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "margin",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "marginChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rule",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ruleChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "sizeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "左チップ（装飾）表示",
+              "name": "chip"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "見出しレベル（1-6 or h1-h6）",
+              "name": "level"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "上マージン（none|top）",
+              "name": "margin"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "下線の太さ（8|6|4|2）",
+              "name": "rule"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "見出しサイズ（64|57|45|36|32|28|24|20|18|16）",
+              "name": "size"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-heading",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/heading/heading.ts",
+          "definitionPath": "./packages/components/heading/heading.ts",
+          "typeDefinitionPath": "./packages/components/heading/heading.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsHeading",
+          "declaration": {
+            "name": "DadsHeading",
+            "module": "packages/components/heading/heading.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/heading/heading.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/heading/heading.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-heading",
+          "declaration": {
+            "name": "DadsHeading",
+            "module": "./packages/components/heading/heading.ts"
           }
         }
       ]
@@ -21448,6 +22124,146 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/heading/heading-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultHeading",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "function",
+          "name": "defineHeading",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "Headingコンポーネントを定義"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-heading`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultHeading",
+          "declaration": {
+            "name": "defineDefaultHeading",
+            "module": "packages/components/heading/heading-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineHeading",
+          "declaration": {
+            "name": "defineHeading",
+            "module": "packages/components/heading/heading-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/heading/heading-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "headingStyles",
+          "default": "css` :host { display: block; color: var(--dads-heading-color); font-family: var(--dads-heading-font-family); font-weight: var(--dads-heading-font-weight); font-size: var(--dads-heading-font-size); line-height: var(--dads-heading-line-height); letter-spacing: var(--dads-heading-letter-spacing); margin: 0; } [part='group'] { display: flex; flex-direction: column; align-items: flex-start; margin: 0; } /* * margin=\"top\" は「見出しの前の余白」。 * ホスト要素の margin は外部CSS（例: *{margin:0}）で潰れる可能性があるため、 * Shadow DOM 内の group に margin を付けて、外部の影響を受けにくくする。 */ :host([margin='top']) [part='group'] { margin-block-start: var(--dads-heading-margin-block-start); } [part='shoulder'] { margin: 0; font-weight: var(--dads-heading-font-weight); font-size: var(--dads-heading-shoulder-font-size); line-height: var(--dads-heading-shoulder-line-height); letter-spacing: var(--dads-heading-shoulder-letter-spacing); } [part='heading'] { margin: 0; font: inherit; display: inline; } [part='icon'] { /* * The icon wrapper participates in inline layout next to the heading text. * Apply vertical-align to the wrapper (not the slotted SVG) so baseline alignment * actually affects the icon's position. */ display: inline-flex; align-items: center; line-height: 0; margin-inline-end: var(--dads-heading-icon-gap); vertical-align: var(--dads-heading-icon-vertical-align); } :host(:not([data-has-icon])) [part='icon'] { display: none; } :host(:not([data-has-shoulder])) [part='shoulder'] { display: none; } :host([data-has-chip]) [part='group'] { position: relative; padding-inline-start: var(--dads-heading-chip-padding-inline); } :host(:not([data-has-chip])) [part='chip'] { display: none; } /* a11y-annotate のアンカー用（擬似要素は対象にできないため） */ :host([data-has-chip]) [part='chip'] { position: absolute; top: var(--dads-heading-chip-top); bottom: var(--dads-heading-chip-bottom); left: 0; width: var(--dads-heading-chip-width); pointer-events: none; background: transparent; } :host([data-has-chip]) [part='group']::before { position: absolute; top: var(--dads-heading-chip-top); bottom: var(--dads-heading-chip-bottom); left: 0; width: var(--dads-heading-chip-width); background-color: var(--dads-heading-chip-color); content: ''; } /* * Shoulderがある場合、chipの上インセットは DADS の式に合わせて補正する。 * - top = (shoulder-size * (line-height - 1)) / 2 */ :host([data-has-chip][data-has-shoulder]) [part='chip'], :host([data-has-chip][data-has-shoulder]) [part='group']::before { top: calc( (var(--dads-heading-shoulder-font-size) * (var(--dads-heading-shoulder-line-height) - 1)) / 2 ); } @media (forced-colors: active) { :host([data-has-chip]) [part='group']::before { background-color: CanvasText; } } :host([rule]) { border-bottom: solid var(--dads-heading-rule-color); border-bottom-width: var(--dads-heading-rule-width); padding-block-end: var(--dads-heading-rule-padding); } ::slotted([slot='icon']), ::slotted(svg) { display: block; width: var(--dads-heading-icon-size); height: var(--dads-heading-icon-size); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "headingStyles",
+          "declaration": {
+            "name": "headingStyles",
+            "module": "packages/components/heading/heading-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/heading/heading-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "headingTokens",
+          "default": "css` ${headingSemanticTokensText} ${headingLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "headingTokens",
+          "declaration": {
+            "name": "headingTokens",
+            "module": "packages/components/heading/heading-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/heading/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/heading/heading.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultHeading",
+          "declaration": {
+            "name": "defineDefaultHeading",
+            "module": "./heading-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineHeading",
+          "declaration": {
+            "name": "defineHeading",
+            "module": "./heading-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/index.ts",
       "declarations": [],
       "exports": [
@@ -21617,6 +22433,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/search-box/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/heading/index.js"
           }
         },
         {

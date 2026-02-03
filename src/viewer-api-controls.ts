@@ -11,6 +11,11 @@ type ControlDescriptor = Readonly<{
 type Cleanup = () => void;
 
 const CONTROL_EVENTS = ['dads-change', 'dads-input', 'change', 'input'] as const;
+const CONTROL_KIND_DATA_ATTRS: readonly [ControlKind, string][] = [
+  ['attr', 'data-api-attr'],
+  ['prop', 'data-api-prop'],
+  ['css-var', 'data-api-css-var'],
+] as const;
 
 type CodeBlockLike = HTMLElement & {
   setCode?: (code: string) => void;
@@ -26,6 +31,10 @@ const CODE_BLOCK_DISCLOSURE_ATTR = 'data-api-code-disclosure';
 const CODE_BLOCK_COLLAPSE_ATTR = 'data-api-code-collapse';
 const CODE_BLOCK_COLLAPSE_OPT_OUT_VALUE = 'off';
 const CODE_BLOCK_DISCLOSURE_SUMMARY_TEXT = 'コードを表示';
+const STRIP_ATTRS_ATTR = 'data-api-strip-attrs';
+const STRIP_ATTR_PREFIXES = ['data-api-', 'data-has-'] as const;
+const ALWAYS_STRIP_ATTRS = new Set<string>(['data-sa-component']);
+const ALWAYS_STRIP_EXACT_ATTRS = new Set<string>(['data-api-target']);
 
 interface CustomEventDetail {
   checked?: boolean;
@@ -295,12 +304,59 @@ function createUsageModel(block: Element, liveTarget: Element): UsageModel | nul
   return { fragment, target: usageTarget };
 }
 
-function syncUsageCode(block: CodeBlockLike | null, usage: UsageModel | null, liveTarget: Element): void {
+function parseStripAttrs(value: string | null): Set<string> {
+  const out = new Set<string>();
+  // Always strip internal instrumentation from snippets unless explicitly needed.
+  for (const name of ALWAYS_STRIP_ATTRS) out.add(name);
+
+  if (!value) return out;
+  for (const raw of value.split(',')) {
+    const name = raw.trim();
+    if (!name) continue;
+    out.add(name);
+  }
+  return out;
+}
+
+function stripUsageAttrs(node: Node, stripAttrs: Set<string>): void {
+  if (node instanceof Element) {
+    // Usage snippet should not include internal wiring attributes.
+    for (const { name } of Array.from(node.attributes)) {
+      if (ALWAYS_STRIP_EXACT_ATTRS.has(name)) {
+        node.removeAttribute(name);
+        continue;
+      }
+
+      if (STRIP_ATTR_PREFIXES.some((prefix) => name.startsWith(prefix))) {
+        node.removeAttribute(name);
+        continue;
+      }
+
+      if (stripAttrs.has(name)) node.removeAttribute(name);
+    }
+  }
+
+  for (const child of Array.from(node.childNodes)) stripUsageAttrs(child, stripAttrs);
+}
+
+function syncUsageCode(
+  block: CodeBlockLike | null,
+  usage: UsageModel | null,
+  liveTarget: Element,
+  stripAttrs: Set<string>
+): void {
   if (!block) return;
 
-  const snippet = usage
-    ? formatHtmlNodes(Array.from(usage.fragment.childNodes))
-    : formatHtmlNodes([liveTarget.cloneNode(true)]);
+  const snippet = (() => {
+    if (usage) {
+      stripUsageAttrs(usage.fragment, stripAttrs);
+      return formatHtmlNodes(Array.from(usage.fragment.childNodes));
+    }
+
+    const clone = liveTarget.cloneNode(true);
+    stripUsageAttrs(clone, stripAttrs);
+    return formatHtmlNodes([clone]);
+  })();
 
   const shouldCollapse =
     !isCodeBlockCollapseOptedOut(block) &&
@@ -387,16 +443,11 @@ export function bindApiControls(root: Element): Cleanup {
 
   const block = resolveCodeBlock(root);
   const usage = block ? createUsageModel(block, target) : null;
+  const stripAttrs = parseStripAttrs(root.getAttribute(STRIP_ATTRS_ATTR));
 
   const controls: ControlDescriptor[] = [];
 
-  const CONTROL_KINDS: readonly [ControlKind, string][] = [
-    ['attr', 'data-api-attr'],
-    ['prop', 'data-api-prop'],
-    ['css-var', 'data-api-css-var'],
-  ];
-
-  for (const [kind, dataAttr] of CONTROL_KINDS) {
+  for (const [kind, dataAttr] of CONTROL_KIND_DATA_ATTRS) {
     for (const el of root.querySelectorAll(`[${dataAttr}]`)) {
       const name = el.getAttribute(dataAttr);
       if (!name) continue;
@@ -412,6 +463,16 @@ export function bindApiControls(root: Element): Cleanup {
 
   const cleanups: Cleanup[] = [];
 
+  let syncScheduled = false;
+  const scheduleSyncUsage = (): void => {
+    if (syncScheduled) return;
+    syncScheduled = true;
+    queueMicrotask(() => {
+      syncScheduled = false;
+      syncUsageCode(block, usage, target, stripAttrs);
+    });
+  };
+
   const applyControlValue = (desc: ControlDescriptor, value: string | boolean): void => {
     const effectiveTarget = resolveEffectiveTarget(root, target, desc);
     if (effectiveTarget) applyToTarget(effectiveTarget, desc, value);
@@ -425,7 +486,8 @@ export function bindApiControls(root: Element): Cleanup {
     return (event: Event): void => {
       const value = readControlValue(desc.el, event);
       applyControlValue(desc, value);
-      syncUsageCode(block, usage, target);
+      // Control interactions should update Usage synchronously.
+      syncUsageCode(block, usage, target, stripAttrs);
     };
   };
 
@@ -450,13 +512,18 @@ export function bindApiControls(root: Element): Cleanup {
         setControlValue(desc.el, nextValue);
         applyControlValue(desc, nextValue);
       }
-      syncUsageCode(block, usage, target);
+      syncUsageCode(block, usage, target, stripAttrs);
     };
     el.addEventListener('click', onClick);
     cleanups.push(() => el.removeEventListener('click', onClick));
   }
 
-  syncUsageCode(block, usage, target);
+  // Keep Usage in sync even when the demo mutates the target DOM (e.g. slot nodes).
+  const mo = new MutationObserver(() => scheduleSyncUsage());
+  mo.observe(target, { attributes: true, childList: true, subtree: true });
+  cleanups.push(() => mo.disconnect());
+
+  syncUsageCode(block, usage, target, stripAttrs);
 
   return () => {
     for (const cleanup of cleanups) cleanup();

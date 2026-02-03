@@ -18,7 +18,11 @@ import {
   repeatLines,
 } from './shared.js';
 
+import { headingDemo } from './heading.js';
+
 export const demos = {
+
+  heading: headingDemo,
 
   blockquote: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">

@@ -4,6 +4,52 @@
 
 ---
 
+## [2026-01-31] 見出し（Heading）のチップ/アイコンは相対単位（em/lh）でサイズ追従させる（トークン増殖を防ぐ）
+**タグ**: #heading #dads #figma #tokens #css #webcomponents #testing
+
+### 概要
+見出しコンポーネントの chip / icon は固定pxで個別トークンを増やすのではなく、**グローバルトークンを代入**し、`size` 差分は `:host([size])` の **変数再代入**で表現する。chip幅など小数pxは **spacingスケールへ丸め**、px literal を避ける。
+
+### 詳細
+- **アイコンサイズ**: DADS HTML 実装は `width/height: 1.25em` + `vertical-align: -0.25em` で追従させる。
+- **チップ幅/余白**: Figmaで小数pxが出るため、`--spacing-*` に丸めて `:host([size='xx']) { --heading-chip-width: var(--spacing-?); }` の形で管理する（px literal は使わない）。
+- **高さは `top/bottom` で制御**: `height` 固定ではなく `top` / `bottom` で高さを決める（chipは情報ではなく意匠）。
+- **lh（line-height）対応**: `@supports (top: 1lh)` が使える環境では `0.5lh` を使って上下インセットをより安定させる。
+- **ショルダー有り時の top 補正**: `top = (shoulder-size * (line-height - 1)) / 2` の式で chip の上インセットを補正すると DADS と整合しやすい。
+- **チップは group につける**: `heading` パートではなく `group` パートに紐づけると、ショルダー＋見出し全体に沿った配置になる。
+- **トークン設計**: px→rem の `calc(64 / 16 * 1rem)` は避け、`--font-size-*` / `--spacing-*` の **グローバルトークンを代入**する。size差分は `:host([size='xx']) { --heading-*: ... }` の **変数再代入**で表現する。
+  - 例外: `calc(var(--spacing-10) + var(--spacing-1-5))` のような **グローバルトークン同士の加算** は許容する（設計意図が明確で、ハードコードに戻らないため）。
+  - chip幅などで小数pxが出る場合は **最も近い spacing トークンへ丸める**（px literal を許容しない運用）。
+- **テスト方針**: happy-dom では CSS 変数の実値が取れないため、`adoptedStyleSheets` の `cssText` からルール存在を検証する。
+- **marginは「上余白」に寄せる**: DADSの作例（Figma）で示されるのは「見出しの前の余白（上方向）」だったため、`margin="top"` を「上方向の余白」のAPIとして整理した。
+  - 実装: ホストmarginではなく Shadow DOM 内（`[part="group"]`）の `margin-block-start` で表現する（外部CSSが Shadow DOM に侵入できないため安定）。
+
+## [2026-02-01] Heading の API 設計: 構造（slot）と装飾（attr）の分離
+**タグ**: #heading #api #slots #attrs #a11y #webcomponents #ux
+
+### 概要
+`type` のようなプリセット属性で見た目を切り替える設計は、Usage（HTML）例の生成や slot の実在と噛み合わず、誤解を生みやすい。代わりに、**情報としての構造は slot の有無**、**純粋な装飾は attribute で明示**という分離が合理的だった。
+
+### 詳細
+- **`type` は公開APIから削除**: `<dads-heading type="...">` ではなく、slot/attr で表現する。
+- **構造は slot**: `slot="shoulder"`（ショルダー）と `slot="icon"`（先頭アイコン）は、マークアップとして与えたときに表示されるのが自然。
+- **装飾は attr**: `chip`（左チップ）や `rule`（下線）は意味を持たないため、属性で ON/OFF を明示できると管理しやすい。
+- **注釈（a11y-annotate）の制約**: 擬似要素はターゲットにできないため、チップは `[part="chip"]` の実体を Shadow DOM に置き、注釈アンカーとして使う。
+- **Usage（HTML）生成の落とし穴**: 実DOMからクローンすると、コンポーネントが自動付与する `role` / `aria-*` / 内部 `data-*` まで出力に混ざる。
+  - 対策: Usage生成側で内部属性をストリップできる仕組み（例: `data-api-strip-attrs`）と、ターゲットDOM変化（slot追加/削除）に追従する仕組み（MutationObserver）が必要。
+
+## [2026-02-01] Custom Element の value は「アップグレード前代入」で壊れる（property shadowing）
+**タグ**: #webcomponents #custom-elements #forms #demos #testing #gotcha
+
+### 概要
+Custom Element に対して **定義（customElements.define）前** に `el.value = ...` を行うと、その値が「インスタンスの own-property」として固定され、クラスの `get/set value()` アクセサを **永続的にシャドーイング** してしまう。結果として `this.value` が古い値を返し続け、イベントdetailなどが更新されなくなる。
+
+### 対策
+- **コンポーネント側で upgrade する**（推奨）:
+  - `connectedCallback()` で `hasOwnProperty('value')` を検出して `delete this.value` → 内部input参照が取れた後に setter 経由で復元する。
+- **デモ/利用側での予防**:
+  - カスタム要素がアップグレードされる前は `.value` を直接触らず、`value` 属性を設定する（または `customElements.whenDefined()` 後に `.value` を使う）。
+
 ## [2026-01-20] Menu List / Menu List Box のFigma再現メモ（divider/hr・余白・ダミーアイコン・スクロールバー）
 **タグ**: #css #webcomponents #dads #figma
 
