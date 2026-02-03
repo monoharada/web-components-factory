@@ -6,6 +6,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   createTestElement,
   cleanupTestElement,
+  getDefinitionStyles,
   getShadowContent,
   waitForCustomElement,
 } from '../../../tests/setup';
@@ -44,6 +45,15 @@ describe('DadsDatePicker - 基本レンダリング', () => {
     expect(year?.tagName.toLowerCase()).toBe('input');
     expect(month?.tagName.toLowerCase()).toBe('input');
     expect(day?.tagName.toLowerCase()).toBe('input');
+  });
+});
+
+describe('DadsDatePicker - tokens', () => {
+  it('spacing tokensがスタイルに含まれる', async () => {
+    const { DadsDatePicker } = await import('./date-picker.js');
+    const { applySpacingTokens } = await import('../../styles/spacing-tokens.js');
+
+    expect(getDefinitionStyles(DadsDatePicker.definition)).toContain(applySpacingTokens());
   });
 });
 

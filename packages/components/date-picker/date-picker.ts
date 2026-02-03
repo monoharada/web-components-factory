@@ -7,6 +7,7 @@
 import { html, BooleanAttr, PropertyAttr } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { withReset } from '../../styles/reset-css.js';
 import { datePickerStyles } from './date-picker-styles.js';
 import { setDefaultAttributes, updateErrorFallback } from '../../utils/form-component-helpers.js';
@@ -271,7 +272,7 @@ export class DadsDatePicker extends TypographyFormComponent {
 
       <div part="visually-hidden" id="describedby-proxies"></div>
     `,
-    styles: withReset([applyDADSTokens(), datePickerStyles], 'minimal'),
+    styles: withReset([applyDADSTokens(), applySpacingTokens(), datePickerStyles], 'minimal'),
     attributes: [
       { attribute: 'data-type' },
       PropertyAttr('size'),

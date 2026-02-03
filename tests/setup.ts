@@ -140,6 +140,7 @@ export {
   getShadowElement,
   getShadowContent,
   getShadowText,
+  getDefinitionStyles,
   cleanup,
   cleanupTestElement,
   waitForComponent,

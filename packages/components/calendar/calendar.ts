@@ -7,6 +7,7 @@
 import { html } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { withReset } from '../../styles/reset-css.js';
 import { calendarStyles } from './calendar-styles.js';
 import type { A11yAnnotations, A11yElementRef } from '../../utils/a11y-annotations.js';
@@ -335,7 +336,7 @@ export class DadsCalendar extends TypographyWebComponent {
         <div part="visually-hidden" id="range-live" aria-live="polite"></div>
       </div>
     `,
-    styles: withReset([applyDADSTokens(), calendarStyles], 'minimal'),
+    styles: withReset([applyDADSTokens(), applySpacingTokens(), calendarStyles], 'minimal'),
     attributes: [
       { attribute: 'min-date' },
       { attribute: 'max-date' },
