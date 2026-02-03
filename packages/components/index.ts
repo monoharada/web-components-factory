@@ -11,6 +11,9 @@ export * from './annotate/index.js';
 // ボタン
 export * from './button/index.js';
 
+// カード
+export * from './card/index.js';
+
 // インプットテキスト
 export * from './input-text/index.js';
 

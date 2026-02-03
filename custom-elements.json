@@ -206,15 +206,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-accordion-details', template: html` <div part=\"container\" role=\"group\"> <slot></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), accordionTokens, css` :host { display: block; width: 100%; } ` ], 'minimal'), attributes: [ BooleanAttr('allow-multiple'), PropertyAttr('animation'), BooleanAttr('respect-motion-preference') ] }"
+              "default": "{ name: 'dads-accordion-details', template: html` <div part=\"container\" role=\"group\"> <slot></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), accordionTokens, css` :host { display: block; width: 100%; } ` ], 'minimal'), attributes: [ BooleanAttr('allow-multiple'), PropertyAttr('animation'), BooleanAttr('respect-motion-preference') ] }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -563,15 +563,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-accordion-item-details', template: html` <details part=\"details\"> <summary part=\"summary\"> <span part=\"icon\" aria-hidden=\"true\"> ${createIconSVG('arrowDown', 'icon-svg', 20)} </span> <span part=\"header\"> <slot name=\"header\"></slot> </span> </summary> <div part=\"content\"> <div part=\"content-inner\"> <slot name=\"content\"></slot> <a part=\"return-button\" href=\"#\" > ${createIconSVG('returnArrow', 'return-icon', 24)} <span part=\"return-text\">先頭に戻る</span> </a> </div> </div> </details> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), accordionTokens, accordionItemStyles, applyDADSFocusStyles(), ], 'full'), attributes: [ BooleanAttr('expanded'), BooleanAttr('disabled'), PropertyAttr('icon-position') ] }"
+              "default": "{ name: 'dads-accordion-item-details', template: html` <details part=\"details\"> <summary part=\"summary\"> <span part=\"icon\" aria-hidden=\"true\"> ${createIconSVG('arrowDown', 'icon-svg', 20)} </span> <span part=\"header\"> <slot name=\"header\"></slot> </span> </summary> <div part=\"content\"> <div part=\"content-inner\"> <slot name=\"content\"></slot> <a part=\"return-button\" href=\"#\" > ${createIconSVG('returnArrow', 'return-icon', 24)} <span part=\"return-text\">先頭に戻る</span> </a> </div> </div> </details> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), accordionTokens, accordionItemStyles, applyDADSFocusStyles(), ], 'full'), attributes: [ BooleanAttr('expanded'), BooleanAttr('disabled'), PropertyAttr('icon-position') ] }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -1275,7 +1275,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color: rgba(220, 38, 38, 0.95); --a11y-annotate-callout-color-solid: rgb(220, 38, 38); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: #334155; /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: #e2e8f0; /* シャドウ */ --a11y-annotate-shadow: 0 10px 30px rgba(2, 6, 23, 0.25); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: 12px; background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; --a11y-annotate-callout-gutter: 64px; } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; /* Expand all sides so callout tags can be placed outside the preview frame (including the right side). */ inset: calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: 12px; background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: 10px; background: transparent; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: 10px; background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; flex: 1 1 auto; min-width: 0; font-weight: 700; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-text-primary); color: var(--a11y-annotate-background); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: 10px; border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
+              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000); --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: var(--color-text-secondary, #475569); /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color); /* シャドウ */ --a11y-annotate-shadow: var( --component-shadow, var( --elevation-2, 0 2px 12px 2px rgba(0, 0, 0, 0.1), 0 1px 6px 0 rgba(0, 0, 0, 0.3) ) ); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; --a11y-annotate-callout-gutter: var(--spacing-16, 64px); } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; inset: calc(var(--a11y-annotate-callout-gutter) * -1) 0 calc(var(--a11y-annotate-callout-gutter) * -1) calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: var(--border-radius-8, 0.5rem); background: transparent; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: var(--border-radius-8, 0.5rem); background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; flex: 1 1 auto; min-width: 0; font-weight: inherit; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { box-sizing: border-box; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; border: 2px solid var(--a11y-annotate-callout-color); background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: var(--border-radius-8, 0.5rem); border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -1816,15 +1816,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-blockquote', template: html` <blockquote part=\"blockquote\"> <slot name=\"lead\" id=\"lead-slot\" part=\"lead\"></slot> <slot id=\"body-slot\" part=\"body\"></slot> <slot name=\"close\" id=\"close-slot\" part=\"close\"></slot> </blockquote> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), blockquoteTokens, blockquoteStyles, ], 'full'), attributes: [ PropertyAttr('cite'), ], shadowOptions: { mode: 'open' as const, slotAssignment: 'manual' as const }, }"
+              "default": "{ name: 'dads-blockquote', template: html` <blockquote part=\"blockquote\"> <slot name=\"lead\" id=\"lead-slot\" part=\"lead\"></slot> <slot id=\"body-slot\" part=\"body\"></slot> <slot name=\"close\" id=\"close-slot\" part=\"close\"></slot> </blockquote> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), blockquoteTokens, blockquoteStyles, ], 'full'), attributes: [ PropertyAttr('cite'), ], shadowOptions: { mode: 'open' as const, slotAssignment: 'manual' as const }, }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -3260,15 +3260,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-calendar', template: html` <div part=\"visually-hidden\"> <h2 id=\"calendar-heading\" aria-live=\"polite\"></h2> </div> <div part=\"controls\"> <span part=\"select\"> <span part=\"select-control\"> <select part=\"year-select\" id=\"year-select\" data-size=\"sm\" aria-label=\"年\" ></select> <svg part=\"select-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\"/> </svg> </span> </span> <div part=\"navigation\"> <dads-button part=\"nav-button prev-month-button\" id=\"prev-month-button\" type=\"button\" variant=\"secondary\" size=\"small\" aria-label=\"前の月\" > <svg slot=\"icon-start\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" role=\"img\" aria-hidden=\"true\"> <path d=\"m5.27 8 5.33-5.33-.93-.94L3.4 8l6.27 6.27.93-.94L5.27 8Z\" fill=\"currentcolor\" /> </svg> </dads-button> <p part=\"current-month\" id=\"current-month\"></p> <dads-button part=\"nav-button next-month-button\" id=\"next-month-button\" type=\"button\" variant=\"secondary\" size=\"small\" aria-label=\"次の月\" > <svg slot=\"icon-start\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" role=\"img\" aria-hidden=\"true\"> <path d=\"m6 1.73-.93.94L10.4 8l-5.33 5.33.93.94L12.27 8 6 1.73Z\" fill=\"currentcolor\" /> </svg> </dads-button> </div> </div> <table part=\"table\" id=\"calendar-table\" role=\"grid\"> <thead> <tr> <th part=\"header-cell\" scope=\"col\">日</th> <th part=\"header-cell\" scope=\"col\">月</th> <th part=\"header-cell\" scope=\"col\">火</th> <th part=\"header-cell\" scope=\"col\">水</th> <th part=\"header-cell\" scope=\"col\">木</th> <th part=\"header-cell\" scope=\"col\">金</th> <th part=\"header-cell\" scope=\"col\">土</th> </tr> </thead> <tbody id=\"calendar-tbody\"></tbody> </table> <template id=\"cell-template\"> <td part=\"data-cell\" role=\"gridcell\"> <button part=\"date\" data-js-date-button></button> </td> </template> <div part=\"footer\"> <dads-button part=\"footer-button\" id=\"delete-button\" type=\"button\" variant=\"tertiary\" size=\"small\">削除</dads-button> <dads-button part=\"footer-button\" id=\"today-button\" type=\"button\" variant=\"secondary\" size=\"small\">今日</dads-button> </div> <div part=\"range\" id=\"range\" hidden> <p part=\"support-text\" id=\"range-support\"></p> <p part=\"range-item\"> <span part=\"range-label\">開始日:</span> <span part=\"range-value\" id=\"range-start\">未選択</span> </p> <p part=\"range-item\"> <span part=\"range-label\">終了日:</span> <span part=\"range-value\" id=\"range-end\">未選択</span> </p> <div part=\"visually-hidden\" id=\"range-live\" aria-live=\"polite\"></div> </div> `, styles: withReset([applyDADSTokens(), calendarStyles], 'minimal'), attributes: [ { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'range' }, ], }"
+              "default": "{ name: 'dads-calendar', template: html` <div part=\"visually-hidden\"> <h2 id=\"calendar-heading\" aria-live=\"polite\"></h2> </div> <div part=\"controls\"> <span part=\"select\"> <span part=\"select-control\"> <select part=\"year-select\" id=\"year-select\" data-size=\"sm\" aria-label=\"年\" ></select> <svg part=\"select-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\"/> </svg> </span> </span> <div part=\"navigation\"> <dads-button part=\"nav-button prev-month-button\" id=\"prev-month-button\" type=\"button\" variant=\"secondary\" size=\"small\" aria-label=\"前の月\" > <svg slot=\"icon-start\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" role=\"img\" aria-hidden=\"true\"> <path d=\"m5.27 8 5.33-5.33-.93-.94L3.4 8l6.27 6.27.93-.94L5.27 8Z\" fill=\"currentcolor\" /> </svg> </dads-button> <p part=\"current-month\" id=\"current-month\"></p> <dads-button part=\"nav-button next-month-button\" id=\"next-month-button\" type=\"button\" variant=\"secondary\" size=\"small\" aria-label=\"次の月\" > <svg slot=\"icon-start\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" role=\"img\" aria-hidden=\"true\"> <path d=\"m6 1.73-.93.94L10.4 8l-5.33 5.33.93.94L12.27 8 6 1.73Z\" fill=\"currentcolor\" /> </svg> </dads-button> </div> </div> <table part=\"table\" id=\"calendar-table\" role=\"grid\"> <thead> <tr> <th part=\"header-cell\" scope=\"col\">日</th> <th part=\"header-cell\" scope=\"col\">月</th> <th part=\"header-cell\" scope=\"col\">火</th> <th part=\"header-cell\" scope=\"col\">水</th> <th part=\"header-cell\" scope=\"col\">木</th> <th part=\"header-cell\" scope=\"col\">金</th> <th part=\"header-cell\" scope=\"col\">土</th> </tr> </thead> <tbody id=\"calendar-tbody\"></tbody> </table> <template id=\"cell-template\"> <td part=\"data-cell\" role=\"gridcell\"> <button part=\"date\" data-js-date-button></button> </td> </template> <div part=\"footer\"> <dads-button part=\"footer-button\" id=\"delete-button\" type=\"button\" variant=\"tertiary\" size=\"small\">削除</dads-button> <dads-button part=\"footer-button\" id=\"today-button\" type=\"button\" variant=\"secondary\" size=\"small\">今日</dads-button> </div> <div part=\"range\" id=\"range\" hidden> <p part=\"support-text\" id=\"range-support\"></p> <p part=\"range-item\"> <span part=\"range-label\">開始日:</span> <span part=\"range-value\" id=\"range-start\">未選択</span> </p> <p part=\"range-item\"> <span part=\"range-label\">終了日:</span> <span part=\"range-value\" id=\"range-end\">未選択</span> </p> <div part=\"visually-hidden\" id=\"range-live\" aria-live=\"polite\"></div> </div> `, styles: withReset([applyDADSTokens(), calendarStyles], 'minimal'), attributes: [ { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'range' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -3465,6 +3465,599 @@
           "declaration": {
             "name": "DadsCalendar",
             "module": "./packages/components/calendar/calendar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/card/card.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Cardコンポーネント\n\nDADS「カード」の構造（コンテナ/メイン/イメージ/サブ）を Web Components として提供します。\n最小限のShadow DOM構造（3セクション）で、利用者がLight DOMで自由にマークアップできます。\n\n## 設計思想: Token-Driven Customization\n\nカードは視覚的バリエーションが多いレイアウトコンテナのため、`variant`属性は提供しません。\n代わりにCSSトークンと`::part()`による柔軟なカスタマイズを推奨します。\n\n```css\n// \"Elevated\" スタイルの例\ndads-card.elevated {\n  --dads-card-border-width: 0;\n  box-shadow: var(--elevation-4);\n}\n\n// \"Bordered\" スタイルの例\ndads-card.bordered {\n  --dads-card-border-width: 1px;\n  --dads-card-border-color: var(--color-neutral-solid-gray-420);\n}\n```\n\n## クリック委譲（カード面クリック）\n\n- 主リンク要素に `data-dads-card-primary` を付与します\n- さらに `data-dads-card-delegate` を付与すると、カード面クリック（pointer）を主リンクへ委譲します\n- キーボード操作は「主リンクへフォーカスしてEnter」で成立するため、カード自体はフォーカス可能にしません\n\n## 既知の課題と対処法\n\n### overflow: clip問題\n`::part(base)`の`overflow: clip`がfocus ringやbox-shadowをクリップします。\n対処: `dads-card::part(base) { overflow: visible; }` でオーバーライド\n\n### ::slotted() margin問題\nShadow DOM内の`::slotted(*) { margin: 0 }`が外部marginを上書きします。\n対処: Light DOM要素では`margin`の代わりに`padding`を使用してください。",
+          "name": "DadsCard",
+          "cssProperties": [
+            {
+              "description": "背景色",
+              "name": "--dads-card-background"
+            },
+            {
+              "description": "外周色",
+              "name": "--dads-card-border-color"
+            },
+            {
+              "description": "外周の線幅",
+              "name": "--dads-card-border-width"
+            },
+            {
+              "description": "角丸",
+              "name": "--dads-card-border-radius"
+            },
+            {
+              "description": "エリア間の区切り線色（media/sub の境界）",
+              "name": "--dads-card-divider-color"
+            },
+            {
+              "description": "エリア間の区切り線幅",
+              "name": "--dads-card-divider-width"
+            },
+            {
+              "description": "layout=\"horizontal\" のメディア列幅",
+              "name": "--dads-card-media-width"
+            },
+            {
+              "description": "メディア領域の aspect-ratio",
+              "name": "--dads-card-media-aspect-ratio"
+            },
+            {
+              "description": "パディング（上下）",
+              "name": "--dads-card-padding-block"
+            },
+            {
+              "description": "パディング（左右）",
+              "name": "--dads-card-padding-inline"
+            },
+            {
+              "description": "エリア内の余白",
+              "name": "--dads-card-gap"
+            },
+            {
+              "description": "本文/ラベルなどの文字色",
+              "name": "--dads-card-color"
+            },
+            {
+              "description": "タイトル（h1-h6）の文字色",
+              "name": "--dads-card-title-color"
+            },
+            {
+              "description": "タイトルのフォントサイズ",
+              "name": "--dads-card-title-font-size"
+            },
+            {
+              "description": "タイトルのフォントウェイト",
+              "name": "--dads-card-title-font-weight"
+            },
+            {
+              "description": "タイトルの行高",
+              "name": "--dads-card-title-line-height"
+            },
+            {
+              "description": "タイトルの字間",
+              "name": "--dads-card-title-letter-spacing"
+            },
+            {
+              "description": "コンテンツ（p）の文字色",
+              "name": "--dads-card-content-color"
+            },
+            {
+              "description": "コンテンツのフォントサイズ",
+              "name": "--dads-card-content-font-size"
+            },
+            {
+              "description": "コンテンツのフォントウェイト",
+              "name": "--dads-card-content-font-weight"
+            },
+            {
+              "description": "コンテンツの行高",
+              "name": "--dads-card-content-line-height"
+            },
+            {
+              "description": "コンテンツの字間",
+              "name": "--dads-card-content-letter-spacing"
+            },
+            {
+              "description": "フォーカスアウトライン色（委譲ON時）",
+              "name": "--dads-card-focus-outline-color"
+            },
+            {
+              "description": "フォーカスアウトライン幅（委譲ON時）",
+              "name": "--dads-card-focus-outline-width"
+            },
+            {
+              "description": "フォーカスアウトラインのオフセット（委譲ON時）",
+              "name": "--dads-card-focus-outline-offset"
+            },
+            {
+              "description": "フォーカスリング色（委譲ON時）",
+              "name": "--dads-card-focus-ring-color"
+            },
+            {
+              "description": "フォーカスリング幅（委譲ON時）",
+              "name": "--dads-card-focus-ring-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "コンテナ（overflow制御に使用）",
+              "name": "base"
+            },
+            {
+              "description": "メインエリア（padding・背景のカスタマイズ）",
+              "name": "main"
+            },
+            {
+              "description": "イメージエリア（背景・ボーダー等のカスタマイズ）",
+              "name": "media"
+            },
+            {
+              "description": "サブエリア（アクション領域のカスタマイズ）",
+              "name": "sub"
+            }
+          ],
+          "slots": [
+            {
+              "description": "メインコンテンツ（デフォルトスロット、h2/p等を自由にマークアップ）",
+              "name": ""
+            },
+            {
+              "description": "イメージエリア（任意）",
+              "name": "media"
+            },
+            {
+              "description": "サブエリア（任意）",
+              "name": "sub"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusOut",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerMove",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePointerUp",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isDelegateEnabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "description": "委譲モードが有効かどうかを判定"
+            },
+            {
+              "kind": "method",
+              "name": "#isSelectionInsideHost",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mainSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#media",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#mediaSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#mutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pointer",
+              "privacy": "private",
+              "type": {
+                "text": "PointerState"
+              },
+              "default": "{ id: null, startX: 0, startY: 0, moved: false }"
+            },
+            {
+              "kind": "field",
+              "name": "#primary",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sub",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#subSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAreasVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPrimary",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "a11yAnnotations",
+              "type": {
+                "text": "A11yAnnotations"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "{ version: 1, summary: 'カードコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'カードはコンテナ/メイン/イメージ/サブの領域を持つレイアウトコンポーネントです。', 'キーボード操作は、カード内のリンク（主リンク）へフォーカスして Enter で遷移します。', ], keyboard: [ 'カード自体はフォーカス可能にしません。', 'カード面クリック（pointer委譲）は data 属性で任意に有効化できます。', ], zoom: [ '余白やサイズは rem と CSS 変数で定義され、拡大時も読みやすさを維持します。', ], states: [ 'layout=\"horizontal\" で横並び（イメージ左・メイン右）にできます。', ], labels: [ 'デフォルトスロットにh2等の見出しや本文を配置します。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'container', title: 'カードコンテナ', label: 'container', description: '外周・背景を持つカードのコンテナです。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"base\"]' }, }, { id: 'media', title: 'イメージエリア', label: 'media', description: '画像や動画などのメディアを配置するエリアです（任意）。', category: 'semantics', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"media\"]' }, }, { id: 'main', title: 'メインエリア', label: 'main', description: 'タイトルや本文などの主要コンテンツを配置します。', category: 'semantics', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"main\"]' }, }, { id: 'sub', title: 'サブエリア', label: 'sub', description: '関連情報やボタンなどの補助要素を配置するエリアです（任意）。', category: 'semantics', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"sub\"]' }, }, ], }"
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-card', template: html` <article part=\"base\" id=\"base\"> <section part=\"media\" id=\"media\" hidden> <slot name=\"media\" id=\"media-slot\"></slot> </section> <section part=\"main\"> <slot id=\"main-slot\"></slot> </section> <section part=\"sub\" id=\"sub\" hidden> <slot name=\"sub\" id=\"sub-slot\"></slot> </section> </article> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), cardTokens, cardStyles, applyDADSFocusStyles(), ], 'minimal', ), attributes: [PropertyAttr('layout')], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "layout",
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "description": "レイアウト（デフォルト: vertical）"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-card",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/card/card.ts",
+          "definitionPath": "./packages/components/card/card.ts",
+          "typeDefinitionPath": "./packages/components/card/card.ts"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsCard",
+          "declaration": {
+            "name": "DadsCard",
+            "module": "packages/components/card/card.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/card/card.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/card/card.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-card",
+          "declaration": {
+            "name": "DadsCard",
+            "module": "./packages/components/card/card.ts"
           }
         }
       ]
@@ -4059,14 +4652,14 @@
                   }
                 }
               ],
-              "inheritedFrom": {
-                "name": "FormComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "return": {
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -4561,15 +5154,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-chip-label', template: html` <span part=\"base\"> <slot name=\"icon\" part=\"icon\"></slot> <span part=\"label\"> <slot></slot> </span> </span> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), chipLabelStyles, ], 'minimal' ), attributes: [ PropertyAttr('variant'), PropertyAttr('color'), ], }"
+              "default": "{ name: 'dads-chip-label', template: html` <span part=\"base\"> <slot name=\"icon\" part=\"icon\"></slot> <span part=\"label\"> <slot></slot> </span> </span> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), chipLabelStyles, ], 'minimal' ), attributes: [ PropertyAttr('variant'), PropertyAttr('color'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -5914,14 +6507,14 @@
                   }
                 }
               ],
-              "inheritedFrom": {
-                "name": "FormComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "return": {
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -6498,15 +7091,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-disclosure', template: html` <details part=\"details\"> <summary part=\"summary\"> <svg part=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <circle cx=\"12\" cy=\"12\" r=\"11\" fill=\"currentcolor\" /> <circle part=\"icon-circle\" cx=\"12\" cy=\"12\" r=\"8\" fill=\"currentcolor\" /> <path part=\"icon-triangle\" d=\"M17 10H7L12 15L17 10Z\" fill=\"Canvas\" /> </svg> <span part=\"summary-text\"> <slot name=\"summary\"></slot> </span> </summary> <div part=\"content\"> <slot name=\"content\"></slot> <a part=\"back-link\" href=\"#\"> <svg part=\"back-link-icon\" width=\"24\" height=\"24\" fill=\"none\" aria-hidden=\"true\"> <path d=\"M6 7V14.5C6 16.8 8.2 19 10.5 19C12.8 19 15 16.8 15 14.5V6M10.709 9.7L15 5.414L19.291 9.7\" stroke=\"currentcolor\" stroke-width=\"2\" /> </svg> <slot name=\"back-link\"></slot> </a> </div> </details> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), disclosureTokens, disclosureStyles, applyDADSFocusStyles()], 'minimal', ), attributes: [BooleanAttr('open')], }"
+              "default": "{ name: 'dads-disclosure', template: html` <details part=\"details\"> <summary part=\"summary\"> <svg part=\"icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <circle cx=\"12\" cy=\"12\" r=\"11\" fill=\"currentcolor\" /> <circle part=\"icon-circle\" cx=\"12\" cy=\"12\" r=\"8\" fill=\"currentcolor\" /> <path part=\"icon-triangle\" d=\"M17 10H7L12 15L17 10Z\" fill=\"Canvas\" /> </svg> <span part=\"summary-text\"> <slot name=\"summary\"></slot> </span> </summary> <div part=\"content\"> <slot name=\"content\"></slot> <a part=\"back-link\" href=\"#\"> <svg part=\"back-link-icon\" width=\"24\" height=\"24\" fill=\"none\" aria-hidden=\"true\"> <path d=\"M6 7V14.5C6 16.8 8.2 19 10.5 19C12.8 19 15 16.8 15 14.5V6M10.709 9.7L15 5.414L19.291 9.7\" stroke=\"currentcolor\" stroke-width=\"2\" /> </svg> <slot name=\"back-link\"></slot> </a> </div> </details> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), disclosureTokens, disclosureStyles, applyDADSFocusStyles()], 'minimal', ), attributes: [BooleanAttr('open')], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -7311,682 +7904,6 @@
           "declaration": {
             "name": "DadsFieldset",
             "module": "./packages/components/fieldset/fieldset.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./packages/components/heading/heading.ts",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "見出しコンポーネント",
-          "name": "DadsHeading",
-          "cssProperties": [
-            {
-              "description": "文字色",
-              "name": "--dads-heading-color"
-            },
-            {
-              "description": "見出しフォントサイズ",
-              "name": "--dads-heading-font-size"
-            },
-            {
-              "description": "行高",
-              "name": "--dads-heading-line-height"
-            },
-            {
-              "description": "文字間隔",
-              "name": "--dads-heading-letter-spacing"
-            },
-            {
-              "description": "ショルダーのフォントサイズ",
-              "name": "--dads-heading-shoulder-font-size"
-            },
-            {
-              "description": "アイコンサイズ",
-              "name": "--dads-heading-icon-size"
-            },
-            {
-              "description": "アイコンと本文の間隔",
-              "name": "--dads-heading-icon-gap"
-            },
-            {
-              "description": "アイコンのベースライン補正（vertical-align）",
-              "name": "--dads-heading-icon-vertical-align"
-            },
-            {
-              "description": "上マージン",
-              "name": "--dads-heading-margin-block-start"
-            },
-            {
-              "description": "チップ色",
-              "name": "--dads-heading-chip-color"
-            },
-            {
-              "description": "チップの幅",
-              "name": "--dads-heading-chip-width"
-            },
-            {
-              "description": "チップのインライン余白",
-              "name": "--dads-heading-chip-padding-inline"
-            },
-            {
-              "description": "チップの上位置",
-              "name": "--dads-heading-chip-top"
-            },
-            {
-              "description": "チップの下位置",
-              "name": "--dads-heading-chip-bottom"
-            },
-            {
-              "description": "ルール色",
-              "name": "--dads-heading-rule-color"
-            }
-          ],
-          "cssParts": [
-            {
-              "description": "左チップ（装飾）※ 注釈用アンカーも兼ねる",
-              "name": "chip"
-            },
-            {
-              "description": "見出しグループ",
-              "name": "group"
-            },
-            {
-              "description": "見出し本体",
-              "name": "heading"
-            },
-            {
-              "description": "アイコンラッパー",
-              "name": "icon"
-            },
-            {
-              "description": "ショルダーテキスト",
-              "name": "shoulder"
-            }
-          ],
-          "slots": [
-            {
-              "description": "見出しテキスト",
-              "name": "default"
-            },
-            {
-              "description": "先頭アイコン 挙動メモ: - `slot=\"shoulder\"` と `slot=\"icon\"` は同時に指定できます（shoulderは上、iconは見出し行の先頭）。 - slot が無い場合は該当パーツは表示されません（内部で `data-has-*` を付与して制御）。 - `chip` / `rule` は装飾（意匠）です。情報の唯一の手掛かりにしないでください。",
-              "name": "icon"
-            },
-            {
-              "description": "ショルダーテキスト",
-              "name": "shoulder"
-            }
-          ],
-          "members": [
-            {
-              "kind": "method",
-              "name": "#cleanupSlots",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#def",
-              "privacy": "private",
-              "type": {
-                "text": "WebComponentDefinition | undefined"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#dsd",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#ensureView",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#finish",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#fontState",
-              "privacy": "private",
-              "type": {
-                "text": "FontObserverState"
-              },
-              "default": "{ observer: null }",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#iconSlot",
-              "privacy": "private",
-              "type": {
-                "text": "HTMLSlotElement | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "#init",
-              "privacy": "private",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#onSlotChange",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "#setup",
-              "privacy": "private",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#setupSlots",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#shoulderSlot",
-              "privacy": "private",
-              "type": {
-                "text": "HTMLSlotElement | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "#slotObserver",
-              "privacy": "private",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
-              "name": "#sr",
-              "privacy": "private",
-              "type": {
-                "text": "ShadowRoot | undefined"
-              },
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#syncLevel",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#syncMargin",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#syncRule",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "method",
-              "name": "#syncSize",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#view",
-              "privacy": "private",
-              "type": {
-                "text": "View | null"
-              },
-              "default": "null",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: '見出しコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ホスト要素に role=\"heading\" と aria-level を付与し、見出しのセマンティクスを提供します。', 'level 属性で見出しレベルを指定します（1-6）。', ], labels: [ 'ショルダーテキストは slot=\"shoulder\" に配置します。', '先頭アイコンは slot=\"icon\" に配置します。', ], states: [ 'chip 属性で左側の装飾バー（チップ）を表示できます。装飾は情報の唯一の手掛かりにしないよう注意します。', 'rule 属性で下線（ルール）を表示できます。', ], zoom: [ 'フォントサイズと余白は相対単位で設定され、ズーム時の可読性を維持します。', ], motion: ['アニメーションは使用しません。'], }, callouts: [ { id: 'heading', title: '見出し', label: 'heading', description: '本文のセマンティック見出しとして扱われます。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"heading\"]' }, }, { id: 'shoulder', title: 'ショルダー', label: 'slot=\"shoulder\"', description: '補助的な見出し（カテゴリなど）を提示します。', category: 'labels', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"shoulder\"]' }, }, { id: 'icon', title: '先頭アイコン', label: 'slot=\"icon\"', description: '見出しの補助記号。意味を持たない場合は aria-hidden の扱いに注意します。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"icon\"]' }, }, { id: 'chip', title: 'チップ（装飾）', label: 'chip', description: '左側の装飾バー。情報の唯一の手掛かりにしないよう注意します。', category: 'states', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"chip\"]' }, }, ], }"
-            },
-            {
-              "kind": "field",
-              "name": "chip",
-              "type": {
-                "text": "boolean"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "chipChanged",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                },
-                {
-                  "name": "_newValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "compose",
-              "static": true,
-              "return": {
-                "type": {
-                  "text": "WebComponentDefinition"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "composeWithTypography",
-              "static": true,
-              "default": "composeWithTypography",
-              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
-              "inheritedFrom": {
-                "name": "TypographyWebComponent",
-                "module": "packages/core/typography/typography-web-component.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "define",
-              "static": true,
-              "return": {
-                "type": {
-                  "text": "typeof WebComponent"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "cfg",
-                  "optional": true,
-                  "type": {
-                    "text": "WebComponentConfig"
-                  }
-                }
-              ],
-              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "definition",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
-              "type": {
-                "text": "object"
-              },
-              "static": true,
-              "default": "{ name: 'dads-heading', template: html` <div part=\"group\"> <span part=\"chip\" aria-hidden=\"true\"></span> <span part=\"shoulder\" id=\"shoulder\"> <slot name=\"shoulder\"></slot> </span> <span part=\"heading\" id=\"heading\"> <span part=\"icon\" id=\"icon\"> <slot name=\"icon\"></slot> </span> <slot></slot> </span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), headingTokens, headingStyles, ], 'minimal'), attributes: [ PropertyAttr('level'), PropertyAttr('size'), PropertyAttr('margin'), PropertyAttr('rule'), BooleanAttr('chip'), ], }"
-            },
-            {
-              "kind": "method",
-              "name": "emitEvent",
-              "parameters": [
-                {
-                  "name": "type",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "detail",
-                  "optional": true,
-                  "type": {
-                    "text": "T"
-                  }
-                },
-                {
-                  "name": "opts",
-                  "optional": true,
-                  "type": {
-                    "text": "CustomEventInit<T>"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "forwardEvent",
-              "parameters": [
-                {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ],
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "level",
-              "type": {
-                "text": "string | null"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "levelChanged",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                },
-                {
-                  "name": "newValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "margin",
-              "type": {
-                "text": "string | null"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "marginChanged",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                },
-                {
-                  "name": "newValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "refs",
-              "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "rule",
-              "type": {
-                "text": "string | null"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "ruleChanged",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                },
-                {
-                  "name": "newValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "size",
-              "type": {
-                "text": "string | null"
-              }
-            },
-            {
-              "kind": "method",
-              "name": "sizeChanged",
-              "return": {
-                "type": {
-                  "text": "void"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "_oldValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                },
-                {
-                  "name": "newValue",
-                  "type": {
-                    "text": "string | null"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "field",
-              "name": "version",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "'1.0.0'"
-            }
-          ],
-          "attributes": [
-            {
-              "type": {
-                "text": "boolean"
-              },
-              "description": "左チップ（装飾）表示",
-              "name": "chip"
-            },
-            {
-              "type": {
-                "text": "string"
-              },
-              "description": "見出しレベル（1-6 or h1-h6）",
-              "name": "level"
-            },
-            {
-              "type": {
-                "text": "string"
-              },
-              "description": "上マージン（none|top）",
-              "name": "margin"
-            },
-            {
-              "type": {
-                "text": "string"
-              },
-              "description": "下線の太さ（8|6|4|2）",
-              "name": "rule"
-            },
-            {
-              "type": {
-                "text": "string"
-              },
-              "description": "見出しサイズ（64|57|45|36|32|28|24|20|18|16）",
-              "name": "size"
-            }
-          ],
-          "superclass": {
-            "name": "TypographyWebComponent",
-            "module": "/packages/core/typography/typography-web-component.js"
-          },
-          "tagName": "dads-heading",
-          "customElement": true,
-          "events": [],
-          "modulePath": "./packages/components/heading/heading.ts",
-          "definitionPath": "./packages/components/heading/heading.ts",
-          "typeDefinitionPath": "./packages/components/heading/heading.ts"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "DadsHeading",
-          "declaration": {
-            "name": "DadsHeading",
-            "module": "packages/components/heading/heading.ts"
-          }
-        }
-      ],
-      "typeDefinitionPath": "./packages/components/heading/heading.ts"
-    },
-    {
-      "kind": "javascript-module",
-      "path": "./packages/components/heading/heading.ts",
-      "deprecated": false,
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "custom-element-definition",
-          "name": "dads-heading",
-          "declaration": {
-            "name": "DadsHeading",
-            "module": "./packages/components/heading/heading.ts"
           }
         }
       ]
@@ -9534,15 +9451,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-menu-list-box', template: html` <button part=\"opener\" id=\"opener\" type=\"button\" aria-haspopup=\"menu\" aria-expanded=\"false\" aria-controls=\"menu\" > <span part=\"opener-icon\" id=\"opener-icon\"> <slot name=\"icon\" id=\"icon-slot\"></slot> </span> <span part=\"opener-label\" id=\"opener-label\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <svg part=\"opener-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentcolor\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\"/> </svg> </button> <div part=\"popup\" id=\"popup\" hidden> <div part=\"menu\" id=\"menu\" role=\"menu\" aria-labelledby=\"opener\"> <slot id=\"items-slot\"></slot> </div> </div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), menuListBoxTokens, menuListBoxStyles], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('variant'), BooleanAttr('bold'), PropertyAttr('label'), BooleanAttr('open'), ], }"
+              "default": "{ name: 'dads-menu-list-box', template: html` <button part=\"opener\" id=\"opener\" type=\"button\" aria-haspopup=\"menu\" aria-expanded=\"false\" aria-controls=\"menu\" > <span part=\"opener-icon\" id=\"opener-icon\"> <slot name=\"icon\" id=\"icon-slot\"></slot> </span> <span part=\"opener-label\" id=\"opener-label\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <svg part=\"opener-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentcolor\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\"/> </svg> </button> <div part=\"popup\" id=\"popup\" hidden> <div part=\"menu\" id=\"menu\" role=\"menu\" aria-labelledby=\"opener\"> <slot id=\"items-slot\"></slot> </div> </div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), menuListBoxTokens, menuListBoxStyles], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('variant'), BooleanAttr('bold'), PropertyAttr('label'), BooleanAttr('open'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -9972,15 +9889,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-menu-list', template: html` <div part=\"base\" role=\"list\" id=\"base\"> <slot></slot> </div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), menuListTokens, menuListStyles], 'minimal'), attributes: [PropertyAttr('indentation')], }"
+              "default": "{ name: 'dads-menu-list', template: html` <div part=\"base\" role=\"list\" id=\"base\"> <slot></slot> </div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), menuListTokens, menuListStyles], 'minimal'), attributes: [PropertyAttr('indentation')], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -10517,15 +10434,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-menu-list-item', template: html` <button part=\"base\" type=\"button\" id=\"base\"> ${menuListItemInnerHtml} </button> <slot name=\"children\"></slot> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), menuListTokens, menuListItemStyles], 'minimal' ), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('current'), BooleanAttr('expanded'), PropertyAttr('end-icon'), PropertyAttr('tail-icon'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download'), ], }"
+              "default": "{ name: 'dads-menu-list-item', template: html` <button part=\"base\" type=\"button\" id=\"base\"> ${menuListItemInnerHtml} </button> <slot name=\"children\"></slot> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), menuListTokens, menuListItemStyles], 'minimal' ), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('current'), BooleanAttr('expanded'), PropertyAttr('end-icon'), PropertyAttr('tail-icon'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -11351,15 +11268,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-page-navigation', template: html` <nav part=\"nav\" id=\"nav\" data-layout=\"balanced\"> <!-- Link mode (as=\"link\") --> <a part=\"control prev\" id=\"prev-link\" rel=\"prev\" hidden> <svg part=\"icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M14 6L8 12L14 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /> </svg> <span part=\"label\" id=\"prev-link-label\"></span> </a> <!-- Button mode (as=\"button\") --> <button part=\"control prev\" id=\"prev-button\" type=\"button\" hidden> <svg part=\"icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M14 6L8 12L14 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /> </svg> <span part=\"label\" id=\"prev-button-label\"></span> </button> <span part=\"status\" id=\"status\"> <slot name=\"status\" id=\"status-slot\"></slot> <span id=\"status-fallback\"></span> </span> <!-- Link mode (as=\"link\") --> <a part=\"control next\" id=\"next-link\" rel=\"next\" hidden> <span part=\"label\" id=\"next-link-label\"></span> <svg part=\"icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M10 6L16 12L10 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /> </svg> </a> <!-- Button mode (as=\"button\") --> <button part=\"control next\" id=\"next-button\" type=\"button\" hidden> <span part=\"label\" id=\"next-button-label\"></span> <svg part=\"icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M10 6L16 12L10 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /> </svg> </button> </nav> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), pageNavigationTokens, pageNavigationStyles, applyDADSFocusStyles(), ], 'minimal', ), attributes: [ PropertyAttr('type'), PropertyAttr('size'), PropertyAttr('as'), PropertyAttr('prevHref', 'prev-href'), PropertyAttr('nextHref', 'next-href'), PropertyAttr('prevLabel', 'prev-label'), PropertyAttr('nextLabel', 'next-label'), BooleanAttr('disabledPrev', 'disabled-prev'), BooleanAttr('disabledNext', 'disabled-next'), PropertyAttr('status'), PropertyAttr('statusSeparator', 'status-separator'), PropertyAttr('current'), PropertyAttr('total'), BooleanAttr('hideStatus', 'hide-status'), BooleanAttr('fill'), PropertyAttr('ariaLabel', 'aria-label'), ], }"
+              "default": "{ name: 'dads-page-navigation', template: html` <nav part=\"nav\" id=\"nav\" data-layout=\"balanced\"> <!-- Link mode (as=\"link\") --> <a part=\"control prev\" id=\"prev-link\" rel=\"prev\" hidden> <svg part=\"icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M14 6L8 12L14 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /> </svg> <span part=\"label\" id=\"prev-link-label\"></span> </a> <!-- Button mode (as=\"button\") --> <button part=\"control prev\" id=\"prev-button\" type=\"button\" hidden> <svg part=\"icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M14 6L8 12L14 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /> </svg> <span part=\"label\" id=\"prev-button-label\"></span> </button> <span part=\"status\" id=\"status\"> <slot name=\"status\" id=\"status-slot\"></slot> <span id=\"status-fallback\"></span> </span> <!-- Link mode (as=\"link\") --> <a part=\"control next\" id=\"next-link\" rel=\"next\" hidden> <span part=\"label\" id=\"next-link-label\"></span> <svg part=\"icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M10 6L16 12L10 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /> </svg> </a> <!-- Button mode (as=\"button\") --> <button part=\"control next\" id=\"next-button\" type=\"button\" hidden> <span part=\"label\" id=\"next-button-label\"></span> <svg part=\"icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M10 6L16 12L10 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /> </svg> </button> </nav> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), pageNavigationTokens, pageNavigationStyles, applyDADSFocusStyles(), ], 'minimal', ), attributes: [ PropertyAttr('type'), PropertyAttr('size'), PropertyAttr('as'), PropertyAttr('prevHref', 'prev-href'), PropertyAttr('nextHref', 'next-href'), PropertyAttr('prevLabel', 'prev-label'), PropertyAttr('nextLabel', 'next-label'), BooleanAttr('disabledPrev', 'disabled-prev'), BooleanAttr('disabledNext', 'disabled-next'), PropertyAttr('status'), PropertyAttr('statusSeparator', 'status-separator'), PropertyAttr('current'), PropertyAttr('total'), BooleanAttr('hideStatus', 'hide-status'), BooleanAttr('fill'), PropertyAttr('ariaLabel', 'aria-label'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -12444,14 +12361,14 @@
                   }
                 }
               ],
-              "inheritedFrom": {
-                "name": "FormComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "return": {
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -14408,14 +14325,14 @@
                   }
                 }
               ],
-              "inheritedFrom": {
-                "name": "FormComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "return": {
                 "type": {
                   "text": "void"
                 }
+              },
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -14975,15 +14892,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-step-navigation', template: html` <nav part=\"container\" id=\"nav\"> <p part=\"visually-hidden status\" id=\"status\"> <slot name=\"status\" id=\"status-slot\"></slot> </p> <ul part=\"list\" id=\"list\" role=\"list\"> <slot id=\"items-slot\"></slot> </ul> </nav> `, styles: withReset( [ applyDADSTokens(), stepNavigationTokens, stepNavigationStyles, ], 'minimal', ), attributes: [ PropertyAttr('orientation'), PropertyAttr('size'), PropertyAttr('statusLive', 'status-live'), TransferringPropertyAttr('nav', 'ariaLabel', 'aria-label'), TransferringPropertyAttr('nav', 'ariaLabelledby', 'aria-labelledby'), ], }"
+              "default": "{ name: 'dads-step-navigation', template: html` <nav part=\"container\" id=\"nav\"> <p part=\"visually-hidden status\" id=\"status\"> <slot name=\"status\" id=\"status-slot\"></slot> </p> <ul part=\"list\" id=\"list\" role=\"list\"> <slot id=\"items-slot\"></slot> </ul> </nav> `, styles: withReset( [ applyDADSTokens(), stepNavigationTokens, stepNavigationStyles, ], 'minimal', ), attributes: [ PropertyAttr('orientation'), PropertyAttr('size'), PropertyAttr('statusLive', 'status-live'), TransferringPropertyAttr('nav', 'ariaLabel', 'aria-label'), TransferringPropertyAttr('nav', 'ariaLabelledby', 'aria-labelledby'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -15475,15 +15392,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-step-navigation-item', template: html` <div part=\"step\" id=\"step\"> <a part=\"header\" id=\"header\"> <span part=\"visually-hidden step-label\">ステップ</span> <span part=\"number\" id=\"number\"> <span part=\"number-value\" id=\"number-value\"></span> <span part=\"state-icon\" data-state-icon=\"completed\" aria-hidden=\"true\"> <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <circle cx=\"12\" cy=\"12\" r=\"11.5\"></circle> <path d=\"M10 17.5 19.8 8l-1.5-1.5-8.1 8-4.1-4L4.5 12l5.6 5.5Z\"></path> </svg> </span> <span part=\"visually-hidden state-sr\" data-state-sr=\"completed\">完了</span> <span part=\"state-icon\" data-state-icon=\"editing\" aria-hidden=\"true\"> <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M5.8 20c-.5 0-1-.2-1.3-.5-.3-.4-.5-.8-.5-1.3V5.6c0-.5.2-.9.5-1.3.4-.3.8-.5 1.3-.5h8L12 5.6H5.8v12.6h12.6V12l1.8-1.8v8c0 .5-.2 1-.5 1.3-.4.3-.8.5-1.3.5H5.8Zm3.6-5.4v-3.8l8.3-8.3a1.8 1.8 0 0 1 2.5 0l1.3 1.3.4.6a1.7 1.7 0 0 1 0 1.3c-.1.3-.2.5-.4.6l-8.3 8.3H9.4Zm1.8-1.8h1.3l5.2-5.2L17 7l-.7-.7-5.2 5.2v1.3Z\"></path> </svg> </span> <span part=\"state-label\" data-state-label=\"editing\">編集中</span> <span part=\"state-icon\" data-state-icon=\"error\" aria-hidden=\"true\"> <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M1 21 12 2l11 19H1Zm3.5-2h15L12 6 4.5 19Zm7.5-1c.3 0 .5-.1.7-.3.2-.2.3-.4.3-.7a1 1 0 0 0-.3-.7 1 1 0 0 0-.7-.3 1 1 0 0 0-.7.3 1 1 0 0 0-.3.7c0 .3.1.5.3.7.2.2.4.3.7.3Zm-1-3h2v-5h-2v5Z\"></path> </svg> </span> <span part=\"state-label\" data-state-label=\"error\">エラー</span> <span part=\"visually-hidden state-sr\" data-state-sr=\"skipped\">スキップされました</span> </span> <span part=\"title\" id=\"title\"> <slot name=\"title\" id=\"title-slot\"><slot id=\"title-fallback-slot\"></slot></slot> </span> </a> <p part=\"description\" id=\"description\"> <slot name=\"description\" id=\"description-slot\"></slot> </p> </div> `, styles: withReset( [ applyDADSTokens(), stepNavigationSemanticTokens, stepNavigationItemStyles, ], 'minimal', ), attributes: [ PropertyAttr('state'), PropertyAttr('step'), PropertyAttr('href'), PropertyAttr('interaction'), PropertyAttr('target'), PropertyAttr('rel'), PropertyAttr('labelStep', 'label-step'), PropertyAttr('labelCompleted', 'label-completed'), PropertyAttr('labelEditing', 'label-editing'), PropertyAttr('labelError', 'label-error'), PropertyAttr('labelSkipped', 'label-skipped'), ], }"
+              "default": "{ name: 'dads-step-navigation-item', template: html` <div part=\"step\" id=\"step\"> <a part=\"header\" id=\"header\"> <span part=\"visually-hidden step-label\">ステップ</span> <span part=\"number\" id=\"number\"> <span part=\"number-value\" id=\"number-value\"></span> <span part=\"state-icon\" data-state-icon=\"completed\" aria-hidden=\"true\"> <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <circle cx=\"12\" cy=\"12\" r=\"11.5\"></circle> <path d=\"M10 17.5 19.8 8l-1.5-1.5-8.1 8-4.1-4L4.5 12l5.6 5.5Z\"></path> </svg> </span> <span part=\"visually-hidden state-sr\" data-state-sr=\"completed\">完了</span> <span part=\"state-icon\" data-state-icon=\"editing\" aria-hidden=\"true\"> <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M5.8 20c-.5 0-1-.2-1.3-.5-.3-.4-.5-.8-.5-1.3V5.6c0-.5.2-.9.5-1.3.4-.3.8-.5 1.3-.5h8L12 5.6H5.8v12.6h12.6V12l1.8-1.8v8c0 .5-.2 1-.5 1.3-.4.3-.8.5-1.3.5H5.8Zm3.6-5.4v-3.8l8.3-8.3a1.8 1.8 0 0 1 2.5 0l1.3 1.3.4.6a1.7 1.7 0 0 1 0 1.3c-.1.3-.2.5-.4.6l-8.3 8.3H9.4Zm1.8-1.8h1.3l5.2-5.2L17 7l-.7-.7-5.2 5.2v1.3Z\"></path> </svg> </span> <span part=\"state-label\" data-state-label=\"editing\">編集中</span> <span part=\"state-icon\" data-state-icon=\"error\" aria-hidden=\"true\"> <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M1 21 12 2l11 19H1Zm3.5-2h15L12 6 4.5 19Zm7.5-1c.3 0 .5-.1.7-.3.2-.2.3-.4.3-.7a1 1 0 0 0-.3-.7 1 1 0 0 0-.7-.3 1 1 0 0 0-.7.3 1 1 0 0 0-.3.7c0 .3.1.5.3.7.2.2.4.3.7.3Zm-1-3h2v-5h-2v5Z\"></path> </svg> </span> <span part=\"state-label\" data-state-label=\"error\">エラー</span> <span part=\"visually-hidden state-sr\" data-state-sr=\"skipped\">スキップされました</span> </span> <span part=\"title\" id=\"title\"> <slot name=\"title\" id=\"title-slot\"><slot id=\"title-fallback-slot\"></slot></slot> </span> </a> <p part=\"description\" id=\"description\"> <slot name=\"description\" id=\"description-slot\"></slot> </p> </div> `, styles: withReset( [ applyDADSTokens(), stepNavigationSemanticTokens, stepNavigationItemStyles, ], 'minimal', ), attributes: [ PropertyAttr('state'), PropertyAttr('step'), PropertyAttr('href'), PropertyAttr('interaction'), PropertyAttr('target'), PropertyAttr('rel'), PropertyAttr('labelStep', 'label-step'), PropertyAttr('labelCompleted', 'label-completed'), PropertyAttr('labelEditing', 'label-editing'), PropertyAttr('labelError', 'label-error'), PropertyAttr('labelSkipped', 'label-skipped'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -17172,15 +17089,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-table', shadowOptions: null, styles: [ createTableTokens('dads-table'), createTableStyles('dads-table'), ], attributes: [ PropertyAttr('size'), PropertyAttr('sortBehavior', 'sort-behavior'), BooleanAttr('striped'), BooleanAttr('hover'), BooleanAttr('selectable'), ], }"
+              "default": "{ name: 'dads-table', shadowOptions: null, styles: [ createTableTokens('dads-table'), createTableStyles('dads-table'), ], attributes: [ PropertyAttr('size'), PropertyAttr('sortBehavior', 'sort-behavior'), BooleanAttr('striped'), BooleanAttr('hover'), BooleanAttr('selectable'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "method",
@@ -18463,15 +18380,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }"
+              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -20616,6 +20533,154 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/card/card-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineCard",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "Cardコンポーネントを定義"
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultCard",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-card`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineCard",
+          "declaration": {
+            "name": "defineCard",
+            "module": "packages/components/card/card-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCard",
+          "declaration": {
+            "name": "defineDefaultCard",
+            "module": "packages/components/card/card-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/card/card-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "cardStyles",
+          "default": "css` :host { display: block; } /* ========== Container ========== */ [part=\"base\"] { display: grid; grid-template-areas: \"media\" \"main\" \"sub\"; grid-template-rows: auto auto auto; background-color: var(--dads-card-background); border: var(--dads-card-border-width) solid var(--dads-card-border-color); border-radius: var(--dads-card-border-radius); color: var(--dads-card-color); overflow: clip; overflow-wrap: anywhere; } :host([layout=\"horizontal\"]) [part=\"base\"] { grid-template-columns: minmax(0, min(50%, var(--dads-card-media-width))) minmax(0, 1fr); grid-template-areas: \"media main\" \". sub\"; grid-template-rows: auto auto; } :host([layout=\"horizontal\"]:not([data-has-media])) [part=\"base\"] { grid-template-columns: minmax(0, 1fr); grid-template-areas: \"main\" \"sub\"; grid-template-rows: auto auto; } /* pointer-only convenience: make it feel clickable when delegation is enabled */ :host([data-dads-card-delegate]) [part=\"base\"] { cursor: pointer; } /* ========== Areas ========== */ [part=\"media\"] { grid-area: media; position: relative; min-width: 0; } :host(:not([layout=\"horizontal\"])) [part=\"media\"] { border-bottom: var(--dads-card-divider-width) solid var(--dads-card-divider-color); } :host([layout=\"horizontal\"]) [part=\"media\"] { border-right: var(--dads-card-divider-width) solid var(--dads-card-divider-color); width: 100%; } [part=\"media\"][hidden] { display: none; } /* メディアスロット内の画像/動画 */ [part=\"media\"] ::slotted(img), [part=\"media\"] ::slotted(video) { display: block; width: 100%; height: auto; aspect-ratio: var(--dads-card-media-aspect-ratio); object-fit: cover; } [part=\"main\"] { grid-area: main; min-width: 0; padding: var(--dads-card-padding-block) var(--dads-card-padding-inline); display: grid; gap: var(--dads-card-gap); align-content: start; } /* スロットに投入された要素のデフォルトマージンをリセット */ [part=\"main\"] ::slotted(*) { margin: 0; min-width: 0; } /* 見出し要素のスタイル（DADSトークン適用） */ [part=\"main\"] ::slotted(:is(h1, h2, h3, h4, h5, h6)) { color: var(--dads-card-title-color); font-size: var(--dads-card-title-font-size); font-weight: var(--dads-card-title-font-weight); line-height: var(--dads-card-title-line-height); letter-spacing: var(--dads-card-title-letter-spacing); } /* 本文要素のスタイル（DADSトークン適用） */ [part=\"main\"] ::slotted(p) { color: var(--dads-card-content-color); font-size: var(--dads-card-content-font-size); font-weight: var(--dads-card-content-font-weight); line-height: var(--dads-card-content-line-height); letter-spacing: var(--dads-card-content-letter-spacing); } [part=\"sub\"] { grid-area: sub; min-width: 0; padding: var(--dads-card-padding-block) var(--dads-card-padding-inline); display: grid; gap: var(--dads-card-gap); align-content: start; } [part=\"sub\"][hidden] { display: none; } [part=\"sub\"] ::slotted(*) { margin: 0; min-width: 0; } /* ========== Focus ring (delegate mode) ========== */ :host([data-dads-card-delegate][data-primary-focus]) [part=\"base\"] { outline: var(--dads-card-focus-outline-width) solid var(--dads-card-focus-outline-color); outline-offset: var(--dads-card-focus-outline-offset); box-shadow: 0 0 0 var(--dads-card-focus-ring-width) var(--dads-card-focus-ring-color); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cardStyles",
+          "declaration": {
+            "name": "cardStyles",
+            "module": "packages/components/card/card-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/card/card-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "cardTokens",
+          "default": "css` ${cardSemanticTokensText} ${cardLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cardTokens",
+          "declaration": {
+            "name": "cardTokens",
+            "module": "packages/components/card/card-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/card/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "cardStyles",
+          "declaration": {
+            "name": "cardStyles",
+            "module": "./card-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCard",
+          "declaration": {
+            "name": "DadsCard",
+            "module": "./card.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineCard",
+          "declaration": {
+            "name": "defineCard",
+            "module": "./card-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCard",
+          "declaration": {
+            "name": "defineDefaultCard",
+            "module": "./card-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/checkbox/checkbox-define.ts",
       "declarations": [
         {
@@ -21383,146 +21448,6 @@
     },
     {
       "kind": "javascript-module",
-      "path": "packages/components/heading/heading-define.ts",
-      "declarations": [
-        {
-          "kind": "function",
-          "name": "defineDefaultHeading",
-          "return": {
-            "type": {
-              "text": "void"
-            }
-          },
-          "description": "デフォルト名での登録"
-        },
-        {
-          "kind": "function",
-          "name": "defineHeading",
-          "return": {
-            "type": {
-              "text": "void"
-            }
-          },
-          "parameters": [
-            {
-              "name": "prefix",
-              "optional": true,
-              "type": {
-                "text": "string"
-              },
-              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
-            },
-            {
-              "name": "registry",
-              "optional": true,
-              "type": {
-                "text": "CustomElementRegistry"
-              },
-              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
-            }
-          ],
-          "description": "Headingコンポーネントを定義"
-        },
-        {
-          "kind": "variable",
-          "name": "name",
-          "default": "`${effectivePrefix}-heading`"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "defineDefaultHeading",
-          "declaration": {
-            "name": "defineDefaultHeading",
-            "module": "packages/components/heading/heading-define.ts"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "defineHeading",
-          "declaration": {
-            "name": "defineHeading",
-            "module": "packages/components/heading/heading-define.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/components/heading/heading-styles.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "headingStyles",
-          "default": "css` :host { display: block; color: var(--dads-heading-color); font-family: var(--dads-heading-font-family); font-weight: var(--dads-heading-font-weight); font-size: var(--dads-heading-font-size); line-height: var(--dads-heading-line-height); letter-spacing: var(--dads-heading-letter-spacing); margin: 0; } [part='group'] { display: flex; flex-direction: column; align-items: flex-start; margin: 0; } /* * margin=\"top\" は「見出しの前の余白」。 * ホスト要素の margin は外部CSS（例: *{margin:0}）で潰れる可能性があるため、 * Shadow DOM 内の group に margin を付けて、外部の影響を受けにくくする。 */ :host([margin='top']) [part='group'] { margin-block-start: var(--dads-heading-margin-block-start); } [part='shoulder'] { margin: 0; font-weight: var(--dads-heading-font-weight); font-size: var(--dads-heading-shoulder-font-size); line-height: var(--dads-heading-shoulder-line-height); letter-spacing: var(--dads-heading-shoulder-letter-spacing); } [part='heading'] { margin: 0; font: inherit; display: inline; } [part='icon'] { /* * The icon wrapper participates in inline layout next to the heading text. * Apply vertical-align to the wrapper (not the slotted SVG) so baseline alignment * actually affects the icon's position. */ display: inline-flex; align-items: center; line-height: 0; margin-inline-end: var(--dads-heading-icon-gap); vertical-align: var(--dads-heading-icon-vertical-align); } :host(:not([data-has-icon])) [part='icon'] { display: none; } :host(:not([data-has-shoulder])) [part='shoulder'] { display: none; } :host([data-has-chip]) [part='group'] { position: relative; padding-inline-start: var(--dads-heading-chip-padding-inline); } :host(:not([data-has-chip])) [part='chip'] { display: none; } /* a11y-annotate のアンカー用（擬似要素は対象にできないため） */ :host([data-has-chip]) [part='chip'] { position: absolute; top: var(--dads-heading-chip-top); bottom: var(--dads-heading-chip-bottom); left: 0; width: var(--dads-heading-chip-width); pointer-events: none; background: transparent; } :host([data-has-chip]) [part='group']::before { position: absolute; top: var(--dads-heading-chip-top); bottom: var(--dads-heading-chip-bottom); left: 0; width: var(--dads-heading-chip-width); background-color: var(--dads-heading-chip-color); content: ''; } /* * Shoulderがある場合、chipの上インセットは DADS の式に合わせて補正する。 * - top = (shoulder-size * (line-height - 1)) / 2 */ :host([data-has-chip][data-has-shoulder]) [part='chip'], :host([data-has-chip][data-has-shoulder]) [part='group']::before { top: calc( (var(--dads-heading-shoulder-font-size) * (var(--dads-heading-shoulder-line-height) - 1)) / 2 ); } @media (forced-colors: active) { :host([data-has-chip]) [part='group']::before { background-color: CanvasText; } } :host([rule]) { border-bottom: solid var(--dads-heading-rule-color); border-bottom-width: var(--dads-heading-rule-width); padding-block-end: var(--dads-heading-rule-padding); } ::slotted([slot='icon']), ::slotted(svg) { display: block; width: var(--dads-heading-icon-size); height: var(--dads-heading-icon-size); } `"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "headingStyles",
-          "declaration": {
-            "name": "headingStyles",
-            "module": "packages/components/heading/heading-styles.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/components/heading/heading-tokens.ts",
-      "declarations": [
-        {
-          "kind": "variable",
-          "name": "headingTokens",
-          "default": "css` ${headingSemanticTokensText} ${headingLocalTokensText} `"
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "headingTokens",
-          "declaration": {
-            "name": "headingTokens",
-            "module": "packages/components/heading/heading-tokens.ts"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "packages/components/heading/index.ts",
-      "declarations": [],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "packages/components/heading/heading.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "defineDefaultHeading",
-          "declaration": {
-            "name": "defineDefaultHeading",
-            "module": "./heading-define.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "defineHeading",
-          "declaration": {
-            "name": "defineHeading",
-            "module": "./heading-define.js"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
       "path": "packages/components/index.ts",
       "declarations": [],
       "exports": [
@@ -21548,6 +21473,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/button/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/card/index.js"
           }
         },
         {
@@ -21684,14 +21617,6 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/search-box/index.js"
-          }
-        },
-        {
-          "kind": "js",
-          "name": "*",
-          "declaration": {
-            "name": "*",
-            "module": "packages/components/heading/index.js"
           }
         },
         {

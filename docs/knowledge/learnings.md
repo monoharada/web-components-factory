@@ -1134,4 +1134,176 @@ calendar?.focus();
 
 ---
 
+## [2026-01-29] カードコンポーネント: ::slotted()の制限とLight DOMスタイリング
+**タグ**: #css #webcomponents #slots #shadowdom #dads
+
+### 概要
+カードコンポーネントの実装で、`::slotted()`の重要な制限を発見。スロット内の子孫要素へのスタイリングは、Light DOM側で行う必要がある。
+
+### 詳細
+
+#### ::slotted()の制限
+- `::slotted()`は**直接の子要素のみ**スタイル可能
+- `::slotted(h2 a)`や`::slotted(h2) a`は**無効**
+- `:is()`を使った複数要素のグループ化は可能: `::slotted(:is(h1, h2, h3))`
+
+#### 構造の違いによる影響
+```
+DADS公式:                現在のWC:
+<a class="card">         <dads-card>
+  <h2>タイトル</h2>        <h2><a>タイトル</a></h2>
+</a>                     </dads-card>
+```
+→ WCでは`h2`にスタイルは適用できるが、内部の`a`には`::slotted()`で届かない
+
+#### 解決策
+1. **コンポーネント内**: `::slotted()`で直接の子要素（h2, p等）にスタイル
+2. **デモ/利用側**: Light DOMで子孫要素（h2 > a等）にスタイル
+
+```css
+/* コンポーネント内（Shadow DOM） */
+[part="main"] ::slotted(:is(h1, h2, h3, h4, h5, h6)) {
+  color: var(--dads-card-title-color);
+}
+
+/* デモ側（Light DOM） */
+dads-card.card-example-1 h2 a {
+  text-decoration: underline;
+}
+```
+
+### 適用例
+```typescript
+// card-styles.ts
+[part="main"] ::slotted(:is(h1, h2, h3, h4, h5, h6)) {
+  color: var(--dads-card-title-color);
+  font-size: var(--dads-card-title-font-size);
+  font-weight: var(--dads-card-title-font-weight);
+  line-height: var(--dads-card-title-line-height);
+  letter-spacing: var(--dads-card-title-letter-spacing);
+}
+```
+
+### 注意点
+- `::part()`はLight DOM要素には使用不可（Shadow DOM内部の要素のみ）
+- 作例固有のスタイルはデモ側に配置（他の作例で異なる構造の可能性）
+- CSS変数は必ずグローバルトークンを参照（ハードコード禁止）
+- 例外: `letter-spacing: 0.02em`（グローバルトークンなし）
+
+### 関連パターン
+- ::slotted() Limitation Pattern
+- Light DOM Styling for Descendant Elements Pattern
+- CSS Token 3-Layer Architecture Pattern
+- Div Soup Reduction Pattern
+
+---
+
+## [2026-01-29] カードコンポーネント: Token-Driven Customization（バリアント属性なし）
+**タグ**: #css #webcomponents #design-tokens #architecture #dads
+
+### 概要
+カードコンポーネントの視覚的バリエーション（bordered, elevated, filled等）は、`variant`属性ではなくCSSトークンと`::part()`による外部カスタマイズで実現する設計を採用。
+
+### 詳細
+
+#### なぜvariant属性を追加しないか
+
+| コンポーネント | variant属性 | 理由 |
+|--------------|-------------|------|
+| `dads-button` | あり（solid/outlined/text） | ボタンはセマンティックな目的を持つ |
+| `dads-card` | **なし** | カードはレイアウトコンテナ、視覚スタイルはコンテキスト依存 |
+
+**根拠**:
+1. **DADS哲学**: DADSカードは構造的柔軟性を重視し、視覚バリアントを定義していない
+2. **作例の多様性**: DADS公式の6作例は、同じコンポーネントでも大きく異なる視覚表現
+3. **柔軟性**: 固定バリアントでは表現できないデザインが多い
+
+#### カスタマイズ方法
+
+```css
+/* "Elevated" スタイル */
+dads-card.elevated {
+  --dads-card-border-width: 0;
+  --dads-card-border-radius: var(--border-radius-16);
+  box-shadow: var(--elevation-4);
+}
+
+/* "Bordered" スタイル */
+dads-card.bordered {
+  --dads-card-border-width: 1px;
+  --dads-card-border-color: var(--color-neutral-solid-gray-420);
+}
+
+/* "Transparent" スタイル */
+dads-card.transparent {
+  --dads-card-background: transparent;
+  --dads-card-border-width: 0;
+  --dads-card-divider-width: 0;
+}
+```
+
+### 適用例
+- `packages/components/card/card.ts` - JSDocに設計思想を明記
+- `packages/components/card/card-tokens.ts` - 公開APIトークンを文書化
+- `src/demos/showcase-components.ts` - 各パターンの実装例
+
+### 注意点
+- トークン（`--dads-card-*`）は公開API、セマンティック（`--card-*`）は内部使用
+- `::part()`で各領域（base, media, main, sub）をカスタマイズ可能
+- 利用者にはCSS知識が必要だが、制限なく自由にスタイリング可能
+
+---
+
+## [2026-01-29] カードコンポーネント: overflow: clip問題と対処法
+**タグ**: #css #webcomponents #focus #shadowdom
+
+### 概要
+カードコンポーネントの`[part="base"]`に設定された`overflow: clip`が、内部要素のfocus ringやbox-shadowをクリップする問題を発見。
+
+### 詳細
+
+#### 問題の発生条件
+1. カード内にフォーカス可能な要素（リンク、ボタン）がある
+2. その要素がカードの端に近い位置にある
+3. `[part="base"]`に`overflow: clip`が設定されている
+
+#### 影響
+- focus ringの一部が見切れる
+- box-shadowがクリップされる
+- アクセシビリティ上の問題（フォーカス位置が不明瞭）
+
+#### 対処法
+
+```css
+/* 利用側で::part()を使ってoverflowを解除 */
+dads-card::part(base) {
+  overflow: visible;
+}
+```
+
+#### なぜデフォルトでclipなのか
+- コンテンツがカードからはみ出さないようにするため
+- 画像のアスペクト比制御のため
+- 意図しないレイアウト崩れを防ぐため
+
+### 適用例
+```css
+/* DADS Example 1: オーバーラップするmain領域 */
+dads-card.card-example-1::part(base) {
+  overflow: visible;  /* main領域がmediaに被るため必須 */
+}
+
+dads-card.card-example-1::part(main) {
+  margin-top: calc(var(--spacing-6) * -1);  /* 負のマージンでオーバーラップ */
+}
+```
+
+### 注意点
+- `overflow: visible`にすると、意図しないはみ出しが発生する可能性
+- 必要なカードインスタンスのみ選択的にオーバーライド
+- focus ringが必要な場合は必ず対処を実施
+- JSDocとREADMEに対処法を明記
+
+---
+
 *継続的に更新されます*

@@ -1,0 +1,99 @@
+{
+  "component": "card",
+  "generatedAt": "2026-01-27T07:15:58.967Z",
+  "entries": [
+    {
+      "id": "components-カード--docs",
+      "title": "Components/カード",
+      "name": "Docs",
+      "importPath": "./src/components/card/card.mdx",
+      "storiesImports": [
+        "./src/components/card/card.stories.ts"
+      ],
+      "type": "docs",
+      "tags": [
+        "dev",
+        "test",
+        "attached-mdx"
+      ]
+    },
+    {
+      "type": "story",
+      "subtype": "story",
+      "id": "components-カード--example-1",
+      "name": "Example 1",
+      "title": "Components/カード",
+      "importPath": "./src/components/card/card.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ],
+      "exportName": "Example1"
+    },
+    {
+      "type": "story",
+      "subtype": "story",
+      "id": "components-カード--example-2",
+      "name": "Example 2",
+      "title": "Components/カード",
+      "importPath": "./src/components/card/card.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ],
+      "exportName": "Example2"
+    },
+    {
+      "type": "story",
+      "subtype": "story",
+      "id": "components-カード--example-3",
+      "name": "Example 3",
+      "title": "Components/カード",
+      "importPath": "./src/components/card/card.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ],
+      "exportName": "Example3"
+    },
+    {
+      "type": "story",
+      "subtype": "story",
+      "id": "components-カード--example-4",
+      "name": "Example 4",
+      "title": "Components/カード",
+      "importPath": "./src/components/card/card.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ],
+      "exportName": "Example4"
+    },
+    {
+      "type": "story",
+      "subtype": "story",
+      "id": "components-カード--example-5",
+      "name": "Example 5",
+      "title": "Components/カード",
+      "importPath": "./src/components/card/card.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ],
+      "exportName": "Example5"
+    },
+    {
+      "type": "story",
+      "subtype": "story",
+      "id": "components-カード--example-6",
+      "name": "Example 6",
+      "title": "Components/カード",
+      "importPath": "./src/components/card/card.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ],
+      "exportName": "Example6"
+    }
+  ]
+}

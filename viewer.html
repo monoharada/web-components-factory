@@ -22,6 +22,7 @@
       "@core/autoloader": "/core/autoloader.js",
       "@demos": "/src/demos.js",
       "dads-button": "/@components/dads/button.js",
+      "dads-card": "/@components/dads/card.js",
       "dads-table": "/@components/dads/table.js",
       "dads-textarea": "/@components/dads/textarea.js",
       "dads-accordion-details": "/@components/dads/accordion-details.js",
@@ -148,6 +149,15 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       min-height: 400px;
+    }
+
+    body[data-component="card"] main {
+      max-width: 1440px;
+      padding: 0 16px;
+    }
+
+    body[data-component="card"] #component-container {
+      padding: 24px;
     }
 
     .loaded-log {
@@ -369,6 +379,7 @@
             <option value="radio">Radio</option>
             <option value="fieldset">Fieldset</option>
             <option value="button">Button</option>
+            <option value="card">Card</option>
             <option value="table">Table</option>
             <option value="pageNavigation">Page Navigation</option>
             <option value="chipLabel">チップラベル</option>
@@ -497,6 +508,7 @@
 
     function showComponent(name) {
       const demoFn = demos[name] || demos.empty;
+      document.body.dataset.component = name;
       container.innerHTML = demoFn();
       activateEmbeddedScripts(container);
     }
