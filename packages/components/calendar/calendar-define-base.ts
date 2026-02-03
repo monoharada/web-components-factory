@@ -2,10 +2,10 @@
  * Calendarコンポーネント定義 共通ロジック
  */
 
-import { WebComponentDefinition } from '../../core/web-components.js';
+import { WebComponent, WebComponentDefinition } from '../../core/web-components.js';
 import { getConfig, getPrefix } from '../../config.js';
 
-type ComponentCtor = (new (...args: never[]) => HTMLElement) & { definition: Record<string, unknown> };
+type ComponentCtor = typeof WebComponent & { definition: Record<string, unknown> };
 
 export function defineCalendarComponent(
   component: ComponentCtor,
