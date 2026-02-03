@@ -5808,6 +5808,15 @@
             },
             {
               "kind": "field",
+              "name": "#calendarOpenToken",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "#calendarPopover",
               "privacy": "private",
               "type": {
