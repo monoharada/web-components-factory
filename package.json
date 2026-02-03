@@ -46,7 +46,8 @@
     "dads:sync": "node scripts/dads/sync.cjs",
     "dads:validate": "node scripts/dads/validate.cjs",
     "dads:figma:add": "node scripts/dads/figma-add.cjs",
-    "dads:figma:expand": "node scripts/dads/figma-expand.cjs"
+    "dads:figma:expand": "node scripts/dads/figma-expand.cjs",
+    "size:esm": "node scripts/size/measure-esm.mjs --entry packages/components/date-picker/date-picker.ts --entry packages/components/calendar/calendar.ts"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.11.0",

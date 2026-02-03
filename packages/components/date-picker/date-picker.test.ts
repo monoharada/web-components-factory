@@ -6,7 +6,9 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   createTestElement,
   cleanupTestElement,
+  getDefinitionStyles,
   getShadowContent,
+  waitForComponent,
   waitForCustomElement,
 } from '../../../tests/setup';
 
@@ -44,6 +46,15 @@ describe('DadsDatePicker - 基本レンダリング', () => {
     expect(year?.tagName.toLowerCase()).toBe('input');
     expect(month?.tagName.toLowerCase()).toBe('input');
     expect(day?.tagName.toLowerCase()).toBe('input');
+  });
+});
+
+describe('DadsDatePicker - tokens', () => {
+  it('spacing tokensがスタイルに含まれる', async () => {
+    const { DadsDatePicker } = await import('./date-picker.js');
+    const { applySpacingTokens } = await import('../../styles/spacing-tokens.js');
+
+    expect(getDefinitionStyles(DadsDatePicker.definition)).toContain(applySpacingTokens());
   });
 });
 
@@ -128,6 +139,66 @@ describe('DadsDatePicker - カレンダー連携', () => {
     backdrop?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(button?.getAttribute('aria-expanded')).toBe('false');
     expect(popover?.style.display).toBe('none');
+  });
+
+  it('動的ロード中に閉じてもカレンダーへフォーカスしない', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('calendar', '');
+    await waitForCustomElement(element);
+
+    const button = getShadowContent(element, '#calendar-button') as HTMLButtonElement | null;
+    const popover = getShadowContent(element, '#calendar-popover') as HTMLElement | null;
+    const calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(button).toBeTruthy();
+    expect(popover).toBeTruthy();
+    expect(calendar).toBeTruthy();
+
+    let resolveWhenDefined: ((value: CustomElementConstructor) => void) | null = null;
+    const whenDefinedPromise = new Promise<CustomElementConstructor>((resolve) => {
+      resolveWhenDefined = resolve;
+    });
+
+    const rafCallbacks: FrameRequestCallback[] = [];
+    const rafSpy = vi
+      .spyOn(globalThis, 'requestAnimationFrame')
+      .mockImplementation((cb: FrameRequestCallback) => {
+        rafCallbacks.push(cb);
+        return 0;
+      });
+
+    const whenDefinedSpy = vi
+      .spyOn(customElements, 'whenDefined')
+      .mockImplementation(() => whenDefinedPromise);
+
+
+    button?.click();
+    expect(button?.getAttribute('aria-expanded')).toBe('true');
+    expect(popover?.style.display).toBe('block');
+
+    button?.click();
+    expect(button?.getAttribute('aria-expanded')).toBe('false');
+    expect(popover?.style.display).toBe('none');
+
+    const calendarAfter = getShadowContent(element, '#calendar') as HTMLElement | null;
+    const host = calendarAfter as unknown as { focus?: () => void; setSelectedDate?: () => void };
+    host.focus = vi.fn();
+    host.setSelectedDate = vi.fn();
+    const focusSpy = vi.spyOn(calendarAfter as HTMLElement, 'focus');
+
+    resolveWhenDefined?.(customElements.get((calendar as HTMLElement).localName) as CustomElementConstructor);
+    while (rafCallbacks.length > 0) {
+      const cb = rafCallbacks.shift();
+      if (cb) cb(0);
+    }
+    await Promise.resolve();
+
+    expect(focusSpy).not.toHaveBeenCalled();
+    whenDefinedSpy.mockRestore();
+    rafSpy.mockRestore();
+    focusSpy.mockRestore();
   });
 
   it('date-selected を受け取ると入力へ反映され、ポップオーバーが閉じる', async () => {
@@ -387,26 +458,69 @@ describe('DadsDatePicker - キーボード（フォーカストラップ）', ()
     expect(button).toBeTruthy();
     button?.click();
 
-    const calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
-    expect(calendar?.shadowRoot).toBeTruthy();
+    let calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar).toBeTruthy();
+    await waitForComponent((calendar as HTMLElement).localName);
     await waitForCustomElement(calendar as HTMLElement);
+    calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar?.shadowRoot).toBeTruthy();
 
     const yearSelect = calendar?.shadowRoot?.querySelector('#year-select') as HTMLSelectElement | null;
     const todayHost = calendar?.shadowRoot?.querySelector('#today-button') as HTMLElement | null;
     expect(yearSelect).toBeTruthy();
     expect(todayHost).toBeTruthy();
+    await waitForComponent((todayHost as HTMLElement).localName);
     await waitForCustomElement(todayHost as HTMLElement);
-
-    const todayInner = todayHost?.shadowRoot?.querySelector('[part="base"]') as HTMLElement | null;
-    expect(todayInner).toBeTruthy();
 
     const popover = getShadowContent(element, '#calendar-popover') as HTMLElement | null;
     expect(popover).toBeTruthy();
 
+    const collectFocusables = (root: ParentNode): HTMLElement[] => {
+      const out: HTMLElement[] = [];
+      const isTabbable = (el: Element): el is HTMLElement => {
+        if (!(el instanceof HTMLElement)) return false;
+        if (el.hasAttribute('hidden')) return false;
+        if (el.getAttribute('aria-hidden') === 'true') return false;
+        if (
+          el instanceof HTMLButtonElement ||
+          el instanceof HTMLInputElement ||
+          el instanceof HTMLSelectElement ||
+          el instanceof HTMLTextAreaElement
+        ) {
+          if (el.disabled) return false;
+        } else {
+          if (el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true') return false;
+        }
+        const isNativelyFocusable = el.matches('button,input,select,textarea,a[href]');
+        const tabIndexAttr = el.getAttribute('tabindex');
+        if (!isNativelyFocusable && tabIndexAttr === null) return false;
+        if (tabIndexAttr !== null) {
+          const normalized = tabIndexAttr.trim();
+          if (normalized === '') return true;
+          const parsed = Number.parseInt(normalized, 10);
+          return !Number.isNaN(parsed) && parsed >= 0;
+        }
+        return isNativelyFocusable;
+      };
+      const walk = (node: ParentNode): void => {
+        for (const child of node.children) {
+          if (isTabbable(child)) out.push(child);
+          if (child instanceof HTMLElement && child.shadowRoot) walk(child.shadowRoot);
+          walk(child);
+        }
+      };
+      walk(root);
+      return out;
+    };
+
+    const focusables = popover ? collectFocusables(popover) : [];
+    const last = focusables[focusables.length - 1] ?? null;
+    expect(last).toBeTruthy();
+
     const focusSpy = vi.spyOn(yearSelect as HTMLSelectElement, 'focus');
     focusSpy.mockClear();
     const ke = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true });
-    Object.defineProperty(ke, 'composedPath', { value: () => [todayInner] });
+    Object.defineProperty(ke, 'composedPath', { value: () => [last] });
     popover?.dispatchEvent(ke);
 
     expect(focusSpy).toHaveBeenCalledTimes(1);
@@ -453,9 +567,12 @@ describe('DadsDatePicker - キーボード（フォーカストラップ）', ()
     expect(button).toBeTruthy();
     button?.click();
 
-    const calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
-    expect(calendar?.shadowRoot).toBeTruthy();
+    let calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar).toBeTruthy();
+    await waitForComponent((calendar as HTMLElement).localName);
     await waitForCustomElement(calendar as HTMLElement);
+    calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar?.shadowRoot).toBeTruthy();
 
     const yearSelect = calendar?.shadowRoot?.querySelector('#year-select') as HTMLSelectElement | null;
     const todayHost = calendar?.shadowRoot?.querySelector('#today-button') as HTMLElement | null;

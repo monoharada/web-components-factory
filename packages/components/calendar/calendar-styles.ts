@@ -216,11 +216,29 @@ export const calendarStyles = css`
     right: 50%;
   }
 
+  :host([range]) [part="data-cell"][data-in-range]:not([data-range-start]):not([data-range-end]) [part="date"] {
+    border: 1px solid var(--color-primitive-blue-900);
+    background-color: var(--color-primitive-blue-50);
+    color: inherit;
+  }
+
   @media (hover: hover) {
     [part="date"]:not(:disabled):hover {
       background-color: var(--color-neutral-solid-gray-50);
       text-decoration: underline;
     }
+  }
+
+  [part="date"]:not(:disabled):not([data-selected]):active {
+    background-color: transparent;
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  [part="date"][data-selected]:is(:hover, :active) {
+    background-color: var(--color-primitive-blue-900);
+    color: var(--color-neutral-white);
+    text-decoration: underline;
   }
 
   [part="date"]:focus-visible {

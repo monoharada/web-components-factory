@@ -3,8 +3,7 @@
  */
 
 import { DadsDatePicker } from './date-picker.js';
-import { WebComponentDefinition } from '../../core/web-components.js';
-import { getConfig, getPrefix } from '../../config.js';
+import { defineDatePickerComponent } from './date-picker-define-base.js';
 
 /**
  * DatePickerコンポーネントを定義
@@ -12,15 +11,7 @@ import { getConfig, getPrefix } from '../../config.js';
  * @param registry - カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）
  */
 export function defineDatePicker(prefix?: string, registry?: CustomElementRegistry): void {
-  const effectivePrefix = prefix ?? getPrefix();
-  const effectiveRegistry = registry ?? getConfig().registry;
-
-  const name = `${effectivePrefix}-date-picker`;
-
-  if (!effectiveRegistry.get(name)) {
-    const def = { ...DadsDatePicker.definition, name, registry: effectiveRegistry };
-    WebComponentDefinition.compose(DadsDatePicker, def).define(effectiveRegistry);
-  }
+  defineDatePickerComponent(DadsDatePicker, prefix, registry);
 }
 
 /**
@@ -29,4 +20,3 @@ export function defineDatePicker(prefix?: string, registry?: CustomElementRegist
 export function defineDefaultDatePicker(): void {
   defineDatePicker();
 }
-

@@ -14,7 +14,7 @@ import { searchBoxTokens } from './search-box-tokens.js';
 import { searchBoxStyles } from './search-box-styles.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 import type { A11yAnnotations, A11yElementRef } from '../../utils/a11y-annotations.js';
-import { getPrefixFromLocalName } from '../../utils/custom-element-name.js';
+import { ensurePrefixedElement, getPrefixFromLocalName } from '../../utils/custom-element-name.js';
 import { defineButton } from '../button/button-define.js';
 
 type SearchDetail = { query: string; scope: string };
@@ -230,7 +230,9 @@ export class DadsSearchBox extends TypographyFormComponent {
     this.#scopeSelect = this.shadowRoot?.querySelector('#scope-select') as HTMLSelectElement | null;
     this.#labelText = this.shadowRoot?.querySelector('#label-text') as HTMLElement | null;
     this.#input = this.shadowRoot?.querySelector('#input') as HTMLInputElement | null;
-    this.#submitButton = this.#ensureButtonElement('submit-button', prefix);
+    if (this.shadowRoot) {
+      this.#submitButton = ensurePrefixedElement(this.shadowRoot, 'submit-button', `${prefix}-button`);
+    }
 
     this.#setupEventListeners();
     this.#setupOptionsObserver();
@@ -484,28 +486,4 @@ export class DadsSearchBox extends TypographyFormComponent {
     this._internals.setFormValue(appended ? formData : null);
   }
 
-  #ensureButtonElement(id: string, prefix: string): HTMLElement | null {
-    const root = this.shadowRoot;
-    if (!root) return null;
-
-    const current = root.querySelector(`#${id}`) as HTMLElement | null;
-    if (!current) return null;
-
-    const expectedName = `${prefix}-button`;
-    if (current.localName === expectedName) return current;
-
-    const replacement = document.createElement(expectedName) as HTMLElement;
-
-    for (const attrName of current.getAttributeNames()) {
-      const val = current.getAttribute(attrName);
-      if (val === null) replacement.setAttribute(attrName, '');
-      else replacement.setAttribute(attrName, val);
-    }
-
-    while (current.firstChild) replacement.appendChild(current.firstChild);
-
-    current.parentNode?.replaceChild(replacement, current);
-
-    return replacement;
-  }
 }

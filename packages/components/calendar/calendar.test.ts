@@ -6,6 +6,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   createTestElement,
   cleanupTestElement,
+  getDefinitionStyles,
   getShadowContent,
   waitForCustomElement,
 } from '../../../tests/setup';
@@ -86,6 +87,63 @@ describe('DadsCalendar - 基本レンダリング', () => {
     expect(next?.getAttribute('variant')).toBe('secondary');
     expect(today?.getAttribute('variant')).toBe('secondary');
     expect(del?.getAttribute('variant')).toBe('tertiary');
+  });
+});
+
+describe('DadsCalendar - tokens', () => {
+  it('spacing tokensがスタイルに含まれる', async () => {
+    const { DadsCalendar } = await import('./calendar.js');
+    const { applySpacingTokens } = await import('../../styles/spacing-tokens.js');
+
+    expect(getDefinitionStyles(DadsCalendar.definition)).toContain(applySpacingTokens());
+  });
+});
+
+describe('DadsCalendar - styles', () => {
+  it('日付ボタンのactive状態は可読性を維持する', async () => {
+    const { calendarStyles } = await import('./calendar-styles.js');
+
+    const rules = Array.from(calendarStyles.cssRules ?? []);
+    const activeRule = rules.find(
+      (rule) =>
+        rule.type === CSSRule.STYLE_RULE &&
+        (rule as CSSStyleRule).selectorText === '[part="date"]:not(:disabled):not([data-selected]):active',
+    ) as CSSStyleRule | undefined;
+
+    expect(activeRule).toBeTruthy();
+    expect(activeRule?.style.color).toBe('inherit');
+    expect(activeRule?.style.textDecoration).toBe('underline');
+  });
+
+  it('選択中のhover/activeは選択色を維持する', async () => {
+    const { calendarStyles } = await import('./calendar-styles.js');
+
+    const rules = Array.from(calendarStyles.cssRules ?? []);
+    const selectedRule = rules.find(
+      (rule) =>
+        rule.type === CSSRule.STYLE_RULE &&
+        (rule as CSSStyleRule).selectorText === '[part="date"][data-selected]:is(:hover, :active)',
+    ) as CSSStyleRule | undefined;
+
+    expect(selectedRule).toBeTruthy();
+    expect(selectedRule?.style.backgroundColor).toBe('var(--color-primitive-blue-900)');
+    expect(selectedRule?.style.color).toBe('var(--color-neutral-white)');
+  });
+
+  it('range中間セルは薄い塗りとプライマリーボーダーを持つ', async () => {
+    const { calendarStyles } = await import('./calendar-styles.js');
+
+    const rules = Array.from(calendarStyles.cssRules ?? []);
+    const rangeRule = rules.find(
+      (rule) =>
+        rule.type === CSSRule.STYLE_RULE &&
+        (rule as CSSStyleRule).selectorText ===
+          ':host([range]) [part="data-cell"][data-in-range]:not([data-range-start]):not([data-range-end]) [part="date"]',
+    ) as CSSStyleRule | undefined;
+
+    expect(rangeRule).toBeTruthy();
+    expect(rangeRule?.style.backgroundColor).toBe('var(--color-primitive-blue-50)');
+    expect(rangeRule?.style.borderColor).toBe('var(--color-primitive-blue-900)');
   });
 });
 

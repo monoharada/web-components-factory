@@ -2493,7 +2493,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "./packages/components/calendar/calendar.ts",
+      "path": "./packages/components/calendar/calendar-impl.ts",
       "declarations": [
         {
           "kind": "class",
@@ -2530,6 +2530,21 @@
             }
           ],
           "members": [
+            {
+              "kind": "field",
+              "name": "#ariaLabelCache",
+              "privacy": "private",
+              "default": "new Map<number, string>()"
+            },
+            {
+              "kind": "field",
+              "name": "#ariaLabelCacheKey",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
             {
               "kind": "field",
               "name": "#autoManageHostAriaLabel",
@@ -2675,30 +2690,6 @@
             },
             {
               "kind": "method",
-              "name": "#ensureButtonElement",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "prefix",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
               "name": "#ensureView",
               "privacy": "private",
               "inheritedFrom": {
@@ -2745,6 +2736,34 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#getDateAriaLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getRangeSupportText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
             },
             {
               "kind": "field",
@@ -3092,6 +3111,30 @@
             },
             {
               "kind": "method",
+              "name": "#setText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#setup",
               "privacy": "private",
               "inheritedFrom": {
@@ -3193,11 +3236,9 @@
               "kind": "field",
               "name": "a11yAnnotations",
               "type": {
-                "text": "A11yAnnotations"
+                "text": "A11yAnnotations | undefined"
               },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'カレンダーコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '日付一覧は <table role=\"grid\"> を用いて表現します。', '日付は <button> として実装され、選択・フォーカス状態を提供します。', 'aria-label（年月）を更新し、スクリーンリーダーに表示中の月を伝えます。', ], keyboard: [ 'Tabで日付ボタンへフォーカスできます。', '矢印キー（上下左右）で日付セル間を移動できます。', ], zoom: [ '日付ボタンは円形で視認性を確保し、相対単位(rem)で定義します。', ], states: [ '選択中の日付は data-selected で視覚的に表示されます。', '範囲外の日付は無効化され、選択できません。', 'range属性が指定された場合、開始日/終了日の期間選択が可能になります。', ], labels: [ '年の選択は <select aria-label=\"年\"> で提供します。', '各日付ボタンは曜日を含む aria-label を持ちます。', 'range属性が指定された場合、「開始日/終了日」とサポートテキストが追加されます。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'year-select', title: '年セレクト', label: '<select>', description: '表示する年を選択します（min-date/max-date に応じて選択肢を生成）。', category: 'labels', placement: 'top-left', target: shadowTarget('[part=\"year-select\"]'), }, { id: 'prev-month-button', title: '前の月へ', label: '<dads-button>', description: '表示月を前の月へ移動します（aria-labelで目的を明示）。', category: 'keyboard', placement: 'top-right', target: shadowTarget('#prev-month-button'), }, { id: 'next-month-button', title: '次の月へ', label: '<dads-button>', description: '表示月を次の月へ移動します（aria-labelで目的を明示）。', category: 'keyboard', placement: 'top-right', target: shadowTarget('#next-month-button'), }, { id: 'current-month', title: '表示中の月', label: '月表示', description: '現在表示している月を示します（年は見出し/テーブルのaria-labelでも提供）。', category: 'labels', placement: 'top-right', target: shadowTarget('#current-month'), }, { id: 'calendar-table', title: 'カレンダーグリッド', label: '<table role=\"grid\">', description: '日付の一覧をグリッドとして提供します。', category: 'semantics', placement: 'bottom-left', target: shadowTarget('[part=\"table\"]'), }, { id: 'date-button', title: '日付ボタン', label: '<button>', description: '日付はbuttonとして実装され、矢印キーでセル移動、クリックで選択できます。', category: 'keyboard', placement: 'bottom-left', target: shadowTarget('[part=\"date\"]:not(:disabled)'), }, { id: 'delete-button', title: '削除', label: '<dads-button>', description: '選択状態をクリアします。', category: 'states', placement: 'bottom-left', target: shadowTarget('#delete-button'), }, { id: 'today-button', title: '今日', label: '<dads-button>', description: '今日の日付へ移動し、選択します。', category: 'states', placement: 'bottom-right', target: shadowTarget('#today-button'), }, { id: 'range', title: '期間選択', label: 'range', description: 'range属性が指定された場合、開始日/終了日の表示とサポートテキスト（aria-liveによる読み上げ）を提供します。', category: 'states', placement: 'bottom-left', target: shadowTarget('[part=\"range\"]'), }, { id: 'range-support', title: 'サポートテキスト（期間選択）', label: 'support-text', description: '開始日/終了日のどちらを選ぶべきかをガイドします。', category: 'labels', placement: 'bottom-left', target: shadowTarget('#range-support'), }, { id: 'range-live', title: '読み上げ（期間選択）', label: 'aria-live', description: '選択操作の結果を aria-live=\"polite\" で通知します。', category: 'states', placement: 'bottom-left', target: shadowTarget('#range-live'), }, ], }"
+              "static": true
             },
             {
               "kind": "method",
@@ -3264,7 +3305,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-calendar', template: html` <div part=\"visually-hidden\"> <h2 id=\"calendar-heading\" aria-live=\"polite\"></h2> </div> <div part=\"controls\"> <span part=\"select\"> <span part=\"select-control\"> <select part=\"year-select\" id=\"year-select\" data-size=\"sm\" aria-label=\"年\" ></select> <svg part=\"select-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\"/> </svg> </span> </span> <div part=\"navigation\"> <dads-button part=\"nav-button prev-month-button\" id=\"prev-month-button\" type=\"button\" variant=\"secondary\" size=\"small\" aria-label=\"前の月\" > <svg slot=\"icon-start\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" role=\"img\" aria-hidden=\"true\"> <path d=\"m5.27 8 5.33-5.33-.93-.94L3.4 8l6.27 6.27.93-.94L5.27 8Z\" fill=\"currentcolor\" /> </svg> </dads-button> <p part=\"current-month\" id=\"current-month\"></p> <dads-button part=\"nav-button next-month-button\" id=\"next-month-button\" type=\"button\" variant=\"secondary\" size=\"small\" aria-label=\"次の月\" > <svg slot=\"icon-start\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" role=\"img\" aria-hidden=\"true\"> <path d=\"m6 1.73-.93.94L10.4 8l-5.33 5.33.93.94L12.27 8 6 1.73Z\" fill=\"currentcolor\" /> </svg> </dads-button> </div> </div> <table part=\"table\" id=\"calendar-table\" role=\"grid\"> <thead> <tr> <th part=\"header-cell\" scope=\"col\">日</th> <th part=\"header-cell\" scope=\"col\">月</th> <th part=\"header-cell\" scope=\"col\">火</th> <th part=\"header-cell\" scope=\"col\">水</th> <th part=\"header-cell\" scope=\"col\">木</th> <th part=\"header-cell\" scope=\"col\">金</th> <th part=\"header-cell\" scope=\"col\">土</th> </tr> </thead> <tbody id=\"calendar-tbody\"></tbody> </table> <template id=\"cell-template\"> <td part=\"data-cell\" role=\"gridcell\"> <button part=\"date\" data-js-date-button></button> </td> </template> <div part=\"footer\"> <dads-button part=\"footer-button\" id=\"delete-button\" type=\"button\" variant=\"tertiary\" size=\"small\">削除</dads-button> <dads-button part=\"footer-button\" id=\"today-button\" type=\"button\" variant=\"secondary\" size=\"small\">今日</dads-button> </div> <div part=\"range\" id=\"range\" hidden> <p part=\"support-text\" id=\"range-support\"></p> <p part=\"range-item\"> <span part=\"range-label\">開始日:</span> <span part=\"range-value\" id=\"range-start\">未選択</span> </p> <p part=\"range-item\"> <span part=\"range-label\">終了日:</span> <span part=\"range-value\" id=\"range-end\">未選択</span> </p> <div part=\"visually-hidden\" id=\"range-live\" aria-live=\"polite\"></div> </div> `, styles: withReset([applyDADSTokens(), calendarStyles], 'minimal'), attributes: [ { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'range' }, ], }",
+              "default": "{ name: 'dads-calendar', template: html` <div part=\"visually-hidden\"> <h2 id=\"calendar-heading\" aria-live=\"polite\"></h2> </div> <div part=\"controls\"> <span part=\"select\"> <span part=\"select-control\"> <select part=\"year-select\" id=\"year-select\" data-size=\"sm\" aria-label=\"年\" ></select> <svg part=\"select-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\"/> </svg> </span> </span> <div part=\"navigation\"> <dads-button part=\"nav-button prev-month-button\" id=\"prev-month-button\" type=\"button\" variant=\"secondary\" size=\"small\" aria-label=\"前の月\" > <svg slot=\"icon-start\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" role=\"img\" aria-hidden=\"true\"> <path d=\"m5.27 8 5.33-5.33-.93-.94L3.4 8l6.27 6.27.93-.94L5.27 8Z\" fill=\"currentcolor\" /> </svg> </dads-button> <p part=\"current-month\" id=\"current-month\"></p> <dads-button part=\"nav-button next-month-button\" id=\"next-month-button\" type=\"button\" variant=\"secondary\" size=\"small\" aria-label=\"次の月\" > <svg slot=\"icon-start\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" role=\"img\" aria-hidden=\"true\"> <path d=\"m6 1.73-.93.94L10.4 8l-5.33 5.33.93.94L12.27 8 6 1.73Z\" fill=\"currentcolor\" /> </svg> </dads-button> </div> </div> <table part=\"table\" id=\"calendar-table\" role=\"grid\"> <thead> <tr> <th part=\"header-cell\" scope=\"col\">日</th> <th part=\"header-cell\" scope=\"col\">月</th> <th part=\"header-cell\" scope=\"col\">火</th> <th part=\"header-cell\" scope=\"col\">水</th> <th part=\"header-cell\" scope=\"col\">木</th> <th part=\"header-cell\" scope=\"col\">金</th> <th part=\"header-cell\" scope=\"col\">土</th> </tr> </thead> <tbody id=\"calendar-tbody\"></tbody> </table> <template id=\"cell-template\"> <td part=\"data-cell\" role=\"gridcell\"> <button part=\"date\" data-js-date-button></button> </td> </template> <div part=\"footer\"> <dads-button part=\"footer-button\" id=\"delete-button\" type=\"button\" variant=\"tertiary\" size=\"small\">削除</dads-button> <dads-button part=\"footer-button\" id=\"today-button\" type=\"button\" variant=\"secondary\" size=\"small\">今日</dads-button> </div> <div part=\"range\" id=\"range\" hidden> <p part=\"support-text\" id=\"range-support\"></p> <p part=\"range-item\"> <span part=\"range-label\">開始日:</span> <span part=\"range-value\" id=\"range-start\">未選択</span> </p> <p part=\"range-item\"> <span part=\"range-label\">終了日:</span> <span part=\"range-value\" id=\"range-end\">未選択</span> </p> <div part=\"visually-hidden\" id=\"range-live\" aria-live=\"polite\"></div> </div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), calendarStyles], 'minimal'), attributes: [ { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'range' }, ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -3436,9 +3477,9 @@
           },
           "tagName": "dads-calendar",
           "customElement": true,
-          "modulePath": "./packages/components/calendar/calendar.ts",
-          "definitionPath": "./packages/components/calendar/calendar.ts",
-          "typeDefinitionPath": "./packages/components/calendar/calendar.ts"
+          "modulePath": "./packages/components/calendar/calendar-impl.ts",
+          "definitionPath": "./packages/components/calendar/calendar-impl.ts",
+          "typeDefinitionPath": "./packages/components/calendar/calendar-impl.ts"
         }
       ],
       "exports": [
@@ -3447,15 +3488,15 @@
           "name": "DadsCalendar",
           "declaration": {
             "name": "DadsCalendar",
-            "module": "packages/components/calendar/calendar.ts"
+            "module": "packages/components/calendar/calendar-impl.ts"
           }
         }
       ],
-      "typeDefinitionPath": "./packages/components/calendar/calendar.ts"
+      "typeDefinitionPath": "./packages/components/calendar/calendar-impl.ts"
     },
     {
       "kind": "javascript-module",
-      "path": "./packages/components/calendar/calendar.ts",
+      "path": "./packages/components/calendar/calendar-impl.ts",
       "deprecated": false,
       "declarations": [],
       "exports": [
@@ -3464,7 +3505,7 @@
           "name": "dads-calendar",
           "declaration": {
             "name": "DadsCalendar",
-            "module": "./packages/components/calendar/calendar.ts"
+            "module": "./packages/components/calendar/calendar-impl.ts"
           }
         }
       ]
@@ -5674,7 +5715,7 @@
     },
     {
       "kind": "javascript-module",
-      "path": "./packages/components/date-picker/date-picker.ts",
+      "path": "./packages/components/date-picker/date-picker-impl.ts",
       "declarations": [
         {
           "kind": "class",
@@ -5758,10 +5799,46 @@
             },
             {
               "kind": "field",
+              "name": "#calendarLoading",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#calendarOpenToken",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "#calendarPopover",
               "privacy": "private",
               "type": {
                 "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#calendarPrefix",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#calendarReady",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<boolean> | null"
               },
               "default": "null"
             },
@@ -5875,6 +5952,10 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "forceReplace",
+                  "default": "false"
                 }
               ]
             },
@@ -5983,11 +6064,31 @@
             },
             {
               "kind": "method",
+              "name": "#getCalendarApi",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<(HTMLElement & DadsCalendarPublicAPI) | null>"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "#getDeepActiveElement",
               "privacy": "private",
               "return": {
                 "type": {
                   "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getExternalDescribedByIds",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
                 }
               }
             },
@@ -6118,7 +6219,17 @@
               "privacy": "private",
               "return": {
                 "type": {
-                  "text": "void"
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#prepareCalendar",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<boolean>"
                 }
               }
             },
@@ -6131,6 +6242,36 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "#setInputsState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "prop",
+                  "type": {
+                    "text": "'disabled' | 'readOnly'"
+                  }
+                },
+                {
+                  "name": "dataAttr",
+                  "type": {
+                    "text": "'data-disabled' | 'data-readonly'"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -6344,11 +6485,9 @@
               "kind": "field",
               "name": "a11yAnnotations",
               "type": {
-                "text": "A11yAnnotations"
+                "text": "A11yAnnotations | undefined"
               },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: '日付ピッカー／カレンダーコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部に年/月/日の入力欄（<input>）を持ち、日付入力のセマンティクスを提供します。', 'カレンダーポップオーバーは role=\"dialog\" で提供します。', ], keyboard: [ 'Tabで各入力欄へフォーカスできます。', 'Consolidatedタイプでは左右キー（←→）でフィールド間の移動をサポートします。', 'カレンダー表示中は Esc で閉じる操作が可能です。', ], zoom: [ 'サイズ（sm/md/lg）に応じて高さを調整します。', ], states: [ 'disabled / readonly / error をサポートします。', 'error時は各入力に aria-invalid=\"true\" を付与し、エラーテキストを表示します。', ], labels: [ '各入力欄は <label> でラベル（年/月/日）と関連付けます。', 'グループ全体のラベルは fieldset/legend による付与を推奨します（DADSガイドに準拠）。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'inputs', title: '入力欄グループ', label: 'inputs', description: '年/月/日の入力欄をまとめた領域です（data-type により見た目が変化）。', category: 'semantics', placement: 'top-left', target: shadowTarget('[part=\"inputs\"]'), }, { id: 'year-input', title: '年（入力）', label: '<input>', description: '年（西暦）の入力欄です。', category: 'keyboard', placement: 'top-left', target: shadowTarget('#year-input'), }, { id: 'month-input', title: '月（入力）', label: '<input>', description: '月（01-12）の入力欄です。', category: 'keyboard', placement: 'top-left', target: shadowTarget('#month-input'), }, { id: 'day-input', title: '日（入力）', label: '<input>', description: '日（01-31）の入力欄です。', category: 'keyboard', placement: 'top-left', target: shadowTarget('#day-input'), }, { id: 'calendar-button', title: 'カレンダーボタン', label: 'button', description: 'クリックでカレンダー（ポップオーバー）を開閉します。', category: 'keyboard', placement: 'top-right', target: shadowTarget('[part=\"calendar-button\"]'), }, { id: 'calendar-popover', title: 'カレンダー（ダイアログ）', label: 'role=\"dialog\"', description: 'カレンダーを role=\"dialog\" として表示します。Escで閉じ、Tabでフォーカスがループします。', category: 'semantics', placement: 'top-right', target: shadowTarget('#calendar-popover'), }, { id: 'calendar', title: '内包カレンダー', label: '<dads-calendar>', description: '日付選択UIは dads-calendar を内包して提供します（選択イベントで入力欄へ反映）。', category: 'semantics', placement: 'top-right', target: shadowTarget('#calendar'), }, { id: 'error-text', title: 'エラーテキスト', label: 'error-text', description: 'error属性が指定されたときに表示されます。', category: 'states', placement: 'bottom-left', target: shadowTarget('[part=\"error-text\"]'), }, ], }"
+              "static": true
             },
             {
               "kind": "method",
@@ -6415,7 +6554,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-date-picker', template: html` <div part=\"controls\" id=\"controls\"> <div part=\"inputs\" id=\"inputs\"> <label part=\"field year\" id=\"year-field\"> <span part=\"field-label\">年</span> <input part=\"field-input\" id=\"year-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-year-input /> </label> <label part=\"field month\" id=\"month-field\"> <span part=\"field-label\">月</span> <input part=\"field-input\" id=\"month-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-month-input /> </label> <label part=\"field day\" id=\"day-field\"> <span part=\"field-label\">日</span> <input part=\"field-input\" id=\"day-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-day-input /> </label> </div> <button part=\"calendar-button\" id=\"calendar-button\" type=\"button\" aria-haspopup=\"dialog\" aria-controls=\"calendar-popover\" aria-expanded=\"false\" > <svg part=\"calendar-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"カレンダー\"> <path d=\"M9 16.5C7.62 16.5 6.5 15.38 6.5 14C6.5 12.62 7.62 11.5 9 11.5C10.38 11.5 11.5 12.62 11.5 14C11.5 15.38 10.38 16.5 9 16.5ZM5 22C3.9 22 3 21.09 3 20V6C3 4.91 3.91 4 5 4H6V2H8V4H16V2H18V4H19C20.09 4 21 4.91 21 6V20C21 21.09 20.09 22 19 22H5ZM5 20H19V10H5V20Z\" fill=\"currentcolor\"/> </svg> <svg part=\"calendar-chevron\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17.1L3 8L4 7L12 15L20 7L21 8L12 17.1Z\" fill=\"currentcolor\" /> </svg> </button> <div part=\"calendar-popover\" id=\"calendar-popover\" role=\"dialog\" aria-label=\"カレンダー\" aria-modal=\"true\" style=\"display: none;\" > <div part=\"backdrop\" id=\"backdrop\"></div> <dads-calendar part=\"calendar\" id=\"calendar\"></dads-calendar> </div> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <div part=\"visually-hidden\" id=\"describedby-proxies\"></div> `, styles: withReset([applyDADSTokens(), datePickerStyles], 'minimal'), attributes: [ { attribute: 'data-type' }, PropertyAttr('size'), BooleanAttr('calendar'), BooleanAttr('disabled'), BooleanAttr('readonly'), BooleanAttr('error'), PropertyAttr('error-text'), { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'value' }, { attribute: 'aria-describedby' }, ], }"
+              "default": "{ name: 'dads-date-picker', template: html` <div part=\"controls\" id=\"controls\"> <div part=\"inputs\" id=\"inputs\"> <label part=\"field year\" id=\"year-field\"> <span part=\"field-label\">年</span> <input part=\"field-input\" id=\"year-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-year-input /> </label> <label part=\"field month\" id=\"month-field\"> <span part=\"field-label\">月</span> <input part=\"field-input\" id=\"month-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-month-input /> </label> <label part=\"field day\" id=\"day-field\"> <span part=\"field-label\">日</span> <input part=\"field-input\" id=\"day-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-day-input /> </label> </div> <button part=\"calendar-button\" id=\"calendar-button\" type=\"button\" aria-haspopup=\"dialog\" aria-controls=\"calendar-popover\" aria-expanded=\"false\" > <svg part=\"calendar-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"カレンダー\"> <path d=\"M9 16.5C7.62 16.5 6.5 15.38 6.5 14C6.5 12.62 7.62 11.5 9 11.5C10.38 11.5 11.5 12.62 11.5 14C11.5 15.38 10.38 16.5 9 16.5ZM5 22C3.9 22 3 21.09 3 20V6C3 4.91 3.91 4 5 4H6V2H8V4H16V2H18V4H19C20.09 4 21 4.91 21 6V20C21 21.09 20.09 22 19 22H5ZM5 20H19V10H5V20Z\" fill=\"currentcolor\"/> </svg> <svg part=\"calendar-chevron\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17.1L3 8L4 7L12 15L20 7L21 8L12 17.1Z\" fill=\"currentcolor\" /> </svg> </button> <div part=\"calendar-popover\" id=\"calendar-popover\" role=\"dialog\" aria-label=\"カレンダー\" aria-modal=\"true\" style=\"display: none;\" > <div part=\"backdrop\" id=\"backdrop\"></div> <dads-calendar part=\"calendar\" id=\"calendar\"></dads-calendar> </div> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <div part=\"visually-hidden\" id=\"describedby-proxies\"></div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), datePickerStyles], 'minimal'), attributes: [ { attribute: 'data-type' }, PropertyAttr('size'), BooleanAttr('calendar'), BooleanAttr('disabled'), BooleanAttr('readonly'), BooleanAttr('error'), PropertyAttr('error-text'), { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'value' }, { attribute: 'aria-describedby' }, ], }"
             },
             {
               "kind": "field",
@@ -6740,9 +6879,9 @@
           },
           "tagName": "dads-date-picker",
           "customElement": true,
-          "modulePath": "./packages/components/date-picker/date-picker.ts",
-          "definitionPath": "./packages/components/date-picker/date-picker.ts",
-          "typeDefinitionPath": "./packages/components/date-picker/date-picker.ts"
+          "modulePath": "./packages/components/date-picker/date-picker-impl.ts",
+          "definitionPath": "./packages/components/date-picker/date-picker-impl.ts",
+          "typeDefinitionPath": "./packages/components/date-picker/date-picker-impl.ts"
         }
       ],
       "exports": [
@@ -6751,15 +6890,15 @@
           "name": "DadsDatePicker",
           "declaration": {
             "name": "DadsDatePicker",
-            "module": "packages/components/date-picker/date-picker.ts"
+            "module": "packages/components/date-picker/date-picker-impl.ts"
           }
         }
       ],
-      "typeDefinitionPath": "./packages/components/date-picker/date-picker.ts"
+      "typeDefinitionPath": "./packages/components/date-picker/date-picker-impl.ts"
     },
     {
       "kind": "javascript-module",
-      "path": "./packages/components/date-picker/date-picker.ts",
+      "path": "./packages/components/date-picker/date-picker-impl.ts",
       "deprecated": false,
       "declarations": [],
       "exports": [
@@ -6768,7 +6907,7 @@
           "name": "dads-date-picker",
           "declaration": {
             "name": "DadsDatePicker",
-            "module": "./packages/components/date-picker/date-picker.ts"
+            "module": "./packages/components/date-picker/date-picker-impl.ts"
           }
         }
       ]
@@ -13539,30 +13678,6 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
-            },
-            {
-              "kind": "method",
-              "name": "#ensureButtonElement",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "HTMLElement | null"
-                }
-              },
-              "parameters": [
-                {
-                  "name": "id",
-                  "type": {
-                    "text": "string"
-                  }
-                },
-                {
-                  "name": "prefix",
-                  "type": {
-                    "text": "string"
-                  }
-                }
-              ]
             },
             {
               "kind": "method",
@@ -21074,6 +21189,82 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/calendar/calendar-a11y.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "calendarA11yAnnotations",
+          "type": {
+            "text": "A11yAnnotations"
+          },
+          "default": "{ version: 1, summary: 'カレンダーコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '日付一覧は <table role=\"grid\"> を用いて表現します。', '日付は <button> として実装され、選択・フォーカス状態を提供します。', 'aria-label（年月）を更新し、スクリーンリーダーに表示中の月を伝えます。', ], keyboard: [ 'Tabで日付ボタンへフォーカスできます。', '矢印キー（上下左右）で日付セル間を移動できます。', ], zoom: [ '日付ボタンは円形で視認性を確保し、相対単位(rem)で定義します。', ], states: [ '選択中の日付は data-selected で視覚的に表示されます。', '範囲外の日付は無効化され、選択できません。', 'range属性が指定された場合、開始日/終了日の期間選択が可能になります。', ], labels: [ '年の選択は <select aria-label=\"年\"> で提供します。', '各日付ボタンは曜日を含む aria-label を持ちます。', 'range属性が指定された場合、「開始日/終了日」とサポートテキストが追加されます。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'year-select', title: '年セレクト', label: '<select>', description: '表示する年を選択します（min-date/max-date に応じて選択肢を生成）。', category: 'labels', placement: 'top-left', target: shadowTarget('[part=\"year-select\"]'), }, { id: 'prev-month-button', title: '前の月へ', label: '<dads-button>', description: '表示月を前の月へ移動します（aria-labelで目的を明示）。', category: 'keyboard', placement: 'top-right', target: shadowTarget('#prev-month-button'), }, { id: 'next-month-button', title: '次の月へ', label: '<dads-button>', description: '表示月を次の月へ移動します（aria-labelで目的を明示）。', category: 'keyboard', placement: 'top-right', target: shadowTarget('#next-month-button'), }, { id: 'current-month', title: '表示中の月', label: '月表示', description: '現在表示している月を示します（年は見出し/テーブルのaria-labelでも提供）。', category: 'labels', placement: 'top-right', target: shadowTarget('#current-month'), }, { id: 'calendar-table', title: 'カレンダーグリッド', label: '<table role=\"grid\">', description: '日付の一覧をグリッドとして提供します。', category: 'semantics', placement: 'bottom-left', target: shadowTarget('[part=\"table\"]'), }, { id: 'date-button', title: '日付ボタン', label: '<button>', description: '日付はbuttonとして実装され、矢印キーでセル移動、クリックで選択できます。', category: 'keyboard', placement: 'bottom-left', target: shadowTarget('[part=\"date\"]:not(:disabled)'), }, { id: 'delete-button', title: '削除', label: '<dads-button>', description: '選択状態をクリアします。', category: 'states', placement: 'bottom-left', target: shadowTarget('#delete-button'), }, { id: 'today-button', title: '今日', label: '<dads-button>', description: '今日の日付へ移動し、選択します。', category: 'states', placement: 'bottom-right', target: shadowTarget('#today-button'), }, { id: 'range', title: '期間選択', label: 'range', description: 'range属性が指定された場合、開始日/終了日の表示とサポートテキスト（aria-liveによる読み上げ）を提供します。', category: 'states', placement: 'bottom-left', target: shadowTarget('[part=\"range\"]'), }, { id: 'range-support', title: 'サポートテキスト（期間選択）', label: 'support-text', description: '開始日/終了日のどちらを選ぶべきかをガイドします。', category: 'labels', placement: 'bottom-left', target: shadowTarget('#range-support'), }, { id: 'range-live', title: '読み上げ（期間選択）', label: 'aria-live', description: '選択操作の結果を aria-live=\"polite\" で通知します。', category: 'states', placement: 'bottom-left', target: shadowTarget('#range-live'), }, ], }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "calendarA11yAnnotations",
+          "declaration": {
+            "name": "calendarA11yAnnotations",
+            "module": "packages/components/calendar/calendar-a11y.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/calendar/calendar-define-base.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineCalendarComponent",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "component",
+              "type": {
+                "text": "ComponentCtor"
+              }
+            },
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-calendar`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineCalendarComponent",
+          "declaration": {
+            "name": "defineCalendarComponent",
+            "module": "packages/components/calendar/calendar-define-base.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/calendar/calendar-define.ts",
       "declarations": [
         {
@@ -21113,11 +21304,6 @@
             }
           },
           "description": "デフォルト名での登録"
-        },
-        {
-          "kind": "variable",
-          "name": "name",
-          "default": "`${effectivePrefix}-calendar`"
         }
       ],
       "exports": [
@@ -21141,12 +21327,93 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/calendar/calendar-lite-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineCalendarLite",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultCalendarLite",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineCalendarLite",
+          "declaration": {
+            "name": "defineCalendarLite",
+            "module": "packages/components/calendar/calendar-lite-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCalendarLite",
+          "declaration": {
+            "name": "defineDefaultCalendarLite",
+            "module": "packages/components/calendar/calendar-lite-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/calendar/calendar-lite.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsCalendar",
+          "declaration": {
+            "name": "DadsCalendar",
+            "module": "./calendar-impl.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCalendarPublicAPI",
+          "declaration": {
+            "name": "DadsCalendarPublicAPI",
+            "module": "./calendar-impl.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/calendar/calendar-styles.ts",
       "declarations": [
         {
           "kind": "variable",
           "name": "calendarStyles",
-          "default": "css` :host { display: flex; flex-direction: column; align-items: center; width: max-content; color: var(--color-neutral-solid-gray-800); font-weight: 400; font-size: calc(16 / 16 * 1rem); line-height: 1; font-family: var(--font-family-sans); letter-spacing: 0.02em; /* Override hooks (consumer can set on <dads-calendar>) */ --dads-calendar-control-size-default: calc(44 / 16 * 1rem); --_dads-calendar-control-size: var( --dads-calendar-control-size, var(--dads-calendar-control-size-default) ); } /* 見出し（スクリーンリーダー通知用） */ [part=\"visually-hidden\"] { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; } /* ========== Controls ========== */ [part=\"controls\"] { display: flex; align-items: center; column-gap: var(--spacing-2); padding: var(--spacing-4); } [part=\"navigation\"] { display: flex; align-items: center; } /* ========== Select（select.css相当） ========== */ [part=\"select-control\"] { position: relative; display: block; width: fit-content; } [part=\"year-select\"] { vertical-align: middle; box-sizing: border-box; border-radius: var(--spacing-2); border: 1px solid var(--color-neutral-solid-gray-600); background-color: var(--color-neutral-white); padding-right: var(--spacing-10); padding-left: var(--spacing-4); color: inherit; font: inherit; line-height: 1; letter-spacing: inherit; -webkit-appearance: none; -moz-appearance: none; appearance: none; } [part=\"year-select\"][data-size=\"sm\"] { height: var(--_dads-calendar-control-size); } [part=\"year-select\"]:focus-visible { outline: var(--spacing-1) solid var(--color-neutral-black); outline-offset: var(--spacing-0-5); box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300); } @media (hover: hover) { [part=\"year-select\"]:hover { border-color: var(--color-neutral-black); } } [part=\"select-chevron\"] { pointer-events: none; position: absolute; top: 0; right: var(--spacing-4); bottom: 0; margin-top: auto; margin-bottom: auto; width: var(--spacing-4); height: var(--spacing-4); } [part=\"year-select\"]:disabled + [part=\"select-chevron\"] { color: var(--color-neutral-solid-gray-420); } @media (forced-colors: active) { [part=\"year-select\"] { color: ButtonText; border-color: ButtonText; } [part=\"year-select\"]:disabled, [part=\"year-select\"]:disabled:hover { border-color: GrayText; color: GrayText; } [part=\"select-chevron\"] { color: ButtonText; } [part=\"year-select\"]:disabled + [part=\"select-chevron\"] { color: GrayText; } } /* ========== Navigation buttons（dads-button secondary） ========== */ [part~=\"nav-button\"] { /* icon-only */ --dads-button-padding: 0; --dads-button-min-height: var(--_dads-calendar-control-size); --dads-button-width: var(--_dads-calendar-control-size); --dads-button-min-width: var(--_dads-calendar-control-size); --dads-button-aspect-ratio: 1 / 1; --dads-button-icon-gap: 0; } [part~=\"nav-button\"]::part(label), [part~=\"nav-button\"]::part(icon-end) { display: none; } [part=\"current-month\"] { margin: 0; align-self: center; width: 3.5rem; /* 56px - 固定幅のため数値指定 */ text-align: center; } /* ========== Table ========== */ [part=\"table\"] { margin-right: var(--spacing-3); margin-bottom: var(--spacing-2); margin-left: var(--spacing-3); width: auto; border-collapse: collapse; } [part=\"header-cell\"] { width: var(--spacing-12); height: var(--spacing-12); padding: 0; color: var(--color-neutral-solid-gray-700); font-weight: 700; text-align: center; vertical-align: middle; } [part=\"data-cell\"] { padding: 0; position: relative; } [part=\"date\"] { margin: var(--spacing-1); display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--spacing-10); height: var(--spacing-10); border-radius: 50%; border: 0; background-color: transparent; color: inherit; font: inherit; letter-spacing: inherit; text-underline-offset: var(--spacing-0-5); cursor: pointer; position: relative; z-index: 1; } /* range: 期間内のライン */ :host([range]) [part=\"data-cell\"][data-in-range]::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); height: 2px; /* hairline - ボーダー幅なのでpx指定 */ background-color: var(--color-primitive-blue-900, #0017c1); z-index: 0; } :host([range]) [part=\"data-cell\"][data-in-range][data-range-start]::before { left: 50%; } :host([range]) [part=\"data-cell\"][data-in-range][data-range-end]::before { right: 50%; } @media (hover: hover) { [part=\"date\"]:not(:disabled):hover { background-color: var(--color-neutral-solid-gray-50); text-decoration: underline; } } [part=\"date\"]:focus-visible { outline: var(--spacing-1) solid var(--color-neutral-black); outline-offset: var(--spacing-0-5); background-color: var(--color-primitive-yellow-300); box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300); } [part=\"date\"][data-selected] { border: 1px solid transparent; background-color: var(--color-primitive-blue-900); color: var(--color-neutral-white); } [part=\"data-cell\"][data-outside-month] [part=\"date\"] { visibility: hidden; } [part=\"date\"]:disabled { cursor: default; color: var(--color-neutral-solid-gray-420); } @media (forced-colors: active) { [part=\"date\"]:disabled { color: GrayText; } } /* ========== Footer ========== */ [part=\"footer\"] { display: flex; align-items: center; justify-content: space-between; column-gap: var(--spacing-4); box-sizing: border-box; width: 100%; padding: var(--spacing-4); } /* Footer buttons: DADS calendar.css 相当のサイズ感に調整 */ [part~=\"footer-button\"] { --dads-button-min-height: var(--_dads-calendar-control-size); } /* ========== Range (Start/End) ========== */ [part=\"range\"] { box-sizing: border-box; width: 100%; padding: 0 var(--spacing-4) var(--spacing-4); } [part=\"support-text\"] { margin: 0 0 var(--spacing-2); color: var(--color-neutral-solid-gray-700); font-size: 0.875rem; /* 14px - フォントサイズは固定 */ line-height: 1.5; } [part=\"range-item\"] { margin: 0; display: flex; column-gap: var(--spacing-2); align-items: baseline; } [part=\"range-label\"] { flex: 0 0 auto; font-weight: 700; } [part=\"range-value\"] { flex: 1 1 auto; } `"
+          "default": "css` :host { display: flex; flex-direction: column; align-items: center; width: max-content; color: var(--color-neutral-solid-gray-800); font-weight: 400; font-size: calc(16 / 16 * 1rem); line-height: 1; font-family: var(--font-family-sans); letter-spacing: 0.02em; /* Override hooks (consumer can set on <dads-calendar>) */ --dads-calendar-control-size-default: calc(44 / 16 * 1rem); --_dads-calendar-control-size: var( --dads-calendar-control-size, var(--dads-calendar-control-size-default) ); } /* 見出し（スクリーンリーダー通知用） */ [part=\"visually-hidden\"] { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; } /* ========== Controls ========== */ [part=\"controls\"] { display: flex; align-items: center; column-gap: var(--spacing-2); padding: var(--spacing-4); } [part=\"navigation\"] { display: flex; align-items: center; } /* ========== Select（select.css相当） ========== */ [part=\"select-control\"] { position: relative; display: block; width: fit-content; } [part=\"year-select\"] { vertical-align: middle; box-sizing: border-box; border-radius: var(--spacing-2); border: 1px solid var(--color-neutral-solid-gray-600); background-color: var(--color-neutral-white); padding-right: var(--spacing-10); padding-left: var(--spacing-4); color: inherit; font: inherit; line-height: 1; letter-spacing: inherit; -webkit-appearance: none; -moz-appearance: none; appearance: none; } [part=\"year-select\"][data-size=\"sm\"] { height: var(--_dads-calendar-control-size); } [part=\"year-select\"]:focus-visible { outline: var(--spacing-1) solid var(--color-neutral-black); outline-offset: var(--spacing-0-5); box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300); } @media (hover: hover) { [part=\"year-select\"]:hover { border-color: var(--color-neutral-black); } } [part=\"select-chevron\"] { pointer-events: none; position: absolute; top: 0; right: var(--spacing-4); bottom: 0; margin-top: auto; margin-bottom: auto; width: var(--spacing-4); height: var(--spacing-4); } [part=\"year-select\"]:disabled + [part=\"select-chevron\"] { color: var(--color-neutral-solid-gray-420); } @media (forced-colors: active) { [part=\"year-select\"] { color: ButtonText; border-color: ButtonText; } [part=\"year-select\"]:disabled, [part=\"year-select\"]:disabled:hover { border-color: GrayText; color: GrayText; } [part=\"select-chevron\"] { color: ButtonText; } [part=\"year-select\"]:disabled + [part=\"select-chevron\"] { color: GrayText; } } /* ========== Navigation buttons（dads-button secondary） ========== */ [part~=\"nav-button\"] { /* icon-only */ --dads-button-padding: 0; --dads-button-min-height: var(--_dads-calendar-control-size); --dads-button-width: var(--_dads-calendar-control-size); --dads-button-min-width: var(--_dads-calendar-control-size); --dads-button-aspect-ratio: 1 / 1; --dads-button-icon-gap: 0; } [part~=\"nav-button\"]::part(label), [part~=\"nav-button\"]::part(icon-end) { display: none; } [part=\"current-month\"] { margin: 0; align-self: center; width: 3.5rem; /* 56px - 固定幅のため数値指定 */ text-align: center; } /* ========== Table ========== */ [part=\"table\"] { margin-right: var(--spacing-3); margin-bottom: var(--spacing-2); margin-left: var(--spacing-3); width: auto; border-collapse: collapse; } [part=\"header-cell\"] { width: var(--spacing-12); height: var(--spacing-12); padding: 0; color: var(--color-neutral-solid-gray-700); font-weight: 700; text-align: center; vertical-align: middle; } [part=\"data-cell\"] { padding: 0; position: relative; } [part=\"date\"] { margin: var(--spacing-1); display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: var(--spacing-10); height: var(--spacing-10); border-radius: 50%; border: 0; background-color: transparent; color: inherit; font: inherit; letter-spacing: inherit; text-underline-offset: var(--spacing-0-5); cursor: pointer; position: relative; z-index: 1; } /* range: 期間内のライン */ :host([range]) [part=\"data-cell\"][data-in-range]::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); height: 2px; /* hairline - ボーダー幅なのでpx指定 */ background-color: var(--color-primitive-blue-900, #0017c1); z-index: 0; } :host([range]) [part=\"data-cell\"][data-in-range][data-range-start]::before { left: 50%; } :host([range]) [part=\"data-cell\"][data-in-range][data-range-end]::before { right: 50%; } :host([range]) [part=\"data-cell\"][data-in-range]:not([data-range-start]):not([data-range-end]) [part=\"date\"] { border: 1px solid var(--color-primitive-blue-900); background-color: var(--color-primitive-blue-50); color: inherit; } @media (hover: hover) { [part=\"date\"]:not(:disabled):hover { background-color: var(--color-neutral-solid-gray-50); text-decoration: underline; } } [part=\"date\"]:not(:disabled):not([data-selected]):active { background-color: transparent; color: inherit; text-decoration: underline; } [part=\"date\"][data-selected]:is(:hover, :active) { background-color: var(--color-primitive-blue-900); color: var(--color-neutral-white); text-decoration: underline; } [part=\"date\"]:focus-visible { outline: var(--spacing-1) solid var(--color-neutral-black); outline-offset: var(--spacing-0-5); background-color: var(--color-primitive-yellow-300); box-shadow: 0 0 0 var(--spacing-0-5) var(--color-primitive-yellow-300); } [part=\"date\"][data-selected] { border: 1px solid transparent; background-color: var(--color-primitive-blue-900); color: var(--color-neutral-white); } [part=\"data-cell\"][data-outside-month] [part=\"date\"] { visibility: hidden; } [part=\"date\"]:disabled { cursor: default; color: var(--color-neutral-solid-gray-420); } @media (forced-colors: active) { [part=\"date\"]:disabled { color: GrayText; } } /* ========== Footer ========== */ [part=\"footer\"] { display: flex; align-items: center; justify-content: space-between; column-gap: var(--spacing-4); box-sizing: border-box; width: 100%; padding: var(--spacing-4); } /* Footer buttons: DADS calendar.css 相当のサイズ感に調整 */ [part~=\"footer-button\"] { --dads-button-min-height: var(--_dads-calendar-control-size); } /* ========== Range (Start/End) ========== */ [part=\"range\"] { box-sizing: border-box; width: 100%; padding: 0 var(--spacing-4) var(--spacing-4); } [part=\"support-text\"] { margin: 0 0 var(--spacing-2); color: var(--color-neutral-solid-gray-700); font-size: 0.875rem; /* 14px - フォントサイズは固定 */ line-height: 1.5; } [part=\"range-item\"] { margin: 0; display: flex; column-gap: var(--spacing-2); align-items: baseline; } [part=\"range-label\"] { flex: 0 0 auto; font-weight: 700; } [part=\"range-value\"] { flex: 1 1 auto; } `"
         }
       ],
       "exports": [
@@ -21156,6 +21423,29 @@
           "declaration": {
             "name": "calendarStyles",
             "module": "packages/components/calendar/calendar-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/calendar/calendar.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsCalendar",
+          "declaration": {
+            "name": "DadsCalendar",
+            "module": "packages/components/calendar/calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCalendarPublicAPI",
+          "declaration": {
+            "name": "DadsCalendarPublicAPI",
+            "module": "./calendar-impl.js"
           }
         }
       ]
@@ -21199,10 +21489,26 @@
         },
         {
           "kind": "js",
+          "name": "defineCalendarLite",
+          "declaration": {
+            "name": "defineCalendarLite",
+            "module": "./calendar-lite-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineDefaultCalendar",
           "declaration": {
             "name": "defineDefaultCalendar",
             "module": "./calendar-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCalendarLite",
+          "declaration": {
+            "name": "defineDefaultCalendarLite",
+            "module": "./calendar-lite-define.js"
           }
         }
       ]
@@ -21704,6 +22010,82 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/date-picker/date-picker-a11y.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "datePickerA11yAnnotations",
+          "type": {
+            "text": "A11yAnnotations"
+          },
+          "default": "{ version: 1, summary: '日付ピッカー／カレンダーコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部に年/月/日の入力欄（<input>）を持ち、日付入力のセマンティクスを提供します。', 'カレンダーポップオーバーは role=\"dialog\" で提供します。', ], keyboard: [ 'Tabで各入力欄へフォーカスできます。', 'Consolidatedタイプでは左右キー（←→）でフィールド間の移動をサポートします。', 'カレンダー表示中は Esc で閉じる操作が可能です。', ], zoom: [ 'サイズ（sm/md/lg）に応じて高さを調整します。', ], states: [ 'disabled / readonly / error をサポートします。', 'error時は各入力に aria-invalid=\"true\" を付与し、エラーテキストを表示します。', ], labels: [ '各入力欄は <label> でラベル（年/月/日）と関連付けます。', 'グループ全体のラベルは fieldset/legend による付与を推奨します（DADSガイドに準拠）。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'inputs', title: '入力欄グループ', label: 'inputs', description: '年/月/日の入力欄をまとめた領域です（data-type により見た目が変化）。', category: 'semantics', placement: 'top-left', target: shadowTarget('[part=\"inputs\"]'), }, { id: 'year-input', title: '年（入力）', label: '<input>', description: '年（西暦）の入力欄です。', category: 'keyboard', placement: 'top-left', target: shadowTarget('#year-input'), }, { id: 'month-input', title: '月（入力）', label: '<input>', description: '月（01-12）の入力欄です。', category: 'keyboard', placement: 'top-left', target: shadowTarget('#month-input'), }, { id: 'day-input', title: '日（入力）', label: '<input>', description: '日（01-31）の入力欄です。', category: 'keyboard', placement: 'top-left', target: shadowTarget('#day-input'), }, { id: 'calendar-button', title: 'カレンダーボタン', label: 'button', description: 'クリックでカレンダー（ポップオーバー）を開閉します。', category: 'keyboard', placement: 'top-right', target: shadowTarget('[part=\"calendar-button\"]'), }, { id: 'calendar-popover', title: 'カレンダー（ダイアログ）', label: 'role=\"dialog\"', description: 'カレンダーを role=\"dialog\" として表示します。Escで閉じ、Tabでフォーカスがループします。', category: 'semantics', placement: 'top-right', target: shadowTarget('#calendar-popover'), }, { id: 'calendar', title: '内包カレンダー', label: '<dads-calendar>', description: '日付選択UIは dads-calendar を内包して提供します（選択イベントで入力欄へ反映）。', category: 'semantics', placement: 'top-right', target: shadowTarget('#calendar'), }, { id: 'error-text', title: 'エラーテキスト', label: 'error-text', description: 'error属性が指定されたときに表示されます。', category: 'states', placement: 'bottom-left', target: shadowTarget('[part=\"error-text\"]'), }, ], }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "datePickerA11yAnnotations",
+          "declaration": {
+            "name": "datePickerA11yAnnotations",
+            "module": "packages/components/date-picker/date-picker-a11y.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/date-picker/date-picker-define-base.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDatePickerComponent",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "component",
+              "type": {
+                "text": "ComponentCtor"
+              }
+            },
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-date-picker`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDatePickerComponent",
+          "declaration": {
+            "name": "defineDatePickerComponent",
+            "module": "packages/components/date-picker/date-picker-define-base.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/date-picker/date-picker-define.ts",
       "declarations": [
         {
@@ -21743,11 +22125,6 @@
             }
           },
           "description": "デフォルト名での登録"
-        },
-        {
-          "kind": "variable",
-          "name": "name",
-          "default": "`${effectivePrefix}-date-picker`"
         }
       ],
       "exports": [
@@ -21771,6 +22148,79 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/date-picker/date-picker-lite-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDatePickerLite",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultDatePickerLite",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDatePickerLite",
+          "declaration": {
+            "name": "defineDatePickerLite",
+            "module": "packages/components/date-picker/date-picker-lite-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultDatePickerLite",
+          "declaration": {
+            "name": "defineDefaultDatePickerLite",
+            "module": "packages/components/date-picker/date-picker-lite-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/date-picker/date-picker-lite.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDatePicker",
+          "declaration": {
+            "name": "DadsDatePicker",
+            "module": "./date-picker-impl.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/date-picker/date-picker-styles.ts",
       "declarations": [
         {
@@ -21786,6 +22236,21 @@
           "declaration": {
             "name": "datePickerStyles",
             "module": "packages/components/date-picker/date-picker-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/date-picker/date-picker.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDatePicker",
+          "declaration": {
+            "name": "DadsDatePicker",
+            "module": "packages/components/date-picker/date-picker.ts"
           }
         }
       ]
@@ -21821,10 +22286,26 @@
         },
         {
           "kind": "js",
+          "name": "defineDatePickerLite",
+          "declaration": {
+            "name": "defineDatePickerLite",
+            "module": "./date-picker-lite-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineDefaultDatePicker",
           "declaration": {
             "name": "defineDefaultDatePicker",
             "module": "./date-picker-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultDatePickerLite",
+          "declaration": {
+            "name": "defineDefaultDatePickerLite",
+            "module": "./date-picker-lite-define.js"
           }
         }
       ]
@@ -27504,6 +27985,39 @@
       "declarations": [
         {
           "kind": "function",
+          "name": "ensurePrefixedElement",
+          "return": {
+            "type": {
+              "text": "T | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "ParentNode"
+              }
+            },
+            {
+              "name": "id",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "expectedName",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "forceReplace",
+              "default": "false"
+            }
+          ]
+        },
+        {
+          "kind": "function",
           "name": "getPrefixFromLocalName",
           "return": {
             "type": {
@@ -27534,6 +28048,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "ensurePrefixedElement",
+          "declaration": {
+            "name": "ensurePrefixedElement",
+            "module": "packages/utils/custom-element-name.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "getPrefixFromLocalName",

@@ -91,3 +91,13 @@ export async function waitForCustomElement(element: HTMLElement): Promise<void> 
     });
   }
 }
+
+/**
+ * WebComponent definitionのstylesを配列で取得
+ */
+export function getDefinitionStyles(definition: {
+  styles?: string | CSSStyleSheet | (string | CSSStyleSheet)[];
+}): Array<string | CSSStyleSheet> {
+  if (!definition.styles) return [];
+  return Array.isArray(definition.styles) ? definition.styles : [definition.styles];
+}

@@ -1,0 +1,138 @@
+import type { A11yAnnotations, A11yElementRef } from '../../utils/a11y-annotations.js';
+
+const shadowTarget = (selector: string): A11yElementRef => ({ scope: 'shadow', selector });
+
+export const calendarA11yAnnotations: A11yAnnotations = {
+  version: 1,
+  summary: 'カレンダーコンポーネント仕様（アクセシビリティ注釈）',
+  categories: {
+    semantics: [
+      '日付一覧は <table role="grid"> を用いて表現します。',
+      '日付は <button> として実装され、選択・フォーカス状態を提供します。',
+      'aria-label（年月）を更新し、スクリーンリーダーに表示中の月を伝えます。',
+    ],
+    keyboard: [
+      'Tabで日付ボタンへフォーカスできます。',
+      '矢印キー（上下左右）で日付セル間を移動できます。',
+    ],
+    zoom: [
+      '日付ボタンは円形で視認性を確保し、相対単位(rem)で定義します。',
+    ],
+    states: [
+      '選択中の日付は data-selected で視覚的に表示されます。',
+      '範囲外の日付は無効化され、選択できません。',
+      'range属性が指定された場合、開始日/終了日の期間選択が可能になります。',
+    ],
+    labels: [
+      '年の選択は <select aria-label="年"> で提供します。',
+      '各日付ボタンは曜日を含む aria-label を持ちます。',
+      'range属性が指定された場合、「開始日/終了日」とサポートテキストが追加されます。',
+    ],
+    motion: [
+      'アニメーションは使用しません。',
+    ],
+  },
+  callouts: [
+    {
+      id: 'year-select',
+      title: '年セレクト',
+      label: '<select>',
+      description: '表示する年を選択します（min-date/max-date に応じて選択肢を生成）。',
+      category: 'labels',
+      placement: 'top-left',
+      target: shadowTarget('[part="year-select"]'),
+    },
+    {
+      id: 'prev-month-button',
+      title: '前の月へ',
+      label: '<dads-button>',
+      description: '表示月を前の月へ移動します（aria-labelで目的を明示）。',
+      category: 'keyboard',
+      placement: 'top-right',
+      target: shadowTarget('#prev-month-button'),
+    },
+    {
+      id: 'next-month-button',
+      title: '次の月へ',
+      label: '<dads-button>',
+      description: '表示月を次の月へ移動します（aria-labelで目的を明示）。',
+      category: 'keyboard',
+      placement: 'top-right',
+      target: shadowTarget('#next-month-button'),
+    },
+    {
+      id: 'current-month',
+      title: '表示中の月',
+      label: '月表示',
+      description: '現在表示している月を示します（年は見出し/テーブルのaria-labelでも提供）。',
+      category: 'labels',
+      placement: 'top-right',
+      target: shadowTarget('#current-month'),
+    },
+    {
+      id: 'calendar-table',
+      title: 'カレンダーグリッド',
+      label: '<table role="grid">',
+      description: '日付の一覧をグリッドとして提供します。',
+      category: 'semantics',
+      placement: 'bottom-left',
+      target: shadowTarget('[part="table"]'),
+    },
+    {
+      id: 'date-button',
+      title: '日付ボタン',
+      label: '<button>',
+      description: '日付はbuttonとして実装され、矢印キーでセル移動、クリックで選択できます。',
+      category: 'keyboard',
+      placement: 'bottom-left',
+      target: shadowTarget('[part="date"]:not(:disabled)'),
+    },
+    {
+      id: 'delete-button',
+      title: '削除',
+      label: '<dads-button>',
+      description: '選択状態をクリアします。',
+      category: 'states',
+      placement: 'bottom-left',
+      target: shadowTarget('#delete-button'),
+    },
+    {
+      id: 'today-button',
+      title: '今日',
+      label: '<dads-button>',
+      description: '今日の日付へ移動し、選択します。',
+      category: 'states',
+      placement: 'bottom-right',
+      target: shadowTarget('#today-button'),
+    },
+    {
+      id: 'range',
+      title: '期間選択',
+      label: 'range',
+      description:
+        'range属性が指定された場合、開始日/終了日の表示とサポートテキスト（aria-liveによる読み上げ）を提供します。',
+      category: 'states',
+      placement: 'bottom-left',
+      target: shadowTarget('[part="range"]'),
+    },
+    {
+      id: 'range-support',
+      title: 'サポートテキスト（期間選択）',
+      label: 'support-text',
+      description: '開始日/終了日のどちらを選ぶべきかをガイドします。',
+      category: 'labels',
+      placement: 'bottom-left',
+      target: shadowTarget('#range-support'),
+    },
+    {
+      id: 'range-live',
+      title: '読み上げ（期間選択）',
+      label: 'aria-live',
+      description: '選択操作の結果を aria-live="polite" で通知します。',
+      category: 'states',
+      placement: 'bottom-left',
+      target: shadowTarget('#range-live'),
+    },
+  ],
+};
+
