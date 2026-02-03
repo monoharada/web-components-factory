@@ -141,6 +141,66 @@ describe('DadsDatePicker - カレンダー連携', () => {
     expect(popover?.style.display).toBe('none');
   });
 
+  it('動的ロード中に閉じてもカレンダーへフォーカスしない', async () => {
+    const { defineDatePicker } = await import('./date-picker-define.js');
+    defineDatePicker();
+
+    element = createTestElement('dads-date-picker');
+    element.setAttribute('calendar', '');
+    await waitForCustomElement(element);
+
+    const button = getShadowContent(element, '#calendar-button') as HTMLButtonElement | null;
+    const popover = getShadowContent(element, '#calendar-popover') as HTMLElement | null;
+    const calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(button).toBeTruthy();
+    expect(popover).toBeTruthy();
+    expect(calendar).toBeTruthy();
+
+    let resolveWhenDefined: ((value: CustomElementConstructor) => void) | null = null;
+    const whenDefinedPromise = new Promise<CustomElementConstructor>((resolve) => {
+      resolveWhenDefined = resolve;
+    });
+
+    const rafCallbacks: FrameRequestCallback[] = [];
+    const rafSpy = vi
+      .spyOn(globalThis, 'requestAnimationFrame')
+      .mockImplementation((cb: FrameRequestCallback) => {
+        rafCallbacks.push(cb);
+        return 0;
+      });
+
+    const whenDefinedSpy = vi
+      .spyOn(customElements, 'whenDefined')
+      .mockImplementation(() => whenDefinedPromise);
+
+
+    button?.click();
+    expect(button?.getAttribute('aria-expanded')).toBe('true');
+    expect(popover?.style.display).toBe('block');
+
+    button?.click();
+    expect(button?.getAttribute('aria-expanded')).toBe('false');
+    expect(popover?.style.display).toBe('none');
+
+    const calendarAfter = getShadowContent(element, '#calendar') as HTMLElement | null;
+    const host = calendarAfter as unknown as { focus?: () => void; setSelectedDate?: () => void };
+    host.focus = vi.fn();
+    host.setSelectedDate = vi.fn();
+    const focusSpy = vi.spyOn(calendarAfter as HTMLElement, 'focus');
+
+    resolveWhenDefined?.(customElements.get((calendar as HTMLElement).localName) as CustomElementConstructor);
+    while (rafCallbacks.length > 0) {
+      const cb = rafCallbacks.shift();
+      if (cb) cb(0);
+    }
+    await Promise.resolve();
+
+    expect(focusSpy).not.toHaveBeenCalled();
+    whenDefinedSpy.mockRestore();
+    rafSpy.mockRestore();
+    focusSpy.mockRestore();
+  });
+
   it('date-selected を受け取ると入力へ反映され、ポップオーバーが閉じる', async () => {
     const { defineDatePicker } = await import('./date-picker-define.js');
     defineDatePicker();

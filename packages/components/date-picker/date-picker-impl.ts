@@ -84,6 +84,7 @@ export class DadsDatePicker extends TypographyFormComponent {
   #calendarPrefix: string | null = null;
   #calendarReady: Promise<boolean> | null = null;
   #calendarLoading = false;
+  #calendarOpenToken = 0;
 
   #errorText: HTMLElement | null = null;
   #errorSlot: HTMLSlotElement | null = null;
@@ -614,6 +615,7 @@ export class DadsDatePicker extends TypographyFormComponent {
     this.#calendarPopover.style.display = 'block';
     this.#calendarButton.setAttribute('aria-expanded', 'true');
 
+    const openToken = ++this.#calendarOpenToken;
     this.#calendarLoading = true;
 
     let shouldClose = false;
@@ -623,8 +625,10 @@ export class DadsDatePicker extends TypographyFormComponent {
         shouldClose = true;
         return;
       }
+      if (!this.#isCalendarOpen() || !this.isConnected || openToken !== this.#calendarOpenToken) return;
 
       const calendar = await this.#getCalendarApi();
+      if (!this.#isCalendarOpen() || !this.isConnected || openToken !== this.#calendarOpenToken) return;
 
       if (calendar) {
         const ymd = this.#getInputYearMonthDay();
@@ -641,7 +645,9 @@ export class DadsDatePicker extends TypographyFormComponent {
         }
       }
 
-      calendar?.focus?.();
+      if (this.#isCalendarOpen() && this.isConnected && openToken === this.#calendarOpenToken) {
+        calendar?.focus?.();
+      }
     } finally {
       this.#calendarLoading = false;
       this.#syncCalendarButtonDisabled();
@@ -652,6 +658,7 @@ export class DadsDatePicker extends TypographyFormComponent {
   #closeCalendar(options: { restoreFocus?: boolean } = {}): void {
     if (!this.#calendarPopover || !this.#calendarButton) return;
     const wasOpen = this.#isCalendarOpen();
+    this.#calendarOpenToken += 1;
     this.#calendarPopover.style.display = 'none';
     this.#calendarButton.setAttribute('aria-expanded', 'false');
 
@@ -834,8 +841,8 @@ export class DadsDatePicker extends TypographyFormComponent {
 
     this.#calendarReady = (async () => {
       try {
-        const { defineCalendar } = await import('../calendar/calendar-define.js');
-        defineCalendar(this.#calendarPrefix ?? undefined);
+        const { defineCalendarLite } = await import('../calendar/calendar-lite-define.js');
+        defineCalendarLite(this.#calendarPrefix ?? undefined);
         this.#ensureCalendarElement(this.#calendarPrefix ?? 'dads', true);
         if (this.#calendar) {
           await customElements.whenDefined(this.#calendar.localName);

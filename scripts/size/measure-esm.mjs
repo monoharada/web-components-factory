@@ -62,8 +62,25 @@ function parseImports(source) {
   const staticSpecs = new Set();
   const dynamicSpecs = new Set();
 
+  const isTypeOnlySpecifiers = (specList) => {
+    const parts = specList
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (parts.length === 0) return false;
+    return parts.every((part) => part.startsWith('type '));
+  };
+
+  const stripTypeOnlyNamed = (input) =>
+    input.replace(
+      /(?:import|export)\s*{\s*([^}]+)\s*}\s*from\s*['"](.+?)['"]\s*;?/g,
+      (match, specList) => (isTypeOnlySpecifiers(specList) ? '' : match),
+    );
+
+  const normalized = stripTypeOnlyNamed(source);
+
   const addAll = (re, set) => {
-    for (const m of source.matchAll(re)) {
+    for (const m of normalized.matchAll(re)) {
       const spec = m[1];
       if (typeof spec === 'string') set.add(spec);
     }
