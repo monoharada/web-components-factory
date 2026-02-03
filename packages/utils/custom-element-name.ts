@@ -9,3 +9,27 @@ export function getPrefixFromLocalName(
   return fallbackPrefix;
 }
 
+export function ensurePrefixedElement<T extends HTMLElement>(
+  root: ParentNode,
+  id: string,
+  expectedName: string,
+  forceReplace = false,
+): T | null {
+  const current = root.querySelector(`#${id}`) as T | null;
+  if (!current) return null;
+  if (current.localName === expectedName && !forceReplace) return current;
+
+  const replacement = document.createElement(expectedName) as T;
+
+  for (const attrName of current.getAttributeNames()) {
+    const val = current.getAttribute(attrName);
+    if (val === null) replacement.setAttribute(attrName, '');
+    else replacement.setAttribute(attrName, val);
+  }
+
+  while (current.firstChild) replacement.appendChild(current.firstChild);
+
+  current.parentNode?.replaceChild(replacement, current);
+
+  return replacement;
+}

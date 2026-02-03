@@ -8,6 +8,7 @@ import {
   cleanupTestElement,
   getDefinitionStyles,
   getShadowContent,
+  waitForComponent,
   waitForCustomElement,
 } from '../../../tests/setup';
 
@@ -397,26 +398,69 @@ describe('DadsDatePicker - キーボード（フォーカストラップ）', ()
     expect(button).toBeTruthy();
     button?.click();
 
-    const calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
-    expect(calendar?.shadowRoot).toBeTruthy();
+    let calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar).toBeTruthy();
+    await waitForComponent((calendar as HTMLElement).localName);
     await waitForCustomElement(calendar as HTMLElement);
+    calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar?.shadowRoot).toBeTruthy();
 
     const yearSelect = calendar?.shadowRoot?.querySelector('#year-select') as HTMLSelectElement | null;
     const todayHost = calendar?.shadowRoot?.querySelector('#today-button') as HTMLElement | null;
     expect(yearSelect).toBeTruthy();
     expect(todayHost).toBeTruthy();
+    await waitForComponent((todayHost as HTMLElement).localName);
     await waitForCustomElement(todayHost as HTMLElement);
-
-    const todayInner = todayHost?.shadowRoot?.querySelector('[part="base"]') as HTMLElement | null;
-    expect(todayInner).toBeTruthy();
 
     const popover = getShadowContent(element, '#calendar-popover') as HTMLElement | null;
     expect(popover).toBeTruthy();
 
+    const collectFocusables = (root: ParentNode): HTMLElement[] => {
+      const out: HTMLElement[] = [];
+      const isTabbable = (el: Element): el is HTMLElement => {
+        if (!(el instanceof HTMLElement)) return false;
+        if (el.hasAttribute('hidden')) return false;
+        if (el.getAttribute('aria-hidden') === 'true') return false;
+        if (
+          el instanceof HTMLButtonElement ||
+          el instanceof HTMLInputElement ||
+          el instanceof HTMLSelectElement ||
+          el instanceof HTMLTextAreaElement
+        ) {
+          if (el.disabled) return false;
+        } else {
+          if (el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true') return false;
+        }
+        const isNativelyFocusable = el.matches('button,input,select,textarea,a[href]');
+        const tabIndexAttr = el.getAttribute('tabindex');
+        if (!isNativelyFocusable && tabIndexAttr === null) return false;
+        if (tabIndexAttr !== null) {
+          const normalized = tabIndexAttr.trim();
+          if (normalized === '') return true;
+          const parsed = Number.parseInt(normalized, 10);
+          return !Number.isNaN(parsed) && parsed >= 0;
+        }
+        return isNativelyFocusable;
+      };
+      const walk = (node: ParentNode): void => {
+        for (const child of node.children) {
+          if (isTabbable(child)) out.push(child);
+          if (child instanceof HTMLElement && child.shadowRoot) walk(child.shadowRoot);
+          walk(child);
+        }
+      };
+      walk(root);
+      return out;
+    };
+
+    const focusables = popover ? collectFocusables(popover) : [];
+    const last = focusables[focusables.length - 1] ?? null;
+    expect(last).toBeTruthy();
+
     const focusSpy = vi.spyOn(yearSelect as HTMLSelectElement, 'focus');
     focusSpy.mockClear();
     const ke = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, composed: true });
-    Object.defineProperty(ke, 'composedPath', { value: () => [todayInner] });
+    Object.defineProperty(ke, 'composedPath', { value: () => [last] });
     popover?.dispatchEvent(ke);
 
     expect(focusSpy).toHaveBeenCalledTimes(1);
@@ -463,9 +507,12 @@ describe('DadsDatePicker - キーボード（フォーカストラップ）', ()
     expect(button).toBeTruthy();
     button?.click();
 
-    const calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
-    expect(calendar?.shadowRoot).toBeTruthy();
+    let calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar).toBeTruthy();
+    await waitForComponent((calendar as HTMLElement).localName);
     await waitForCustomElement(calendar as HTMLElement);
+    calendar = getShadowContent(element, '#calendar') as HTMLElement | null;
+    expect(calendar?.shadowRoot).toBeTruthy();
 
     const yearSelect = calendar?.shadowRoot?.querySelector('#year-select') as HTMLSelectElement | null;
     const todayHost = calendar?.shadowRoot?.querySelector('#today-button') as HTMLElement | null;

@@ -3,8 +3,7 @@
  */
 
 import { DadsCalendar } from './calendar.js';
-import { WebComponentDefinition } from '../../core/web-components.js';
-import { getConfig, getPrefix } from '../../config.js';
+import { defineCalendarComponent } from './calendar-define-base.js';
 
 /**
  * Calendarコンポーネントを定義
@@ -12,15 +11,7 @@ import { getConfig, getPrefix } from '../../config.js';
  * @param registry - カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）
  */
 export function defineCalendar(prefix?: string, registry?: CustomElementRegistry): void {
-  const effectivePrefix = prefix ?? getPrefix();
-  const effectiveRegistry = registry ?? getConfig().registry;
-
-  const name = `${effectivePrefix}-calendar`;
-
-  if (!effectiveRegistry.get(name)) {
-    const def = { ...DadsCalendar.definition, name, registry: effectiveRegistry };
-    WebComponentDefinition.compose(DadsCalendar, def).define(effectiveRegistry);
-  }
+  defineCalendarComponent(DadsCalendar, prefix, registry);
 }
 
 /**
@@ -29,4 +20,3 @@ export function defineCalendar(prefix?: string, registry?: CustomElementRegistry
 export function defineDefaultCalendar(): void {
   defineCalendar();
 }
-
