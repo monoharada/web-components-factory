@@ -237,9 +237,9 @@ describe('DadsDatePicker - カレンダー連携', () => {
 
 describe('DadsDatePicker - a11yAnnotations', () => {
   it('calloutsが主要な操作要素を含む', async () => {
-    const { DadsDatePicker } = await import('./date-picker.js');
-
-    const ids = DadsDatePicker.a11yAnnotations.callouts.map((c) => c.id);
+    const { getCemA11yAnnotations } = await import('../../../tests/utils/cem-annotations.js');
+    const annotations = getCemA11yAnnotations('dads-date-picker');
+    const ids = annotations?.callouts?.map((c) => c.id) ?? [];
 
     expect(ids).toEqual(
       expect.arrayContaining([

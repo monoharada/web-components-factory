@@ -16,7 +16,6 @@ import {
 } from '../../utils/form-component-helpers.js';
 import { VALIDATION_RULES, getValidationMessage } from '../../utils/validation.js';
 import { checkboxStyles } from './checkbox-styles.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * Checkboxコンポーネント
@@ -54,85 +53,6 @@ export class DadsCheckbox extends TypographyFormComponent {
 
   static readonly version = '1.0.0';
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'コンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        '内部にネイティブの <input type="checkbox"> を持ち、チェックボックスのセマンティクスをブラウザ標準で提供します。',
-        'チェックボックスは <label> 内に配置されるため、ラベルテキストと操作対象が確実に関連付けられます。',
-        'Form-Associated Custom Elementとしてフォームに参加し、checked時のみ値を送信します（ネイティブcheckboxの挙動に準拠）。',
-      ],
-      keyboard: [
-        'Tabでフォーカス可能です。',
-        'Spaceでチェック状態を切り替えできます（ネイティブ挙動）。',
-      ],
-      zoom: [
-        'サイズ（sm/md/lg）に応じて操作面の大きさを調整し、拡大時も視認性・操作性を確保します。',
-      ],
-      states: [
-        'checked / indeterminate / disabled をサポートします。',
-        'error属性で aria-invalid="true" を付与し、エラー状態（赤系）を表示します（DADS HTML版に準拠）。',
-      ],
-      labels: [
-        'label属性は視覚ラベルとして表示され、同時にネイティブlabel関連付けによりアクセシブルネームに寄与します。',
-        'ラベルを表示しない場合は aria-label または aria-labelledby の指定を推奨します。',
-        '補足説明は aria-describedby（外部要素ID）で関連付けできます。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'base',
-        title: 'ラベルラッパー',
-        label: '<label>',
-        description: 'クリック領域を含め、チェックボックスとラベルを一体として提供します。',
-        category: 'semantics',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="base"]' },
-      },
-      {
-        id: 'native-input',
-        title: 'ネイティブチェックボックス',
-        label: 'input[type="checkbox"]',
-        description:
-          'キーボード操作（Space）や状態（checked/indeterminate/disabled）の基本挙動はブラウザ標準に委譲します。',
-        category: 'keyboard',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="input"]' },
-      },
-      {
-        id: 'label-text',
-        title: 'ラベルテキスト',
-        label: 'label',
-        description: 'label属性（または将来的な拡張）で表示されるテキスト。空の場合はaria-label等で補完します。',
-        category: 'labels',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="label"]' },
-      },
-      {
-        id: 'requirement',
-        title: '要否ラベル',
-        label: '要否ラベル',
-        description: 'required属性が設定されている場合に「※必須」と表示されます。必須入力であることを視覚的に伝えます。',
-        category: 'labels',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="requirement"]' },
-      },
-      {
-        id: 'error-text',
-        title: 'エラーメッセージ',
-        label: 'error-text',
-        description:
-          'バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。',
-        category: 'states',
-        placement: 'bottom-left',
-        target: { scope: 'shadow', selector: '[part="error-text"]' },
-      },
-    ],
-  };
 
   #base: HTMLLabelElement | null = null;
   #input: HTMLInputElement | null = null;

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Average Case UI</title>
+  <link rel="icon" href="data:,">
+
+  <script type="importmap">
+  {
+    "imports": {
+      "dads-button": "/@components/dads/button.js",
+      "dads-input-text": "/@components/dads/input-text.js",
+      "dads-select": "/@components/dads/select.js",
+      "dads-date-picker": "/@components/dads/date-picker.js",
+      "dads-calendar": "/@components/dads/calendar.js",
+      "dads-textarea": "/@components/dads/textarea.js",
+      "dads-checkbox": "/@components/dads/checkbox.js",
+      "dads-radio": "/@components/dads/radio.js",
+      "dads-fieldset": "/@components/dads/fieldset.js",
+      "dads-card": "/@components/dads/card.js",
+      "dads-table": "/@components/dads/table.js",
+      "dads-page-navigation": "/@components/dads/page-navigation.js"
+    }
+  }
+  </script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    :where(
+      dads-button,
+      dads-input-text,
+      dads-select,
+      dads-date-picker,
+      dads-calendar,
+      dads-textarea,
+      dads-checkbox,
+      dads-radio,
+      dads-fieldset,
+      dads-card,
+      dads-table,
+      dads-page-navigation
+    ):not(:defined) {
+      visibility: hidden;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 32px auto 64px;
+      padding: 0 24px;
+      display: grid;
+      gap: 28px;
+    }
+
+    .avg-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .avg-header {
+      display: grid;
+      gap: 12px;
+    }
+
+    .avg-header h1 {
+      font-size: 24px;
+    }
+
+    .avg-header p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    .avg-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .avg-form {
+      display: grid;
+      gap: 20px;
+    }
+
+    .avg-form-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    .avg-fieldset {
+      display: grid;
+      gap: 12px;
+    }
+
+    .avg-list {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    .avg-table {
+      overflow-x: auto;
+    }
+
+    .avg-table table {
+      min-width: 640px;
+    }
+
+    .avg-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="avg-card avg-header">
+      <h1>平均ケース: 申請画面（サンプル）</h1>
+      <p>フォーム入力・一覧・ナビゲーションを含む、一般的な画面構成の例です。</p>
+      <div class="avg-actions">
+        <dads-button variant="solid">申請をはじめる</dads-button>
+        <dads-button variant="outlined">下書き保存</dads-button>
+      </div>
+    </section>
+
+    <section class="avg-card avg-form">
+      <h2 style="font-size: 18px;">申請者情報</h2>
+      <div class="avg-form-grid">
+        <dads-input-text label="氏名" value="" support-text="例: 山田 太郎"></dads-input-text>
+        <dads-input-text label="メールアドレス" value="" support-text="例: example@example.jp"></dads-input-text>
+        <dads-select label="申請種別">
+          <option value="" selected>(選択してください)</option>
+          <option value="new">新規申請</option>
+          <option value="update">変更申請</option>
+          <option value="cancel">取消申請</option>
+        </dads-select>
+        <dads-date-picker calendar></dads-date-picker>
+        <dads-calendar></dads-calendar>
+        <dads-textarea label="申請理由" rows="4"></dads-textarea>
+      </div>
+      <div class="avg-fieldset">
+        <dads-fieldset required>
+          <span slot="legend">連絡方法</span>
+          <p slot="support-text">連絡可能な方法を選択してください。</p>
+          <dads-checkbox label="メール" size="sm"></dads-checkbox>
+          <dads-checkbox label="電話" size="sm"></dads-checkbox>
+        </dads-fieldset>
+        <dads-fieldset required>
+          <span slot="legend">希望の手続き方法</span>
+          <dads-radio name="avg-procedure" label="オンライン" size="sm"></dads-radio>
+          <dads-radio name="avg-procedure" label="窓口" size="sm"></dads-radio>
+        </dads-fieldset>
+      </div>
+    </section>
+
+    <section class="avg-card">
+      <h2 style="font-size: 18px; margin-bottom: 16px;">関連情報</h2>
+      <div class="avg-list">
+        <dads-card>
+          <h3 slot="header">申請の流れ</h3>
+          <p>申請後の審査・通知までの手順を確認できます。</p>
+          <dads-button slot="footer" size="small" variant="outlined">詳細</dads-button>
+        </dads-card>
+        <dads-card>
+          <h3 slot="header">必要書類</h3>
+          <p>添付が必要な書類の一覧と取得方法をまとめています。</p>
+          <dads-button slot="footer" size="small" variant="outlined">一覧を見る</dads-button>
+        </dads-card>
+        <dads-card>
+          <h3 slot="header">よくある質問</h3>
+          <p>申請に関するよくある質問をまとめています。</p>
+          <dads-button slot="footer" size="small" variant="outlined">FAQ</dads-button>
+        </dads-card>
+      </div>
+    </section>
+
+    <section class="avg-card">
+      <h2 style="font-size: 18px; margin-bottom: 16px;">申請状況一覧</h2>
+      <div class="avg-table">
+        <dads-table>
+          <table data-cell-border="bottom">
+            <thead>
+              <tr>
+                <th scope="col">申請ID</th>
+                <th scope="col">種別</th>
+                <th scope="col">提出日</th>
+                <th scope="col">ステータス</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AP-2024-001</td>
+                <td>新規申請</td>
+                <td>2024-03-12</td>
+                <td>審査中</td>
+              </tr>
+              <tr>
+                <td>AP-2024-014</td>
+                <td>変更申請</td>
+                <td>2024-01-22</td>
+                <td>確認待ち</td>
+              </tr>
+              <tr>
+                <td>AP-2023-203</td>
+                <td>取消申請</td>
+                <td>2023-12-18</td>
+                <td>完了</td>
+              </tr>
+            </tbody>
+          </table>
+        </dads-table>
+      </div>
+    </section>
+
+    <section class="avg-card avg-footer">
+      <p style="color: #555; font-size: 14px;">直近 24 件の申請を表示中</p>
+      <dads-page-navigation
+        type="text"
+        prev-href="#"
+        next-href="#"
+        current="1"
+        total="24"
+        status-separator=" / "
+      ></dads-page-navigation>
+    </section>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const disableServiceWorker = params.get('nosw') === '1';
+
+    async function disableServiceWorkerAndClearCaches() {
+      if (!('serviceWorker' in navigator)) return;
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+
+      if (!('caches' in window)) return;
+      const keys = await window.caches.keys();
+      await Promise.all(keys.map((key) => window.caches.delete(key)));
+    }
+
+    if (disableServiceWorker) {
+      disableServiceWorkerAndClearCaches().catch(() => {});
+    }
+  </script>
+
+  <script type="module" src="./averageCase.runtime.js"></script>
+</body>
+</html>

@@ -670,9 +670,9 @@ describe('DadsCalendar - キーボード（矢印キー）', () => {
 
 describe('DadsCalendar - a11yAnnotations', () => {
   it('calloutsが主要な操作要素を含む', async () => {
-    const { DadsCalendar } = await import('./calendar.js');
-
-    const ids = DadsCalendar.a11yAnnotations.callouts.map((c) => c.id);
+    const { getCemA11yAnnotations } = await import('../../../tests/utils/cem-annotations.js');
+    const annotations = getCemA11yAnnotations('dads-calendar');
+    const ids = annotations?.callouts?.map((c) => c.id) ?? [];
 
     expect(ids).toEqual(
       expect.arrayContaining([

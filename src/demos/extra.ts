@@ -1325,7 +1325,6 @@ export const demos = {
     </div>
   `,
 
-
   empty: () => `
     <div style="padding: 40px; text-align: center; color: #666;">
       コンポーネントを選択してください

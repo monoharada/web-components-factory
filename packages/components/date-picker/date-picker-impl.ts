@@ -15,7 +15,6 @@ import { ensurePrefixedElement, getPrefixFromLocalName } from '../../utils/custo
 import { parseIsoDate, toIsoDateOrEmpty } from '../../utils/iso-date.js';
 import type { DadsCalendarPublicAPI } from '../calendar/index.js';
 
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 type MaybeDate = Date | null;
 
@@ -69,7 +68,6 @@ export class DadsDatePicker extends TypographyFormComponent {
   static override readonly formAssociated = true;
 
   static readonly version = '1.0.0';
-  static a11yAnnotations?: A11yAnnotations;
 
   // DOM refs
   #inputs: HTMLElement | null = null;

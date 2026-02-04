@@ -79,6 +79,7 @@ npm run claude:verify
 - テストカバレッジ
 - アクセシビリティ
 - パフォーマンス
+- キーボードナビゲーション実装は `ElementSelection` を優先（不使用時は理由を明記）
 
 ### 4. 振り返りとナレッジ管理 (Reflection)
 

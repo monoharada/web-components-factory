@@ -7,7 +7,6 @@
 import { BooleanAttr, PropertyAttr } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 import { createTableTokens } from './table-tokens.js';
 import { createTableStyles } from './table-styles.js';
 
@@ -101,104 +100,6 @@ export class DadsTable extends TypographyWebComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'テーブル／データテーブル（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'ネイティブの <table> 要素をそのまま使用し、行・列の関係性をブラウザ標準のセマンティクスで提供します。',
-        '列見出しは <th scope="col">、行見出しは <th scope="row"> を推奨します（複雑な表は見出し構造を簡素化）。',
-      ],
-      keyboard: [
-        '選択（チェックボックス）やソート（ボタン）等の操作はネイティブ要素に委譲します。',
-        'Tabで操作要素に移動し、Space/Enterで操作できます（ネイティブ挙動）。',
-      ],
-      zoom: [
-        '横幅が足りない場合は水平スクロール（オーバーフロー）を許可し、視認性を確保します。',
-      ],
-      states: [
-        'striped属性で交互行背景、hover属性で行ホバー、選択状態は <tr aria-selected="true"> として表現します。',
-        'ソート状態は <th aria-sort="ascending|descending"> として表現します。',
-        'sort-behavior="dom" を指定すると、ソート操作に連動して <tbody> の行順をDOM上で並び替えます（3クリック目のnoneで元の順序に戻ります）。',
-        'DOM自動ソート時は data-sort-type="string|number|date" と data-sort-value で判定・比較を明示できます（複数tbodyは各tbody内でソート）。',
-      ],
-      labels: [
-        '<caption> を使用してテーブルのタイトル／説明を提供できます。',
-        '行選択用のチェックボックス（data-select-row / data-select-all）は aria-label 等でラベル付けしてください。',
-      ],
-      motion: ['アニメーションは使用しません。'],
-    },
-    callouts: [
-      {
-        id: 'table',
-        title: 'テーブル本体',
-        label: '<table>',
-        description: 'ネイティブのtable要素をそのまま配置します。',
-        category: 'semantics',
-        placement: 'top-right',
-        target: { scope: 'light', selector: 'table' },
-      },
-      {
-        id: 'caption',
-        title: 'キャプション',
-        label: '<caption>',
-        description:
-          'テーブルのタイトル／説明は caption（または figure + figcaption）で提供すると、利用者が目的を把握しやすくなります。',
-        category: 'labels',
-        placement: 'top-right',
-        target: { scope: 'light', selector: ':is(caption, figcaption, .dads-table__caption)' },
-      },
-      {
-        id: 'header',
-        title: '見出しセル',
-        label: 'scope="col"',
-        description:
-          '列見出しは th scope="col"、行見出しは th scope="row" を推奨します（読み上げ時の関連付けが明確になります）。',
-        category: 'semantics',
-        placement: 'top-left',
-        target: { scope: 'light', selector: 'th[scope="col"]' },
-      },
-      {
-        id: 'scroll',
-        title: 'スクロールコンテナ',
-        label: 'overflow-x',
-        description: '横幅不足時に水平スクロールできるようにします。',
-        category: 'zoom',
-        placement: 'top-left',
-        target: { scope: 'light', selector: '[part="scroll"]' },
-      },
-      {
-        id: 'sort',
-        title: 'ソート操作',
-        label: 'data-sort',
-        description:
-          'ヘッダーセル内のボタンをクリックすると aria-sort を切り替え、dads-sort-change を発火します。sort-behavior="dom" の場合はDOMも並び替えます。',
-        category: 'states',
-        placement: 'bottom-left',
-        target: { scope: 'light', selector: '[data-sort], [data-js-sort]' },
-      },
-      {
-        id: 'select-all',
-        title: '全選択',
-        label: 'data-select-all',
-        description:
-          'ヘッダーのチェックボックスで全行を一括選択できます（indeterminate も含め、状態はコンポーネントが同期します）。',
-        category: 'states',
-        placement: 'bottom-left',
-        target: { scope: 'light', selector: '[data-select-all], [data-js-check-all]' },
-      },
-      {
-        id: 'selection',
-        title: '行選択',
-        label: 'data-select-row',
-        description:
-          'チェック状態に応じて行へ aria-selected="true" を付与し、dads-selection-change を発火します。',
-        category: 'states',
-        placement: 'bottom-right',
-        target: { scope: 'light', selector: '[data-select-row], [data-js-check]' },
-      },
-    ],
-  };
 
   #tableEl: HTMLTableElement | null = null;
   #scrollEl: HTMLElement | null = null;

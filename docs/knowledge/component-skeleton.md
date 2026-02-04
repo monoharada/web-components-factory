@@ -160,29 +160,33 @@ export default DadsComponent;
 - `callouts` は「コールアウト」（画面上のマーカー）
 - **インタラクティブなコンポーネントは callout を最低1つ**用意するとデモ/レビューがやりやすい
 
-### calloutの例（shadow内partをターゲット）
+### calloutの例（CEMに記述）
 
-```ts
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
-
-static readonly a11yAnnotations: A11yAnnotations = {
-  version: 1,
-  summary: '...',
-  categories: { semantics: ['...'], keyboard: ['...'] },
-  callouts: [
-    {
-      id: 'trigger',
-      title: 'trigger',
-      description: '...',
-      target: { scope: 'shadow', selector: '[part=\"trigger\"]' },
-      placement: 'top-left',
+```json
+{
+  "dads-component-name": {
+    "version": 1,
+    "summary": "...",
+    "categories": {
+      "semantics": ["..."],
+      "keyboard": ["..."]
     },
-  ],
-};
+    "callouts": [
+      {
+        "id": "trigger",
+        "title": "trigger",
+        "description": "...",
+        "target": { "scope": "shadow", "selector": "[part=\"trigger\"]" },
+        "placement": "top-left"
+      }
+    ]
+  }
+}
 ```
 
 **注意**
-- `a11y-annotate` はターゲット要素の `constructor.a11yAnnotations` を読み取るため、viewerデモでは **targetのimport/defineが先**になるようにする（import順でレースが起きうる）。
+- `a11y-annotate` は dev専用で、`custom-elements.json`（CEM）から注釈を読み取る。
+- viewerで表示する場合は `?a11y=1` を付与する。
 - デモ実装パターンは `docs/knowledge/a11y-annotate-demo-patterns.md` を参照。
 
 ---
@@ -258,7 +262,7 @@ static readonly a11yAnnotations: A11yAnnotations = {
 - [ ] unit test が最小限揃っている
 
 ### 推奨
-- [ ] a11yAnnotations（categories / callouts）を記載している
+- [ ] `docs/knowledge/a11y-annotations.json` に注釈（categories / callouts）を記載している
 - [ ] `@cssprop` で CSS 変数 API を記載
 - [ ] viewerデモが `componentName` / `componentNameFidelity` に分離されている
 - [ ] CSS vars が `data-api-css-var` で編集できる

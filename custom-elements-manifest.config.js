@@ -2,6 +2,10 @@ import { cemValidatorPlugin } from '@wc-toolkit/cem-validator';
 import { cemInheritancePlugin } from '@wc-toolkit/cem-inheritance';
 import { cemSorterPlugin } from '@wc-toolkit/cem-sorter';
 import { modulePathResolverPlugin } from '@wc-toolkit/module-path-resolver';
+import { readFileSync } from 'node:fs';
+
+const A11Y_ANNOTATIONS_PATH = new URL('./docs/knowledge/a11y-annotations.json', import.meta.url);
+const A11Y_ANNOTATIONS = JSON.parse(readFileSync(A11Y_ANNOTATIONS_PATH, 'utf-8'));
 
 function normalizePosixPath(p) {
   return p.replaceAll('\\', '/');
@@ -48,6 +52,25 @@ function sanitizeCustomElementsManifest(customElementsManifest) {
   }
 }
 
+function injectA11yAnnotations(customElementsManifest) {
+  const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
+
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      if (!decl || typeof decl !== 'object') continue;
+      const tagName = typeof decl.tagName === 'string' ? decl.tagName.trim() : '';
+      if (!tagName) continue;
+      const annotations = A11Y_ANNOTATIONS[tagName];
+      if (!annotations) continue;
+      decl.custom = { ...(decl.custom ?? {}), a11yAnnotations: annotations };
+      if (Array.isArray(decl.members)) {
+        decl.members = decl.members.filter((member) => member?.name !== 'a11yAnnotations');
+      }
+    }
+  }
+}
+
 export default {
   globs: ['packages/**/*.ts'],
   exclude: [
@@ -81,6 +104,12 @@ export default {
       },
     }),
     cemInheritancePlugin(),
+    {
+      name: 'wcf-a11y-annotations',
+      packageLinkPhase({ customElementsManifest }) {
+        injectA11yAnnotations(customElementsManifest);
+      },
+    },
     {
       name: 'wcf-sanitize-manifest',
       packageLinkPhase({ customElementsManifest }) {

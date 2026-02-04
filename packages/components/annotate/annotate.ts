@@ -65,7 +65,77 @@ function getAriaAttrs(el: Element): readonly [string, string][] {
   return out;
 }
 
-function readAnnotations(el: ElementWithAnnotations): A11yAnnotations | null {
+const CEM_URL = '/custom-elements.json';
+const A11Y_QUERY_PARAM = 'a11y';
+const A11Y_STORAGE_KEY = 'dads:a11y';
+
+let cemAnnotations: Map<string, A11yAnnotations> | null = null;
+let cemAnnotationsPromise: Promise<Map<string, A11yAnnotations>> | null = null;
+
+function isA11yAnnotationsEnabled(): boolean {
+  if (typeof window === 'undefined') return false;
+  const params = new URLSearchParams(window.location.search);
+  if (params.get(A11Y_QUERY_PARAM) === '1') return true;
+  try {
+    return window.localStorage.getItem(A11Y_STORAGE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+type CemDeclaration = { tagName?: string; custom?: { a11yAnnotations?: A11yAnnotations } };
+type CemModule = { declarations?: CemDeclaration[] };
+type CemManifest = { modules?: CemModule[] };
+
+function parseCemAnnotations(manifest: CemManifest | null | undefined): Map<string, A11yAnnotations> {
+  const map = new Map<string, A11yAnnotations>();
+  const modules = Array.isArray(manifest?.modules) ? manifest.modules : [];
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      const tagName = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : '';
+      if (!tagName) continue;
+      const spec = decl.custom?.a11yAnnotations;
+      if (spec && spec.version === 1) map.set(tagName, spec);
+    }
+  }
+  return map;
+}
+
+function loadCemAnnotations(): Promise<Map<string, A11yAnnotations>> {
+  if (cemAnnotations) return Promise.resolve(cemAnnotations);
+  if (!cemAnnotationsPromise) {
+    cemAnnotationsPromise = fetch(CEM_URL)
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to load CEM: ${res.status}`);
+        return res.json();
+      })
+      .then((manifest) => {
+        const map = parseCemAnnotations(manifest);
+        cemAnnotations = map;
+        return map;
+      })
+      .catch((err) => {
+        console.warn('[a11y-annotate] Failed to load custom-elements.json', err);
+        const empty = new Map<string, A11yAnnotations>();
+        cemAnnotations = empty;
+        return empty;
+      });
+  }
+  return cemAnnotationsPromise;
+}
+
+function readAnnotations(
+  el: ElementWithAnnotations,
+  onCemLoaded?: () => void
+): A11yAnnotations | null {
+  if (isA11yAnnotationsEnabled()) {
+    const tagName = el.localName;
+    const spec = cemAnnotations?.get(tagName) ?? null;
+    if (spec) return spec;
+    void loadCemAnnotations().then(() => onCemLoaded?.());
+  }
+
   const inst = el.a11yAnnotations;
   if (inst && inst.version === 1) return inst;
   const ctor = el.constructor?.a11yAnnotations;
@@ -459,6 +529,7 @@ export class DadsAnnotate extends TypographyWebComponent {
   #calloutLayer: HTMLElement | null = null;
   #calloutSvg: SVGSVGElement | null = null;
   #previewInner: HTMLElement | null = null;
+  #refreshQueued = false;
 
   #target: ElementWithAnnotations | null = null;
   #callouts: CalloutRender[] = [];
@@ -546,6 +617,15 @@ export class DadsAnnotate extends TypographyWebComponent {
     });
   }
 
+  #scheduleRefresh() {
+    if (this.#refreshQueued) return;
+    this.#refreshQueued = true;
+    queueMicrotask(() => {
+      this.#refreshQueued = false;
+      this.#refresh();
+    });
+  }
+
   #refresh() {
     if (!this.#targetRoot || !this.#panelBody || !this.#panelSubtitle || !this.#panelBadges || !this.#calloutLayer) {
       return;
@@ -564,7 +644,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       return;
     }
 
-    const spec = readAnnotations(this.#target);
+    const spec = readAnnotations(this.#target, () => this.#scheduleRefresh());
     this.#render(spec);
 
     if (targetChanged) {

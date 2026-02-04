@@ -64,6 +64,8 @@ Web Components ショーケースデモの標準テンプレートです。新�
 
 ## a11y-annotate 統合
 
+> 注釈表示は dev 専用です。viewer / demo では `?a11y=1` を付与してください。
+
 ### トグルUI
 
 ```javascript

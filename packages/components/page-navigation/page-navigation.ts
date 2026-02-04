@@ -12,7 +12,6 @@ import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
 import { pageNavigationTokens } from './page-navigation-tokens.js';
 import { pageNavigationStyles } from './page-navigation-styles.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 const DEFAULT_NAV_LABEL = 'ページナビゲーション';
 const DEFAULT_PREV_LABEL = '前のページ';
@@ -140,61 +139,6 @@ export class DadsPageNavigation extends TypographyWebComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'ページナビゲーション（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        '内部は <nav> 要素を使用し、ページ移動のまとまりを示します。',
-        'as="link" 時は <a rel="prev|next"> を使用します（href未指定時は非表示）。',
-        'as="button" 時は <button> を使用し、クリックでイベントを発火します。',
-      ],
-      keyboard: [
-        'リンク: Tabでフォーカス、Enterで遷移（ネイティブ挙動）。',
-        'ボタン: Tabでフォーカス、Enter/Spaceでイベント発火（ネイティブ挙動）。',
-      ],
-      zoom: [
-        'コンテンツ幅に応じてレイアウトが追従し、狭い幅では左寄せレイアウトに切り替えます。',
-      ],
-      states: [
-        'type属性で表示タイプ（text/outlined/arrow）を切り替えます。',
-        'arrowタイプはsize属性（l/m/s/xs）でコントロールのサイズを切り替えます。',
-        'as="button" 時は disabled-prev / disabled-next で非表示にできます。',
-      ],
-      labels: [
-        'navの aria-label は aria-label 属性で上書きできます。',
-        'arrowタイプはラベルを視覚的に隠しつつ、スクリーンリーダー向けの名称を維持します。',
-        'ステータス表示は slot/status属性/current+total から構成できます。',
-      ],
-      motion: ['アニメーションは使用しません。'],
-    },
-    callouts: [
-      {
-        id: 'prev',
-        title: '前へ',
-        label: 'prev',
-        category: 'keyboard',
-        target: { scope: 'shadow', selector: '[part~="prev"]:not([hidden])' },
-        placement: 'top-left',
-      },
-      {
-        id: 'status',
-        title: 'ステータス',
-        label: 'status',
-        category: 'labels',
-        target: { scope: 'shadow', selector: '[part~="status"]' },
-        placement: 'top-right',
-      },
-      {
-        id: 'next',
-        title: '次へ',
-        label: 'next',
-        category: 'keyboard',
-        target: { scope: 'shadow', selector: '[part~="next"]:not([hidden])' },
-        placement: 'bottom-right',
-      },
-    ],
-  };
 
   #nav: HTMLElement | null = null;
   #prevLink: HTMLAnchorElement | null = null;

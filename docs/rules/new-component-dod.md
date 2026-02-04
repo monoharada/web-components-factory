@@ -84,6 +84,11 @@ npm run type-check      # 型チェック
 npm run ci              # CI pipeline
 ```
 
+### (F) キーボードナビゲーション（レビュー観点）
+
+- [ ] 矢印キー/Home/Endで同一グループ内を移動する実装は、`ElementSelection` を優先する
+- [ ] `ElementSelection` を使わない場合は、PRに理由を明記する
+
 ---
 
 ## 推奨項目
@@ -91,7 +96,7 @@ npm run ci              # CI pipeline
 以下は必須ではありませんが、品質向上のため推奨します：
 
 - [ ] `@cssprop` で CSS 変数 API を記載（cssProperties 充実方針）
-- [ ] `a11yAnnotations` を記載（categories / callouts）
+- [ ] `docs/knowledge/a11y-annotations.json` に注釈（categories / callouts）を記載
 - [ ] unit test で ARIA 状態変化、キーボード操作、イベント発火を確認
 - [ ] E2E / Fidelity テストを `e2e-evidence/` に追加
 
@@ -206,7 +211,7 @@ PRコメントや自己レビュー用：
 
 ### 推奨
 - [ ] `@cssprop` でCSS変数API記載（cssProperties充実）
-- [ ] `a11yAnnotations` 記載（categories/callouts）
+- [ ] `docs/knowledge/a11y-annotations.json` に注釈（categories / callouts）を記載
 - [ ] E2E/Fidelityテスト追加
 ```
 

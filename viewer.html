@@ -5,14 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web Components Viewer (Autoload)</title>
   <link rel="icon" href="data:,">
+  <script>
+    (function() {
+      var url = new URL(window.location.href);
+      if (!url.searchParams.has('a11y')) {
+        url.searchParams.set('a11y', '1');
+        history.replaceState(null, '', url.toString());
+      }
+    })();
+  </script>
 
-  <!-- Fonts (optional)
-    - Needed for design-intent rendering on machines without Noto Sans JP
-    - If you need offline/corporate-network operation, remove the following <link> tags
-  -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Mono&display=swap" rel="stylesheet">
+  <!-- Fonts: Web Font は読み込まない -->
 
   <!-- Import Maps: コンポーネントタグ名からモジュールパスへのマッピング -->
   <script type="importmap">
@@ -79,7 +82,7 @@
     }
 
     body {
-      font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
       background: #f5f5f5;
       min-height: 100vh;
     }

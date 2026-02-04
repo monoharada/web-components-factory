@@ -12,11 +12,11 @@ export const baseTypographyStyles = css`
   /* フォントのチラツキ対策 */
   :host {
     /* システムフォントスタック（フォールバック） */
-    --system-font-stack: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", Arial, sans-serif;
+    --system-font-stack: -apple-system, BlinkMacSystemFont, sans-serif;
     
     /* Noto Sans JPを優先、読み込まれるまでシステムフォントを使用 */
     --base-font-family: "Noto Sans JP", var(--system-font-stack);
-    --mono-font-family: "Noto Sans Mono", "SF Mono", Monaco, "Courier New", monospace;
+    --mono-font-family: "Noto Sans Mono", monospace;
     
     /* デフォルトフォント適用 */
     font-family: var(--base-font-family);
@@ -91,60 +91,17 @@ export const fontLoadingStyles = css`
 `;
 
 /**
- * Noto Sans JP の Web Font 読み込み
- * グローバルに一度だけ実行
+ * フォント状態の初期化
+ * グローバルに一度だけ実行（Web Fontは読み込まない）
  */
 export function initializeGlobalFonts(): void {
   const flags = globalThis as unknown as { __DADS_DISABLE_FONT_LOADING__?: boolean };
   if (flags.__DADS_DISABLE_FONT_LOADING__) {
     return;
   }
-
-  // 既にフォントが読み込まれているかチェック
-  if (document.querySelector('link[href*="fonts.googleapis.com/css2?family=Noto+Sans+JP"]')) {
-    return;
-  }
-  
-  // preconnect追加（接続の高速化）
-  const preconnect1 = document.createElement('link');
-  preconnect1.rel = 'preconnect';
-  preconnect1.href = 'https://fonts.googleapis.com';
-  document.head.appendChild(preconnect1);
-  
-  const preconnect2 = document.createElement('link');
-  preconnect2.rel = 'preconnect';
-  preconnect2.href = 'https://fonts.gstatic.com';
-  preconnect2.crossOrigin = 'anonymous';
-  document.head.appendChild(preconnect2);
-  
-  // Web Fontのlink要素追加
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;200;300;400;500;600;700;800;900&family=Noto+Sans+Mono:wght@400;700&display=swap';
-  document.head.appendChild(link);
-  
-  // フォント読み込み状態をbodyクラスで管理
-  document.body.classList.add('fonts-loading');
-  
-  // Font Loading APIを使用して読み込み完了を検知
-  if ('fonts' in document) {
-    Promise.all([
-      document.fonts.load('400 16px "Noto Sans JP"'),
-      document.fonts.load('700 16px "Noto Sans JP"')
-    ]).then(() => {
-      document.body.classList.remove('fonts-loading');
-      document.body.classList.add('fonts-loaded');
-    }).catch(() => {
-      document.body.classList.remove('fonts-loading');
-      document.body.classList.add('fonts-error');
-    });
-  } else {
-    // Font Loading APIが使えない場合は、一定時間後に読み込み完了とみなす
-    setTimeout(() => {
-      document.body.classList.remove('fonts-loading');
-      document.body.classList.add('fonts-loaded');
-    }, 1000);
-  }
+  // Web Fontは読み込まない。即座に読み込み完了扱いにする。
+  document.body.classList.remove('fonts-loading', 'fonts-error');
+  document.body.classList.add('fonts-loaded');
 }
 
 /**

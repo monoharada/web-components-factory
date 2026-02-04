@@ -327,14 +327,16 @@ describe('DadsFieldset - disabled伝播', () => {
 
 describe('DadsFieldset - a11yAnnotations', () => {
   it('静的プロパティa11yAnnotationsが定義されている', async () => {
-    const { DadsFieldset } = await import('./fieldset.js');
-    expect(DadsFieldset.a11yAnnotations).toBeDefined();
-    expect(DadsFieldset.a11yAnnotations.version).toBe(1);
+    const { getCemA11yAnnotations } = await import('../../../tests/utils/cem-annotations.js');
+    const annotations = getCemA11yAnnotations('dads-fieldset');
+    expect(annotations).toBeDefined();
+    expect(annotations?.version).toBe(1);
   });
 
   it('calloutsが定義されている', async () => {
-    const { DadsFieldset } = await import('./fieldset.js');
-    expect(DadsFieldset.a11yAnnotations.callouts).toBeDefined();
-    expect(DadsFieldset.a11yAnnotations.callouts.length).toBeGreaterThan(0);
+    const { getCemA11yAnnotations } = await import('../../../tests/utils/cem-annotations.js');
+    const annotations = getCemA11yAnnotations('dads-fieldset');
+    expect(annotations?.callouts).toBeDefined();
+    expect(annotations?.callouts?.length ?? 0).toBeGreaterThan(0);
   });
 });
