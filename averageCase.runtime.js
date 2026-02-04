@@ -1,5 +1,29 @@
 const params = new URLSearchParams(window.location.search);
-    const disableLazy = params.get('lazy') === '0';
+const disableLazy = params.get('lazy') === '0';
+const shouldMinify = params.get('min') === '1';
+const importMap = (() => {
+  const element = document.querySelector('script[type="importmap"]');
+  if (!element?.textContent) return {};
+  try {
+    const parsed = JSON.parse(element.textContent);
+    return parsed?.imports ?? {};
+  } catch {
+    return {};
+  }
+})();
+
+const appendQuery = (url, key, value) => {
+  const joiner = url.includes('?') ? '&' : '?';
+  return `${url}${joiner}${key}=${value}`;
+};
+
+const resolveSpecifier = (specifier) => {
+  if (!shouldMinify) return specifier;
+  const mapped = importMap[specifier];
+  if (!mapped) return specifier;
+  if (mapped.includes('min=1')) return mapped;
+  return appendQuery(mapped, 'min', '1');
+};
 
     const eagerImports = [
       'dads-button',
@@ -12,57 +36,56 @@ const params = new URLSearchParams(window.location.search);
       'dads-card',
     ];
 
-    await Promise.all(eagerImports.map((specifier) => import(specifier)));
+await Promise.all(eagerImports.map((specifier) => import(resolveSpecifier(specifier))));
 
-    const lazySpecifiers = {
-      datePicker: ['dads-date-picker', 'dads-calendar'],
-      calendar: ['dads-calendar'],
-      table: ['dads-table'],
-      pageNav: ['dads-page-navigation'],
-    };
+const lazySpecifiers = {
+  datePicker: ['dads-date-picker', 'dads-calendar'],
+  table: ['dads-table'],
+  pageNav: ['dads-page-navigation'],
+};
 
-    const lazyLoaded = new Set();
+const lazyLoaded = new Set();
 
-    const loadLazy = async (key) => {
-      if (lazyLoaded.has(key)) return;
-      lazyLoaded.add(key);
-      await Promise.all(lazySpecifiers[key].map((specifier) => import(specifier)));
-    };
+const loadLazy = async (key) => {
+  if (lazyLoaded.has(key)) return;
+  lazyLoaded.add(key);
+  await Promise.all(lazySpecifiers[key].map((specifier) => import(resolveSpecifier(specifier))));
+};
 
-    const datePicker = document.querySelector('dads-date-picker');
-    if (!disableLazy && datePicker) {
-      const trigger = () => loadLazy('datePicker');
-      datePicker.addEventListener('pointerdown', trigger, { once: true });
-      datePicker.addEventListener('focusin', trigger, { once: true });
+const datePicker = document.querySelector('dads-date-picker');
+if (!disableLazy && datePicker) {
+  const trigger = () => loadLazy('datePicker');
+  datePicker.addEventListener('pointerdown', trigger, { once: true });
+  datePicker.addEventListener('focusin', trigger, { once: true });
+}
+
+const lazySections = [
+  { selector: '.avg-form', key: 'datePicker' },
+  { selector: '.avg-table', key: 'table' },
+  { selector: '.avg-footer', key: 'pageNav' },
+];
+
+if (!disableLazy && 'IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const key = entry.target.getAttribute('data-lazy-key');
+      if (key) loadLazy(key);
+      observer.unobserve(entry.target);
     }
+  }, { rootMargin: '200px 0px' });
 
-    const lazySections = [
-      { selector: 'dads-date-picker', key: 'datePicker' },
-      { selector: 'dads-calendar', key: 'calendar' },
-      { selector: '.avg-table', key: 'table' },
-      { selector: '.avg-footer', key: 'pageNav' },
-    ];
-
-    if (!disableLazy && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const key = entry.target.getAttribute('data-lazy-key');
-          if (key) loadLazy(key);
-          observer.unobserve(entry.target);
-        }
-      }, { rootMargin: '200px 0px' });
-
-      for (const section of lazySections) {
-        const element = document.querySelector(section.selector);
-        if (!element) continue;
-        element.setAttribute('data-lazy-key', section.key);
-        observer.observe(element);
-      }
-    } else if (!disableLazy) {
-      for (const section of lazySections) {
-        loadLazy(section.key);
-      }
-    } else {
-      await Promise.all(Object.values(lazySpecifiers).flat().map((specifier) => import(specifier)));
-    }
+  for (const section of lazySections) {
+    const element = document.querySelector(section.selector);
+    if (!element) continue;
+    element.setAttribute('data-lazy-key', section.key);
+    observer.observe(element);
+  }
+} else if (!disableLazy) {
+  for (const section of lazySections) {
+    loadLazy(section.key);
+  }
+} else {
+  const allLazySpecifiers = Array.from(new Set(Object.values(lazySpecifiers).flat()));
+  await Promise.all(allLazySpecifiers.map((specifier) => import(resolveSpecifier(specifier))));
+}
