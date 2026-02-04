@@ -11,7 +11,6 @@ import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { withReset } from '../../styles/reset-css.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 import { chipLabelStyles } from './chip-label-styles.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * チップラベルコンポーネント
@@ -64,64 +63,6 @@ export class DadsChipLabel extends TypographyWebComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'チップラベル（ステータスや分類の表示）',
-    categories: {
-      semantics: [
-        '非インタラクティブなラベル表示コンポーネントです。',
-        'テキストはデフォルトスロットに配置されます。',
-      ],
-      keyboard: [
-        '操作対象ではないため、デフォルトではフォーカス可能ではありません。',
-      ],
-      zoom: [
-        'デザイントークン（余白 / 文字サイズ など）で定義され、ズーム時もレイアウトを維持します。',
-        'overflow-wrap:anywhere により長い文字列でも折り返します。',
-      ],
-      states: [
-        'variant属性で視覚スタイルを切り替えます: text / outline / filled-outline / fill。',
-        'color属性でカラープリセットを切り替えます。',
-      ],
-      labels: [
-        'slot="icon" でアイコンを配置できます（任意）。',
-        '装飾目的のアイコンは aria-hidden="true" を推奨します。',
-        'テキストが無い場合は aria-label 等で代替テキストの提供を検討してください。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'base',
-        title: 'チップラベル本体',
-        label: 'チップラベル本体',
-        description: '外枠・背景・タイポグラフィを担う要素です。',
-        category: 'semantics',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="base"]' },
-      },
-      {
-        id: 'icon',
-        title: 'アイコン',
-        label: 'アイコンスロット（任意）',
-        description: '任意のアイコンを配置します（装飾目的のSVGは aria-hidden="true" を推奨）。',
-        category: 'labels',
-        placement: 'top-left',
-        target: { scope: 'light', selector: '[slot="icon"]' },
-      },
-      {
-        id: 'label',
-        title: 'ラベルテキスト',
-        label: 'デフォルトスロット',
-        description: 'チップラベルのテキストを配置します。',
-        category: 'labels',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="label"]' },
-      },
-    ],
-  };
 
   connectedCallback(): void {
     super.connectedCallback();

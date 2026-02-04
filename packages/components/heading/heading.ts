@@ -17,7 +17,6 @@ import { headingTokens } from './heading-tokens.js';
 import { headingStyles } from './heading-styles.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 import { hasSlotContent } from '../../utils/dom.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 const VALID_LEVELS = ['1', '2', '3', '4', '5', '6'];
 const VALID_SIZES = ['64', '57', '45', '36', '32', '28', '24', '20', '18', '16'];
@@ -114,67 +113,6 @@ const normalizeMargin = (value: string | null): string => {
  */
 export class DadsHeading extends TypographyWebComponent {
   static readonly version = '1.0.0';
-
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: '見出しコンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'ホスト要素に role="heading" と aria-level を付与し、見出しのセマンティクスを提供します。',
-        'level 属性で見出しレベルを指定します（1-6）。',
-      ],
-      labels: [
-        'ショルダーテキストは slot="shoulder" に配置します。',
-        '先頭アイコンは slot="icon" に配置します。',
-      ],
-      states: [
-        'chip 属性で左側の装飾バー（チップ）を表示できます。装飾は情報の唯一の手掛かりにしないよう注意します。',
-        'rule 属性で下線（ルール）を表示できます。',
-      ],
-      zoom: [
-        'フォントサイズと余白は相対単位で設定され、ズーム時の可読性を維持します。',
-      ],
-      motion: ['アニメーションは使用しません。'],
-    },
-    callouts: [
-      {
-        id: 'heading',
-        title: '見出し',
-        label: 'heading',
-        description: '本文のセマンティック見出しとして扱われます。',
-        category: 'semantics',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="heading"]' },
-      },
-      {
-        id: 'shoulder',
-        title: 'ショルダー',
-        label: 'slot="shoulder"',
-        description: '補助的な見出し（カテゴリなど）を提示します。',
-        category: 'labels',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="shoulder"]' },
-      },
-      {
-        id: 'icon',
-        title: '先頭アイコン',
-        label: 'slot="icon"',
-        description: '見出しの補助記号。意味を持たない場合は aria-hidden の扱いに注意します。',
-        category: 'labels',
-        placement: 'bottom-left',
-        target: { scope: 'shadow', selector: '[part="icon"]' },
-      },
-      {
-        id: 'chip',
-        title: 'チップ（装飾）',
-        label: 'chip',
-        description: '左側の装飾バー。情報の唯一の手掛かりにしないよう注意します。',
-        category: 'states',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="chip"]' },
-      },
-    ],
-  };
 
   static definition = {
     name: 'dads-heading',

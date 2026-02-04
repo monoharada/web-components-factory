@@ -631,6 +631,13 @@ export const Orientation = Object.freeze({
 } as const);
 export type OrientationValue = (typeof Orientation)[keyof typeof Orientation];
 
+type ProcessKeyOptions = {
+  orientation?: OrientationValue;
+  wrap?: boolean;
+  allowAlternateAxis?: boolean;
+  preventDefaultHomeEnd?: boolean;
+};
+
 export class ElementSelection<T extends Element = Element> {
   #elements: T[];
   #current: T;
@@ -668,42 +675,53 @@ export class ElementSelection<T extends Element = Element> {
   processKey(
     event: KeyboardEvent,
     cb: (el: T) => void,
-    orientation: OrientationValue = Orientation.vertical,
+    orientationOrOptions: OrientationValue | ProcessKeyOptions = Orientation.vertical,
   ) {
+    const total = this.#elements.length;
+    if (total === 0) return;
+
+    // Usage: new ElementSelection(items, current).processKey(event, (next) => next.focus(), { wrap: true });
+    const options =
+      typeof orientationOrOptions === 'string'
+        ? { orientation: orientationOrOptions }
+        : orientationOrOptions;
+    const {
+      orientation = Orientation.vertical,
+      wrap = false,
+      allowAlternateAxis = false,
+      preventDefaultHomeEnd = false,
+    } = options;
     const dir = getComputedStyle(this.#current).direction;
     const isVertical = orientation === Orientation.vertical;
     const isRtl = dir === 'rtl';
+    const keySet: [KeyName, KeyName, KeyName, KeyName] = isVertical
+      ? [Keys.arrowUp, Keys.arrowDown, isRtl ? Keys.arrowRight : Keys.arrowLeft, isRtl ? Keys.arrowLeft : Keys.arrowRight]
+      : [isRtl ? Keys.arrowRight : Keys.arrowLeft, isRtl ? Keys.arrowLeft : Keys.arrowRight, Keys.arrowUp, Keys.arrowDown];
+    const [primaryPrev, primaryNext, altPrev, altNext] = keySet;
 
-    let prevKey: KeyName;
-    let nextKey: KeyName;
+    const isPrevKey =
+      event.key === primaryPrev || (allowAlternateAxis && event.key === altPrev);
+    const isNextKey =
+      event.key === primaryNext || (allowAlternateAxis && event.key === altNext);
 
-    if (isVertical) {
-      prevKey = Keys.arrowUp;
-      nextKey = Keys.arrowDown;
-    } else if (isRtl) {
-      prevKey = Keys.arrowRight;
-      nextKey = Keys.arrowLeft;
-    } else {
-      prevKey = Keys.arrowLeft;
-      nextKey = Keys.arrowRight;
-    }
+    const currentIndex = Math.max(0, this.currentIndex);
+    const resolveIndex = wrap
+      ? (index: number): number => (index + total) % total
+      : (index: number): number => this.#clamp(index);
 
     let target: T | undefined;
-    switch (event.key) {
-      case prevKey:
-        event.preventDefault();
-        target = this.previous;
-        break;
-      case nextKey:
-        event.preventDefault();
-        target = this.next;
-        break;
-      case Keys.home:
-        target = this.first;
-        break;
-      case Keys.end:
-        target = this.last;
-        break;
+    if (isPrevKey) {
+      event.preventDefault();
+      target = this.#elements[resolveIndex(currentIndex - 1)];
+    } else if (isNextKey) {
+      event.preventDefault();
+      target = this.#elements[resolveIndex(currentIndex + 1)];
+    } else if (event.key === Keys.home) {
+      if (preventDefaultHomeEnd) event.preventDefault();
+      target = this.first;
+    } else if (event.key === Keys.end) {
+      if (preventDefaultHomeEnd) event.preventDefault();
+      target = this.last;
     }
     if (target) cb(target);
   }

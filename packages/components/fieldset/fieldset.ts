@@ -15,7 +15,6 @@ import {
   updateRequirement,
 } from '../../utils/form-component-helpers.js';
 import { fieldsetStyles } from './fieldset-styles.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * Fieldsetコンポーネント
@@ -48,90 +47,6 @@ export class DadsFieldset extends TypographyFormComponent {
 
   static readonly version = '1.0.0';
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'Fieldsetコンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'ネイティブの <fieldset> と <legend> を使用し、フォームグループのセマンティクスを提供します。',
-        'スクリーンリーダーは「{legend} グループ」と読み上げ、グループの開始を認識できます。',
-      ],
-      keyboard: [
-        '子要素のフォームコントロールに標準のキーボード操作が適用されます。',
-      ],
-      zoom: [
-        'レジェンドとサポートテキストは相対単位(rem)で定義され、拡大時も読みやすさを維持します。',
-      ],
-      states: [
-        'disabled属性で子要素を一括無効化できます。',
-        'required属性で「※必須」ラベルを表示します。',
-        'バリデーションエラー時は子要素にエラーメッセージが表示されます。',
-      ],
-      labels: [
-        'legend属性またはlegendスロットでグループのラベルを指定します。',
-        'support-textスロットで補足説明を提供し、子要素のaria-describedbyに自動設定されます（属性フォールバックは表示のみ）。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'fieldset',
-        title: 'Fieldset要素',
-        label: '<fieldset>',
-        description:
-          'ネイティブのfieldset要素でフォームコントロールをグループ化します。',
-        category: 'semantics',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="fieldset"]' },
-      },
-      {
-        id: 'legend',
-        title: 'Legend要素',
-        label: '<legend>',
-        description:
-          'グループのタイトルを定義します。スクリーンリーダーはグループ名として読み上げます。',
-        category: 'semantics',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="legend"]' },
-      },
-      {
-        id: 'requirement',
-        title: '要否ラベル',
-        label: '要否ラベル',
-        description:
-          'required属性が設定されている場合に「※必須」と表示されます。',
-        category: 'labels',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="requirement"]' },
-      },
-      {
-        id: 'support-text',
-        title: 'サポートテキスト',
-        label: 'support-text',
-        description:
-          '補足説明を提供します。support-textスロット利用時のみ、子要素のaria-describedbyに自動的に関連付けられます（属性フォールバックは表示のみ）。',
-        category: 'labels',
-        placement: 'bottom-left',
-        target: { scope: 'shadow', selector: '[part="support-text"]' },
-      },
-      {
-        id: 'error-text',
-        title: 'エラーメッセージ',
-        label: 'error-text',
-        description:
-          'バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。',
-        category: 'states',
-        placement: 'bottom-left',
-        target: {
-          hostSelector: 'dads-checkbox',
-          scope: 'shadow',
-          selector: '[part="error-text"]',
-        },
-      },
-    ],
-  };
 
   // 一意ID（aria-describedby用）
   #uniqueId = `dads-fieldset-${crypto.randomUUID().slice(0, 8)}`;

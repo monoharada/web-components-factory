@@ -12,7 +12,6 @@ import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
 import { disclosureTokens } from './disclosure-tokens.js';
 import { disclosureStyles } from './disclosure-styles.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * Disclosure（ディスクロージャー）コンポーネント
@@ -59,74 +58,6 @@ export class DadsDisclosure extends TypographyWebComponent {
   #backLink: HTMLAnchorElement | null = null;
   #backLinkObserver: MutationObserver | null = null;
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'ディスクロージャーコンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        '内部は <details>/<summary> で実装し、ネイティブの開閉セマンティクス（open）を利用します。',
-        '見出し（slot="summary"）が summary の主要ラベルになります。',
-        '本文（slot="content"）は open のときに表示されます（detailsのネイティブ挙動）。',
-        'back-link（slot="back-link"）は任意で、未指定の場合は表示しません。',
-      ],
-      keyboard: [
-        'summary は Tab でフォーカスでき、Enter/Space で開閉できます（ネイティブ挙動）。',
-        'back-link が表示されている場合、Tab でフォーカスでき、クリック/Enter で見出しへ戻れます。',
-      ],
-      zoom: [
-        '見出し/本文はテキストの折り返しを前提にし、ズーム/文字サイズ変更でも情報が欠けないことを想定します。',
-      ],
-      states: [
-        'open 属性で初期状態を制御でき、ユーザー操作と同期します。',
-        'アイコンは open 状態で回転し、開閉状態を視覚的に補助します。',
-      ],
-      labels: [
-        'summary のラベルは slot="summary" のテキストで決まります。',
-        'back-link のラベルは slot="back-link" で提供します。',
-      ],
-      motion: [
-        'back-link は summary へスクロール+フォーカスします（prefers-reduced-motion を考慮します）。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'summary',
-        title: 'summary（見出し）',
-        label: '<summary>',
-        description: '展開/折りたたみの操作起点。',
-        category: 'keyboard',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="summary"]' },
-      },
-      {
-        id: 'icon',
-        title: '開閉状態アイコン',
-        label: 'aria-hidden="true"',
-        description: '開閉状態を視覚的に示すアイコン（aria-hidden）。',
-        category: 'states',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="icon"]' },
-      },
-      {
-        id: 'content',
-        title: 'content（本文）',
-        label: 'slot="content"',
-        description: '展開時に表示される本文領域。',
-        category: 'semantics',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="content"]' },
-      },
-      {
-        id: 'back-link',
-        title: '先頭に戻るリンク（任意）',
-        label: 'slot="back-link"',
-        description: '本文内から見出しへ戻る補助リンク。未指定の場合は表示しません。',
-        category: 'labels',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="back-link"]' },
-      },
-    ],
-  };
 
   static definition = {
     name: 'dads-disclosure',

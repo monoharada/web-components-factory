@@ -13,7 +13,6 @@ import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.
 import { hasSlotContent } from '../../utils/dom.js';
 import { cardTokens } from './card-tokens.js';
 import { cardStyles } from './card-styles.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 type PointerState = {
   id: number | null;
@@ -106,70 +105,6 @@ type PointerState = {
  * @cssprop --dads-card-focus-ring-width - フォーカスリング幅（委譲ON時）
  */
 export class DadsCard extends TypographyWebComponent {
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'カードコンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'カードはコンテナ/メイン/イメージ/サブの領域を持つレイアウトコンポーネントです。',
-        'キーボード操作は、カード内のリンク（主リンク）へフォーカスして Enter で遷移します。',
-      ],
-      keyboard: [
-        'カード自体はフォーカス可能にしません。',
-        'カード面クリック（pointer委譲）は data 属性で任意に有効化できます。',
-      ],
-      zoom: [
-        '余白やサイズは rem と CSS 変数で定義され、拡大時も読みやすさを維持します。',
-      ],
-      states: [
-        'layout="horizontal" で横並び（イメージ左・メイン右）にできます。',
-      ],
-      labels: [
-        'デフォルトスロットにh2等の見出しや本文を配置します。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'container',
-        title: 'カードコンテナ',
-        label: 'container',
-        description: '外周・背景を持つカードのコンテナです。',
-        category: 'semantics',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="base"]' },
-      },
-      {
-        id: 'media',
-        title: 'イメージエリア',
-        label: 'media',
-        description: '画像や動画などのメディアを配置するエリアです（任意）。',
-        category: 'semantics',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="media"]' },
-      },
-      {
-        id: 'main',
-        title: 'メインエリア',
-        label: 'main',
-        description: 'タイトルや本文などの主要コンテンツを配置します。',
-        category: 'semantics',
-        placement: 'bottom-left',
-        target: { scope: 'shadow', selector: '[part="main"]' },
-      },
-      {
-        id: 'sub',
-        title: 'サブエリア',
-        label: 'sub',
-        description: '関連情報やボタンなどの補助要素を配置するエリアです（任意）。',
-        category: 'semantics',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="sub"]' },
-      },
-    ],
-  };
 
   static definition = {
     name: 'dads-card',

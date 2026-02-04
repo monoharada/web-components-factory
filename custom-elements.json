@@ -136,16 +136,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'コンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'アコーディオンは、子要素（dads-accordion-item-details）をグルーピングして表示します。', '各アイテムは内部で <details>/<summary> を使い、ネイティブの展開/折りたたみセマンティクスを活用します。', 'コンテナ内部は role=\"group\" として関連コンテンツのまとまりを示します。', ], keyboard: [ '各アイテムの見出し（summary）はTabでフォーカスでき、Enter/Spaceで展開/折りたたみできます（ネイティブ挙動）。', '本文内の「先頭に戻る」リンクはTabでフォーカスでき、クリックで見出しへスクロール+フォーカスします。', ], zoom: [ 'テキストの折り返し・行間を前提に、ズーム/文字サイズ変更でも情報が欠けないようにします。', '横幅が狭い場合も、パネル/本文が縦に積まれて操作できることを想定します（ドキュメント側のレイアウトも含む）。', ], states: [ '単一展開モードでは、あるアイテムが開くと他の開いているアイテムが閉じます（allow-multiple未指定時）。', 'アイテムは expanded/disabled 属性で状態を制御できます（内部の <details> に反映）。', '見出し左のアイコン（矢印）は、ロービジョン等で画面拡大して閲覧するユーザーに対して、開閉状況を視覚的に示す補助情報です。', ], labels: [ '見出しスロット（slot=\"header\"）のテキストが、アイテムの主要ラベルとして機能します。', '「先頭に戻る」リンクは見出しテキストを含む説明的なリンクテキストを持ちます。', ], motion: [ 'animation 属性でアニメーション方針を切り替えできます。', 'respect-motion-preference を指定した場合、prefers-reduced-motion: reduce では animation=\"none\" を優先します。', ], }, callouts: [ { id: 'item-header', title: '見出し（header）', label: 'slot=\"header\"', description: '展開/折りたたみの操作起点（内部は <summary>）。', category: 'keyboard', placement: 'top-right', target: { hostSelector: 'dads-accordion-item-details', selector: '[slot=\"header\"]' }, }, { id: 'state-icon', title: '開閉状態アイコン', label: 'aria-hidden=\"true\"', description: '見出しの文頭に配置し、開閉状態を視覚的に示します（スクリーンリーダー向けには aria-hidden）。', category: 'states', placement: 'top-left', target: { hostSelector: 'dads-accordion-item-details', scope: 'shadow', selector: '[part=\"icon\"]' }, }, { id: 'item-content', title: '本文（content）', label: 'slot=\"content\"', description: '展開時に表示されるコンテンツ領域。', category: 'semantics', placement: 'bottom-right', target: { hostSelector: 'dads-accordion-item-details', selector: '[slot=\"content\"]' }, }, { id: 'return-link', title: '先頭に戻るリンク', label: '「[見出し]」の先頭に戻る', description: '本文内から見出しへ戻る補助リンク。見出しテキストを含む説明的なリンクテキスト。', category: 'labels', placement: 'bottom-right', target: { hostSelector: 'dads-accordion-item-details', scope: 'shadow', selector: '[part=\"return-button\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -304,7 +294,93 @@
           "events": [],
           "modulePath": "./packages/components/accordion/accordion.ts",
           "definitionPath": "./packages/components/accordion/accordion.ts",
-          "typeDefinitionPath": "./packages/components/accordion/accordion.ts"
+          "typeDefinitionPath": "./packages/components/accordion/accordion.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "コンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "アコーディオンは、子要素（dads-accordion-item-details）をグルーピングして表示します。",
+                  "各アイテムは内部で <details>/<summary> を使い、ネイティブの展開/折りたたみセマンティクスを活用します。",
+                  "コンテナ内部は role=\"group\" として関連コンテンツのまとまりを示します。"
+                ],
+                "keyboard": [
+                  "各アイテムの見出し（summary）はTabでフォーカスでき、Enter/Spaceで展開/折りたたみできます（ネイティブ挙動）。",
+                  "本文内の「先頭に戻る」リンクはTabでフォーカスでき、クリックで見出しへスクロール+フォーカスします。"
+                ],
+                "zoom": [
+                  "テキストの折り返し・行間を前提に、ズーム/文字サイズ変更でも情報が欠けないようにします。",
+                  "横幅が狭い場合も、パネル/本文が縦に積まれて操作できることを想定します（ドキュメント側のレイアウトも含む）。"
+                ],
+                "states": [
+                  "単一展開モードでは、あるアイテムが開くと他の開いているアイテムが閉じます（allow-multiple未指定時）。",
+                  "アイテムは expanded/disabled 属性で状態を制御できます（内部の <details> に反映）。",
+                  "見出し左のアイコン（矢印）は、ロービジョン等で画面拡大して閲覧するユーザーに対して、開閉状況を視覚的に示す補助情報です。"
+                ],
+                "labels": [
+                  "見出しスロット（slot=\"header\"）のテキストが、アイテムの主要ラベルとして機能します。",
+                  "「先頭に戻る」リンクは見出しテキストを含む説明的なリンクテキストを持ちます。"
+                ],
+                "motion": [
+                  "animation 属性でアニメーション方針を切り替えできます。",
+                  "respect-motion-preference を指定した場合、prefers-reduced-motion: reduce では animation=\"none\" を優先します。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "item-header",
+                  "title": "見出し（header）",
+                  "label": "slot=\"header\"",
+                  "description": "展開/折りたたみの操作起点（内部は <summary>）。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "hostSelector": "dads-accordion-item-details",
+                    "selector": "[slot=\"header\"]"
+                  }
+                },
+                {
+                  "id": "state-icon",
+                  "title": "開閉状態アイコン",
+                  "label": "aria-hidden=\"true\"",
+                  "description": "見出しの文頭に配置し、開閉状態を視覚的に示します（スクリーンリーダー向けには aria-hidden）。",
+                  "category": "states",
+                  "placement": "top-left",
+                  "target": {
+                    "hostSelector": "dads-accordion-item-details",
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "item-content",
+                  "title": "本文（content）",
+                  "label": "slot=\"content\"",
+                  "description": "展開時に表示されるコンテンツ領域。",
+                  "category": "semantics",
+                  "placement": "bottom-right",
+                  "target": {
+                    "hostSelector": "dads-accordion-item-details",
+                    "selector": "[slot=\"content\"]"
+                  }
+                },
+                {
+                  "id": "return-link",
+                  "title": "先頭に戻るリンク",
+                  "label": "「[見出し]」の先頭に戻る",
+                  "description": "本文内から見出しへ戻る補助リンク。見出しテキストを含む説明的なリンクテキスト。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "hostSelector": "dads-accordion-item-details",
+                    "scope": "shadow",
+                    "selector": "[part=\"return-button\"]"
+                  }
+                }
+              ]
+            }
+          }
         },
         {
           "kind": "class",
@@ -489,16 +565,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'コンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部は <details>/<summary> で実装し、ネイティブの状態（open）とセマンティクスを利用します。', '見出し左（文頭）にアイコンを置き、開閉状態を視覚的に補助します（スクリーンリーダー向けには aria-hidden）。', '見出しスロット（slot=\"header\"）が、summary内に配置されます。', '本文スロット（slot=\"content\"）が、detailsのコンテンツ領域に配置されます。', ], keyboard: [ 'summary はTabでフォーカス可能です。', 'Enter/Spaceで展開/折りたたみができます（ネイティブ挙動）。', '本文内の「先頭に戻る」リンクで、見出しへスクロール+フォーカスできます。', ], zoom: [ 'ヘッダー/本文はテキストの折り返しを前提に設計します。', 'ズーム時にボタンやフォーカスリングが欠けない余白を確保します。', ], states: [ 'expanded 属性で初期展開状態を制御できます（内部 <details>.open に反映）。', 'disabled 属性で無効状態を制御できます（内部 <details> の disabled に反映）。', '開閉状態は、矢印アイコンの向き/回転でも視覚的に示します（ロービジョン等での認知補助）。', ], labels: [ '見出しのラベルは slot=\"header\" のテキストで決まります。', '戻るリンクは「[見出し]」の先頭に戻る形式で、説明的なリンクテキストを持ちます。', ], motion: [ '戻る操作は smooth scroll を行います（必要に応じて reduced motion を考慮します）。', 'コンテナ側の animation 設定により、展開/折りたたみの見え方が変わります。', ], }, callouts: [ { id: 'icon', title: '開閉状態アイコン', label: 'aria-hidden=\"true\"', description: '開閉状態を視覚的に示すアイコン（aria-hidden）。', category: 'states', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"icon\"]' }, }, { id: 'summary', title: 'summary（見出し）', label: '<summary>', description: '展開/折りたたみの操作起点。', category: 'keyboard', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"summary\"]' }, }, { id: 'content', title: 'content（本文領域）', label: '<div part=\"content\">', description: '展開時に表示されるコンテンツ領域。', category: 'semantics', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"content\"]' }, }, { id: 'return-link', title: '先頭に戻るリンク', label: '「[見出し]」の先頭に戻る', description: '本文内から見出しへ戻る補助リンク。見出しテキストを含む説明的なリンクテキスト。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"return-button\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "collapse"
             },
@@ -677,7 +743,93 @@
           "customElement": true,
           "modulePath": "./packages/components/accordion/accordion.ts",
           "definitionPath": "./packages/components/accordion/accordion.ts",
-          "typeDefinitionPath": "./packages/components/accordion/accordion.ts"
+          "typeDefinitionPath": "./packages/components/accordion/accordion.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "コンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部は <details>/<summary> で実装し、ネイティブの状態（open）とセマンティクスを利用します。",
+                  "見出し左（文頭）にアイコンを置き、開閉状態を視覚的に補助します（スクリーンリーダー向けには aria-hidden）。",
+                  "見出しスロット（slot=\"header\"）が、summary内に配置されます。",
+                  "本文スロット（slot=\"content\"）が、detailsのコンテンツ領域に配置されます。"
+                ],
+                "keyboard": [
+                  "summary はTabでフォーカス可能です。",
+                  "Enter/Spaceで展開/折りたたみができます（ネイティブ挙動）。",
+                  "本文内の「先頭に戻る」リンクで、見出しへスクロール+フォーカスできます。"
+                ],
+                "zoom": [
+                  "ヘッダー/本文はテキストの折り返しを前提に設計します。",
+                  "ズーム時にボタンやフォーカスリングが欠けない余白を確保します。"
+                ],
+                "states": [
+                  "expanded 属性で初期展開状態を制御できます（内部 <details>.open に反映）。",
+                  "disabled 属性で無効状態を制御できます（内部 <details> の disabled に反映）。",
+                  "開閉状態は、矢印アイコンの向き/回転でも視覚的に示します（ロービジョン等での認知補助）。"
+                ],
+                "labels": [
+                  "見出しのラベルは slot=\"header\" のテキストで決まります。",
+                  "戻るリンクは「[見出し]」の先頭に戻る形式で、説明的なリンクテキストを持ちます。"
+                ],
+                "motion": [
+                  "戻る操作は smooth scroll を行います（必要に応じて reduced motion を考慮します）。",
+                  "コンテナ側の animation 設定により、展開/折りたたみの見え方が変わります。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "icon",
+                  "title": "開閉状態アイコン",
+                  "label": "aria-hidden=\"true\"",
+                  "description": "開閉状態を視覚的に示すアイコン（aria-hidden）。",
+                  "category": "states",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "summary",
+                  "title": "summary（見出し）",
+                  "label": "<summary>",
+                  "description": "展開/折りたたみの操作起点。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"summary\"]"
+                  }
+                },
+                {
+                  "id": "content",
+                  "title": "content（本文領域）",
+                  "label": "<div part=\"content\">",
+                  "description": "展開時に表示されるコンテンツ領域。",
+                  "category": "semantics",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"content\"]"
+                  }
+                },
+                {
+                  "id": "return-link",
+                  "title": "先頭に戻るリンク",
+                  "label": "「[見出し]」の先頭に戻る",
+                  "description": "本文内から見出しへ戻る補助リンク。見出しテキストを含む説明的なリンクテキスト。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"return-button\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -1052,6 +1204,15 @@
               "privacy": "private"
             },
             {
+              "kind": "field",
+              "name": "#refreshQueued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
               "kind": "method",
               "name": "#refreshSnapshotsOnly",
               "privacy": "private"
@@ -1127,6 +1288,11 @@
             {
               "kind": "method",
               "name": "#scheduleLayout",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#scheduleRefresh",
               "privacy": "private"
             },
             {
@@ -1746,16 +1912,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: '引用ブロックコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ネイティブの <blockquote> 要素を使用し、引用のセマンティクスを提供します。', 'cite属性で引用元URLを内部blockquote要素に転送します。', '3スロット構造（lead/default/close）でコンテンツを意味的に分割できます。', ], keyboard: [ '引用コンテンツ内のリンクやインタラクティブ要素はTabでフォーカス可能です。', ], zoom: [ 'テキストは相対単位(rem)で定義され、拡大時も読みやすさを維持します。', '左ボーダーと余白は視覚的な引用識別を支援します。', ], states: [ '空のスロットは自動的に非表示になり、余分な余白が発生しません。', ], labels: [ 'スロットなし要素は自動的にlead/body/closeに振り分けられます。', 'cite属性で引用元情報をメタデータとして提供できます（視覚的には非表示）。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'blockquote', title: '引用ブロック要素', label: '<blockquote>', description: 'ネイティブのblockquote要素でセマンティックな引用を表現します。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"blockquote\"]' }, }, { id: 'lead', title: '冒頭スロット', label: 'slot=\"lead\"', description: '引用の冒頭部分（最初の段落など）を配置します。', category: 'labels', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"lead\"]' }, }, { id: 'body', title: '本文スロット', label: 'デフォルトスロット', description: '引用の本文（中間の段落群）を配置します。', category: 'semantics', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"body\"]' }, }, { id: 'close', title: '締め括りスロット', label: 'slot=\"close\"', description: '引用の締め括り（最後の段落、出典など）を配置します。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"close\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -1900,7 +2056,87 @@
           "events": [],
           "modulePath": "./packages/components/blockquote/blockquote.ts",
           "definitionPath": "./packages/components/blockquote/blockquote.ts",
-          "typeDefinitionPath": "./packages/components/blockquote/blockquote.ts"
+          "typeDefinitionPath": "./packages/components/blockquote/blockquote.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "引用ブロックコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ネイティブの <blockquote> 要素を使用し、引用のセマンティクスを提供します。",
+                  "cite属性で引用元URLを内部blockquote要素に転送します。",
+                  "3スロット構造（lead/default/close）でコンテンツを意味的に分割できます。"
+                ],
+                "keyboard": [
+                  "引用コンテンツ内のリンクやインタラクティブ要素はTabでフォーカス可能です。"
+                ],
+                "zoom": [
+                  "テキストは相対単位(rem)で定義され、拡大時も読みやすさを維持します。",
+                  "左ボーダーと余白は視覚的な引用識別を支援します。"
+                ],
+                "states": [
+                  "空のスロットは自動的に非表示になり、余分な余白が発生しません。"
+                ],
+                "labels": [
+                  "スロットなし要素は自動的にlead/body/closeに振り分けられます。",
+                  "cite属性で引用元情報をメタデータとして提供できます（視覚的には非表示）。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "blockquote",
+                  "title": "引用ブロック要素",
+                  "label": "<blockquote>",
+                  "description": "ネイティブのblockquote要素でセマンティックな引用を表現します。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"blockquote\"]"
+                  }
+                },
+                {
+                  "id": "lead",
+                  "title": "冒頭スロット",
+                  "label": "slot=\"lead\"",
+                  "description": "引用の冒頭部分（最初の段落など）を配置します。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"lead\"]"
+                  }
+                },
+                {
+                  "id": "body",
+                  "title": "本文スロット",
+                  "label": "デフォルトスロット",
+                  "description": "引用の本文（中間の段落群）を配置します。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"body\"]"
+                  }
+                },
+                {
+                  "id": "close",
+                  "title": "締め括りスロット",
+                  "label": "slot=\"close\"",
+                  "description": "引用の締め括り（最後の段落、出典など）を配置します。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"close\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -2165,16 +2401,6 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'ボタンコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ネイティブの <button> 要素を使用し、ボタンのセマンティクスを提供します。', 'as=\"link\" または href属性で <a> 要素としてレンダリングできます。', 'type属性（button/submit/reset）でフォーム動作を制御します。', ], keyboard: [ 'Tabでフォーカス可能です。', 'Enter/Spaceで操作できます（ネイティブ挙動）。', ], zoom: [ '最小44x44pxのタップターゲットを確保（WCAG 2.2 AA準拠）。', 'サイズバリエーション: x-small / small / medium / large。', 'full-width属性で幅100%表示が可能です。', ], states: [ 'variant属性: solid（塗り）/ outlined（枠線）/ text（テキスト）。', 'disabled属性で無効状態（デジタル庁ガイドラインでは非推奨）。', ':focus-visible でフォーカスリング表示。', ], labels: [ 'デフォルトスロットでボタンテキストを提供します。', 'icon-start / icon-end スロットでアイコンを配置できます。', 'aria-label属性でアクセシブルネームをカスタマイズできます。', ], motion: [ 'ホバー/フォーカス時の色変化は即時適用されます。', ], }, callouts: [ { id: 'button', title: 'ボタン要素', label: '<button>/<a>', description: 'デフォルトはbutton要素、as=\"link\" または href指定でa要素としてレンダリングされます。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"base\"]' }, }, { id: 'icon-start', title: '先頭アイコン', label: 'slot=\"icon-start\"', description: 'ボタンテキストの前にアイコンを配置します。', category: 'labels', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"icon-start\"]' }, }, { id: 'label', title: 'ラベルテキスト', label: 'デフォルトスロット', description: 'ボタンのテキストコンテンツを配置します。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"label\"]' }, }, { id: 'icon-end', title: '末尾アイコン', label: 'slot=\"icon-end\"', description: 'ボタンテキストの後にアイコンを配置します。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"icon-end\"]' }, }, ], }"
             },
             {
               "kind": "method",
@@ -2460,7 +2686,92 @@
           "customElement": true,
           "modulePath": "./packages/components/button/button.ts",
           "definitionPath": "./packages/components/button/button.ts",
-          "typeDefinitionPath": "./packages/components/button/button.ts"
+          "typeDefinitionPath": "./packages/components/button/button.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ボタンコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ネイティブの <button> 要素を使用し、ボタンのセマンティクスを提供します。",
+                  "as=\"link\" または href属性で <a> 要素としてレンダリングできます。",
+                  "type属性（button/submit/reset）でフォーム動作を制御します。"
+                ],
+                "keyboard": [
+                  "Tabでフォーカス可能です。",
+                  "Enter/Spaceで操作できます（ネイティブ挙動）。"
+                ],
+                "zoom": [
+                  "最小44x44pxのタップターゲットを確保（WCAG 2.2 AA準拠）。",
+                  "サイズバリエーション: x-small / small / medium / large。",
+                  "full-width属性で幅100%表示が可能です。"
+                ],
+                "states": [
+                  "variant属性: solid（塗り）/ outlined（枠線）/ text（テキスト）。",
+                  "disabled属性で無効状態（デジタル庁ガイドラインでは非推奨）。",
+                  ":focus-visible でフォーカスリング表示。"
+                ],
+                "labels": [
+                  "デフォルトスロットでボタンテキストを提供します。",
+                  "icon-start / icon-end スロットでアイコンを配置できます。",
+                  "aria-label属性でアクセシブルネームをカスタマイズできます。"
+                ],
+                "motion": [
+                  "ホバー/フォーカス時の色変化は即時適用されます。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "button",
+                  "title": "ボタン要素",
+                  "label": "<button>/<a>",
+                  "description": "デフォルトはbutton要素、as=\"link\" または href指定でa要素としてレンダリングされます。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "icon-start",
+                  "title": "先頭アイコン",
+                  "label": "slot=\"icon-start\"",
+                  "description": "ボタンテキストの前にアイコンを配置します。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon-start\"]"
+                  }
+                },
+                {
+                  "id": "label",
+                  "title": "ラベルテキスト",
+                  "label": "デフォルトスロット",
+                  "description": "ボタンのテキストコンテンツを配置します。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "icon-end",
+                  "title": "末尾アイコン",
+                  "label": "slot=\"icon-end\"",
+                  "description": "ボタンテキストの後にアイコンを配置します。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon-end\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -3233,14 +3544,6 @@
               "default": "null"
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations | undefined"
-              },
-              "static": true
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -3479,7 +3782,174 @@
           "customElement": true,
           "modulePath": "./packages/components/calendar/calendar-impl.ts",
           "definitionPath": "./packages/components/calendar/calendar-impl.ts",
-          "typeDefinitionPath": "./packages/components/calendar/calendar-impl.ts"
+          "typeDefinitionPath": "./packages/components/calendar/calendar-impl.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "カレンダーコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "日付一覧は <table role=\"grid\"> を用いて表現します。",
+                  "日付は <button> として実装され、選択・フォーカス状態を提供します。",
+                  "aria-label（年月）を更新し、スクリーンリーダーに表示中の月を伝えます。"
+                ],
+                "keyboard": [
+                  "Tabで日付ボタンへフォーカスできます。",
+                  "矢印キー（上下左右）で日付セル間を移動できます。"
+                ],
+                "zoom": [
+                  "日付ボタンは円形で視認性を確保し、相対単位(rem)で定義します。"
+                ],
+                "states": [
+                  "選択中の日付は data-selected で視覚的に表示されます。",
+                  "範囲外の日付は無効化され、選択できません。",
+                  "range属性が指定された場合、開始日/終了日の期間選択が可能になります。"
+                ],
+                "labels": [
+                  "年の選択は <select aria-label=\"年\"> で提供します。",
+                  "各日付ボタンは曜日を含む aria-label を持ちます。",
+                  "range属性が指定された場合、「開始日/終了日」とサポートテキストが追加されます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "year-select",
+                  "title": "年セレクト",
+                  "label": "<select>",
+                  "description": "表示する年を選択します（min-date/max-date に応じて選択肢を生成）。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"year-select\"]"
+                  }
+                },
+                {
+                  "id": "prev-month-button",
+                  "title": "前の月へ",
+                  "label": "<dads-button>",
+                  "description": "表示月を前の月へ移動します（aria-labelで目的を明示）。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#prev-month-button"
+                  }
+                },
+                {
+                  "id": "next-month-button",
+                  "title": "次の月へ",
+                  "label": "<dads-button>",
+                  "description": "表示月を次の月へ移動します（aria-labelで目的を明示）。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#next-month-button"
+                  }
+                },
+                {
+                  "id": "current-month",
+                  "title": "表示中の月",
+                  "label": "月表示",
+                  "description": "現在表示している月を示します（年は見出し/テーブルのaria-labelでも提供）。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#current-month"
+                  }
+                },
+                {
+                  "id": "calendar-table",
+                  "title": "カレンダーグリッド",
+                  "label": "<table role=\"grid\">",
+                  "description": "日付の一覧をグリッドとして提供します。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"table\"]"
+                  }
+                },
+                {
+                  "id": "date-button",
+                  "title": "日付ボタン",
+                  "label": "<button>",
+                  "description": "日付はbuttonとして実装され、矢印キーでセル移動、クリックで選択できます。",
+                  "category": "keyboard",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"date\"]:not(:disabled)"
+                  }
+                },
+                {
+                  "id": "delete-button",
+                  "title": "削除",
+                  "label": "<dads-button>",
+                  "description": "選択状態をクリアします。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#delete-button"
+                  }
+                },
+                {
+                  "id": "today-button",
+                  "title": "今日",
+                  "label": "<dads-button>",
+                  "description": "今日の日付へ移動し、選択します。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#today-button"
+                  }
+                },
+                {
+                  "id": "range",
+                  "title": "期間選択",
+                  "label": "range",
+                  "description": "range属性が指定された場合、開始日/終了日の表示とサポートテキスト（aria-liveによる読み上げ）を提供します。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"range\"]"
+                  }
+                },
+                {
+                  "id": "range-support",
+                  "title": "サポートテキスト（期間選択）",
+                  "label": "support-text",
+                  "description": "開始日/終了日のどちらを選ぶべきかをガイドします。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#range-support"
+                  }
+                },
+                {
+                  "id": "range-live",
+                  "title": "読み上げ（期間選択）",
+                  "label": "aria-live",
+                  "description": "選択操作の結果を aria-live=\"polite\" で通知します。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#range-live"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -3918,16 +4388,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'カードコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'カードはコンテナ/メイン/イメージ/サブの領域を持つレイアウトコンポーネントです。', 'キーボード操作は、カード内のリンク（主リンク）へフォーカスして Enter で遷移します。', ], keyboard: [ 'カード自体はフォーカス可能にしません。', 'カード面クリック（pointer委譲）は data 属性で任意に有効化できます。', ], zoom: [ '余白やサイズは rem と CSS 変数で定義され、拡大時も読みやすさを維持します。', ], states: [ 'layout=\"horizontal\" で横並び（イメージ左・メイン右）にできます。', ], labels: [ 'デフォルトスロットにh2等の見出しや本文を配置します。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'container', title: 'カードコンテナ', label: 'container', description: '外周・背景を持つカードのコンテナです。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"base\"]' }, }, { id: 'media', title: 'イメージエリア', label: 'media', description: '画像や動画などのメディアを配置するエリアです（任意）。', category: 'semantics', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"media\"]' }, }, { id: 'main', title: 'メインエリア', label: 'main', description: 'タイトルや本文などの主要コンテンツを配置します。', category: 'semantics', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"main\"]' }, }, { id: 'sub', title: 'サブエリア', label: 'sub', description: '関連情報やボタンなどの補助要素を配置するエリアです（任意）。', category: 'semantics', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"sub\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -4072,7 +4532,85 @@
           "events": [],
           "modulePath": "./packages/components/card/card.ts",
           "definitionPath": "./packages/components/card/card.ts",
-          "typeDefinitionPath": "./packages/components/card/card.ts"
+          "typeDefinitionPath": "./packages/components/card/card.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "カードコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "カードはコンテナ/メイン/イメージ/サブの領域を持つレイアウトコンポーネントです。",
+                  "キーボード操作は、カード内のリンク（主リンク）へフォーカスして Enter で遷移します。"
+                ],
+                "keyboard": [
+                  "カード自体はフォーカス可能にしません。",
+                  "カード面クリック（pointer委譲）は data 属性で任意に有効化できます。"
+                ],
+                "zoom": [
+                  "余白やサイズは rem と CSS 変数で定義され、拡大時も読みやすさを維持します。"
+                ],
+                "states": [
+                  "layout=\"horizontal\" で横並び（イメージ左・メイン右）にできます。"
+                ],
+                "labels": [
+                  "デフォルトスロットにh2等の見出しや本文を配置します。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "container",
+                  "title": "カードコンテナ",
+                  "label": "container",
+                  "description": "外周・背景を持つカードのコンテナです。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "media",
+                  "title": "イメージエリア",
+                  "label": "media",
+                  "description": "画像や動画などのメディアを配置するエリアです（任意）。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"media\"]"
+                  }
+                },
+                {
+                  "id": "main",
+                  "title": "メインエリア",
+                  "label": "main",
+                  "description": "タイトルや本文などの主要コンテンツを配置します。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"main\"]"
+                  }
+                },
+                {
+                  "id": "sub",
+                  "title": "サブエリア",
+                  "label": "sub",
+                  "description": "関連情報やボタンなどの補助要素を配置するエリアです（任意）。",
+                  "category": "semantics",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"sub\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -4511,16 +5049,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'コンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部にネイティブの <input type=\"checkbox\"> を持ち、チェックボックスのセマンティクスをブラウザ標準で提供します。', 'チェックボックスは <label> 内に配置されるため、ラベルテキストと操作対象が確実に関連付けられます。', 'Form-Associated Custom Elementとしてフォームに参加し、checked時のみ値を送信します（ネイティブcheckboxの挙動に準拠）。', ], keyboard: [ 'Tabでフォーカス可能です。', 'Spaceでチェック状態を切り替えできます（ネイティブ挙動）。', ], zoom: [ 'サイズ（sm/md/lg）に応じて操作面の大きさを調整し、拡大時も視認性・操作性を確保します。', ], states: [ 'checked / indeterminate / disabled をサポートします。', 'error属性で aria-invalid=\"true\" を付与し、エラー状態（赤系）を表示します（DADS HTML版に準拠）。', ], labels: [ 'label属性は視覚ラベルとして表示され、同時にネイティブlabel関連付けによりアクセシブルネームに寄与します。', 'ラベルを表示しない場合は aria-label または aria-labelledby の指定を推奨します。', '補足説明は aria-describedby（外部要素ID）で関連付けできます。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'base', title: 'ラベルラッパー', label: '<label>', description: 'クリック領域を含め、チェックボックスとラベルを一体として提供します。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"base\"]' }, }, { id: 'native-input', title: 'ネイティブチェックボックス', label: 'input[type=\"checkbox\"]', description: 'キーボード操作（Space）や状態（checked/indeterminate/disabled）の基本挙動はブラウザ標準に委譲します。', category: 'keyboard', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"input\"]' }, }, { id: 'label-text', title: 'ラベルテキスト', label: 'label', description: 'label属性（または将来的な拡張）で表示されるテキスト。空の場合はaria-label等で補完します。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"label\"]' }, }, { id: 'requirement', title: '要否ラベル', label: '要否ラベル', description: 'required属性が設定されている場合に「※必須」と表示されます。必須入力であることを視覚的に伝えます。', category: 'labels', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"requirement\"]' }, }, { id: 'error-text', title: 'エラーメッセージ', label: 'error-text', description: 'バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。', category: 'states', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"error-text\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "blur",
               "return": {
@@ -4957,7 +5485,101 @@
           "events": [],
           "modulePath": "./packages/components/checkbox/checkbox.ts",
           "definitionPath": "./packages/components/checkbox/checkbox.ts",
-          "typeDefinitionPath": "./packages/components/checkbox/checkbox.ts"
+          "typeDefinitionPath": "./packages/components/checkbox/checkbox.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "コンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部にネイティブの <input type=\"checkbox\"> を持ち、チェックボックスのセマンティクスをブラウザ標準で提供します。",
+                  "チェックボックスは <label> 内に配置されるため、ラベルテキストと操作対象が確実に関連付けられます。",
+                  "Form-Associated Custom Elementとしてフォームに参加し、checked時のみ値を送信します（ネイティブcheckboxの挙動に準拠）。"
+                ],
+                "keyboard": [
+                  "Tabでフォーカス可能です。",
+                  "Spaceでチェック状態を切り替えできます（ネイティブ挙動）。"
+                ],
+                "zoom": [
+                  "サイズ（sm/md/lg）に応じて操作面の大きさを調整し、拡大時も視認性・操作性を確保します。"
+                ],
+                "states": [
+                  "checked / indeterminate / disabled をサポートします。",
+                  "error属性で aria-invalid=\"true\" を付与し、エラー状態（赤系）を表示します（DADS HTML版に準拠）。"
+                ],
+                "labels": [
+                  "label属性は視覚ラベルとして表示され、同時にネイティブlabel関連付けによりアクセシブルネームに寄与します。",
+                  "ラベルを表示しない場合は aria-label または aria-labelledby の指定を推奨します。",
+                  "補足説明は aria-describedby（外部要素ID）で関連付けできます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "ラベルラッパー",
+                  "label": "<label>",
+                  "description": "クリック領域を含め、チェックボックスとラベルを一体として提供します。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "native-input",
+                  "title": "ネイティブチェックボックス",
+                  "label": "input[type=\"checkbox\"]",
+                  "description": "キーボード操作（Space）や状態（checked/indeterminate/disabled）の基本挙動はブラウザ標準に委譲します。",
+                  "category": "keyboard",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"input\"]"
+                  }
+                },
+                {
+                  "id": "label-text",
+                  "title": "ラベルテキスト",
+                  "label": "label",
+                  "description": "label属性（または将来的な拡張）で表示されるテキスト。空の場合はaria-label等で補完します。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "requirement",
+                  "title": "要否ラベル",
+                  "label": "要否ラベル",
+                  "description": "required属性が設定されている場合に「※必須」と表示されます。必須入力であることを視覚的に伝えます。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"requirement\"]"
+                  }
+                },
+                {
+                  "id": "error-text",
+                  "title": "エラーメッセージ",
+                  "label": "error-text",
+                  "description": "バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"error-text\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -5125,16 +5747,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'チップラベル（ステータスや分類の表示）', categories: { semantics: [ '非インタラクティブなラベル表示コンポーネントです。', 'テキストはデフォルトスロットに配置されます。', ], keyboard: [ '操作対象ではないため、デフォルトではフォーカス可能ではありません。', ], zoom: [ 'デザイントークン（余白 / 文字サイズ など）で定義され、ズーム時もレイアウトを維持します。', 'overflow-wrap:anywhere により長い文字列でも折り返します。', ], states: [ 'variant属性で視覚スタイルを切り替えます: text / outline / filled-outline / fill。', 'color属性でカラープリセットを切り替えます。', ], labels: [ 'slot=\"icon\" でアイコンを配置できます（任意）。', '装飾目的のアイコンは aria-hidden=\"true\" を推奨します。', 'テキストが無い場合は aria-label 等で代替テキストの提供を検討してください。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'base', title: 'チップラベル本体', label: 'チップラベル本体', description: '外枠・背景・タイポグラフィを担う要素です。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"base\"]' }, }, { id: 'icon', title: 'アイコン', label: 'アイコンスロット（任意）', description: '任意のアイコンを配置します（装飾目的のSVGは aria-hidden=\"true\" を推奨）。', category: 'labels', placement: 'top-left', target: { scope: 'light', selector: '[slot=\"icon\"]' }, }, { id: 'label', title: 'ラベルテキスト', label: 'デフォルトスロット', description: 'チップラベルのテキストを配置します。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"label\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -5286,7 +5898,76 @@
           "events": [],
           "modulePath": "./packages/components/chip-label/chip-label.ts",
           "definitionPath": "./packages/components/chip-label/chip-label.ts",
-          "typeDefinitionPath": "./packages/components/chip-label/chip-label.ts"
+          "typeDefinitionPath": "./packages/components/chip-label/chip-label.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "チップラベル（ステータスや分類の表示）",
+              "categories": {
+                "semantics": [
+                  "非インタラクティブなラベル表示コンポーネントです。",
+                  "テキストはデフォルトスロットに配置されます。"
+                ],
+                "keyboard": [
+                  "操作対象ではないため、デフォルトではフォーカス可能ではありません。"
+                ],
+                "zoom": [
+                  "デザイントークン（余白 / 文字サイズ など）で定義され、ズーム時もレイアウトを維持します。",
+                  "overflow-wrap:anywhere により長い文字列でも折り返します。"
+                ],
+                "states": [
+                  "variant属性で視覚スタイルを切り替えます: text / outline / filled-outline / fill。",
+                  "color属性でカラープリセットを切り替えます。"
+                ],
+                "labels": [
+                  "slot=\"icon\" でアイコンを配置できます（任意）。",
+                  "装飾目的のアイコンは aria-hidden=\"true\" を推奨します。",
+                  "テキストが無い場合は aria-label 等で代替テキストの提供を検討してください。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "チップラベル本体",
+                  "label": "チップラベル本体",
+                  "description": "外枠・背景・タイポグラフィを担う要素です。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "icon",
+                  "title": "アイコン",
+                  "label": "アイコンスロット（任意）",
+                  "description": "任意のアイコンを配置します（装飾目的のSVGは aria-hidden=\"true\" を推奨）。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "light",
+                    "selector": "[slot=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "label",
+                  "title": "ラベルテキスト",
+                  "label": "デフォルトスロット",
+                  "description": "チップラベルのテキストを配置します。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -6482,14 +7163,6 @@
               "default": "null"
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations | undefined"
-              },
-              "static": true
-            },
-            {
               "kind": "method",
               "name": "checkValidity",
               "inheritedFrom": {
@@ -6881,7 +7554,136 @@
           "customElement": true,
           "modulePath": "./packages/components/date-picker/date-picker-impl.ts",
           "definitionPath": "./packages/components/date-picker/date-picker-impl.ts",
-          "typeDefinitionPath": "./packages/components/date-picker/date-picker-impl.ts"
+          "typeDefinitionPath": "./packages/components/date-picker/date-picker-impl.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "日付ピッカー／カレンダーコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部に年/月/日の入力欄（<input>）を持ち、日付入力のセマンティクスを提供します。",
+                  "カレンダーポップオーバーは role=\"dialog\" で提供します。"
+                ],
+                "keyboard": [
+                  "Tabで各入力欄へフォーカスできます。",
+                  "Consolidatedタイプでは左右キー（←→）でフィールド間の移動をサポートします。",
+                  "カレンダー表示中は Esc で閉じる操作が可能です。"
+                ],
+                "zoom": [
+                  "サイズ（sm/md/lg）に応じて高さを調整します。"
+                ],
+                "states": [
+                  "disabled / readonly / error をサポートします。",
+                  "error時は各入力に aria-invalid=\"true\" を付与し、エラーテキストを表示します。"
+                ],
+                "labels": [
+                  "各入力欄は <label> でラベル（年/月/日）と関連付けます。",
+                  "グループ全体のラベルは fieldset/legend による付与を推奨します（DADSガイドに準拠）。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "inputs",
+                  "title": "入力欄グループ",
+                  "label": "inputs",
+                  "description": "年/月/日の入力欄をまとめた領域です（data-type により見た目が変化）。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"inputs\"]"
+                  }
+                },
+                {
+                  "id": "year-input",
+                  "title": "年（入力）",
+                  "label": "<input>",
+                  "description": "年（西暦）の入力欄です。",
+                  "category": "keyboard",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#year-input"
+                  }
+                },
+                {
+                  "id": "month-input",
+                  "title": "月（入力）",
+                  "label": "<input>",
+                  "description": "月（01-12）の入力欄です。",
+                  "category": "keyboard",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#month-input"
+                  }
+                },
+                {
+                  "id": "day-input",
+                  "title": "日（入力）",
+                  "label": "<input>",
+                  "description": "日（01-31）の入力欄です。",
+                  "category": "keyboard",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#day-input"
+                  }
+                },
+                {
+                  "id": "calendar-button",
+                  "title": "カレンダーボタン",
+                  "label": "button",
+                  "description": "クリックでカレンダー（ポップオーバー）を開閉します。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"calendar-button\"]"
+                  }
+                },
+                {
+                  "id": "calendar-popover",
+                  "title": "カレンダー（ダイアログ）",
+                  "label": "role=\"dialog\"",
+                  "description": "カレンダーを role=\"dialog\" として表示します。Escで閉じ、Tabでフォーカスがループします。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#calendar-popover"
+                  }
+                },
+                {
+                  "id": "calendar",
+                  "title": "内包カレンダー",
+                  "label": "<dads-calendar>",
+                  "description": "日付選択UIは dads-calendar を内包して提供します（選択イベントで入力欄へ反映）。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#calendar"
+                  }
+                },
+                {
+                  "id": "error-text",
+                  "title": "エラーテキスト",
+                  "label": "error-text",
+                  "description": "error属性が指定されたときに表示されます。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"error-text\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -7160,16 +7962,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'ディスクロージャーコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部は <details>/<summary> で実装し、ネイティブの開閉セマンティクス（open）を利用します。', '見出し（slot=\"summary\"）が summary の主要ラベルになります。', '本文（slot=\"content\"）は open のときに表示されます（detailsのネイティブ挙動）。', 'back-link（slot=\"back-link\"）は任意で、未指定の場合は表示しません。', ], keyboard: [ 'summary は Tab でフォーカスでき、Enter/Space で開閉できます（ネイティブ挙動）。', 'back-link が表示されている場合、Tab でフォーカスでき、クリック/Enter で見出しへ戻れます。', ], zoom: [ '見出し/本文はテキストの折り返しを前提にし、ズーム/文字サイズ変更でも情報が欠けないことを想定します。', ], states: [ 'open 属性で初期状態を制御でき、ユーザー操作と同期します。', 'アイコンは open 状態で回転し、開閉状態を視覚的に補助します。', ], labels: [ 'summary のラベルは slot=\"summary\" のテキストで決まります。', 'back-link のラベルは slot=\"back-link\" で提供します。', ], motion: [ 'back-link は summary へスクロール+フォーカスします（prefers-reduced-motion を考慮します）。', ], }, callouts: [ { id: 'summary', title: 'summary（見出し）', label: '<summary>', description: '展開/折りたたみの操作起点。', category: 'keyboard', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"summary\"]' }, }, { id: 'icon', title: '開閉状態アイコン', label: 'aria-hidden=\"true\"', description: '開閉状態を視覚的に示すアイコン（aria-hidden）。', category: 'states', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"icon\"]' }, }, { id: 'content', title: 'content（本文）', label: 'slot=\"content\"', description: '展開時に表示される本文領域。', category: 'semantics', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"content\"]' }, }, { id: 'back-link', title: '先頭に戻るリンク（任意）', label: 'slot=\"back-link\"', description: '本文内から見出しへ戻る補助リンク。未指定の場合は表示しません。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"back-link\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -7342,7 +8134,89 @@
           "customElement": true,
           "modulePath": "./packages/components/disclosure/disclosure.ts",
           "definitionPath": "./packages/components/disclosure/disclosure.ts",
-          "typeDefinitionPath": "./packages/components/disclosure/disclosure.ts"
+          "typeDefinitionPath": "./packages/components/disclosure/disclosure.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ディスクロージャーコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部は <details>/<summary> で実装し、ネイティブの開閉セマンティクス（open）を利用します。",
+                  "見出し（slot=\"summary\"）が summary の主要ラベルになります。",
+                  "本文（slot=\"content\"）は open のときに表示されます（detailsのネイティブ挙動）。",
+                  "back-link（slot=\"back-link\"）は任意で、未指定の場合は表示しません。"
+                ],
+                "keyboard": [
+                  "summary は Tab でフォーカスでき、Enter/Space で開閉できます（ネイティブ挙動）。",
+                  "back-link が表示されている場合、Tab でフォーカスでき、クリック/Enter で見出しへ戻れます。"
+                ],
+                "zoom": [
+                  "見出し/本文はテキストの折り返しを前提にし、ズーム/文字サイズ変更でも情報が欠けないことを想定します。"
+                ],
+                "states": [
+                  "open 属性で初期状態を制御でき、ユーザー操作と同期します。",
+                  "アイコンは open 状態で回転し、開閉状態を視覚的に補助します。"
+                ],
+                "labels": [
+                  "summary のラベルは slot=\"summary\" のテキストで決まります。",
+                  "back-link のラベルは slot=\"back-link\" で提供します。"
+                ],
+                "motion": [
+                  "back-link は summary へスクロール+フォーカスします（prefers-reduced-motion を考慮します）。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "summary",
+                  "title": "summary（見出し）",
+                  "label": "<summary>",
+                  "description": "展開/折りたたみの操作起点。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"summary\"]"
+                  }
+                },
+                {
+                  "id": "icon",
+                  "title": "開閉状態アイコン",
+                  "label": "aria-hidden=\"true\"",
+                  "description": "開閉状態を視覚的に示すアイコン（aria-hidden）。",
+                  "category": "states",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "content",
+                  "title": "content（本文）",
+                  "label": "slot=\"content\"",
+                  "description": "展開時に表示される本文領域。",
+                  "category": "semantics",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"content\"]"
+                  }
+                },
+                {
+                  "id": "back-link",
+                  "title": "先頭に戻るリンク（任意）",
+                  "label": "slot=\"back-link\"",
+                  "description": "本文内から見出しへ戻る補助リンク。未指定の場合は表示しません。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"back-link\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -7735,16 +8609,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'Fieldsetコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ネイティブの <fieldset> と <legend> を使用し、フォームグループのセマンティクスを提供します。', 'スクリーンリーダーは「{legend} グループ」と読み上げ、グループの開始を認識できます。', ], keyboard: [ '子要素のフォームコントロールに標準のキーボード操作が適用されます。', ], zoom: [ 'レジェンドとサポートテキストは相対単位(rem)で定義され、拡大時も読みやすさを維持します。', ], states: [ 'disabled属性で子要素を一括無効化できます。', 'required属性で「※必須」ラベルを表示します。', 'バリデーションエラー時は子要素にエラーメッセージが表示されます。', ], labels: [ 'legend属性またはlegendスロットでグループのラベルを指定します。', 'support-textスロットで補足説明を提供し、子要素のaria-describedbyに自動設定されます（属性フォールバックは表示のみ）。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'fieldset', title: 'Fieldset要素', label: '<fieldset>', description: 'ネイティブのfieldset要素でフォームコントロールをグループ化します。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"fieldset\"]' }, }, { id: 'legend', title: 'Legend要素', label: '<legend>', description: 'グループのタイトルを定義します。スクリーンリーダーはグループ名として読み上げます。', category: 'semantics', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"legend\"]' }, }, { id: 'requirement', title: '要否ラベル', label: '要否ラベル', description: 'required属性が設定されている場合に「※必須」と表示されます。', category: 'labels', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"requirement\"]' }, }, { id: 'support-text', title: 'サポートテキスト', label: 'support-text', description: '補足説明を提供します。support-textスロット利用時のみ、子要素のaria-describedbyに自動的に関連付けられます（属性フォールバックは表示のみ）。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"support-text\"]' }, }, { id: 'error-text', title: 'エラーメッセージ', label: 'error-text', description: 'バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。', category: 'states', placement: 'bottom-left', target: { hostSelector: 'dads-checkbox', scope: 'shadow', selector: '[part=\"error-text\"]', }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "checkValidity",
               "inheritedFrom": {
@@ -8016,7 +8880,100 @@
           "events": [],
           "modulePath": "./packages/components/fieldset/fieldset.ts",
           "definitionPath": "./packages/components/fieldset/fieldset.ts",
-          "typeDefinitionPath": "./packages/components/fieldset/fieldset.ts"
+          "typeDefinitionPath": "./packages/components/fieldset/fieldset.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "Fieldsetコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ネイティブの <fieldset> と <legend> を使用し、フォームグループのセマンティクスを提供します。",
+                  "スクリーンリーダーは「{legend} グループ」と読み上げ、グループの開始を認識できます。"
+                ],
+                "keyboard": [
+                  "子要素のフォームコントロールに標準のキーボード操作が適用されます。"
+                ],
+                "zoom": [
+                  "レジェンドとサポートテキストは相対単位(rem)で定義され、拡大時も読みやすさを維持します。"
+                ],
+                "states": [
+                  "disabled属性で子要素を一括無効化できます。",
+                  "required属性で「※必須」ラベルを表示します。",
+                  "バリデーションエラー時は子要素にエラーメッセージが表示されます。"
+                ],
+                "labels": [
+                  "legend属性またはlegendスロットでグループのラベルを指定します。",
+                  "support-textスロットで補足説明を提供し、子要素のaria-describedbyに自動設定されます（属性フォールバックは表示のみ）。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "fieldset",
+                  "title": "Fieldset要素",
+                  "label": "<fieldset>",
+                  "description": "ネイティブのfieldset要素でフォームコントロールをグループ化します。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"fieldset\"]"
+                  }
+                },
+                {
+                  "id": "legend",
+                  "title": "Legend要素",
+                  "label": "<legend>",
+                  "description": "グループのタイトルを定義します。スクリーンリーダーはグループ名として読み上げます。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"legend\"]"
+                  }
+                },
+                {
+                  "id": "requirement",
+                  "title": "要否ラベル",
+                  "label": "要否ラベル",
+                  "description": "required属性が設定されている場合に「※必須」と表示されます。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"requirement\"]"
+                  }
+                },
+                {
+                  "id": "support-text",
+                  "title": "サポートテキスト",
+                  "label": "support-text",
+                  "description": "補足説明を提供します。support-textスロット利用時のみ、子要素のaria-describedbyに自動的に関連付けられます（属性フォールバックは表示のみ）。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"support-text\"]"
+                  }
+                },
+                {
+                  "id": "error-text",
+                  "title": "エラーメッセージ",
+                  "label": "error-text",
+                  "description": "バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "hostSelector": "dads-checkbox",
+                    "scope": "shadow",
+                    "selector": "[part=\"error-text\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -8351,16 +9308,6 @@
             },
             {
               "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: '見出しコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ホスト要素に role=\"heading\" と aria-level を付与し、見出しのセマンティクスを提供します。', 'level 属性で見出しレベルを指定します（1-6）。', ], labels: [ 'ショルダーテキストは slot=\"shoulder\" に配置します。', '先頭アイコンは slot=\"icon\" に配置します。', ], states: [ 'chip 属性で左側の装飾バー（チップ）を表示できます。装飾は情報の唯一の手掛かりにしないよう注意します。', 'rule 属性で下線（ルール）を表示できます。', ], zoom: [ 'フォントサイズと余白は相対単位で設定され、ズーム時の可読性を維持します。', ], motion: ['アニメーションは使用しません。'], }, callouts: [ { id: 'heading', title: '見出し', label: 'heading', description: '本文のセマンティック見出しとして扱われます。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"heading\"]' }, }, { id: 'shoulder', title: 'ショルダー', label: 'slot=\"shoulder\"', description: '補助的な見出し（カテゴリなど）を提示します。', category: 'labels', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"shoulder\"]' }, }, { id: 'icon', title: '先頭アイコン', label: 'slot=\"icon\"', description: '見出しの補助記号。意味を持たない場合は aria-hidden の扱いに注意します。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"icon\"]' }, }, { id: 'chip', title: 'チップ（装飾）', label: 'chip', description: '左側の装飾バー。情報の唯一の手掛かりにしないよう注意します。', category: 'states', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"chip\"]' }, }, ], }"
-            },
-            {
-              "kind": "field",
               "name": "chip",
               "type": {
                 "text": "boolean"
@@ -8692,7 +9639,83 @@
           "events": [],
           "modulePath": "./packages/components/heading/heading.ts",
           "definitionPath": "./packages/components/heading/heading.ts",
-          "typeDefinitionPath": "./packages/components/heading/heading.ts"
+          "typeDefinitionPath": "./packages/components/heading/heading.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "見出しコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ホスト要素に role=\"heading\" と aria-level を付与し、見出しのセマンティクスを提供します。",
+                  "level 属性で見出しレベルを指定します（1-6）。"
+                ],
+                "labels": [
+                  "ショルダーテキストは slot=\"shoulder\" に配置します。",
+                  "先頭アイコンは slot=\"icon\" に配置します。"
+                ],
+                "states": [
+                  "chip 属性で左側の装飾バー（チップ）を表示できます。装飾は情報の唯一の手掛かりにしないよう注意します。",
+                  "rule 属性で下線（ルール）を表示できます。"
+                ],
+                "zoom": [
+                  "フォントサイズと余白は相対単位で設定され、ズーム時の可読性を維持します。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "heading",
+                  "title": "見出し",
+                  "label": "heading",
+                  "description": "本文のセマンティック見出しとして扱われます。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"heading\"]"
+                  }
+                },
+                {
+                  "id": "shoulder",
+                  "title": "ショルダー",
+                  "label": "slot=\"shoulder\"",
+                  "description": "補助的な見出し（カテゴリなど）を提示します。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"shoulder\"]"
+                  }
+                },
+                {
+                  "id": "icon",
+                  "title": "先頭アイコン",
+                  "label": "slot=\"icon\"",
+                  "description": "見出しの補助記号。意味を持たない場合は aria-hidden の扱いに注意します。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "chip",
+                  "title": "チップ（装飾）",
+                  "label": "chip",
+                  "description": "左側の装飾バー。情報の唯一の手掛かりにしないよう注意します。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"chip\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -9164,16 +10187,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'インプットテキストコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ネイティブの <input> 要素を使用し、テキスト入力のセマンティクスを提供します。', '<label> 要素でラベルとinputを関連付けます。', 'Form-Associated Custom Elementとしてネイティブフォームに参加します。', ], keyboard: [ 'Tabでフォーカス可能です。', '標準のテキスト入力キーボード操作が利用できます。', ], zoom: [ 'サイズバリエーション: sm / md / lg。', '幅バリエーション: short(8ch) / medium(16ch) / full(100%) / カスタム値。', 'テキストは相対単位で定義され、拡大時も操作可能です。', ], states: [ 'required属性で「※必須」ラベル表示、aria-required=\"true\"設定。', 'readonly属性で「読み取り専用」ラベル表示、編集不可。', 'disabled属性で無効状態。', 'error属性でエラー状態（aria-invalid=\"true\"、赤枠表示）。', ], labels: [ 'label属性またはスロットでラベルを提供します。', 'support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。', 'error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'label', title: 'ラベル要素', label: '<label>', description: 'ネイティブのlabel要素でinputと関連付けます。クリックでフォーカス移動。', category: 'semantics', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"label\"]' }, }, { id: 'requirement', title: '要否ラベル', label: '※必須/読み取り専用', description: 'required/readonly属性に応じて表示されるラベルです。', category: 'labels', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"requirement\"]' }, }, { id: 'support-text', title: 'サポートテキスト', label: 'support-text', description: '入力のヒントや補足説明を提供します。aria-describedbyで関連付け。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"support-text\"]' }, }, { id: 'input', title: 'ネイティブ入力要素', label: '<input>', description: 'type属性（text/email/tel）に応じた入力を受け付けます。', category: 'keyboard', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"input\"]' }, }, { id: 'error-text', title: 'エラーメッセージ', label: 'error-text', description: 'バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。', category: 'states', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"error-text\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "blur"
             },
@@ -9589,7 +10602,105 @@
           "customElement": true,
           "modulePath": "./packages/components/input-text/input-text.ts",
           "definitionPath": "./packages/components/input-text/input-text.ts",
-          "typeDefinitionPath": "./packages/components/input-text/input-text.ts"
+          "typeDefinitionPath": "./packages/components/input-text/input-text.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "インプットテキストコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ネイティブの <input> 要素を使用し、テキスト入力のセマンティクスを提供します。",
+                  "<label> 要素でラベルとinputを関連付けます。",
+                  "Form-Associated Custom Elementとしてネイティブフォームに参加します。"
+                ],
+                "keyboard": [
+                  "Tabでフォーカス可能です。",
+                  "標準のテキスト入力キーボード操作が利用できます。"
+                ],
+                "zoom": [
+                  "サイズバリエーション: sm / md / lg。",
+                  "幅バリエーション: short(8ch) / medium(16ch) / full(100%) / カスタム値。",
+                  "テキストは相対単位で定義され、拡大時も操作可能です。"
+                ],
+                "states": [
+                  "required属性で「※必須」ラベル表示、aria-required=\"true\"設定。",
+                  "readonly属性で「読み取り専用」ラベル表示、編集不可。",
+                  "disabled属性で無効状態。",
+                  "error属性でエラー状態（aria-invalid=\"true\"、赤枠表示）。"
+                ],
+                "labels": [
+                  "label属性またはスロットでラベルを提供します。",
+                  "support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。",
+                  "error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "label",
+                  "title": "ラベル要素",
+                  "label": "<label>",
+                  "description": "ネイティブのlabel要素でinputと関連付けます。クリックでフォーカス移動。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "requirement",
+                  "title": "要否ラベル",
+                  "label": "※必須/読み取り専用",
+                  "description": "required/readonly属性に応じて表示されるラベルです。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"requirement\"]"
+                  }
+                },
+                {
+                  "id": "support-text",
+                  "title": "サポートテキスト",
+                  "label": "support-text",
+                  "description": "入力のヒントや補足説明を提供します。aria-describedbyで関連付け。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"support-text\"]"
+                  }
+                },
+                {
+                  "id": "input",
+                  "title": "ネイティブ入力要素",
+                  "label": "<input>",
+                  "description": "type属性（text/email/tel）に応じた入力を受け付けます。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"input\"]"
+                  }
+                },
+                {
+                  "id": "error-text",
+                  "title": "エラーメッセージ",
+                  "label": "error-text",
+                  "description": "バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"error-text\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -10181,16 +11292,6 @@
             },
             {
               "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'メニューリストボックス仕様（アクセシビリティ注釈）', categories: { semantics: [ 'opener は aria-haspopup=\"menu\" を持ち、開閉状態は aria-expanded で表します。', 'menu は role=\"menu\"、各項目は role=\"menuitem\" を付与してキーボード操作を提供します。', ], keyboard: [ 'opener: ArrowDown/ArrowUp で開いて先頭/末尾へフォーカス移動。', 'menu: ArrowUp/ArrowDown/Home/End で roving tabindex により移動。', 'Escape で閉じて opener にフォーカス復帰。', ], zoom: [ 'サイズ: sm / md。', 'ポップアップは max-height と overflow-y でスクロール可能です。', ], states: [ 'open 属性 / opener の aria-expanded で開閉状態を表します。', ], labels: [ 'label 属性、または slot=\"label\" で opener のラベルを提供します。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'opener', title: 'opener', description: 'aria-haspopup=\"menu\" と aria-expanded を持つトリガーボタン。開閉状態をスクリーンリーダーに伝えます。', target: { scope: 'shadow', selector: '[part=\"opener\"]' }, placement: 'top-left' as const, }, { id: 'popup', title: 'popup', description: 'role=\"menu\" を持つポップアップ。項目はキーボードナビゲーション（矢印キー / Home / End）で移動できます。', target: { scope: 'shadow', selector: '[part=\"popup\"]' }, placement: 'bottom-right' as const, }, ], }"
-            },
-            {
-              "kind": "field",
               "name": "bold",
               "type": {
                 "text": "boolean"
@@ -10468,7 +11569,59 @@
           "customElement": true,
           "modulePath": "./packages/components/menu-list-box/menu-list-box.ts",
           "definitionPath": "./packages/components/menu-list-box/menu-list-box.ts",
-          "typeDefinitionPath": "./packages/components/menu-list-box/menu-list-box.ts"
+          "typeDefinitionPath": "./packages/components/menu-list-box/menu-list-box.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "メニューリストボックス仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "opener は aria-haspopup=\"menu\" を持ち、開閉状態は aria-expanded で表します。",
+                  "menu は role=\"menu\"、各項目は role=\"menuitem\" を付与してキーボード操作を提供します。"
+                ],
+                "keyboard": [
+                  "opener: ArrowDown/ArrowUp で開いて先頭/末尾へフォーカス移動。",
+                  "menu: ArrowUp/ArrowDown/Home/End で roving tabindex により移動。",
+                  "Escape で閉じて opener にフォーカス復帰。"
+                ],
+                "zoom": [
+                  "サイズ: sm / md。",
+                  "ポップアップは max-height と overflow-y でスクロール可能です。"
+                ],
+                "states": [
+                  "open 属性 / opener の aria-expanded で開閉状態を表します。"
+                ],
+                "labels": [
+                  "label 属性、または slot=\"label\" で opener のラベルを提供します。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "opener",
+                  "title": "opener",
+                  "description": "aria-haspopup=\"menu\" と aria-expanded を持つトリガーボタン。開閉状態をスクリーンリーダーに伝えます。",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"opener\"]"
+                  },
+                  "placement": "top-left"
+                },
+                {
+                  "id": "popup",
+                  "title": "popup",
+                  "description": "role=\"menu\" を持つポップアップ。項目はキーボードナビゲーション（矢印キー / Home / End）で移動できます。",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"popup\"]"
+                  },
+                  "placement": "bottom-right"
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -10634,16 +11787,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'メニューリスト仕様（アクセシビリティ注釈）', categories: { semantics: [ 'メニュー項目の集合を表します。ナビゲーション用途の場合は、上位で<nav>等の適切なランドマークを付与します。', ], keyboard: [ '各メニュー項目（dads-menu-list-item）の内部要素がTabでフォーカス可能です。', ], zoom: [ '相対単位（rem）ベースのトークンを利用し、ズーム時もレイアウトが破綻しないことを想定します。', ], states: [ 'インデントは CSS 変数 --menu-list-indentation（数値）で制御します。', ], labels: [ '必要に応じて aria-label / aria-labelledby を利用してください。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -10804,7 +11947,34 @@
           "events": [],
           "modulePath": "./packages/components/menu-list/menu-list.ts",
           "definitionPath": "./packages/components/menu-list/menu-list.ts",
-          "typeDefinitionPath": "./packages/components/menu-list/menu-list.ts"
+          "typeDefinitionPath": "./packages/components/menu-list/menu-list.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "メニューリスト仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "メニュー項目の集合を表します。ナビゲーション用途の場合は、上位で<nav>等の適切なランドマークを付与します。"
+                ],
+                "keyboard": [
+                  "各メニュー項目（dads-menu-list-item）の内部要素がTabでフォーカス可能です。"
+                ],
+                "zoom": [
+                  "相対単位（rem）ベースのトークンを利用し、ズーム時もレイアウトが破綻しないことを想定します。"
+                ],
+                "states": [
+                  "インデントは CSS 変数 --menu-list-indentation（数値）で制御します。"
+                ],
+                "labels": [
+                  "必要に応じて aria-label / aria-labelledby を利用してください。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": []
+            }
+          }
         },
         {
           "kind": "class",
@@ -11172,16 +12342,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'メニューリスト項目仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部は <button> または <a>（href指定時）で実装します。', 'current属性で現在地（選択中）状態を視覚的に示します。', ], keyboard: [ 'Tabでフォーカス可能です。', ], zoom: [ 'サイズ: regular / small。', ], states: [ 'variant=\"standard|box\" で表示タイプを切り替えます。', 'expanded属性で end-icon を回転します（展開状態の表現）。', ], labels: [ '末尾アイコン（tail-icon）は新規タブで開く等の補助情報に利用できます。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -11473,7 +12633,36 @@
           "events": [],
           "modulePath": "./packages/components/menu-list/menu-list.ts",
           "definitionPath": "./packages/components/menu-list/menu-list.ts",
-          "typeDefinitionPath": "./packages/components/menu-list/menu-list.ts"
+          "typeDefinitionPath": "./packages/components/menu-list/menu-list.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "メニューリスト項目仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部は <button> または <a>（href指定時）で実装します。",
+                  "current属性で現在地（選択中）状態を視覚的に示します。"
+                ],
+                "keyboard": [
+                  "Tabでフォーカス可能です。"
+                ],
+                "zoom": [
+                  "サイズ: regular / small。"
+                ],
+                "states": [
+                  "variant=\"standard|box\" で表示タイプを切り替えます。",
+                  "expanded属性で end-icon を回転します（展開状態の表現）。"
+                ],
+                "labels": [
+                  "末尾アイコン（tail-icon）は新規タブで開く等の補助情報に利用できます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": []
+            }
+          }
         }
       ],
       "exports": [
@@ -11986,16 +13175,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'ページナビゲーション（アクセシビリティ注釈）', categories: { semantics: [ '内部は <nav> 要素を使用し、ページ移動のまとまりを示します。', 'as=\"link\" 時は <a rel=\"prev|next\"> を使用します（href未指定時は非表示）。', 'as=\"button\" 時は <button> を使用し、クリックでイベントを発火します。', ], keyboard: [ 'リンク: Tabでフォーカス、Enterで遷移（ネイティブ挙動）。', 'ボタン: Tabでフォーカス、Enter/Spaceでイベント発火（ネイティブ挙動）。', ], zoom: [ 'コンテンツ幅に応じてレイアウトが追従し、狭い幅では左寄せレイアウトに切り替えます。', ], states: [ 'type属性で表示タイプ（text/outlined/arrow）を切り替えます。', 'arrowタイプはsize属性（l/m/s/xs）でコントロールのサイズを切り替えます。', 'as=\"button\" 時は disabled-prev / disabled-next で非表示にできます。', ], labels: [ 'navの aria-label は aria-label 属性で上書きできます。', 'arrowタイプはラベルを視覚的に隠しつつ、スクリーンリーダー向けの名称を維持します。', 'ステータス表示は slot/status属性/current+total から構成できます。', ], motion: ['アニメーションは使用しません。'], }, callouts: [ { id: 'prev', title: '前へ', label: 'prev', category: 'keyboard', target: { scope: 'shadow', selector: '[part~=\"prev\"]:not([hidden])' }, placement: 'top-left', }, { id: 'status', title: 'ステータス', label: 'status', category: 'labels', target: { scope: 'shadow', selector: '[part~=\"status\"]' }, placement: 'top-right', }, { id: 'next', title: '次へ', label: 'next', category: 'keyboard', target: { scope: 'shadow', selector: '[part~=\"next\"]:not([hidden])' }, placement: 'bottom-right', }, ], }"
-            },
-            {
               "kind": "method",
               "name": "ariaLabelChanged",
               "return": {
@@ -12398,7 +13577,75 @@
           "customElement": true,
           "modulePath": "./packages/components/page-navigation/page-navigation.ts",
           "definitionPath": "./packages/components/page-navigation/page-navigation.ts",
-          "typeDefinitionPath": "./packages/components/page-navigation/page-navigation.ts"
+          "typeDefinitionPath": "./packages/components/page-navigation/page-navigation.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ページナビゲーション（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部は <nav> 要素を使用し、ページ移動のまとまりを示します。",
+                  "as=\"link\" 時は <a rel=\"prev|next\"> を使用します（href未指定時は非表示）。",
+                  "as=\"button\" 時は <button> を使用し、クリックでイベントを発火します。"
+                ],
+                "keyboard": [
+                  "リンク: Tabでフォーカス、Enterで遷移（ネイティブ挙動）。",
+                  "ボタン: Tabでフォーカス、Enter/Spaceでイベント発火（ネイティブ挙動）。"
+                ],
+                "zoom": [
+                  "コンテンツ幅に応じてレイアウトが追従し、狭い幅では左寄せレイアウトに切り替えます。"
+                ],
+                "states": [
+                  "type属性で表示タイプ（text/outlined/arrow）を切り替えます。",
+                  "arrowタイプはsize属性（l/m/s/xs）でコントロールのサイズを切り替えます。",
+                  "as=\"button\" 時は disabled-prev / disabled-next で非表示にできます。"
+                ],
+                "labels": [
+                  "navの aria-label は aria-label 属性で上書きできます。",
+                  "arrowタイプはラベルを視覚的に隠しつつ、スクリーンリーダー向けの名称を維持します。",
+                  "ステータス表示は slot/status属性/current+total から構成できます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "prev",
+                  "title": "前へ",
+                  "label": "prev",
+                  "category": "keyboard",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part~=\"prev\"]:not([hidden])"
+                  },
+                  "placement": "top-left"
+                },
+                {
+                  "id": "status",
+                  "title": "ステータス",
+                  "label": "status",
+                  "category": "labels",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part~=\"status\"]"
+                  },
+                  "placement": "top-right"
+                },
+                {
+                  "id": "next",
+                  "title": "次へ",
+                  "label": "next",
+                  "category": "keyboard",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part~=\"next\"]:not([hidden])"
+                  },
+                  "placement": "bottom-right"
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -12994,16 +14241,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'ラジオボタン（単一選択）', categories: { semantics: [ '内部にネイティブの <input type=\"radio\"> を持ち、ラジオボタンのセマンティクスをブラウザ標準で提供します。', 'Shadow DOMの制約により、同一nameのグルーピングはコンポーネント側で補完します（選択時に他の同一nameのradioを解除）。', 'Form-Associated Custom Elementとしてフォームに参加し、checked時のみ値を送信します（ネイティブradioの挙動に準拠）。', ], keyboard: [ 'Tabでフォーカス可能です（グループ内のタブストップはcheckedを優先し、未選択時は先頭を採用します）。', 'Spaceで選択できます（ネイティブ挙動）。', 'Arrowキー（↑↓←→）で同一nameグループ内を移動して選択できます（Shadow DOMで失われる挙動を補完）。', 'Home / End でグループの先頭 / 末尾へ移動して選択できます。', ], zoom: [ 'サイズ（sm/md/lg）に応じて操作面の大きさを調整し、拡大時も視認性・操作性を確保します。', ], states: [ 'checked / disabled をサポートします。', 'error属性で aria-invalid=\"true\" を付与し、エラー状態（赤系）を表示します（DADS HTML版に準拠）。', ], labels: [ 'label属性は視覚ラベルとして表示され、同時にネイティブlabel関連付けによりアクセシブルネームに寄与します。', 'ラベルを表示しない場合は aria-label または aria-labelledby の指定を推奨します。', '補足説明は aria-describedby（外部要素ID）で関連付けできます。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'base', title: 'ラベルラッパー', label: '<label>', description: 'クリック領域を含め、ラジオボタンとラベルを一体として提供します。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"base\"]' }, }, { id: 'native-input', title: 'ネイティブラジオ', label: 'input[type=\"radio\"]', description: 'キーボード操作（Space）や状態（checked/disabled）の基本挙動はブラウザ標準に委譲します。', category: 'keyboard', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"input\"]' }, }, { id: 'label-text', title: 'ラベルテキスト', label: 'label', description: 'label属性で表示されるテキスト。空の場合はaria-label等で補完します。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"label\"]' }, }, { id: 'requirement', title: '要否ラベル', label: '要否ラベル', description: 'required属性が設定されている場合に「※必須」と表示されます。必須入力であることを視覚的に伝えます。', category: 'labels', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"requirement\"]' }, }, { id: 'error-text', title: 'エラーメッセージ', label: 'error-text', description: 'バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。', category: 'states', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"error-text\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "blur",
               "return": {
@@ -13426,7 +14663,103 @@
           "events": [],
           "modulePath": "./packages/components/radio/radio.ts",
           "definitionPath": "./packages/components/radio/radio.ts",
-          "typeDefinitionPath": "./packages/components/radio/radio.ts"
+          "typeDefinitionPath": "./packages/components/radio/radio.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ラジオボタン（単一選択）",
+              "categories": {
+                "semantics": [
+                  "内部にネイティブの <input type=\"radio\"> を持ち、ラジオボタンのセマンティクスをブラウザ標準で提供します。",
+                  "Shadow DOMの制約により、同一nameのグルーピングはコンポーネント側で補完します（選択時に他の同一nameのradioを解除）。",
+                  "Form-Associated Custom Elementとしてフォームに参加し、checked時のみ値を送信します（ネイティブradioの挙動に準拠）。"
+                ],
+                "keyboard": [
+                  "Tabでフォーカス可能です（グループ内のタブストップはcheckedを優先し、未選択時は先頭を採用します）。",
+                  "Spaceで選択できます（ネイティブ挙動）。",
+                  "Arrowキー（↑↓←→）で同一nameグループ内を移動して選択できます（Shadow DOMで失われる挙動を補完）。",
+                  "Home / End でグループの先頭 / 末尾へ移動して選択できます。"
+                ],
+                "zoom": [
+                  "サイズ（sm/md/lg）に応じて操作面の大きさを調整し、拡大時も視認性・操作性を確保します。"
+                ],
+                "states": [
+                  "checked / disabled をサポートします。",
+                  "error属性で aria-invalid=\"true\" を付与し、エラー状態（赤系）を表示します（DADS HTML版に準拠）。"
+                ],
+                "labels": [
+                  "label属性は視覚ラベルとして表示され、同時にネイティブlabel関連付けによりアクセシブルネームに寄与します。",
+                  "ラベルを表示しない場合は aria-label または aria-labelledby の指定を推奨します。",
+                  "補足説明は aria-describedby（外部要素ID）で関連付けできます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "ラベルラッパー",
+                  "label": "<label>",
+                  "description": "クリック領域を含め、ラジオボタンとラベルを一体として提供します。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "native-input",
+                  "title": "ネイティブラジオ",
+                  "label": "input[type=\"radio\"]",
+                  "description": "キーボード操作（Space）や状態（checked/disabled）の基本挙動はブラウザ標準に委譲します。",
+                  "category": "keyboard",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"input\"]"
+                  }
+                },
+                {
+                  "id": "label-text",
+                  "title": "ラベルテキスト",
+                  "label": "label",
+                  "description": "label属性で表示されるテキスト。空の場合はaria-label等で補完します。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "requirement",
+                  "title": "要否ラベル",
+                  "label": "要否ラベル",
+                  "description": "required属性が設定されている場合に「※必須」と表示されます。必須入力であることを視覚的に伝えます。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"requirement\"]"
+                  }
+                },
+                {
+                  "id": "error-text",
+                  "title": "エラーメッセージ",
+                  "label": "error-text",
+                  "description": "バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"error-text\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -13950,16 +15283,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: '検索ボックスコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ '内部に検索語入力（<input type=\"search\">）と（任意の）検索対象（<select>）を持つ複合コンポーネントです。', 'Form-Associated Custom Elementとしてネイティブフォームに参加し、FormData（query + scope）を送信します。', 'searchランドマークが必要な場合は、ホストに role=\"search\" を付与するか、利用側の <form> に role=\"search\" を付与してください。同一ページに複数ある場合は aria-label / aria-labelledby で命名してください。', 'forced-colors: active ではアイコン色を CanvasText にフォールバックします。', ], labels: [ '検索語inputは label（視覚的に非表示）でラベル付けします。', '画面上にラベルがある場合は aria-labelledby を指定して外部ラベルを参照できます。', 'aria-label / aria-describedby は検索語inputへ転写されます。', ], keyboard: [ 'Tabで scope（存在する場合）→ query → button の順にフォーカス移動します。', 'Enter またはボタン操作で dads-search が発火し、フォーム内では requestSubmit() で送信します。', ], zoom: [ 'デフォルトで最小44x44px相当のタップターゲット（高さ）を確保します（--dads-search-box-control-min-height で上書き可能）。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'scope', title: '検索対象（任意）', label: '<select>', description: 'Light DOMの option/optgroup を複製して内部selectに表示します。', category: 'semantics', placement: 'top-left', target: shadowTarget('[part=\"scope-select\"]'), }, { id: 'query', title: '検索語', label: '<input type=\"search\">', description: '検索語を入力します。label/aria-* によりアクセシブルネームが提供されます。', category: 'labels', placement: 'top-left', target: shadowTarget('[part=\"input\"]'), }, { id: 'button', title: '検索ボタン', label: '<dads-button>', description: 'クリックまたはEnterで検索実行（dads-search）を行います。', category: 'keyboard', placement: 'top-right', target: shadowTarget('[part=\"button\"]'), }, ], }"
-            },
-            {
               "kind": "method",
               "name": "blur",
               "return": {
@@ -14359,7 +15682,74 @@
           "customElement": true,
           "modulePath": "./packages/components/search-box/search-box.ts",
           "definitionPath": "./packages/components/search-box/search-box.ts",
-          "typeDefinitionPath": "./packages/components/search-box/search-box.ts"
+          "typeDefinitionPath": "./packages/components/search-box/search-box.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "検索ボックスコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部に検索語入力（<input type=\"search\">）と（任意の）検索対象（<select>）を持つ複合コンポーネントです。",
+                  "Form-Associated Custom Elementとしてネイティブフォームに参加し、FormData（query + scope）を送信します。",
+                  "searchランドマークが必要な場合は、ホストに role=\"search\" を付与するか、利用側の <form> に role=\"search\" を付与してください。同一ページに複数ある場合は aria-label / aria-labelledby で命名してください。",
+                  "forced-colors: active ではアイコン色を CanvasText にフォールバックします。"
+                ],
+                "labels": [
+                  "検索語inputは label（視覚的に非表示）でラベル付けします。",
+                  "画面上にラベルがある場合は aria-labelledby を指定して外部ラベルを参照できます。",
+                  "aria-label / aria-describedby は検索語inputへ転写されます。"
+                ],
+                "keyboard": [
+                  "Tabで scope（存在する場合）→ query → button の順にフォーカス移動します。",
+                  "Enter またはボタン操作で dads-search が発火し、フォーム内では requestSubmit() で送信します。"
+                ],
+                "zoom": [
+                  "デフォルトで最小44x44px相当のタップターゲット（高さ）を確保します（--dads-search-box-control-min-height で上書き可能）。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "scope",
+                  "title": "検索対象（任意）",
+                  "label": "<select>",
+                  "description": "Light DOMの option/optgroup を複製して内部selectに表示します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"scope-select\"]"
+                  }
+                },
+                {
+                  "id": "query",
+                  "title": "検索語",
+                  "label": "<input type=\"search\">",
+                  "description": "検索語を入力します。label/aria-* によりアクセシブルネームが提供されます。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"input\"]"
+                  }
+                },
+                {
+                  "id": "button",
+                  "title": "検索ボタン",
+                  "label": "<dads-button>",
+                  "description": "クリックまたはEnterで検索実行（dads-search）を行います。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"button\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -14941,16 +16331,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'セレクトボックスコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ネイティブの <select> 要素を使用し、単一選択のセマンティクスを提供します。', '<label> 要素でラベルとselectを関連付けます。', 'Form-Associated Custom Elementとしてネイティブフォームに参加します。', ], keyboard: [ 'Tabでフォーカス可能です。', '標準のセレクトボックスのキーボード操作が利用できます（aria-disabled時はTab以外抑止）。', ], zoom: [ 'サイズバリエーション: sm / md / lg。', 'size属性の追加トークンで幅指定が可能（例: size=\"md 256\", size=\"md full\", size=\"md fit-content\"）。', 'テキストは相対単位で定義され、拡大時も操作可能です。', ], states: [ 'required属性で「※必須」ラベル表示、aria-required=\"true\"設定。', 'disabled属性で無効状態（ネイティブdisabled）。', 'aria-disabled属性で無効相当状態（Tab移動は許容、操作は抑止）。', 'error属性でエラー状態（aria-invalid=\"true\"、赤枠表示）。', ], labels: [ 'label属性またはスロットでラベルを提供します。', 'support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。', 'error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'label', title: 'ラベル要素', label: '<label>', description: 'ネイティブのlabel要素でselectと関連付けます。クリックでフォーカス移動。', category: 'semantics', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"label\"]' }, }, { id: 'requirement', title: '要否ラベル', label: '※必須', description: 'required属性に応じて表示されるラベルです。', category: 'labels', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"requirement\"]' }, }, { id: 'support-text', title: 'サポートテキスト', label: 'support-text', description: '入力のヒントや補足説明を提供します。aria-describedbyで関連付け。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"support-text\"]' }, }, { id: 'select', title: 'ネイティブ選択要素', label: '<select>', description: '選択肢（option/optgroup）はLight DOMから複製して内部selectに設定します。', category: 'keyboard', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"select\"]' }, }, { id: 'chevron', title: 'シェブロンアイコン', label: 'chevron', description: '選択肢であることを示す装飾アイコンです（aria-hidden）。', category: 'semantics', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"select-chevron\"]' }, }, { id: 'error-text', title: 'エラーメッセージ', label: 'error-text', description: 'バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。', category: 'states', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"error-text\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "blur",
               "return": {
@@ -15341,7 +16721,117 @@
           "customElement": true,
           "modulePath": "./packages/components/select/select.ts",
           "definitionPath": "./packages/components/select/select.ts",
-          "typeDefinitionPath": "./packages/components/select/select.ts"
+          "typeDefinitionPath": "./packages/components/select/select.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "セレクトボックスコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ネイティブの <select> 要素を使用し、単一選択のセマンティクスを提供します。",
+                  "<label> 要素でラベルとselectを関連付けます。",
+                  "Form-Associated Custom Elementとしてネイティブフォームに参加します。"
+                ],
+                "keyboard": [
+                  "Tabでフォーカス可能です。",
+                  "標準のセレクトボックスのキーボード操作が利用できます（aria-disabled時はTab以外抑止）。"
+                ],
+                "zoom": [
+                  "サイズバリエーション: sm / md / lg。",
+                  "size属性の追加トークンで幅指定が可能（例: size=\"md 256\", size=\"md full\", size=\"md fit-content\"）。",
+                  "テキストは相対単位で定義され、拡大時も操作可能です。"
+                ],
+                "states": [
+                  "required属性で「※必須」ラベル表示、aria-required=\"true\"設定。",
+                  "disabled属性で無効状態（ネイティブdisabled）。",
+                  "aria-disabled属性で無効相当状態（Tab移動は許容、操作は抑止）。",
+                  "error属性でエラー状態（aria-invalid=\"true\"、赤枠表示）。"
+                ],
+                "labels": [
+                  "label属性またはスロットでラベルを提供します。",
+                  "support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。",
+                  "error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "label",
+                  "title": "ラベル要素",
+                  "label": "<label>",
+                  "description": "ネイティブのlabel要素でselectと関連付けます。クリックでフォーカス移動。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "requirement",
+                  "title": "要否ラベル",
+                  "label": "※必須",
+                  "description": "required属性に応じて表示されるラベルです。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"requirement\"]"
+                  }
+                },
+                {
+                  "id": "support-text",
+                  "title": "サポートテキスト",
+                  "label": "support-text",
+                  "description": "入力のヒントや補足説明を提供します。aria-describedbyで関連付け。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"support-text\"]"
+                  }
+                },
+                {
+                  "id": "select",
+                  "title": "ネイティブ選択要素",
+                  "label": "<select>",
+                  "description": "選択肢（option/optgroup）はLight DOMから複製して内部selectに設定します。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"select\"]"
+                  }
+                },
+                {
+                  "id": "chevron",
+                  "title": "シェブロンアイコン",
+                  "label": "chevron",
+                  "description": "選択肢であることを示す装飾アイコンです（aria-hidden）。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"select-chevron\"]"
+                  }
+                },
+                {
+                  "id": "error-text",
+                  "title": "エラーメッセージ",
+                  "label": "error-text",
+                  "description": "バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"error-text\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -15613,16 +17103,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'ステップナビゲーション仕様（アクセシビリティ注釈）', categories: { semantics: [ '複数ステップの進行状況を、ステップ番号・タイトル・説明で提示します。', '進捗文言（slot=\"status\"）はスクリーンリーダー向けに提供できます（visually-hidden）。必要に応じて status-live で aria-live 通知を有効化します。', 'ホストに aria-label / aria-labelledby を指定すると、Shadow内の nav に反映されます。', ], keyboard: ['リンクとして指定したステップはTabでフォーカスできます。'], zoom: ['横幅が狭い場合、horizontalは横スクロールで閲覧できます。'], states: [ '各ステップは state 属性（reached/completed/editing/error/skipped）で状態表現できます。', 'aria-current 属性で現在位置を示し、視覚的にアウトラインを表示します。', ], labels: ['各ステップのラベルは title スロットの内容です。'], motion: ['アニメーションは使用しません。'], }, callouts: [ { id: 'step-navigation-header', title: 'ヘッダー（リンク/ボタン相当）', description: 'href を指定するとリンクとして、interaction=\"button\" を指定するとボタン相当として操作できます（href指定時はリンク優先）。', category: 'semantics', placement: 'top-left', target: { hostSelector: 'dads-step-navigation-item[href], dads-step-navigation-item', scope: 'shadow', selector: '[part=\"header\"]', }, }, { id: 'step-navigation-current-step', title: '現在位置（aria-current=\"step\"）', label: 'aria-current=\"step\"', description: '現在のステップに aria-current=\"step\" を指定します（番号にアウトライン）。', category: 'states', placement: 'top-right', target: { hostSelector: 'dads-step-navigation-item[aria-current=\"step\"]', scope: 'shadow', selector: '[part=\"number\"]', }, }, { id: 'step-navigation-title', title: 'タイトル（主要ラベル）', label: 'slot=\"title\"', description: 'title スロット（または default slot）の内容が、ステップの主要ラベルになります。', category: 'labels', placement: 'bottom-left', target: { hostSelector: 'dads-step-navigation-item[aria-current], dads-step-navigation-item', scope: 'shadow', selector: '[part=\"title\"]', }, }, { id: 'step-navigation-state-icon-error', title: '状態アイコン（エラー）', label: 'aria-hidden=\"true\"', description: 'state=\"error\" のときに表示されます（スクリーンリーダー向けには aria-hidden）。', category: 'states', placement: 'top-right', target: { hostSelector: 'dads-step-navigation-item[state=\"error\"]', scope: 'shadow', selector: '[data-state-icon=\"error\"]', }, }, { id: 'step-navigation-state-label-editing', title: '状態ラベル（編集中）', label: 'state=\"editing\"', description: 'state=\"editing\" のときに表示されます（label-editing で文言を変更できます）。', category: 'states', placement: 'bottom-right', target: { hostSelector: 'dads-step-navigation-item[state=\"editing\"]', scope: 'shadow', selector: '[data-state-label=\"editing\"]', }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -15818,7 +17298,102 @@
           "events": [],
           "modulePath": "./packages/components/step-navigation/step-navigation.ts",
           "definitionPath": "./packages/components/step-navigation/step-navigation.ts",
-          "typeDefinitionPath": "./packages/components/step-navigation/step-navigation.ts"
+          "typeDefinitionPath": "./packages/components/step-navigation/step-navigation.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ステップナビゲーション仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "複数ステップの進行状況を、ステップ番号・タイトル・説明で提示します。",
+                  "進捗文言（slot=\"status\"）はスクリーンリーダー向けに提供できます（visually-hidden）。必要に応じて status-live で aria-live 通知を有効化します。",
+                  "ホストに aria-label / aria-labelledby を指定すると、Shadow内の nav に反映されます。"
+                ],
+                "keyboard": [
+                  "リンクとして指定したステップはTabでフォーカスできます。"
+                ],
+                "zoom": [
+                  "横幅が狭い場合、horizontalは横スクロールで閲覧できます。"
+                ],
+                "states": [
+                  "各ステップは state 属性（reached/completed/editing/error/skipped）で状態表現できます。",
+                  "aria-current 属性で現在位置を示し、視覚的にアウトラインを表示します。"
+                ],
+                "labels": [
+                  "各ステップのラベルは title スロットの内容です。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "step-navigation-header",
+                  "title": "ヘッダー（リンク/ボタン相当）",
+                  "description": "href を指定するとリンクとして、interaction=\"button\" を指定するとボタン相当として操作できます（href指定時はリンク優先）。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "hostSelector": "dads-step-navigation-item[href], dads-step-navigation-item",
+                    "scope": "shadow",
+                    "selector": "[part=\"header\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-current-step",
+                  "title": "現在位置（aria-current=\"step\"）",
+                  "label": "aria-current=\"step\"",
+                  "description": "現在のステップに aria-current=\"step\" を指定します（番号にアウトライン）。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "hostSelector": "dads-step-navigation-item[aria-current=\"step\"]",
+                    "scope": "shadow",
+                    "selector": "[part=\"number\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-title",
+                  "title": "タイトル（主要ラベル）",
+                  "label": "slot=\"title\"",
+                  "description": "title スロット（または default slot）の内容が、ステップの主要ラベルになります。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "hostSelector": "dads-step-navigation-item[aria-current], dads-step-navigation-item",
+                    "scope": "shadow",
+                    "selector": "[part=\"title\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-state-icon-error",
+                  "title": "状態アイコン（エラー）",
+                  "label": "aria-hidden=\"true\"",
+                  "description": "state=\"error\" のときに表示されます（スクリーンリーダー向けには aria-hidden）。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "hostSelector": "dads-step-navigation-item[state=\"error\"]",
+                    "scope": "shadow",
+                    "selector": "[data-state-icon=\"error\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-state-label-editing",
+                  "title": "状態ラベル（編集中）",
+                  "label": "state=\"editing\"",
+                  "description": "state=\"editing\" のときに表示されます（label-editing で文言を変更できます）。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "hostSelector": "dads-step-navigation-item[state=\"editing\"]",
+                    "scope": "shadow",
+                    "selector": "[data-state-label=\"editing\"]"
+                  }
+                }
+              ]
+            }
+          }
         },
         {
           "kind": "class",
@@ -16111,16 +17686,6 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'ステップアイテム仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ステップ番号とタイトルを提示し、必要に応じて説明文を併記します。', 'href を指定した場合、ヘッダーはリンクとして提供されます。', 'interaction=\"button\" を指定した場合、ヘッダーはボタン相当として提供されます（href指定時はリンク優先）。', ], keyboard: [ 'リンクの場合、Tabでフォーカスでき、Enterで遷移します。', 'interaction=\"button\" の場合、Tabでフォーカスでき、Enter/Spaceでアクティベートできます。', ], zoom: ['タイトル/説明は折り返しを許容します。'], states: [ 'state に応じて色・アイコン・ラベルを表示します。', 'aria-current を指定すると現在のステップとして強調表示します。', ], labels: ['title スロットがステップの主要ラベルになります。'], motion: ['アニメーションは使用しません。'], }, callouts: [ { id: 'step-navigation-item-header', title: 'ヘッダー（リンク/ボタン相当）', description: 'href を指定するとリンクとして、interaction=\"button\" を指定するとボタン相当として操作できます（href指定時はリンク優先）。', category: 'semantics', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"header\"]' }, }, { id: 'step-navigation-item-number', title: 'ステップ番号', description: '親（dads-step-navigation）が step 属性を付与し、表示番号として利用します。', category: 'labels', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"number\"]' }, }, { id: 'step-navigation-item-title', title: 'タイトル', description: 'title スロット（または default slot）の内容が、ステップの主要ラベルになります。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"title\"]' }, }, { id: 'step-navigation-item-description', title: '説明（任意）', description: 'description スロットがある場合に表示されます。', category: 'labels', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"description\"]' }, }, { id: 'step-navigation-item-state-icon-completed', title: '状態アイコン（完了）', description: 'state=\"completed\" のときに表示されます。', category: 'states', placement: 'top-right', target: { scope: 'shadow', selector: '[data-state-icon=\"completed\"]' }, }, { id: 'step-navigation-item-state-icon-editing', title: '状態アイコン（編集中）', description: 'state=\"editing\" のときに表示されます。', category: 'states', placement: 'top-right', target: { scope: 'shadow', selector: '[data-state-icon=\"editing\"]' }, }, { id: 'step-navigation-item-state-icon-error', title: '状態アイコン（エラー）', description: 'state=\"error\" のときに表示されます。', category: 'states', placement: 'top-right', target: { scope: 'shadow', selector: '[data-state-icon=\"error\"]' }, }, { id: 'step-navigation-item-state-label-editing', title: '状態ラベル（編集中）', description: 'state=\"editing\" のときに表示されます（label-editing で文言を変更できます）。', category: 'states', placement: 'bottom-right', target: { scope: 'shadow', selector: '[data-state-label=\"editing\"]' }, }, { id: 'step-navigation-item-state-label-error', title: '状態ラベル（エラー）', description: 'state=\"error\" のときに表示されます（label-error で文言を変更できます）。', category: 'states', placement: 'bottom-right', target: { scope: 'shadow', selector: '[data-state-label=\"error\"]' }, }, ], }"
             },
             {
               "kind": "method",
@@ -16445,7 +18010,138 @@
           "customElement": true,
           "modulePath": "./packages/components/step-navigation/step-navigation.ts",
           "definitionPath": "./packages/components/step-navigation/step-navigation.ts",
-          "typeDefinitionPath": "./packages/components/step-navigation/step-navigation.ts"
+          "typeDefinitionPath": "./packages/components/step-navigation/step-navigation.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ステップアイテム仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ステップ番号とタイトルを提示し、必要に応じて説明文を併記します。",
+                  "href を指定した場合、ヘッダーはリンクとして提供されます。",
+                  "interaction=\"button\" を指定した場合、ヘッダーはボタン相当として提供されます（href指定時はリンク優先）。"
+                ],
+                "keyboard": [
+                  "リンクの場合、Tabでフォーカスでき、Enterで遷移します。",
+                  "interaction=\"button\" の場合、Tabでフォーカスでき、Enter/Spaceでアクティベートできます。"
+                ],
+                "zoom": [
+                  "タイトル/説明は折り返しを許容します。"
+                ],
+                "states": [
+                  "state に応じて色・アイコン・ラベルを表示します。",
+                  "aria-current を指定すると現在のステップとして強調表示します。"
+                ],
+                "labels": [
+                  "title スロットがステップの主要ラベルになります。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "step-navigation-item-header",
+                  "title": "ヘッダー（リンク/ボタン相当）",
+                  "description": "href を指定するとリンクとして、interaction=\"button\" を指定するとボタン相当として操作できます（href指定時はリンク優先）。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"header\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-item-number",
+                  "title": "ステップ番号",
+                  "description": "親（dads-step-navigation）が step 属性を付与し、表示番号として利用します。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"number\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-item-title",
+                  "title": "タイトル",
+                  "description": "title スロット（または default slot）の内容が、ステップの主要ラベルになります。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"title\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-item-description",
+                  "title": "説明（任意）",
+                  "description": "description スロットがある場合に表示されます。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"description\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-item-state-icon-completed",
+                  "title": "状態アイコン（完了）",
+                  "description": "state=\"completed\" のときに表示されます。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[data-state-icon=\"completed\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-item-state-icon-editing",
+                  "title": "状態アイコン（編集中）",
+                  "description": "state=\"editing\" のときに表示されます。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[data-state-icon=\"editing\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-item-state-icon-error",
+                  "title": "状態アイコン（エラー）",
+                  "description": "state=\"error\" のときに表示されます。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[data-state-icon=\"error\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-item-state-label-editing",
+                  "title": "状態ラベル（編集中）",
+                  "description": "state=\"editing\" のときに表示されます（label-editing で文言を変更できます）。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[data-state-label=\"editing\"]"
+                  }
+                },
+                {
+                  "id": "step-navigation-item-state-label-error",
+                  "title": "状態ラベル（エラー）",
+                  "description": "state=\"error\" のときに表示されます（label-error で文言を変更できます）。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[data-state-label=\"error\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -16568,7 +18264,8 @@
               "type": {
                 "text": "HTMLInputElement | null"
               },
-              "default": "null"
+              "default": "null",
+              "description": "アクセシビリティ注釈メタデータ\na11y-annotateコンポーネントが参照"
             },
             {
               "kind": "field",
@@ -16789,16 +18486,6 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
-            },
-            {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "default": "{ version: 1, summary: 'トグルスイッチ（ON/OFF切り替え）', categories: { semantics: [ 'role=\"switch\" でスイッチとして認識される', 'aria-checked で現在の状態を通知', 'input[type=\"checkbox\"] をベースに実装', ], keyboard: [ 'Tabキーでフォーカス移動', 'Enter / Space でトグル', '← (ArrowLeft) で OFF', '→ (ArrowRight) で ON', ], zoom: [ 'rem/em 相対単位でサイズ変更可能', 'タッチターゲット最小44×44px確保（sm以上）', 'サイズバリエーション: sm(40×20) / md(48×24) / lg(56×28)', ], states: [ 'checked: ON/OFF状態', 'disabled: 無効状態（操作不可）', 'aria-checked: スクリーンリーダーへの状態通知', ':focus-visible でフォーカスリング表示', ], labels: [ 'slot=\"label-left\" / slot=\"label-right\" でラベル提供', 'ラベルクリックでもトグル可能', 'name属性でフォーム送信時の識別子を設定', ], motion: [ 'ノブ移動: 150ms ease トランジション', 'prefers-reduced-motion: reduce でアニメーション無効化', ], }, callouts: [ { id: 'checkbox', title: 'スイッチ入力（role=\"switch\"）', label: 'role=\"switch\"', description: 'aria-checked で状態を伝達、キーボード操作を受け付ける', category: 'semantics', target: { scope: 'shadow', selector: '[part=\"checkbox\"]' }, placement: 'top-left', }, { id: 'track', title: 'トラック（背景）', label: 'part=\"track\"', description: 'スイッチの視覚的なトラック部分', category: 'states', target: { scope: 'shadow', selector: '[part=\"track\"]' }, placement: 'top-right', }, { id: 'knob', title: 'ノブ（つまみ）', label: 'part=\"knob\"', description: 'ON/OFF状態を視覚的に示す移動要素', category: 'states', target: { scope: 'shadow', selector: '[part=\"knob\"]' }, placement: 'bottom-right', }, { id: 'label-left', title: '左ラベル（OFF状態）', label: 'slot=\"label-left\"', description: 'クリックでトグル可能', category: 'labels', target: { scope: 'shadow', selector: '[part=\"label-left\"]' }, placement: 'top-left', }, { id: 'label-right', title: '右ラベル（ON状態）', label: 'slot=\"label-right\"', description: 'クリックでトグル可能', category: 'labels', target: { scope: 'shadow', selector: '[part=\"label-right\"]' }, placement: 'top-right', }, ], }",
-              "description": "アクセシビリティ注釈メタデータ\na11y-annotateコンポーネントが参照"
             },
             {
               "kind": "method",
@@ -17136,7 +18823,108 @@
           "customElement": true,
           "modulePath": "./packages/components/switch/switch.ts",
           "definitionPath": "./packages/components/switch/switch.ts",
-          "typeDefinitionPath": "./packages/components/switch/switch.ts"
+          "typeDefinitionPath": "./packages/components/switch/switch.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "トグルスイッチ（ON/OFF切り替え）",
+              "categories": {
+                "semantics": [
+                  "role=\"switch\" でスイッチとして認識される",
+                  "aria-checked で現在の状態を通知",
+                  "input[type=\"checkbox\"] をベースに実装"
+                ],
+                "keyboard": [
+                  "Tabキーでフォーカス移動",
+                  "Enter / Space でトグル",
+                  "← (ArrowLeft) で OFF",
+                  "→ (ArrowRight) で ON"
+                ],
+                "zoom": [
+                  "rem/em 相対単位でサイズ変更可能",
+                  "タッチターゲット最小44×44px確保（sm以上）",
+                  "サイズバリエーション: sm(40×20) / md(48×24) / lg(56×28)"
+                ],
+                "states": [
+                  "checked: ON/OFF状態",
+                  "disabled: 無効状態（操作不可）",
+                  "aria-checked: スクリーンリーダーへの状態通知",
+                  ":focus-visible でフォーカスリング表示"
+                ],
+                "labels": [
+                  "slot=\"label-left\" / slot=\"label-right\" でラベル提供",
+                  "ラベルクリックでもトグル可能",
+                  "name属性でフォーム送信時の識別子を設定"
+                ],
+                "motion": [
+                  "ノブ移動: 150ms ease トランジション",
+                  "prefers-reduced-motion: reduce でアニメーション無効化"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "checkbox",
+                  "title": "スイッチ入力（role=\"switch\"）",
+                  "label": "role=\"switch\"",
+                  "description": "aria-checked で状態を伝達、キーボード操作を受け付ける",
+                  "category": "semantics",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"checkbox\"]"
+                  },
+                  "placement": "top-left"
+                },
+                {
+                  "id": "track",
+                  "title": "トラック（背景）",
+                  "label": "part=\"track\"",
+                  "description": "スイッチの視覚的なトラック部分",
+                  "category": "states",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"track\"]"
+                  },
+                  "placement": "top-right"
+                },
+                {
+                  "id": "knob",
+                  "title": "ノブ（つまみ）",
+                  "label": "part=\"knob\"",
+                  "description": "ON/OFF状態を視覚的に示す移動要素",
+                  "category": "states",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"knob\"]"
+                  },
+                  "placement": "bottom-right"
+                },
+                {
+                  "id": "label-left",
+                  "title": "左ラベル（OFF状態）",
+                  "label": "slot=\"label-left\"",
+                  "description": "クリックでトグル可能",
+                  "category": "labels",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label-left\"]"
+                  },
+                  "placement": "top-left"
+                },
+                {
+                  "id": "label-right",
+                  "title": "右ラベル（ON状態）",
+                  "label": "slot=\"label-right\"",
+                  "description": "クリックでトグル可能",
+                  "category": "labels",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label-right\"]"
+                  },
+                  "placement": "top-right"
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -17810,16 +19598,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'テーブル／データテーブル（アクセシビリティ注釈）', categories: { semantics: [ 'ネイティブの <table> 要素をそのまま使用し、行・列の関係性をブラウザ標準のセマンティクスで提供します。', '列見出しは <th scope=\"col\">、行見出しは <th scope=\"row\"> を推奨します（複雑な表は見出し構造を簡素化）。', ], keyboard: [ '選択（チェックボックス）やソート（ボタン）等の操作はネイティブ要素に委譲します。', 'Tabで操作要素に移動し、Space/Enterで操作できます（ネイティブ挙動）。', ], zoom: [ '横幅が足りない場合は水平スクロール（オーバーフロー）を許可し、視認性を確保します。', ], states: [ 'striped属性で交互行背景、hover属性で行ホバー、選択状態は <tr aria-selected=\"true\"> として表現します。', 'ソート状態は <th aria-sort=\"ascending|descending\"> として表現します。', 'sort-behavior=\"dom\" を指定すると、ソート操作に連動して <tbody> の行順をDOM上で並び替えます（3クリック目のnoneで元の順序に戻ります）。', 'DOM自動ソート時は data-sort-type=\"string|number|date\" と data-sort-value で判定・比較を明示できます（複数tbodyは各tbody内でソート）。', ], labels: [ '<caption> を使用してテーブルのタイトル／説明を提供できます。', '行選択用のチェックボックス（data-select-row / data-select-all）は aria-label 等でラベル付けしてください。', ], motion: ['アニメーションは使用しません。'], }, callouts: [ { id: 'table', title: 'テーブル本体', label: '<table>', description: 'ネイティブのtable要素をそのまま配置します。', category: 'semantics', placement: 'top-right', target: { scope: 'light', selector: 'table' }, }, { id: 'caption', title: 'キャプション', label: '<caption>', description: 'テーブルのタイトル／説明は caption（または figure + figcaption）で提供すると、利用者が目的を把握しやすくなります。', category: 'labels', placement: 'top-right', target: { scope: 'light', selector: ':is(caption, figcaption, .dads-table__caption)' }, }, { id: 'header', title: '見出しセル', label: 'scope=\"col\"', description: '列見出しは th scope=\"col\"、行見出しは th scope=\"row\" を推奨します（読み上げ時の関連付けが明確になります）。', category: 'semantics', placement: 'top-left', target: { scope: 'light', selector: 'th[scope=\"col\"]' }, }, { id: 'scroll', title: 'スクロールコンテナ', label: 'overflow-x', description: '横幅不足時に水平スクロールできるようにします。', category: 'zoom', placement: 'top-left', target: { scope: 'light', selector: '[part=\"scroll\"]' }, }, { id: 'sort', title: 'ソート操作', label: 'data-sort', description: 'ヘッダーセル内のボタンをクリックすると aria-sort を切り替え、dads-sort-change を発火します。sort-behavior=\"dom\" の場合はDOMも並び替えます。', category: 'states', placement: 'bottom-left', target: { scope: 'light', selector: '[data-sort], [data-js-sort]' }, }, { id: 'select-all', title: '全選択', label: 'data-select-all', description: 'ヘッダーのチェックボックスで全行を一括選択できます（indeterminate も含め、状態はコンポーネントが同期します）。', category: 'states', placement: 'bottom-left', target: { scope: 'light', selector: '[data-select-all], [data-js-check-all]' }, }, { id: 'selection', title: '行選択', label: 'data-select-row', description: 'チェック状態に応じて行へ aria-selected=\"true\" を付与し、dads-selection-change を発火します。', category: 'states', placement: 'bottom-right', target: { scope: 'light', selector: '[data-select-row], [data-js-check]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -18026,7 +19804,125 @@
           "customElement": true,
           "modulePath": "./packages/components/table/table.ts",
           "definitionPath": "./packages/components/table/table.ts",
-          "typeDefinitionPath": "./packages/components/table/table.ts"
+          "typeDefinitionPath": "./packages/components/table/table.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "テーブル／データテーブル（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ネイティブの <table> 要素をそのまま使用し、行・列の関係性をブラウザ標準のセマンティクスで提供します。",
+                  "列見出しは <th scope=\"col\">、行見出しは <th scope=\"row\"> を推奨します（複雑な表は見出し構造を簡素化）。"
+                ],
+                "keyboard": [
+                  "選択（チェックボックス）やソート（ボタン）等の操作はネイティブ要素に委譲します。",
+                  "Tabで操作要素に移動し、Space/Enterで操作できます（ネイティブ挙動）。"
+                ],
+                "zoom": [
+                  "横幅が足りない場合は水平スクロール（オーバーフロー）を許可し、視認性を確保します。"
+                ],
+                "states": [
+                  "striped属性で交互行背景、hover属性で行ホバー、選択状態は <tr aria-selected=\"true\"> として表現します。",
+                  "ソート状態は <th aria-sort=\"ascending|descending\"> として表現します。",
+                  "sort-behavior=\"dom\" を指定すると、ソート操作に連動して <tbody> の行順をDOM上で並び替えます（3クリック目のnoneで元の順序に戻ります）。",
+                  "DOM自動ソート時は data-sort-type=\"string|number|date\" と data-sort-value で判定・比較を明示できます（複数tbodyは各tbody内でソート）。"
+                ],
+                "labels": [
+                  "<caption> を使用してテーブルのタイトル／説明を提供できます。",
+                  "行選択用のチェックボックス（data-select-row / data-select-all）は aria-label 等でラベル付けしてください。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "table",
+                  "title": "テーブル本体",
+                  "label": "<table>",
+                  "description": "ネイティブのtable要素をそのまま配置します。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "light",
+                    "selector": "table"
+                  }
+                },
+                {
+                  "id": "caption",
+                  "title": "キャプション",
+                  "label": "<caption>",
+                  "description": "テーブルのタイトル／説明は caption（または figure + figcaption）で提供すると、利用者が目的を把握しやすくなります。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "light",
+                    "selector": ":is(caption, figcaption, .dads-table__caption)"
+                  }
+                },
+                {
+                  "id": "header",
+                  "title": "見出しセル",
+                  "label": "scope=\"col\"",
+                  "description": "列見出しは th scope=\"col\"、行見出しは th scope=\"row\" を推奨します（読み上げ時の関連付けが明確になります）。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "light",
+                    "selector": "th[scope=\"col\"]"
+                  }
+                },
+                {
+                  "id": "scroll",
+                  "title": "スクロールコンテナ",
+                  "label": "overflow-x",
+                  "description": "横幅不足時に水平スクロールできるようにします。",
+                  "category": "zoom",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "light",
+                    "selector": "[part=\"scroll\"]"
+                  }
+                },
+                {
+                  "id": "sort",
+                  "title": "ソート操作",
+                  "label": "data-sort",
+                  "description": "ヘッダーセル内のボタンをクリックすると aria-sort を切り替え、dads-sort-change を発火します。sort-behavior=\"dom\" の場合はDOMも並び替えます。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "light",
+                    "selector": "[data-sort], [data-js-sort]"
+                  }
+                },
+                {
+                  "id": "select-all",
+                  "title": "全選択",
+                  "label": "data-select-all",
+                  "description": "ヘッダーのチェックボックスで全行を一括選択できます（indeterminate も含め、状態はコンポーネントが同期します）。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "light",
+                    "selector": "[data-select-all], [data-js-check-all]"
+                  }
+                },
+                {
+                  "id": "selection",
+                  "title": "行選択",
+                  "label": "data-select-row",
+                  "description": "チェック状態に応じて行へ aria-selected=\"true\" を付与し、dads-selection-change を発火します。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "light",
+                    "selector": "[data-select-row], [data-js-check]"
+                  }
+                }
+              ]
+            }
+          }
         },
         {
           "kind": "variable",
@@ -18523,16 +20419,6 @@
               }
             },
             {
-              "kind": "field",
-              "name": "a11yAnnotations",
-              "type": {
-                "text": "A11yAnnotations"
-              },
-              "static": true,
-              "readonly": true,
-              "default": "{ version: 1, summary: 'テキストエリアコンポーネント仕様（アクセシビリティ注釈）', categories: { semantics: [ 'ネイティブの <textarea> 要素を使用し、複数行テキスト入力のセマンティクスを提供します。', '<label> 要素でラベルとtextareaを関連付けます。', 'Form-Associated Custom Elementとしてネイティブフォームに参加します。', ], keyboard: [ 'Tabでフォーカス可能です。', '標準のテキスト入力キーボード操作が利用できます。', '複数行入力のため、Enterで改行されます。', ], zoom: [ 'サイズバリエーション: sm / md / lg。', 'rows属性で行数を指定できます（デフォルト: 3行）。', 'テキストは相対単位で定義され、拡大時も操作可能です。', ], states: [ 'required属性で「※必須」ラベル表示、aria-required=\"true\"設定。', 'readonly属性で「読み取り専用」ラベル表示、編集不可。', 'disabled属性で無効状態。', 'error属性でエラー状態（aria-invalid=\"true\"、赤枠表示）。', 'show-counter属性で文字数カウンター表示。', ], labels: [ 'label属性またはスロットでラベルを提供します。', 'support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。', 'error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。', 'カウンター表示時はaria-describedbyに追加されます。', ], motion: [ 'アニメーションは使用しません。', ], }, callouts: [ { id: 'label', title: 'ラベル要素', label: '<label>', description: 'ネイティブのlabel要素でtextareaと関連付けます。クリックでフォーカス移動。', category: 'semantics', placement: 'top-left', target: { scope: 'shadow', selector: '[part=\"label\"]' }, }, { id: 'requirement', title: '要否ラベル', label: '※必須/読み取り専用', description: 'required/readonly属性に応じて表示されるラベルです。', category: 'labels', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"requirement\"]' }, }, { id: 'support-text', title: 'サポートテキスト', label: 'support-text', description: '入力のヒントや補足説明を提供します。aria-describedbyで関連付け。', category: 'labels', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"support-text\"]' }, }, { id: 'textarea', title: 'ネイティブテキストエリア要素', label: '<textarea>', description: '複数行テキスト入力を受け付けます。rows属性で行数指定。', category: 'keyboard', placement: 'top-right', target: { scope: 'shadow', selector: '[part=\"textarea\"]' }, }, { id: 'counter', title: '文字数カウンター', label: 'counter', description: '現在の文字数と上限を「0/100」形式で表示。aria-describedbyで関連付け。', category: 'states', placement: 'bottom-right', target: { scope: 'shadow', selector: '[part=\"counter\"]' }, }, { id: 'error-text', title: 'エラーメッセージ', label: 'error-text', description: 'バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。', category: 'states', placement: 'bottom-left', target: { scope: 'shadow', selector: '[part=\"error-text\"]' }, }, ], }"
-            },
-            {
               "kind": "method",
               "name": "blur"
             },
@@ -18955,7 +20841,120 @@
           "customElement": true,
           "modulePath": "./packages/components/textarea/textarea.ts",
           "definitionPath": "./packages/components/textarea/textarea.ts",
-          "typeDefinitionPath": "./packages/components/textarea/textarea.ts"
+          "typeDefinitionPath": "./packages/components/textarea/textarea.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "テキストエリアコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ネイティブの <textarea> 要素を使用し、複数行テキスト入力のセマンティクスを提供します。",
+                  "<label> 要素でラベルとtextareaを関連付けます。",
+                  "Form-Associated Custom Elementとしてネイティブフォームに参加します。"
+                ],
+                "keyboard": [
+                  "Tabでフォーカス可能です。",
+                  "標準のテキスト入力キーボード操作が利用できます。",
+                  "複数行入力のため、Enterで改行されます。"
+                ],
+                "zoom": [
+                  "サイズバリエーション: sm / md / lg。",
+                  "rows属性で行数を指定できます（デフォルト: 3行）。",
+                  "テキストは相対単位で定義され、拡大時も操作可能です。"
+                ],
+                "states": [
+                  "required属性で「※必須」ラベル表示、aria-required=\"true\"設定。",
+                  "readonly属性で「読み取り専用」ラベル表示、編集不可。",
+                  "disabled属性で無効状態。",
+                  "error属性でエラー状態（aria-invalid=\"true\"、赤枠表示）。",
+                  "show-counter属性で文字数カウンター表示。"
+                ],
+                "labels": [
+                  "label属性またはスロットでラベルを提供します。",
+                  "support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。",
+                  "error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。",
+                  "カウンター表示時はaria-describedbyに追加されます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "label",
+                  "title": "ラベル要素",
+                  "label": "<label>",
+                  "description": "ネイティブのlabel要素でtextareaと関連付けます。クリックでフォーカス移動。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "requirement",
+                  "title": "要否ラベル",
+                  "label": "※必須/読み取り専用",
+                  "description": "required/readonly属性に応じて表示されるラベルです。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"requirement\"]"
+                  }
+                },
+                {
+                  "id": "support-text",
+                  "title": "サポートテキスト",
+                  "label": "support-text",
+                  "description": "入力のヒントや補足説明を提供します。aria-describedbyで関連付け。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"support-text\"]"
+                  }
+                },
+                {
+                  "id": "textarea",
+                  "title": "ネイティブテキストエリア要素",
+                  "label": "<textarea>",
+                  "description": "複数行テキスト入力を受け付けます。rows属性で行数指定。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"textarea\"]"
+                  }
+                },
+                {
+                  "id": "counter",
+                  "title": "文字数カウンター",
+                  "label": "counter",
+                  "description": "現在の文字数と上限を「0/100」形式で表示。aria-describedbyで関連付け。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"counter\"]"
+                  }
+                },
+                {
+                  "id": "error-text",
+                  "title": "エラーメッセージ",
+                  "label": "error-text",
+                  "description": "バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"error-text\"]"
+                  }
+                }
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -19628,10 +21627,10 @@
                   }
                 },
                 {
-                  "name": "orientation",
+                  "name": "orientationOrOptions",
                   "default": "Orientation.vertical",
                   "type": {
-                    "text": "OrientationValue"
+                    "text": "OrientationValue | ProcessKeyOptions"
                   }
                 }
               ]
@@ -26281,7 +28280,7 @@
         {
           "kind": "variable",
           "name": "baseTypographyStyles",
-          "default": "css` /* フォントのチラツキ対策 */ :host { /* システムフォントスタック（フォールバック） */ --system-font-stack: -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", \"Hiragino Kaku Gothic ProN\", \"Yu Gothic\", \"Meiryo\", Arial, sans-serif; /* Noto Sans JPを優先、読み込まれるまでシステムフォントを使用 */ --base-font-family: \"Noto Sans JP\", var(--system-font-stack); --mono-font-family: \"Noto Sans Mono\", \"SF Mono\", Monaco, \"Courier New\", monospace; /* デフォルトフォント適用 */ font-family: var(--base-font-family); /* font-synthesis を無効化（偽ボールド・斜体を防ぐ） */ font-synthesis: none; /* アンチエイリアシング改善 */ -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; /* テキストレンダリング最適化 */ text-rendering: optimizeLegibility; /* デフォルトの行高（アクセシビリティ考慮） */ line-height: 1.5; } /* フォント読み込み中の見た目を安定化 */ :host { /* font-display: swap 相当の動作をCSS側でも補助 */ /* 文字間隔をわずかに調整（日本語フォントの特性） */ letter-spacing: 0.02em; } /* リンクスタイル */ :host a { font-family: inherit; } /* コードブロック */ :host code, :host pre, :host kbd, :host samp { font-family: var(--mono-font-family); } /* ボタン・インプット */ :host button, :host input, :host select, :host textarea { font-family: inherit; } `",
+          "default": "css` /* フォントのチラツキ対策 */ :host { /* システムフォントスタック（フォールバック） */ --system-font-stack: -apple-system, BlinkMacSystemFont, sans-serif; /* Noto Sans JPを優先、読み込まれるまでシステムフォントを使用 */ --base-font-family: \"Noto Sans JP\", var(--system-font-stack); --mono-font-family: \"Noto Sans Mono\", monospace; /* デフォルトフォント適用 */ font-family: var(--base-font-family); /* font-synthesis を無効化（偽ボールド・斜体を防ぐ） */ font-synthesis: none; /* アンチエイリアシング改善 */ -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; /* テキストレンダリング最適化 */ text-rendering: optimizeLegibility; /* デフォルトの行高（アクセシビリティ考慮） */ line-height: 1.5; } /* フォント読み込み中の見た目を安定化 */ :host { /* font-display: swap 相当の動作をCSS側でも補助 */ /* 文字間隔をわずかに調整（日本語フォントの特性） */ letter-spacing: 0.02em; } /* リンクスタイル */ :host a { font-family: inherit; } /* コードブロック */ :host code, :host pre, :host kbd, :host samp { font-family: var(--mono-font-family); } /* ボタン・インプット */ :host button, :host input, :host select, :host textarea { font-family: inherit; } `",
           "description": "グローバルフォント定義\nすべてのWeb Componentsで使用される基本フォント設定"
         },
         {
@@ -26308,7 +28307,7 @@
               "text": "void"
             }
           },
-          "description": "Noto Sans JP の Web Font 読み込み\nグローバルに一度だけ実行"
+          "description": "フォント状態の初期化\nグローバルに一度だけ実行（Web Fontは読み込まない）"
         }
       ],
       "exports": [
@@ -26353,7 +28352,7 @@
         {
           "kind": "variable",
           "name": "fontFaceCSS",
-          "default": "` /* フォント読み込み中のチラツキ対策 */ :host { /* font-display: swap でFOITを防ぐ */ font-synthesis: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; } /* フォールバックチェーン */ :host { --system-font-stack: -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", \"Hiragino Kaku Gothic ProN\", \"Yu Gothic\", Arial, sans-serif; --base-font-family: \"Noto Sans JP\", var(--system-font-stack); --mono-font-family: \"Noto Sans Mono\", \"SF Mono\", Monaco, \"Courier New\", monospace; font-family: var(--base-font-family); } `",
+          "default": "` /* フォント読み込み中のチラツキ対策 */ :host { /* font-display: swap でFOITを防ぐ */ font-synthesis: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; } /* フォールバックチェーン */ :host { --system-font-stack: -apple-system, BlinkMacSystemFont, sans-serif; --base-font-family: \"Noto Sans JP\", var(--system-font-stack); --mono-font-family: \"Noto Sans Mono\", monospace; font-family: var(--base-font-family); } `",
           "description": "フォントフェイスのCSS定義\nコンポーネントのスタイルに含めるための基本定義"
         },
         {
@@ -27479,7 +29478,7 @@
         {
           "kind": "variable",
           "name": "kisoResetStyles",
-          "default": "css` /*! kiso.css v1.2.2 | MIT License | https://github.com/tak-dcxi/kiso.css */ /* ====================================================== // MARK: Universal // ====================================================== */ *, ::before, ::after { /* * Includes 'padding' and 'border' in the element's specified dimensions. * It is highly recommended to set 'box-sizing: border-box;' by default, as it makes styling much easier, especially when specifying 'width: 100%;'. */ box-sizing: border-box; } /* ====================================================== // MARK: Document and Body Elements // ====================================================== */ :where(:root,:host) { /* In Safari, if 'font-family' is not specified, a serif font is applied by default, so 'sans-serif' is set as the default here. */ font-family: sans-serif; /* * For accessibility, it is recommended to set the 'line-height' to at least 1.5 times the text size within paragraphs. * @see https://waic.jp/translations/WCAG21/#visual-presentation */ line-height: 1.5; /* Remove space when punctuation marks are adjacent, and also remove leading spaces in a line. */ text-spacing-trim: trim-start; /* Improves readability by inserting a small space between Japanese and alphanumeric characters. */ text-autospace: normal; /* Prevents misreading by applying strict line-breaking rules. */ line-break: strict; /* Wraps English words mid-word. Specifying 'anywhere' also prevents content from overflowing in layouts like 'flex' or 'grid'. */ overflow-wrap: anywhere; /* * Mobile browsers have an algorithm that automatically adjusts font sizes to prevent text from becoming too small. * This controls the auto-adjustment feature to prevent unwanted resizing. */ -webkit-text-size-adjust: 100%; text-size-adjust: 100%; /* Prevents layout shift caused by the appearance or disappearance of the scrollbar. */ scrollbar-gutter: stable; /* Suppresses the tap highlight on iOS. */ -webkit-tap-highlight-color: transparent; } :where(body) { /* * When creating a sticky footer, a minimum height is often required. * Setting the 'min-block-size' to the dynamic viewport height ensures enough space for the footer. */ min-block-size: 100dvb; /* The 'margin' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset here. */ margin: unset; } /* ====================================================== // MARK: Sections // ------------------------------------------------------ */ :where(h1, h2, h3, h4, h5, h6) { /* Prevents the last line of text from ending with a single word, which can look awkward (known as an orphan). */ text-wrap: pretty; } :where(h1) { /* * Adjusts user agent (UA) styles for 'h1' elements within sectioning content. * This addresses DevTools warnings that appear when 'h1' elements nested within sectioning content lack 'font-size' and 'margin' properties. * @see https://html.spec.whatwg.org/#sections-and-headings */ margin-block: 0.67em; font-size: 2em; } :where(h2, h3, h4, h5, h6) { /* The 'margin-block' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */ margin-block: unset; } :where(search) { /* * The '<search>' element is supported from Safari 17. * This prevents it from being displayed as an inline element in unsupported environments. */ display: block flow; } /* ====================================================== // MARK: Grouping content // ====================================================== */ :where(p, blockquote, figure, pre, address, ul, ol, dl, menu) { /* The 'margin-block' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */ margin-block: unset; } :where(blockquote, figure) { /* The 'margin-inline' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */ margin-inline: unset; } :where(p:lang(en)) { /* * In English, a single word on the last line is called a \"widow\" or \"orphan\" and is considered something to avoid as it makes the text harder to read. * Therefore, when lang=\"en\", this prevents the last line from ending with a single word. */ text-wrap: pretty; } :where(address:lang(ja)) { /* Italic style is not common in Japanese, so the 'font-style' is reset. */ font-style: unset; } :where(ul, ol, menu) { /* The 'padding-inline-start' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */ padding-inline-start: unset; /* * In Safari, using 'list-style: none' prevents screen readers from announcing lists. * 'list-style-type: \"\"' is used to hide markers without affecting accessibility. * @see https://matuzo.at/blog/2023/removing-list-styles-without-affecting-semantics */ list-style-type: \"\"; } :where(dt) { /* It is common to display '<dt>' elements in bold, so 'font-weight: bolder;' is set by default. */ font-weight: bolder; } :where(dd) { /* The 'margin-inline-start' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */ margin-inline-start: unset; } :where(pre) { /* * Since 'text-spacing-trim' can affect spacing in '<pre>' elements even with its initial value, the final rendering may depend on the user's font settings. * To ensure consistent alignment, 'space-all' is explicitly specified and inheritance is prevented. */ text-spacing-trim: space-all; /* Set to 'no-autospace' as it can cause misalignment with monospaced fonts. */ text-autospace: no-autospace; } /* ====================================================== // MARK: Text-level semantics // ====================================================== */ :where(em:lang(ja)) { /* In Japanese, emphasis is commonly represented by bold text, so 'font-weight: bolder;' is set by default. */ font-weight: bolder; } :where(:is(i, cite, em, dfn, var):lang(ja)) { /* Italic style is not common in Japanese, so the 'font-style' is reset. */ font-style: unset; } :where(code, kbd, samp) { /* * Set a monospace font family referencing Tailwind. * @see https://tailwindcss.com/docs/font-family */ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; /* Font feature settings can have adverse effects on monospaced fonts, so their values are explicitly set to 'initial' to prevent inheritance. */ font-feature-settings: initial; font-variation-settings: initial; /* Resets the 'font-size' specified in the UA stylesheet to allow inheritance. */ font-size: unset; /* * Disables font ligatures for programming fonts (like Fira Code) * to prevent character combinations like '=>' from being rendered as a single symbol (e.g., '⇒'). */ font-variant-ligatures: none; } :where(abbr[title]) { /* * The '<abbr>' element with the 'title' attribute isn't helpful regarding accessibility because support is inconsistent, and it's only accessible to some users. * This rule shows a dotted underline on abbreviations in all browsers (there's a bug in Safari) and changes the cursor. * @see https://adrianroselli.com/2024/01/using-abbr-element-with-title-attribute.html */ text-decoration-line: underline; text-decoration-style: dotted; cursor: help; } :where(time) { /* Set to 'no-autospace' because date notations in typography do not include spaces. */ text-autospace: no-autospace; } @media (forced-colors: active) { :where(mark) { /* * In forced-colors mode, the color of the mark element may not change, which can be problematic. Use system colors in forced-colors mode. * @see https://adrianroselli.com/2017/12/tweaking-text-level-styles.html#MarkWHCM */ background-color: Highlight; color: HighlightText; } } @media print { :where(mark) { /* * Not all printers support color, and users might print in grayscale. * It's worth adding a non-disruptive style that scales with the text, as an alternative to relying only on background color. * @see https://adrianroselli.com/2017/12/tweaking-text-level-styles.html#MarkPrint */ border-width: 1px; border-style: dotted; } } /* ====================================================== // MARK: Links // ====================================================== */ :where(a:any-link) { /* The default 'color' from the UA stylesheet is rarely used as is, so it's reset to allow inheritance. */ color: unset; /* * While link underlines can be useful, they are often obstructive. * They are disabled by default. * If needed, restore them using 'text-decoration-line: revert;'. */ text-decoration-line: unset; /* Set the underline thickness to the font's default thickness. */ text-decoration-thickness: from-font; } /* ====================================================== // MARK: Embedded content // ====================================================== */ :where(img, svg, picture, video, canvas, model, audio, iframe, embed, object) { /* Automatically adjust block size based on content. */ block-size: auto; /* Prevents overflow by setting the maximum width to '100%'. */ max-inline-size: 100%; /* Prevents extra space from appearing at the bottom of the element. */ vertical-align: bottom; } :where(iframe) { /* The 'border' specified in the UA stylesheet is often unnecessary, so it is reset. */ border: unset; } /* ====================================================== // MARK: Tabular data // ====================================================== */ :where(table) { /* Collapse borders for a more refined table design. */ border-collapse: collapse; } :where(caption, th) { /* The 'text-align' specified in the UA stylesheet is often unnecessary, so it is reset. */ text-align: unset; } :where(caption) { /* Prevents the last line of text from ending with a single word, which can look awkward (known as an orphan). */ text-wrap: pretty; } /* ====================================================== // MARK: Forms // ====================================================== */ :where(button, input, select, textarea), ::file-selector-button { /* * These elements are often styled with a border, so a '1px' border is applied by default for consistency. * This ensures readability even for unstyled elements. * When resetting, it's recommended to use 'border-color: transparent' instead of 'border: none' to account for forced color modes. */ border-width: 1px; border-style: solid; /* These styles specified in the UA stylesheet are often unnecessary, so they are reset to allow for inheritance. */ border-color: unset; border-radius: unset; color: unset; font: unset; letter-spacing: unset; text-align: unset; } :where(input:is([type=\"radio\" i], [type=\"checkbox\" i])) { /* The 'margin' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset here. */ margin: unset; } :where(input[type=\"file\" i]) { /* The 'border' is often unnecessary, so it is reset here. */ border: unset; } :where(input[type=\"search\" i]) { /* Remove the rounded corners of search inputs on macOS and normalize the background color. */ -webkit-appearance: textfield; } @supports (-webkit-touch-callout: none) { :where(input[type=\"search\" i]) { /* normalize the background color on iOS. */ background-color: Canvas; } } :where( input:is( [type=\"tel\" i], [type=\"url\" i], [type=\"email\" i], [type=\"number\" i] ):not(:placeholder-shown) ) { /* * Certain input types need to maintain left alignment even in right-to-left (RTL) languages. * However, this only applies when the value is not empty, as the placeholder should be right-aligned. * @see https://rtlstyling.com/posts/rtl-styling#form-inputs */ direction: ltr; } :where(textarea) { /* The 'margin-block' specified in Firefox's UA stylesheet is often unnecessary, so it is reset. */ margin-block: unset; /* Allows vertical resizing for '<textarea>' elements. */ resize: block; } :where( input:not([type=\"button\" i], [type=\"submit\" i], [type=\"reset\" i]), textarea, [contenteditable] ) { /* Set to 'no-autospace' because 'text-autospace' can insert spaces during input, potentially causing erratic behavior. */ text-autospace: no-autospace; } :where( button, input:is([type=\"button\" i], [type=\"submit\" i], [type=\"reset\" i]) ), ::file-selector-button { /* The 'background-color' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset here. */ background-color: unset; } :where( button, input:is([type=\"button\" i], [type=\"submit\" i], [type=\"reset\" i]), [role=\"tab\" i], [role=\"button\" i], [role=\"option\" i] ), ::file-selector-button { /* * On iOS, double-tapping a button can cause zooming, which harms usability. * 'touch-action: manipulation' is specified to disable zooming on double-tap. * Third-party plugins such as Swiper sometimes use div elements with these roles as buttons, since double-tapping a div can still trigger zooming, it's advisable to specify this property. */ touch-action: manipulation; } :where( button:enabled, label[for], select:enabled, input:is( [type=\"button\" i], [type=\"submit\" i], [type=\"reset\" i], [type=\"radio\" i], [type=\"checkbox\" i] ):enabled, [role=\"tab\" i], [role=\"button\" i], [role=\"option\" i] ), :where(:enabled)::file-selector-button { /* Indicate clickable elements with a pointer cursor. */ cursor: pointer; } :where(fieldset) { /* * Prevent fieldset from causing overflow. * Reset the default 'min-inline-size: min-content' to prevent children from stretching fieldset. * @see https://github.com/twbs/bootstrap/issues/12359 */ min-inline-size: 0; /* The following default styles are often unnecessary, so they are reset. */ margin-inline: unset; padding: unset; border: unset; } :where(legend) { /* The default 'padding-inline' is often unnecessary, so it is reset. */ padding-inline: unset; } :where(progress) { /* Resets the vertical alignment of the '<progress>' element to its initial value. */ vertical-align: unset; } ::placeholder { /* Standardize the opacity of placeholder text (it may be set lower by default in Firefox). */ opacity: unset; } /* ====================================================== // MARK: Interactive elements // ====================================================== */ :where(summary) { /* The default triangle marker is often unnecessary, so it is disabled. */ list-style-type: \"\"; /* Changing the cursor to a pointer clarifies the clickability of the element. */ cursor: pointer; } :where(summary)::-webkit-details-marker { /* In Safari versions earlier than 18.4 (released in April 2025), a triangle icon is displayed using the -webkit-details-marker CSS pseudo-element, so it should be removed. */ display: none; } :where(dialog, [popover]) { /* * When these fixed-position elements are scrolled, preventing scroll chaining on the underlying page and bounce effects on mobile improves usability. * Disabling block-direction scroll chaining is recommended. */ overscroll-behavior-block: contain; /* The following default styles are often unnecessary, so they are reset. */ padding: unset; border: unset; } :where(dialog:not([open], [popover]), [popover]:not(:popover-open)) { /* * These elements can be easily displayed by explicitly setting their 'display' property. * To prevent them from appearing when not in an open state, they are forcibly hidden. */ display: none !important; } :where(dialog) { /* * The max width and height of a '<dialog>' element are typically determined by the design. * These UA stylesheet properties are reset as they can be obstructive, especially when trying to make the dialog full-screen. */ max-inline-size: unset; max-block-size: unset; } :where(dialog)::backdrop { /* Normalize the background color of the '::backdrop' element. */ background-color: oklch(0% 0 0deg / 30%); } :where([popover]) { /* * While the UA stylesheet's 'margin' for '<dialog>' elements is useful for centering with 'inset: 0', * but 'margin' for 'popover' elements is often obstructive as they frequently use Anchor Positioning. */ margin: unset; } /* ====================================================== // MARK: Focus Styles // ====================================================== */ :where(:focus-visible) { /* Add space between the content and the focus outline. */ outline-offset: 3px; } [tabindex=\"-1\"]:focus { /* Prevent programmatically focused elements from displaying an outline unless they are naturally focusable. */ outline: none !important; } /* ====================================================== // MARK: Misc // ====================================================== */ :where(:disabled, [aria-disabled=\"true\" i]) { /* Display the default cursor on disabled elements to reflect their non-interactive state. */ cursor: default; } [hidden]:not([hidden=\"until-found\" i]) { /* Ensure that elements intended to be hidden are not displayed, improving clarity and layout control. */ display: none !important; } `",
+          "default": "css`*, ::before, ::after { box-sizing: border-box; } :where(:root,:host) { font-family: sans-serif; line-height: 1.5; text-spacing-trim: trim-start; text-autospace: normal; line-break: strict; overflow-wrap: anywhere; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scrollbar-gutter: stable; -webkit-tap-highlight-color: transparent; } :where(body) { min-block-size: 100dvb; margin: unset; } :where(h1, h2, h3, h4, h5, h6) { text-wrap: pretty; } :where(h1) { margin-block: 0.67em; font-size: 2em; } :where(h2, h3, h4, h5, h6) { margin-block: unset; } :where(search) { display: block flow; } :where(p, blockquote, figure, pre, address, ul, ol, dl, menu) { margin-block: unset; } :where(blockquote, figure) { margin-inline: unset; } :where(p:lang(en)) { text-wrap: pretty; } :where(address:lang(ja)) { font-style: unset; } :where(ul, ol, menu) { padding-inline-start: unset; list-style-type: \"\"; } :where(dt) { font-weight: bolder; } :where(dd) { margin-inline-start: unset; } :where(pre) { text-spacing-trim: space-all; text-autospace: no-autospace; } :where(em:lang(ja)) { font-weight: bolder; } :where(:is(i, cite, em, dfn, var):lang(ja)) { font-style: unset; } :where(code, kbd, samp) { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace; font-feature-settings: initial; font-variation-settings: initial; font-size: unset; font-variant-ligatures: none; } :where(abbr[title]) { text-decoration-line: underline; text-decoration-style: dotted; cursor: help; } :where(time) { text-autospace: no-autospace; } @media (forced-colors: active) { :where(mark) { background-color: Highlight; color: HighlightText; } } @media print { :where(mark) { border-width: 1px; border-style: dotted; } } :where(a:any-link) { color: unset; text-decoration-line: unset; text-decoration-thickness: from-font; } :where(img, svg, picture, video, canvas, model, audio, iframe, embed, object) { block-size: auto; max-inline-size: 100%; vertical-align: bottom; } :where(iframe) { border: unset; } :where(table) { border-collapse: collapse; } :where(caption, th) { text-align: unset; } :where(caption) { text-wrap: pretty; } :where(button, input, select, textarea), ::file-selector-button { border-width: 1px; border-style: solid; border-color: unset; border-radius: unset; color: unset; font: unset; letter-spacing: unset; text-align: unset; } :where(input:is([type=\"radio\" i], [type=\"checkbox\" i])) { margin: unset; } :where(input[type=\"file\" i]) { border: unset; } :where(input[type=\"search\" i]) { -webkit-appearance: textfield; } @supports (-webkit-touch-callout: none) { :where(input[type=\"search\" i]) { background-color: Canvas; } } :where( input:is( [type=\"tel\" i], [type=\"url\" i], [type=\"email\" i], [type=\"number\" i] ):not(:placeholder-shown) ) { direction: ltr; } :where(textarea) { margin-block: unset; resize: block; } :where( input:not([type=\"button\" i], [type=\"submit\" i], [type=\"reset\" i]), textarea, [contenteditable] ) { text-autospace: no-autospace; } :where( button, input:is([type=\"button\" i], [type=\"submit\" i], [type=\"reset\" i]) ), ::file-selector-button { background-color: unset; } :where( button, input:is([type=\"button\" i], [type=\"submit\" i], [type=\"reset\" i]), [role=\"tab\" i], [role=\"button\" i], [role=\"option\" i] ), ::file-selector-button { touch-action: manipulation; } :where( button:enabled, label[for], select:enabled, input:is( [type=\"button\" i], [type=\"submit\" i], [type=\"reset\" i], [type=\"radio\" i], [type=\"checkbox\" i] ):enabled, [role=\"tab\" i], [role=\"button\" i], [role=\"option\" i] ), :where(:enabled)::file-selector-button { cursor: pointer; } :where(fieldset) { min-inline-size: 0; margin-inline: unset; padding: unset; border: unset; } :where(legend) { padding-inline: unset; } :where(progress) { vertical-align: unset; } ::placeholder { opacity: unset; } :where(summary) { list-style-type: \"\"; cursor: pointer; } :where(summary)::-webkit-details-marker { display: none; } :where(dialog, [popover]) { overscroll-behavior-block: contain; padding: unset; border: unset; } :where(dialog:not([open], [popover]), [popover]:not(:popover-open)) { display: none !important; } :where(dialog) { max-inline-size: unset; max-block-size: unset; } :where(dialog)::backdrop { background-color: oklch(0% 0 0deg / 30%); } :where([popover]) { margin: unset; } :where(:focus-visible) { outline-offset: 3px; } [tabindex=\"-1\"]:focus { outline: none !important; } :where(:disabled, [aria-disabled=\"true\" i]) { cursor: default; } [hidden]:not([hidden=\"until-found\" i]) { display: none !important; }`",
           "description": "kiso.cssのWeb Components向けサブセット\nShadow DOM内でのみ適用され、既存サイトのスタイルには影響しない"
         },
         {

@@ -13,7 +13,6 @@ import {
   stepNavigationSemanticTokens,
 } from './step-navigation-tokens.js';
 import { stepNavigationStyles, stepNavigationItemStyles } from './step-navigation-styles.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 type Orientation = 'horizontal' | 'vertical';
 type Size = 'normal' | 'small';
@@ -118,92 +117,6 @@ export class DadsStepNavigation extends TypographyWebComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'ステップナビゲーション仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        '複数ステップの進行状況を、ステップ番号・タイトル・説明で提示します。',
-        '進捗文言（slot="status"）はスクリーンリーダー向けに提供できます（visually-hidden）。必要に応じて status-live で aria-live 通知を有効化します。',
-        'ホストに aria-label / aria-labelledby を指定すると、Shadow内の nav に反映されます。',
-      ],
-      keyboard: ['リンクとして指定したステップはTabでフォーカスできます。'],
-      zoom: ['横幅が狭い場合、horizontalは横スクロールで閲覧できます。'],
-      states: [
-        '各ステップは state 属性（reached/completed/editing/error/skipped）で状態表現できます。',
-        'aria-current 属性で現在位置を示し、視覚的にアウトラインを表示します。',
-      ],
-      labels: ['各ステップのラベルは title スロットの内容です。'],
-      motion: ['アニメーションは使用しません。'],
-    },
-    callouts: [
-      {
-        id: 'step-navigation-header',
-        title: 'ヘッダー（リンク/ボタン相当）',
-        description:
-          'href を指定するとリンクとして、interaction="button" を指定するとボタン相当として操作できます（href指定時はリンク優先）。',
-        category: 'semantics',
-        placement: 'top-left',
-        target: {
-          hostSelector: 'dads-step-navigation-item[href], dads-step-navigation-item',
-          scope: 'shadow',
-          selector: '[part="header"]',
-        },
-      },
-      {
-        id: 'step-navigation-current-step',
-        title: '現在位置（aria-current="step"）',
-        label: 'aria-current="step"',
-        description: '現在のステップに aria-current="step" を指定します（番号にアウトライン）。',
-        category: 'states',
-        placement: 'top-right',
-        target: {
-          hostSelector: 'dads-step-navigation-item[aria-current="step"]',
-          scope: 'shadow',
-          selector: '[part="number"]',
-        },
-      },
-      {
-        id: 'step-navigation-title',
-        title: 'タイトル（主要ラベル）',
-        label: 'slot="title"',
-        description: 'title スロット（または default slot）の内容が、ステップの主要ラベルになります。',
-        category: 'labels',
-        placement: 'bottom-left',
-        target: {
-          hostSelector: 'dads-step-navigation-item[aria-current], dads-step-navigation-item',
-          scope: 'shadow',
-          selector: '[part="title"]',
-        },
-      },
-      {
-        id: 'step-navigation-state-icon-error',
-        title: '状態アイコン（エラー）',
-        label: 'aria-hidden="true"',
-        description: 'state="error" のときに表示されます（スクリーンリーダー向けには aria-hidden）。',
-        category: 'states',
-        placement: 'top-right',
-        target: {
-          hostSelector: 'dads-step-navigation-item[state="error"]',
-          scope: 'shadow',
-          selector: '[data-state-icon="error"]',
-        },
-      },
-      {
-        id: 'step-navigation-state-label-editing',
-        title: '状態ラベル（編集中）',
-        label: 'state="editing"',
-        description: 'state="editing" のときに表示されます（label-editing で文言を変更できます）。',
-        category: 'states',
-        placement: 'bottom-right',
-        target: {
-          hostSelector: 'dads-step-navigation-item[state="editing"]',
-          scope: 'shadow',
-          selector: '[data-state-label="editing"]',
-        },
-      },
-    ],
-  };
 
   #slot: HTMLSlotElement | null = null;
   #statusSlot: HTMLSlotElement | null = null;
@@ -457,103 +370,6 @@ export class DadsStepNavigationItem extends TypographyWebComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'ステップアイテム仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'ステップ番号とタイトルを提示し、必要に応じて説明文を併記します。',
-        'href を指定した場合、ヘッダーはリンクとして提供されます。',
-        'interaction="button" を指定した場合、ヘッダーはボタン相当として提供されます（href指定時はリンク優先）。',
-      ],
-      keyboard: [
-        'リンクの場合、Tabでフォーカスでき、Enterで遷移します。',
-        'interaction="button" の場合、Tabでフォーカスでき、Enter/Spaceでアクティベートできます。',
-      ],
-      zoom: ['タイトル/説明は折り返しを許容します。'],
-      states: [
-        'state に応じて色・アイコン・ラベルを表示します。',
-        'aria-current を指定すると現在のステップとして強調表示します。',
-      ],
-      labels: ['title スロットがステップの主要ラベルになります。'],
-      motion: ['アニメーションは使用しません。'],
-    },
-    callouts: [
-      {
-        id: 'step-navigation-item-header',
-        title: 'ヘッダー（リンク/ボタン相当）',
-        description:
-          'href を指定するとリンクとして、interaction="button" を指定するとボタン相当として操作できます（href指定時はリンク優先）。',
-        category: 'semantics',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="header"]' },
-      },
-      {
-        id: 'step-navigation-item-number',
-        title: 'ステップ番号',
-        description: '親（dads-step-navigation）が step 属性を付与し、表示番号として利用します。',
-        category: 'labels',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="number"]' },
-      },
-      {
-        id: 'step-navigation-item-title',
-        title: 'タイトル',
-        description: 'title スロット（または default slot）の内容が、ステップの主要ラベルになります。',
-        category: 'labels',
-        placement: 'bottom-left',
-        target: { scope: 'shadow', selector: '[part="title"]' },
-      },
-      {
-        id: 'step-navigation-item-description',
-        title: '説明（任意）',
-        description: 'description スロットがある場合に表示されます。',
-        category: 'labels',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="description"]' },
-      },
-      {
-        id: 'step-navigation-item-state-icon-completed',
-        title: '状態アイコン（完了）',
-        description: 'state="completed" のときに表示されます。',
-        category: 'states',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[data-state-icon="completed"]' },
-      },
-      {
-        id: 'step-navigation-item-state-icon-editing',
-        title: '状態アイコン（編集中）',
-        description: 'state="editing" のときに表示されます。',
-        category: 'states',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[data-state-icon="editing"]' },
-      },
-      {
-        id: 'step-navigation-item-state-icon-error',
-        title: '状態アイコン（エラー）',
-        description: 'state="error" のときに表示されます。',
-        category: 'states',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[data-state-icon="error"]' },
-      },
-      {
-        id: 'step-navigation-item-state-label-editing',
-        title: '状態ラベル（編集中）',
-        description: 'state="editing" のときに表示されます（label-editing で文言を変更できます）。',
-        category: 'states',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[data-state-label="editing"]' },
-      },
-      {
-        id: 'step-navigation-item-state-label-error',
-        title: '状態ラベル（エラー）',
-        description: 'state="error" のときに表示されます（label-error で文言を変更できます）。',
-        category: 'states',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[data-state-label="error"]' },
-      },
-    ],
-  };
 
   #header: HTMLElement | null = null;
   #titleSlot: HTMLSlotElement | null = null;

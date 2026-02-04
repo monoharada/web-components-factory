@@ -18,7 +18,6 @@ import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
 import { applyStandardFormElementBehavior } from '../../utils/behaviors.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * Switchコンポーネント
@@ -60,90 +59,6 @@ export class DadsSwitch extends TypographyFormComponent {
    * アクセシビリティ注釈メタデータ
    * a11y-annotateコンポーネントが参照
    */
-  static a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'トグルスイッチ（ON/OFF切り替え）',
-    categories: {
-      semantics: [
-        'role="switch" でスイッチとして認識される',
-        'aria-checked で現在の状態を通知',
-        'input[type="checkbox"] をベースに実装',
-      ],
-      keyboard: [
-        'Tabキーでフォーカス移動',
-        'Enter / Space でトグル',
-        '← (ArrowLeft) で OFF',
-        '→ (ArrowRight) で ON',
-      ],
-      zoom: [
-        'rem/em 相対単位でサイズ変更可能',
-        'タッチターゲット最小44×44px確保（sm以上）',
-        'サイズバリエーション: sm(40×20) / md(48×24) / lg(56×28)',
-      ],
-      states: [
-        'checked: ON/OFF状態',
-        'disabled: 無効状態（操作不可）',
-        'aria-checked: スクリーンリーダーへの状態通知',
-        ':focus-visible でフォーカスリング表示',
-      ],
-      labels: [
-        'slot="label-left" / slot="label-right" でラベル提供',
-        'ラベルクリックでもトグル可能',
-        'name属性でフォーム送信時の識別子を設定',
-      ],
-      motion: [
-        'ノブ移動: 150ms ease トランジション',
-        'prefers-reduced-motion: reduce でアニメーション無効化',
-      ],
-    },
-    callouts: [
-      {
-        id: 'checkbox',
-        title: 'スイッチ入力（role="switch"）',
-        label: 'role="switch"',
-        description: 'aria-checked で状態を伝達、キーボード操作を受け付ける',
-        category: 'semantics',
-        target: { scope: 'shadow', selector: '[part="checkbox"]' },
-        placement: 'top-left',
-      },
-      {
-        id: 'track',
-        title: 'トラック（背景）',
-        label: 'part="track"',
-        description: 'スイッチの視覚的なトラック部分',
-        category: 'states',
-        target: { scope: 'shadow', selector: '[part="track"]' },
-        placement: 'top-right',
-      },
-      {
-        id: 'knob',
-        title: 'ノブ（つまみ）',
-        label: 'part="knob"',
-        description: 'ON/OFF状態を視覚的に示す移動要素',
-        category: 'states',
-        target: { scope: 'shadow', selector: '[part="knob"]' },
-        placement: 'bottom-right',
-      },
-      {
-        id: 'label-left',
-        title: '左ラベル（OFF状態）',
-        label: 'slot="label-left"',
-        description: 'クリックでトグル可能',
-        category: 'labels',
-        target: { scope: 'shadow', selector: '[part="label-left"]' },
-        placement: 'top-left',
-      },
-      {
-        id: 'label-right',
-        title: '右ラベル（ON状態）',
-        label: 'slot="label-right"',
-        description: 'クリックでトグル可能',
-        category: 'labels',
-        target: { scope: 'shadow', selector: '[part="label-right"]' },
-        placement: 'top-right',
-      },
-    ],
-  };
 
   // Private fields
   #checkbox: HTMLInputElement | null = null;

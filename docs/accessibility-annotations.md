@@ -15,6 +15,13 @@ Design System コンポーネントをドキュメンテーション用途で「
 </a11y-annotate>
 ```
 
+### devオンデマンド
+
+注釈は **dev専用** で表示します。以下のどちらかで有効化してください。
+
+- URL: `?a11y=1` を付与
+- `localStorage.setItem('dads:a11y', '1')`
+
 ### オプション
 
 - `mode="both" | "panel" | "callouts"`（デフォルト: `both`）
@@ -39,10 +46,15 @@ Design System コンポーネントをドキュメンテーション用途で「
 
 ## コンポーネント側の注釈メタデータ
 
-各コンポーネントのクラスに `static a11yAnnotations` を追加して、注釈の内容（文章/コールアウト）を持たせます。
+注釈メタデータは **CEMに集約**します。
 
+- 定義ファイル: `docs/knowledge/a11y-annotations.json`
+- CEM出力: `custom-elements.json` の `custom.a11yAnnotations`
 - 型: `A11yAnnotations`（`packages/utils/a11y-annotations.ts`）
-- 例: `packages/components/accordion/accordion.ts` に実装済み
+
+更新手順:
+1. `docs/knowledge/a11y-annotations.json` を更新
+2. `npm run cem:analyze` を実行して `custom-elements.json` に反映
 
 ### コールアウトターゲットの指定
 

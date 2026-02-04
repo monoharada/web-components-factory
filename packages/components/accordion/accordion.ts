@@ -20,7 +20,6 @@ import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { accordionItemStyles } from '../../styles/accordion-styles.js';
 import { withReset } from '../../styles/reset-css.js';
 import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * アコーディオンコンテナコンポーネント
@@ -39,77 +38,6 @@ import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 export class DadsAccordionDetails extends TypographyWebComponent {
   #allowMultiple = false;
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'コンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'アコーディオンは、子要素（dads-accordion-item-details）をグルーピングして表示します。',
-        '各アイテムは内部で <details>/<summary> を使い、ネイティブの展開/折りたたみセマンティクスを活用します。',
-        'コンテナ内部は role="group" として関連コンテンツのまとまりを示します。',
-      ],
-      keyboard: [
-        '各アイテムの見出し（summary）はTabでフォーカスでき、Enter/Spaceで展開/折りたたみできます（ネイティブ挙動）。',
-        '本文内の「先頭に戻る」リンクはTabでフォーカスでき、クリックで見出しへスクロール+フォーカスします。',
-      ],
-      zoom: [
-        'テキストの折り返し・行間を前提に、ズーム/文字サイズ変更でも情報が欠けないようにします。',
-        '横幅が狭い場合も、パネル/本文が縦に積まれて操作できることを想定します（ドキュメント側のレイアウトも含む）。',
-      ],
-      states: [
-        '単一展開モードでは、あるアイテムが開くと他の開いているアイテムが閉じます（allow-multiple未指定時）。',
-        'アイテムは expanded/disabled 属性で状態を制御できます（内部の <details> に反映）。',
-        '見出し左のアイコン（矢印）は、ロービジョン等で画面拡大して閲覧するユーザーに対して、開閉状況を視覚的に示す補助情報です。',
-      ],
-      labels: [
-        '見出しスロット（slot="header"）のテキストが、アイテムの主要ラベルとして機能します。',
-        '「先頭に戻る」リンクは見出しテキストを含む説明的なリンクテキストを持ちます。',
-      ],
-      motion: [
-        'animation 属性でアニメーション方針を切り替えできます。',
-        'respect-motion-preference を指定した場合、prefers-reduced-motion: reduce では animation="none" を優先します。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'item-header',
-        title: '見出し（header）',
-        label: 'slot="header"',
-        description: '展開/折りたたみの操作起点（内部は <summary>）。',
-        category: 'keyboard',
-        placement: 'top-right',
-        target: { hostSelector: 'dads-accordion-item-details', selector: '[slot="header"]' },
-      },
-      {
-        id: 'state-icon',
-        title: '開閉状態アイコン',
-        label: 'aria-hidden="true"',
-        description:
-          '見出しの文頭に配置し、開閉状態を視覚的に示します（スクリーンリーダー向けには aria-hidden）。',
-        category: 'states',
-        placement: 'top-left',
-        target: { hostSelector: 'dads-accordion-item-details', scope: 'shadow', selector: '[part="icon"]' },
-      },
-      {
-        id: 'item-content',
-        title: '本文（content）',
-        label: 'slot="content"',
-        description: '展開時に表示されるコンテンツ領域。',
-        category: 'semantics',
-        placement: 'bottom-right',
-        target: { hostSelector: 'dads-accordion-item-details', selector: '[slot="content"]' },
-      },
-      {
-        id: 'return-link',
-        title: '先頭に戻るリンク',
-        label: '「[見出し]」の先頭に戻る',
-        description: '本文内から見出しへ戻る補助リンク。見出しテキストを含む説明的なリンクテキスト。',
-        category: 'labels',
-        placement: 'bottom-right',
-        target: { hostSelector: 'dads-accordion-item-details', scope: 'shadow', selector: '[part="return-button"]' },
-      },
-    ],
-  };
 
   static definition = {
     name: 'dads-accordion-details',
@@ -216,78 +144,6 @@ export class DadsAccordionDetails extends TypographyWebComponent {
 export class DadsAccordionItemDetails extends TypographyWebComponent {
   #details?: HTMLDetailsElement;
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'コンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        '内部は <details>/<summary> で実装し、ネイティブの状態（open）とセマンティクスを利用します。',
-        '見出し左（文頭）にアイコンを置き、開閉状態を視覚的に補助します（スクリーンリーダー向けには aria-hidden）。',
-        '見出しスロット（slot="header"）が、summary内に配置されます。',
-        '本文スロット（slot="content"）が、detailsのコンテンツ領域に配置されます。',
-      ],
-      keyboard: [
-        'summary はTabでフォーカス可能です。',
-        'Enter/Spaceで展開/折りたたみができます（ネイティブ挙動）。',
-        '本文内の「先頭に戻る」リンクで、見出しへスクロール+フォーカスできます。',
-      ],
-      zoom: [
-        'ヘッダー/本文はテキストの折り返しを前提に設計します。',
-        'ズーム時にボタンやフォーカスリングが欠けない余白を確保します。',
-      ],
-      states: [
-        'expanded 属性で初期展開状態を制御できます（内部 <details>.open に反映）。',
-        'disabled 属性で無効状態を制御できます（内部 <details> の disabled に反映）。',
-        '開閉状態は、矢印アイコンの向き/回転でも視覚的に示します（ロービジョン等での認知補助）。',
-      ],
-      labels: [
-        '見出しのラベルは slot="header" のテキストで決まります。',
-        '戻るリンクは「[見出し]」の先頭に戻る形式で、説明的なリンクテキストを持ちます。',
-      ],
-      motion: [
-        '戻る操作は smooth scroll を行います（必要に応じて reduced motion を考慮します）。',
-        'コンテナ側の animation 設定により、展開/折りたたみの見え方が変わります。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'icon',
-        title: '開閉状態アイコン',
-        label: 'aria-hidden="true"',
-        description: '開閉状態を視覚的に示すアイコン（aria-hidden）。',
-        category: 'states',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="icon"]' },
-      },
-      {
-        id: 'summary',
-        title: 'summary（見出し）',
-        label: '<summary>',
-        description: '展開/折りたたみの操作起点。',
-        category: 'keyboard',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="summary"]' },
-      },
-      {
-        id: 'content',
-        title: 'content（本文領域）',
-        label: '<div part="content">',
-        description: '展開時に表示されるコンテンツ領域。',
-        category: 'semantics',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="content"]' },
-      },
-      {
-        id: 'return-link',
-        title: '先頭に戻るリンク',
-        label: '「[見出し]」の先頭に戻る',
-        description: '本文内から見出しへ戻る補助リンク。見出しテキストを含む説明的なリンクテキスト。',
-        category: 'labels',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="return-button"]' },
-      },
-    ],
-  };
 
   static definition = {
     name: 'dads-accordion-item-details',

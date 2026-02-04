@@ -13,13 +13,11 @@ import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.
 import { searchBoxTokens } from './search-box-tokens.js';
 import { searchBoxStyles } from './search-box-styles.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
-import type { A11yAnnotations, A11yElementRef } from '../../utils/a11y-annotations.js';
 import { ensurePrefixedElement, getPrefixFromLocalName } from '../../utils/custom-element-name.js';
 import { defineButton } from '../button/button-define.js';
 
 type SearchDetail = { query: string; scope: string };
 
-const shadowTarget = (selector: string): A11yElementRef => ({ scope: 'shadow', selector });
 
 /**
  * SearchBoxコンポーネント
@@ -98,62 +96,6 @@ export class DadsSearchBox extends TypographyFormComponent {
 
   static readonly version = '1.0.0';
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: '検索ボックスコンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        '内部に検索語入力（<input type="search">）と（任意の）検索対象（<select>）を持つ複合コンポーネントです。',
-        'Form-Associated Custom Elementとしてネイティブフォームに参加し、FormData（query + scope）を送信します。',
-        'searchランドマークが必要な場合は、ホストに role="search" を付与するか、利用側の <form> に role="search" を付与してください。同一ページに複数ある場合は aria-label / aria-labelledby で命名してください。',
-        'forced-colors: active ではアイコン色を CanvasText にフォールバックします。',
-      ],
-      labels: [
-        '検索語inputは label（視覚的に非表示）でラベル付けします。',
-        '画面上にラベルがある場合は aria-labelledby を指定して外部ラベルを参照できます。',
-        'aria-label / aria-describedby は検索語inputへ転写されます。',
-      ],
-      keyboard: [
-        'Tabで scope（存在する場合）→ query → button の順にフォーカス移動します。',
-        'Enter またはボタン操作で dads-search が発火し、フォーム内では requestSubmit() で送信します。',
-      ],
-      zoom: [
-        'デフォルトで最小44x44px相当のタップターゲット（高さ）を確保します（--dads-search-box-control-min-height で上書き可能）。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'scope',
-        title: '検索対象（任意）',
-        label: '<select>',
-        description: 'Light DOMの option/optgroup を複製して内部selectに表示します。',
-        category: 'semantics',
-        placement: 'top-left',
-        target: shadowTarget('[part="scope-select"]'),
-      },
-      {
-        id: 'query',
-        title: '検索語',
-        label: '<input type="search">',
-        description: '検索語を入力します。label/aria-* によりアクセシブルネームが提供されます。',
-        category: 'labels',
-        placement: 'top-left',
-        target: shadowTarget('[part="input"]'),
-      },
-      {
-        id: 'button',
-        title: '検索ボタン',
-        label: '<dads-button>',
-        description: 'クリックまたはEnterで検索実行（dads-search）を行います。',
-        category: 'keyboard',
-        placement: 'top-right',
-        target: shadowTarget('[part="button"]'),
-      },
-    ],
-  };
 
   // DOM refs
   #scopeLabel: HTMLElement | null = null;

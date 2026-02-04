@@ -3,7 +3,7 @@
  * デジタル庁デザインシステム Menu List Box
  */
 
-import { html, PropertyAttr, BooleanAttr } from '../../core/web-components.js';
+import { html, PropertyAttr, BooleanAttr, ElementSelection } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { applySpacingTokens } from '../../styles/spacing-tokens.js';
@@ -11,7 +11,6 @@ import { withReset } from '../../styles/reset-css.js';
 import { menuListBoxTokens } from './menu-list-box-tokens.js';
 import { menuListBoxStyles } from './menu-list-box-styles.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 type MenuListBoxSize = 'sm' | 'md';
 type MenuListBoxVariant = 'text' | 'outlined' | 'filled';
@@ -116,52 +115,6 @@ export class DadsMenuListBox extends TypographyWebComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'メニューリストボックス仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'opener は aria-haspopup="menu" を持ち、開閉状態は aria-expanded で表します。',
-        'menu は role="menu"、各項目は role="menuitem" を付与してキーボード操作を提供します。',
-      ],
-      keyboard: [
-        'opener: ArrowDown/ArrowUp で開いて先頭/末尾へフォーカス移動。',
-        'menu: ArrowUp/ArrowDown/Home/End で roving tabindex により移動。',
-        'Escape で閉じて opener にフォーカス復帰。',
-      ],
-      zoom: [
-        'サイズ: sm / md。',
-        'ポップアップは max-height と overflow-y でスクロール可能です。',
-      ],
-      states: [
-        'open 属性 / opener の aria-expanded で開閉状態を表します。',
-      ],
-      labels: [
-        'label 属性、または slot="label" で opener のラベルを提供します。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'opener',
-        title: 'opener',
-        description:
-          'aria-haspopup="menu" と aria-expanded を持つトリガーボタン。開閉状態をスクリーンリーダーに伝えます。',
-        target: { scope: 'shadow', selector: '[part="opener"]' },
-        placement: 'top-left' as const,
-      },
-      {
-        id: 'popup',
-        title: 'popup',
-        description:
-          'role="menu" を持つポップアップ。項目はキーボードナビゲーション（矢印キー / Home / End）で移動できます。',
-        target: { scope: 'shadow', selector: '[part="popup"]' },
-        placement: 'bottom-right' as const,
-      },
-    ],
-  };
 
   declare size: MenuListBoxSize;
   declare variant: MenuListBoxVariant;
@@ -320,24 +273,30 @@ export class DadsMenuListBox extends TypographyWebComponent {
   #handleMenuKeydown(event: KeyboardEvent): void {
     if (!this.#isOpen()) return;
 
-    switch (event.key) {
-      case 'ArrowDown':
-        event.preventDefault();
-        this.focusNextMenuItem();
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        this.focusPreviousMenuItem();
-        break;
-      case 'Home':
-        event.preventDefault();
-        this.focusFirstMenuItem();
-        break;
-      case 'End':
-        event.preventDefault();
-        this.focusLastMenuItem();
-        break;
+    const entries = this.#getMenuItemEntries();
+    if (entries.length === 0) return;
+
+    const currentIndex = this.#currentIndex(entries);
+    const currentTarget = entries[currentIndex >= 0 ? currentIndex : 0].target;
+    const targets = entries.map((entry) => entry.target);
+    const targetIndex = new Map<Element, number>();
+    for (let i = 0; i < targets.length; i += 1) {
+      targetIndex.set(targets[i], i);
     }
+
+    const selection = new ElementSelection(targets, currentTarget);
+    selection.processKey(
+      event,
+      (target) => {
+        const index = targetIndex.get(target);
+        if (index === undefined) return;
+        this.#focusItem(index);
+      },
+      {
+        wrap: true,
+        preventDefaultHomeEnd: true,
+      },
+    );
   }
 
   #handleClickOutside(event: MouseEvent): void {

@@ -8,219 +8,127 @@ import { css, AdoptableStyles } from '../core/web-components.js';
  * kiso.cssのWeb Components向けサブセット
  * Shadow DOM内でのみ適用され、既存サイトのスタイルには影響しない
  */
-export const kisoResetStyles = css`
-/*! kiso.css v1.2.2 | MIT License | https://github.com/tak-dcxi/kiso.css */
-
-/* ======================================================
-//  MARK: Universal
-// ====================================================== */
-*,
+export const kisoResetStyles = css`*,
 ::before,
 ::after {
-  /*
-  * Includes 'padding' and 'border' in the element's specified dimensions.
-  * It is highly recommended to set 'box-sizing: border-box;' by default, as it makes styling much easier, especially when specifying 'width: 100%;'.
-  */
+
   box-sizing: border-box;
 }
-
-/* ======================================================
-//  MARK: Document and Body Elements
-// ====================================================== */
 :where(:root,:host) {
-  /* In Safari, if 'font-family' is not specified, a serif font is applied by default, so 'sans-serif' is set as the default here. */
+
   font-family: sans-serif;
-
-  /*
-  * For accessibility, it is recommended to set the 'line-height' to at least 1.5 times the text size within paragraphs.
-  * @see https://waic.jp/translations/WCAG21/#visual-presentation
-  */
   line-height: 1.5;
-
-  /* Remove space when punctuation marks are adjacent, and also remove leading spaces in a line. */
   text-spacing-trim: trim-start;
-
-  /* Improves readability by inserting a small space between Japanese and alphanumeric characters. */
   text-autospace: normal;
-
-  /* Prevents misreading by applying strict line-breaking rules. */
   line-break: strict;
-
-  /* Wraps English words mid-word. Specifying 'anywhere' also prevents content from overflowing in layouts like 'flex' or 'grid'. */
   overflow-wrap: anywhere;
-
-  /*
-  * Mobile browsers have an algorithm that automatically adjusts font sizes to prevent text from becoming too small.
-  * This controls the auto-adjustment feature to prevent unwanted resizing.
-  */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-
-  /* Prevents layout shift caused by the appearance or disappearance of the scrollbar. */
   scrollbar-gutter: stable;
-
-  /* Suppresses the tap highlight on iOS. */
   -webkit-tap-highlight-color: transparent;
 }
 
 :where(body) {
-  /*
-  * When creating a sticky footer, a minimum height is often required.
-  * Setting the 'min-block-size' to the dynamic viewport height ensures enough space for the footer.
-  */
-  min-block-size: 100dvb;
 
-  /* The 'margin' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset here. */
+  min-block-size: 100dvb;
   margin: unset;
 }
-
-/* ======================================================
-// MARK: Sections
-// ------------------------------------------------------ */
 :where(h1, h2, h3, h4, h5, h6) {
-  /* Prevents the last line of text from ending with a single word, which can look awkward (known as an orphan). */
+
   text-wrap: pretty;
 }
 
 :where(h1) {
-  /*
-  * Adjusts user agent (UA) styles for 'h1' elements within sectioning content.
-  * This addresses DevTools warnings that appear when 'h1' elements nested within sectioning content lack 'font-size' and 'margin' properties.
-  * @see https://html.spec.whatwg.org/#sections-and-headings
-  */
+
   margin-block: 0.67em;
   font-size: 2em;
 }
 
 :where(h2, h3, h4, h5, h6) {
-  /* The 'margin-block' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */
+
   margin-block: unset;
 }
 
 :where(search) {
-  /*
-  * The '<search>' element is supported from Safari 17.
-  * This prevents it from being displayed as an inline element in unsupported environments.
-  */
+
   display: block flow;
 }
-
-/* ======================================================
-//  MARK: Grouping content
-// ====================================================== */
 :where(p, blockquote, figure, pre, address, ul, ol, dl, menu) {
-  /* The 'margin-block' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */
+
   margin-block: unset;
 }
 
 :where(blockquote, figure) {
-  /* The 'margin-inline' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */
+
   margin-inline: unset;
 }
 
 :where(p:lang(en)) {
-  /*
-  * In English, a single word on the last line is called a "widow" or "orphan" and is considered something to avoid as it makes the text harder to read.
-  * Therefore, when lang="en", this prevents the last line from ending with a single word.
-  */
+
   text-wrap: pretty;
 }
 
 :where(address:lang(ja)) {
-  /* Italic style is not common in Japanese, so the 'font-style' is reset. */
+
   font-style: unset;
 }
 
 :where(ul, ol, menu) {
-  /* The 'padding-inline-start' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */
-  padding-inline-start: unset;
 
-  /*
-  * In Safari, using 'list-style: none' prevents screen readers from announcing lists.
-  * 'list-style-type: ""' is used to hide markers without affecting accessibility.
-  * @see https://matuzo.at/blog/2023/removing-list-styles-without-affecting-semantics
-  */
+  padding-inline-start: unset;
   list-style-type: "";
 }
 
 :where(dt) {
-  /* It is common to display '<dt>' elements in bold, so 'font-weight: bolder;' is set by default. */
+
   font-weight: bolder;
 }
 
 :where(dd) {
-  /* The 'margin-inline-start' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset. */
+
   margin-inline-start: unset;
 }
 
 :where(pre) {
-  /*
-  * Since 'text-spacing-trim' can affect spacing in '<pre>' elements even with its initial value, the final rendering may depend on the user's font settings.
-  * To ensure consistent alignment, 'space-all' is explicitly specified and inheritance is prevented.
-  */
-  text-spacing-trim: space-all;
 
-  /* Set to 'no-autospace' as it can cause misalignment with monospaced fonts. */
+  text-spacing-trim: space-all;
   text-autospace: no-autospace;
 }
-
-/* ======================================================
-//  MARK: Text-level semantics
-// ====================================================== */
 :where(em:lang(ja)) {
-  /* In Japanese, emphasis is commonly represented by bold text, so 'font-weight: bolder;' is set by default. */
+
   font-weight: bolder;
 }
 
 :where(:is(i, cite, em, dfn, var):lang(ja)) {
-  /* Italic style is not common in Japanese, so the 'font-style' is reset. */
+
   font-style: unset;
 }
 
 :where(code, kbd, samp) {
-  /*
-  * Set a monospace font family referencing Tailwind.
-  * @see https://tailwindcss.com/docs/font-family
-  */
+
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
-
-  /* Font feature settings can have adverse effects on monospaced fonts, so their values are explicitly set to 'initial' to prevent inheritance. */
   font-feature-settings: initial;
   font-variation-settings: initial;
-
-  /* Resets the 'font-size' specified in the UA stylesheet to allow inheritance. */
   font-size: unset;
-
-  /*
-  * Disables font ligatures for programming fonts (like Fira Code)
-  * to prevent character combinations like '=>' from being rendered as a single symbol (e.g., '⇒').
-  */
   font-variant-ligatures: none;
 }
 
 :where(abbr[title]) {
-  /*
-  * The '<abbr>' element with the 'title' attribute isn't helpful regarding accessibility because support is inconsistent, and it's only accessible to some users.
-  * This rule shows a dotted underline on abbreviations in all browsers (there's a bug in Safari) and changes the cursor.
-  * @see https://adrianroselli.com/2024/01/using-abbr-element-with-title-attribute.html
-  */
+
   text-decoration-line: underline;
   text-decoration-style: dotted;
   cursor: help;
 }
 
 :where(time) {
-  /* Set to 'no-autospace' because date notations in typography do not include spaces. */
+
   text-autospace: no-autospace;
 }
 
 @media (forced-colors: active) {
   :where(mark) {
-    /*
-    * In forced-colors mode, the color of the mark element may not change, which can be problematic. Use system colors in forced-colors mode.
-    * @see https://adrianroselli.com/2017/12/tweaking-text-level-styles.html#MarkWHCM
-    */
+
     background-color: Highlight;
     color: HighlightText;
   }
@@ -228,85 +136,47 @@ export const kisoResetStyles = css`
 
 @media print {
   :where(mark) {
-    /*
-    * Not all printers support color, and users might print in grayscale.
-    * It's worth adding a non-disruptive style that scales with the text, as an alternative to relying only on background color.
-    * @see https://adrianroselli.com/2017/12/tweaking-text-level-styles.html#MarkPrint
-    */
+
     border-width: 1px;
     border-style: dotted;
   }
 }
-
-/* ======================================================
-//  MARK: Links
-// ====================================================== */
 :where(a:any-link) {
-  /* The default 'color' from the UA stylesheet is rarely used as is, so it's reset to allow inheritance. */
+
   color: unset;
-
-  /*
-  * While link underlines can be useful, they are often obstructive.
-  * They are disabled by default.
-  * If needed, restore them using 'text-decoration-line: revert;'.
-  */
   text-decoration-line: unset;
-
-  /* Set the underline thickness to the font's default thickness. */
   text-decoration-thickness: from-font;
 }
-
-/* ======================================================
-//  MARK: Embedded content
-// ====================================================== */
 :where(img, svg, picture, video, canvas, model, audio, iframe, embed, object) {
-  /* Automatically adjust block size based on content. */
+
   block-size: auto;
-
-  /* Prevents overflow by setting the maximum width to '100%'. */
   max-inline-size: 100%;
-
-  /* Prevents extra space from appearing at the bottom of the element. */
   vertical-align: bottom;
 }
 
 :where(iframe) {
-  /* The 'border' specified in the UA stylesheet is often unnecessary, so it is reset. */
+
   border: unset;
 }
-
-/* ======================================================
-//  MARK: Tabular data
-// ====================================================== */
 :where(table) {
-  /* Collapse borders for a more refined table design. */
+
   border-collapse: collapse;
 }
 
 :where(caption, th) {
-  /* The 'text-align' specified in the UA stylesheet is often unnecessary, so it is reset. */
+
   text-align: unset;
 }
 
 :where(caption) {
-  /* Prevents the last line of text from ending with a single word, which can look awkward (known as an orphan). */
+
   text-wrap: pretty;
 }
-
-/* ======================================================
-//  MARK: Forms
-// ====================================================== */
 :where(button, input, select, textarea),
 ::file-selector-button {
-  /*
-  * These elements are often styled with a border, so a '1px' border is applied by default for consistency.
-  * This ensures readability even for unstyled elements.
-  * When resetting, it's recommended to use 'border-color: transparent' instead of 'border: none' to account for forced color modes.
-  */
+
   border-width: 1px;
   border-style: solid;
-
-  /* These styles specified in the UA stylesheet are often unnecessary, so they are reset to allow for inheritance. */
   border-color: unset;
   border-radius: unset;
   color: unset;
@@ -316,23 +186,23 @@ export const kisoResetStyles = css`
 }
 
 :where(input:is([type="radio" i], [type="checkbox" i])) {
-  /* The 'margin' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset here. */
+
   margin: unset;
 }
 
 :where(input[type="file" i]) {
-  /* The 'border' is often unnecessary, so it is reset here. */
+
   border: unset;
 }
 
 :where(input[type="search" i]) {
-  /* Remove the rounded corners of search inputs on macOS and normalize the background color. */
+
   -webkit-appearance: textfield;
 }
 
 @supports (-webkit-touch-callout: none) {
   :where(input[type="search" i]) {
-    /* normalize the background color on iOS. */
+
     background-color: Canvas;
   }
 }
@@ -345,19 +215,13 @@ export const kisoResetStyles = css`
         [type="number" i]
       ):not(:placeholder-shown)
   ) {
-  /*
-  * Certain input types need to maintain left alignment even in right-to-left (RTL) languages.
-  * However, this only applies when the value is not empty, as the placeholder should be right-aligned.
-  * @see https://rtlstyling.com/posts/rtl-styling#form-inputs
-  */
+
   direction: ltr;
 }
 
 :where(textarea) {
-  /* The 'margin-block' specified in Firefox's UA stylesheet is often unnecessary, so it is reset. */
-  margin-block: unset;
 
-  /* Allows vertical resizing for '<textarea>' elements. */
+  margin-block: unset;
   resize: block;
 }
 
@@ -366,7 +230,7 @@ export const kisoResetStyles = css`
     textarea,
     [contenteditable]
   ) {
-  /* Set to 'no-autospace' because 'text-autospace' can insert spaces during input, potentially causing erratic behavior. */
+
   text-autospace: no-autospace;
 }
 
@@ -375,7 +239,7 @@ export const kisoResetStyles = css`
     input:is([type="button" i], [type="submit" i], [type="reset" i])
   ),
 ::file-selector-button {
-  /* The 'background-color' specified in the User Agent (UA) stylesheet is often unnecessary, so it is reset here. */
+
   background-color: unset;
 }
 
@@ -387,11 +251,7 @@ export const kisoResetStyles = css`
     [role="option" i]
   ),
 ::file-selector-button {
-  /*
-  * On iOS, double-tapping a button can cause zooming, which harms usability.
-  * 'touch-action: manipulation' is specified to disable zooming on double-tap.
-  * Third-party plugins such as Swiper sometimes use div elements with these roles as buttons, since double-tapping a div can still trigger zooming, it's advisable to specify this property.
-  */
+
   touch-action: manipulation;
 }
 
@@ -411,123 +271,88 @@ export const kisoResetStyles = css`
     [role="option" i]
   ),
 :where(:enabled)::file-selector-button {
-  /* Indicate clickable elements with a pointer cursor. */
+
   cursor: pointer;
 }
 
 :where(fieldset) {
-  /*
-  * Prevent fieldset from causing overflow.
-  * Reset the default 'min-inline-size: min-content' to prevent children from stretching fieldset.
-  * @see https://github.com/twbs/bootstrap/issues/12359
-  */
-  min-inline-size: 0;
 
-  /* The following default styles are often unnecessary, so they are reset. */
+  min-inline-size: 0;
   margin-inline: unset;
   padding: unset;
   border: unset;
 }
 
 :where(legend) {
-  /* The default 'padding-inline' is often unnecessary, so it is reset. */
+
   padding-inline: unset;
 }
 
 :where(progress) {
-  /* Resets the vertical alignment of the '<progress>' element to its initial value. */
+
   vertical-align: unset;
 }
 
 ::placeholder {
-  /* Standardize the opacity of placeholder text (it may be set lower by default in Firefox). */
+
   opacity: unset;
 }
-
-/* ======================================================
-//  MARK: Interactive elements
-// ====================================================== */
 :where(summary) {
-  /* The default triangle marker is often unnecessary, so it is disabled. */
-  list-style-type: "";
 
-  /* Changing the cursor to a pointer clarifies the clickability of the element. */
+  list-style-type: "";
   cursor: pointer;
 }
 
 :where(summary)::-webkit-details-marker {
-  /* In Safari versions earlier than 18.4 (released in April 2025), a triangle icon is displayed using the -webkit-details-marker CSS pseudo-element, so it should be removed. */
+
   display: none;
 }
 
 :where(dialog, [popover]) {
-  /*
-  * When these fixed-position elements are scrolled, preventing scroll chaining on the underlying page and bounce effects on mobile improves usability.
-  * Disabling block-direction scroll chaining is recommended.
-  */
-  overscroll-behavior-block: contain;
 
-  /* The following default styles are often unnecessary, so they are reset. */
+  overscroll-behavior-block: contain;
   padding: unset;
   border: unset;
 }
 
 :where(dialog:not([open], [popover]), [popover]:not(:popover-open)) {
-  /*
-  * These elements can be easily displayed by explicitly setting their 'display' property.
-  * To prevent them from appearing when not in an open state, they are forcibly hidden.
-  */
+
   display: none !important;
 }
 
 :where(dialog) {
-  /*
-  * The max width and height of a '<dialog>' element are typically determined by the design.
-  * These UA stylesheet properties are reset as they can be obstructive, especially when trying to make the dialog full-screen.
-  */
+
   max-inline-size: unset;
   max-block-size: unset;
 }
 
 :where(dialog)::backdrop {
-  /* Normalize the background color of the '::backdrop' element. */
+
   background-color: oklch(0% 0 0deg / 30%);
 }
 
 :where([popover]) {
-  /*
-  * While the UA stylesheet's 'margin' for '<dialog>' elements is useful for centering with 'inset: 0',
-  * but 'margin' for 'popover' elements is often obstructive as they frequently use Anchor Positioning.
-  */
+
   margin: unset;
 }
-
-/* ======================================================
-//  MARK: Focus Styles
-// ====================================================== */
 :where(:focus-visible) {
-  /* Add space between the content and the focus outline. */
+
   outline-offset: 3px;
 }
 
 [tabindex="-1"]:focus {
-  /* Prevent programmatically focused elements from displaying an outline unless they are naturally focusable. */
+
   outline: none !important;
 }
-
-/* ======================================================
-//  MARK: Misc
-// ====================================================== */
 :where(:disabled, [aria-disabled="true" i]) {
-  /* Display the default cursor on disabled elements to reflect their non-interactive state. */
+
   cursor: default;
 }
 
 [hidden]:not([hidden="until-found" i]) {
-  /* Ensure that elements intended to be hidden are not displayed, improving clarity and layout control. */
+
   display: none !important;
-}
-`
+}`
 
 /**
  * 最小限のリセット（より軽量なオプション）

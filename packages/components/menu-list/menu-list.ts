@@ -11,7 +11,6 @@ import { withReset } from '../../styles/reset-css.js';
 import { menuListTokens } from './menu-list-tokens.js';
 import { menuListStyles, menuListItemStyles } from './menu-list-styles.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * メニューリストコンポーネント
@@ -37,31 +36,6 @@ export class DadsMenuList extends TypographyWebComponent {
     attributes: [PropertyAttr('indentation')],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'メニューリスト仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'メニュー項目の集合を表します。ナビゲーション用途の場合は、上位で<nav>等の適切なランドマークを付与します。',
-      ],
-      keyboard: [
-        '各メニュー項目（dads-menu-list-item）の内部要素がTabでフォーカス可能です。',
-      ],
-      zoom: [
-        '相対単位（rem）ベースのトークンを利用し、ズーム時もレイアウトが破綻しないことを想定します。',
-      ],
-      states: [
-        'インデントは CSS 変数 --menu-list-indentation（数値）で制御します。',
-      ],
-      labels: [
-        '必要に応じて aria-label / aria-labelledby を利用してください。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [],
-  };
 
   declare indentation: string | null;
 
@@ -185,33 +159,6 @@ export class DadsMenuListItem extends TypographyWebComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'メニューリスト項目仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        '内部は <button> または <a>（href指定時）で実装します。',
-        'current属性で現在地（選択中）状態を視覚的に示します。',
-      ],
-      keyboard: [
-        'Tabでフォーカス可能です。',
-      ],
-      zoom: [
-        'サイズ: regular / small。',
-      ],
-      states: [
-        'variant="standard|box" で表示タイプを切り替えます。',
-        'expanded属性で end-icon を回転します（展開状態の表現）。',
-      ],
-      labels: [
-        '末尾アイコン（tail-icon）は新規タブで開く等の補助情報に利用できます。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [],
-  };
 
   declare variant: MenuListVariant;
   declare size: MenuListSize;

@@ -8,7 +8,7 @@ import { css } from '../../core/web-components.js';
  * Web フォント読み込み（互換用）
  *
  * Constructable Stylesheets（CSSStyleSheet.replaceSync）では `@import` が使えないため、
- * ここでは no-op にする（フォント自体は `ensureFontsInitialized()` が <link> 注入で読み込む）。
+ * ここでは no-op にする（Web Fontは読み込まない）。
  */
 const fontImportText = '';
 
@@ -19,8 +19,8 @@ const fontImportText = '';
 const typographyPrimitiveTokensText = `
   :host {
     /* Font Families - デジタル庁標準 */
-    --font-family-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", Arial, sans-serif;
-    --font-family-mono: "Noto Sans Mono", "SF Mono", Monaco, monospace;
+    --font-family-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-family-mono: "Noto Sans Mono", monospace;
     
     /* Font Sizes - 最重要3サイズのみ（Shape Up: Must Have） */
     --font-size-16: 1rem;      /* 標準本文 */

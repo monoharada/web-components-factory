@@ -4,7 +4,7 @@
  * @version 1.0.0
  */
 
-import { html, BooleanAttr, PropertyAttr } from '../../core/web-components.js';
+import { html, BooleanAttr, PropertyAttr, ElementSelection } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { applySpacingTokens } from '../../styles/spacing-tokens.js';
@@ -18,7 +18,6 @@ import {
 import { VALIDATION_RULES, getValidationMessage } from '../../utils/validation.js';
 import { radioStyles } from './radio-styles.js';
 import { radioTokens } from './radio-tokens.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * Radioコンポーネント
@@ -59,87 +58,6 @@ export class DadsRadio extends TypographyFormComponent {
 
   static readonly version = '1.0.0';
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'ラジオボタン（単一選択）',
-    categories: {
-      semantics: [
-        '内部にネイティブの <input type="radio"> を持ち、ラジオボタンのセマンティクスをブラウザ標準で提供します。',
-        'Shadow DOMの制約により、同一nameのグルーピングはコンポーネント側で補完します（選択時に他の同一nameのradioを解除）。',
-        'Form-Associated Custom Elementとしてフォームに参加し、checked時のみ値を送信します（ネイティブradioの挙動に準拠）。',
-      ],
-      keyboard: [
-        'Tabでフォーカス可能です（グループ内のタブストップはcheckedを優先し、未選択時は先頭を採用します）。',
-        'Spaceで選択できます（ネイティブ挙動）。',
-        'Arrowキー（↑↓←→）で同一nameグループ内を移動して選択できます（Shadow DOMで失われる挙動を補完）。',
-        'Home / End でグループの先頭 / 末尾へ移動して選択できます。',
-      ],
-      zoom: [
-        'サイズ（sm/md/lg）に応じて操作面の大きさを調整し、拡大時も視認性・操作性を確保します。',
-      ],
-      states: [
-        'checked / disabled をサポートします。',
-        'error属性で aria-invalid="true" を付与し、エラー状態（赤系）を表示します（DADS HTML版に準拠）。',
-      ],
-      labels: [
-        'label属性は視覚ラベルとして表示され、同時にネイティブlabel関連付けによりアクセシブルネームに寄与します。',
-        'ラベルを表示しない場合は aria-label または aria-labelledby の指定を推奨します。',
-        '補足説明は aria-describedby（外部要素ID）で関連付けできます。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'base',
-        title: 'ラベルラッパー',
-        label: '<label>',
-        description: 'クリック領域を含め、ラジオボタンとラベルを一体として提供します。',
-        category: 'semantics',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="base"]' },
-      },
-      {
-        id: 'native-input',
-        title: 'ネイティブラジオ',
-        label: 'input[type="radio"]',
-        description:
-          'キーボード操作（Space）や状態（checked/disabled）の基本挙動はブラウザ標準に委譲します。',
-        category: 'keyboard',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="input"]' },
-      },
-      {
-        id: 'label-text',
-        title: 'ラベルテキスト',
-        label: 'label',
-        description: 'label属性で表示されるテキスト。空の場合はaria-label等で補完します。',
-        category: 'labels',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="label"]' },
-      },
-      {
-        id: 'requirement',
-        title: '要否ラベル',
-        label: '要否ラベル',
-        description: 'required属性が設定されている場合に「※必須」と表示されます。必須入力であることを視覚的に伝えます。',
-        category: 'labels',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="requirement"]' },
-      },
-      {
-        id: 'error-text',
-        title: 'エラーメッセージ',
-        label: 'error-text',
-        description:
-          'バリデーションエラー時に表示されるメッセージです。aria-describedbyで入力要素と関連付けられ、スクリーンリーダーがエラー内容を読み上げます。',
-        category: 'states',
-        placement: 'bottom-left',
-        target: { scope: 'shadow', selector: '[part="error-text"]' },
-      },
-    ],
-  };
 
   #base: HTMLLabelElement | null = null;
   #input: HTMLInputElement | null = null;
@@ -677,50 +595,21 @@ export class DadsRadio extends TypographyFormComponent {
     }
     if (enabled.length <= 1) return;
 
-    const currentIndex = enabled.indexOf(this);
-    if (currentIndex < 0) return;
-
-    const dir = getComputedStyle(this).direction;
-    const isRtl = dir === 'rtl';
-
-    const prevKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
-    const nextKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
-
-    let target: DadsRadio | null = null;
-
-    switch (e.key) {
-      case 'ArrowUp':
-      case prevKey: {
-        e.preventDefault();
-        const idx = (currentIndex - 1 + enabled.length) % enabled.length;
-        target = enabled[idx];
-        break;
-      }
-      case 'ArrowDown':
-      case nextKey: {
-        e.preventDefault();
-        const idx = (currentIndex + 1) % enabled.length;
-        target = enabled[idx];
-        break;
-      }
-      case 'Home':
-        e.preventDefault();
-        target = enabled[0];
-        break;
-      case 'End':
-        e.preventDefault();
-        target = enabled[enabled.length - 1];
-        break;
-      default:
-        break;
-    }
-
-    if (!target || target === this) return;
-    if (!target.#input) return;
-
-    // Shadow DOMで失われるネイティブ挙動を補完: 矢印操作で選択＋フォーカス
-    target.#input.click();
-    target.focus();
+    const selection = new ElementSelection(enabled, this);
+    selection.processKey(
+      e,
+      (target) => {
+        if (target === this || !target.#input) return;
+        // Shadow DOMで失われるネイティブ挙動を補完: 矢印操作で選択＋フォーカス
+        target.#input.click();
+        target.focus();
+      },
+      {
+        wrap: true,
+        allowAlternateAxis: true,
+        preventDefaultHomeEnd: true,
+      },
+    );
   };
 
   // ============================================================

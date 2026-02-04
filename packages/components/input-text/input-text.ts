@@ -36,7 +36,6 @@ import {
   setupSlotChangeListeners,
   type FormValidationSetup,
 } from '../../utils/form-component-helpers.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * InputTextコンポーネント
@@ -168,87 +167,6 @@ export class DadsInputText extends TypographyFormComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'インプットテキストコンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'ネイティブの <input> 要素を使用し、テキスト入力のセマンティクスを提供します。',
-        '<label> 要素でラベルとinputを関連付けます。',
-        'Form-Associated Custom Elementとしてネイティブフォームに参加します。',
-      ],
-      keyboard: [
-        'Tabでフォーカス可能です。',
-        '標準のテキスト入力キーボード操作が利用できます。',
-      ],
-      zoom: [
-        'サイズバリエーション: sm / md / lg。',
-        '幅バリエーション: short(8ch) / medium(16ch) / full(100%) / カスタム値。',
-        'テキストは相対単位で定義され、拡大時も操作可能です。',
-      ],
-      states: [
-        'required属性で「※必須」ラベル表示、aria-required="true"設定。',
-        'readonly属性で「読み取り専用」ラベル表示、編集不可。',
-        'disabled属性で無効状態。',
-        'error属性でエラー状態（aria-invalid="true"、赤枠表示）。',
-      ],
-      labels: [
-        'label属性またはスロットでラベルを提供します。',
-        'support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。',
-        'error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'label',
-        title: 'ラベル要素',
-        label: '<label>',
-        description: 'ネイティブのlabel要素でinputと関連付けます。クリックでフォーカス移動。',
-        category: 'semantics',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="label"]' },
-      },
-      {
-        id: 'requirement',
-        title: '要否ラベル',
-        label: '※必須/読み取り専用',
-        description: 'required/readonly属性に応じて表示されるラベルです。',
-        category: 'labels',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="requirement"]' },
-      },
-      {
-        id: 'support-text',
-        title: 'サポートテキスト',
-        label: 'support-text',
-        description: '入力のヒントや補足説明を提供します。aria-describedbyで関連付け。',
-        category: 'labels',
-        placement: 'bottom-left',
-        target: { scope: 'shadow', selector: '[part="support-text"]' },
-      },
-      {
-        id: 'input',
-        title: 'ネイティブ入力要素',
-        label: '<input>',
-        description: 'type属性（text/email/tel）に応じた入力を受け付けます。',
-        category: 'keyboard',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="input"]' },
-      },
-      {
-        id: 'error-text',
-        title: 'エラーメッセージ',
-        label: 'error-text',
-        description: 'バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。',
-        category: 'states',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="error-text"]' },
-      },
-    ],
-  };
 
   connectedCallback() {
     super.connectedCallback();

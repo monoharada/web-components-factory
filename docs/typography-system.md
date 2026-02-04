@@ -2,7 +2,7 @@
 
 ## 🎯 概要
 
-すべてのWeb ComponentsでNoto Sans JPを自動的に適用し、フォント読み込み時のチラツキ（FOUT/FOIT）を最小限に抑えるシステム。
+すべてのWeb ComponentsでNoto Sans JPを優先適用し、Web Fontは読み込まない運用とする。
 
 ## 🏗️ アーキテクチャ
 
@@ -11,9 +11,8 @@
 ```
 1. グローバルフォント管理層
    └── ensureFontsInitialized()
-       └── Google Fonts CDN読み込み
-       └── Font Loading API監視
-       └── bodyクラス管理
+       └── Web Fontは読み込まない
+       └── bodyクラス管理（初期化のみ）
 
 2. ベースコンポーネント層
    └── TypographyWebComponent
@@ -29,23 +28,16 @@
 
 ## 📋 実装詳細
 
-### フォント読み込み戦略
+### フォント運用方針
 
-1. **プリコネクション**
-   - fonts.googleapis.com
-   - fonts.gstatic.com
-   - 接続の高速化
+1. **Web Fontは読み込まない**
+   - ローカルフォントのみ
+   - ネットワーク依存を排除
 
-2. **font-display: swap**
-   - FOITを防ぐ
-   - 即座にフォールバック表示
-   - 読み込み後に切り替え
-
-3. **読み込み状態管理**
+2. **読み込み状態管理**
    ```javascript
-   body.fonts-loading  // 読み込み中
-   body.fonts-loaded   // 読み込み完了
-   body.fonts-error    // エラー時
+   body.fonts-loaded   // 初期化完了
+   body.fonts-error    // エラー時（基本は発生しない）
    ```
 
 ### チラツキ対策
@@ -63,7 +55,7 @@
 }
 ```
 
-文字間隔の微調整により、フォント切り替え時の視覚的な変化を最小化。
+文字間隔の微調整はローカルフォント前提の見た目調整。
 
 ## 🔧 使用方法
 
@@ -112,7 +104,7 @@ export class MyComponent extends WebComponent {
   import { initializeGlobalFonts } from '@core/typography';
   
   // アプリケーション起動時に一度だけ実行
-  initializeGlobalFonts();
+  initializeGlobalFonts(); // Web Fontは読み込まない
 </script>
 ```
 
@@ -123,7 +115,7 @@ export class MyComponent extends WebComponent {
 ```css
 :host {
   /* フォントファミリー変更 */
-  --base-font-family: "Custom Font", "Noto Sans JP", sans-serif;
+  --base-font-family: "Custom Font", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
   
   /* モノスペースフォント */
   --mono-font-family: "Fira Code", monospace;
@@ -171,15 +163,15 @@ document.fonts.ready.then(() => {
   console.log('All fonts loaded');
 });
 
-// 個別フォント確認
-document.fonts.check('16px "Noto Sans JP"'); // true/false
+  // 個別フォント確認（ブラウザサポートに依存）
+  document.fonts.check('16px "Noto Sans JP"'); // true/false
 ```
 
 ### トラブルシューティング
 
 | 問題 | 原因 | 解決策 |
 |------|------|--------|
-| フォントが適用されない | CSP制限 | CSPにfonts.googleapis.com追加 |
+| フォントが適用されない | ローカル未インストール | フォールバックフォントを確認 |
 | チラツキが目立つ | ネットワーク遅延 | セルフホスティング検討 |
 | フォールバックのまま | 読み込みエラー | fonts-errorクラス確認 |
 
@@ -193,12 +185,12 @@ document.fonts.check('16px "Noto Sans JP"'); // true/false
 ## 🚀 今後の改善案
 
 ### Phase 1（現在）
-- ✅ Google Fonts CDN
-- ✅ 基本的なチラツキ対策
+- ✅ Web Fontなし運用
+- ✅ 基本的な見た目調整
 - ✅ 自動適用システム
 
 ### Phase 2（次期）
-- セルフホスティング
+- セルフホスティング（必要なら検討）
 - サブセット化（使用文字のみ）
 - Service Worker キャッシュ
 

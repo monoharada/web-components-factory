@@ -249,7 +249,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 
 ## コンポーネント別の適用状況
 
-| コンポーネント | a11yAnnotations | トグル | レイアウトタイプ | 中央揃え (grid) | padding | 備考 |
+| コンポーネント | a11yAnnotations（CEM） | トグル | レイアウトタイプ | 中央揃え (grid) | padding | 備考 |
 |---------------|-----------------|--------|-----------------|----------------|---------|------|
 | checkbox | ✅ 既存 | ✅ | パターンA | ✅ | ✅ 60px | fieldset内で表示、width: 520px |
 | fieldset | ✅ 既存 | ✅ | パターンA | ✅ | ✅ 60px | checkbox含む、width: 500px |
@@ -267,7 +267,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 ### コンポーネントファイル（.ts）
 
 - [ ] `import type { A11yAnnotations } from '../../utils/a11y-annotations.js';` を追加
-- [ ] `static readonly a11yAnnotations: A11yAnnotations` を定義
+- [ ] `docs/knowledge/a11y-annotations.json` に注釈を定義
 - [ ] `categories` を6項目定義（semantics, keyboard, zoom, states, labels, motion）
 - [ ] `callouts` でShadow DOM内の要素を指定（`scope: 'shadow', selector: '[part="..."]'`）
 - [ ] 型チェックが通ることを確認（`npm run type-check`）

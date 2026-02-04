@@ -28,7 +28,6 @@ import {
   setupSlotChangeListeners,
   type FormValidationSetup,
 } from '../../utils/form-component-helpers.js';
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * Selectコンポーネント
@@ -150,96 +149,6 @@ export class DadsSelect extends TypographyFormComponent {
     ],
   };
 
-  static readonly a11yAnnotations: A11yAnnotations = {
-    version: 1,
-    summary: 'セレクトボックスコンポーネント仕様（アクセシビリティ注釈）',
-    categories: {
-      semantics: [
-        'ネイティブの <select> 要素を使用し、単一選択のセマンティクスを提供します。',
-        '<label> 要素でラベルとselectを関連付けます。',
-        'Form-Associated Custom Elementとしてネイティブフォームに参加します。',
-      ],
-      keyboard: [
-        'Tabでフォーカス可能です。',
-        '標準のセレクトボックスのキーボード操作が利用できます（aria-disabled時はTab以外抑止）。',
-      ],
-      zoom: [
-        'サイズバリエーション: sm / md / lg。',
-        'size属性の追加トークンで幅指定が可能（例: size="md 256", size="md full", size="md fit-content"）。',
-        'テキストは相対単位で定義され、拡大時も操作可能です。',
-      ],
-      states: [
-        'required属性で「※必須」ラベル表示、aria-required="true"設定。',
-        'disabled属性で無効状態（ネイティブdisabled）。',
-        'aria-disabled属性で無効相当状態（Tab移動は許容、操作は抑止）。',
-        'error属性でエラー状態（aria-invalid="true"、赤枠表示）。',
-      ],
-      labels: [
-        'label属性またはスロットでラベルを提供します。',
-        'support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。',
-        'error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。',
-      ],
-      motion: [
-        'アニメーションは使用しません。',
-      ],
-    },
-    callouts: [
-      {
-        id: 'label',
-        title: 'ラベル要素',
-        label: '<label>',
-        description: 'ネイティブのlabel要素でselectと関連付けます。クリックでフォーカス移動。',
-        category: 'semantics',
-        placement: 'top-left',
-        target: { scope: 'shadow', selector: '[part="label"]' },
-      },
-      {
-        id: 'requirement',
-        title: '要否ラベル',
-        label: '※必須',
-        description: 'required属性に応じて表示されるラベルです。',
-        category: 'labels',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="requirement"]' },
-      },
-      {
-        id: 'support-text',
-        title: 'サポートテキスト',
-        label: 'support-text',
-        description: '入力のヒントや補足説明を提供します。aria-describedbyで関連付け。',
-        category: 'labels',
-        placement: 'bottom-left',
-        target: { scope: 'shadow', selector: '[part="support-text"]' },
-      },
-      {
-        id: 'select',
-        title: 'ネイティブ選択要素',
-        label: '<select>',
-        description: '選択肢（option/optgroup）はLight DOMから複製して内部selectに設定します。',
-        category: 'keyboard',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="select"]' },
-      },
-      {
-        id: 'chevron',
-        title: 'シェブロンアイコン',
-        label: 'chevron',
-        description: '選択肢であることを示す装飾アイコンです（aria-hidden）。',
-        category: 'semantics',
-        placement: 'top-right',
-        target: { scope: 'shadow', selector: '[part="select-chevron"]' },
-      },
-      {
-        id: 'error-text',
-        title: 'エラーメッセージ',
-        label: 'error-text',
-        description: 'バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。',
-        category: 'states',
-        placement: 'bottom-right',
-        target: { scope: 'shadow', selector: '[part="error-text"]' },
-      },
-    ],
-  };
 
   connectedCallback(): void {
     super.connectedCallback();

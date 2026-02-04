@@ -14,7 +14,6 @@ import { ensurePrefixedElement, getPrefixFromLocalName } from '../../utils/custo
 import { parseIsoDate } from '../../utils/iso-date.js';
 import { defineButton } from '../button/index.js';
 
-import type { A11yAnnotations } from '../../utils/a11y-annotations.js';
 
 /**
  * DadsCalendarコンポーネントの公開API（型安全な参照用）
@@ -112,7 +111,6 @@ function formatJapaneseDate(date: Date): string {
  */
 export class DadsCalendar extends TypographyWebComponent {
   static readonly version = '1.0.0';
-  static a11yAnnotations?: A11yAnnotations;
 
   // DOM refs
   #yearSelect: HTMLSelectElement | null = null;

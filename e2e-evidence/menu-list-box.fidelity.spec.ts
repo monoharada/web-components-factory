@@ -49,7 +49,7 @@ async function waitForComponentReady(page: import('@playwright/test').Page): Pro
 
   await page.waitForFunction(() => customElements.get('dads-menu-list-box') !== undefined);
 
-  // Fonts load async (google fonts). We accept flakiness, but capture state.
+  // Fonts are local-only; we still capture state to avoid flakes.
   await page
     .waitForFunction(() => {
       const cls = document.body.classList;

@@ -6,7 +6,6 @@ import {
   waitForComponent,
 } from '../../../test/utils/test-helpers';
 
-import type { A11yAnnotations } from '../../utils/a11y-annotations';
 
 describe('DadsAnnotate', () => {
   afterEach(() => {
@@ -38,28 +37,18 @@ describe('DadsAnnotate', () => {
     defineDefaultAnnotate();
 
     class TestTarget extends HTMLElement {
-      static a11yAnnotations: A11yAnnotations = {
+      static a11yAnnotations = {
         version: 1,
         summary: 'テスト用',
-        categories: {
-          semantics: ['semantics'],
-          keyboard: ['keyboard'],
-          zoom: ['zoom'],
-          states: ['states'],
-          labels: ['labels'],
-          motion: ['motion'],
-        },
+        categories: {},
         callouts: [
           {
-            id: 'anchor',
-            title: 'アンカー',
-            description: 'aria-label を観測',
-            category: 'labels',
-            target: { selector: '#anchor' },
-            placement: 'top-right',
+            id: 'callout-1',
+            title: 'ラベル',
+            target: { selector: '#anchor', scope: 'light' },
           },
         ],
-      };
+      } as const;
     }
     const tagName = 'test-a11y-target';
     if (!customElements.get(tagName)) {
@@ -100,23 +89,19 @@ describe('DadsAnnotate', () => {
     const { defineDefaultAnnotate } = await import('./annotate-define');
     defineDefaultAnnotate();
 
+    const manyCallouts = Array.from({ length: 10 }, (_, i) => ({
+      id: `callout-${i + 1}`,
+      title: `Anchor ${i + 1}`,
+      target: { selector: `#anchor-${i + 1}`, scope: 'light' },
+    })) as const;
+
     class TestTargetManyCallouts extends HTMLElement {
-      static a11yAnnotations: A11yAnnotations = {
+      static a11yAnnotations = {
         version: 1,
-        summary: '10件以上',
-        categories: { labels: ['labels'] },
-        callouts: Array.from({ length: 10 }, (_, i) => {
-          const n = i + 1;
-          return {
-            id: `anchor-${n}`,
-            title: `項目${n}`,
-            description: `説明${n}`,
-            category: 'labels',
-            target: { selector: `#anchor-${n}` },
-            placement: 'top-right',
-          };
-        }),
-      };
+        summary: '大量コールアウト',
+        categories: {},
+        callouts: manyCallouts,
+      } as const;
     }
     const tagName = 'test-a11y-target-many-callouts';
     if (!customElements.get(tagName)) {
@@ -154,21 +139,19 @@ describe('DadsAnnotate', () => {
     defineDefaultAnnotate();
 
     class TestTargetSvg extends HTMLElement {
-      static a11yAnnotations: A11yAnnotations = {
+      static a11yAnnotations = {
         version: 1,
-        summary: 'SVGターゲット',
-        categories: { labels: ['labels'] },
+        summary: 'SVGテスト',
+        categories: {},
         callouts: [
           {
-            id: 'icon',
+            id: 'svg-callout',
             title: 'アイコン',
             label: 'アイコン',
-            category: 'labels',
-            target: { selector: '#icon' },
-            placement: 'top-right',
+            target: { selector: '#icon', scope: 'light' },
           },
         ],
-      };
+      } as const;
     }
 
     const tagName = 'test-a11y-target-svg';
