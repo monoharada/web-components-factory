@@ -24,4 +24,16 @@ describe('rewriteModuleSpecifiers', () => {
 
     expect(output).toContain("import mod from './mod.js?min=1#hash';");
   });
+
+  test('handles minified import/export without spaces', () => {
+    const input = [
+      'import{a}from\"./a.js\";',
+      'export*from\"/b.js\";',
+    ].join('\\n');
+
+    const output = rewriteModuleSpecifiers(input);
+
+    expect(output).toContain('import{a}from\"./a.js?min=1\";');
+    expect(output).toContain('export*from\"/b.js?min=1\";');
+  });
 });

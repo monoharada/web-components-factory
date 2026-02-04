@@ -3,6 +3,7 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const ts = require('typescript');
+const { staticPageAssets } = require('./build-pages-assets.cjs');
 
 const projectRoot = process.cwd();
 const outDir = path.join(projectRoot, 'dist-pages');
@@ -173,10 +174,9 @@ async function main() {
 
   await cleanOutDir();
   await buildIndexHtml();
-  await copyFile(
-    path.join(projectRoot, 'averageCase.runtime.js'),
-    path.join(outDir, 'averageCase.runtime.js')
-  );
+  for (const asset of staticPageAssets) {
+    await copyFile(path.join(projectRoot, asset), path.join(outDir, asset));
+  }
 
   await transpileFile(path.join(projectRoot, 'packages/config.ts'), path.join(outDir, 'config.js'));
 

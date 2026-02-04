@@ -22,8 +22,13 @@ export function rewriteModuleSpecifiers(code: string): string {
     shouldRewriteSpecifier(specifier) ? appendMinQuery(specifier) : specifier;
 
   let result = code.replace(
-    /\b(import|export)\s+(?:[^'"]*?\sfrom\s*)?["']([^"']+)["']/g,
+    /\b(import|export)\s*(?:\*\s*)?(?:[^'"]*?from\s*)?["']([^"']+)["']/g,
     (match, _keyword, specifier) => match.replace(specifier, rewrite(specifier))
+  );
+
+  result = result.replace(
+    /export\*\s*from\s*["']([^"']+)["']/g,
+    (match, specifier) => match.replace(specifier, rewrite(specifier))
   );
 
   result = result.replace(
