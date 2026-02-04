@@ -79,6 +79,7 @@ npm run claude:verify
 - テストカバレッジ
 - アクセシビリティ
 - パフォーマンス
+- averageCase の計測仕様（`lazy=0` で全件即時、`min=1` は全モジュール、IO はラッパー監視）を満たすか確認
 - キーボードナビゲーション実装は `ElementSelection` を優先（不使用時は理由を明記）
 
 ### 4. 振り返りとナレッジ管理 (Reflection)

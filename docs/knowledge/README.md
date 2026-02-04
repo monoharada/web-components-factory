@@ -9,6 +9,7 @@ knowledge/
 ├── README.md                    # このファイル
 ├── learnings.md                 # 学習内容の記録
 ├── patterns.md                  # 発見したパターン
+├── performance-average-case.md  # averageCase の計測/運用ルール
 ├── improvements.md              # 改善提案
 ├── decisions.md                 # 技術的決定事項
 └── accessibility-guidelines.md  # アクセシビリティガイドライン (DADS準拠)
