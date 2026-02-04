@@ -134,11 +134,8 @@ function getRequestFlags(
   req: Request
 ): { shouldMinify: boolean; shouldCompress: boolean; compressParam: string | null } {
   const compressParam = url.searchParams.get('compress');
-  const cookieCompress = getCookieValue(req, 'dads_compress');
-  const shouldMinify = url.searchParams.get('min') === '1' || hasRefererQuery(req, 'min');
-  const shouldCompress =
-    compressParam === '1' ||
-    (compressParam !== '0' && (hasRefererQuery(req, 'compress') || cookieCompress === '1'));
+  const shouldMinify = url.searchParams.get('min') === '1';
+  const shouldCompress = compressParam === '1';
   return { shouldMinify, shouldCompress, compressParam };
 }
 
@@ -289,8 +286,7 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 
     if (ext === 'html') {
-      const cookieValue = compressParam === '1' ? '1' : '0';
-      headers["Set-Cookie"] = `dads_compress=${cookieValue}; Path=/; SameSite=Lax`;
+      headers["Cache-Control"] = "no-cache, must-revalidate";
     }
 
     if (shouldCompress && isCompressibleContentType(contentType)) {

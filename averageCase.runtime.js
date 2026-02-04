@@ -37,6 +37,7 @@ const params = new URLSearchParams(window.location.search);
     }
 
     const lazySections = [
+      { selector: 'dads-date-picker', key: 'datePicker' },
       { selector: 'dads-calendar', key: 'calendar' },
       { selector: '.avg-table', key: 'table' },
       { selector: '.avg-footer', key: 'pageNav' },
@@ -62,4 +63,6 @@ const params = new URLSearchParams(window.location.search);
       for (const section of lazySections) {
         loadLazy(section.key);
       }
+    } else {
+      await Promise.all(Object.values(lazySpecifiers).flat().map((specifier) => import(specifier)));
     }
