@@ -3,6 +3,7 @@ import { join } from "path";
 import { transformSync } from "esbuild";
 import { brotliCompressSync, gzipSync, constants } from "node:zlib";
 import { CORE_DEPENDENCIES, generateLinkHeader } from "./packages/core/preloader";
+import { rewriteModuleSpecifiers } from "./server-utils";
 
 // ===== パフォーマンス最適化: キャッシュ設定 =====
 
@@ -194,6 +195,7 @@ async function handleRequest(req: Request): Promise<Response> {
               minifyJsTranspiler,
               minifyTranspileCache
             );
+            const rewritten = rewriteModuleSpecifiers(content);
             const cacheControl = path.startsWith('/@components/') || path.startsWith('/components/') || path.startsWith('/src/')
               ? "no-cache, must-revalidate"
               : "public, max-age=31536000, immutable";
@@ -203,7 +205,7 @@ async function handleRequest(req: Request): Promise<Response> {
               "Cache-Control": cacheControl,
               "ETag": mtime.toString(16)
             };
-            return respondWithOptionalCompression(content, headers, req, shouldCompress);
+            return respondWithOptionalCompression(rewritten, headers, req, shouldCompress);
           } catch (error) {
             const err = error as Error;
             console.error(`Transpilation error for ${filePath}:`, error);
@@ -229,6 +231,7 @@ async function handleRequest(req: Request): Promise<Response> {
             shouldMinify ? minifyTsTranspiler : globalTranspiler,
             shouldMinify ? minifyTranspileCache : transpileCache
           );
+          const rewritten = shouldMinify ? rewriteModuleSpecifiers(content) : content;
           const shouldNoCache =
             path.startsWith('/@components/') || path.startsWith('/components/') || path.startsWith('/src/');
           const cacheControl = shouldNoCache
@@ -240,7 +243,7 @@ async function handleRequest(req: Request): Promise<Response> {
             "Cache-Control": cacheControl,
             "ETag": mtime.toString(16)
           };
-          return respondWithOptionalCompression(content, headers, req, shouldCompress);
+          return respondWithOptionalCompression(rewritten, headers, req, shouldCompress);
         } catch (error) {
           const err = error as Error;
           console.error(`Transpilation error for ${filePath}:`, error);

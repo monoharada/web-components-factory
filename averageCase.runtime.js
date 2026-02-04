@@ -1,3 +1,5 @@
+import { resolveMinifiedSpecifier } from './averageCase.runtime-utils.js';
+
 const params = new URLSearchParams(window.location.search);
 const disableLazy = params.get('lazy') === '0';
 const shouldMinify = params.get('min') === '1';
@@ -12,17 +14,13 @@ const importMap = (() => {
   }
 })();
 
-const appendQuery = (url, key, value) => {
-  const joiner = url.includes('?') ? '&' : '?';
-  return `${url}${joiner}${key}=${value}`;
-};
-
 const resolveSpecifier = (specifier) => {
-  if (!shouldMinify) return specifier;
-  const mapped = importMap[specifier];
-  if (!mapped) return specifier;
-  if (mapped.includes('min=1')) return mapped;
-  return appendQuery(mapped, 'min', '1');
+  return resolveMinifiedSpecifier({
+    specifier,
+    importMap,
+    shouldMinify,
+    baseURI: document.baseURI,
+  });
 };
 
     const eagerImports = [
