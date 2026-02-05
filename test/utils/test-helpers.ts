@@ -71,12 +71,9 @@ export function cleanupTestElement(element: HTMLElement): void {
  */
 export async function waitForComponent(tagName: string): Promise<void> {
   await customElements.whenDefined(tagName);
-  // requestAnimationFrameで2フレーム待機して初期化を確実に完了させる
-  await new Promise(resolve => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(resolve);
-    });
-  });
+  // fake timers 下でも待機がハングしないよう microtask で初期化を待つ
+  await Promise.resolve();
+  await Promise.resolve();
 }
 
 /**
@@ -84,11 +81,8 @@ export async function waitForComponent(tagName: string): Promise<void> {
  */
 export async function waitForCustomElement(element: HTMLElement): Promise<void> {
   if ('connectedCallback' in element && typeof element.connectedCallback === 'function') {
-    await new Promise(resolve => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(resolve);
-      });
-    });
+    await Promise.resolve();
+    await Promise.resolve();
   }
 }
 

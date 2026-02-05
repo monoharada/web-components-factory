@@ -61,10 +61,20 @@ async function getCemTagNames(): Promise<Set<string>> {
 async function getComponentDirectories(): Promise<string[]> {
   const componentsDir = path.resolve(process.cwd(), 'packages/components');
   const entries = await fs.readdir(componentsDir, { withFileTypes: true });
-  return entries
+  const dirs = entries
     .filter((e) => e.isDirectory())
     .filter((e) => !e.name.startsWith('_'))  // exclude _internal, __fixtures__, etc.
     .map((e) => e.name);
+
+  // 実装ファイルを持つディレクトリのみを coverage 対象とする
+  const result: string[] = [];
+  for (const dir of dirs) {
+    const dirPath = path.resolve(componentsDir, dir);
+    const files = await fs.readdir(dirPath);
+    const hasImplementation = files.some((name) => name.endsWith('.ts') || name.endsWith('.tsx'));
+    if (hasImplementation) result.push(dir);
+  }
+  return result;
 }
 
 describe('CEM component coverage', () => {

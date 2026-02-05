@@ -22089,14 +22089,6 @@
           "members": [
             {
               "kind": "field",
-              "name": "#fragment",
-              "privacy": "private",
-              "type": {
-                "text": "DocumentFragment | undefined"
-              }
-            },
-            {
-              "kind": "field",
               "name": "#html",
               "privacy": "private",
               "type": {
