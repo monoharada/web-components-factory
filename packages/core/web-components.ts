@@ -241,6 +241,58 @@ export function TransferringPropertyAttr(
   };
 }
 
+export function DelegatingPropertyAttr(
+  targetSelector: string,
+  property: string,
+  attribute = property,
+  remove = false,
+): AttrBehavior & { property: string } {
+  const cb = `${property}Changed`;
+  const lock = new WeakSet<HTMLElement>();
+  const resolveTarget = (i: HTMLElement): HTMLElement | null => {
+    const sr = i.shadowRoot;
+    if (sr) {
+      const el = sr.querySelector(targetSelector);
+      if (el instanceof HTMLElement) return el;
+    }
+    const el = i.querySelector(targetSelector);
+    if (el instanceof HTMLElement) return el;
+    return null;
+  };
+  return {
+    property,
+    attribute,
+    getValue: (i: HTMLElement) => {
+      const val = i.getAttribute(attribute);
+      if (val != null || !remove) return val;
+      const trg = resolveTarget(i);
+      return trg ? trg.getAttribute(attribute) : null;
+    },
+    setValue: (el: HTMLElement, v: unknown) => {
+      if (v == null) el.removeAttribute(attribute);
+      else el.setAttribute(attribute, String(v));
+    },
+    tryTransfer(i) {
+      if (lock.has(i)) return false;
+      const trg = resolveTarget(i);
+      if (!trg) return false;
+      lock.add(i);
+      try {
+        const val = i.getAttribute(attribute);
+        if (remove && val != null) i.removeAttribute(attribute);
+        if (val == null) trg.removeAttribute(attribute);
+        else trg.setAttribute(attribute, val);
+        return true;
+      } finally {
+        lock.delete(i);
+      }
+    },
+    attributeChangedCallback(i, o, n) {
+      if (this.tryTransfer?.(i)) invokeCallback(i, cb, o, n);
+    },
+  };
+}
+
 export function NonReflectingPropertyAttr(
   property: string,
   attribute = property,
@@ -470,6 +522,12 @@ export class WebComponent extends HTMLElement {
     requestAnimationFrame(() => this.dispatchEvent(e));
   }
 
+  transferDelegatedAttributes(): void {
+    for (const a of this.definition.attributes) {
+      a.tryTransfer?.(this);
+    }
+  }
+
   static define(cfg?: WebComponentConfig): typeof WebComponent {
     // 静的コンテキストで 'this' を使うのを避けるため、明示的に型アサーションを行う
     // biome-ignore lint/complexity/noThisInStatic: <explanation>
@@ -544,6 +602,8 @@ export class WebComponent extends HTMLElement {
     this.#ensureView();
     Attribute.restoreInitialValues(this as Dict);
     if (this.#view && !this.#dsd) this.#view.appendTo(this.#sr ?? this);
+    // template 反映後に delegated 属性転送を確実に適用する
+    this.transferDelegatedAttributes();
     this.#init = true;
   }
 
