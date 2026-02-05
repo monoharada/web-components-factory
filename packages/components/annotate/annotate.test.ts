@@ -6,6 +6,35 @@ import {
   waitForComponent,
 } from '../../../test/utils/test-helpers';
 
+function domRect(left: number, top: number, width: number, height: number): DOMRect {
+  return ({ left, top, width, height, right: left + width, bottom: top + height } as DOMRect);
+}
+
+function stubBcr(el: Element, rect: DOMRect) {
+  (el as unknown as { getBoundingClientRect: () => DOMRect }).getBoundingClientRect = () => rect;
+}
+
+function stubClientRects(el: HTMLElement) {
+  (el as unknown as { getClientRects: () => DOMRect[] }).getClientRects = () => [el.getBoundingClientRect()];
+}
+
+function stubTagBcr(tagEl: HTMLElement, width = 80, height = 40) {
+  tagEl.getBoundingClientRect = () => {
+    const leftRaw = Number.parseFloat(tagEl.style.left || '0') || 0;
+    const topRaw = Number.parseFloat(tagEl.style.top || '0') || 0;
+    const transform = tagEl.style.transform || '';
+
+    const dx = transform.includes('-100%') ? -width : 0;
+    const dy = transform.includes('-50%') ? -height / 2 : 0;
+    const left = leftRaw + dx;
+    const top = topRaw + dy;
+    return domRect(left, top, width, height);
+  };
+}
+
+function waitForDoubleRaf(): Promise<void> {
+  return new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
 
 describe('DadsAnnotate', () => {
   afterEach(() => {
@@ -176,5 +205,435 @@ describe('DadsAnnotate', () => {
 
     const tag = el.querySelector('.callout-tag code');
     expect(tag?.textContent).toBe('アイコン');
+  });
+
+  it('ラベルが左右レーンに整列し、線が要素の中心寄りまで伸びる', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetLineEndpoint extends HTMLElement {
+      static a11yAnnotations = {
+        version: 1,
+        summary: 'Line endpoint',
+        categories: {},
+        callouts: [
+          {
+            id: 'anchor',
+            title: 'Anchor',
+            placement: 'top-left',
+            target: { selector: '#anchor', scope: 'light' },
+          },
+        ],
+      } as const;
+    }
+    const tagName = 'test-a11y-target-line-endpoint';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetLineEndpoint);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate
+        style="
+          --a11y-annotate-callout-line-inset: 2px;
+          --a11y-annotate-callout-line-inset-ratio: 0.35;
+          --a11y-annotate-callout-anchor-corner-margin: 10px;
+          --a11y-annotate-callout-lane-offset: 24px;
+        "
+      >
+        <${tagName}>
+          <div id="anchor">x</div>
+        </${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const layer = el.querySelector('[part="callout-layer"]') as HTMLElement | null;
+    const tagEl = el.querySelector('.callout-tag') as HTMLElement | null;
+    const line = el.querySelector('.callout-line') as SVGPathElement | null;
+    const anchor = el.querySelector('#anchor') as HTMLElement | null;
+
+    expect(layer).toBeTruthy();
+    expect(tagEl).toBeTruthy();
+    expect(line).toBeTruthy();
+    expect(anchor).toBeTruthy();
+
+    // Happy DOM ではレイアウトが 0 になりがちなので、geometry を固定する。
+    // tagRect は style/transform を考慮したスタブにする（レーン整列の検証用）。
+    stubBcr(layer!, domRect(0, 0, 400, 400));
+    stubTagBcr(tagEl!);
+    stubBcr(anchor!, domRect(200, 200, 100, 40));
+    stubClientRects(anchor!);
+
+    // layout を再計算させる
+    window.dispatchEvent(new Event('resize'));
+    await waitForDoubleRaf();
+
+    await waitFor(() => {
+      expect(line!.getAttribute('d')).toBeTruthy();
+    });
+    const d = line!.getAttribute('d') ?? '';
+
+    // placement: top-left なので left lane へドックする（transform でY中心揃え）。
+    expect(tagEl!.style.left).toBe('176px');
+    expect(tagEl!.style.transform).toBe('translate(-100%, -50%)');
+
+    // 境界交点(x=200)から、minDim(40)*ratio(0.35)=14px 内側へ入る (x=214) ことを期待する。
+    expect(d).toContain('L 214 220');
+  });
+
+  it('右寄せコンポーネントではラベルが左レーンに固定される', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetRightAligned extends HTMLElement {
+      static a11yAnnotations = {
+        version: 1,
+        summary: 'Right aligned',
+        categories: {},
+        callouts: [
+          {
+            id: 'a',
+            title: 'A',
+            placement: 'top-right',
+            target: { selector: '#a', scope: 'light' },
+          },
+          {
+            id: 'b',
+            title: 'B',
+            placement: 'bottom-right',
+            target: { selector: '#b', scope: 'light' },
+          },
+        ],
+      } as const;
+    }
+    const tagName = 'test-a11y-target-right-aligned';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetRightAligned);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate style="--a11y-annotate-callout-lane-offset: 24px;">
+        <${tagName}>
+          <div id="a">x</div>
+          <div id="b">y</div>
+        </${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const layer = el.querySelector('[part="callout-layer"]') as HTMLElement | null;
+    const previewInner = el.querySelector('[part="preview-inner"]') as HTMLElement | null;
+    const target = el.querySelector(tagName) as HTMLElement | null;
+
+    const tagA = el.querySelector('[data-callout-id="a"] .callout-tag') as HTMLElement | null;
+    const tagB = el.querySelector('[data-callout-id="b"] .callout-tag') as HTMLElement | null;
+    const anchorA = el.querySelector('#a') as HTMLElement | null;
+    const anchorB = el.querySelector('#b') as HTMLElement | null;
+
+    expect(layer).toBeTruthy();
+    expect(previewInner).toBeTruthy();
+    expect(target).toBeTruthy();
+    expect(tagA).toBeTruthy();
+    expect(tagB).toBeTruthy();
+    expect(anchorA).toBeTruthy();
+    expect(anchorB).toBeTruthy();
+
+    stubBcr(layer!, domRect(0, 0, 400, 400));
+    stubBcr(previewInner!, domRect(0, 0, 300, 300));
+
+    // 右寄せに見えるように、preview-inner 右端に寄った targetRect を返す。
+    stubBcr(target!, domRect(220, 20, 80, 40));
+
+    stubTagBcr(tagA!);
+    stubTagBcr(tagB!);
+
+    stubBcr(anchorA!, domRect(240, 120, 20, 20));
+    stubClientRects(anchorA!);
+
+    stubBcr(anchorB!, domRect(250, 220, 20, 20));
+    stubClientRects(anchorB!);
+
+    window.dispatchEvent(new Event('resize'));
+    await waitForDoubleRaf();
+
+    // placement が right 指定でも、右寄せコンポーネントでは left lane に固定する。
+    expect(tagA!.style.transform).toBe('translate(-100%, -50%)');
+    expect(tagB!.style.transform).toBe('translate(-100%, -50%)');
+  });
+
+  it('左寄せコンポーネントではラベルが右レーンに固定される', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetLeftAligned extends HTMLElement {
+      static a11yAnnotations = {
+        version: 1,
+        summary: 'Left aligned',
+        categories: {},
+        callouts: [
+          {
+            id: 'a',
+            title: 'A',
+            placement: 'top-left',
+            target: { selector: '#a', scope: 'light' },
+          },
+          {
+            id: 'b',
+            title: 'B',
+            placement: 'bottom-left',
+            target: { selector: '#b', scope: 'light' },
+          },
+        ],
+      } as const;
+    }
+    const tagName = 'test-a11y-target-left-aligned';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetLeftAligned);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate style="--a11y-annotate-callout-lane-offset: 24px;">
+        <${tagName}>
+          <div id="a">x</div>
+          <div id="b">y</div>
+        </${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const layer = el.querySelector('[part="callout-layer"]') as HTMLElement | null;
+    const previewInner = el.querySelector('[part="preview-inner"]') as HTMLElement | null;
+    const target = el.querySelector(tagName) as HTMLElement | null;
+
+    const tagA = el.querySelector('[data-callout-id="a"] .callout-tag') as HTMLElement | null;
+    const tagB = el.querySelector('[data-callout-id="b"] .callout-tag') as HTMLElement | null;
+    const anchorA = el.querySelector('#a') as HTMLElement | null;
+    const anchorB = el.querySelector('#b') as HTMLElement | null;
+
+    expect(layer).toBeTruthy();
+    expect(previewInner).toBeTruthy();
+    expect(target).toBeTruthy();
+    expect(tagA).toBeTruthy();
+    expect(tagB).toBeTruthy();
+    expect(anchorA).toBeTruthy();
+    expect(anchorB).toBeTruthy();
+
+    stubBcr(layer!, domRect(0, 0, 400, 400));
+    stubBcr(previewInner!, domRect(0, 0, 300, 300));
+
+    // 左寄せに見えるように、preview-inner 左端に寄った targetRect を返す。
+    stubBcr(target!, domRect(0, 20, 80, 40));
+
+    stubTagBcr(tagA!);
+    stubTagBcr(tagB!);
+
+    stubBcr(anchorA!, domRect(40, 120, 20, 20));
+    stubClientRects(anchorA!);
+
+    stubBcr(anchorB!, domRect(50, 220, 20, 20));
+    stubClientRects(anchorB!);
+
+    window.dispatchEvent(new Event('resize'));
+    await waitForDoubleRaf();
+
+    // placement が left 指定でも、左寄せコンポーネントでは right lane に固定する。
+    expect(tagA!.style.transform).toBe('translate(0, -50%)');
+    expect(tagB!.style.transform).toBe('translate(0, -50%)');
+  });
+
+  it('コンポーネントの寄せ判定はコールアウト対象の散らばりに引きずられない', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetLaneAlignUsesTargetRect extends HTMLElement {
+      static a11yAnnotations = {
+        version: 1,
+        summary: 'Lane align uses target rect',
+        categories: {},
+        callouts: [
+          {
+            id: 'left',
+            title: 'Left',
+            placement: 'top-left',
+            target: { selector: '#left', scope: 'light' },
+          },
+          {
+            id: 'right',
+            title: 'Right',
+            placement: 'top-right',
+            target: { selector: '#right', scope: 'light' },
+          },
+        ],
+      } as const;
+    }
+    const tagName = 'test-a11y-target-lane-align-uses-target-rect';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetLaneAlignUsesTargetRect);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate style="--a11y-annotate-callout-lane-offset: 24px;">
+        <${tagName}>
+          <div id="left">x</div>
+          <div id="right">y</div>
+        </${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const layer = el.querySelector('[part="callout-layer"]') as HTMLElement | null;
+    const previewInner = el.querySelector('[part="preview-inner"]') as HTMLElement | null;
+    const target = el.querySelector(tagName) as HTMLElement | null;
+
+    const tagLeft = el.querySelector('[data-callout-id="left"] .callout-tag') as HTMLElement | null;
+    const tagRight = el.querySelector('[data-callout-id="right"] .callout-tag') as HTMLElement | null;
+    const anchorLeft = el.querySelector('#left') as HTMLElement | null;
+    const anchorRight = el.querySelector('#right') as HTMLElement | null;
+
+    expect(layer).toBeTruthy();
+    expect(previewInner).toBeTruthy();
+    expect(target).toBeTruthy();
+    expect(tagLeft).toBeTruthy();
+    expect(tagRight).toBeTruthy();
+    expect(anchorLeft).toBeTruthy();
+    expect(anchorRight).toBeTruthy();
+
+    stubBcr(layer!, domRect(0, 0, 400, 400));
+    stubBcr(previewInner!, domRect(0, 0, 300, 300));
+
+    // コンポーネント自体は左寄せ（右側に大きく余白がある）だが、
+    // callout 対象は左右に散らばっているケース。
+    stubBcr(target!, domRect(0, 20, 80, 40));
+
+    stubTagBcr(tagLeft!);
+    stubTagBcr(tagRight!);
+
+    stubBcr(anchorLeft!, domRect(10, 120, 20, 20));
+    stubClientRects(anchorLeft!);
+
+    // 右端付近に callout 対象があっても、レーン固定はコンポーネント寄せを優先する。
+    stubBcr(anchorRight!, domRect(260, 120, 20, 20));
+    stubClientRects(anchorRight!);
+
+    window.dispatchEvent(new Event('resize'));
+    await waitForDoubleRaf();
+
+    // 左寄せなので right lane 固定（両方right）になる
+    expect(tagLeft!.style.transform).toBe('translate(0, -50%)');
+    expect(tagRight!.style.transform).toBe('translate(0, -50%)');
+  });
+
+  it('callout-boxはデフォルト非表示で、包含関係がある場合のみ表示される（auto）', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetAutoBox extends HTMLElement {
+      static a11yAnnotations = {
+        version: 1,
+        summary: 'Box auto',
+        categories: {},
+        callouts: [
+          {
+            id: 'container',
+            title: 'コンテナ',
+            target: { selector: '#container', scope: 'light' },
+          },
+          {
+            id: 'child',
+            title: '子要素',
+            target: { selector: '#child', scope: 'light' },
+          },
+        ],
+      } as const;
+    }
+    const tagName = 'test-a11y-target-auto-box';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetAutoBox);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate>
+        <${tagName}>
+          <div id="container">
+            <div id="child" aria-label="Child">x</div>
+          </div>
+        </${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const containerBox = el.querySelector(
+      '[data-callout-id="container"] .callout-box',
+    ) as HTMLElement | null;
+    const childBox = el.querySelector(
+      '[data-callout-id="child"] .callout-box',
+    ) as HTMLElement | null;
+
+    expect(containerBox).toBeTruthy();
+    expect(childBox).toBeTruthy();
+
+    expect(containerBox?.hasAttribute('hidden')).toBe(false);
+    expect(childBox?.hasAttribute('hidden')).toBe(true);
+  });
+
+  it('targetHintでcallout-boxの表示を上書きできる', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetBoxHint extends HTMLElement {
+      static a11yAnnotations = {
+        version: 1,
+        summary: 'Box hint',
+        categories: {},
+        callouts: [
+          {
+            id: 'container',
+            title: 'コンテナ',
+            targetHint: 'none',
+            target: { selector: '#container', scope: 'light' },
+          },
+          {
+            id: 'child',
+            title: '子要素',
+            targetHint: 'box',
+            target: { selector: '#child', scope: 'light' },
+          },
+        ],
+      } as const;
+    }
+    const tagName = 'test-a11y-target-box-hint';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetBoxHint);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate>
+        <${tagName}>
+          <div id="container">
+            <div id="child" aria-label="Child">x</div>
+          </div>
+        </${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const containerBox = el.querySelector(
+      '[data-callout-id="container"] .callout-box',
+    ) as HTMLElement | null;
+    const childBox = el.querySelector(
+      '[data-callout-id="child"] .callout-box',
+    ) as HTMLElement | null;
+
+    expect(containerBox).toBeTruthy();
+    expect(childBox).toBeTruthy();
+
+    expect(containerBox?.hasAttribute('hidden')).toBe(true);
+    expect(childBox?.hasAttribute('hidden')).toBe(false);
   });
 });
