@@ -2,16 +2,25 @@
  * DadsTextareaコンポーネントの登録
  */
 import { DadsTextarea } from './textarea.js';
-
-let defined = false;
+import { WebComponentDefinition } from '../../core/web-components.js';
+import { getConfig, getPrefix } from '../../config.js';
 
 /**
  * DadsTextareaコンポーネントをカスタム要素として登録
  */
-export function defineTextarea(): void {
-  if (defined) return;
-  DadsTextarea.define();
-  defined = true;
+export function defineTextarea(prefix?: string, registry?: CustomElementRegistry): void {
+  const effectivePrefix = prefix ?? getPrefix();
+  const effectiveRegistry = registry ?? getConfig().registry;
+
+  const name = `${effectivePrefix}-textarea`;
+  if (effectiveRegistry.get(name)) return;
+
+  const def = { ...DadsTextarea.definition, name, registry: effectiveRegistry };
+  WebComponentDefinition.compose(DadsTextarea, def).define(effectiveRegistry);
+}
+
+export function defineDefaultTextarea(): void {
+  defineTextarea();
 }
 
 /**
@@ -19,6 +28,6 @@ export function defineTextarea(): void {
  */
 export function autoDefineTextarea(): void {
   if (typeof customElements !== 'undefined') {
-    defineTextarea();
+    defineDefaultTextarea();
   }
 }

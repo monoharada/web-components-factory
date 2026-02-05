@@ -379,6 +379,20 @@
                   }
                 }
               ]
+            },
+            "componentId": "accordion",
+            "install": {
+              "id": "accordion",
+              "define": "defineAccordion",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/accordion"
+              },
+              "tags": [
+                "dads-accordion-details",
+                "dads-accordion-item-details"
+              ]
             }
           }
         },
@@ -827,6 +841,20 @@
                     "selector": "[part=\"return-button\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "accordion",
+            "install": {
+              "id": "accordion",
+              "define": "defineAccordion",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/accordion"
+              },
+              "tags": [
+                "dads-accordion-details",
+                "dads-accordion-item-details"
               ]
             }
           }
@@ -2135,6 +2163,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "blockquote",
+            "install": {
+              "id": "blockquote",
+              "define": "defineBlockquote",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/blockquote"
+              },
+              "tags": [
+                "dads-blockquote"
+              ]
             }
           }
         }
@@ -2769,6 +2810,19 @@
                     "selector": "[part=\"icon-end\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "button",
+            "install": {
+              "id": "button",
+              "define": "defineButton",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/button"
+              },
+              "tags": [
+                "dads-button"
               ]
             }
           }
@@ -3948,6 +4002,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "calendar",
+            "install": {
+              "id": "calendar",
+              "define": "defineCalendar",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/calendar"
+              },
+              "tags": [
+                "dads-calendar"
+              ]
             }
           }
         }
@@ -4608,6 +4675,19 @@
                     "selector": "[part=\"sub\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "card",
+            "install": {
+              "id": "card",
+              "define": "defineCard",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/card"
+              },
+              "tags": [
+                "dads-card"
               ]
             }
           }
@@ -5578,6 +5658,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "checkbox",
+            "install": {
+              "id": "checkbox",
+              "define": "defineCheckbox",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/checkbox"
+              },
+              "tags": [
+                "dads-checkbox"
+              ]
             }
           }
         }
@@ -5965,6 +6058,19 @@
                     "selector": "[part=\"label\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "chip-label",
+            "install": {
+              "id": "chip-label",
+              "define": "defineChipLabel",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/chip-label"
+              },
+              "tags": [
+                "dads-chip-label"
               ]
             }
           }
@@ -6363,7 +6469,22 @@
           "typeDefinitionPath": "./packages/components/code-block/code-block.ts",
           "cssProperties": [],
           "cssStates": [],
-          "attributes": []
+          "attributes": [],
+          "custom": {
+            "componentId": "code-block",
+            "install": {
+              "id": "code-block",
+              "define": "defineCodeBlock",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/code-block"
+              },
+              "tags": [
+                "dads-code-block"
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -7682,6 +7803,21 @@
                   }
                 }
               ]
+            },
+            "componentId": "date-picker",
+            "install": {
+              "id": "date-picker",
+              "define": "defineDatePicker",
+              "call": "prefix-registry",
+              "deps": [
+                "calendar"
+              ],
+              "source": {
+                "componentDir": "packages/components/date-picker"
+              },
+              "tags": [
+                "dads-date-picker"
+              ]
             }
           }
         }
@@ -8214,6 +8350,19 @@
                     "selector": "[part=\"back-link\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "disclosure",
+            "install": {
+              "id": "disclosure",
+              "define": "defineDisclosure",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/disclosure"
+              },
+              "tags": [
+                "dads-disclosure"
               ]
             }
           }
@@ -8972,6 +9121,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "fieldset",
+            "install": {
+              "id": "fieldset",
+              "define": "defineFieldset",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/fieldset"
+              },
+              "tags": [
+                "dads-fieldset"
+              ]
             }
           }
         }
@@ -9713,6 +9875,19 @@
                     "selector": "[part=\"chip\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "heading",
+            "install": {
+              "id": "heading",
+              "define": "defineHeading",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/heading"
+              },
+              "tags": [
+                "dads-heading"
               ]
             }
           }
@@ -10699,6 +10874,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "input-text",
+            "install": {
+              "id": "input-text",
+              "define": "defineInputText",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/input-text"
+              },
+              "tags": [
+                "dads-input-text"
+              ]
             }
           }
         }
@@ -11620,6 +11808,21 @@
                   "placement": "bottom-right"
                 }
               ]
+            },
+            "componentId": "menu-list-box",
+            "install": {
+              "id": "menu-list-box",
+              "define": "defineMenuListBox",
+              "call": "prefix-registry",
+              "deps": [
+                "menu-list"
+              ],
+              "source": {
+                "componentDir": "packages/components/menu-list-box"
+              },
+              "tags": [
+                "dads-menu-list-box"
+              ]
             }
           }
         }
@@ -11973,6 +12176,20 @@
                 ]
               },
               "callouts": []
+            },
+            "componentId": "menu-list",
+            "install": {
+              "id": "menu-list",
+              "define": "defineMenuList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/menu-list"
+              },
+              "tags": [
+                "dads-menu-list",
+                "dads-menu-list-item"
+              ]
             }
           }
         },
@@ -12661,6 +12878,20 @@
                 ]
               },
               "callouts": []
+            },
+            "componentId": "menu-list",
+            "install": {
+              "id": "menu-list",
+              "define": "defineMenuList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/menu-list"
+              },
+              "tags": [
+                "dads-menu-list",
+                "dads-menu-list-item"
+              ]
             }
           }
         }
@@ -13643,6 +13874,19 @@
                   },
                   "placement": "bottom-right"
                 }
+              ]
+            },
+            "componentId": "page-navigation",
+            "install": {
+              "id": "page-navigation",
+              "define": "definePageNavigation",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/page-navigation"
+              },
+              "tags": [
+                "dads-page-navigation"
               ]
             }
           }
@@ -14758,6 +15002,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "radio",
+            "install": {
+              "id": "radio",
+              "define": "defineRadio",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/radio"
+              },
+              "tags": [
+                "dads-radio"
+              ]
             }
           }
         }
@@ -15747,6 +16004,21 @@
                     "selector": "[part=\"button\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "search-box",
+            "install": {
+              "id": "search-box",
+              "define": "defineSearchBox",
+              "call": "prefix-registry",
+              "deps": [
+                "button"
+              ],
+              "source": {
+                "componentDir": "packages/components/search-box"
+              },
+              "tags": [
+                "dads-search-box"
               ]
             }
           }
@@ -16830,6 +17102,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "select",
+            "install": {
+              "id": "select",
+              "define": "defineSelect",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/select"
+              },
+              "tags": [
+                "dads-select"
+              ]
             }
           }
         }
@@ -17391,6 +17676,20 @@
                     "selector": "[data-state-label=\"editing\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "step-navigation",
+            "install": {
+              "id": "step-navigation",
+              "define": "defineStepNavigation",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/step-navigation"
+              },
+              "tags": [
+                "dads-step-navigation",
+                "dads-step-navigation-item"
               ]
             }
           }
@@ -18139,6 +18438,20 @@
                     "selector": "[data-state-label=\"error\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "step-navigation",
+            "install": {
+              "id": "step-navigation",
+              "define": "defineStepNavigation",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/step-navigation"
+              },
+              "tags": [
+                "dads-step-navigation",
+                "dads-step-navigation-item"
               ]
             }
           }
@@ -18922,6 +19235,19 @@
                   },
                   "placement": "top-right"
                 }
+              ]
+            },
+            "componentId": "switch",
+            "install": {
+              "id": "switch",
+              "define": "defineSwitch",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/switch"
+              },
+              "tags": [
+                "dads-switch"
               ]
             }
           }
@@ -19920,6 +20246,19 @@
                     "selector": "[data-select-row], [data-js-check]"
                   }
                 }
+              ]
+            },
+            "componentId": "table",
+            "install": {
+              "id": "table",
+              "define": "defineTable",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/table"
+              },
+              "tags": [
+                "dads-table"
               ]
             }
           }
@@ -20953,6 +21292,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "textarea",
+            "install": {
+              "id": "textarea",
+              "define": "defineTextarea",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/textarea"
+              },
+              "tags": [
+                "dads-textarea"
+              ]
             }
           }
         }
@@ -21395,7 +21747,22 @@
           "events": [],
           "modulePath": "./packages/components/typography/dads-text.ts",
           "definitionPath": "./packages/components/typography/dads-text.ts",
-          "typeDefinitionPath": "./packages/components/typography/dads-text.ts"
+          "typeDefinitionPath": "./packages/components/typography/dads-text.ts",
+          "custom": {
+            "componentId": "typography",
+            "install": {
+              "id": "typography",
+              "define": "defineText",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/typography"
+              },
+              "tags": [
+                "dads-text"
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -23928,6 +24295,14 @@
           },
           "parameters": [
             {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
               "name": "registry",
               "optional": true,
               "type": {
@@ -23951,10 +24326,7 @@
         {
           "kind": "variable",
           "name": "name",
-          "type": {
-            "text": "string"
-          },
-          "default": "'dads-code-block'"
+          "default": "`${effectivePrefix}-code-block`"
         }
       ],
       "exports": [
@@ -24956,6 +25328,14 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultInputText",
+          "declaration": {
+            "name": "defineDefaultInputText",
+            "module": "./input-text-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineInputText",
           "declaration": {
             "name": "defineInputText",
@@ -24980,13 +25360,43 @@
         },
         {
           "kind": "function",
+          "name": "defineDefaultInputText",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
           "name": "defineInputText",
           "return": {
             "type": {
               "text": "void"
             }
           },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
           "description": "DadsInputTextコンポーネントをカスタム要素として登録する"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-input-text`"
         }
       ],
       "exports": [
@@ -24995,6 +25405,14 @@
           "name": "autoDefineInputText",
           "declaration": {
             "name": "autoDefineInputText",
+            "module": "packages/components/input-text/input-text-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultInputText",
+          "declaration": {
+            "name": "defineDefaultInputText",
             "module": "packages/components/input-text/input-text-define.ts"
           }
         },
@@ -26639,6 +27057,14 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultSelect",
+          "declaration": {
+            "name": "defineDefaultSelect",
+            "module": "./select-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineSelect",
           "declaration": {
             "name": "defineSelect",
@@ -26663,13 +27089,43 @@
         },
         {
           "kind": "function",
+          "name": "defineDefaultSelect",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
           "name": "defineSelect",
           "return": {
             "type": {
               "text": "void"
             }
           },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
           "description": "DadsSelectコンポーネントをカスタム要素として登録する"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-select`"
         }
       ],
       "exports": [
@@ -26678,6 +27134,14 @@
           "name": "autoDefineSelect",
           "declaration": {
             "name": "autoDefineSelect",
+            "module": "packages/components/select/select-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultSelect",
+          "declaration": {
+            "name": "defineDefaultSelect",
             "module": "packages/components/select/select-define.ts"
           }
         },
@@ -27006,6 +27470,14 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultSwitch",
+          "declaration": {
+            "name": "defineDefaultSwitch",
+            "module": "./switch-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineSwitch",
           "declaration": {
             "name": "defineSwitch",
@@ -27030,13 +27502,43 @@
         },
         {
           "kind": "function",
+          "name": "defineDefaultSwitch",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
           "name": "defineSwitch",
           "return": {
             "type": {
               "text": "void"
             }
           },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
           "description": "スイッチコンポーネントを登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-switch`"
         }
       ],
       "exports": [
@@ -27045,6 +27547,14 @@
           "name": "autoDefineSwitch",
           "declaration": {
             "name": "autoDefineSwitch",
+            "module": "packages/components/switch/switch-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultSwitch",
+          "declaration": {
+            "name": "defineDefaultSwitch",
             "module": "packages/components/switch/switch-define.ts"
           }
         },
@@ -27343,6 +27853,14 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultTextarea",
+          "declaration": {
+            "name": "defineDefaultTextarea",
+            "module": "./textarea-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineTextarea",
           "declaration": {
             "name": "defineTextarea",
@@ -27399,13 +27917,43 @@
         },
         {
           "kind": "function",
+          "name": "defineDefaultTextarea",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
           "name": "defineTextarea",
           "return": {
             "type": {
               "text": "void"
             }
           },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
           "description": "DadsTextareaコンポーネントをカスタム要素として登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-textarea`"
         }
       ],
       "exports": [
@@ -27414,6 +27962,14 @@
           "name": "autoDefineTextarea",
           "declaration": {
             "name": "autoDefineTextarea",
+            "module": "packages/components/textarea/textarea-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultTextarea",
+          "declaration": {
+            "name": "defineDefaultTextarea",
             "module": "packages/components/textarea/textarea-define.ts"
           }
         },
@@ -27512,6 +28068,22 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultText",
+          "declaration": {
+            "name": "defineDefaultText",
+            "module": "./typography-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineText",
+          "declaration": {
+            "name": "defineText",
+            "module": "./typography-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "typographyLocalTokens",
           "declaration": {
             "name": "typographyLocalTokens",
@@ -27572,6 +28144,72 @@
           "declaration": {
             "name": "TypographyWeight",
             "module": "../../styles/design-tokens/typography-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/typography/typography-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultText",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineText",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "dads-text を定義（prefix対応）"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-text`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultText",
+          "declaration": {
+            "name": "defineDefaultText",
+            "module": "packages/components/typography/typography-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineText",
+          "declaration": {
+            "name": "defineText",
+            "module": "packages/components/typography/typography-define.ts"
           }
         }
       ]

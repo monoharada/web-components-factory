@@ -7,6 +7,8 @@ import { collectCemCustomElements, validateTextAgainstCem } from '../wc/validato
 
 const CANONICAL_PREFIX = 'dads';
 const DEFAULT_CEM_PATH = path.resolve(process.cwd(), 'custom-elements.json');
+const DEFAULT_INSTALL_REGISTRY_PATH = path.resolve(process.cwd(), 'registry/install-registry.json');
+const DEFAULT_PATTERN_REGISTRY_PATH = path.resolve(process.cwd(), 'registry/pattern-registry.json');
 
 function normalizePrefix(prefix) {
   if (typeof prefix !== 'string' || prefix.trim() === '') return CANONICAL_PREFIX;
@@ -102,6 +104,7 @@ function serializeApi(decl, modulePath, prefix) {
     className: typeof decl?.name === 'string' ? decl.name : undefined,
     description: typeof decl?.description === 'string' ? decl.description : undefined,
     modulePath,
+    custom: decl?.custom,
     attributes: attributes.map((a) => ({
       name: a?.name,
       type: a?.type?.text,
@@ -168,6 +171,18 @@ function generateSnippet(api, prefix) {
   return `${open}${slotComment}</${tag}>`;
 }
 
+function findDeclByComponentId(indexes, componentIdRaw) {
+  const componentId = typeof componentIdRaw === 'string' ? componentIdRaw.trim() : '';
+  if (!componentId) return undefined;
+  for (const { decl, modulePath } of indexes.decls) {
+    const installId = decl?.custom?.install?.id;
+    const inferredId = decl?.custom?.componentId;
+    const id = typeof installId === 'string' ? installId : typeof inferredId === 'string' ? inferredId : undefined;
+    if (id === componentId) return { decl, modulePath };
+  }
+  return undefined;
+}
+
 function applyPrefixToCemIndex(cemIndex, prefix) {
   const p = normalizePrefix(prefix);
   if (p === CANONICAL_PREFIX) return cemIndex;
@@ -189,10 +204,59 @@ async function loadCem(cemPath) {
   return JSON.parse(text);
 }
 
+async function loadJson(absPath) {
+  const text = await fs.readFile(absPath, 'utf8');
+  return JSON.parse(text);
+}
+
+function applyPrefixToHtml(html, prefix) {
+  const p = normalizePrefix(prefix);
+  if (p === CANONICAL_PREFIX) return String(html ?? '');
+  const from = `${CANONICAL_PREFIX}-`;
+  const to = `${p}-`;
+
+  // Patterns are constrained to plain HTML snippets without <script>/<style>,
+  // so a tag-level replace is sufficient and deterministic.
+  return String(html ?? '').replace(
+    new RegExp(`<\\s*(\\/?)\\s*${from}([a-z0-9-]+)(?=[\\s/>])`, 'gi'),
+    (_m, slash, rest) => `<${slash ?? ''}${to}${String(rest).toLowerCase()}`,
+  );
+}
+
+function loadPatternRegistryShape(raw) {
+  if (!raw || typeof raw !== 'object') return { patterns: {} };
+  const patterns = raw.patterns && typeof raw.patterns === 'object' ? raw.patterns : {};
+  return { patterns };
+}
+
+function resolveComponentClosure({ installRegistry }, componentIds) {
+  const components = installRegistry?.components && typeof installRegistry.components === 'object' ? installRegistry.components : {};
+  const queue = [...new Set(componentIds.map((c) => String(c ?? '').trim()).filter(Boolean))];
+  const out = new Set();
+
+  while (queue.length > 0) {
+    const id = queue.shift();
+    if (!id || out.has(id)) continue;
+    out.add(id);
+
+    const meta = components[id];
+    const deps = Array.isArray(meta?.deps) ? meta.deps : [];
+    for (const d of deps) {
+      const dep = String(d ?? '').trim();
+      if (dep && !out.has(dep)) queue.push(dep);
+    }
+  }
+
+  return [...out];
+}
+
 async function main() {
   const manifest = await loadCem(DEFAULT_CEM_PATH);
   const indexes = buildIndexes(manifest);
   const canonicalCemIndex = collectCemCustomElements(manifest);
+  const installRegistry = await loadJson(DEFAULT_INSTALL_REGISTRY_PATH);
+  const patternRegistry = await loadJson(DEFAULT_PATTERN_REGISTRY_PATH);
+  const { patterns } = loadPatternRegistryShape(patternRegistry);
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
@@ -292,6 +356,95 @@ async function main() {
   );
 
   server.registerTool(
+    'get_install_recipe',
+    {
+      description:
+        'Get an install recipe (componentId/deps/define + usage snippet) from CEM custom metadata.',
+      inputSchema: {
+        component: z.string(),
+        prefix: z.string().optional(),
+      },
+    },
+    async ({ component, prefix }) => {
+      const p = normalizePrefix(prefix);
+
+      const byTagOrClass =
+        pickDecl(indexes, { tagName: component, prefix: p }) ??
+        pickDecl(indexes, { className: component, prefix: p });
+
+      const byComponentId = byTagOrClass ? undefined : findDeclByComponentId(indexes, component);
+      const decl = byTagOrClass ?? byComponentId?.decl;
+
+      if (!decl) {
+        return {
+          content: [{ type: 'text', text: `Component not found: ${component}` }],
+          isError: true,
+        };
+      }
+
+      const canonicalTag = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
+      const modulePath =
+        canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : byComponentId?.modulePath;
+      const api = serializeApi(decl, modulePath, p);
+      const usageSnippet = generateSnippet(api, p);
+
+      const install = decl?.custom?.install;
+      if (!install || typeof install !== 'object') {
+        return {
+          content: [
+            {
+              type: 'text',
+              text:
+                'Install metadata not found in CEM. Run `npm run cem:analyze` and ensure `decl.custom.install` is injected.',
+            },
+          ],
+          isError: true,
+        };
+      }
+
+      const componentId = String(install.id ?? '').trim() || api?.custom?.componentId;
+      const define = String(install.define ?? '').trim();
+      const deps = Array.isArray(install.deps) ? install.deps : [];
+      const tags = Array.isArray(install.tags) ? install.tags : [];
+
+      const tagNames =
+        tags.length > 0 ? tags.map((t) => withPrefix(String(t).toLowerCase(), p)) : [api.tagName];
+
+      const defineHint = define
+        ? [
+            modulePath ? `import { ${define} } from "${modulePath}";` : `import { ${define} } from "<modulePath>";`,
+            `${define}();`,
+            p !== CANONICAL_PREFIX ? `// If supported: ${define}("${p}");` : undefined,
+          ]
+            .filter(Boolean)
+            .join('\n')
+        : undefined;
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(
+              {
+                componentId,
+                tagNames,
+                deps,
+                define,
+                defineHint,
+                source: install.source,
+                usageSnippet,
+                installHint: componentId ? `wcf add ${componentId}` : undefined,
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+      };
+    },
+  );
+
+  server.registerTool(
     'validate_markup',
     {
       description:
@@ -335,6 +488,123 @@ async function main() {
 
       return {
         content: [{ type: 'text', text: JSON.stringify({ diagnostics }, null, 2) }],
+      };
+    },
+  );
+
+  server.registerTool(
+    'list_patterns',
+    {
+      description: 'List UI patterns (recipes) from registry/pattern-registry.json.',
+      inputSchema: {
+        // reserved for future filtering
+      },
+    },
+    async () => {
+      const list = Object.values(patterns).map((p) => ({
+        id: p?.id,
+        title: p?.title,
+        description: p?.description,
+        requires: p?.requires,
+      }));
+
+      return {
+        content: [{ type: 'text', text: JSON.stringify(list, null, 2) }],
+      };
+    },
+  );
+
+  server.registerTool(
+    'get_pattern_recipe',
+    {
+      description:
+        'Get a pattern recipe (required componentIds + resolved HTML snippet). Use this to drive wcf installs + UI composition.',
+      inputSchema: {
+        patternId: z.string(),
+        prefix: z.string().optional(),
+      },
+    },
+    async ({ patternId, prefix }) => {
+      const id = String(patternId ?? '').trim();
+      const p = normalizePrefix(prefix);
+      const pat = patterns[id];
+      if (!pat) {
+        return {
+          content: [{ type: 'text', text: `Pattern not found: ${id}` }],
+          isError: true,
+        };
+      }
+
+      const requires = Array.isArray(pat.requires) ? pat.requires : [];
+      const closure = resolveComponentClosure({ installRegistry }, requires);
+
+      const components = installRegistry?.components && typeof installRegistry.components === 'object' ? installRegistry.components : {};
+      const install = Object.fromEntries(
+        closure
+          .map((cid) => [cid, components[cid]])
+          .filter(([, meta]) => meta && typeof meta === 'object')
+          .map(([cid, meta]) => [
+            cid,
+            {
+              ...meta,
+              tags: Array.isArray(meta.tags) ? meta.tags.map((t) => withPrefix(String(t).toLowerCase(), p)) : meta.tags,
+            },
+          ]),
+      );
+
+      const canonicalHtml = String(pat.html ?? '');
+      const html = applyPrefixToHtml(canonicalHtml, p);
+
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(
+              {
+                pattern: {
+                  id: pat.id,
+                  title: pat.title,
+                  description: pat.description,
+                },
+                prefix: p,
+                requires,
+                components: closure,
+                install,
+                html,
+                canonicalHtml,
+                installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+      };
+    },
+  );
+
+  server.registerTool(
+    'generate_pattern_snippet',
+    {
+      description: 'Generate a pattern HTML snippet. (Same as get_pattern_recipe().html)',
+      inputSchema: {
+        patternId: z.string(),
+        prefix: z.string().optional(),
+      },
+    },
+    async ({ patternId, prefix }) => {
+      const id = String(patternId ?? '').trim();
+      const p = normalizePrefix(prefix);
+      const pat = patterns[id];
+      if (!pat) {
+        return {
+          content: [{ type: 'text', text: `Pattern not found: ${id}` }],
+          isError: true,
+        };
+      }
+
+      return {
+        content: [{ type: 'text', text: applyPrefixToHtml(String(pat.html ?? ''), p) }],
       };
     },
   );

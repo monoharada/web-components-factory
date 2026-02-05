@@ -23,6 +23,7 @@ Custom Elements Manifest (`custom-elements.json`) はこのリポジトリにお
 - [ ] JSDoc で `@customElement` + `@tagname` を記載（CEM抽出保証）
 - [ ] `npm run cem:analyze` 実行後、`custom-elements.json` に差分があればコミット
 - [ ] sanity テストがパス（tagName存在、bogus event無し）
+- [ ] `custom-elements.json` の当該 `dads-*` declaration に `decl.custom.install` が注入されている（vendor install / AI recipe 用）
 
 **参照**: [Custom Elements Manifest 運用](../knowledge/custom-elements-manifest.md)
 
@@ -50,6 +51,9 @@ Custom Elements Manifest (`custom-elements.json`) はこのリポジトリにお
 
 - [ ] tagName は canonical `dads-*` で定義
 - [ ] import は `.js` 拡張子運用を維持
+- [ ] `packages/components/<componentId>/<componentId>-define.ts` を用意し、`export function define*()`（`defineDefault*` 以外）を含める
+  - 例外が必要な場合は `registry/overrides.json` に **理由つきで**明記する
+- [ ] 依存コンポーネントがある場合、define 内で `// dependencies` の下に `defineX(...)` を呼び出して宣言する（抽出・レシピ生成の安定化）
 - [ ] `packages/autoload/dads/<component>.ts` に Autoloader アダプタ追加
 
 **例**: `packages/autoload/dads/my-component.ts`
@@ -78,6 +82,8 @@ export default DadsMyComponent;
 
 ```bash
 npm run cem:analyze     # CEM生成
+npm run contracts:check # install contract（autoload / install metadata）
+npm run registry:check  # install registry（軽量レジストリ）
 npm run validate:wc     # マークアップ検証
 npm run test:run        # 単体テスト
 npm run type-check      # 型チェック
@@ -199,13 +205,17 @@ PRコメントや自己レビュー用：
 - [ ] `@csspart` で公開partを記載
 - [ ] `@fires` で公開イベントを記載
 - [ ] `npm run cem:analyze` 実行、`custom-elements.json` 更新・コミット
+- [ ] `custom-elements.json` に `decl.custom.install` が注入されている
 - [ ] `src/demos.ts` にデモ追加
 - [ ] `src/demos.ts` の説明ページに **Usage（HTML）コードブロック（`<dads-code-block>`）** を追加
 - [ ] `src/demos.ts` に **操作可能な API / Controls テーブル**を追加（`docs/knowledge/viewer-api-controls-table.md` を参照）
 - [ ] `placeholder` 属性は使用禁止（ネイティブ `<input>` 含む）。ヒントは `support-text` / `aria-describedby` などで提供する
 - [ ] `viewer.html` にセレクタ追加
+- [ ] `packages/components/<componentId>/<componentId>-define.ts` を用意（例外は `registry/overrides.json` に理由つきで明記）
 - [ ] `packages/autoload/dads/<component>.ts` 追加
 - [ ] `<component>.test.ts` 追加
+- [ ] `npm run contracts:check` パス
+- [ ] `npm run registry:check` パス（`registry/install-registry.json` が最新）
 - [ ] `npm run validate:wc` パス
 - [ ] `npm run ci` パス
 
