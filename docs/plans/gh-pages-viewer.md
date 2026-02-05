@@ -35,7 +35,7 @@
 - `?component=...` の切り替えが動作する
 - Autoloader によるロードが動作し、各コンポーネントが表示される
 - 404 が発生しない（少なくとも以下）
-  - `core/*.js`, `utils/*.js`, `styles/*.js`, `components/**`, `@components/**`, `config.js`, `src/demos.js`
+  - `core/*.js`, `utils/*.js`, `styles/*.js`, `components/**`, `@components/**`, `config.js`, `src/demos.js`, `custom-elements.json`
 - 初回は Service Worker を無効化してもよい（= SW 起因の 404 を避ける）
 
 ## 方針（決定事項）
@@ -51,6 +51,7 @@
 ```
 dist-pages/
 ├── index.html
+├── custom-elements.json
 ├── config.js
 ├── core/
 │   ├── web-components.js
@@ -97,6 +98,7 @@ dist-pages/
 
 ### 3) トランスパイル対象と配置マッピング
 
+- `custom-elements.json` → `dist-pages/custom-elements.json`
 - `packages/config.ts` → `dist-pages/config.js`
 - `packages/core/**/*.ts` → `dist-pages/core/**/*.js`
 - `packages/utils/**/*.ts` → `dist-pages/utils/**/*.js`
@@ -147,6 +149,8 @@ dist-pages/
   - 対策: `index.html` 生成時に、import map / preload / dynamic import 文字列を確実に `./` に統一
 - **Service Worker が absolute path をキャッシュしようとして 404**
   - 対策: フェーズ1では SW を無効化してリスクを切り離す
+- **`custom-elements.json` が配信されないと a11y-annotate（注釈）が動かない**
+  - 対策: `pages:build` で `dist-pages/custom-elements.json` を同梱し、`scripts/check-pages-output.cjs` で存在/JSON妥当性をチェックする
 
 ## フェーズ2（SW 有効化 / パフォーマンス最適化）
 

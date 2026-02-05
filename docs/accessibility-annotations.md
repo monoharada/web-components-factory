@@ -56,6 +56,23 @@ Design System コンポーネントをドキュメンテーション用途で「
 1. `docs/knowledge/a11y-annotations.json` を更新
 2. `npm run cem:analyze` を実行して `custom-elements.json` に反映
 
+## CEM のロード（特に GitHub Pages）
+
+`a11y-annotate` は注釈が有効なとき、ランタイムで CEM（`custom-elements.json`）を読み込みます。
+
+- 取得URLは **`document.baseURI` 基準の相対**（`./custom-elements.json`）で解決します（Project Pages の `/<repo>/` 配下でも動くため）
+- 非ブラウザ環境などで `document` が無い場合はフォールバックとして `/custom-elements.json` を参照します
+
+### トラブルシューティング（症状: 404 → 重くなる/固まる）
+
+DevTools Console/Network で `custom-elements.json` が 404 の場合、注釈のロードに失敗して表示できません。
+
+確認ポイント:
+1. `npm run pages:build` 後に `dist-pages/custom-elements.json` が存在する
+2. `node scripts/check-pages-output.cjs` が `OK: custom-elements.json` になる
+
+※ CEM 取得に失敗しても `a11y-annotate` が無限 refresh しないようにガードしていますが、そもそも 404 を消すのが正です。
+
 ### コールアウトターゲットの指定
 
 `callouts[].target` は「どの要素に紐付けるか」を指定します。

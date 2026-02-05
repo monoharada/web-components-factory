@@ -95,12 +95,21 @@ function getAriaAttrs(el: Element): readonly [string, string][] {
   return out;
 }
 
-const CEM_URL = '/custom-elements.json';
+const CEM_URL_FALLBACK = '/custom-elements.json';
 const A11Y_QUERY_PARAM = 'a11y';
 const A11Y_STORAGE_KEY = 'dads:a11y';
 
 let cemAnnotations: Map<string, A11yAnnotations> | null = null;
 let cemAnnotationsPromise: Promise<Map<string, A11yAnnotations>> | null = null;
+
+function resolveCemUrl(): string {
+  try {
+    if (typeof document !== 'undefined') return new URL('custom-elements.json', document.baseURI).toString();
+  } catch {
+    // fall through
+  }
+  return CEM_URL_FALLBACK;
+}
 
 function isA11yAnnotationsEnabled(): boolean {
   if (typeof window === 'undefined') return false;
@@ -135,7 +144,8 @@ function parseCemAnnotations(manifest: CemManifest | null | undefined): Map<stri
 function loadCemAnnotations(): Promise<Map<string, A11yAnnotations>> {
   if (cemAnnotations) return Promise.resolve(cemAnnotations);
   if (!cemAnnotationsPromise) {
-    cemAnnotationsPromise = fetch(CEM_URL)
+    const cemUrl = resolveCemUrl();
+    cemAnnotationsPromise = fetch(cemUrl)
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to load CEM: ${res.status}`);
         return res.json();
@@ -163,7 +173,11 @@ function readAnnotations(
     const tagName = el.localName;
     const spec = cemAnnotations?.get(tagName) ?? null;
     if (spec) return spec;
-    void loadCemAnnotations().then(() => onCemLoaded?.());
+    // CEMが未ロードのときだけロードし、ロード完了後に再描画を予約する。
+    // 既にロード済み（空Map=取得失敗/未収載含む）の場合は無限refreshを避けるため予約しない。
+    if (cemAnnotations === null) {
+      void loadCemAnnotations().then(() => onCemLoaded?.());
+    }
   }
 
   const inst = el.a11yAnnotations;

@@ -157,6 +157,12 @@ async function buildIndexHtml() {
   await fs.writeFile(destHtmlPath, html, 'utf8');
 }
 
+async function copyCustomElementsManifest() {
+  const srcPath = path.join(projectRoot, 'custom-elements.json');
+  const destPath = path.join(outDir, 'custom-elements.json');
+  await fs.copyFile(srcPath, destPath);
+}
+
 async function cleanOutDir() {
   await fs.rm(outDir, { recursive: true, force: true });
   await ensureDir(outDir);
@@ -167,6 +173,7 @@ async function main() {
 
   await cleanOutDir();
   await buildIndexHtml();
+  await copyCustomElementsManifest();
 
   await transpileFile(path.join(projectRoot, 'packages/config.ts'), path.join(outDir, 'config.js'));
 

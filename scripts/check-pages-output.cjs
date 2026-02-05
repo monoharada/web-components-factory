@@ -18,3 +18,20 @@ if (html.includes('Average Case UI')) {
 
 console.log('[pages] OK: Viewer');
 
+const outDir = path.dirname(indexHtmlPath);
+const cemPath = path.join(outDir, 'custom-elements.json');
+if (!fs.existsSync(cemPath)) {
+  console.error(`[pages] Missing Custom Elements Manifest: ${cemPath}`);
+  process.exit(1);
+}
+
+try {
+  const cemRaw = fs.readFileSync(cemPath, 'utf8');
+  JSON.parse(cemRaw);
+} catch (error) {
+  console.error(`[pages] Invalid Custom Elements Manifest JSON: ${cemPath}`);
+  console.error(error);
+  process.exit(1);
+}
+
+console.log('[pages] OK: custom-elements.json');
