@@ -636,4 +636,65 @@ describe('DadsAnnotate', () => {
     expect(containerBox?.hasAttribute('hidden')).toBe(true);
     expect(childBox?.hasAttribute('hidden')).toBe(false);
   });
+
+  it('callout-box(auto) は shadow 内要素を含むホストを container として判定できる', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestShadowHost extends HTMLElement {
+      static a11yAnnotations = {
+        version: 1,
+        summary: 'Shadow container',
+        categories: {},
+        callouts: [
+          {
+            id: 'container',
+            title: 'Host',
+            target: { host: 'annotate', selector: 'test-shadow-host' },
+          },
+          {
+            id: 'child',
+            title: 'Inside',
+            target: { scope: 'shadow', selector: '#inside' },
+          },
+        ],
+      } as const;
+
+      constructor() {
+        super();
+        const root = this.attachShadow({ mode: 'open' });
+        const btn = document.createElement('button');
+        btn.id = 'inside';
+        btn.setAttribute('aria-label', 'Inside');
+        btn.textContent = 'x';
+        root.appendChild(btn);
+      }
+    }
+
+    const tagName = 'test-shadow-host';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestShadowHost);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate>
+        <${tagName} aria-label="Host"></${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const containerBox = el.querySelector(
+      '[data-callout-id="container"] .callout-box',
+    ) as HTMLElement | null;
+    const childBox = el.querySelector('[data-callout-id="child"] .callout-box') as HTMLElement | null;
+
+    expect(containerBox).toBeTruthy();
+    expect(childBox).toBeTruthy();
+
+    // host（container）は shadow 内要素を包含していると判定され、auto で枠が出る
+    expect(containerBox?.hasAttribute('hidden')).toBe(false);
+    // child は container ではないので auto のまま枠は出ない
+    expect(childBox?.hasAttribute('hidden')).toBe(true);
+  });
 });

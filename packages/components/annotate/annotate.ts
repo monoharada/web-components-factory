@@ -65,6 +65,24 @@ function clamp(v: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, v));
 }
 
+function composedContains(container: Element, node: Element): boolean {
+  if (container === node) return true;
+
+  let cur: Node | null = node;
+  while (cur) {
+    if (cur === container) return true;
+
+    const root = cur.getRootNode();
+    if (root instanceof ShadowRoot) {
+      cur = root.host;
+      continue;
+    }
+
+    cur = cur.parentNode;
+  }
+  return false;
+}
+
 function isHTMLElement(v: unknown): v is HTMLElement {
   return v instanceof HTMLElement;
 }
@@ -967,7 +985,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         if (other === item) return false;
         if (!other.targetEl) return false;
         if (other.targetEl === el) return false;
-        return el.contains(other.targetEl);
+        return composedContains(el, other.targetEl);
       });
 
       item.boxEl.toggleAttribute('hidden', !isContainer);
