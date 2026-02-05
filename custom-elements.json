@@ -260,6 +260,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -701,6 +714,19 @@
             {
               "kind": "method",
               "name": "toggle"
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "events": [
@@ -1503,6 +1529,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -2036,6 +2075,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -2467,7 +2519,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }"
+              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), DelegatingPropertyAttr('[part=\"base\"]', 'command'), DelegatingPropertyAttr('[part=\"base\"]', 'commandfor'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }"
             },
             {
               "kind": "field",
@@ -2589,6 +2641,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -2641,6 +2706,20 @@
               },
               "description": "アクセシビリティラベル",
               "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "command-store / commandfor 用（任意、動作は外部に委ねる）",
+              "name": "command"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "command-store / commandfor 用（任意、動作は外部に委ねる）",
+              "name": "commandfor"
             },
             {
               "type": {
@@ -3719,6 +3798,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -4508,6 +4600,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -5323,6 +5428,19 @@
               "description": "※必須表示の再同期\nfieldsetから呼び出される（スロット変更時やrequired属性変更時）"
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -5871,6 +5989,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -5994,6 +6125,633 @@
           "declaration": {
             "name": "DadsChipLabel",
             "module": "./packages/components/chip-label/chip-label.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/chip-tag/chip-tag.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "チップタグコンポーネント",
+          "name": "DadsChipTag",
+          "cssProperties": [
+            {
+              "description": "背景色",
+              "name": "--dads-chip-tag-background"
+            },
+            {
+              "description": "枠線色",
+              "name": "--dads-chip-tag-border-color"
+            },
+            {
+              "description": "枠線の太さ",
+              "name": "--dads-chip-tag-border-width"
+            },
+            {
+              "description": "外周の補助線",
+              "name": "--dads-chip-tag-border-shadow"
+            },
+            {
+              "description": "hover時の外周補助線",
+              "name": "--dads-chip-tag-border-shadow-hover"
+            },
+            {
+              "description": "テキスト色",
+              "name": "--dads-chip-tag-text-color"
+            },
+            {
+              "description": "hover時のテキスト色",
+              "name": "--dads-chip-tag-text-color-hover"
+            },
+            {
+              "description": "active時のテキスト色",
+              "name": "--dads-chip-tag-text-color-active"
+            },
+            {
+              "description": "角丸",
+              "name": "--dads-chip-tag-border-radius"
+            },
+            {
+              "description": "最小高さ",
+              "name": "--dads-chip-tag-min-height"
+            },
+            {
+              "description": "上下パディング",
+              "name": "--dads-chip-tag-padding-block"
+            },
+            {
+              "description": "左右パディング",
+              "name": "--dads-chip-tag-padding-inline"
+            },
+            {
+              "description": "ラベルの左右パディング",
+              "name": "--dads-chip-tag-label-padding-inline"
+            },
+            {
+              "description": "ラベルの下パディング",
+              "name": "--dads-chip-tag-label-padding-bottom"
+            },
+            {
+              "description": "ラベルの装飾線",
+              "name": "--dads-chip-tag-label-text-decoration"
+            },
+            {
+              "description": "ラベル下線の太さ",
+              "name": "--dads-chip-tag-label-underline-thickness"
+            },
+            {
+              "description": "hover/active時のラベル下線の太さ",
+              "name": "--dads-chip-tag-label-underline-thickness-hover"
+            },
+            {
+              "description": "ラベル下線のオフセット",
+              "name": "--dads-chip-tag-label-underline-offset"
+            },
+            {
+              "description": "アイコンサイズ",
+              "name": "--dads-chip-tag-icon-size"
+            },
+            {
+              "description": "アクションのヒット領域（見た目は維持したまま拡張）",
+              "name": "--dads-chip-tag-action-hit-area"
+            },
+            {
+              "description": "アクション内アイコンサイズ",
+              "name": "--dads-chip-tag-action-icon-size"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "末尾アクションボタン",
+              "name": "action"
+            },
+            {
+              "description": "末尾アイコンコンテナ",
+              "name": "action-icon"
+            },
+            {
+              "description": "チップタグ本体",
+              "name": "base"
+            },
+            {
+              "description": "ラベルテキストコンテナ",
+              "name": "label"
+            },
+            {
+              "description": "先頭アイコンスロット",
+              "name": "start-icon"
+            },
+            {
+              "description": "value属性の表示テキスト",
+              "name": "value"
+            }
+          ],
+          "slots": [
+            {
+              "description": "ラベルテキスト",
+              "name": "default"
+            },
+            {
+              "description": "末尾アイコン（オプション / 削除アクション用）",
+              "name": "end-icon"
+            },
+            {
+              "description": "先頭アイコン（オプション）",
+              "name": "start-icon"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#action",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getLabelText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleActionClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleBaseClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleBaseKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDadsCommand",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#requestRemove",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncActionLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncActionState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValueLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#valueText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-chip-tag', template: html` <span part=\"base\"> <slot name=\"start-icon\" part=\"start-icon\"></slot> <span part=\"label\"> <span part=\"value\" data-value-text></span> <slot></slot> </span> <button part=\"action\" type=\"button\"> <span part=\"action-icon\"> <slot name=\"end-icon\"> <svg width=\"24\" height=\"24\" viewBox=\"0 0 19 19\" fill=\"currentcolor\" aria-hidden=\"true\"> <path d=\"M5.89998 14.1538L9.49998 10.5538L13.1 14.1538L14.1538 13.1L10.5538 9.49998L14.1538 5.89998L13.1 4.84615L9.49998 8.44615L5.89998 4.84615L4.84615 5.89998L8.44615 9.49998L4.84615 13.1L5.89998 14.1538Z\" /> </svg> </slot> </span> </button> </span> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), chipTagTokens, chipTagStyles, applyDADSFocusStyles(), ], 'minimal' ), attributes: [ PropertyAttr('action'), PropertyAttr('remove-label'), PropertyAttr('value'), PropertyAttr('size'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "action=\"none\"時、チップ本体押下で発火（detail: { label, value }) NOTE: Invoker API / commandfor は現時点では採用せず、CustomEvent で操作を公開します。",
+              "name": "dads-chip-tag-click"
+            },
+            {
+              "description": "末尾アクション押下時に発火（detail: { label, value, remove() })",
+              "name": "dads-chip-tag-remove"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'remove' | 'none'"
+              },
+              "description": "末尾アクションの表示制御",
+              "name": "action"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "末尾アクションのaria-label",
+              "name": "remove-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "サイズ (sm | md | lg)",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "任意の値（イベントdetailに含まれる）",
+              "name": "value"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-chip-tag",
+          "customElement": true,
+          "modulePath": "./packages/components/chip-tag/chip-tag.ts",
+          "definitionPath": "./packages/components/chip-tag/chip-tag.ts",
+          "typeDefinitionPath": "./packages/components/chip-tag/chip-tag.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "チップタグ（情報の表示・削除）",
+              "categories": {
+                "semantics": [
+                  "アイテム化した情報を表示し、任意で削除できるコンポーネントです。"
+                ],
+                "keyboard": [
+                  "action=\"none\" の場合、チップ本体がフォーカス可能になり Enter/Space でクリックできます。",
+                  "action=\"remove\" の場合、末尾アクションボタンがフォーカス可能です。"
+                ],
+                "states": [
+                  "hover/active でテキスト色が変化します。",
+                  "action属性で末尾アクションの表示を切り替えます。"
+                ],
+                "labels": [
+                  "末尾アクションには remove-label で aria-label を指定できます。",
+                  "テキストが無い場合は aria-label 等で代替テキストの提供を検討してください。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "lead-icon",
+                  "title": "リードアイコン",
+                  "label": "リードアイコン",
+                  "description": "先頭に配置されるアイコンです（装飾目的のSVGは aria-hidden=\"true\" を推奨）。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "light",
+                    "selector": "[slot=\"start-icon\"]"
+                  }
+                },
+                {
+                  "id": "label",
+                  "title": "ラベル",
+                  "label": "ラベル",
+                  "description": "チップタグの表示テキストです。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "action",
+                  "title": "削除ボタン",
+                  "label": "削除ボタン",
+                  "description": "削除や取り外しのためのアクションボタンです。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"action\"]"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsChipTag",
+          "declaration": {
+            "name": "DadsChipTag",
+            "module": "packages/components/chip-tag/chip-tag.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/chip-tag/chip-tag.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/chip-tag/chip-tag.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-chip-tag",
+          "declaration": {
+            "name": "DadsChipTag",
+            "module": "./packages/components/chip-tag/chip-tag.ts"
           }
         }
       ]
@@ -6339,6 +7097,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -7404,6 +8175,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -8109,6 +8893,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "events": [
@@ -8791,6 +9588,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -9581,6 +10391,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -10439,6 +11262,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -11508,6 +12344,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "variant",
               "type": {
@@ -11923,6 +12772,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -12542,6 +13404,19 @@
               "name": "target",
               "type": {
                 "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -13433,6 +14308,19 @@
                 "type": {
                   "text": "void"
                 }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -14508,6 +15396,19 @@
               "description": "※必須表示の再同期\nfieldsetから呼び出される（スロット変更時やrequired属性変更時）"
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -15532,6 +16433,19 @@
               "name": "scopeValue",
               "type": {
                 "text": "string"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -16581,6 +17495,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -17256,6 +18183,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -17901,6 +18841,19 @@
                 "type": {
                   "text": "void"
                 }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -18725,6 +19678,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -19733,6 +20699,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -20673,6 +21652,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -21296,6 +22288,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "variant",
               "type": {
@@ -21499,6 +22504,37 @@
               "type": {
                 "text": "unknown[]"
               }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "DelegatingPropertyAttr",
+          "return": {
+            "type": {
+              "text": "AttrBehavior & { property: string }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "targetSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "property",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "attribute",
+              "default": "property"
+            },
+            {
+              "name": "remove",
+              "default": "false"
             }
           ]
         },
@@ -21901,6 +22937,19 @@
             {
               "kind": "method",
               "name": "reportValidity"
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -22306,6 +23355,15 @@
               "kind": "field",
               "name": "refs",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             }
           ],
           "events": [],
@@ -22547,6 +23605,14 @@
           "name": "css",
           "declaration": {
             "name": "css",
+            "module": "packages/core/web-components.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DelegatingPropertyAttr",
+          "declaration": {
+            "name": "DelegatingPropertyAttr",
             "module": "packages/core/web-components.ts"
           }
         },
@@ -23916,6 +24982,162 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/chip-tag/chip-tag-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineChipTag",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "チップタグコンポーネントを定義"
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultChipTag",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-chip-tag`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineChipTag",
+          "declaration": {
+            "name": "defineChipTag",
+            "module": "packages/components/chip-tag/chip-tag-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultChipTag",
+          "declaration": {
+            "name": "defineDefaultChipTag",
+            "module": "packages/components/chip-tag/chip-tag-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/chip-tag/chip-tag-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "chipTagStyles",
+          "default": "css` :host { display: inline-block; vertical-align: middle; --dads-chip-tag-action-hit-padding: 0px; } [part='base'] { display: inline-flex; align-items: center; box-sizing: border-box; min-height: var(--dads-chip-tag-min-height); padding-block: var(--dads-chip-tag-padding-block); padding-inline: var(--dads-chip-tag-padding-inline); padding-inline-end: calc(var(--dads-chip-tag-padding-inline) + var(--dads-chip-tag-action-hit-padding)); border-radius: var(--dads-chip-tag-border-radius); border: var(--dads-chip-tag-border-width) solid var(--dads-chip-tag-border-color); background-color: var(--dads-chip-tag-background); color: var(--dads-chip-tag-text-color); box-shadow: var(--dads-chip-tag-border-shadow); font-family: var(--dads-chip-tag-font-family); font-size: var(--dads-chip-tag-font-size); font-weight: var(--dads-chip-tag-font-weight); line-height: var(--dads-chip-tag-line-height); letter-spacing: var(--dads-chip-tag-letter-spacing); overflow-wrap: anywhere; } /* 下線用の余白は action=\"none\" 時だけ有効にする（remove時のセンタリングを崩さない） */ :host(:not([action='none'])) { --dads-chip-tag-label-padding-bottom: 0; } :host([action='none']) { --dads-chip-tag-label-text-decoration: underline; } :host([action='remove']) { --dads-chip-tag-action-hit-padding: calc( (var(--dads-chip-tag-action-hit-area) - var(--dads-chip-tag-action-size)) / 2 ); } :host([action='none']:hover) { --dads-chip-tag-text-color: var(--dads-chip-tag-text-color-hover); --dads-chip-tag-label-underline-thickness: var( --dads-chip-tag-label-underline-thickness-hover ); --dads-chip-tag-border-shadow: var(--dads-chip-tag-border-shadow-hover); } :host([action='none']:active) { --dads-chip-tag-text-color: var(--dads-chip-tag-text-color-active); --dads-chip-tag-label-underline-thickness: var( --dads-chip-tag-label-underline-thickness-hover ); } [part='start-icon'] { display: inline-flex; align-items: center; flex-shrink: 0; padding-block-end: var(--dads-chip-tag-label-padding-bottom); } [part='start-icon']::slotted(*) { width: var(--dads-chip-tag-icon-size); height: var(--dads-chip-tag-icon-size); display: block; } [part='label'] { display: inline-flex; align-items: center; padding-inline: var(--dads-chip-tag-label-padding-inline); padding-block-end: var(--dads-chip-tag-label-padding-bottom); text-decoration: var(--dads-chip-tag-label-text-decoration); text-decoration-thickness: var(--dads-chip-tag-label-underline-thickness); text-underline-offset: var(--dads-chip-tag-label-underline-offset); } [part='value'] { display: none; } :host([data-has-value]) [part='value'] { display: inline; } :host([data-has-value]) [part='label'] slot { display: none; } [part='action'] { display: inline-flex; align-items: center; justify-content: center; width: var(--dads-chip-tag-action-size); height: var(--dads-chip-tag-action-size); padding: 0; position: relative; margin-inline-end: calc(-1 * var(--dads-chip-tag-action-hit-padding)); border: var(--dads-chip-tag-action-border-width) solid var(--dads-chip-tag-action-border-color); border-radius: var(--dads-chip-tag-border-radius); background: var(--dads-chip-tag-action-background); color: var(--dads-chip-tag-action-icon-color); cursor: pointer; -webkit-tap-highlight-color: transparent; appearance: none; } /* 見た目は変えずに、タップ領域だけを拡張する（主に右側へ広げる） */ [part='action']::before { content: ''; position: absolute; width: var(--dads-chip-tag-action-hit-area); height: var(--dads-chip-tag-action-hit-area); left: 50%; top: 50%; transform: translate(-50%, -50%); background: transparent; } :host([action='remove']) [part='action'] { --dads-chip-tag-action-background: var(--chip-tag-action-background); --dads-chip-tag-action-icon-color: var(--chip-tag-action-icon-color); } :host([action='remove']) [part='action']:hover { --dads-chip-tag-action-background: var(--dads-chip-tag-action-background-hover); --dads-chip-tag-action-icon-color: var(--dads-chip-tag-action-icon-color-hover); } :host([action='remove']) [part='action']:active { --dads-chip-tag-action-background: var(--dads-chip-tag-action-background-active); --dads-chip-tag-action-icon-color: var(--dads-chip-tag-action-icon-color-active); } [part='action-icon'] { display: inline-flex; align-items: center; justify-content: center; width: var(--dads-chip-tag-action-icon-size); height: var(--dads-chip-tag-action-icon-size); } [part='action-icon']::slotted(*) { width: var(--dads-chip-tag-action-icon-size); height: var(--dads-chip-tag-action-icon-size); display: block; } [part='action']:focus-visible { outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); background-color: var(--dads-chip-tag-focus-text-element-bg); } :host([action='none']) [part='action'] { display: none; } :host([action='none']) [part='base'] { cursor: pointer; } @media (forced-colors: active) { [part='start-icon']::slotted(*), [part='action-icon']::slotted(*) { fill: CanvasText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "chipTagStyles",
+          "declaration": {
+            "name": "chipTagStyles",
+            "module": "packages/components/chip-tag/chip-tag-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/chip-tag/chip-tag-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "chipTagTokens",
+          "default": "css` ${chipTagSemanticTokensText} ${chipTagLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "chipTagTokens",
+          "declaration": {
+            "name": "chipTagTokens",
+            "module": "packages/components/chip-tag/chip-tag-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/chip-tag/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "chipTagStyles",
+          "declaration": {
+            "name": "chipTagStyles",
+            "module": "./chip-tag-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "chipTagTokens",
+          "declaration": {
+            "name": "chipTagTokens",
+            "module": "./chip-tag-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsChipTag",
+          "declaration": {
+            "name": "DadsChipTag",
+            "module": "./chip-tag.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineChipTag",
+          "declaration": {
+            "name": "defineChipTag",
+            "module": "./chip-tag-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultChipTag",
+          "declaration": {
+            "name": "defineDefaultChipTag",
+            "module": "./chip-tag-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/code-block/code-block-define.ts",
       "declarations": [
         {
@@ -24865,6 +26087,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/chip-label/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/chip-tag/index.js"
           }
         },
         {
@@ -25982,6 +27212,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "superclass": {
@@ -26198,6 +27441,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "superclass": {
@@ -26410,6 +27666,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -28866,6 +30135,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -29124,6 +30406,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -29974,6 +31269,167 @@
           "declaration": {
             "name": "applyStandardFormElementBehavior",
             "module": "packages/utils/behaviors.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/utils/command-store.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "command"
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CommandStore",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#handlersByCommand",
+              "privacy": "private",
+              "default": "new Map<string, Set<CommandHandler>>()"
+            },
+            {
+              "kind": "method",
+              "name": "bind",
+              "return": {
+                "type": {
+                  "text": "() => void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ParentNode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "invokeFromElement",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "invoker",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Readonly<{ root?: ParentNode; originalEvent?: Event | null }>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "on",
+              "return": {
+                "type": {
+                  "text": "() => void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "command",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "handler",
+                  "type": {
+                    "text": "CommandHandler"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "defaultCommandStore",
+          "default": "new CommandStore()"
+        },
+        {
+          "kind": "variable",
+          "name": "invoker"
+        },
+        {
+          "kind": "function",
+          "name": "resolveCommandTarget",
+          "return": {
+            "type": {
+              "text": "Element | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "ParentNode"
+              }
+            },
+            {
+              "name": "commandfor",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "target"
+        },
+        {
+          "kind": "variable",
+          "name": "value"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CommandStore",
+          "declaration": {
+            "name": "CommandStore",
+            "module": "packages/utils/command-store.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCommandDetail",
+          "declaration": {
+            "name": "DadsCommandDetail",
+            "module": "packages/utils/command-store.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defaultCommandStore",
+          "declaration": {
+            "name": "defaultCommandStore",
+            "module": "packages/utils/command-store.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveCommandTarget",
+          "declaration": {
+            "name": "resolveCommandTarget",
+            "module": "packages/utils/command-store.ts"
           }
         }
       ]

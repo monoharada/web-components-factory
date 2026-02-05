@@ -4,6 +4,9 @@ import {
   API_TABLE_PROPS_HEADER,
   API_TABLE_PROPS_WITH_TYPE_HEADER,
   CHIP_LABEL_ICON_SVG,
+  CHIP_TAG_ICON_SVG,
+  CHIP_TAG_ICON_OPTIONS,
+  MAIL_CLEAR_ICON_SVG,
   annotationToggleScript,
   annotationToggleUI,
   dadsColHeaderLine,
@@ -19,6 +22,52 @@ import {
 } from './shared.js';
 
 import { headingDemo } from './heading.js';
+
+const CHIP_TAG_ICON_MAP = Object.fromEntries(
+  CHIP_TAG_ICON_OPTIONS.map((option) => [option.value, option.svg]),
+);
+const CHIP_TAG_ICON_OPTIONS_HTML = CHIP_TAG_ICON_OPTIONS
+  .map((option) => `<option value="${option.value}"${option.value === 'dummy' ? ' selected' : ''}>${option.label}</option>`)
+  .join('');
+const CHIP_TAG_EXAMPLE_SEPARATOR = '1px solid var(--color-neutral-solid-gray-420, #949494)';
+const CHIP_TAG_EXAMPLE_ROW_STYLE = `
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 16px 0;
+`;
+const CHIP_TAG_EXAMPLE_LABEL_STYLE = `
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-20, 20px);
+  font-weight: var(--font-weight-700, 700);
+  line-height: 1.5;
+  letter-spacing: 0.4px;
+  color: var(--color-neutral-solid-gray-800, #333);
+  width: 64px;
+`;
+const CHIP_TAG_EXAMPLE_CHIP_LIST_STYLE = `
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+const CHIP_TAG_PERSON_ICON = `
+  <span slot="start-icon" style="padding: 2px; box-sizing: content-box; display: block;">
+    <svg width="100%" height="100%" viewBox="0 0 40 40" fill="currentcolor" aria-hidden="true">
+      <path d="M27 14C27 17.866 23.866 21 20 21C16.134 21 13 17.866 13 14C13 10.134 16.134 7 20 7C23.866 7 27 10.134 27 14Z" />
+      <path d="M4.26562 32.3465C7.68269 27.3096 13.4549 24 20.0001 24C26.5458 24 32.3184 27.31 35.7353 32.3475C32.0736 37.0071 26.3868 40 20.0009 40C13.6145 40 7.92729 37.0067 4.26562 32.3465Z" />
+      <path d="M39 20C39 9.50659 30.4934 1 20 1C9.50659 1 1 9.50659 1 20C1 30.4934 9.50659 39 20 39L20.0009 40C8.95518 40 0 31.0457 0 20C0 8.9543 8.9543 0 20 0C31.0457 0 40 8.9543 40 20C40 31.0457 31.0466 40 20.0009 40L20 39C30.4934 39 39 30.4934 39 20Z" />
+    </svg>
+  </span>
+`;
+const CHIP_TAG_PERSON_CHIP_STYLE = '--dads-chip-tag-icon-size: 40px;';
+const renderChipTagPersonChip = (label: string) => `
+  <dads-chip-tag style="${CHIP_TAG_PERSON_CHIP_STYLE}" value="${label}">
+    ${CHIP_TAG_PERSON_ICON}
+    ${label}
+  </dads-chip-tag>
+`;
 
 export const demos = {
 
@@ -2894,6 +2943,421 @@ export const demos = {
     <script type="module">
       // custom element定義前にプロパティへ触ると、upgrade後に「自前プロパティ」が残り挙動が壊れるため先に読み込む
       await Promise.all([import('dads-chip-label'), import('dads-switch'), import('a11y-annotate')]);
+    </script>
+  `,
+
+  chipTag: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">チップタグ</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        アイテム化した任意の情報を、表示・削除しやすくするための要素です。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <!-- アクセシビリティ注釈 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-chip-tag">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-chip-tag data-chip-tag-lead-target>
+              ${CHIP_TAG_ICON_SVG}
+              ラベル
+            </dads-chip-tag>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <!-- API / Controls（Storybook風） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          Props/Attrs と CSS vars の変更が Preview に即時反映されます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-chip-tag',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-chip-tag data-api-target value="ラベル" size="md">
+                  ${CHIP_TAG_ICON_SVG}
+                  ラベル
+                </dads-chip-tag>
+              </div>
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-chip-tag value="ラベル" size="md">
+                      ${CHIP_TAG_ICON_SVG}
+                      ラベル
+                    </dads-chip-tag>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>action</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>remove</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="action" data-api-attr="action" data-default="remove">
+                              <option value="remove" selected>remove</option>
+                              <option value="none">none</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>末尾アクションの表示</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>remove-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>削除</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="remove-label" value="" data-api-attr="remove-label" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>末尾アクションのaria-label</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>value</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>ラベル</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="value" value="ラベル" data-api-attr="value" data-default="ラベル"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>任意の値（イベントdetail）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>md</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="size" data-api-attr="size" data-default="md">
+                              <option value="sm">sm</option>
+                              <option value="md" selected>md</option>
+                              <option value="lg">lg</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>サイズ（sm / md / lg）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>lead-icon</code></th>
+                        <td><code>demo</code></td>
+                        <td><code>dummy</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="lead-icon" data-chip-tag-lead-icon data-default="dummy">
+                              <option value="none">none</option>
+                              ${CHIP_TAG_ICON_OPTIONS_HTML}
+                            </select>
+                          </div>
+                        </td>
+                        <td>リードアイコンの表示</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">Events</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">When</th>
+                        <th scope="col">Detail</th>
+                        <th scope="col">Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>dads-chip-tag-remove</code></th>
+                        <td><code>action="remove"</code> かつ末尾ボタン押下</td>
+                        <td><code>{ label, value, remove() }</code></td>
+                        <td>
+                          <div>cancelable / bubbles / composed</div>
+                          <div><code>event.preventDefault()</code> で自動削除を止められます</div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>dads-chip-tag-click</code></th>
+                        <td><code>action="none"</code> で本体押下</td>
+                        <td><code>{ label, value }</code></td>
+                        <td>bubbles / composed</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-chip-tag-min-height</code></th>
+                        <td><code>--spacing-8</code><br><small style="color:#666">(32px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-chip-tag-min-height" value="" data-api-css-var="--dads-chip-tag-min-height" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>最小高さ</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-chip-tag-border-radius</code></th>
+                        <td><code>--border-radius-full</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-chip-tag-border-radius" value="" data-api-css-var="--dads-chip-tag-border-radius" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>角丸</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-chip-tag-padding-block</code></th>
+                        <td><code>--spacing-1</code><br><small style="color:#666">(4px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-chip-tag-padding-block" value="" data-api-css-var="--dads-chip-tag-padding-block" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>上下パディング</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-chip-tag-padding-inline</code></th>
+                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-chip-tag-padding-inline" value="" data-api-css-var="--dads-chip-tag-padding-inline" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>左右パディング</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-chip-tag-icon-size</code></th>
+                        <td><code>--spacing-6</code><br><small style="color:#666">(24px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-chip-tag-icon-size" value="" data-api-css-var="--dads-chip-tag-icon-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アイコンサイズ</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本</h3>
+        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+          <dads-chip-tag>
+            ${CHIP_TAG_ICON_SVG}
+            ラベル
+          </dads-chip-tag>
+          <dads-chip-tag action="none">
+            ${CHIP_TAG_ICON_SVG}
+            クリック可能
+          </dads-chip-tag>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">メールアプリの宛先欄（作例）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          <code>commandfor</code> / <code>command</code> を使って、行単位の「すべて削除」を宣言的に接続します。
+        </p>
+        <div
+          style="
+            border-top: ${CHIP_TAG_EXAMPLE_SEPARATOR};
+            border-bottom: ${CHIP_TAG_EXAMPLE_SEPARATOR};
+          "
+        >
+          <div
+            id="mail-to-row"
+            data-mail-row
+            style="
+              ${CHIP_TAG_EXAMPLE_ROW_STYLE}
+            "
+          >
+            <span
+              style="
+                ${CHIP_TAG_EXAMPLE_LABEL_STYLE}
+              "
+            >
+              宛先
+            </span>
+            <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: space-between; width: 100%;">
+              <div style="${CHIP_TAG_EXAMPLE_CHIP_LIST_STYLE}">
+                ${renderChipTagPersonChip('デジ田 太郎')}
+                ${renderChipTagPersonChip('デジ濱 実')}
+              </div>
+              <dads-button
+                variant="outlined"
+                size="small"
+                commandfor="#mail-to-row"
+                command="clear-recipients"
+                aria-label="宛先をすべて削除"
+              >
+                ${MAIL_CLEAR_ICON_SVG}
+                すべて削除
+              </dads-button>
+            </div>
+          </div>
+
+          <div
+            id="mail-cc-row"
+            data-mail-row
+            style="
+              ${CHIP_TAG_EXAMPLE_ROW_STYLE}
+              border-top: ${CHIP_TAG_EXAMPLE_SEPARATOR};
+            "
+          >
+            <span
+              style="
+                ${CHIP_TAG_EXAMPLE_LABEL_STYLE}
+              "
+            >
+              CC
+            </span>
+            <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: space-between; width: 100%;">
+              <div style="${CHIP_TAG_EXAMPLE_CHIP_LIST_STYLE}">
+                ${renderChipTagPersonChip('デジ山 ひかり')}
+              </div>
+              <dads-button
+                variant="outlined"
+                size="small"
+                commandfor="#mail-cc-row"
+                command="clear-recipients"
+                aria-label="CCをすべて削除"
+              >
+                ${MAIL_CLEAR_ICON_SVG}
+                すべて削除
+              </dads-button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      (function() {
+        var currentScript = document.currentScript;
+        Promise.all([
+          customElements.whenDefined('dads-chip-tag'),
+          customElements.whenDefined('dads-switch'),
+          customElements.whenDefined('a11y-annotate'),
+        ]).then(function() {
+          var root = currentScript?.parentElement;
+          if (!root) return;
+
+          import('./packages/utils/command-store.js').then(function(mod) {
+            if (mod && mod.defaultCommandStore && mod.defaultCommandStore.bind) {
+              mod.defaultCommandStore.bind(root);
+
+              if (!root.hasAttribute('data-command-store-mail-demo')) {
+                root.setAttribute('data-command-store-mail-demo', 'true');
+                if (mod.defaultCommandStore.on) {
+                  mod.defaultCommandStore.on('clear-recipients', function(detail) {
+                    var target = detail && detail.target;
+                    if (!target) return;
+                    var chips = target.querySelectorAll('dads-chip-tag');
+                    for (var i = 0; i < chips.length; i++) {
+                      chips[i].dispatchEvent(new CustomEvent('dads-command', {
+                        bubbles: true,
+                        composed: true,
+                        cancelable: true,
+                        detail: {
+                          command: 'remove',
+                          invoker: detail.invoker,
+                          target: chips[i],
+                          value: null,
+                          originalEvent: detail.originalEvent || null,
+                        },
+                      }));
+                    }
+                  });
+                }
+              }
+            }
+          }).catch(function() {});
+
+          var preview = root.querySelector('dads-chip-tag[data-api-target]');
+          var annotateTarget = root.querySelector('dads-chip-tag[data-chip-tag-lead-target]');
+          var select = root.querySelector('[data-chip-tag-lead-icon]');
+          var iconMap = ${JSON.stringify(CHIP_TAG_ICON_MAP)};
+          var targets = [preview, annotateTarget].filter(Boolean);
+          if (targets.length > 0 && select) {
+            var defaultValue = select.getAttribute('data-default') || 'dummy';
+            var syncIcon = function() {
+              var value = select.value;
+              for (var i = 0; i < targets.length; i++) {
+                var target = targets[i];
+                if (!target) continue;
+                var existing = target.querySelector('[slot=\"start-icon\"]');
+                if (existing) existing.remove();
+                if (value === 'none') continue;
+                var svg = iconMap[value];
+                if (!svg) continue;
+                var wrapper = document.createElement('span');
+                wrapper.innerHTML = svg;
+                var icon = wrapper.querySelector('[slot=\"start-icon\"]');
+                if (icon) target.prepend(icon);
+              }
+            };
+            select.addEventListener('change', syncIcon);
+            var resetButton = root.querySelector('[data-api-reset]');
+            if (resetButton) {
+              resetButton.addEventListener('click', function() {
+                select.value = defaultValue;
+                syncIcon();
+              });
+            }
+            syncIcon();
+          }
+        });
+      })();
     </script>
   `,
 

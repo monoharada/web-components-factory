@@ -47,6 +47,9 @@ export * from './switch/index.js';
 // チップラベル
 export * from './chip-label/index.js';
 
+// チップタグ
+export * from './chip-tag/index.js';
+
 // ページナビゲーション
 export * from './page-navigation/index.js';
 

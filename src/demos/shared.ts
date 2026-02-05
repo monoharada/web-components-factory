@@ -184,8 +184,6 @@ const API_TABLE_CSS_VARS_NOTE = `
   </p>
 `;
 
-const CHIP_LABEL_ICON_SVG = createIconWithSlot('dummy', 'icon', 24);
-
 const HEADING_ICON_PATH_OPTIONS = [
   { label: 'dummy', value: iconPaths.dummy },
   { label: 'search', value: iconPaths.search },
@@ -197,6 +195,15 @@ const HEADING_ICON_PATH_OPTIONS = [
   { label: 'caret', value: iconPaths.caret },
   { label: 'externalLink', value: iconPaths.externalLink },
 ] as const;
+
+const CHIP_LABEL_ICON_SVG = createIconWithSlot('dummy', 'icon', 24);
+const CHIP_TAG_ICON_SVG = createIconWithSlot('dummy', 'start-icon', 24);
+const CHIP_TAG_ICON_OPTIONS = HEADING_ICON_PATH_OPTIONS.map((option) => ({
+  label: option.label,
+  value: option.label,
+  svg: createIconWithSlot(option.label, 'start-icon', 24),
+}));
+const MAIL_CLEAR_ICON_SVG = createIconWithSlot('delete', 'icon-start', 20);
 
 function renderAllChipLabels(): string {
   const variants = ["text", "outline", "filled-outline", "fill"] as const;
@@ -427,6 +434,9 @@ export {
   API_TABLE_CSS_VARS_HEADER,
   API_TABLE_CSS_VARS_NOTE,
   CHIP_LABEL_ICON_SVG,
+  CHIP_TAG_ICON_SVG,
+  CHIP_TAG_ICON_OPTIONS,
+  MAIL_CLEAR_ICON_SVG,
   HEADING_ICON_PATH_OPTIONS,
   renderAllChipLabels,
   repeat,
