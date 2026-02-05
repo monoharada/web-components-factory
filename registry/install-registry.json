@@ -87,6 +87,18 @@
         "componentDir": "packages/components/chip-label"
       }
     },
+    "chip-tag": {
+      "id": "chip-tag",
+      "tags": [
+        "dads-chip-tag"
+      ],
+      "define": "defineChipTag",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/chip-tag"
+      }
+    },
     "code-block": {
       "id": "code-block",
       "tags": [
@@ -309,6 +321,7 @@
     "dads-card": "card",
     "dads-checkbox": "checkbox",
     "dads-chip-label": "chip-label",
+    "dads-chip-tag": "chip-tag",
     "dads-code-block": "code-block",
     "dads-date-picker": "date-picker",
     "dads-disclosure": "disclosure",
