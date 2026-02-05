@@ -2,6 +2,36 @@ import { describe, it, expect, vi } from 'vitest';
 import { CommandStore, resolveCommandTarget } from './command-store';
 
 describe('command-store', () => {
+  it('bind: shadow DOM 内の invoker を composedPath で解決できる', () => {
+    class ShadowInvokerElement extends HTMLElement {
+      constructor() {
+        super();
+        const sr = this.attachShadow({ mode: 'open' });
+        sr.innerHTML = `<button command="remove" type="button">x</button>`;
+      }
+    }
+    if (!customElements.get('shadow-invoker-el')) {
+      customElements.define('shadow-invoker-el', ShadowInvokerElement);
+    }
+
+    const root = document.createElement('div');
+    const host = document.createElement('shadow-invoker-el') as HTMLElement;
+    root.appendChild(host);
+
+    const store = new CommandStore();
+    const handler = vi.fn();
+    store.on('remove', handler);
+
+    const cleanup = store.bind(root);
+    const inner = host.shadowRoot?.querySelector('button') as HTMLButtonElement | null;
+    inner?.click();
+    cleanup();
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    const detail = handler.mock.calls[0]?.[0];
+    expect(detail?.invoker).toBe(inner);
+  });
+
   it('resolveCommandTarget: id を解決できる', () => {
     const root = document.createElement('div');
     const target = document.createElement('div');
@@ -88,4 +118,3 @@ describe('command-store', () => {
     expect(handler).toHaveBeenCalledTimes(1);
   });
 });
-

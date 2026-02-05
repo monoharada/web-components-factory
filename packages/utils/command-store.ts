@@ -58,6 +58,18 @@ function findInvokerFromEventTarget(target: EventTarget | null): Element | null 
   return target.closest('[command]');
 }
 
+function findInvokerFromEvent(event: Event): Element | null {
+  // Prefer composedPath so shadow DOM retargeting doesn't hide the real invoker.
+  const composedPath =
+    typeof event.composedPath === 'function' ? (event.composedPath() as unknown[]) : [];
+  for (const entry of composedPath) {
+    if (!(entry instanceof Element)) continue;
+    const invoker = entry.closest('[command]');
+    if (invoker) return invoker;
+  }
+  return findInvokerFromEventTarget(event.target);
+}
+
 function isNativeKeyboardInvoker(el: Element): boolean {
   return (
     el instanceof HTMLButtonElement ||
@@ -132,7 +144,7 @@ export class CommandStore {
     if (!parent.addEventListener || !parent.removeEventListener) return () => {};
 
     const onClick: EventListener = (event) => {
-      const invoker = findInvokerFromEventTarget(event.target);
+      const invoker = findInvokerFromEvent(event as Event);
       if (!invoker) return;
       this.invokeFromElement(invoker, { root, originalEvent: event });
     };
@@ -141,7 +153,7 @@ export class CommandStore {
       if (!(event instanceof KeyboardEvent)) return;
       if (event.key !== 'Enter' && event.key !== ' ') return;
 
-      const invoker = findInvokerFromEventTarget(event.target);
+      const invoker = findInvokerFromEvent(event);
       if (!invoker) return;
       if (isNativeKeyboardInvoker(invoker)) return;
 
@@ -160,4 +172,3 @@ export class CommandStore {
 }
 
 export const defaultCommandStore = new CommandStore();
-

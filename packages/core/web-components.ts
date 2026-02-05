@@ -262,7 +262,12 @@ export function DelegatingPropertyAttr(
   return {
     property,
     attribute,
-    getValue: (el: HTMLElement) => el.getAttribute(attribute),
+    getValue: (i: HTMLElement) => {
+      const val = i.getAttribute(attribute);
+      if (val != null || !remove) return val;
+      const trg = resolveTarget(i);
+      return trg ? trg.getAttribute(attribute) : null;
+    },
     setValue: (el: HTMLElement, v: unknown) => {
       if (v == null) el.removeAttribute(attribute);
       else el.setAttribute(attribute, String(v));
