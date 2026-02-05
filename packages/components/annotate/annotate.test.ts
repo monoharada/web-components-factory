@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { waitFor } from '@testing-library/dom';
 import {
   cleanup,
@@ -39,6 +39,48 @@ function waitForDoubleRaf(): Promise<void> {
 describe('DadsAnnotate', () => {
   afterEach(() => {
     cleanup();
+    try {
+      window.localStorage.removeItem('dads:a11y');
+    } catch {
+      // ignore
+    }
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('CEMロード失敗時でも無限refreshしない', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    window.localStorage.setItem('dads:a11y', '1');
+
+    let microtaskCalls = 0;
+    const origQueueMicrotask = globalThis.queueMicrotask;
+    vi.stubGlobal('queueMicrotask', (cb: VoidFunction) => {
+      microtaskCalls += 1;
+      return origQueueMicrotask(cb);
+    });
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: false, status: 404, json: async () => ({}) }) as unknown as Response),
+    );
+
+    const el = renderWebComponent(`
+      <a11y-annotate>
+        <div id="target">Target</div>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+    expect(el).toBeInTheDocument();
+
+    // microtaskが連鎖している場合、短時間で呼び出し回数が増え続ける
+    await new Promise((r) => setTimeout(r, 50));
+    expect(microtaskCalls).toBeLessThan(20);
+
+    // CEM取得は1回に抑えられる（失敗しても再試行ループしない）
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 
   it('ラップした要素を表示し、6カテゴリの枠を出す', async () => {
