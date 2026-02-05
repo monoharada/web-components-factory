@@ -728,6 +728,68 @@
       }
     ]
   },
+  "dads-chip-tag": {
+    "version": 1,
+    "summary": "チップタグ（情報の表示・削除）",
+    "categories": {
+      "semantics": [
+        "アイテム化した情報を表示し、任意で削除できるコンポーネントです。"
+      ],
+      "keyboard": [
+        "action=\"none\" の場合、チップ本体がフォーカス可能になり Enter/Space でクリックできます。",
+        "action=\"remove\" の場合、末尾アクションボタンがフォーカス可能です。"
+      ],
+      "states": [
+        "hover/active でテキスト色が変化します。",
+        "action属性で末尾アクションの表示を切り替えます。"
+      ],
+      "labels": [
+        "末尾アクションには remove-label で aria-label を指定できます。",
+        "テキストが無い場合は aria-label 等で代替テキストの提供を検討してください。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "lead-icon",
+        "title": "リードアイコン",
+        "label": "リードアイコン",
+        "description": "先頭に配置されるアイコンです（装飾目的のSVGは aria-hidden=\"true\" を推奨）。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "light",
+          "selector": "[slot=\"start-icon\"]"
+        }
+      },
+      {
+        "id": "label",
+        "title": "ラベル",
+        "label": "ラベル",
+        "description": "チップタグの表示テキストです。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "action",
+        "title": "削除ボタン",
+        "label": "削除ボタン",
+        "description": "削除や取り外しのためのアクションボタンです。",
+        "category": "keyboard",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"action\"]"
+        }
+      }
+    ]
+  },
   "dads-date-picker": {
     "version": 1,
     "summary": "日付ピッカー／カレンダーコンポーネント仕様（アクセシビリティ注釈）",
