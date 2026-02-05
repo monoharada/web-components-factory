@@ -42,6 +42,8 @@
 ## 制約（AI/移植性のため）
 
 - `html` は **プレーン HTML snippet** とし、`<script>` / `<style>` を含めない
+- `html` に **インラインイベントハンドラ**（`on*="..."`）を含めない
+- `html` に **危険なURL**（`javascript:`）や `srcdoc=` を含めない
 - カスタム要素は **`dads-*` のみ**を使う（prefixed `<myui-*>` は書かない）
   - prefix 変換は MCP 側が行う（`prefix` 引数）
 
@@ -52,6 +54,7 @@
 - `requires[]` が `registry/install-registry.json` に存在する
 - `html` に未知の custom element がない（CEMで unknownElement=error）
 - canonical tag prefix 以外の custom element を含まない
+- `<script>` / `<style>` / `on*=` / `javascript:` / `srcdoc=` を含まない
 
 ## AI / MCP での利用
 
@@ -66,4 +69,3 @@
 1. `wcf add <componentIds...>` を実行
 2. 返ってきた snippet を画面へ貼る
 3. `validate_markup` / `validate:wc` で検証
-

@@ -18,6 +18,8 @@ import ts from 'typescript';
 
 const DEFAULT_REPO = 'monoharada/web-components-factory';
 const DEFAULT_REF = 'main';
+const OWNER_SHARED = '__shared__';
+const OWNER_META = '__meta__';
 
 function usage() {
   console.log(
@@ -36,6 +38,7 @@ function usage() {
       '  - This CLI reads install metadata from the upstream install registry (registry/install-registry.json).',
       '  - UI patterns are read from registry/pattern-registry.json. Use --pattern to install by recipe.',
       '  - By default, CEM files are NOT written into vendor. Use --embed-cem if you need local CEM snapshots.',
+      '  - Use --force to overwrite locally modified managed files (otherwise detach or attach as appropriate).',
       '  - Default output is no-build friendly ESM (.js) files + importmap snippet.',
       '  - --lang ts vendors TypeScript sources (for bundler/tsc workflows; not directly runnable in browsers).',
     ].join('\n'),
@@ -105,6 +108,35 @@ async function pathExists(p) {
   } catch {
     return false;
   }
+}
+
+function isSubPath(childAbs, parentAbs) {
+  const rel = path.relative(parentAbs, childAbs);
+  if (rel === '' || rel === '.') return false;
+  if (rel.startsWith('..') || path.isAbsolute(rel)) return false;
+  return true;
+}
+
+function resolveOutDir(outDir, { allowOutsideProject }) {
+  const raw = String(outDir ?? '').trim();
+  if (!raw) throw new Error('Invalid --out (empty)');
+
+  const cwdAbs = path.resolve(process.cwd());
+  const outAbs = path.resolve(cwdAbs, raw);
+  const inside = isSubPath(outAbs, cwdAbs);
+
+  if (!inside && !allowOutsideProject) {
+    throw new Error(
+      `Refusing --out outside the project: ${raw}\n` +
+        `- Use a project-relative path (recommended), or pass --allow-outside-project explicitly.`,
+    );
+  }
+
+  if (outAbs === cwdAbs) {
+    throw new Error(`Refusing --out pointing to project root: ${raw}`);
+  }
+
+  return { outAbs, outDir: raw, insideProject: inside };
 }
 
 function sha256(text) {
@@ -277,6 +309,37 @@ function run(cmd, args, { cwd } = {}) {
   });
 }
 
+function assertTarListingSafe(listingText, { archiveUrl }) {
+  const lines = String(listingText ?? '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  for (const p of lines) {
+    const n = path.posix.normalize(p.replaceAll('\\', '/'));
+    if (!n || n === '.' || n.startsWith('/')) {
+      throw new Error(`Unsafe tar entry (absolute/empty): "${p}" from ${archiveUrl}`);
+    }
+    if (n.split('/').includes('..')) {
+      throw new Error(`Unsafe tar entry (..): "${p}" from ${archiveUrl}`);
+    }
+  }
+}
+
+function assertTarNoSymlinks(longListingText, { archiveUrl }) {
+  const lines = String(longListingText ?? '')
+    .split('\n')
+    .map((l) => l.trimEnd())
+    .filter(Boolean);
+
+  // Typical: "lrwxr-xr-x ... link -> target"
+  for (const line of lines) {
+    if (line.startsWith('l') || line.includes(' -> ')) {
+      throw new Error(`Refusing to extract tar with symlinks: ${archiveUrl}`);
+    }
+  }
+}
+
 async function fetchUpstreamToTemp({ repo, ref }) {
   const tmpBase = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-'));
   const dest = path.join(tmpBase, 'upstream');
@@ -295,6 +358,15 @@ async function fetchUpstreamToTemp({ repo, ref }) {
     const buf = Buffer.from(await res.arrayBuffer());
     await fs.writeFile(archive, buf);
     await fs.mkdir(dest, { recursive: true });
+
+    // Safety preflight (tar is an external tool + archive extraction is a common footgun).
+    // - refuse absolute/.. entries
+    // - refuse symlinks
+    const list = await run('tar', ['-tzf', archive]);
+    assertTarListingSafe(list.out, { archiveUrl: url });
+    const longList = await run('tar', ['-tvzf', archive]);
+    assertTarNoSymlinks(longList.out, { archiveUrl: url });
+
     await run('tar', ['-xzf', archive, '-C', dest, '--strip-components=1']);
     return { tmpBase, dest };
   }
@@ -377,6 +449,25 @@ function transpileTsToEsmJs(tsText, fileName) {
 async function writeManagedFile(lock, relPath, content, ownerId) {
   const absPath = path.resolve(process.cwd(), relPath);
   const key = relFromCwd(absPath);
+  if (lock.detachedIds?.includes(ownerId)) return;
+
+  const existingMeta = lock.files?.[key];
+  if (existingMeta && existingMeta.detached !== true) {
+    try {
+      const onDisk = await fs.readFile(absPath, 'utf8');
+      const onDiskHash = sha256(onDisk);
+      if (existingMeta.sha256 && onDiskHash !== existingMeta.sha256 && lock.force !== true) {
+        throw new Error(
+          `Refusing to overwrite locally modified file: ${key}\n` +
+            `- If you intended to edit it, run: wcf detach ${ownerId}\n` +
+            `- If you want to overwrite anyway, re-run with: --force`,
+        );
+      }
+    } catch (err) {
+      // If the file doesn't exist, it's safe to write.
+      if (!(err && typeof err === 'object' && 'code' in err && err.code === 'ENOENT')) throw err;
+    }
+  }
   const hash = sha256(content);
   lock.files[key] = { ownerId, sha256: hash, detached: lock.detachedIds.includes(ownerId) };
   await fs.mkdir(path.dirname(absPath), { recursive: true });
@@ -446,11 +537,9 @@ async function installToVendor({
       // ownerId: componentId for component files, otherwise "__shared__"
       const ownerId = relFromUpstream.startsWith('packages/components/')
         ? relFromUpstream.split('/')[2]
-        : '__shared__';
+        : OWNER_SHARED;
 
-      // Skip overwriting detached component-owned files.
-      const existing = lock.files[destKeyBase];
-      if (existing?.detached === true && existing.ownerId === ownerId) continue;
+      if (lock.detachedIds?.includes(ownerId)) continue;
 
       const buf = await fs.readFile(fileAbs);
       if (fileAbs.endsWith('.ts') && lang !== 'ts') {
@@ -471,19 +560,20 @@ async function installToVendor({
       lock,
       relFromCwd(path.join(cemRoot, 'custom-elements.json')),
       JSON.stringify(cem, null, 2) + '\n',
-      '__shared__',
+      OWNER_META,
     );
     const prefixedCem = transformCemPrefix(cem, prefix);
     await writeManagedFile(
       lock,
       relFromCwd(path.join(cemRoot, `custom-elements.${prefix}.json`)),
       JSON.stringify(prefixedCem, null, 2) + '\n',
-      '__shared__',
+      OWNER_META,
     );
   }
 
   // 4) Generate autoload wrappers (one per componentId).
   for (const id of componentIds) {
+    if (lock.detachedIds?.includes(id)) continue;
     const install = byId.get(id);
     const define = String(install?.define ?? '').trim();
     if (!define) throw new Error(`Missing install.define for componentId="${id}"`);
@@ -515,8 +605,6 @@ async function installToVendor({
 
     const rel = path.join(autoloadRoot, `${id}${outExt}`);
     const relKey = relFromCwd(rel);
-    const existing = lock.files[relKey];
-    if (existing?.detached === true && existing.ownerId === id) continue;
     await writeManagedFile(lock, relKey, out, id);
   }
 
@@ -526,7 +614,7 @@ async function installToVendor({
     lock,
     relFromCwd(path.join(vendorRoot, `index${outExt}`)),
     indexJs,
-    '__shared__',
+    OWNER_META,
   );
 
   // 6) Importmap snippet (js-only).
@@ -542,7 +630,7 @@ async function installToVendor({
       lock,
       relFromCwd(path.join(vendorRoot, 'importmap.snippet.json')),
       snippet,
-      '__shared__',
+      OWNER_META,
     );
   }
 }
@@ -559,6 +647,7 @@ async function loadConfig() {
   const config = await readJson(configPath);
   config.lang ??= 'js';
   config.embedCem ??= false;
+  config.allowOutsideProject ??= false;
   return { configPath, config };
 }
 
@@ -574,6 +663,7 @@ async function loadLock() {
       outDir: defaultOutDir('dads'),
       installed: [],
       detachedIds: [],
+      allowOutsideProject: false,
       files: {},
     };
     await writeJson(lockPath, initial);
@@ -582,6 +672,7 @@ async function loadLock() {
   lock.lang ??= 'js';
   lock.embedCem ??= false;
   lock.detachedIds ??= [];
+  lock.allowOutsideProject ??= false;
   lock.files ??= {};
   return { lockPath, lock };
 }
@@ -594,10 +685,12 @@ async function cmdInit(flags) {
   if (!lang) throw new Error(`Invalid --lang: ${String(flags.lang ?? '')} (expected "js" or "ts")`);
 
   const embedCem = Boolean(flags['embed-cem'] ?? false);
+  const allowOutsideProject = Boolean(flags['allow-outside-project'] ?? false);
 
   const repo = String(flags.repo ?? DEFAULT_REPO);
   const ref = String(flags.ref ?? DEFAULT_REF);
   const outDir = String(flags.out ?? defaultOutDir(prefix));
+  resolveOutDir(outDir, { allowOutsideProject });
 
   const configPath = path.resolve(process.cwd(), '.wcf/config.json');
   const lockPath = path.resolve(process.cwd(), '.wcf/lock.json');
@@ -611,11 +704,27 @@ async function cmdInit(flags) {
     prefix,
     outDir,
     embedCem,
+    allowOutsideProject,
     registry: { type: 'github', repo, ref },
   });
-  await writeJson(lockPath, { schemaVersion: 1, repo, ref, lang, prefix, outDir, embedCem, installed: [], detachedIds: [], files: {} });
+  await writeJson(lockPath, {
+    schemaVersion: 1,
+    repo,
+    ref,
+    lang,
+    prefix,
+    outDir,
+    embedCem,
+    allowOutsideProject,
+    installed: [],
+    detachedIds: [],
+    force: false,
+    files: {},
+  });
 
-  console.log(`✅ Initialized .wcf/ (prefix=${prefix}, lang=${lang}, outDir=${outDir}, repo=${repo}@${ref}, embedCem=${embedCem})`);
+  console.log(
+    `✅ Initialized .wcf/ (prefix=${prefix}, lang=${lang}, outDir=${outDir}, repo=${repo}@${ref}, embedCem=${embedCem})`,
+  );
 }
 
 async function cmdList(flags) {
@@ -672,8 +781,11 @@ async function cmdAdd(ids, flags) {
   const lang = normalizeLang(flags.lang ?? config.lang ?? lock.lang ?? 'js');
   if (!lang) throw new Error(`Invalid --lang: ${String(flags.lang ?? '')} (expected "js" or "ts")`);
 
+  const allowOutsideProject = Boolean(flags['allow-outside-project'] ?? config.allowOutsideProject ?? lock.allowOutsideProject ?? false);
   const outDir = String(flags.out ?? config.outDir ?? defaultOutDir(prefix));
+  resolveOutDir(outDir, { allowOutsideProject });
   const embedCem = Boolean(flags['embed-cem'] ?? config.embedCem ?? lock.embedCem ?? false);
+  const force = Boolean(flags.force ?? false);
 
   const patternIds = parseCsvFlag(flags.pattern, 'pattern');
 
@@ -709,8 +821,10 @@ async function cmdAdd(ids, flags) {
     lock.prefix = prefix;
     lock.outDir = outDir;
     lock.embedCem = embedCem;
+    lock.allowOutsideProject = allowOutsideProject;
     lock.installed = nextInstalled;
     lock.detachedIds ??= [];
+    if (force) lock.force = true;
     lock.files ??= {};
 
     const componentIds = resolveClosure(nextInstalled, byId);
@@ -726,6 +840,7 @@ async function cmdAdd(ids, flags) {
       lock,
     });
 
+    if ('force' in lock) delete lock.force;
     await writeJson(lockPath, lock);
     const via = patternIds.length > 0 ? `, patterns=${patternIds.join(',')}` : '';
     console.log(`✅ Installed: ${closure.join(', ')} (prefix=${prefix}, outDir=${outDir}${via})`);
@@ -766,8 +881,10 @@ async function cmdAdd(ids, flags) {
     lock.prefix = prefix;
     lock.outDir = outDir;
     lock.embedCem = embedCem;
+    lock.allowOutsideProject = allowOutsideProject;
     lock.installed = nextInstalled;
     lock.detachedIds ??= [];
+    if (force) lock.force = true;
     lock.files ??= {};
 
     const componentIds = resolveClosure(nextInstalled, byId);
@@ -783,6 +900,7 @@ async function cmdAdd(ids, flags) {
       lock,
     });
 
+    if ('force' in lock) delete lock.force;
     await writeJson(lockPath, lock);
     const via = patternIds.length > 0 ? `, patterns=${patternIds.join(',')}` : '';
     console.log(`✅ Installed: ${closure.join(', ')} (prefix=${prefix}, outDir=${outDir}${via})`);
@@ -832,6 +950,16 @@ async function cmdRemove(ids) {
   lock.detachedIds ??= [];
   lock.files ??= {};
 
+  const vendorRootAbs = path.resolve(process.cwd(), String(lock.outDir ?? defaultOutDir(lock.prefix ?? 'dads')));
+  const cwdAbs = path.resolve(process.cwd());
+  const vendorInsideProject = isSubPath(vendorRootAbs, cwdAbs);
+  if (!vendorInsideProject && !lock.allowOutsideProject) {
+    throw new Error(
+      `Refusing to remove with --out outside the project (outDir=${String(lock.outDir ?? '')}).\n` +
+        `- Re-init with --allow-outside-project if you really need this.`,
+    );
+  }
+
   const toRemove = new Set(ids.map(String));
   const nextInstalled = lock.installed.filter((id) => !toRemove.has(id));
   lock.installed = nextInstalled;
@@ -842,6 +970,10 @@ async function cmdRemove(ids) {
     if (!toRemove.has(meta.ownerId)) continue;
     if (meta.detached === true) continue;
     const abs = path.resolve(process.cwd(), rel);
+    if (!isSubPath(abs, vendorRootAbs) && abs !== vendorRootAbs) {
+      // Hard guard: never delete outside the configured vendor root.
+      continue;
+    }
     try {
       await fs.rm(abs, { force: true, recursive: false });
     } catch {

@@ -68,6 +68,7 @@ wcf init --prefix myui --lang js --out vendor/components/myui
 
 - `--lang js`（デフォルト）: ブラウザ実行しやすい ESM `.js` を vendor に生成し、`importmap.snippet.json` を出します
 - `--lang ts`: TypeScript ソースを vendor に配置します（※ブラウザ直実行ではなく、bundler / tsc 前提）
+- `--allow-outside-project`: `--out` をプロジェクト外に指定する場合のみ明示的に付けます（削除操作の安全のため、通常は非推奨）
 
 ### 2) 追加（依存も含めてインストール）
 
@@ -89,6 +90,13 @@ wcf add --pattern search-form
 wcf add --pattern search-form,table-with-pagination
 ```
 
+#### ローカル改変を上書きしたい（強制）
+
+managed なファイルに手編集が入っている場合、`wcf add` は安全のため上書きを拒否します。
+
+- そのまま編集したい: `wcf detach <id>`（推奨）
+- 上書きして最新に戻したい: `wcf add ... --force`
+
 prefix を変える場合：
 
 ```bash
@@ -106,6 +114,14 @@ wcf detach button
 ```
 
 以後、同じ componentId のファイルは `wcf add` で上書きされません（管理対象から外れます）。
+
+#### 共有コードも保護したい（任意）
+
+`packages/core` / `packages/utils` 等の共有コード（vendor 内では `wcf/packages/*`）も手編集する場合は、`__shared__` を detach できます。
+
+```bash
+wcf detach __shared__
+```
 
 ### 4.1) 再アタッチ（管理対象に戻す）
 

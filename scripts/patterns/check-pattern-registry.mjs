@@ -25,6 +25,22 @@ function assertNoScripts(html, id) {
   if (lower.includes('<style')) fail(`${id}: pattern html must not include <style>`);
 }
 
+function assertNoInlineEventHandlers(html, id) {
+  if (/\son[a-z]+\s*=/i.test(String(html))) {
+    fail(`${id}: pattern html must not include inline event handlers (on*="...")`);
+  }
+}
+
+function assertNoJavascriptUrls(html, id) {
+  const text = String(html);
+  if (/(?:href|src)\s*=\s*["']\s*javascript:/i.test(text)) {
+    fail(`${id}: pattern html must not include javascript: URLs`);
+  }
+  if (/\ssrcdoc\s*=/i.test(text)) {
+    fail(`${id}: pattern html must not include srcdoc=`);
+  }
+}
+
 async function loadJson(filePath) {
   const text = await fs.readFile(filePath, 'utf8');
   return JSON.parse(text);
@@ -107,6 +123,8 @@ async function main() {
     const html = typeof raw.html === 'string' ? raw.html : '';
     if (!html.trim()) fail(`${id}: missing html`);
     assertNoScripts(html, id);
+    assertNoInlineEventHandlers(html, id);
+    assertNoJavascriptUrls(html, id);
     assertCanonicalPrefixUsage(html, canonicalPrefix, id);
 
     const errors = collectUnknownElementErrors({ html, cemIndex });
