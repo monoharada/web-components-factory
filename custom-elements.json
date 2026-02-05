@@ -2565,15 +2565,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), DelegatingPropertyAttr('[part=\"base\"]', 'command'), DelegatingPropertyAttr('[part=\"base\"]', 'commandfor'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }"
+              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), DelegatingPropertyAttr('[part=\"base\"]', 'command'), DelegatingPropertyAttr('[part=\"base\"]', 'commandfor'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -5319,15 +5319,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-checkbox', template: html` <label part=\"base\" id=\"base\" class=\"dads-checkbox\"> <span part=\"checkbox\" id=\"checkbox\" class=\"dads-checkbox__checkbox\"> <input part=\"input\" id=\"input\" class=\"dads-checkbox__input\" type=\"checkbox\" /> </span> <span part=\"label\" id=\"label\" class=\"dads-checkbox__label\"></span> <span part=\"requirement\" id=\"requirement\"></span> </label> <!-- エラーメッセージ表示 --> <span part=\"error-text\" id=\"error-text\"></span> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> `, styles: withReset([applyDADSTokens(), checkboxStyles], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('size'), BooleanAttr('disabled'), BooleanAttr('required'), BooleanAttr('auto-validate'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('name'), // checked/indeterminate/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない { attribute: 'checked' }, { attribute: 'indeterminate' }, { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, ], }"
+              "default": "{ name: 'dads-checkbox', template: html` <label part=\"base\" id=\"base\" class=\"dads-checkbox\"> <span part=\"checkbox\" id=\"checkbox\" class=\"dads-checkbox__checkbox\"> <input part=\"input\" id=\"input\" class=\"dads-checkbox__input\" type=\"checkbox\" /> </span> <span part=\"label\" id=\"label\" class=\"dads-checkbox__label\"></span> <span part=\"requirement\" id=\"requirement\"></span> </label> <!-- エラーメッセージ表示 --> <span part=\"error-text\" id=\"error-text\"></span> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> `, styles: withReset([applyDADSTokens(), checkboxStyles], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('size'), BooleanAttr('disabled'), BooleanAttr('required'), BooleanAttr('auto-validate'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('name'), // checked/indeterminate/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない { attribute: 'checked' }, { attribute: 'indeterminate' }, { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -8137,15 +8137,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-date-picker', template: html` <div part=\"controls\" id=\"controls\"> <div part=\"inputs\" id=\"inputs\"> <label part=\"field year\" id=\"year-field\"> <span part=\"field-label\">年</span> <input part=\"field-input\" id=\"year-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-year-input /> </label> <label part=\"field month\" id=\"month-field\"> <span part=\"field-label\">月</span> <input part=\"field-input\" id=\"month-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-month-input /> </label> <label part=\"field day\" id=\"day-field\"> <span part=\"field-label\">日</span> <input part=\"field-input\" id=\"day-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-day-input /> </label> </div> <button part=\"calendar-button\" id=\"calendar-button\" type=\"button\" aria-haspopup=\"dialog\" aria-controls=\"calendar-popover\" aria-expanded=\"false\" > <svg part=\"calendar-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"カレンダー\"> <path d=\"M9 16.5C7.62 16.5 6.5 15.38 6.5 14C6.5 12.62 7.62 11.5 9 11.5C10.38 11.5 11.5 12.62 11.5 14C11.5 15.38 10.38 16.5 9 16.5ZM5 22C3.9 22 3 21.09 3 20V6C3 4.91 3.91 4 5 4H6V2H8V4H16V2H18V4H19C20.09 4 21 4.91 21 6V20C21 21.09 20.09 22 19 22H5ZM5 20H19V10H5V20Z\" fill=\"currentcolor\"/> </svg> <svg part=\"calendar-chevron\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17.1L3 8L4 7L12 15L20 7L21 8L12 17.1Z\" fill=\"currentcolor\" /> </svg> </button> <div part=\"calendar-popover\" id=\"calendar-popover\" role=\"dialog\" aria-label=\"カレンダー\" aria-modal=\"true\" style=\"display: none;\" > <div part=\"backdrop\" id=\"backdrop\"></div> <dads-calendar part=\"calendar\" id=\"calendar\"></dads-calendar> </div> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <div part=\"visually-hidden\" id=\"describedby-proxies\"></div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), datePickerStyles], 'minimal'), attributes: [ { attribute: 'data-type' }, PropertyAttr('size'), BooleanAttr('calendar'), BooleanAttr('disabled'), BooleanAttr('readonly'), BooleanAttr('error'), PropertyAttr('error-text'), { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'value' }, { attribute: 'aria-describedby' }, ], }"
+              "default": "{ name: 'dads-date-picker', template: html` <div part=\"controls\" id=\"controls\"> <div part=\"inputs\" id=\"inputs\"> <label part=\"field year\" id=\"year-field\"> <span part=\"field-label\">年</span> <input part=\"field-input\" id=\"year-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-year-input /> </label> <label part=\"field month\" id=\"month-field\"> <span part=\"field-label\">月</span> <input part=\"field-input\" id=\"month-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-month-input /> </label> <label part=\"field day\" id=\"day-field\"> <span part=\"field-label\">日</span> <input part=\"field-input\" id=\"day-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-day-input /> </label> </div> <button part=\"calendar-button\" id=\"calendar-button\" type=\"button\" aria-haspopup=\"dialog\" aria-controls=\"calendar-popover\" aria-expanded=\"false\" > <svg part=\"calendar-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"カレンダー\"> <path d=\"M9 16.5C7.62 16.5 6.5 15.38 6.5 14C6.5 12.62 7.62 11.5 9 11.5C10.38 11.5 11.5 12.62 11.5 14C11.5 15.38 10.38 16.5 9 16.5ZM5 22C3.9 22 3 21.09 3 20V6C3 4.91 3.91 4 5 4H6V2H8V4H16V2H18V4H19C20.09 4 21 4.91 21 6V20C21 21.09 20.09 22 19 22H5ZM5 20H19V10H5V20Z\" fill=\"currentcolor\"/> </svg> <svg part=\"calendar-chevron\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17.1L3 8L4 7L12 15L20 7L21 8L12 17.1Z\" fill=\"currentcolor\" /> </svg> </button> <div part=\"calendar-popover\" id=\"calendar-popover\" role=\"dialog\" aria-label=\"カレンダー\" aria-modal=\"true\" style=\"display: none;\" > <div part=\"backdrop\" id=\"backdrop\"></div> <dads-calendar part=\"calendar\" id=\"calendar\"></dads-calendar> </div> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <div part=\"visually-hidden\" id=\"describedby-proxies\"></div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), datePickerStyles], 'minimal'), attributes: [ { attribute: 'data-type' }, PropertyAttr('size'), BooleanAttr('calendar'), BooleanAttr('disabled'), BooleanAttr('readonly'), BooleanAttr('error'), PropertyAttr('error-text'), { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'value' }, { attribute: 'aria-describedby' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -9637,15 +9637,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-fieldset', template: html` <fieldset part=\"fieldset\" id=\"fieldset\"> <legend part=\"legend\" id=\"legend\"> <slot name=\"legend\" id=\"legend-slot\"></slot> <span part=\"legend-fallback\" id=\"legend-fallback\"></span> <span part=\"requirement\" id=\"requirement\"></span> </legend> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span part=\"support-fallback\" id=\"support-fallback\"></span> </div> <div part=\"content\" id=\"content\"> <slot id=\"default-slot\"></slot> </div> </fieldset> `, styles: withReset([applyDADSTokens(), fieldsetStyles], 'minimal'), attributes: [ PropertyAttr('legend'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('disabled'), ], }"
+              "default": "{ name: 'dads-fieldset', template: html` <fieldset part=\"fieldset\" id=\"fieldset\"> <legend part=\"legend\" id=\"legend\"> <slot name=\"legend\" id=\"legend-slot\"></slot> <span part=\"legend-fallback\" id=\"legend-fallback\"></span> <span part=\"requirement\" id=\"requirement\"></span> </legend> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span part=\"support-fallback\" id=\"support-fallback\"></span> </div> <div part=\"content\" id=\"content\"> <slot id=\"default-slot\"></slot> </div> </fieldset> `, styles: withReset([applyDADSTokens(), fieldsetStyles], 'minimal'), attributes: [ PropertyAttr('legend'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('disabled'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -11271,15 +11271,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-input-text', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"input\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"input-wrapper\" id=\"input-wrapper\"> <input part=\"input\" id=\"input\" type=\"text\" /> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"type-mismatch-error\" id=\"type-mismatch-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), inputTextTokens, inputTextStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), PropertyAttr('type'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), PropertyAttr('name'), PropertyAttr('size'), PropertyAttr('input-width'), BooleanAttr('auto-validate'), PropertyAttr('autocomplete'), // value は observedAttributes に含めるが、PropertyAttr は使わない { attribute: 'value' }, ], }"
+              "default": "{ name: 'dads-input-text', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"input\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"input-wrapper\" id=\"input-wrapper\"> <input part=\"input\" id=\"input\" type=\"text\" /> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"type-mismatch-error\" id=\"type-mismatch-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), inputTextTokens, inputTextStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), PropertyAttr('type'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), PropertyAttr('name'), PropertyAttr('size'), PropertyAttr('input-width'), BooleanAttr('auto-validate'), PropertyAttr('autocomplete'), // value は observedAttributes に含めるが、PropertyAttr は使わない { attribute: 'value' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -15471,15 +15471,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-radio', template: html` <label part=\"base\" id=\"base\"> <span part=\"radio\" id=\"radio\"> <input part=\"input\" id=\"input\" type=\"radio\" /> </span> <span part=\"label\" id=\"label\"></span> <span part=\"requirement\" id=\"requirement\"></span> </label> <!-- エラーメッセージ表示 --> <span part=\"error-text\" id=\"error-text\"></span> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), radioTokens, radioStyles], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('size'), BooleanAttr('disabled'), BooleanAttr('required'), BooleanAttr('auto-validate'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('name'), // checked/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない { attribute: 'checked' }, { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, ], }"
+              "default": "{ name: 'dads-radio', template: html` <label part=\"base\" id=\"base\"> <span part=\"radio\" id=\"radio\"> <input part=\"input\" id=\"input\" type=\"radio\" /> </span> <span part=\"label\" id=\"label\"></span> <span part=\"requirement\" id=\"requirement\"></span> </label> <!-- エラーメッセージ表示 --> <span part=\"error-text\" id=\"error-text\"></span> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), radioTokens, radioStyles], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('size'), BooleanAttr('disabled'), BooleanAttr('required'), BooleanAttr('auto-validate'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('name'), // checked/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない { attribute: 'checked' }, { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -16532,15 +16532,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-search-box', template: html` <div part=\"base\" id=\"base\"> <div part=\"fields\" id=\"fields\"> <label part=\"scope\" id=\"scope\"> <span part=\"scope-label\" id=\"scope-label\">検索対象</span> <select part=\"scope-select\" id=\"scope-select\"></select> <svg part=\"scope-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </label> <label part=\"query\" id=\"query\"> <svg part=\"search-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"m21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z\" fill=\"currentcolor\" /> </svg> <span part=\"visually-hidden\" id=\"label-text\">検索</span> <input part=\"input\" id=\"input\" type=\"search\" /> </label> </div> <dads-button part=\"button\" id=\"submit-button\" type=\"button\" variant=\"solid\" size=\"large\">検索</dads-button> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), searchBoxTokens, searchBoxStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('name'), PropertyAttr('label'), { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, { attribute: 'scope-name' }, { attribute: 'scope-value' }, { attribute: 'scope-label' }, { attribute: 'button-label' }, ], }"
+              "default": "{ name: 'dads-search-box', template: html` <div part=\"base\" id=\"base\"> <div part=\"fields\" id=\"fields\"> <label part=\"scope\" id=\"scope\"> <span part=\"scope-label\" id=\"scope-label\">検索対象</span> <select part=\"scope-select\" id=\"scope-select\"></select> <svg part=\"scope-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </label> <label part=\"query\" id=\"query\"> <svg part=\"search-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"m21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z\" fill=\"currentcolor\" /> </svg> <span part=\"visually-hidden\" id=\"label-text\">検索</span> <input part=\"input\" id=\"input\" type=\"search\" /> </label> </div> <dads-button part=\"button\" id=\"submit-button\" type=\"button\" variant=\"solid\" size=\"large\">検索</dads-button> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), searchBoxTokens, searchBoxStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('name'), PropertyAttr('label'), { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, { attribute: 'scope-name' }, { attribute: 'scope-value' }, { attribute: 'scope-label' }, { attribute: 'button-label' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -17608,15 +17608,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-select', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"select\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"select-wrapper\" id=\"select-wrapper\"> <select part=\"select\" id=\"select\"></select> <svg part=\"select-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), selectTokens, selectStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), // aria-disabled は文字列属性（\"true\"/\"false\" だけでなく空文字も許容） { attribute: 'aria-disabled' }, PropertyAttr('name'), PropertyAttr('size'), BooleanAttr('auto-validate'), // value は observedAttributes に含めるが、PropertyAttr は使わない（カスタム getter/setter） { attribute: 'value' }, ], }"
+              "default": "{ name: 'dads-select', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"select\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"select-wrapper\" id=\"select-wrapper\"> <select part=\"select\" id=\"select\"></select> <svg part=\"select-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), selectTokens, selectStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), // aria-disabled は文字列属性（\"true\"/\"false\" だけでなく空文字も許容） { attribute: 'aria-disabled' }, PropertyAttr('name'), PropertyAttr('size'), BooleanAttr('auto-validate'), // value は observedAttributes に含めるが、PropertyAttr は使わない（カスタム getter/setter） { attribute: 'value' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -19856,15 +19856,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-switch', template: html` <div part=\"wrapper\"> <span part=\"label-left\"> <slot name=\"label-left\"></slot> </span> <label part=\"switch\"> <input type=\"checkbox\" part=\"checkbox\" id=\"checkbox\" role=\"switch\" aria-checked=\"false\" /> <span part=\"track\"> <span part=\"knob\"></span> </span> </label> <span part=\"label-right\"> <slot name=\"label-right\"></slot> </span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), switchTokens, switchStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ BooleanAttr('checked'), BooleanAttr('disabled'), PropertyAttr('name'), // value は observedAttributes に含めるが、PropertyAttr は使わない（カスタムgetter/setterを保持） { attribute: 'value' }, PropertyAttr('size'), ], }"
+              "default": "{ name: 'dads-switch', template: html` <div part=\"wrapper\"> <span part=\"label-left\"> <slot name=\"label-left\"></slot> </span> <label part=\"switch\"> <input type=\"checkbox\" part=\"checkbox\" id=\"checkbox\" role=\"switch\" aria-checked=\"false\" /> <span part=\"track\"> <span part=\"knob\"></span> </span> </label> <span part=\"label-right\"> <slot name=\"label-right\"></slot> </span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), switchTokens, switchStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ BooleanAttr('checked'), BooleanAttr('disabled'), PropertyAttr('name'), // value は observedAttributes に含めるが、PropertyAttr は使わない（カスタムgetter/setterを保持） { attribute: 'value' }, PropertyAttr('size'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -21823,15 +21823,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-textarea', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"textarea\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"textarea-wrapper\" id=\"textarea-wrapper\"> <textarea part=\"textarea\" id=\"textarea\" rows=\"3\" ></textarea> </div> <span part=\"counter\" id=\"counter\"></span> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"overflow-error\" id=\"overflow-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), textareaTokens, textareaStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), PropertyAttr('maxlength'), BooleanAttr('show-counter'), PropertyAttr('counter-max'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), // placeholder は非推奨: support-text を使用してください PropertyAttr('name'), PropertyAttr('rows'), PropertyAttr('size'), // value は observedAttributes に含めるが、PropertyAttr は使わない // カスタム getter/setter が定義されているため (property フィールドなし) { attribute: 'value' }, BooleanAttr('auto-validate'), ], }"
+              "default": "{ name: 'dads-textarea', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"textarea\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"textarea-wrapper\" id=\"textarea-wrapper\"> <textarea part=\"textarea\" id=\"textarea\" rows=\"3\" ></textarea> </div> <span part=\"counter\" id=\"counter\"></span> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"overflow-error\" id=\"overflow-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), textareaTokens, textareaStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), PropertyAttr('maxlength'), BooleanAttr('show-counter'), PropertyAttr('counter-max'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), // placeholder は非推奨: support-text を使用してください PropertyAttr('name'), PropertyAttr('rows'), PropertyAttr('size'), // value は observedAttributes に含めるが、PropertyAttr は使わない // カスタム getter/setter が定義されているため (property フィールドなし) { attribute: 'value' }, BooleanAttr('auto-validate'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -22540,15 +22540,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }"
+              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",

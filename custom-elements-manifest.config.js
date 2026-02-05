@@ -310,6 +310,19 @@ function sanitizeCustomElementsManifest(customElementsManifest) {
     for (const decl of declarations) {
       if (!decl || typeof decl !== 'object') continue;
 
+      // Stabilize member object key order for deterministic diffs across Node versions.
+      // (The analyzer output can differ in where `inheritedFrom` is inserted relative to `default`.)
+      if (Array.isArray(decl.members)) {
+        for (const member of decl.members) {
+          if (!member || typeof member !== 'object') continue;
+          if (!('inheritedFrom' in member) || !('default' in member)) continue;
+          const inheritedFrom = member.inheritedFrom;
+          // Move `inheritedFrom` to the end of the object.
+          delete member.inheritedFrom;
+          member.inheritedFrom = inheritedFrom;
+        }
+      }
+
       // The analyzer marks any class extending HTMLElement as `customElement: true`.
       // Base classes without a tagName should not be treated as custom elements.
       if (decl.customElement === true) {
