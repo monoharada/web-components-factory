@@ -41,6 +41,13 @@ describe('command-store', () => {
     expect(resolveCommandTarget(root, 'target-id')).toBe(target);
   });
 
+  it('resolveCommandTarget: root自身のidも解決できる', () => {
+    const root = document.createElement('div');
+    root.id = 'root-id';
+
+    expect(resolveCommandTarget(root, 'root-id')).toBe(root);
+  });
+
   it('resolveCommandTarget: selector を解決できる', () => {
     const root = document.createElement('div');
     const target = document.createElement('div');

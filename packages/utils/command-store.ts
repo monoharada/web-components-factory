@@ -29,6 +29,11 @@ export function resolveCommandTarget(root: ParentNode, commandfor: string): Elem
   const raw = commandfor.trim();
   if (raw === '') return null;
 
+  // Treat as an ID that points at the root element itself.
+  if (!(looksLikeSelector(raw)) && root instanceof Element && root.id === raw) {
+    return root;
+  }
+
   if (looksLikeSelector(raw)) {
     const parent = root as ParentNode & { querySelector?: (selectors: string) => Element | null };
     if (!parent.querySelector) return null;
