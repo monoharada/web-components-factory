@@ -25,6 +25,15 @@ jobs:
       - name: Ensure custom-elements.json is up to date
         run: git diff --exit-code custom-elements.json
 
+      - name: Contracts check (autoload / install metadata)
+        run: npm run contracts:check
+
+      - name: Ensure install registry is up to date
+        run: npm run registry:check
+
+      - name: Validate pattern registry (UI recipes)
+        run: npm run patterns:check
+
       - name: Validate Web Components markup
         run: npm run validate:wc
 

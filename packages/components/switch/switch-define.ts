@@ -2,16 +2,25 @@
  * スイッチコンポーネント登録ヘルパー
  */
 import { DadsSwitch } from './switch.js';
-
-let defined = false;
+import { WebComponentDefinition } from '../../core/web-components.js';
+import { getConfig, getPrefix } from '../../config.js';
 
 /**
  * スイッチコンポーネントを登録
  */
-export function defineSwitch(): void {
-  if (defined) return;
-  DadsSwitch.define();
-  defined = true;
+export function defineSwitch(prefix?: string, registry?: CustomElementRegistry): void {
+  const effectivePrefix = prefix ?? getPrefix();
+  const effectiveRegistry = registry ?? getConfig().registry;
+
+  const name = `${effectivePrefix}-switch`;
+  if (effectiveRegistry.get(name)) return;
+
+  const def = { ...DadsSwitch.definition, name, registry: effectiveRegistry };
+  WebComponentDefinition.compose(DadsSwitch, def).define(effectiveRegistry);
+}
+
+export function defineDefaultSwitch(): void {
+  defineSwitch();
 }
 
 /**
@@ -19,6 +28,6 @@ export function defineSwitch(): void {
  */
 export function autoDefineSwitch(): void {
   if (typeof customElements !== 'undefined') {
-    defineSwitch();
+    defineDefaultSwitch();
   }
 }

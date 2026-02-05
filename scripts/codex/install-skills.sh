@@ -47,6 +47,7 @@ dest_root="${codex_home}/skills"
 skills=(
   "css-writing-rules"
   "headless-component-design"
+  "wcf-ui-builder"
 )
 
 if [[ ! -d "$src_root" ]]; then
