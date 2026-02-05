@@ -69,6 +69,7 @@ wcf init --prefix myui --lang js --out vendor/components/myui
 - `--lang js`（デフォルト）: ブラウザ実行しやすい ESM `.js` を vendor に生成し、`importmap.snippet.json` を出します
 - `--lang ts`: TypeScript ソースを vendor に配置します（※ブラウザ直実行ではなく、bundler / tsc 前提）
 - `--allow-outside-project`: `--out` をプロジェクト外に指定する場合のみ明示的に付けます（削除操作の安全のため、通常は非推奨）
+- boolean フラグ（例: `--force`）は基本的に **値を取らない**前提です（`--no-force` / `--force=false` も解釈できます）
 
 ### 2) 追加（依存も含めてインストール）
 
@@ -122,6 +123,8 @@ wcf detach button
 ```bash
 wcf detach __shared__
 ```
+
+> 補足：`__meta__`（`index.js` / `importmap.snippet.json` / `cem/*` などの生成物）は常に managed とし、`detach` / `remove` はできません。
 
 ### 4.1) 再アタッチ（管理対象に戻す）
 

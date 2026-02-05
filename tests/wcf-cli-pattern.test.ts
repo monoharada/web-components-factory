@@ -1,4 +1,4 @@
-import { mkdtemp, rm, stat, unlink } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, stat, unlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -102,3 +102,61 @@ test(
   },
 );
 
+test(
+  'managed file edits require --force to overwrite',
+  { timeout: 30_000 },
+  async () => {
+    tempDir = await makeTempDir();
+    const outDir = 'vendor/components/myui';
+
+    await runNode([WCF_BIN, 'init', '--prefix', 'myui', '--lang', 'js', '--out', outDir], { cwd: tempDir });
+    await runNode([WCF_BIN, 'add', 'button', '--prefix', 'myui', '--lang', 'js', '--out', outDir, '--local', REPO_ROOT], {
+      cwd: tempDir,
+    });
+
+    const target = path.join(tempDir, outDir, 'autoload', 'button.js');
+    const before = await readFile(target, 'utf8');
+    const marker = '\n// local-edit\n';
+    await writeFile(target, before + marker, 'utf8');
+
+    await expect(
+      runNode([WCF_BIN, 'add', 'button', '--prefix', 'myui', '--lang', 'js', '--out', outDir, '--local', REPO_ROOT], {
+        cwd: tempDir,
+      }),
+    ).rejects.toThrow(/Refusing to overwrite locally modified file/i);
+
+    await runNode(
+      [WCF_BIN, 'add', 'button', '--force', '--prefix', 'myui', '--lang', 'js', '--out', outDir, '--local', REPO_ROOT],
+      { cwd: tempDir },
+    );
+
+    const after = await readFile(target, 'utf8');
+    expect(after.includes(marker)).toBe(false);
+  },
+);
+
+test(
+  'remove never deletes files outside vendor root',
+  { timeout: 30_000 },
+  async () => {
+    tempDir = await makeTempDir();
+    const outDir = 'vendor/components/myui';
+
+    await runNode([WCF_BIN, 'init', '--prefix', 'myui', '--lang', 'js', '--out', outDir], { cwd: tempDir });
+    await runNode([WCF_BIN, 'add', 'button', '--prefix', 'myui', '--lang', 'js', '--out', outDir, '--local', REPO_ROOT], {
+      cwd: tempDir,
+    });
+
+    const outsideFile = path.join(tempDir, 'outside.txt');
+    await writeFile(outsideFile, 'do-not-delete', 'utf8');
+
+    const lockPath = path.join(tempDir, '.wcf', 'lock.json');
+    const lock = JSON.parse(await readFile(lockPath, 'utf8'));
+    lock.files ??= {};
+    lock.files['outside.txt'] = { ownerId: 'button', sha256: 'deadbeef', detached: false };
+    await writeFile(lockPath, JSON.stringify(lock, null, 2) + '\n', 'utf8');
+
+    await runNode([WCF_BIN, 'remove', 'button'], { cwd: tempDir });
+    expect(await exists(outsideFile)).toBe(true);
+  },
+);

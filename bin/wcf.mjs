@@ -73,7 +73,19 @@ function parseArgs(argv) {
       continue;
     }
     if (a.startsWith('--')) {
-      const name = a.slice(2);
+      const raw = a.slice(2);
+      // --no-flag
+      if (raw.startsWith('no-') && !raw.includes('=')) {
+        setFlag(raw.slice(3), false);
+        continue;
+      }
+      // --flag=value
+      if (raw.includes('=')) {
+        const [name, ...rest] = raw.split('=');
+        setFlag(name, rest.join('='));
+        continue;
+      }
+      const name = raw;
       const next = argv[i + 1];
       if (next && !next.startsWith('-')) {
         setFlag(name, next);
@@ -252,6 +264,19 @@ function parseCsvFlag(value, flagName) {
     .filter(Boolean);
 }
 
+function parseBooleanFlag(value, flagName, defaultValue = false) {
+  if (value === undefined) return defaultValue;
+  if (Array.isArray(value)) return parseBooleanFlag(value[value.length - 1], flagName, defaultValue);
+  if (value === true) return true;
+  if (value === false) return false;
+
+  const raw = String(value).trim().toLowerCase();
+  if (raw === 'true' || raw === '1' || raw === 'yes' || raw === 'on') return true;
+  if (raw === 'false' || raw === '0' || raw === 'no' || raw === 'off') return false;
+
+  throw new Error(`Invalid boolean for --${flagName}: ${String(value)}`);
+}
+
 function collectPatternRequires(patternRegistry, patternIds) {
   if (!patternIds || patternIds.length === 0) return [];
   const patterns =
@@ -302,6 +327,20 @@ function run(cmd, args, { cwd } = {}) {
     let err = '';
     child.stdout.on('data', (d) => (out += String(d)));
     child.stderr.on('data', (d) => (err += String(d)));
+    child.on('error', (e) => {
+      const code = typeof e?.code === 'string' ? e.code : undefined;
+      const hint =
+        code === 'ENOENT'
+          ? `\nHint: "${cmd}" is not installed or not on PATH.`
+          : code
+            ? `\nHint: spawn error code=${code}`
+            : '';
+      reject(
+        new Error(`${cmd} ${args.join(' ')} failed to start: ${e?.message ?? String(e)}.${hint}`, {
+          cause: e,
+        }),
+      );
+    });
     child.on('close', (code) => {
       if (code === 0) resolve({ out, err });
       else reject(new Error(`${cmd} ${args.join(' ')} failed (${code})\n${err}`));
@@ -684,8 +723,8 @@ async function cmdInit(flags) {
   const lang = normalizeLang(flags.lang ?? 'js');
   if (!lang) throw new Error(`Invalid --lang: ${String(flags.lang ?? '')} (expected "js" or "ts")`);
 
-  const embedCem = Boolean(flags['embed-cem'] ?? false);
-  const allowOutsideProject = Boolean(flags['allow-outside-project'] ?? false);
+  const embedCem = parseBooleanFlag(flags['embed-cem'], 'embed-cem', false);
+  const allowOutsideProject = parseBooleanFlag(flags['allow-outside-project'], 'allow-outside-project', false);
 
   const repo = String(flags.repo ?? DEFAULT_REPO);
   const ref = String(flags.ref ?? DEFAULT_REF);
@@ -781,11 +820,15 @@ async function cmdAdd(ids, flags) {
   const lang = normalizeLang(flags.lang ?? config.lang ?? lock.lang ?? 'js');
   if (!lang) throw new Error(`Invalid --lang: ${String(flags.lang ?? '')} (expected "js" or "ts")`);
 
-  const allowOutsideProject = Boolean(flags['allow-outside-project'] ?? config.allowOutsideProject ?? lock.allowOutsideProject ?? false);
+  const allowOutsideProject = parseBooleanFlag(
+    flags['allow-outside-project'] ?? config.allowOutsideProject ?? lock.allowOutsideProject,
+    'allow-outside-project',
+    false,
+  );
   const outDir = String(flags.out ?? config.outDir ?? defaultOutDir(prefix));
   resolveOutDir(outDir, { allowOutsideProject });
-  const embedCem = Boolean(flags['embed-cem'] ?? config.embedCem ?? lock.embedCem ?? false);
-  const force = Boolean(flags.force ?? false);
+  const embedCem = parseBooleanFlag(flags['embed-cem'] ?? config.embedCem ?? lock.embedCem, 'embed-cem', false);
+  const force = parseBooleanFlag(flags.force, 'force', false);
 
   const patternIds = parseCsvFlag(flags.pattern, 'pattern');
 
@@ -911,6 +954,9 @@ async function cmdAdd(ids, flags) {
 
 async function cmdDetach(ids) {
   if (ids.length === 0) throw new Error('Missing componentId(s). Example: wcf detach button');
+  if (ids.includes(OWNER_META)) {
+    throw new Error(`Refusing to detach "${OWNER_META}" (generated meta files must remain managed).`);
+  }
   const { lockPath, lock } = await loadLock();
   lock.detachedIds ??= [];
   for (const id of ids) {
@@ -929,6 +975,9 @@ async function cmdDetach(ids) {
 
 async function cmdAttach(ids) {
   if (ids.length === 0) throw new Error('Missing componentId(s). Example: wcf attach button');
+  if (ids.includes(OWNER_META)) {
+    throw new Error(`Refusing to attach "${OWNER_META}" (generated meta files must remain managed).`);
+  }
   const { lockPath, lock } = await loadLock();
   lock.detachedIds ??= [];
   const toAttach = new Set(ids.map(String));
@@ -945,6 +994,9 @@ async function cmdAttach(ids) {
 
 async function cmdRemove(ids) {
   if (ids.length === 0) throw new Error('Missing componentId(s). Example: wcf remove button');
+  if (ids.includes(OWNER_META)) {
+    throw new Error(`Refusing to remove "${OWNER_META}" (generated meta files must remain managed).`);
+  }
   const { lockPath, lock } = await loadLock();
   lock.installed ??= [];
   lock.detachedIds ??= [];

@@ -46,16 +46,16 @@ async function loadJson(filePath) {
   return JSON.parse(text);
 }
 
-function collectUnknownElementErrors({ html, cemIndex }) {
+function collectCemErrors({ html, cemIndex }) {
   return validateTextAgainstCem({
     filePath: '<pattern>',
     text: html,
     cem: cemIndex,
     severity: {
       unknownElement: 'error',
-      unknownAttribute: 'warning',
+      unknownAttribute: 'error',
     },
-  }).filter((d) => d.severity === 'error' && d.code === 'unknownElement');
+  }).filter((d) => d.severity === 'error');
 }
 
 function assertCanonicalPrefixUsage(html, canonicalPrefix, id) {
@@ -127,10 +127,21 @@ async function main() {
     assertNoJavascriptUrls(html, id);
     assertCanonicalPrefixUsage(html, canonicalPrefix, id);
 
-    const errors = collectUnknownElementErrors({ html, cemIndex });
+    const errors = collectCemErrors({ html, cemIndex });
     if (errors.length > 0) {
-      const uniq = [...new Set(errors.map((e) => String(e.tagName ?? '').trim()).filter(Boolean))];
-      fail(`${id}: contains unknownElement(s): ${uniq.join(', ')}`);
+      const uniq = [
+        ...new Set(
+          errors.map((e) => {
+            const tag = String(e.tagName ?? '').trim();
+            const attr = String(e.attrName ?? '').trim();
+            const code = String(e.code ?? '').trim();
+            if (code === 'unknownAttribute' && tag && attr) return `${tag}[${attr}]`;
+            if (tag) return tag;
+            return code || '<unknown>';
+          }),
+        ),
+      ];
+      fail(`${id}: contains CEM validation error(s): ${uniq.join(', ')}`);
     }
   }
 

@@ -53,6 +53,7 @@
 - JSON の整合性（必須フィールド、id/key一致）
 - `requires[]` が `registry/install-registry.json` に存在する
 - `html` に未知の custom element がない（CEMで unknownElement=error）
+- `html` の custom element 属性に typo がない（CEMで unknownAttribute=error）
 - canonical tag prefix 以外の custom element を含まない
 - `<script>` / `<style>` / `on*=` / `javascript:` / `srcdoc=` を含まない
 
