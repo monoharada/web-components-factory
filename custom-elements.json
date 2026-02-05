@@ -260,6 +260,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -701,6 +714,19 @@
             {
               "kind": "method",
               "name": "toggle"
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "events": [
@@ -1503,6 +1529,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -2036,6 +2075,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -2467,7 +2519,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), PropertyAttr('command'), PropertyAttr('commandfor'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }"
+              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), DelegatingPropertyAttr('[part=\"base\"]', 'command'), DelegatingPropertyAttr('[part=\"base\"]', 'commandfor'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }"
             },
             {
               "kind": "field",
@@ -2585,6 +2637,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -3733,6 +3798,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -4522,6 +4600,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -5337,6 +5428,19 @@
               "description": "※必須表示の再同期\nfieldsetから呼び出される（スロット変更時やrequired属性変更時）"
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -5881,6 +5985,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -6481,6 +6598,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "events": [
@@ -6967,6 +7097,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -8032,6 +8175,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -8737,6 +8893,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "events": [
@@ -9419,6 +9588,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -10209,6 +10391,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -11067,6 +11262,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -12136,6 +12344,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "variant",
               "type": {
@@ -12551,6 +12772,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -13170,6 +13404,19 @@
               "name": "target",
               "type": {
                 "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -14061,6 +14308,19 @@
                 "type": {
                   "text": "void"
                 }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -15136,6 +15396,19 @@
               "description": "※必須表示の再同期\nfieldsetから呼び出される（スロット変更時やrequired属性変更時）"
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -16160,6 +16433,19 @@
               "name": "scopeValue",
               "type": {
                 "text": "string"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -17209,6 +17495,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -17884,6 +18183,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -18529,6 +18841,19 @@
                 "type": {
                   "text": "void"
                 }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -19353,6 +19678,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -20361,6 +20699,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -21301,6 +21652,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -21798,15 +22162,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }",
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              }
+              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }"
             },
             {
               "kind": "field",
@@ -21922,6 +22286,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -22127,6 +22504,37 @@
               "type": {
                 "text": "unknown[]"
               }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "DelegatingPropertyAttr",
+          "return": {
+            "type": {
+              "text": "AttrBehavior & { property: string }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "targetSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "property",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "attribute",
+              "default": "property"
+            },
+            {
+              "name": "remove",
+              "default": "false"
             }
           ]
         },
@@ -22529,6 +22937,19 @@
             {
               "kind": "method",
               "name": "reportValidity"
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -22934,6 +23355,15 @@
               "kind": "field",
               "name": "refs",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             }
           ],
           "events": [],
@@ -23175,6 +23605,14 @@
           "name": "css",
           "declaration": {
             "name": "css",
+            "module": "packages/core/web-components.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DelegatingPropertyAttr",
+          "declaration": {
+            "name": "DelegatingPropertyAttr",
             "module": "packages/core/web-components.ts"
           }
         },
@@ -26774,6 +27212,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "superclass": {
@@ -26990,6 +27441,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "superclass": {
@@ -27202,6 +27666,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -29658,6 +30135,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -29916,6 +30406,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
