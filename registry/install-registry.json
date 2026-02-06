@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "canonicalPrefix": "dads",
+  "components": {
+    "accordion": {
+      "id": "accordion",
+      "tags": [
+        "dads-accordion-details",
+        "dads-accordion-item-details"
+      ],
+      "define": "defineAccordion",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/accordion"
+      }
+    },
+    "blockquote": {
+      "id": "blockquote",
+      "tags": [
+        "dads-blockquote"
+      ],
+      "define": "defineBlockquote",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/blockquote"
+      }
+    },
+    "button": {
+      "id": "button",
+      "tags": [
+        "dads-button"
+      ],
+      "define": "defineButton",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/button"
+      }
+    },
+    "calendar": {
+      "id": "calendar",
+      "tags": [
+        "dads-calendar"
+      ],
+      "define": "defineCalendar",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/calendar"
+      }
+    },
+    "card": {
+      "id": "card",
+      "tags": [
+        "dads-card"
+      ],
+      "define": "defineCard",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/card"
+      }
+    },
+    "checkbox": {
+      "id": "checkbox",
+      "tags": [
+        "dads-checkbox"
+      ],
+      "define": "defineCheckbox",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/checkbox"
+      }
+    },
+    "chip-label": {
+      "id": "chip-label",
+      "tags": [
+        "dads-chip-label"
+      ],
+      "define": "defineChipLabel",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/chip-label"
+      }
+    },
+    "chip-tag": {
+      "id": "chip-tag",
+      "tags": [
+        "dads-chip-tag"
+      ],
+      "define": "defineChipTag",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/chip-tag"
+      }
+    },
+    "code-block": {
+      "id": "code-block",
+      "tags": [
+        "dads-code-block"
+      ],
+      "define": "defineCodeBlock",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/code-block"
+      }
+    },
+    "date-picker": {
+      "id": "date-picker",
+      "tags": [
+        "dads-date-picker"
+      ],
+      "define": "defineDatePicker",
+      "call": "prefix-registry",
+      "deps": [
+        "calendar"
+      ],
+      "source": {
+        "componentDir": "packages/components/date-picker"
+      }
+    },
+    "disclosure": {
+      "id": "disclosure",
+      "tags": [
+        "dads-disclosure"
+      ],
+      "define": "defineDisclosure",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/disclosure"
+      }
+    },
+    "fieldset": {
+      "id": "fieldset",
+      "tags": [
+        "dads-fieldset"
+      ],
+      "define": "defineFieldset",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/fieldset"
+      }
+    },
+    "heading": {
+      "id": "heading",
+      "tags": [
+        "dads-heading"
+      ],
+      "define": "defineHeading",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/heading"
+      }
+    },
+    "input-text": {
+      "id": "input-text",
+      "tags": [
+        "dads-input-text"
+      ],
+      "define": "defineInputText",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/input-text"
+      }
+    },
+    "list": {
+      "id": "list",
+      "tags": [
+        "dads-list",
+        "dads-list-item"
+      ],
+      "define": "defineList",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/list"
+      }
+    },
+    "menu-list": {
+      "id": "menu-list",
+      "tags": [
+        "dads-menu-list",
+        "dads-menu-list-item"
+      ],
+      "define": "defineMenuList",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/menu-list"
+      }
+    },
+    "menu-list-box": {
+      "id": "menu-list-box",
+      "tags": [
+        "dads-menu-list-box"
+      ],
+      "define": "defineMenuListBox",
+      "call": "prefix-registry",
+      "deps": [
+        "menu-list"
+      ],
+      "source": {
+        "componentDir": "packages/components/menu-list-box"
+      }
+    },
+    "page-navigation": {
+      "id": "page-navigation",
+      "tags": [
+        "dads-page-navigation"
+      ],
+      "define": "definePageNavigation",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/page-navigation"
+      }
+    },
+    "radio": {
+      "id": "radio",
+      "tags": [
+        "dads-radio"
+      ],
+      "define": "defineRadio",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/radio"
+      }
+    },
+    "search-box": {
+      "id": "search-box",
+      "tags": [
+        "dads-search-box"
+      ],
+      "define": "defineSearchBox",
+      "call": "prefix-registry",
+      "deps": [
+        "button"
+      ],
+      "source": {
+        "componentDir": "packages/components/search-box"
+      }
+    },
+    "select": {
+      "id": "select",
+      "tags": [
+        "dads-select"
+      ],
+      "define": "defineSelect",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/select"
+      }
+    },
+    "step-navigation": {
+      "id": "step-navigation",
+      "tags": [
+        "dads-step-navigation",
+        "dads-step-navigation-item"
+      ],
+      "define": "defineStepNavigation",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/step-navigation"
+      }
+    },
+    "switch": {
+      "id": "switch",
+      "tags": [
+        "dads-switch"
+      ],
+      "define": "defineSwitch",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/switch"
+      }
+    },
+    "table": {
+      "id": "table",
+      "tags": [
+        "dads-table"
+      ],
+      "define": "defineTable",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/table"
+      }
+    },
+    "textarea": {
+      "id": "textarea",
+      "tags": [
+        "dads-textarea"
+      ],
+      "define": "defineTextarea",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/textarea"
+      }
+    },
+    "typography": {
+      "id": "typography",
+      "tags": [
+        "dads-text"
+      ],
+      "define": "defineText",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/typography"
+      }
+    }
+  },
+  "tags": {
+    "dads-accordion-details": "accordion",
+    "dads-accordion-item-details": "accordion",
+    "dads-blockquote": "blockquote",
+    "dads-button": "button",
+    "dads-calendar": "calendar",
+    "dads-card": "card",
+    "dads-checkbox": "checkbox",
+    "dads-chip-label": "chip-label",
+    "dads-chip-tag": "chip-tag",
+    "dads-code-block": "code-block",
+    "dads-date-picker": "date-picker",
+    "dads-disclosure": "disclosure",
+    "dads-fieldset": "fieldset",
+    "dads-heading": "heading",
+    "dads-input-text": "input-text",
+    "dads-list": "list",
+    "dads-list-item": "list",
+    "dads-menu-list": "menu-list",
+    "dads-menu-list-box": "menu-list-box",
+    "dads-menu-list-item": "menu-list",
+    "dads-page-navigation": "page-navigation",
+    "dads-radio": "radio",
+    "dads-search-box": "search-box",
+    "dads-select": "select",
+    "dads-step-navigation": "step-navigation",
+    "dads-step-navigation-item": "step-navigation",
+    "dads-switch": "switch",
+    "dads-table": "table",
+    "dads-text": "typography",
+    "dads-textarea": "textarea"
+  }
+}
