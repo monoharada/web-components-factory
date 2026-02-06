@@ -12140,6 +12140,20 @@
                   }
                 }
               ]
+            },
+            "componentId": "list",
+            "install": {
+              "id": "list",
+              "define": "defineList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/list"
+              },
+              "tags": [
+                "dads-list",
+                "dads-list-item"
+              ]
             }
           }
         },
@@ -12487,6 +12501,20 @@
                 ]
               },
               "callouts": []
+            },
+            "componentId": "list",
+            "install": {
+              "id": "list",
+              "define": "defineList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/list"
+              },
+              "tags": [
+                "dads-list",
+                "dads-list-item"
+              ]
             }
           }
         }
