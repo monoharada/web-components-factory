@@ -11582,6 +11582,959 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/list/list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "箇条書きリスト（コンテナ）コンポーネント",
+          "name": "DadsList",
+          "cssProperties": [
+            {
+              "description": "インデント（depthに応じて設定）",
+              "name": "--dads-list-indent"
+            },
+            {
+              "description": "アイテム間隔（spacingに応じて設定）",
+              "name": "--dads-list-item-gap"
+            },
+            {
+              "description": "マーカー列の幅（marker-widthで上書き可能）",
+              "name": "--dads-list-marker-width"
+            },
+            {
+              "description": "マーカー列と本文列の間隔",
+              "name": "--dads-list-marker-gap"
+            },
+            {
+              "description": "マーカー色",
+              "name": "--dads-list-marker-color"
+            },
+            {
+              "description": "マーカー記号のサイズ（markerタイプ向け）",
+              "name": "--dads-list-marker-size"
+            },
+            {
+              "description": "リストマーク（markerタイプ用、装飾用途）",
+              "name": "--dads-list-marker-content"
+            },
+            {
+              "description": "マーカー種別1（depth1）",
+              "name": "--dads-list-marker-content-1"
+            },
+            {
+              "description": "マーカー種別2（depth2-4）",
+              "name": "--dads-list-marker-content-2"
+            },
+            {
+              "description": "マーカー種別3（depth5+）",
+              "name": "--dads-list-marker-content-3"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "role=\"list\" のルート",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "リスト項目（dads-list-item）",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#rawDepth",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncClampedDepth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncMarkerWidth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncRawDepth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSpacing",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncVariant",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncVariantRenderingVars",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-list', template: html` <div part=\"base\" role=\"list\"> <slot></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), listTokens, listStyles, ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('spacing'), PropertyAttr('markerWidth', 'marker-width'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "markerWidth",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "markerWidthChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "spacing",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "spacingChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variantChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "項番タイプのマーカー幅（全角n文字相当、CSSでは n em）",
+              "name": "marker-width"
+            },
+            {
+              "type": {
+                "text": "'lg' | 'md' | 'sm'"
+              },
+              "description": "項目間隔（12/8/4）",
+              "name": "spacing"
+            },
+            {
+              "type": {
+                "text": "'marker' | 'number'"
+              },
+              "description": "表示タイプ（リストマーク / 項番）",
+              "name": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-list",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/list/list.ts",
+          "definitionPath": "./packages/components/list/list.ts",
+          "typeDefinitionPath": "./packages/components/list/list.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "箇条書きリスト仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "箇条書きの構造はリストとして表現します（role=\"list\" / role=\"listitem\"）。",
+                  "項番タイプ（variant=\"number\"）では、項番を slot=\"marker\" に地のテキストとして記載します（<ol> や CSS カウンターで自動採番しません）。",
+                  "入れ子のリストは、dads-list を正しくネストしてマークアップします。"
+                ],
+                "keyboard": [
+                  "リスト自体はインタラクティブではありません。本文内のリンク等は通常どおりTabでフォーカス可能です。"
+                ],
+                "zoom": [
+                  "インデントや間隔は相対単位（rem）ベースのトークンを利用し、ズーム時も読みやすさを維持します。"
+                ],
+                "states": [
+                  "variant/spacing/marker-width 属性で表示を制御します。",
+                  "ネスト深さ（data-depth）に応じてインデントとマーカー種別を切り替えます（深さはクランプされます）。"
+                ],
+                "labels": [
+                  "テキストの中黒（・）等で箇条書きを再現する表現は避け、リスト構造を用います。",
+                  "項番自体をリンクにする場合は、slot=\"marker\" 内にリンク要素を配置できます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "リストコンテナ",
+                  "label": "role=\"list\"",
+                  "description": "リストのコンテナ。ネスト深さに応じてインデントとマーカーを切り替えます。",
+                  "targetHint": "box",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "item-marker",
+                  "title": "マーカー列",
+                  "label": "marker",
+                  "description": "markerタイプではマーカー記号を表示し、numberタイプでは slot=\"marker\" を表示します。",
+                  "category": "states",
+                  "placement": "top-left",
+                  "target": {
+                    "hostSelector": "dads-list-item",
+                    "scope": "shadow",
+                    "selector": "[part=\"marker-glyph\"]"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "kind": "class",
+          "description": "箇条書きリスト（アイテム）コンポーネント",
+          "name": "DadsListItem",
+          "cssProperties": [
+            {
+              "description": "マーカー列の幅",
+              "name": "--dads-list-marker-width"
+            },
+            {
+              "description": "マーカー列と本文列の間隔",
+              "name": "--dads-list-marker-gap"
+            },
+            {
+              "description": "マーカー色",
+              "name": "--dads-list-marker-color"
+            },
+            {
+              "description": "マーカー記号のサイズ（markerタイプ向け）",
+              "name": "--dads-list-marker-size"
+            },
+            {
+              "description": "リストマーク（markerタイプ用、装飾用途）",
+              "name": "--dads-list-marker-content"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "本文列",
+              "name": "content"
+            },
+            {
+              "description": "role=\"listitem\" のルート",
+              "name": "item"
+            },
+            {
+              "description": "マーカー列",
+              "name": "marker"
+            },
+            {
+              "description": "予備のマーカー記号領域（通常は非表示）",
+              "name": "marker-glyph"
+            }
+          ],
+          "slots": [
+            {
+              "description": "本文（ネストした dads-list を含められます）",
+              "name": "default"
+            },
+            {
+              "description": "項番（numberタイプ向け、コピー可能な“地のテキスト”）",
+              "name": "marker"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-list-item', template: html` <div part=\"item\" role=\"listitem\"> <span part=\"marker\"> <span part=\"marker-glyph\" aria-hidden=\"true\"></span> <slot name=\"marker\"></slot> </span> <div part=\"content\"> <slot></slot> </div> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), listItemTokens, listItemStyles, ], 'minimal'), attributes: [], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-list-item",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/list/list.ts",
+          "definitionPath": "./packages/components/list/list.ts",
+          "typeDefinitionPath": "./packages/components/list/list.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "箇条書きリストアイテム仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "リストアイテムは role=\"listitem\" として扱われます。",
+                  "項番タイプでは slot=\"marker\" に項番を地のテキストとして記載します。"
+                ],
+                "keyboard": [
+                  "本文内のリンク等は通常どおりTabでフォーカス可能です。"
+                ],
+                "zoom": [
+                  "本文は折り返しを前提とし、ズーム時も情報が欠けないようにします。"
+                ],
+                "states": [
+                  "表示モード（marker/number）は親（dads-list）からの CSS 変数継承で切り替えます。"
+                ],
+                "labels": [
+                  "必要に応じて本文側で説明的なリンクテキストや見出しを用意します。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": []
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsList",
+          "declaration": {
+            "name": "DadsList",
+            "module": "packages/components/list/list.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsListItem",
+          "declaration": {
+            "name": "DadsListItem",
+            "module": "packages/components/list/list.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/list/list.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/list/list.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-list",
+          "declaration": {
+            "name": "DadsList",
+            "module": "./packages/components/list/list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/list/list.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-list-item",
+          "declaration": {
+            "name": "DadsListItem",
+            "module": "./packages/components/list/list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/menu-list-box/menu-list-box.ts",
       "declarations": [
         {
@@ -26464,6 +27417,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/list/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/disclosure/index.js"
           }
         }
@@ -26610,6 +27571,164 @@
           "declaration": {
             "name": "inputTextTokens",
             "module": "packages/components/input-text/input-text-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/list/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/list/list.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultList",
+          "declaration": {
+            "name": "defineDefaultList",
+            "module": "./list-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineList",
+          "declaration": {
+            "name": "defineList",
+            "module": "./list-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/list/list-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultList",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineList",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultList",
+          "declaration": {
+            "name": "defineDefaultList",
+            "module": "packages/components/list/list-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineList",
+          "declaration": {
+            "name": "defineList",
+            "module": "packages/components/list/list-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/list/list-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "listItemStyles",
+          "default": "css` :host { display: block; font: inherit; color: inherit; } [part='item'] { display: var(--_dads-list-item-display); grid-template-columns: var(--_dads-list-marker-width) 1fr; column-gap: var(--_dads-list-marker-gap); align-items: baseline; } [part='marker'] { color: var(--_dads-list-marker-color); line-height: 1em; text-align: end; } /* * Marker mode: render marker glyph via ::before * Number mode: render marker slot (copyable) */ [part='marker-glyph'] { font-size: var(--_dads-list-marker-size); color: var(--_dads-list-marker-color); } [part='marker-glyph']::before { content: var(--_dads-list-marker-content); white-space: pre; } [part='marker'] slot[name='marker'] { display: var(--_dads-list-marker-slot-display); } [part='content'] { min-inline-size: 0; } /* * Light DOM content is not affected by Shadow DOM reset. * Reset common block margins to avoid unexpected spacing. */ ::slotted(p), ::slotted(ul), ::slotted(ol), ::slotted(dl), ::slotted(blockquote), ::slotted(figure) { margin: 0; } /* Nested list inside a list item */ ::slotted(dads-list) { margin-block-start: var(--_dads-list-item-gap); } @media (forced-colors: active) { :host { --dads-list-marker-color: CanvasText; } } `"
+        },
+        {
+          "kind": "variable",
+          "name": "listStyles",
+          "default": "css` :host { display: block; font: inherit; color: inherit; } [part='base'] { display: flex; flex-direction: column; align-items: stretch; row-gap: var(--dads-list-item-gap); padding-inline-start: var(--dads-list-indent); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "listItemStyles",
+          "declaration": {
+            "name": "listItemStyles",
+            "module": "packages/components/list/list-styles.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "listStyles",
+          "declaration": {
+            "name": "listStyles",
+            "module": "packages/components/list/list-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/list/list-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "listItemTokens",
+          "default": "css` :host { --_dads-list-marker-width: var(--dads-list-marker-width, auto); --_dads-list-marker-gap: var(--dads-list-marker-gap, var(--spacing-2, 8px)); --_dads-list-marker-color: var(--dads-list-marker-color, currentColor); --_dads-list-marker-size: var(--dads-list-marker-size, 6px); --_dads-list-marker-type: var(--dads-list-marker-type, disc); --_dads-list-marker-content: var(--dads-list-marker-content, normal); --_dads-list-marker-slot-display: var(--dads-list-marker-slot-display, none); --_dads-list-item-display: var(--dads-list-item-display, grid); --_dads-list-item-gap: var(--dads-list-item-gap, var(--spacing-2, 8px)); } `",
+          "description": "List Item 側で使うフォールバック用トークン（単体使用時の最低限）\n- 親（dads-list）から継承される変数がない場合の既定値"
+        },
+        {
+          "kind": "variable",
+          "name": "listTokens",
+          "default": "css` ${listSemanticTokensText} ${listLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "listItemTokens",
+          "declaration": {
+            "name": "listItemTokens",
+            "module": "packages/components/list/list-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "listTokens",
+          "declaration": {
+            "name": "listTokens",
+            "module": "packages/components/list/list-tokens.ts"
           }
         }
       ]

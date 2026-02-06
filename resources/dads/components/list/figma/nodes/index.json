@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-02-06T04:03:36.527Z",
+  "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+  "nodes": [
+    {
+      "id": "8263:22351",
+      "name": "Unordered List: Spacing 12  ",
+      "type": "FRAME",
+      "file": "figma/nodes/8263-22351.json",
+      "instances": 8
+    },
+    {
+      "id": "8263:22341",
+      "name": "Unordered List: Spacing 8",
+      "type": "FRAME",
+      "file": "figma/nodes/8263-22341.json",
+      "instances": 8
+    },
+    {
+      "id": "8263:22430",
+      "name": "Unordered List: Tight Spacing",
+      "type": "FRAME",
+      "file": "figma/nodes/8263-22430.json",
+      "instances": 8
+    },
+    {
+      "id": "8263:22408",
+      "name": "Ordered List: Default Spacing",
+      "type": "FRAME",
+      "file": "figma/nodes/8263-22408.json",
+      "instances": 9
+    },
+    {
+      "id": "8263:22397",
+      "name": "Ordered List: Default Spacing",
+      "type": "FRAME",
+      "file": "figma/nodes/8263-22397.json",
+      "instances": 9
+    },
+    {
+      "id": "8263:22419",
+      "name": "Ordered List: Default Tight",
+      "type": "FRAME",
+      "file": "figma/nodes/8263-22419.json",
+      "instances": 9
+    }
+  ],
+  "match": {
+    "includeNameIncludes": [
+      "List"
+    ],
+    "excludeNameIncludes": []
+  }
+}

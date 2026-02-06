@@ -6,6 +6,7 @@ Menu List / Menu List Box の「DADS/Figma準拠度」を **実ブラウザ（Pl
 
 - すべて実行: `npm run test:e2e`
 - Menu List Box だけ: `npm run test:e2e:menu-list-box`
+- List（Fidelity/VRT）だけ: `npm run test:e2e:list-fidelity`
 
 Playwright の `webServer` 設定で `bun server.ts` を起動し、`http://localhost:3000` へアクセスします。
 
@@ -17,6 +18,7 @@ E2E テストは **Fidelity用デモページ** を参照します。人間向�
 |--------|-----|------|
 | menuListBox | `/?component=menuListBox` | 人間向けショーケース（API/CSS Variables/実務例） |
 | menuListBoxFidelity | `/?component=menuListBoxFidelity` | E2E/Figma検証用（ID安定性優先） |
+| listFidelity | `/?component=listFidelity` | E2E/VRT検証用（ID安定性優先） |
 
 **重要**: E2E テストは `menuListBoxFidelity` を参照するため、ショーケース整理時にE2Eが壊れることはありません。
 
@@ -42,4 +44,3 @@ Figma のベースラインPNGが `resources/dads/components/menu-list-box/figma
 2) `npm run dads:sync -- --component menu-list-box --force` を実行  
 
 上記が未実施の場合、このテストは `skipped` になります。
-
