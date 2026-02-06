@@ -61,32 +61,7 @@ setInterval(() => {
 // パスに拡張子がないかチェック
 function hasNoExtension(path: string): boolean {
   const basename = path.split('/').pop() || '';
-  if (!basename.includes('.')) return true;
-  const ext = basename.split('.').pop();
-  return !ext;
-}
-
-function hasRefererQuery(req: Request, key: string, value = '1'): boolean {
-  const referer = req.headers.get('referer');
-  if (!referer) return false;
-  try {
-    const refUrl = new URL(referer);
-    return refUrl.searchParams.get(key) === value;
-  } catch {
-    return false;
-  }
-}
-
-function getCookieValue(req: Request, name: string): string | null {
-  const cookie = req.headers.get('cookie');
-  if (!cookie) return null;
-  const parts = cookie.split(';');
-  for (const part of parts) {
-    const [rawKey, ...rest] = part.trim().split('=');
-    if (!rawKey) continue;
-    if (rawKey === name) return rest.join('=');
-  }
-  return null;
+  return !basename.includes('.') || !basename.split('.').pop();
 }
 
 function isCompressibleContentType(contentType: string): boolean {
@@ -156,21 +131,17 @@ function respondWithOptionalCompression(
   return new Response(body, { headers });
 }
 
-function getRequestFlags(
-  url: URL,
-  req: Request
-): { shouldMinify: boolean; shouldCompress: boolean; compressParam: string | null } {
-  const compressParam = url.searchParams.get('compress');
+function getRequestFlags(url: URL): { shouldMinify: boolean; shouldCompress: boolean } {
   const shouldMinify = url.searchParams.get('min') === '1';
-  const shouldCompress = compressParam === '1';
-  return { shouldMinify, shouldCompress, compressParam };
+  const shouldCompress = url.searchParams.get('compress') === '1';
+  return { shouldMinify, shouldCompress };
 }
 
 // fetch ハンドラー
 async function handleRequest(req: Request): Promise<Response> {
   const url = new URL(req.url);
   let path = url.pathname;
-  const { shouldMinify, shouldCompress, compressParam } = getRequestFlags(url, req);
+  const { shouldMinify, shouldCompress } = getRequestFlags(url);
 
   // favicon.ico は 204 No Content を返す
   if (path === "/favicon.ico") {
