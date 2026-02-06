@@ -9,6 +9,7 @@ knowledge/
 ├── README.md                    # このファイル
 ├── learnings.md                 # 学習内容の記録
 ├── patterns.md                  # 発見したパターン
+├── skill-map.md                 # vendor install + AI理解のスキル図
 ├── performance-average-case.md  # averageCase の計測/運用ルール
 ├── improvements.md              # 改善提案
 ├── decisions.md                 # 技術的決定事項

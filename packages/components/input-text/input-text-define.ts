@@ -2,16 +2,25 @@
  * InputTextコンポーネント登録
  */
 import { DadsInputText } from './input-text.js';
-
-let defined = false;
+import { WebComponentDefinition } from '../../core/web-components.js';
+import { getConfig, getPrefix } from '../../config.js';
 
 /**
  * DadsInputTextコンポーネントをカスタム要素として登録する
  */
-export function defineInputText(): void {
-  if (defined) return;
-  DadsInputText.define();
-  defined = true;
+export function defineInputText(prefix?: string, registry?: CustomElementRegistry): void {
+  const effectivePrefix = prefix ?? getPrefix();
+  const effectiveRegistry = registry ?? getConfig().registry;
+
+  const name = `${effectivePrefix}-input-text`;
+  if (effectiveRegistry.get(name)) return;
+
+  const def = { ...DadsInputText.definition, name, registry: effectiveRegistry };
+  WebComponentDefinition.compose(DadsInputText, def).define(effectiveRegistry);
+}
+
+export function defineDefaultInputText(): void {
+  defineInputText();
 }
 
 /**
@@ -19,6 +28,6 @@ export function defineInputText(): void {
  */
 export function autoDefineInputText(): void {
   if (typeof customElements !== 'undefined') {
-    defineInputText();
+    defineDefaultInputText();
   }
 }
