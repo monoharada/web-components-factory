@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-01-27T07:16:12.136Z",
+  "generatedAt": "2026-02-06T04:04:11.386Z",
   "components": {
     "file-upload": {
       "updatedAt": "2026-01-17T23:27:40.637Z",
@@ -1051,6 +1051,329 @@
         "requiredEnv": [
           "FIGMA_ACCESS_TOKEN (recommended)",
           "FIGMA_TOKEN (legacy)"
+        ]
+      }
+    },
+    "list": {
+      "updatedAt": "2026-02-06T04:04:11.386Z",
+      "docs": {
+        "overview": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/list/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/overview/page.html",
+            "text": "docs/overview/page.txt",
+            "screenshot": "docs/overview/screenshot.png"
+          },
+          "images": [
+            {
+              "src": "/dads/images/components/list/overview/list_overview.png",
+              "url": "https://design.digital.go.jp/dads/images/components/list/overview/list_overview.png",
+              "file": "docs/overview/images/list_overview.png",
+              "status": "ok",
+              "error": null
+            }
+          ]
+        },
+        "usage": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/list/usage/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/usage/page.html",
+            "text": "docs/usage/page.txt",
+            "screenshot": "docs/usage/screenshot.png"
+          },
+          "images": [
+            {
+              "src": "/dads/images/components/list/usage/list_marker_anatomy.png",
+              "url": "https://design.digital.go.jp/dads/images/components/list/usage/list_marker_anatomy.png",
+              "file": "docs/usage/images/list_marker_anatomy.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_1.96ce219c.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_1.96ce219c.svg",
+              "file": "docs/usage/images/counter_1.96ce219c.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/_next/static/media/counter_2.73d71e67.svg",
+              "url": "https://design.digital.go.jp/dads/_next/static/media/counter_2.73d71e67.svg",
+              "file": "docs/usage/images/counter_2.73d71e67.svg",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/list/usage/list_marker_indent.png",
+              "url": "https://design.digital.go.jp/dads/images/components/list/usage/list_marker_indent.png",
+              "file": "docs/usage/images/list_marker_indent.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/list/usage/list_number_anatomy.png",
+              "url": "https://design.digital.go.jp/dads/images/components/list/usage/list_number_anatomy.png",
+              "file": "docs/usage/images/list_number_anatomy.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/list/usage/list_number_indent.png",
+              "url": "https://design.digital.go.jp/dads/images/components/list/usage/list_number_indent.png",
+              "file": "docs/usage/images/list_number_indent.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/list/usage/list_number_formats.png",
+              "url": "https://design.digital.go.jp/dads/images/components/list/usage/list_number_formats.png",
+              "file": "docs/usage/images/list_number_formats.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/list/usage/list_number_link.png",
+              "url": "https://design.digital.go.jp/dads/images/components/list/usage/list_number_link.png",
+              "file": "docs/usage/images/list_number_link.png",
+              "status": "ok",
+              "error": null
+            },
+            {
+              "src": "/dads/images/components/list/usage/list_spacing.png",
+              "url": "https://design.digital.go.jp/dads/images/components/list/usage/list_spacing.png",
+              "file": "docs/usage/images/list_spacing.png",
+              "status": "ok",
+              "error": null
+            }
+          ]
+        },
+        "accessibility": {
+          "status": "ok",
+          "url": "https://design.digital.go.jp/dads/components/list/accessibility/",
+          "httpStatus": 200,
+          "files": {
+            "html": "docs/accessibility/page.html",
+            "text": "docs/accessibility/page.txt",
+            "screenshot": "docs/accessibility/screenshot.png"
+          },
+          "images": []
+        }
+      },
+      "storybook": {
+        "status": "ok",
+        "entries": [
+          {
+            "id": "components-箇条書きリスト--docs",
+            "type": "docs",
+            "name": "Docs",
+            "title": "Components/箇条書きリスト",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/docs/components-%E7%AE%87%E6%9D%A1%E6%9B%B8%E3%81%8D%E3%83%AA%E3%82%B9%E3%83%88--docs",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E7%AE%87%E6%9D%A1%E6%9B%B8%E3%81%8D%E3%83%AA%E3%82%B9%E3%83%88--docs",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/docs--docs--7e44bfa8.png",
+              "canvasPng": "storybook/canvas/docs--docs--7e44bfa8.png",
+              "canvasHtml": "storybook/html/docs--docs--7e44bfa8.html"
+            }
+          },
+          {
+            "id": "components-箇条書きリスト--all-lists",
+            "type": "story",
+            "name": "All Lists",
+            "title": "Components/箇条書きリスト",
+            "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E7%AE%87%E6%9D%A1%E6%9B%B8%E3%81%8D%E3%83%AA%E3%82%B9%E3%83%88--all-lists",
+            "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E7%AE%87%E6%9D%A1%E6%9B%B8%E3%81%8D%E3%83%AA%E3%82%B9%E3%83%88--all-lists",
+            "status": "ok",
+            "error": null,
+            "ui": {
+              "status": "ok",
+              "error": null
+            },
+            "canvas": {
+              "status": "ok",
+              "error": null
+            },
+            "files": {
+              "uiPng": "storybook/ui/story--all-lists--0cf3622d.png",
+              "canvasPng": "storybook/canvas/story--all-lists--0cf3622d.png",
+              "canvasHtml": "storybook/html/story--all-lists--0cf3622d.html"
+            }
+          }
+        ],
+        "files": {
+          "entries": "storybook/entries.json"
+        }
+      },
+      "upstream": {
+        "status": "ok",
+        "commit": "fd97fd253b45064d50d9788eda28bfdc2f76badd",
+        "copied": [
+          "upstream/design-system-example-components-html/src/components/list",
+          "upstream/design-system-example-components-html/src/global.css",
+          "upstream/design-system-example-components-html/src/helpers/html-fragment.ts"
+        ],
+        "files": {
+          "meta": "upstream/design-system-example-components-html/META.json",
+          "license": "upstream/design-system-example-components-html/LICENSE"
+        }
+      },
+      "figma": {
+        "status": "ok",
+        "config": {
+          "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+          "nodes": [
+            {
+              "id": "8263:22351",
+              "label": "Figma node 8263:22351",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.2?node-id=8263-22351&m=dev"
+            },
+            {
+              "id": "8263:22341",
+              "label": "Figma node 8263:22341",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.2?node-id=8263-22341&m=dev"
+            },
+            {
+              "id": "8263:22430",
+              "label": "Figma node 8263:22430",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.2?node-id=8263-22430&m=dev"
+            },
+            {
+              "id": "8263:22408",
+              "label": "Figma node 8263:22408",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.2?node-id=8263-22408&m=dev"
+            },
+            {
+              "id": "8263:22397",
+              "label": "Figma node 8263:22397",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.2?node-id=8263-22397&m=dev"
+            },
+            {
+              "id": "8263:22419",
+              "label": "Figma node 8263:22419",
+              "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.2?node-id=8263-22419&m=dev"
+            }
+          ]
+        },
+        "export": {
+          "format": "png",
+          "scale": 2
+        },
+        "files": {
+          "config": "figma/config.json",
+          "nodes": "figma/nodes/index.json"
+        },
+        "nodeMeta": {
+          "8263:22351": {
+            "name": "Unordered List: Spacing 12  ",
+            "type": "FRAME"
+          },
+          "8263:22341": {
+            "name": "Unordered List: Spacing 8",
+            "type": "FRAME"
+          },
+          "8263:22430": {
+            "name": "Unordered List: Tight Spacing",
+            "type": "FRAME"
+          },
+          "8263:22408": {
+            "name": "Ordered List: Default Spacing",
+            "type": "FRAME"
+          },
+          "8263:22397": {
+            "name": "Ordered List: Default Spacing",
+            "type": "FRAME"
+          },
+          "8263:22419": {
+            "name": "Ordered List: Default Tight",
+            "type": "FRAME"
+          }
+        },
+        "assets": [
+          {
+            "id": "8263:22351",
+            "label": "Figma node 8263:22351",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/004df879-6cda-4ac1-b815-1b783ab2c2ae",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/8263-22351@2x.png",
+            "status": "ok",
+            "error": null
+          },
+          {
+            "id": "8263:22341",
+            "label": "Figma node 8263:22341",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f559c1fb-c017-461d-8015-0a117961f4fa",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/8263-22341@2x.png",
+            "status": "ok",
+            "error": null
+          },
+          {
+            "id": "8263:22430",
+            "label": "Figma node 8263:22430",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/6344804c-f85a-4ac0-a02d-81f6f37f8db9",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/8263-22430@2x.png",
+            "status": "ok",
+            "error": null
+          },
+          {
+            "id": "8263:22408",
+            "label": "Figma node 8263:22408",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/67a333d8-672a-4901-b731-be153c23814d",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/8263-22408@2x.png",
+            "status": "ok",
+            "error": null
+          },
+          {
+            "id": "8263:22397",
+            "label": "Figma node 8263:22397",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/216bbdd6-b0f4-45a6-b108-641307cbbb46",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/8263-22397@2x.png",
+            "status": "ok",
+            "error": null
+          },
+          {
+            "id": "8263:22419",
+            "label": "Figma node 8263:22419",
+            "url": "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/b21a0adc-6e3e-4f55-becd-1f37a065a2b7",
+            "export": {
+              "format": "png",
+              "scale": 2
+            },
+            "file": "figma/images/8263-22419@2x.png",
+            "status": "ok",
+            "error": null
+          }
         ]
       }
     }

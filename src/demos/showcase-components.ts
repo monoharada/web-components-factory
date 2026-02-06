@@ -2716,6 +2716,264 @@ export const demos = {
     </div>
   `,
 
+  list: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">箇条書きリスト</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        DADS準拠の箇条書きリスト。<code>&lt;ol&gt;</code> や CSS カウンターは使わず、項番は地のテキストとして扱います。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <!-- アクセシビリティ注釈（a11y-annotate） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate
+          target-selector="dads-list"
+          style="
+            --a11y-annotate-callout-lane-offset: 128px;
+            --a11y-annotate-callout-gutter: clamp(6rem, 16vw, 14rem);
+          "
+        >
+          <div style="padding: 80px 140px;">
+            <dads-list variant="marker" spacing="md">
+              <dads-list-item>項目1</dads-list-item>
+              <dads-list-item>
+                項目2（入れ子あり）
+                <dads-list variant="marker" spacing="md">
+                  <dads-list-item>入れ子項目A</dads-list-item>
+                  <dads-list-item>入れ子項目B</dads-list-item>
+                </dads-list>
+              </dads-list-item>
+              <dads-list-item>項目3</dads-list-item>
+            </dads-list>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <!-- API / Controls（Storybook風） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          Props/Attrs と CSS vars の変更が Preview に即時反映されます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-list',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-list data-api-target variant="marker" spacing="md">
+                  <dads-list-item>
+                    <span slot="marker">1.</span>
+                    項目1
+                  </dads-list-item>
+                  <dads-list-item>
+                    <span slot="marker">2.</span>
+                    項目2（入れ子あり）
+                    <dads-list variant="marker" spacing="md">
+                      <dads-list-item>
+                        <span slot="marker">2-1.</span>
+                        入れ子項目A
+                      </dads-list-item>
+                      <dads-list-item>
+                        <span slot="marker">2-2.</span>
+                        入れ子項目B
+                      </dads-list-item>
+                    </dads-list>
+                  </dads-list-item>
+                  <dads-list-item>
+                    <span slot="marker">3.</span>
+                    項目3
+                  </dads-list-item>
+                </dads-list>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-list variant="marker" spacing="md">
+                      <dads-list-item>項目1</dads-list-item>
+                      <dads-list-item>
+                        項目2（入れ子あり）
+                        <dads-list variant="marker" spacing="md">
+                          <dads-list-item>入れ子項目A</dads-list-item>
+                          <dads-list-item>入れ子項目B</dads-list-item>
+                        </dads-list>
+                      </dads-list-item>
+                      <dads-list-item>項目3</dads-list-item>
+                    </dads-list>
+
+                    <!-- 項番タイプ（<ol>は使わず、項番は地のテキストとして記載） -->
+                    <dads-list variant="number" spacing="md" marker-width="2">
+                      <dads-list-item><span slot="marker">1.</span>項目1</dads-list-item>
+                      <dads-list-item><span slot="marker">2.</span>項目2</dads-list-item>
+                    </dads-list>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>variant</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>marker</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="variant" size="md 240" value="marker" data-api-attr="variant" data-default="marker">
+                              <option value="marker">marker</option>
+                              <option value="number">number</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>リストマーク / 項番</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>spacing</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>md</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="spacing" size="md 240" value="md" data-api-attr="spacing" data-default="md">
+                              <option value="lg">lg</option>
+                              <option value="md">md</option>
+                              <option value="sm">sm</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>項目間隔（12/8/4）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>marker-width</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>(empty)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="marker-width"
+                              value=""
+                              data-api-attr="marker-width"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>項番タイプのマーカー幅（全角n文字相当）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-list-marker-gap</code></th>
+                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-list-marker-gap" value="" data-api-css-var="--dads-list-marker-gap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>マーカー列と本文列の間隔</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-list-marker-width</code></th>
+                        <td><code>2em</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-list-marker-width" value="" data-api-css-var="--dads-list-marker-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>マーカー列の幅（例: <code>2em</code>）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-list-marker-color</code></th>
+                        <td><code>--color-neutral-solid-gray-800</code><br><small style="color:#666">(#333)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-list-marker-color" value="" data-api-css-var="--dads-list-marker-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>マーカー色</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-list-marker-size</code></th>
+                        <td><code>6px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-list-marker-size" value="" data-api-css-var="--dads-list-marker-size" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>マーカー記号のサイズ（markerタイプ向け）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-list-marker-content-1</code></th>
+                        <td><code>'●'</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-list-marker-content-1" value="" data-api-css-var="--dads-list-marker-content-1" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>マーカー種別1（入力はクォート込み）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-list-marker-content-2</code></th>
+                        <td><code>'○'</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-list-marker-content-2" value="" data-api-css-var="--dads-list-marker-content-2" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>マーカー種別2（depth2-4）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-list-marker-content-3</code></th>
+                        <td><code>'■'</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-list-marker-content-3" value="" data-api-css-var="--dads-list-marker-content-3" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>マーカー種別3（depth5+）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+    </div>
+  `,
+
   chipLabel: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">チップラベル</h2>

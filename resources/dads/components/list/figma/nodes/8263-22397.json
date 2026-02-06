@@ -1,0 +1,343 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-02-06T04:03:36.527Z",
+  "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+  "root": {
+    "id": "8263:22397",
+    "name": "Ordered List: Default Spacing",
+    "type": "FRAME",
+    "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.2?node-id=8263-22397&m=dev"
+  },
+  "match": {
+    "includeNameIncludes": [
+      "List"
+    ],
+    "excludeNameIncludes": []
+  },
+  "instances": [
+    {
+      "id": "8263:22398",
+      "name": "List with Numbers",
+      "componentId": "8263:22571",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -2105,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "0",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22399",
+      "name": "List with Numbers",
+      "componentId": "8263:22571",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -2062,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "0",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22400",
+      "name": "List with Numbers",
+      "componentId": "8263:22571",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -2019,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "0",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22401",
+      "name": "List with Numbers",
+      "componentId": "8263:22607",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -1976,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "32",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22402",
+      "name": "List with Numbers",
+      "componentId": "8263:22607",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -1933,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "32",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22403",
+      "name": "List with Numbers",
+      "componentId": "8263:22607",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -1890,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "32",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22404",
+      "name": "List with Numbers",
+      "componentId": "8263:22679",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -1847,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "64",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22405",
+      "name": "List with Numbers",
+      "componentId": "8263:22679",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -1804,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "64",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22406",
+      "name": "List with Numbers",
+      "componentId": "8263:22679",
+      "absoluteBoundingBox": {
+        "x": 5188,
+        "y": -1761,
+        "width": 280,
+        "height": 43
+      },
+      "componentProperties": {
+        "Text#6037:17": {
+          "type": "TEXT",
+          "value": "リストアイテム"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "64",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "8",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    }
+  ]
+}
