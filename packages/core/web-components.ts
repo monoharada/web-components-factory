@@ -82,7 +82,6 @@ export class View<TRefs extends Dict = Dict> {
 const templateCache = new Map<string, ViewTemplate>();
 
 export class ViewTemplate {
-  #fragment?: DocumentFragment;
   #html: string;
 
   constructor(html: string) {
@@ -90,12 +89,11 @@ export class ViewTemplate {
   }
 
   create(): View {
-    if (!this.#fragment) {
-      const t = document.createElement('template');
-      t.innerHTML = this.#html;
-      this.#fragment = document.adoptNode(t.content);
-    }
-    return new View(this.#fragment.cloneNode(true) as DocumentFragment);
+    // happy-dom@20 系では custom element を含む fragment の cloneNode(true) で
+    // private field が初期化されない要素が生成されることがあるため、毎回再パースする。
+    const t = document.createElement('template');
+    t.innerHTML = this.#html;
+    return new View(document.adoptNode(t.content));
   }
 
   hydrate(sr: ShadowRoot): View {
