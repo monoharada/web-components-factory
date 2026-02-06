@@ -43,6 +43,8 @@ const minifyTranspileCache = new Map<string, { content: string; mtime: number }>
 const fileResolutionCache = new Map<string, { value: string; timestamp: number }>();
 const RESOLUTION_CACHE_TTL = 30000; // 30秒
 const CACHE_CLEANUP_INTERVAL = 10000; // 10秒ごとにクリーンアップ
+const DISABLE_HTTP_CACHE = process.env.DEV_DISABLE_HTTP_CACHE !== "0";
+const NO_STORE_CACHE_CONTROL = "no-store";
 
 // 定期的なキャッシュクリーンアップ（高負荷時のsetTimeout乱立を防止）
 setInterval(() => {
@@ -93,6 +95,30 @@ function isCompressibleContentType(contentType: string): boolean {
     contentType === 'application/javascript' ||
     contentType === 'application/json'
   );
+}
+
+function applyNoStoreHeaders(headers: Record<string, string>): void {
+  if (!DISABLE_HTTP_CACHE) return;
+  headers["Cache-Control"] = NO_STORE_CACHE_CONTROL;
+  headers["Pragma"] = "no-cache";
+  headers["Expires"] = "0";
+  delete headers["ETag"];
+}
+
+function getModuleCacheControl(path: string): string {
+  if (DISABLE_HTTP_CACHE) return NO_STORE_CACHE_CONTROL;
+  const isFrequentlyChangedModule =
+    path.startsWith('/@components/') || path.startsWith('/components/') || path.startsWith('/src/');
+  return isFrequentlyChangedModule
+    ? "no-cache, must-revalidate"
+    : "public, max-age=31536000, immutable";
+}
+
+function getStaticCacheControl(path: string, ext?: string): string {
+  if (DISABLE_HTTP_CACHE) return NO_STORE_CACHE_CONTROL;
+  return path === '/sw.js' || ext === 'html'
+    ? "no-cache, must-revalidate"
+    : "public, max-age=31536000, immutable";
 }
 
 function chooseCompression(req: Request): 'br' | 'gzip' | null {
@@ -196,15 +222,13 @@ async function handleRequest(req: Request): Promise<Response> {
               minifyTranspileCache
             );
             const rewritten = rewriteModuleSpecifiers(content);
-            const cacheControl = path.startsWith('/@components/') || path.startsWith('/components/') || path.startsWith('/src/')
-              ? "no-cache, must-revalidate"
-              : "public, max-age=31536000, immutable";
 
             const headers: Record<string, string> = {
               "Content-Type": "application/javascript",
-              "Cache-Control": cacheControl,
-              "ETag": mtime.toString(16)
+              "Cache-Control": getModuleCacheControl(path),
             };
+            if (!DISABLE_HTTP_CACHE) headers["ETag"] = mtime.toString(16);
+            applyNoStoreHeaders(headers);
             return respondWithOptionalCompression(rewritten, headers, req, shouldCompress);
           } catch (error) {
             const err = error as Error;
@@ -232,17 +256,13 @@ async function handleRequest(req: Request): Promise<Response> {
             shouldMinify ? minifyTranspileCache : transpileCache
           );
           const rewritten = shouldMinify ? rewriteModuleSpecifiers(content) : content;
-          const shouldNoCache =
-            path.startsWith('/@components/') || path.startsWith('/components/') || path.startsWith('/src/');
-          const cacheControl = shouldNoCache
-            ? "no-cache, must-revalidate"
-            : "public, max-age=31536000, immutable";
 
           const headers: Record<string, string> = {
             "Content-Type": "application/javascript",
-            "Cache-Control": cacheControl,
-            "ETag": mtime.toString(16)
+            "Cache-Control": getModuleCacheControl(path),
           };
+          if (!DISABLE_HTTP_CACHE) headers["ETag"] = mtime.toString(16);
+          applyNoStoreHeaders(headers);
           return respondWithOptionalCompression(rewritten, headers, req, shouldCompress);
         } catch (error) {
           const err = error as Error;
@@ -273,24 +293,17 @@ async function handleRequest(req: Request): Promise<Response> {
     }
 
     // キャッシュヘッダーを設定（JS/CSS は長期キャッシュ、HTML は短期）
-    const cacheControl = path === '/sw.js' || ext === 'html'
-      ? "no-cache, must-revalidate"
-      : "public, max-age=31536000, immutable";
-
     // HTMLの場合はHTTP/2 Server Push用のLinkヘッダーを追加
     const headers: Record<string, string> = {
       "Content-Type": contentType,
-      "Cache-Control": cacheControl
+      "Cache-Control": getStaticCacheControl(path, ext)
     };
 
     if (ext === 'html') {
       headers["Link"] = generateLinkHeader();
       console.log('[HTTP/2] Adding Link header for preload');
     }
-
-    if (ext === 'html') {
-      headers["Cache-Control"] = "no-cache, must-revalidate";
-    }
+    applyNoStoreHeaders(headers);
 
     if (shouldCompress && isCompressibleContentType(contentType)) {
       const encoding = chooseCompression(req);
@@ -474,6 +487,7 @@ function startServer(preferredPort: number = 3000, opts: { strictPort?: boolean 
     });
     console.log(`🚀 Server running at http://localhost:${server.port}`);
     console.log(`📋 View components at http://localhost:${server.port}`);
+    console.log(`🗃️ HTTP Cache: ${DISABLE_HTTP_CACHE ? 'disabled (no-store)' : 'enabled'}`);
   } catch (error) {
     const err = error as { code?: string };
     if (err.code === 'EADDRINUSE') {
@@ -485,6 +499,7 @@ function startServer(preferredPort: number = 3000, opts: { strictPort?: boolean 
       });
       console.log(`🚀 Server running at http://localhost:${server.port}`);
       console.log(`📋 View components at http://localhost:${server.port}`);
+      console.log(`🗃️ HTTP Cache: ${DISABLE_HTTP_CACHE ? 'disabled (no-store)' : 'enabled'}`);
     } else {
       throw error;
     }

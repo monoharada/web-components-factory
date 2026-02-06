@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "customElements": "custom-elements.json",
   "scripts": {
-    "dev": "bun server.ts",
+    "dev": "bun --watch serve.ts",
     "dev:vite": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
