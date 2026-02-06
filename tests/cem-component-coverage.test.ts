@@ -26,6 +26,17 @@ const DIRECTORY_TO_TAG_MAPPING: Record<string, string | string[]> = {
   'step-navigation': ['dads-step-navigation', 'dads-step-navigation-item'],
 };
 
+function getExpectedTagsForDirectory(directory: string): string[] {
+  const mapped = DIRECTORY_TO_TAG_MAPPING[directory];
+  if (Array.isArray(mapped)) return mapped;
+  if (typeof mapped === 'string') return [mapped];
+  return [`dads-${directory}`];
+}
+
+function hasAllTags(tagNames: ReadonlySet<string>, expectedTags: readonly string[]): boolean {
+  return expectedTags.every((tag) => tagNames.has(tag.toLowerCase()));
+}
+
 /**
  * CEM から tagName 一覧を抽出
  */
@@ -63,18 +74,20 @@ async function getComponentDirectories(): Promise<string[]> {
   const entries = await fs.readdir(componentsDir, { withFileTypes: true });
   const dirs = entries
     .filter((e) => e.isDirectory())
-    .filter((e) => !e.name.startsWith('_'))  // exclude _internal, __fixtures__, etc.
+    .filter((e) => !e.name.startsWith('_')) // exclude _internal, __fixtures__, etc.
     .map((e) => e.name);
 
   // 実装ファイルを持つディレクトリのみを coverage 対象とする
-  const result: string[] = [];
-  for (const dir of dirs) {
-    const dirPath = path.resolve(componentsDir, dir);
-    const files = await fs.readdir(dirPath);
-    const hasImplementation = files.some((name) => name.endsWith('.ts') || name.endsWith('.tsx'));
-    if (hasImplementation) result.push(dir);
-  }
-  return result;
+  const checks = await Promise.all(
+    dirs.map(async (dir) => {
+      const dirPath = path.resolve(componentsDir, dir);
+      const files = await fs.readdir(dirPath);
+      const hasImplementation = files.some((name) => name.endsWith('.ts') || name.endsWith('.tsx'));
+      return { dir, hasImplementation };
+    }),
+  );
+
+  return checks.filter((item) => item.hasImplementation).map((item) => item.dir);
 }
 
 describe('CEM component coverage', () => {
@@ -85,23 +98,10 @@ describe('CEM component coverage', () => {
     const missing: Array<{ directory: string; expected: string | string[] }> = [];
 
     for (const dir of componentDirs) {
-      // 特殊マッピングがあればそれを使用
-      const expectedTags = DIRECTORY_TO_TAG_MAPPING[dir];
-
-      if (expectedTags) {
-        // 特殊マッピングのケース
-        const tagsToCheck = Array.isArray(expectedTags) ? expectedTags : [expectedTags];
-        const allPresent = tagsToCheck.every((t) => tagNames.has(t.toLowerCase()));
-        if (!allPresent) {
-          missing.push({ directory: dir, expected: expectedTags });
-        }
-      } else {
-        // デフォルト: dads-<directory-name> の完全一致のみ
-        // 複数タグや変則パターンは DIRECTORY_TO_TAG_MAPPING に明示的に追加する
-        const expectedTag = `dads-${dir}`;
-        if (!tagNames.has(expectedTag)) {
-          missing.push({ directory: dir, expected: expectedTag });
-        }
+      const expectedTags = getExpectedTagsForDirectory(dir);
+      if (!hasAllTags(tagNames, expectedTags)) {
+        const mapped = DIRECTORY_TO_TAG_MAPPING[dir];
+        missing.push({ directory: dir, expected: mapped ?? expectedTags[0] });
       }
     }
 
