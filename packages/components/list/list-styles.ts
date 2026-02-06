@@ -28,15 +28,19 @@ export const listItemStyles = css`
   }
 
   [part='item'] {
-    display: grid;
+    display: var(--_dads-list-item-display);
+    position: var(--_dads-list-item-position);
     grid-template-columns: var(--_dads-list-marker-width) minmax(0, 1fr);
     column-gap: var(--_dads-list-marker-gap);
   }
 
   [part='marker'] {
+    position: var(--_dads-list-marker-position);
+    inset-inline-start: var(--_dads-list-marker-inset-inline-start);
+    inset-block-start: var(--_dads-list-marker-inset-block-start);
     color: var(--_dads-list-marker-color);
-    line-height: 1em;
-    text-align: end;
+    line-height: var(--_dads-list-marker-line-height);
+    text-align: var(--_dads-list-marker-text-align);
   }
 
   [part='marker-glyph'] {
@@ -61,23 +65,6 @@ export const listItemStyles = css`
     display: flex;
     flex-direction: column;
     row-gap: var(--_dads-list-item-gap);
-  }
-
-  :host-context(dads-list[variant='marker']) [part='item'] {
-    display: block;
-    position: relative;
-  }
-
-  :host-context(dads-list[variant='marker']) [part='marker'] {
-    position: absolute;
-    inset-inline-start: calc(-1 * (var(--_dads-list-marker-gap) + var(--_dads-list-marker-size)));
-    inset-block-start: 0;
-    line-height: 1;
-    text-align: start;
-  }
-
-  :host-context(dads-list[variant='marker']) [part='marker'] slot[name='marker'] {
-    display: none;
   }
 
   ::slotted(p),

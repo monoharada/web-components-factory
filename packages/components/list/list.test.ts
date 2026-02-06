@@ -174,6 +174,37 @@ describe('DadsListItem - marker slot visibility (via inherited vars)', () => {
     expect(markerLink).toBeInTheDocument();
   });
 
+  it('外側 marker / 内側 number の混在ネストでも内側 marker slot は表示される', async () => {
+    const { defineDefaultList } = await import('./list-define');
+    defineDefaultList();
+
+    element = renderWebComponent(`
+      <dads-list variant="marker">
+        <dads-list-item>
+          outer
+          <dads-list variant="number">
+            <dads-list-item>
+              <span slot="marker">1.</span>
+              inner
+            </dads-list-item>
+          </dads-list>
+        </dads-list-item>
+      </dads-list>
+    `);
+    await waitForCustomElement(element);
+
+    const innerItem = element.querySelector('dads-list[variant="number"] dads-list-item') as HTMLElement | null;
+    expect(innerItem).toBeInTheDocument();
+    if (!innerItem) return;
+    await waitForCustomElement(innerItem);
+
+    const markerSlot = getShadowContent(innerItem, 'slot[name="marker"]') as HTMLElement | null;
+    expect(markerSlot).toBeInTheDocument();
+    if (!markerSlot) return;
+
+    expect(getComputedStyle(markerSlot).display).toBe('inline');
+  });
+
   it('marker-size の既定フォールバックは 6px', async () => {
     const { defineDefaultList } = await import('./list-define');
     defineDefaultList();
@@ -206,6 +237,7 @@ describe('DadsListItem - marker slot visibility (via inherited vars)', () => {
     expect(sheetText).toContain("[part='item'] {");
     expect(sheetText).toContain("[part='marker-glyph']::before");
     expect(sheetText).not.toContain("[part='item']::marker");
+    expect(sheetText).not.toContain(':host-context(dads-list[variant=');
     expect(sheetText).not.toContain('transform:');
   });
 
