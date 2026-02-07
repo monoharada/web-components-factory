@@ -2275,6 +2275,1313 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/breadcrumb/breadcrumb.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "現在位置ナビゲーション（パンくず）コンテナ",
+          "name": "DadsBreadcrumb",
+          "cssParts": [
+            {
+              "description": "ナビゲーションラベル",
+              "name": "label"
+            },
+            {
+              "description": "パンくず一覧（p要素）",
+              "name": "list"
+            },
+            {
+              "description": "ナビゲーションルート（nav要素）",
+              "name": "nav"
+            }
+          ],
+          "slots": [
+            {
+              "description": "dads-breadcrumb-item 群",
+              "name": "default"
+            },
+            {
+              "description": "ナビゲーションラベル（デフォルト: 現在位置）",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureStructuredDataMirror",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "BreadcrumbItemLike[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getItemTagName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleMutations",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#isSyncing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#itemsSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#label",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#labelId",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "#observer",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#readStructuredDataName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "BreadcrumbItemLike"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#removeStructuredDataMirror",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveStructuredDataUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "href",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#startObservingMutations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncNavLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncStructuredData",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ariaLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ariaLabelledbyChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "baseUrlChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-breadcrumb', template: html` <nav part=\"nav\" id=\"nav\"> <span part=\"label\" id=\"label\"> <slot name=\"label\" id=\"label-slot\">現在位置</slot> </span> <p part=\"list\" id=\"list\" role=\"list\"> <slot id=\"items-slot\"></slot> </p> </nav> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), breadcrumbTokens, breadcrumbStyles, ], 'minimal'), attributes: [ BooleanAttr('showLabel', 'show-label'), PropertyAttr('separator'), PropertyAttr('structuredData', 'structured-data'), PropertyAttr('baseUrl', 'base-url'), TransferringPropertyAttr('nav', 'ariaLabel', 'aria-label'), TransferringPropertyAttr('nav', 'ariaLabelledby', 'aria-labelledby'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "separatorChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "structuredDataChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'0.1.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ナビゲーションのラベル",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ナビゲーションラベルの参照先ID",
+              "name": "aria-labelledby"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "構造化データURL解決用ベースURL",
+              "name": "base-url"
+            },
+            {
+              "type": {
+                "text": "'chevron' | 'slash' | 'pipe'"
+              },
+              "description": "区切り表示種別",
+              "name": "separator"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "ラベルを視覚表示する",
+              "name": "show-label"
+            },
+            {
+              "type": {
+                "text": "'off' | 'microdata'"
+              },
+              "description": "構造化データ出力モード",
+              "name": "structured-data"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-breadcrumb",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/breadcrumb/breadcrumb.ts",
+          "definitionPath": "./packages/components/breadcrumb/breadcrumb.ts",
+          "typeDefinitionPath": "./packages/components/breadcrumb/breadcrumb.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "現在位置ナビゲーション（パンくず）仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部は <nav> 要素と <p role=\"list\"> を使って現在位置ナビゲーションを提供します（ul/olは使用しません）。",
+                  "各項目は dads-breadcrumb-item（role=\"listitem\"）として扱います。",
+                  "現在位置は aria-current=\"page\" で表現します（明示指定がなければ末尾要素を現在位置として補完）。"
+                ],
+                "keyboard": [
+                  "リンク項目はTabでフォーカスし、Enterで遷移できます（ネイティブ挙動）。",
+                  "現在位置項目はリンク化されず、テキストとして表示されます。"
+                ],
+                "zoom": [
+                  "長いラベルは折り返し可能です（overflow-wrap）。"
+                ],
+                "states": [
+                  "show-label 属性で「現在位置」ラベルの視覚表示を切り替えます。",
+                  "home 属性で先頭項目にホームアイコンを表示できます。",
+                  "separator 属性（chevron / slash / pipe）で区切り表示を切り替えできます。",
+                  "structured-data=\"microdata\" でLight DOMにBreadcrumbListのMicrodataをミラー出力します。"
+                ],
+                "labels": [
+                  "aria-label / aria-labelledby でナビゲーション名を指定できます。",
+                  "show-label 未指定時はラベルを視覚非表示にしつつ、ランドマーク名として利用します。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "breadcrumb-nav",
+                  "title": "ナビゲーション領域",
+                  "label": "<nav>",
+                  "description": "現在位置ナビゲーションのランドマークです。aria-label / aria-labelledby で名称を提供します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"nav\"]"
+                  }
+                },
+                {
+                  "id": "breadcrumb-list",
+                  "title": "現在位置ナビゲーション本体（p + role=list）",
+                  "label": "role=\"list\"",
+                  "description": "p要素ベースの現在位置ナビゲーション。ul/ol/liを使わずに構成します。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"list\"]"
+                  }
+                },
+                {
+                  "id": "breadcrumb-current",
+                  "title": "現在位置",
+                  "label": "aria-current=\"page\"",
+                  "description": "現在のページ項目。リンクではなくテキスト表示されます。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "hostSelector": "dads-breadcrumb-item[current], dads-breadcrumb-item[aria-current=\"page\"]",
+                    "scope": "shadow",
+                    "selector": "[part=\"current\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "breadcrumb",
+            "install": {
+              "id": "breadcrumb",
+              "define": "defineBreadcrumb",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/breadcrumb"
+              },
+              "tags": [
+                "dads-breadcrumb",
+                "dads-breadcrumb-item"
+              ]
+            }
+          }
+        },
+        {
+          "kind": "class",
+          "description": "現在位置ナビゲーション（パンくず）項目",
+          "name": "DadsBreadcrumbItem",
+          "cssParts": [
+            {
+              "description": "現在項目テキスト",
+              "name": "current"
+            },
+            {
+              "description": "ホームアイコン",
+              "name": "home-icon"
+            },
+            {
+              "description": "アイテムルート（p要素）",
+              "name": "item"
+            },
+            {
+              "description": "非現在項目リンク",
+              "name": "link"
+            },
+            {
+              "description": "区切り",
+              "name": "separator"
+            },
+            {
+              "description": "区切りアイコン",
+              "name": "separator-icon"
+            },
+            {
+              "description": "区切りテキスト（slash / pipe）",
+              "name": "separator-text"
+            }
+          ],
+          "slots": [
+            {
+              "description": "項目テキスト",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#contentSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#current",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#homeIcon",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isCurrent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#link",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLAnchorElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#readAssignedText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#separator",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#separatorIcon",
+              "privacy": "private",
+              "type": {
+                "text": "SVGElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#separatorText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#sync",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ariaCurrentChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "currentChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-breadcrumb-item', template: html` <p part=\"item\" id=\"item\"> <span part=\"home-icon\" id=\"home-icon\" aria-hidden=\"true\" hidden> <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"> <path d=\"M3 13.666V6.166L7.99998 2.4032L12.99997 6.166V13.666H9.26922V9.20443H6.73075V13.666H3Z\" fill=\"currentColor\"></path> </svg> </span> <a part=\"link\" id=\"link\"> <slot id=\"content-slot\"></slot> </a> <span part=\"current\" id=\"current\" hidden></span> <span part=\"separator\" id=\"separator\" aria-hidden=\"true\"> <svg part=\"separator-icon\" id=\"separator-icon\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"> <path d=\"M4.5 10.5L4 10L8 6L4 2L4.5 1.5L9.05 6L4.5 10.5Z\" fill=\"currentColor\"></path> </svg> <span part=\"separator-text\" id=\"separator-text\" hidden></span> </span> </p> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), breadcrumbSemanticTokens, breadcrumbItemStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('current'), BooleanAttr('home'), PropertyAttr('separatorStyle', 'data-separator-style'), PropertyAttr('ariaCurrent', 'aria-current'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getStructuredDataName",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "homeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hrefChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "relChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "separatorStyleChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "targetChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'0.1.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "現在位置（page）",
+              "name": "aria-current"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "現在ページ",
+              "name": "current"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "ホームアイコン表示",
+              "name": "home"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンク先URL",
+              "name": "href"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンクrel",
+              "name": "rel"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンクターゲット",
+              "name": "target"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-breadcrumb-item",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/breadcrumb/breadcrumb.ts",
+          "definitionPath": "./packages/components/breadcrumb/breadcrumb.ts",
+          "typeDefinitionPath": "./packages/components/breadcrumb/breadcrumb.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "現在位置ナビゲーション項目（パンくず）仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "項目は role=\"listitem\" を持ち、href指定時はリンクとして動作します。",
+                  "current / aria-current=\"page\" の項目はリンクではなくテキスト表示に切り替わります。"
+                ],
+                "keyboard": [
+                  "リンク項目はTab/Enterで操作できます。",
+                  "現在位置項目はフォーカス対象になりません。"
+                ],
+                "zoom": [
+                  "項目テキストは折り返しを許容します。"
+                ],
+                "states": [
+                  "home属性でホームアイコンを前置表示します。",
+                  "current状態では区切り記号（separator）を非表示にします。",
+                  "区切り記号は chevron / slash / pipe のいずれでも aria-hidden で支援技術から除外されます。"
+                ],
+                "labels": [
+                  "項目テキストがパンくずラベルとして読み上げられます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "breadcrumb-item-link",
+                  "title": "リンク項目",
+                  "label": "<a>",
+                  "description": "hrefがある非現在項目はリンクとして表示されます。",
+                  "category": "keyboard",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"link\"]"
+                  }
+                },
+                {
+                  "id": "breadcrumb-item-separator",
+                  "title": "区切り記号",
+                  "label": "separator",
+                  "description": "現在項目以外の末尾に表示される視覚的な区切りです（chevron / slash / pipe、いずれも aria-hidden）。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"separator\"]"
+                  }
+                },
+                {
+                  "id": "breadcrumb-item-home-icon",
+                  "title": "ホームアイコン",
+                  "label": "home",
+                  "description": "home属性指定時に表示される先頭アイコンです（aria-hidden）。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"home-icon\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "breadcrumb",
+            "install": {
+              "id": "breadcrumb",
+              "define": "defineBreadcrumb",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/breadcrumb"
+              },
+              "tags": [
+                "dads-breadcrumb",
+                "dads-breadcrumb-item"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsBreadcrumb",
+          "declaration": {
+            "name": "DadsBreadcrumb",
+            "module": "packages/components/breadcrumb/breadcrumb.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsBreadcrumbItem",
+          "declaration": {
+            "name": "DadsBreadcrumbItem",
+            "module": "packages/components/breadcrumb/breadcrumb.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/breadcrumb/breadcrumb.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/breadcrumb/breadcrumb.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-breadcrumb",
+          "declaration": {
+            "name": "DadsBreadcrumb",
+            "module": "./packages/components/breadcrumb/breadcrumb.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/breadcrumb/breadcrumb.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-breadcrumb-item",
+          "declaration": {
+            "name": "DadsBreadcrumbItem",
+            "module": "./packages/components/breadcrumb/breadcrumb.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/button/button.ts",
       "declarations": [
         {
@@ -25796,6 +27103,224 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/breadcrumb/breadcrumb-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineBreadcrumb",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultBreadcrumb",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineBreadcrumb",
+          "declaration": {
+            "name": "defineBreadcrumb",
+            "module": "packages/components/breadcrumb/breadcrumb-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultBreadcrumb",
+          "declaration": {
+            "name": "defineDefaultBreadcrumb",
+            "module": "packages/components/breadcrumb/breadcrumb-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/breadcrumb/breadcrumb-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "breadcrumbItemStyles",
+          "default": "css` :host { display: inline; color: var(--dads-breadcrumb-color); font-family: var(--dads-breadcrumb-font-family); font-size: var(--dads-breadcrumb-font-size); font-weight: var(--dads-breadcrumb-font-weight); line-height: var(--dads-breadcrumb-line-height); letter-spacing: var(--dads-breadcrumb-letter-spacing); } [part='item'] { display: inline-flex; align-items: center; min-height: var(--dads-breadcrumb-home-icon-size); overflow-wrap: anywhere; } [part='home-icon'] { display: inline-flex; align-items: center; width: var(--dads-breadcrumb-home-icon-size); height: var(--dads-breadcrumb-home-icon-size); margin-right: var(--dads-breadcrumb-list-item-gap); } [part='home-icon'] svg { width: 100%; height: 100%; display: block; } [part='home-icon'][hidden] { display: none; } [part='link'] { color: var(--dads-breadcrumb-link-color); text-decoration: underline; text-underline-offset: var(--dads-breadcrumb-link-underline-offset); text-decoration-thickness: var(--dads-breadcrumb-link-underline-thickness); } @media (any-hover: hover) { [part='link']:hover { color: var(--dads-breadcrumb-link-color-hover); text-decoration-thickness: var(--dads-breadcrumb-link-underline-thickness-hover); } } [part='link']:active { color: var(--dads-breadcrumb-link-color-active); text-decoration-thickness: var(--dads-breadcrumb-link-underline-thickness); } [part='link'][hidden] { display: none; } [part='current'] { color: var(--dads-breadcrumb-current-color); letter-spacing: var(--dads-breadcrumb-current-letter-spacing); } [part='current'][hidden] { display: none; } [part='separator'] { display: inline-flex; align-items: center; line-height: 1; margin-inline-start: var(--dads-breadcrumb-separator-gap-start); color: var(--dads-breadcrumb-separator-color); } [part='separator-icon'] { display: block; width: var(--dads-breadcrumb-separator-size); height: var(--dads-breadcrumb-separator-size); margin-inline: 0; flex-shrink: 0; } [part='separator-icon'][hidden] { display: none; } [part='separator-text'] { display: inline-block; font-size: var(--dads-breadcrumb-font-size); line-height: 1; letter-spacing: 0; } [part='separator-text'][hidden] { display: none; } [part='separator'][hidden] { display: none; } `"
+        },
+        {
+          "kind": "variable",
+          "name": "breadcrumbStyles",
+          "default": "css` :host { display: block; } [part='nav'] { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--dads-breadcrumb-label-gap); row-gap: var(--dads-breadcrumb-row-gap); } [part='label'] { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; } :host([show-label]) [part='label'] { display: inline-flex; align-items: center; position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; color: var(--dads-breadcrumb-color); font-family: var(--dads-breadcrumb-font-family); font-size: var(--dads-breadcrumb-font-size); font-weight: var(--dads-breadcrumb-font-weight); line-height: var(--dads-breadcrumb-line-height); letter-spacing: var(--dads-breadcrumb-letter-spacing); } :host([show-label]) [part='label']::after { content: '：'; margin-inline-start: var(--dads-breadcrumb-label-suffix-gap); } [part='list'] { margin: 0; padding: 0; display: flex; align-items: center; flex-wrap: wrap; column-gap: var(--dads-breadcrumb-list-unit-gap); row-gap: var(--dads-breadcrumb-row-gap); color: var(--dads-breadcrumb-color); font-family: var(--dads-breadcrumb-font-family); font-size: var(--dads-breadcrumb-font-size); font-weight: var(--dads-breadcrumb-font-weight); line-height: var(--dads-breadcrumb-line-height); letter-spacing: var(--dads-breadcrumb-letter-spacing); } ::slotted(*) { display: inline; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "breadcrumbItemStyles",
+          "declaration": {
+            "name": "breadcrumbItemStyles",
+            "module": "packages/components/breadcrumb/breadcrumb-styles.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "breadcrumbStyles",
+          "declaration": {
+            "name": "breadcrumbStyles",
+            "module": "packages/components/breadcrumb/breadcrumb-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/breadcrumb/breadcrumb-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "breadcrumbLocalTokens",
+          "default": "css`${breadcrumbLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "breadcrumbSemanticTokens",
+          "default": "css`${breadcrumbSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "breadcrumbTokens",
+          "default": "css` ${breadcrumbSemanticTokensText} ${breadcrumbLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "breadcrumbLocalTokens",
+          "declaration": {
+            "name": "breadcrumbLocalTokens",
+            "module": "packages/components/breadcrumb/breadcrumb-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "breadcrumbSemanticTokens",
+          "declaration": {
+            "name": "breadcrumbSemanticTokens",
+            "module": "packages/components/breadcrumb/breadcrumb-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "breadcrumbTokens",
+          "declaration": {
+            "name": "breadcrumbTokens",
+            "module": "packages/components/breadcrumb/breadcrumb-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/breadcrumb/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "breadcrumbItemStyles",
+          "declaration": {
+            "name": "breadcrumbItemStyles",
+            "module": "./breadcrumb-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "breadcrumbLocalTokens",
+          "declaration": {
+            "name": "breadcrumbLocalTokens",
+            "module": "./breadcrumb-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "breadcrumbSemanticTokens",
+          "declaration": {
+            "name": "breadcrumbSemanticTokens",
+            "module": "./breadcrumb-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "breadcrumbStyles",
+          "declaration": {
+            "name": "breadcrumbStyles",
+            "module": "./breadcrumb-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "breadcrumbTokens",
+          "declaration": {
+            "name": "breadcrumbTokens",
+            "module": "./breadcrumb-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsBreadcrumb",
+          "declaration": {
+            "name": "DadsBreadcrumb",
+            "module": "./breadcrumb.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsBreadcrumbItem",
+          "declaration": {
+            "name": "DadsBreadcrumbItem",
+            "module": "./breadcrumb.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineBreadcrumb",
+          "declaration": {
+            "name": "defineBreadcrumb",
+            "module": "./breadcrumb-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultBreadcrumb",
+          "declaration": {
+            "name": "defineDefaultBreadcrumb",
+            "module": "./breadcrumb-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/button/button-define.ts",
       "declarations": [
         {
@@ -27777,6 +29302,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/page-navigation/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/breadcrumb/index.js"
           }
         },
         {
