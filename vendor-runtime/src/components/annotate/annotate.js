@@ -14,9 +14,10 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsAnnotate_instances, _a, _DadsAnnotate_targetRoot, _DadsAnnotate_panelBody, _DadsAnnotate_panelSubtitle, _DadsAnnotate_panelBadges, _DadsAnnotate_calloutLayer, _DadsAnnotate_calloutSvg, _DadsAnnotate_previewInner, _DadsAnnotate_refreshQueued, _DadsAnnotate_target, _DadsAnnotate_callouts, _DadsAnnotate_observers, _DadsAnnotate_resizeObserver, _DadsAnnotate_raf, _DadsAnnotate_supportsAnchors, _DadsAnnotate_readCssPx, _DadsAnnotate_instanceCounter, _DadsAnnotate_instanceId, _DadsAnnotate_moveInitialContentIntoTargetRoot, _DadsAnnotate_setupResizeObserver, _DadsAnnotate_scheduleLayout, _DadsAnnotate_scheduleRefresh, _DadsAnnotate_refresh, _DadsAnnotate_resolveTarget, _DadsAnnotate_render, _DadsAnnotate_formatCalloutTag, _DadsAnnotate_renderSnapshot, _DadsAnnotate_normalizeCallouts, _DadsAnnotate_resolveElementRef, _DadsAnnotate_hasRenderableBox, _DadsAnnotate_isEmptyOrHidden, _DadsAnnotate_layoutCallouts, _DadsAnnotate_setupLiveObservers, _DadsAnnotate_windowCleanup, _DadsAnnotate_teardownObservers, _DadsAnnotate_refreshSnapshotsOnly;
+var _DadsAnnotate_instances, _a, _DadsAnnotate_targetRoot, _DadsAnnotate_panelBody, _DadsAnnotate_panelSubtitle, _DadsAnnotate_panelBadges, _DadsAnnotate_calloutLayer, _DadsAnnotate_calloutSvg, _DadsAnnotate_previewInner, _DadsAnnotate_refreshQueued, _DadsAnnotate_target, _DadsAnnotate_callouts, _DadsAnnotate_observers, _DadsAnnotate_resizeObserver, _DadsAnnotate_raf, _DadsAnnotate_supportsAnchors, _DadsAnnotate_readCssPx, _DadsAnnotate_instanceCounter, _DadsAnnotate_instanceId, _DadsAnnotate_moveInitialContentIntoTargetRoot, _DadsAnnotate_setupResizeObserver, _DadsAnnotate_scheduleLayout, _DadsAnnotate_scheduleRefresh, _DadsAnnotate_refresh, _DadsAnnotate_resolveTarget, _DadsAnnotate_render, _DadsAnnotate_formatCalloutTag, _DadsAnnotate_renderSnapshot, _DadsAnnotate_normalizeCallouts, _DadsAnnotate_applyCalloutBoxHints, _DadsAnnotate_resolveElementRef, _DadsAnnotate_hasRenderableBox, _DadsAnnotate_isEmptyOrHidden, _DadsAnnotate_layoutCallouts, _DadsAnnotate_setupLiveObservers, _DadsAnnotate_windowCleanup, _DadsAnnotate_teardownObservers, _DadsAnnotate_refreshSnapshotsOnly;
 import { css, html, BooleanAttr, PropertyAttr } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
+import { buildAutoPath, clampBoundaryPointAwayFromCorners, computeInsetPx, insetPointTowards, pickRectBoundaryPoint, rectCenter, } from './annotate-geometry.js';
 const CATEGORY_ORDER = Object.freeze([
     'semantics',
     'keyboard',
@@ -38,6 +39,25 @@ function asArray(v) {
         return [];
     return typeof v === 'string' ? [v] : v;
 }
+function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+}
+function composedContains(container, node) {
+    if (container === node)
+        return true;
+    let cur = node;
+    while (cur) {
+        if (cur === container)
+            return true;
+        const root = cur.getRootNode();
+        if (root instanceof ShadowRoot) {
+            cur = root.host;
+            continue;
+        }
+        cur = cur.parentNode;
+    }
+    return false;
+}
 function isHTMLElement(v) {
     return v instanceof HTMLElement;
 }
@@ -49,11 +69,21 @@ function getAriaAttrs(el) {
     }
     return out;
 }
-const CEM_URL = '/custom-elements.json';
+const CEM_URL_FALLBACK = '/custom-elements.json';
 const A11Y_QUERY_PARAM = 'a11y';
 const A11Y_STORAGE_KEY = 'dads:a11y';
 let cemAnnotations = null;
 let cemAnnotationsPromise = null;
+function resolveCemUrl() {
+    try {
+        if (typeof document !== 'undefined')
+            return new URL('custom-elements.json', document.baseURI).toString();
+    }
+    catch {
+        // fall through
+    }
+    return CEM_URL_FALLBACK;
+}
 function isA11yAnnotationsEnabled() {
     if (typeof window === 'undefined')
         return false;
@@ -87,7 +117,8 @@ function loadCemAnnotations() {
     if (cemAnnotations)
         return Promise.resolve(cemAnnotations);
     if (!cemAnnotationsPromise) {
-        cemAnnotationsPromise = fetch(CEM_URL)
+        const cemUrl = resolveCemUrl();
+        cemAnnotationsPromise = fetch(cemUrl)
             .then((res) => {
             if (!res.ok)
                 throw new Error(`Failed to load CEM: ${res.status}`);
@@ -113,7 +144,11 @@ function readAnnotations(el, onCemLoaded) {
         const spec = cemAnnotations?.get(tagName) ?? null;
         if (spec)
             return spec;
-        void loadCemAnnotations().then(() => onCemLoaded?.());
+        // CEMが未ロードのときだけロードし、ロード完了後に再描画を予約する。
+        // 既にロード済み（空Map=取得失敗/未収載含む）の場合は無限refreshを避けるため予約しない。
+        if (cemAnnotations === null) {
+            void loadCemAnnotations().then(() => onCemLoaded?.());
+        }
     }
     const inst = el.a11yAnnotations;
     if (inst && inst.version === 1)
@@ -318,6 +353,7 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
     __classPrivateFieldGet(this, _DadsAnnotate_panelBody, "f").textContent = '';
     const categories = spec?.categories ?? {};
     const callouts = __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_normalizeCallouts).call(this, spec);
+    __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_applyCalloutBoxHints).call(this, callouts);
     // アノテーション一覧を最初に表示
     const panelCallouts = callouts.filter((c) => (c.callout.mode ?? 'both') !== 'marker');
     if (panelCallouts.length > 0) {
@@ -475,6 +511,7 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
         overlay.setAttribute('data-callout-id', callout.id);
         const box = document.createElement('div');
         box.className = 'callout-box';
+        box.toggleAttribute('hidden', true);
         const tag = document.createElement('div');
         tag.className = 'callout-tag';
         const numBadge = document.createElement('span');
@@ -500,6 +537,33 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
         });
     }
     return out;
+}, _DadsAnnotate_applyCalloutBoxHints = function _DadsAnnotate_applyCalloutBoxHints(callouts) {
+    for (const item of callouts) {
+        const hint = item.callout.targetHint ?? 'auto';
+        if (hint === 'box') {
+            item.boxEl.toggleAttribute('hidden', false);
+            continue;
+        }
+        if (hint === 'none') {
+            item.boxEl.toggleAttribute('hidden', true);
+            continue;
+        }
+        const el = item.targetEl;
+        if (!el) {
+            item.boxEl.toggleAttribute('hidden', true);
+            continue;
+        }
+        const isContainer = callouts.some((other) => {
+            if (other === item)
+                return false;
+            if (!other.targetEl)
+                return false;
+            if (other.targetEl === el)
+                return false;
+            return composedContains(el, other.targetEl);
+        });
+        item.boxEl.toggleAttribute('hidden', !isContainer);
+    }
 }, _DadsAnnotate_resolveElementRef = function _DadsAnnotate_resolveElementRef(ref) {
     const host = ref.host ?? 'target';
     const hostBase = host === 'annotate' ? this : __classPrivateFieldGet(this, _DadsAnnotate_target, "f");
@@ -602,8 +666,17 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
         __classPrivateFieldGet(this, _DadsAnnotate_calloutSvg, "f").setAttribute('width', String(containerRect.width));
         __classPrivateFieldGet(this, _DadsAnnotate_calloutSvg, "f").setAttribute('height', String(containerRect.height));
     }
-    const placedTags = [];
-    const overlapMargin = 8;
+    const lineInsetMin = __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_readCssPx).call(this, '--a11y-annotate-callout-line-inset', 2);
+    const cornerMargin = __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_readCssPx).call(this, '--a11y-annotate-callout-anchor-corner-margin', 10);
+    const ratioRaw = getComputedStyle(this).getPropertyValue('--a11y-annotate-callout-line-inset-ratio').trim();
+    const ratio = Number.parseFloat(ratioRaw);
+    const clampMargin = 10;
+    const laneGap = 8;
+    const laneOffset = __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_readCssPx).call(this, '--a11y-annotate-callout-lane-offset', 24);
+    const targetInfo = new Map();
+    let focusRectLocal = null;
+    const laneItems = [];
+    // Pass 1: show/hide + box layout + focusRect (targets union) collection
     for (const item of __classPrivateFieldGet(this, _DadsAnnotate_callouts, "f")) {
         const anchorEl = item.targetEl;
         if (!anchorEl) {
@@ -623,109 +696,274 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
         const localTop = rect.top - containerRect.top;
         const localWidth = rect.width;
         const localHeight = rect.height;
-        const pad = 6;
-        item.boxEl.style.left = `${localLeft - pad}px`;
-        item.boxEl.style.top = `${localTop - pad}px`;
-        item.boxEl.style.width = `${localWidth + pad * 2}px`;
-        item.boxEl.style.height = `${localHeight + pad * 2}px`;
-        const computed = getComputedStyle(anchorEl);
-        const baseRadii = {
-            topLeft: parseRadiusPx(computed.borderTopLeftRadius, rootFontSize),
-            topRight: parseRadiusPx(computed.borderTopRightRadius, rootFontSize),
-            bottomRight: parseRadiusPx(computed.borderBottomRightRadius, rootFontSize),
-            bottomLeft: parseRadiusPx(computed.borderBottomLeftRadius, rootFontSize),
-        };
-        const maxRadius = Math.min((localWidth + pad * 2) / 2, (localHeight + pad * 2) / 2);
-        const toBoxRadius = (base) => {
-            if (base <= 0)
-                return 0;
-            const padded = base + pad;
-            return Math.max(0, Math.min(padded, maxRadius));
-        };
-        item.boxEl.style.borderTopLeftRadius = `${toBoxRadius(baseRadii.topLeft)}px`;
-        item.boxEl.style.borderTopRightRadius = `${toBoxRadius(baseRadii.topRight)}px`;
-        item.boxEl.style.borderBottomRightRadius = `${toBoxRadius(baseRadii.bottomRight)}px`;
-        item.boxEl.style.borderBottomLeftRadius = `${toBoxRadius(baseRadii.bottomLeft)}px`;
-        const placement = item.callout.placement ?? 'top-right';
-        const isLeft = placement === 'top-left' || placement === 'bottom-left';
-        const isTop = placement === 'top-left' || placement === 'top-right';
-        const anchorX = isLeft ? localLeft : localLeft + localWidth;
-        const anchorY = isTop ? localTop : localTop + localHeight;
-        const gap = __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_readCssPx).call(this, '--spacing-6', 24);
-        let tagLeft = isLeft ? anchorX - gap : anchorX + gap;
-        let tagTop = isTop ? anchorY - gap : anchorY + gap;
-        const tagTransform = `translate(${isLeft ? '-100%' : '0'}, ${isTop ? '-100%' : '0'})`;
-        item.tagEl.style.left = `${tagLeft}px`;
-        item.tagEl.style.top = `${tagTop}px`;
-        item.tagEl.style.transform = tagTransform;
-        // タグがプレビュー領域からはみ出す場合はクランプする（padding領域も含めて配置できる）
-        const clampMargin = 10;
-        const clampToContainer = () => {
-            let tagRect = item.tagEl.getBoundingClientRect();
-            let dx = 0;
-            let dy = 0;
-            if (tagRect.left < containerRect.left + clampMargin) {
-                dx = containerRect.left + clampMargin - tagRect.left;
-            }
-            else if (tagRect.right > containerRect.right - clampMargin) {
-                dx = containerRect.right - clampMargin - tagRect.right;
-            }
-            if (tagRect.top < containerRect.top + clampMargin) {
-                dy = containerRect.top + clampMargin - tagRect.top;
-            }
-            else if (tagRect.bottom > containerRect.bottom - clampMargin) {
-                dy = containerRect.bottom - clampMargin - tagRect.bottom;
-            }
-            if (dx !== 0 || dy !== 0) {
-                tagLeft += dx;
-                tagTop += dy;
-                item.tagEl.style.left = `${tagLeft}px`;
-                item.tagEl.style.top = `${tagTop}px`;
-                tagRect = item.tagEl.getBoundingClientRect();
-            }
-            return tagRect;
-        };
-        // 初回クランプ
-        let tagRect = clampToContainer();
-        // 既存タグとの衝突を回避（簡易）
-        for (let attempt = 0; attempt < 8; attempt += 1) {
-            const hit = placedTags.find((r) => {
-                const ax1 = tagRect.left - overlapMargin;
-                const ay1 = tagRect.top - overlapMargin;
-                const ax2 = tagRect.right + overlapMargin;
-                const ay2 = tagRect.bottom + overlapMargin;
-                const bx1 = r.left;
-                const by1 = r.top;
-                const bx2 = r.right;
-                const by2 = r.bottom;
-                return ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1;
-            });
-            if (!hit)
-                break;
-            const shift = 10;
-            tagTop += isTop
-                ? hit.bottom - tagRect.top + shift
-                : -(tagRect.bottom - hit.top + shift);
-            item.tagEl.style.top = `${tagTop}px`;
-            tagRect = clampToContainer();
+        if (!item.boxEl.hasAttribute('hidden')) {
+            const pad = 6;
+            item.boxEl.style.left = `${localLeft - pad}px`;
+            item.boxEl.style.top = `${localTop - pad}px`;
+            item.boxEl.style.width = `${localWidth + pad * 2}px`;
+            item.boxEl.style.height = `${localHeight + pad * 2}px`;
+            const computed = getComputedStyle(anchorEl);
+            const baseRadii = {
+                topLeft: parseRadiusPx(computed.borderTopLeftRadius, rootFontSize),
+                topRight: parseRadiusPx(computed.borderTopRightRadius, rootFontSize),
+                bottomRight: parseRadiusPx(computed.borderBottomRightRadius, rootFontSize),
+                bottomLeft: parseRadiusPx(computed.borderBottomLeftRadius, rootFontSize),
+            };
+            const maxRadius = Math.min((localWidth + pad * 2) / 2, (localHeight + pad * 2) / 2);
+            const toBoxRadius = (base) => {
+                if (base <= 0)
+                    return 0;
+                const padded = base + pad;
+                return Math.max(0, Math.min(padded, maxRadius));
+            };
+            item.boxEl.style.borderTopLeftRadius = `${toBoxRadius(baseRadii.topLeft)}px`;
+            item.boxEl.style.borderTopRightRadius = `${toBoxRadius(baseRadii.topRight)}px`;
+            item.boxEl.style.borderBottomRightRadius = `${toBoxRadius(baseRadii.bottomRight)}px`;
+            item.boxEl.style.borderBottomLeftRadius = `${toBoxRadius(baseRadii.bottomLeft)}px`;
         }
-        // ターゲットと重なる場合は、少しだけ離す
-        const intersectsTarget = tagRect.left < rect.right &&
-            tagRect.right > rect.left &&
-            tagRect.top < rect.bottom &&
-            tagRect.bottom > rect.top;
-        if (intersectsTarget) {
-            const nudge = 14;
-            tagTop += isTop ? -nudge : nudge;
-            item.tagEl.style.top = `${tagTop}px`;
-            tagRect = clampToContainer();
+        const targetRectLocal = {
+            left: localLeft,
+            top: localTop,
+            width: localWidth,
+            height: localHeight,
+        };
+        const targetCenter = rectCenter(targetRectLocal);
+        targetInfo.set(item, { targetRectLocal, targetCenter });
+        const right = localLeft + localWidth;
+        const bottom = localTop + localHeight;
+        if (!focusRectLocal) {
+            focusRectLocal = { left: localLeft, top: localTop, right, bottom };
         }
-        placedTags.push(tagRect);
-        const tagLocalLeft = tagRect.left - containerRect.left;
-        const tagLocalTop = tagRect.top - containerRect.top;
-        const startX = isLeft ? tagLocalLeft + tagRect.width : tagLocalLeft;
-        const startY = isTop ? tagLocalTop + tagRect.height : tagLocalTop;
-        item.lineEl.setAttribute('d', `M ${startX} ${startY} L ${anchorX} ${startY} L ${anchorX} ${anchorY}`);
+        else {
+            focusRectLocal.left = Math.min(focusRectLocal.left, localLeft);
+            focusRectLocal.top = Math.min(focusRectLocal.top, localTop);
+            focusRectLocal.right = Math.max(focusRectLocal.right, right);
+            focusRectLocal.bottom = Math.max(focusRectLocal.bottom, bottom);
+        }
+    }
+    if (!focusRectLocal)
+        return;
+    // レーンの基準は「注釈対象の実範囲（focusRect）」だが、
+    // ここにホスト（display:blockで幅100%）が混ざると「実際の見た目の寄せ」が判定できない。
+    // そのため、preview-inner 幅に対して「ほぼフル幅」のターゲットは除外し、
+    // 小さめのターゲット群の union を laneFocusRect として使う（無い場合は focusRect にフォールバック）。
+    const previewInnerRect = __classPrivateFieldGet(this, _DadsAnnotate_previewInner, "f")?.getBoundingClientRect();
+    const previewInnerLocal = previewInnerRect && previewInnerRect.width > 0 && previewInnerRect.height > 0
+        ? {
+            left: previewInnerRect.left - containerRect.left,
+            top: previewInnerRect.top - containerRect.top,
+            width: previewInnerRect.width,
+            height: previewInnerRect.height,
+        }
+        : null;
+    let laneFocusRectLocal = null;
+    if (previewInnerLocal) {
+        const maxLaneTargetWidth = previewInnerLocal.width * 0.9;
+        const maxLaneTargetHeight = previewInnerLocal.height * 0.98;
+        for (const { targetRectLocal } of targetInfo.values()) {
+            if (targetRectLocal.width >= maxLaneTargetWidth)
+                continue;
+            if (targetRectLocal.height >= maxLaneTargetHeight)
+                continue;
+            const right = targetRectLocal.left + targetRectLocal.width;
+            const bottom = targetRectLocal.top + targetRectLocal.height;
+            if (!laneFocusRectLocal) {
+                laneFocusRectLocal = { left: targetRectLocal.left, top: targetRectLocal.top, right, bottom };
+            }
+            else {
+                laneFocusRectLocal.left = Math.min(laneFocusRectLocal.left, targetRectLocal.left);
+                laneFocusRectLocal.top = Math.min(laneFocusRectLocal.top, targetRectLocal.top);
+                laneFocusRectLocal.right = Math.max(laneFocusRectLocal.right, right);
+                laneFocusRectLocal.bottom = Math.max(laneFocusRectLocal.bottom, bottom);
+            }
+        }
+    }
+    if (!laneFocusRectLocal)
+        laneFocusRectLocal = focusRectLocal;
+    const focusCenterXLocal = (laneFocusRectLocal.left + laneFocusRectLocal.right) / 2;
+    // レーン固定（left-only/right-only）の判定には、コールアウト対象の union ではなく
+    // 「プレビュー内でのコンポーネント自体の寄せ」を優先して使う。
+    // - コールアウト対象が左右に散っている場合でも、コンポーネントが右寄せなら左にまとめたい
+    // - 逆に、左寄せなら右へまとめたい
+    // ただし、ターゲットがほぼフル幅の場合は寄せ判定ができないため、laneFocusRect にフォールバックする。
+    const targetRect = __classPrivateFieldGet(this, _DadsAnnotate_target, "f")?.getBoundingClientRect();
+    const targetRectLocal = previewInnerLocal &&
+        targetRect &&
+        targetRect.width > 0 &&
+        targetRect.height > 0 &&
+        Number.isFinite(targetRect.left) &&
+        Number.isFinite(targetRect.top)
+        ? {
+            left: targetRect.left - containerRect.left,
+            top: targetRect.top - containerRect.top,
+            width: targetRect.width,
+            height: targetRect.height,
+        }
+        : null;
+    const laneAlignRectLocal = (() => {
+        if (!previewInnerLocal || !targetRectLocal)
+            return laneFocusRectLocal;
+        const isFullWidth = targetRectLocal.width >= previewInnerLocal.width * 0.95;
+        if (isFullWidth)
+            return laneFocusRectLocal;
+        return {
+            left: targetRectLocal.left,
+            top: targetRectLocal.top,
+            right: targetRectLocal.left + targetRectLocal.width,
+            bottom: targetRectLocal.top + targetRectLocal.height,
+        };
+    })();
+    // コンポーネント（実ターゲット範囲）が右/左どちらに寄っているかを判定し、
+    // 空いている側へレーンを固定する（寄せが無い場合は split）。
+    let laneMode = 'split';
+    const inferLaneMode = () => {
+        if (!previewInnerLocal)
+            return 'split';
+        const previewLeft = previewInnerLocal.left;
+        const previewRight = previewInnerLocal.left + previewInnerLocal.width;
+        const spaceLeft = laneAlignRectLocal.left - previewLeft;
+        const spaceRight = previewRight - laneAlignRectLocal.right;
+        if (spaceLeft < 0 || spaceRight < 0)
+            return 'split';
+        const diff = spaceLeft - spaceRight;
+        // 差分がレーン距離以上なら固定を優先（小さいズレでも読みやすくするため）。
+        if (diff >= laneOffset)
+            return 'left-only'; // right aligned → labels on the left
+        if (diff <= -laneOffset)
+            return 'right-only'; // left aligned → labels on the right
+        const absDiff = Math.abs(diff);
+        const dominant = Math.max(spaceLeft, spaceRight);
+        const minor = Math.min(spaceLeft, spaceRight);
+        const ratio = (dominant + 1) / (minor + 1);
+        // ズレの閾値はプレビュー幅に比例（極端にならないように clamp）
+        // - 小さいプレビューでも寄せを検出したい（例: heading の shoulder）
+        // - 大きいプレビューでも過剰に片寄せしない
+        const minDiff = clamp(previewInnerLocal.width * 0.05, 32, 80);
+        if (absDiff < minDiff || ratio < 1.4)
+            return 'split';
+        if (diff > 0)
+            return 'left-only';
+        if (diff < 0)
+            return 'right-only';
+        return 'split';
+    };
+    laneMode = inferLaneMode();
+    const resolveSide = (placement, targetCenterX) => {
+        if (laneMode === 'left-only')
+            return 'left';
+        if (laneMode === 'right-only')
+            return 'right';
+        if (placement === 'top-left' || placement === 'bottom-left')
+            return 'left';
+        if (placement === 'top-right' || placement === 'bottom-right')
+            return 'right';
+        return targetCenterX < focusCenterXLocal ? 'left' : 'right';
+    };
+    const viewportMargin = clampMargin;
+    const viewportMinXLocal = viewportMargin - containerRect.left;
+    const viewportMaxXLocal = window.innerWidth - viewportMargin - containerRect.left;
+    const minXLocal = Math.max(clampMargin, viewportMinXLocal);
+    const maxXLocal = Math.min(containerRect.width - clampMargin, viewportMaxXLocal);
+    const dockToSide = (item, side, y) => {
+        const laneXBase = side === 'left' ? laneFocusRectLocal.left - laneOffset : laneFocusRectLocal.right + laneOffset;
+        const transform = side === 'left' ? 'translate(-100%, -50%)' : 'translate(0, -50%)';
+        // まず lane へドックし、サイズ計測のために暫定 top/left を入れる
+        item.tagEl.style.transform = transform;
+        item.tagEl.style.top = `${y}px`;
+        item.tagEl.style.left = `${laneXBase}px`;
+        const measured = item.tagEl.getBoundingClientRect();
+        const w = measured.width || 0;
+        const h = measured.height || 0;
+        // はみ出し防止（viewport と callout-layer の両方に収める）
+        const minForLeft = Math.min(minXLocal + w, maxXLocal);
+        const maxForLeft = maxXLocal;
+        const minForRight = minXLocal;
+        const maxForRight = Math.max(minXLocal, maxXLocal - w);
+        // left側は right-edge を clamp、right側は left-edge を clamp
+        const laneX = side === 'left'
+            ? clamp(laneXBase, minForLeft, maxForLeft)
+            : clamp(laneXBase, minForRight, maxForRight);
+        item.tagEl.style.left = `${laneX}px`;
+        const penalty = Math.abs(laneX - laneXBase);
+        return { side, desiredY: y, height: h, penalty };
+    };
+    // Pass 2: lane docking + measurement (height) + per-side stacking
+    for (const item of __classPrivateFieldGet(this, _DadsAnnotate_callouts, "f")) {
+        const info = targetInfo.get(item);
+        if (!info)
+            continue;
+        const { targetCenter } = info;
+        const preferredSide = resolveSide(item.callout.placement, targetCenter.x);
+        const preferred = dockToSide(item, preferredSide, targetCenter.y);
+        // split の場合のみ、viewport clamp が強く効いている側は反転を試す（見た目の破綻回避）。
+        let chosen = preferred;
+        if (laneMode === 'split' && preferred.penalty > 1) {
+            const otherSide = preferredSide === 'left' ? 'right' : 'left';
+            const other = dockToSide(item, otherSide, targetCenter.y);
+            if (other.penalty < preferred.penalty)
+                chosen = other;
+            else
+                dockToSide(item, preferredSide, targetCenter.y); // revert (other sideを試したため)
+        }
+        laneItems.push({ item, desiredY: chosen.desiredY, height: chosen.height, side: chosen.side });
+    }
+    const packLane = (items, side) => {
+        const list = items.filter((x) => x.side === side).sort((a, b) => a.desiredY - b.desiredY);
+        if (list.length === 0)
+            return;
+        const minY = (h) => clampMargin + h / 2;
+        const maxY = (h) => containerRect.height - clampMargin - h / 2;
+        const centers = list.map((x) => ({
+            ...x,
+            centerY: clamp(x.desiredY, minY(x.height), maxY(x.height)),
+        }));
+        // forward: push down to resolve overlaps
+        for (let i = 1; i < centers.length; i += 1) {
+            const prev = centers[i - 1];
+            const cur = centers[i];
+            const minCenterY = prev.centerY + prev.height / 2 + laneGap + cur.height / 2;
+            cur.centerY = Math.max(cur.centerY, minCenterY);
+            cur.centerY = Math.min(cur.centerY, maxY(cur.height));
+        }
+        // backward: pull up if overflowed
+        for (let i = centers.length - 2; i >= 0; i -= 1) {
+            const next = centers[i + 1];
+            const cur = centers[i];
+            const maxCenterY = next.centerY - next.height / 2 - laneGap - cur.height / 2;
+            cur.centerY = Math.min(cur.centerY, maxCenterY);
+            cur.centerY = Math.max(cur.centerY, minY(cur.height));
+        }
+        // apply
+        for (const c of centers) {
+            c.item.tagEl.style.top = `${c.centerY}px`;
+        }
+    };
+    packLane(laneItems, 'left');
+    packLane(laneItems, 'right');
+    // line calculation after final tag placement
+    for (const { item } of laneItems) {
+        const info = targetInfo.get(item);
+        if (!info)
+            continue;
+        const { targetRectLocal, targetCenter } = info;
+        const tagRect = item.tagEl.getBoundingClientRect();
+        const tagRectLocal = {
+            left: tagRect.left - containerRect.left,
+            top: tagRect.top - containerRect.top,
+            width: tagRect.width,
+            height: tagRect.height,
+        };
+        const tagCenter = rectCenter(tagRectLocal);
+        const start = pickRectBoundaryPoint(tagCenter, targetCenter, tagRectLocal) ??
+            // fallback (should be rare)
+            { x: tagCenter.x, y: tagCenter.y };
+        const hit = pickRectBoundaryPoint(tagCenter, targetCenter, targetRectLocal) ??
+            { x: targetCenter.x, y: targetCenter.y };
+        const dir = { x: targetCenter.x - tagCenter.x, y: targetCenter.y - tagCenter.y };
+        const safeHit = clampBoundaryPointAwayFromCorners(hit, targetRectLocal, cornerMargin, dir);
+        const insetPx = computeInsetPx(targetRectLocal, lineInsetMin, Number.isFinite(ratio) ? ratio : 0.35);
+        const end = insetPointTowards(safeHit, targetCenter, insetPx);
+        item.lineEl.setAttribute('d', buildAutoPath(start, end, targetRectLocal));
     }
 }, _DadsAnnotate_setupLiveObservers = function _DadsAnnotate_setupLiveObservers() {
     if (!__classPrivateFieldGet(this, _DadsAnnotate_target, "f"))
@@ -816,6 +1054,13 @@ DadsAnnotate.definition = {
         /* カスタマイズ可能な注釈カラー */
         --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000);
         --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid);
+        --a11y-annotate-callout-line-inset: var(--spacing-0-5, 2px);
+        --a11y-annotate-callout-line-inset-ratio: 0.35;
+        --a11y-annotate-callout-anchor-corner-margin: var(--spacing-2-5, 10px);
+        /* callout-layer の拡張量（= レーンの外側距離）。大きすぎると視認性が落ちるため clamp で抑える。 */
+        --a11y-annotate-callout-gutter: clamp(var(--spacing-12, 3rem), 8vw, var(--spacing-24, 6rem));
+        /* レーン（ラベル位置）のターゲット範囲からの距離 */
+        --a11y-annotate-callout-lane-offset: var(--spacing-14, 56px);
 
         /* Typography */
         --a11y-annotate-font-size: var(--font-size-16, 1rem);
@@ -868,7 +1113,6 @@ DadsAnnotate.definition = {
         padding: var(--spacing-12, 48px);
         position: relative;
         overflow: visible;
-        --a11y-annotate-callout-gutter: var(--spacing-16, 64px);
       }
 
       a11y-annotate [part="preview-inner"] {
@@ -1001,6 +1245,10 @@ DadsAnnotate.definition = {
         border: 2px dashed var(--a11y-annotate-callout-color);
         border-radius: var(--border-radius-8, 0.5rem);
         background: transparent;
+      }
+
+      a11y-annotate .callout-box[hidden] {
+        display: none;
       }
 
       a11y-annotate .callout-tag {

@@ -4,6 +4,13 @@
 目的は「発見 → 1コマンド導入 → ページ生成」を一貫させることです。
 生成物は `vendor/components/<prefix>/components/**` を中心に編集します（`elements/` 分離は行いません）。
 
+## 組版CSS（標準同梱）
+
+- `page create` で生成される `index.html` には、`@layer ... contents` の組版CSS（`<style data-wcf-typeset>`）が標準で入る
+- コンテンツルートには `data-dads-typeset` を付ける（pattern定義も同契約）
+- 密度を詰める場合のみ `data-dads-density="compact"` を付与する
+- `dads-heading` の大きい上余白は `margin="top"` を優先し、組版CSSはフォールバックのみ担当する
+
 ## 主要コマンド
 
 ```bash

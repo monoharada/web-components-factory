@@ -5,4 +5,4 @@
  * @module input-text
  */
 export * from './input-text.js';
-export { defineInputText, autoDefineInputText } from './input-text-define.js';
+export { defineInputText, defineDefaultInputText, autoDefineInputText } from './input-text-define.js';

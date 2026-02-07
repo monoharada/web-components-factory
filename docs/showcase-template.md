@@ -2,6 +2,13 @@
 
 Web Components ショーケースデモの標準テンプレートです。新しいコンポーネントのデモを作成する際に参照してください。
 
+## 組版ルール（共通）
+
+- コンテンツルートに `data-dads-typeset` を付与する（例: `<main data-dads-typeset>`）
+- 密度を詰めるときだけ `data-dads-density="compact"` を使う
+- `dads-heading` の大きい上余白は `margin="top"` を使い、組版側で重ねて定義しない
+- 詳細は `docs/rules/content-typeset-rules.md` を参照する
+
 ## 章立て
 
 ```
@@ -190,3 +197,4 @@ function annotationToggleScript(): string {
 - [ ] E2E用 ID は Fidelity デモに移動済み
 - [ ] viewer.html に Fidelity オプションがある
 - [ ] E2E テストが Fidelity を参照している
+- [ ] ルートコンテナに `data-dads-typeset` がある

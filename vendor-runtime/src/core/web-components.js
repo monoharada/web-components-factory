@@ -193,6 +193,64 @@ export function TransferringPropertyAttr(target, property, attribute = property,
         },
     };
 }
+export function DelegatingPropertyAttr(targetSelector, property, attribute = property, remove = false) {
+    const cb = `${property}Changed`;
+    const lock = new WeakSet();
+    const resolveTarget = (i) => {
+        const sr = i.shadowRoot;
+        if (sr) {
+            const el = sr.querySelector(targetSelector);
+            if (el instanceof HTMLElement)
+                return el;
+        }
+        const el = i.querySelector(targetSelector);
+        if (el instanceof HTMLElement)
+            return el;
+        return null;
+    };
+    return {
+        property,
+        attribute,
+        getValue: (i) => {
+            const val = i.getAttribute(attribute);
+            if (val != null || !remove)
+                return val;
+            const trg = resolveTarget(i);
+            return trg ? trg.getAttribute(attribute) : null;
+        },
+        setValue: (el, v) => {
+            if (v == null)
+                el.removeAttribute(attribute);
+            else
+                el.setAttribute(attribute, String(v));
+        },
+        tryTransfer(i) {
+            if (lock.has(i))
+                return false;
+            const trg = resolveTarget(i);
+            if (!trg)
+                return false;
+            lock.add(i);
+            try {
+                const val = i.getAttribute(attribute);
+                if (remove && val != null)
+                    i.removeAttribute(attribute);
+                if (val == null)
+                    trg.removeAttribute(attribute);
+                else
+                    trg.setAttribute(attribute, val);
+                return true;
+            }
+            finally {
+                lock.delete(i);
+            }
+        },
+        attributeChangedCallback(i, o, n) {
+            if (this.tryTransfer?.(i))
+                invokeCallback(i, cb, o, n);
+        },
+    };
+}
 export function NonReflectingPropertyAttr(property, attribute = property) {
     const cb = `${property}Changed`;
     const field = new WeakMap();
@@ -385,6 +443,11 @@ export class WebComponent extends HTMLElement {
     forwardEvent(e) {
         requestAnimationFrame(() => this.dispatchEvent(e));
     }
+    transferDelegatedAttributes() {
+        for (const a of this.definition.attributes) {
+            a.tryTransfer?.(this);
+        }
+    }
     static define(cfg) {
         // 静的コンテキストで 'this' を使うのを避けるため、明示的に型アサーションを行う
         // biome-ignore lint/complexity/noThisInStatic: <explanation>
@@ -459,6 +522,8 @@ _WebComponent_view = new WeakMap(), _WebComponent_def = new WeakMap(), _WebCompo
     Attribute.restoreInitialValues(this);
     if (__classPrivateFieldGet(this, _WebComponent_view, "f") && !__classPrivateFieldGet(this, _WebComponent_dsd, "f"))
         __classPrivateFieldGet(this, _WebComponent_view, "f").appendTo(__classPrivateFieldGet(this, _WebComponent_sr, "f") ?? this);
+    // template 反映後に delegated 属性転送を確実に適用する
+    this.transferDelegatedAttributes();
     __classPrivateFieldSet(this, _WebComponent_init, true, "f");
 }, _WebComponent_ensureView = function _WebComponent_ensureView() {
     if (__classPrivateFieldGet(this, _WebComponent_view, "f") || __classPrivateFieldGet(this, _WebComponent_init, "f"))

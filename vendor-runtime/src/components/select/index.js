@@ -5,4 +5,4 @@
  * @module select
  */
 export * from './select.js';
-export { defineSelect, autoDefineSelect } from './select-define.js';
+export { defineSelect, defineDefaultSelect, autoDefineSelect } from './select-define.js';

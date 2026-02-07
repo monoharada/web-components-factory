@@ -42,7 +42,7 @@ node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myu
 ## サンプルHTML（canonical `dads-*`）
 
 ```html
-<main>
+<main data-dads-typeset>
   <dads-heading level="1">申請フォーム</dads-heading>
   <form id="application-form-single">
     <dads-fieldset>

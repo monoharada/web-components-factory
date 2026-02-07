@@ -474,12 +474,12 @@ function indentMultiline(text, { dropEmpty = false } = {}) {
 }
 
 function replaceCanonicalPrefixInHtml(html, prefix) {
-  return String(html ?? '').replace(/\bdads-/g, `${prefix}-`);
+  return String(html ?? '').replace(/(<\/?\s*)dads-/g, `$1${prefix}-`);
 }
 
 function createFallbackSampleHtml(prefix, selectedComponents) {
   const tags = selectedComponents.map((suffix) => `<${prefix}-${suffix}></${prefix}-${suffix}>`).join('\n    ');
-  return `<main>
+  return `<main data-dads-typeset>
   <h1>${prefix} page</h1>
   <section>
     ${tags}
@@ -521,6 +521,35 @@ function createImportMapForPage({ entry, prefix, vendorDirImportPath, selectedCo
   return {};
 }
 
+const WCF_CONTENT_TYPESET_LAYER_ORDER = 'reset, tokens, base, layout, components, contents, page';
+const WCF_CONTENT_TYPESET_STYLE_TEXT = `@layer ${WCF_CONTENT_TYPESET_LAYER_ORDER};
+
+@layer contents {
+  [data-dads-typeset] {
+    --dads-typeset-gap-normal: clamp(0.75lh, var(--spacing-6, 1rem), 1lh);
+    --dads-typeset-gap-compact: calc(var(--dads-typeset-gap-normal) * 0.85);
+    --dads-typeset-gap-current: var(--dads-typeset-gap-normal);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--dads-typeset-gap-current);
+  }
+
+  [data-dads-density='compact'][data-dads-typeset],
+  [data-dads-density='compact'] [data-dads-typeset] {
+    --dads-typeset-gap-current: var(--dads-typeset-gap-compact);
+  }
+
+  [data-dads-typeset] > :where(*) {
+    margin-block: 0;
+  }
+
+  [data-dads-typeset] > :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
+    margin-block-start: calc(var(--dads-typeset-gap-current) + 0.5lh);
+  }
+}
+`;
+
 function createPageHtml({
   title,
   importMap,
@@ -550,6 +579,12 @@ function createPageHtml({
       ].join('\n')
     : '';
 
+  const typesetStyleTag = [
+    '<style data-wcf-typeset>',
+    WCF_CONTENT_TYPESET_STYLE_TEXT,
+    '</style>',
+  ].join('\n');
+
   return [
     '<!doctype html>',
     '<html lang="ja">',
@@ -558,6 +593,7 @@ function createPageHtml({
     '    <meta name="viewport" content="width=device-width, initial-scale=1" />',
     `    <title>${title}</title>`,
     '',
+    indentMultiline(typesetStyleTag, { dropEmpty: true }),
     indentMultiline(importMapScript, { dropEmpty: true }),
     '    <script type="module">',
     `      ${entryImportLine}`,
@@ -717,17 +753,18 @@ function buildAgentSkill({ pattern, selectedComponents }) {
     '```bash',
     './scripts/wcf-create-page.sh',
     '```',
-    '3. If you need manual importmap, run:',
+    '3. Generated page includes built-in typeset CSS (`@layer contents`) and expects `[data-dads-typeset]` on content container.',
+    '4. If you need manual importmap, run:',
     '```bash',
     './scripts/wcf-print-importmap.sh',
     '```',
-    '4. Preferred entry (`boot`):',
+    '5. Preferred entry (`boot`):',
     '```html',
     '<script type="module">',
     "  import './vendor/components/<prefix>/boot.js';",
     '</script>',
     '```',
-    '5. Compatibility entries (`@wcf` / `index`) are deprecated in release N and removed in N+1:',
+    '6. Compatibility entries (`@wcf` / `index`) are deprecated in release N and removed in N+1:',
     '```html',
     '<script type="module">',
     "  import '@wcf';",
@@ -738,7 +775,7 @@ function buildAgentSkill({ pattern, selectedComponents }) {
     "  import './vendor/components/<prefix>/index.js';",
     '</script>',
     '```',
-    '6. Serve over HTTP (not `file://`):',
+    '7. Serve over HTTP (not `file://`):',
     '```bash',
     'python3 -m http.server 4173',
     '```',
@@ -776,6 +813,8 @@ function buildAgentPrompt({ prefix, pattern, selectedComponents }) {
     '3) (optional) ./scripts/wcf-print-importmap.sh',
     '',
     'Then create/update index.html to include:',
+    '- built-in typeset CSS with `@layer ... contents` (or keep the generated `<style data-wcf-typeset>`)',
+    '- apply `[data-dads-typeset]` to the content container (for example `<main data-dads-typeset>...</main>`)',
     '- printed importmap in <head>',
     '- <script type="module">import "./vendor/components/<prefix>/boot.js"</script> を推奨',
     '- `@wcf` / `index.js` は互換モード（deprecated, N+1で廃止予定）',

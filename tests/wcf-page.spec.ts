@@ -20,9 +20,13 @@ describe('wcf page create', () => {
       });
 
       const text = await fs.readFile(res.file, 'utf8');
+      expect(text).toContain('<style data-wcf-typeset>');
+      expect(text).toContain('@layer reset, tokens, base, layout, components, contents, page;');
+      expect(text).toContain('@layer contents');
       expect(text).toContain('<script type="importmap">');
       expect(text).toContain('"myui-search-box": "./vendor/components/myui/components/search-box.js"');
       expect(text).toContain("import './vendor/components/myui/boot.js';");
+      expect(text).toContain('<main data-dads-typeset>');
       expect(text).toContain('<myui-search-box');
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
@@ -42,6 +46,7 @@ describe('wcf page create', () => {
       const text = await fs.readFile(res.file, 'utf8');
       expect(text).toContain('"@wcf": "./vendor/components/myui/index.js"');
       expect(text).toContain("import '@wcf';");
+      expect(text).toContain('<main data-dads-typeset>');
       expect(res.warnings).toContain(
         'W_ENTRY_DEPRECATED: --entry @wcf is deprecated in release N and will be removed in N+1. Use --entry boot.',
       );

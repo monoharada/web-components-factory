@@ -7,22 +7,21 @@
       "title": "検索フォーム（最小）",
       "description": "検索語の入力と送信ボタンだけの最小フォーム。",
       "requires": ["search-box", "button"],
-      "html": "<form>\n  <dads-search-box label=\"検索\" name=\"q\"></dads-search-box>\n  <dads-button type=\"submit\" variant=\"solid\">検索</dads-button>\n</form>\n"
+      "html": "<form data-dads-typeset>\n  <dads-search-box label=\"検索\" name=\"q\"></dads-search-box>\n  <dads-button type=\"submit\" variant=\"solid\">検索</dads-button>\n</form>\n"
     },
     "table-with-pagination": {
       "id": "table-with-pagination",
       "title": "テーブル + ページネーション",
       "description": "一覧（テーブル）とページ移動コントロールの基本構成。",
       "requires": ["table", "page-navigation"],
-      "html": "<div>\n  <dads-table>\n    <table>\n      <thead>\n        <tr>\n          <th scope=\"col\">項目</th>\n          <th scope=\"col\">値</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>例</td>\n          <td>サンプル</td>\n        </tr>\n      </tbody>\n    </table>\n  </dads-table>\n\n  <dads-page-navigation current=\"1\" total=\"10\"></dads-page-navigation>\n</div>\n"
+      "html": "<div data-dads-typeset>\n  <dads-table>\n    <table>\n      <thead>\n        <tr>\n          <th scope=\"col\">項目</th>\n          <th scope=\"col\">値</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>例</td>\n          <td>サンプル</td>\n        </tr>\n      </tbody>\n    </table>\n  </dads-table>\n\n  <dads-page-navigation current=\"1\" total=\"10\"></dads-page-navigation>\n</div>\n"
     },
     "card-grid": {
       "id": "card-grid",
       "title": "カードグリッド（見出し + 説明 + CTA）",
       "description": "カードの繰り返しで一覧を作るときのベース。",
       "requires": ["card", "heading", "typography", "button"],
-      "html": "<section>\n  <dads-heading level=\"h2\">見出し</dads-heading>\n\n  <div style=\"display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));\">\n    <dads-card>\n      <dads-heading level=\"h3\" size=\"24\">カードタイトル</dads-heading>\n      <dads-text>説明文（短く）</dads-text>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n\n    <dads-card>\n      <dads-heading level=\"h3\" size=\"24\">カードタイトル</dads-heading>\n      <dads-text>説明文（短く）</dads-text>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n  </div>\n</section>\n"
+      "html": "<section data-dads-typeset>\n  <dads-heading level=\"h2\">見出し</dads-heading>\n\n  <div style=\"display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));\">\n    <dads-card>\n      <dads-heading level=\"h3\" size=\"24\">カードタイトル</dads-heading>\n      <dads-text>説明文（短く）</dads-text>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n\n    <dads-card>\n      <dads-heading level=\"h3\" size=\"24\">カードタイトル</dads-heading>\n      <dads-text>説明文（短く）</dads-text>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n  </div>\n</section>\n"
     }
   }
 }
-
