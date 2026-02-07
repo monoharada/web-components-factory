@@ -11311,6 +11311,1650 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/file-upload/file-upload.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "File Upload / Drop Area コンポーネント",
+          "name": "DadsFileUpload",
+          "cssParts": [
+            {
+              "description": "ファイル選択ボタン",
+              "name": "browse-button"
+            },
+            {
+              "description": "ドラッグ&ドロップ案内",
+              "name": "drop-hint"
+            },
+            {
+              "description": "ボタン+ヒント行",
+              "name": "drop-main"
+            },
+            {
+              "description": "ドロップエリア",
+              "name": "dropzone"
+            },
+            {
+              "description": "未選択メッセージ",
+              "name": "empty-text"
+            },
+            {
+              "description": "エラーメッセージ",
+              "name": "error-text"
+            },
+            {
+              "description": "全画面ドロップ領域拡大チェック",
+              "name": "expand-checkbox"
+            },
+            {
+              "description": "ファイル番号",
+              "name": "file-index"
+            },
+            {
+              "description": "ファイル行",
+              "name": "file-item"
+            },
+            {
+              "description": "ファイル単位エラーメッセージ",
+              "name": "file-item-error"
+            },
+            {
+              "description": "ファイル単位エラーメッセージ行",
+              "name": "file-item-error-line"
+            },
+            {
+              "description": "ファイル一覧",
+              "name": "file-list"
+            },
+            {
+              "description": "補足情報（サイズ）",
+              "name": "file-meta"
+            },
+            {
+              "description": "ファイル名",
+              "name": "file-name"
+            },
+            {
+              "description": "状態ラベル",
+              "name": "file-status"
+            },
+            {
+              "description": "ネイティブ input[type=file]",
+              "name": "input"
+            },
+            {
+              "description": "ラベル要素",
+              "name": "label"
+            },
+            {
+              "description": "ラベルテキストラッパー",
+              "name": "label-text"
+            },
+            {
+              "description": "全画面ドロップオーバーレイ",
+              "name": "overlay"
+            },
+            {
+              "description": "オーバーレイ文言",
+              "name": "overlay-text"
+            },
+            {
+              "description": "解除ボタン",
+              "name": "remove-button"
+            },
+            {
+              "description": "要否ラベル（※必須）",
+              "name": "requirement"
+            },
+            {
+              "description": "選択中ファイル数/合計サイズ",
+              "name": "selection-summary"
+            },
+            {
+              "description": "サポートテキスト",
+              "name": "support-text"
+            },
+            {
+              "description": "全体ラッパー",
+              "name": "wrapper"
+            }
+          ],
+          "slots": [
+            {
+              "description": "エラーメッセージ",
+              "name": "error-text"
+            },
+            {
+              "description": "ラベルテキスト",
+              "name": "label"
+            },
+            {
+              "description": "サポートテキスト",
+              "name": "support-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#attachWindowDragListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#browseButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#clearManagedError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#detachWindowDragListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#disabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dropHint",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#dropzone",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#dropzoneDragDepth",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#emptyText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#errorFallback",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#errorSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#errorText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#expandCheckbox",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#expandDropAreaEnabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#fileInput",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#fileList",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLUListElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyFormComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#formDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#getMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DadsFileUploadMode"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleBrowseClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDropzoneDragEnter",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDropzoneDragLeave",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDropzoneDragOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDropzoneDrop",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleExpandCheckboxChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleFileListClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleInputChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleWindowDragEnter",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleWindowDragLeave",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleWindowDragOver",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleWindowDrop",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#hideOverlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#idSequence",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#items",
+              "privacy": "private",
+              "type": {
+                "text": "DadsFileUploadInternalItem[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#labelFallback",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#managedError",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#nextItemId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#openFilePicker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#overlay",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#overlayText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#renderFileList",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#requirement",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#selectionSummary",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setManagedError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "message",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupEventListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#showOverlay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#supportFallback",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#supportsDropArea",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#supportSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#supportText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAllState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAriaDescribedBy",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncDerivedState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncDisabledState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncEmptyState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncInputAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncManagedErrorFromItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncModeState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSelectionSummary",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncTextLabels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncWindowDragListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#teardownEventListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#toggleExpandDropArea",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "enabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "emitEvent",
+                  "default": "true"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#toSnapshot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DadsFileUploadItemSnapshot"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "DadsFileUploadInternalItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#validateFile",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "{\n    valid: boolean;\n    messages: string[];\n    errors: Array<{ code: DadsFileUploadErrorCode; message: string }>;\n  }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "file",
+                  "type": {
+                    "text": "File"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "{\n      acceptTokens: readonly string[];\n      maxFiles: number | null;\n      maxSize: number | null;\n      validCount: number;\n    }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#windowDndBound",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#windowDragDepth",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "addFiles",
+              "return": {
+                "type": {
+                  "text": "DadsFileUploadItemSnapshot[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "files",
+                  "type": {
+                    "text": "FileList | readonly File[] | Iterable<File>"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "AddFilesOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "clearFiles",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-file-upload', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"file-input\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"dropzone\" id=\"dropzone\"> <div part=\"drop-main\" id=\"drop-main\"> <input part=\"input\" id=\"file-input\" type=\"file\" hidden /> <dads-button part=\"browse-button\" id=\"browse-button\" type=\"button\" variant=\"outlined\" size=\"medium\"> ファイルを選択 </dads-button> <span part=\"drop-hint\" id=\"drop-hint\">または、このエリア内にドラッグ＆ドロップ</span> </div> <div part=\"selection-summary\" id=\"selection-summary\" hidden></div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <dads-checkbox part=\"expand-checkbox\" id=\"expand-checkbox\" size=\"md\" label=\"ドラッグ＆ドロップの範囲をこのブラウザウィンドウ全体に広げる\" ></dads-checkbox> </div> <p part=\"empty-text\" id=\"empty-text\">ファイルが選択されていません</p> <ul part=\"file-list\" id=\"file-list\"></ul> </div> <div part=\"overlay\" id=\"overlay\" hidden aria-hidden=\"true\"> <p part=\"overlay-text\" id=\"overlay-text\">このエリア内にファイルをドラッグ＆ドロップ</p> </div> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), fileUploadTokens, fileUploadStyles, applyDADSFocusStyles(), ], 'minimal' ), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('disabled'), PropertyAttr('name'), PropertyAttr('accept'), BooleanAttr('multiple'), PropertyAttr('max-files'), PropertyAttr('max-file-size'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('browse-label'), PropertyAttr('drop-hint'), PropertyAttr('empty-text'), PropertyAttr('mode'), PropertyAttr('expand-label'), PropertyAttr('overlay-text'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_state",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "readonly DadsFileUploadItemSnapshot[]"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "removeFile",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpload",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "ids",
+                  "optional": true,
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setFileState",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "id",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "patch",
+                  "type": {
+                    "text": "SetFileStatePatch"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "ファイル追加前（cancelable）",
+              "name": "dads-file-upload-before-add"
+            },
+            {
+              "description": "ファイル一覧変更時",
+              "name": "dads-file-upload-change"
+            },
+            {
+              "description": "全画面ドロップ切り替え時",
+              "name": "dads-file-upload-fullscreen-change"
+            },
+            {
+              "description": "requestUpload() 呼び出し時",
+              "name": "dads-file-upload-request"
+            },
+            {
+              "description": "バリデーションエラー時",
+              "name": "dads-file-upload-validation-error"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "許可するファイル形式（input accept互換）",
+              "name": "accept"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ファイル選択ボタン文言",
+              "name": "browse-label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "無効化",
+              "name": "disabled"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ドロップヒント文言",
+              "name": "drop-hint"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "未選択文言",
+              "name": "empty-text"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "エラー状態",
+              "name": "error"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "エラーメッセージ（slot未使用時のフォールバック）",
+              "name": "error-text"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "全画面ドロップ領域拡大チェック文言",
+              "name": "expand-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ラベル（slot未使用時のフォールバック）",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "最大ファイルサイズ（bytes / kb / mb / gb）",
+              "name": "max-file-size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "最大ファイル数",
+              "name": "max-files"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "表示モード（drop-area | button-only）",
+              "name": "mode"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "複数選択",
+              "name": "multiple"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "フォーム名",
+              "name": "name"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "全画面オーバーレイ文言",
+              "name": "overlay-text"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "必須",
+              "name": "required"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "サポートテキスト（slot未使用時のフォールバック）",
+              "name": "support-text"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyFormComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-file-upload",
+          "customElement": true,
+          "modulePath": "./packages/components/file-upload/file-upload.ts",
+          "definitionPath": "./packages/components/file-upload/file-upload.ts",
+          "typeDefinitionPath": "./packages/components/file-upload/file-upload.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ファイルアップロード／ドロップエリア仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ファイル選択ボタンを常設し、ドラッグ&ドロップは補助操作として提供します。",
+                  "通常時（未選択）も、項目ラベル・要否ラベル・サポートテキスト・未選択メッセージを表示して状態を明示します。",
+                  "ドロップエリア内には、ボタン、ドロップヒント、全画面範囲拡大チェックを配置します。"
+                ],
+                "keyboard": [
+                  "Tabでファイル選択ボタンと拡大チェックボックスへ到達できます。",
+                  "Enter/Spaceでファイル選択ボタンを操作し、ドラッグなしで完遂できます。",
+                  "チェックボックスはラベルを含む操作領域でON/OFFでき、全画面ドロップ範囲の切替に到達できます。"
+                ],
+                "zoom": [
+                  "ファイル名は折り返して表示し、拡大時も情報欠落を防ぎます。",
+                  "全画面ドロップオーバーレイの文言は可変サイズで表示されます。"
+                ],
+                "states": [
+                  "ファイル未選択時は「ファイルが選択されていません」を表示します。",
+                  "ファイルごとに状態（準備中/アップロード中/完了/エラー）を表示します。",
+                  "バリデーションエラー時は上部エラーとファイル行エラーを表示します。"
+                ],
+                "labels": [
+                  "label/support-text/error-text を公開し、aria-describedbyで関連付けます。",
+                  "要否ラベル（※必須）は項目ラベルと一体で提示し、必須項目であることを視覚的に示します。",
+                  "拡大チェックボックスの文言は expand-label 属性で変更できます。"
+                ],
+                "motion": [
+                  "ドラッグ中のみ全画面オーバーレイを表示し、不要時は非表示に戻します。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "browse-button",
+                  "title": "ファイル選択ボタン",
+                  "label": "ファイル選択ボタン（必須）",
+                  "description": "ドラッグ操作が難しい利用者でも完遂できる必須導線です。",
+                  "category": "keyboard",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"browse-button\"]"
+                  }
+                },
+                {
+                  "id": "expand-checkbox",
+                  "title": "範囲拡大チェックボックス",
+                  "label": "ドロップ領域拡大チェック",
+                  "description": "ドロップ範囲をブラウザウィンドウ全体に広げる切替です。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"expand-checkbox\"]"
+                  }
+                },
+                {
+                  "id": "dropzone",
+                  "title": "ドロップエリア",
+                  "label": "ドロップエリア",
+                  "description": "ボタンとドロップヒントを含む補助領域です。ドロップ操作が可能です。",
+                  "category": "semantics",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"dropzone\"]"
+                  }
+                },
+                {
+                  "id": "field-label",
+                  "title": "項目ラベル",
+                  "label": "項目ラベル（必須）",
+                  "description": "入力項目名を示す主ラベルです。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "requirement-label",
+                  "title": "要否ラベル",
+                  "label": "※必須",
+                  "description": "必須項目であることを明示する補助ラベルです。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"requirement\"]"
+                  }
+                },
+                {
+                  "id": "support-text",
+                  "title": "サポートテキスト",
+                  "label": "サポートテキスト",
+                  "description": "対応形式や上限サイズなどの補足条件を示します。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"support-text\"]"
+                  }
+                },
+                {
+                  "id": "empty-text",
+                  "title": "未選択メッセージ",
+                  "label": "ファイル未選択メッセージ",
+                  "description": "未選択状態を明示し、現在の状態が分かるようにします。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"empty-text\"]"
+                  }
+                },
+                {
+                  "id": "drop-hint",
+                  "title": "ドロップヒント",
+                  "label": "補助文: ドロップ可能範囲",
+                  "description": "ボタン以外にドラッグ&ドロップでも選択できることを案内します。",
+                  "category": "semantics",
+                  "mode": "panel",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"drop-hint\"]"
+                  }
+                },
+                {
+                  "id": "file-list",
+                  "title": "選択ファイル一覧",
+                  "label": "選択ファイル一覧（選択時）",
+                  "description": "選択ファイル、サイズ、状態、エラーを一覧表示します（ファイル選択後に表示）。",
+                  "category": "states",
+                  "mode": "panel",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"wrapper\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "file-upload",
+            "install": {
+              "id": "file-upload",
+              "define": "defineFileUpload",
+              "call": "prefix-registry",
+              "deps": [
+                "button",
+                "checkbox"
+              ],
+              "source": {
+                "componentDir": "packages/components/file-upload"
+              },
+              "tags": [
+                "dads-file-upload"
+              ]
+            }
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "removedIds"
+        },
+        {
+          "kind": "variable",
+          "name": "replace"
+        },
+        {
+          "kind": "variable",
+          "name": "source"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsFileUpload",
+          "declaration": {
+            "name": "DadsFileUpload",
+            "module": "packages/components/file-upload/file-upload.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/file-upload/file-upload.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/file-upload/file-upload.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-file-upload",
+          "declaration": {
+            "name": "DadsFileUpload",
+            "module": "./packages/components/file-upload/file-upload.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/heading/heading.ts",
       "declarations": [
         {
@@ -29025,6 +30669,168 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/file-upload/file-upload-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultFileUpload",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineFileUpload",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-file-upload`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultFileUpload",
+          "declaration": {
+            "name": "defineDefaultFileUpload",
+            "module": "packages/components/file-upload/file-upload-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineFileUpload",
+          "declaration": {
+            "name": "defineFileUpload",
+            "module": "packages/components/file-upload/file-upload-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/file-upload/file-upload-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "fileUploadStyles",
+          "default": "css` :host { display: block; font-family: var(--font-family-sans); color: var(--dads-file-upload-file-name-color); } [part='wrapper'] { display: flex; flex-direction: column; gap: var(--dads-file-upload-gap); } [part='label'] { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0; font-size: var(--dads-file-upload-label-size); line-height: var(--line-height-150); color: var(--dads-file-upload-label-color); font-weight: var(--dads-file-upload-label-weight); } [part='label-text'] { display: contents; } [part='requirement'] { margin-left: var(--spacing-1, 0.25rem); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); color: var(--dads-file-upload-requirement-color); } [part='support-text'] { margin: 0; font-size: var(--font-size-16, 1rem); line-height: var(--line-height-150); color: var(--dads-file-upload-support-color); } [part='dropzone'] { display: flex; flex-direction: column; gap: 0; padding: var(--dads-file-upload-dropzone-padding); border: var(--dads-file-upload-dropzone-border-width) solid var(--dads-file-upload-dropzone-border-color); border-radius: var(--dads-file-upload-dropzone-radius); background-color: var(--dads-file-upload-dropzone-bg); } [part='drop-main'] { display: flex; align-items: center; flex-wrap: wrap; gap: var(--spacing-4, 1rem); min-height: var(--dads-file-upload-button-gap); } :host([mode='button-only']) [part='drop-main'] { gap: var(--dads-file-upload-button-only-main-gap); min-height: var(--dads-file-upload-button-only-main-min-height); width: fit-content; } [part='browse-button'] { flex: none; --dads-button-background: var(--dads-file-upload-browse-bg); --dads-button-background-hover: var(--dads-file-upload-browse-bg-hover); --dads-button-background-active: var(--dads-file-upload-browse-bg-active); --dads-button-color: var(--dads-file-upload-browse-color); --dads-button-color-hover: var(--dads-file-upload-browse-color-hover); --dads-button-color-active: var(--dads-file-upload-browse-color-active); --dads-button-border-color: var(--dads-file-upload-browse-border-color); --dads-button-border-color-hover: var(--dads-file-upload-browse-border-color-hover); --dads-button-border-color-active: var(--dads-file-upload-browse-border-color-active); --dads-button-text-decoration: var(--dads-file-upload-browse-text-decoration); } [part='drop-hint'] { font-size: var(--font-size-16, 1rem); line-height: var(--line-height-170); color: var(--dads-file-upload-hint-color); } [part='selection-summary'] { margin-top: var(--dads-file-upload-selection-summary-margin-top); font-size: var(--font-size-16, 1rem); line-height: var(--line-height-170); color: var(--dads-file-upload-selection-summary-color); } [part='selection-summary'][hidden] { display: none; } [part='expand-checkbox'] { margin-top: var(--dads-file-upload-button-gap); display: block; --line-height-130: var(--line-height-130, 1.3); } [part='expand-checkbox']::part(base) { align-items: var(--dads-file-upload-expand-checkbox-base-align-items); } [part='expand-checkbox']::part(label) { padding-block-start: var(--dads-file-upload-expand-checkbox-label-padding-block-start); } [part='error-text'] { margin-top: var(--dads-file-upload-top-error-margin-top); font-size: var(--font-size-16, 1rem); line-height: var(--line-height-150); color: var(--dads-file-upload-error-color); } [part='selection-summary'][hidden] + [part='error-text'] { margin-top: var(--dads-file-upload-top-error-margin-top-no-summary); } :host([mode='button-only']) [part='drop-hint'], :host([mode='button-only']) [part='expand-checkbox'] { display: none; } :host([mode='button-only']) [part='selection-summary'][hidden] + [part='error-text'] { margin-top: var(--dads-file-upload-top-error-margin-top); } [part='empty-text'] { margin: 0; font-size: var(--font-size-16, 1rem); line-height: var(--line-height-170); color: var(--dads-file-upload-file-name-color); } [part='empty-text'][hidden] { display: none; } [part='file-list'] { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: var(--dads-file-upload-list-gap); } [part='file-list'][hidden] { display: none; } [part='file-item'] { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: var(--spacing-2, 0.5rem); row-gap: var(--spacing-1, 0.25rem); font-size: var(--font-size-16, 1rem); line-height: var(--line-height-170); } [part='file-item'][data-valid='false'] { color: var(--dads-file-upload-file-status-error-color); } [part='file-item'][data-valid='false'] [part='file-name'] { color: var(--dads-file-upload-file-name-color-error); } [part='file-item'][data-valid='false'] [part='file-meta'] { color: var(--dads-file-upload-file-meta-color-error); } [part='remove-button'] { appearance: none; -webkit-appearance: none; border: 0; background: transparent; padding: 0; color: var(--dads-file-upload-remove-color); font: inherit; text-decoration: underline; text-underline-offset: 0.15em; cursor: pointer; } [part='remove-button']:hover { color: var(--dads-file-upload-remove-color-hover); } [part='file-name'] { font-weight: var(--font-weight-700, 700); color: var(--dads-file-upload-file-name-color); word-break: break-all; } [part='file-meta'] { color: var(--dads-file-upload-file-meta-color); } [part='file-status'] { color: var(--dads-file-upload-file-status-color); } [part='file-item'][data-status='success'] [part='file-status'] { color: var(--dads-file-upload-file-status-success-color); } [part='file-item'][data-status='error'] [part='file-status'] { color: var(--dads-file-upload-file-status-error-color); } [part='file-item-error'] { flex-basis: 100%; margin-left: calc(var(--spacing-8, 2rem) + var(--spacing-4, 1rem)); display: grid; gap: var(--dads-file-upload-item-error-row-gap); color: var(--dads-file-upload-item-error-color); border-left: var(--dads-file-upload-item-error-border-width) solid var(--dads-file-upload-item-error-color); padding-left: var(--dads-file-upload-item-error-padding-inline-start); } [part='file-item-error-line'] { line-height: var(--line-height-150); } [part='overlay'] { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; padding: var(--spacing-8, 2rem); box-sizing: border-box; pointer-events: none; border: var(--dads-file-upload-overlay-border-width) solid var(--dads-file-upload-overlay-border-color); background: var(--dads-file-upload-overlay-bg); } [part='overlay'][hidden] { display: none; } [part='overlay-text'] { margin: 0; text-align: center; font-size: clamp(var(--font-size-24, 1.5rem), 4vw, var(--dads-file-upload-overlay-text-size)); line-height: var(--line-height-150); font-weight: var(--font-weight-700, 700); color: var(--dads-file-upload-overlay-text-color); } @media (hover: hover) { :host(:not([disabled])) [part='dropzone']:hover { --dads-file-upload-dropzone-border-color: var(--file-upload-dropzone-border-color-hover); } } @media (max-width: 640px) { [part='drop-main'] { align-items: flex-start; } } @media (forced-colors: active) { [part='dropzone'] { border-color: CanvasText; } [part='remove-button'] { color: LinkText; } [part='file-item'][data-status='error'] [part='file-status'], [part='file-item-error'], [part='error-text'] { color: LinkText; border-left-color: LinkText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "fileUploadStyles",
+          "declaration": {
+            "name": "fileUploadStyles",
+            "module": "packages/components/file-upload/file-upload-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/file-upload/file-upload-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "fileUploadLocalTokens",
+          "default": "css`${fileUploadLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "fileUploadSemanticTokens",
+          "default": "css`${fileUploadSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "fileUploadTokens",
+          "default": "css` ${fileUploadSemanticTokensText} ${fileUploadLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "fileUploadLocalTokens",
+          "declaration": {
+            "name": "fileUploadLocalTokens",
+            "module": "packages/components/file-upload/file-upload-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fileUploadSemanticTokens",
+          "declaration": {
+            "name": "fileUploadSemanticTokens",
+            "module": "packages/components/file-upload/file-upload-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fileUploadTokens",
+          "declaration": {
+            "name": "fileUploadTokens",
+            "module": "packages/components/file-upload/file-upload-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/file-upload/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/file-upload/file-upload.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultFileUpload",
+          "declaration": {
+            "name": "defineDefaultFileUpload",
+            "module": "./file-upload-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineFileUpload",
+          "declaration": {
+            "name": "defineFileUpload",
+            "module": "./file-upload-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/heading/heading-define.ts",
       "declarations": [
         {
@@ -29206,6 +31012,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/input-text/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/file-upload/index.js"
           }
         },
         {

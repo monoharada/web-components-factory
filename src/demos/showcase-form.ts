@@ -2161,6 +2161,381 @@ export const demos = {
   `,
 
 
+  fileUpload: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ファイルアップロード／ドロップエリア</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        DADS準拠のファイルアップロードUIです。ファイル選択ボタンを必須で提供し、ドラッグ&ドロップは補助操作として扱います。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ ファイル選択ボタン常設、ドロップ領域拡大切替、キーボード導線などを確認できます。
+        </p>
+        <a11y-annotate target-selector="dads-file-upload">
+          <div style="display: grid; place-content: center; padding: 48px 0;">
+            <dads-file-upload
+              label="ファイルアップロード"
+              support-text="PDF / JPEG / PNG をアップロードできます。"
+              required
+              accept=".pdf,image/jpeg,image/png"
+              max-files="3"
+              max-file-size="10mb"
+              multiple
+            ></dads-file-upload>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          属性変更が Preview に即時反映されます。<code>requestUpload()</code> で外部処理開始イベントを発火できます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-file-upload',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+	              <div style="padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+	                <dads-file-upload
+	                  data-api-target
+	                  id="api-file-upload"
+                  label="ファイルアップロード"
+                  support-text="PDF / JPEG / PNG"
+                  accept=".pdf,image/jpeg,image/png"
+                  multiple
+	                  max-files="3"
+	                  max-file-size="10mb"
+	                ></dads-file-upload>
+                  <p id="api-file-upload-summary" style="margin: 12px 0 0; color: #666; font-size: 14px;">選択中: 0件, 合計サイズ 0 B</p>
+	              </div>
+
+              <div style="margin-top: 12px; display: flex; gap: 8px;">
+                <dads-button id="api-upload-request" type="button" variant="outlined" size="small">requestUpload()</dads-button>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-file-upload
+                      label="ファイルアップロード"
+                      support-text="PDF / JPEG / PNG"
+                      accept=".pdf,image/jpeg,image/png"
+                      max-files="3"
+                      max-file-size="10mb"
+                      multiple
+                    ></dads-file-upload>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>ファイルアップロード</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="label" value="ファイルアップロード" data-api-attr="label" data-default="ファイルアップロード"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ラベル</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>support-text</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>PDF / JPEG / PNG</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="support-text" value="PDF / JPEG / PNG" data-api-attr="support-text" data-default="PDF / JPEG / PNG"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>サポートテキスト</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>required</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="required" data-api-attr="required" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>必須</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>multiple</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>true</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="multiple" checked data-api-attr="multiple" data-default="true">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>複数選択</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>mode</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>drop-area</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="mode" data-api-attr="mode" data-default="drop-area">
+                              <option value="drop-area" selected>drop-area</option>
+                              <option value="button-only">button-only</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>表示モード</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>accept</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>.pdf,image/jpeg,image/png</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="accept" value=".pdf,image/jpeg,image/png" data-api-attr="accept" data-default=".pdf,image/jpeg,image/png"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>許可形式</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>max-files</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>3</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="max-files" value="3" data-api-attr="max-files" data-default="3"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>最大件数</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>max-file-size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>10mb</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="max-file-size" value="10mb" data-api-attr="max-file-size" data-default="10mb"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>最大サイズ</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-file-upload-dropzone-border-color</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-file-upload-dropzone-border-color" value="" data-api-css-var="--dads-file-upload-dropzone-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ドロップエリア枠線色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-file-upload-button-gap</code></th>
+                        <td><code>56px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-file-upload-button-gap" value="" data-api-css-var="--dads-file-upload-button-gap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ボタンとヒントの間隔</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-file-upload-overlay-bg</code></th>
+                        <td><code>(token)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-file-upload-overlay-bg" value="" data-api-css-var="--dads-file-upload-overlay-bg" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>全画面オーバーレイ背景色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+          footer: `
+            <script>
+              (function() {
+                var currentScript = document.currentScript;
+                if (!currentScript) return;
+                var root = currentScript.closest('.wc-api-panel');
+                if (!root) return;
+
+	                var host = root.querySelector('#api-file-upload');
+	                var requestButton = root.querySelector('#api-upload-request');
+	                var summary = root.querySelector('#api-file-upload-summary');
+	                if (!host || !requestButton) return;
+
+	                function formatFileSize(size) {
+	                  if (!Number.isFinite(size) || size < 0) return '0 B';
+	                  if (size < 1024) return String(size) + ' B';
+	                  if (size < 1024 * 1024) return (size / 1024).toFixed(1) + ' KB';
+	                  if (size < 1024 * 1024 * 1024) return (size / (1024 * 1024)).toFixed(1) + ' MB';
+	                  return (size / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+	                }
+
+	                function updateSummary(items) {
+	                  if (!summary) return;
+	                  var count = Array.isArray(items) ? items.length : 0;
+	                  var total = 0;
+	                  if (Array.isArray(items)) {
+	                    for (var i = 0; i < items.length; i++) {
+	                      var file = items[i] && items[i].file;
+	                      total += file && Number.isFinite(file.size) ? file.size : 0;
+	                    }
+	                  }
+	                  summary.textContent = '選択中: ' + count + '件, 合計サイズ ' + formatFileSize(total);
+	                }
+
+	                updateSummary(Array.isArray(host.items) ? host.items : []);
+
+	                requestButton.addEventListener('click', function() {
+	                  if (typeof host.requestUpload === 'function') {
+	                    host.requestUpload();
+	                  }
+	                });
+
+	                host.addEventListener('dads-file-upload-change', function(event) {
+	                  var items = event.detail && event.detail.items ? event.detail.items : [];
+	                  updateSummary(items);
+	                });
+
+	                host.addEventListener('dads-file-upload-request', function(event) {
+	                  var items = event.detail && event.detail.items ? event.detail.items : [];
+	                  for (var i = 0; i < items.length; i++) {
+                    if (typeof host.setFileState !== 'function') continue;
+                    host.setFileState(items[i].id, { status: 'uploading', message: '処理中' });
+                    setTimeout((function(id) {
+                      return function() {
+                        host.setFileState(id, { status: 'success', message: '完了' });
+                      };
+                    })(items[i].id), 450);
+                  }
+                });
+              })();
+            <\/script>
+          `,
+        })}
+	      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">エラー表示例</h3>
+        <div style="max-width: 720px;">
+          <dads-file-upload
+            label="ファイルアップロード"
+            support-text="PDF / JPEG / PNG"
+            accept=".pdf,image/jpeg,image/png"
+            required
+            error
+            error-text="許可されていない形式のファイルです"
+          ></dads-file-upload>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Button Only作例（Figma: 21293:4020）</h3>
+        <div style="max-width: 720px;">
+          <dads-file-upload
+            mode="button-only"
+            label="ファイルアップロード"
+            support-text="サポートテキスト"
+            required
+          ></dads-file-upload>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">ALT生成作例（Figma: 20864:5738）</h3>
+        <div style="max-width: 800px;">
+          <dads-file-upload
+            id="alt-default-file-upload"
+            label="参照する画像・ドキュメント"
+            required
+            accept=".png,.jpg,.jpeg,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.pdf"
+            max-files="1"
+            max-file-size="5mb"
+            expand-label="ドラッグ＆ドロップの範囲をこのブラウザウィンドウ全体に広げる"
+          >
+            <span slot="support-text">対応ファイル：PNG/JPEG/GIF形式の画像、Excel/Word/PowerPoint/PDF形式のドキュメント<br />1ファイルまで選択可能。5MBまで（5,242,880バイトまで）</span>
+          </dads-file-upload>
+          <div style="margin-top: 32px; display: flex; gap: 8px;">
+            <dads-button id="alt-default-run-button" type="button" variant="solid" size="medium">実行</dads-button>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">基本例</h3>
+        <div style="max-width: 720px;">
+          <dads-file-upload
+            label="ファイルアップロード"
+            support-text="PDF / JPEG / PNG"
+            accept=".pdf,image/jpeg,image/png"
+            max-files="3"
+            max-file-size="10mb"
+            multiple
+          ></dads-file-upload>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-file-upload'), import('dads-button'), import('a11y-annotate')]);
+
+      const altDefault = document.querySelector('#alt-default-file-upload');
+      const altDefaultRunButton = document.querySelector('#alt-default-run-button');
+      if (
+        altDefault &&
+        altDefaultRunButton &&
+        typeof altDefault.requestUpload === 'function'
+      ) {
+        altDefaultRunButton.addEventListener('click', () => {
+          altDefault.requestUpload();
+        });
+      }
+
+    </script>
+  `,
+
+
   searchBox: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">検索ボックス</h2>

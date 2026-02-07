@@ -17,6 +17,9 @@ export * from './card/index.js';
 // インプットテキスト
 export * from './input-text/index.js';
 
+// ファイルアップロード
+export * from './file-upload/index.js';
+
 // セレクトボックス
 export * from './select/index.js';
 
