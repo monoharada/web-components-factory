@@ -2762,6 +2762,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -2895,6 +2908,20 @@
                     "selector": "[part=\"current\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "breadcrumb",
+            "install": {
+              "id": "breadcrumb",
+              "define": "defineBreadcrumb",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/breadcrumb"
+              },
+              "tags": [
+                "dads-breadcrumb",
+                "dads-breadcrumb-item"
               ]
             }
           }
@@ -3340,6 +3367,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -3469,6 +3509,20 @@
                     "selector": "[part=\"home-icon\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "breadcrumb",
+            "install": {
+              "id": "breadcrumb",
+              "define": "defineBreadcrumb",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/breadcrumb"
+              },
+              "tags": [
+                "dads-breadcrumb",
+                "dads-breadcrumb-item"
               ]
             }
           }
@@ -24784,15 +24838,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }"
+              "default": "{ name: 'dads-text', template: html` <span part=\"text\"> <slot></slot> </span> `, styles: [ typographyTokens, css` :host { display: inline; font-family: var(--dads-text-font-family); font-size: var(--dads-text-font-size); font-weight: var(--dads-text-font-weight); line-height: var(--dads-text-line-height); color: var(--dads-text-color); letter-spacing: var(--dads-text-letter-spacing); text-align: var(--dads-text-text-align); } :host([display=\"block\"]) { display: block; } [part=\"text\"] { display: contents; } ` ], attributes: [ PropertyAttr('variant'), PropertyAttr('size'), PropertyAttr('weight'), PropertyAttr('display') ] }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
