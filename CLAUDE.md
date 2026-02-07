@@ -91,6 +91,26 @@ npm run dev             # Start viewer (requires Bun)
 # http://localhost:3000/?component=button
 ```
 
+## 🚫 PR前必須ガードレール（Codex / Claude 共通）
+
+AIエージェントは、PR作成・更新前に次を必ず実行してください。
+
+```bash
+npm run agents:verify
+```
+
+運用ルール:
+- 軽量な事前確認は `npm run agents:pre-pr` を使う
+- `custom-elements.json` または `registry/install-registry.json` に差分が出た場合、同一PRに含めるまでPR更新しない
+- 以下の変更では必須実行:
+  - `packages/components/**`
+  - `packages/core/**`
+  - `packages/autoload/**`
+  - `custom-elements-manifest.config.js`
+  - `registry/overrides.json`
+  - `src/demos.ts`
+  - `viewer.html`
+
 ## 🔄 Claude Code Workflow Commands
 
 ### 1. Planning Phase
