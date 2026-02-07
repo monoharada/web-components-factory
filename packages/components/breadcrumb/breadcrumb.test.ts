@@ -42,6 +42,30 @@ describe('DadsBreadcrumb', () => {
     expect(component.shadowRoot).toBeTruthy();
   });
 
+  it('defineBreadcrumb(prefix) のタグでも item 同期が機能する', async () => {
+    const { defineBreadcrumb } = await import('./breadcrumb-define');
+    defineBreadcrumb('my-ui');
+
+    const component = renderWebComponent(`
+      <my-ui-breadcrumb separator="slash">
+        <my-ui-breadcrumb-item href="#home">ホーム</my-ui-breadcrumb-item>
+        <my-ui-breadcrumb-item href="#section">セクション</my-ui-breadcrumb-item>
+        <my-ui-breadcrumb-item>現在ページ</my-ui-breadcrumb-item>
+      </my-ui-breadcrumb>
+    `) as HTMLElement;
+
+    await waitForComponent('my-ui-breadcrumb');
+    await waitForComponent('my-ui-breadcrumb-item');
+    await nextFrame();
+
+    const items = component.querySelectorAll('my-ui-breadcrumb-item');
+    expect(items.length).toBe(3);
+    expect(items[0].getAttribute('data-separator-style')).toBe('slash');
+    expect(items[0].getAttribute('aria-setsize')).toBe('3');
+    expect(items[2].hasAttribute('current')).toBe(true);
+    expect(items[2].getAttribute('aria-current')).toBe('page');
+  });
+
   it('listはp要素で role="list" を持つ', async () => {
     const { defineDefaultBreadcrumb } = await import('./breadcrumb-define');
     defineDefaultBreadcrumb();
@@ -270,6 +294,45 @@ describe('DadsBreadcrumb', () => {
     await nextFrame();
 
     expect(component.querySelector('[data-breadcrumb-structured-data]')).toBeNull();
+  });
+
+  it('microdata有効時に子要素テキスト/属性変更を再同期しミラーを重複生成しない', async () => {
+    const { defineDefaultBreadcrumb } = await import('./breadcrumb-define');
+    defineDefaultBreadcrumb();
+
+    const component = renderWebComponent(`
+      <dads-breadcrumb structured-data="microdata" base-url="https://example.com/base/">
+        <dads-breadcrumb-item href="/">ホーム</dads-breadcrumb-item>
+        <dads-breadcrumb-item href="current">現在ページ</dads-breadcrumb-item>
+      </dads-breadcrumb>
+    `) as HTMLElement;
+
+    await waitForComponent('dads-breadcrumb');
+    await waitForComponent('dads-breadcrumb-item');
+    await nextFrame();
+
+    const firstItem = component.querySelector('dads-breadcrumb-item');
+    const initialMirror = component.querySelector('[data-breadcrumb-structured-data]');
+    expect(firstItem).toBeTruthy();
+    expect(initialMirror).toBeTruthy();
+
+    firstItem!.textContent = 'トップ';
+    firstItem!.setAttribute('href', '/top');
+    await nextFrame();
+    await nextFrame();
+
+    const mirrors = component.querySelectorAll('[data-breadcrumb-structured-data]');
+    expect(mirrors.length).toBe(1);
+    expect(mirrors[0]).toBe(initialMirror);
+
+    const names = Array.from(mirrors[0].querySelectorAll('[itemprop="name"]'))
+      .map(el => el.textContent?.trim())
+      .filter(Boolean);
+    expect(names).toContain('トップ');
+
+    const links = mirrors[0].querySelectorAll('[itemprop="item"]');
+    expect(links.length).toBe(2);
+    expect((links[0] as HTMLAnchorElement).href).toBe('https://example.com/top');
   });
 });
 
