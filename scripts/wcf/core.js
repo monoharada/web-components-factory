@@ -389,10 +389,10 @@ export async function vendorInstall({ prefix, outDir, pattern = null, components
 
   // Compatibility shim (N): keep index/autoload for legacy entry modes.
   // Planned removal timing is documented as N+1.
-  const indexShimLines = [
-    "import { setConfig } from './components/config.js';",
-    `setConfig({ prefix: '${p}' });`,
-  ];
+  const indexShimLines = createShimHeaderLines({
+    prefix: p,
+    configImportPath: './components/config.js',
+  });
   for (const suffix of selected) {
     indexShimLines.push(`await import('./components/${suffix}.js');`);
   }
@@ -401,8 +401,10 @@ export async function vendorInstall({ prefix, outDir, pattern = null, components
 
   for (const suffix of selected) {
     const shim = [
-      "import { setConfig } from '../components/config.js';",
-      `setConfig({ prefix: '${p}' });`,
+      ...createShimHeaderLines({
+        prefix: p,
+        configImportPath: '../components/config.js',
+      }),
       `await import('../components/${suffix}.js');`,
       '',
     ].join('\n');
@@ -454,6 +456,21 @@ function toImportPath(relPath) {
     return normalized;
   }
   return `./${normalized}`;
+}
+
+function createShimHeaderLines({ prefix, configImportPath }) {
+  return [
+    `import { setConfig } from '${configImportPath}';`,
+    `setConfig({ prefix: '${prefix}' });`,
+  ];
+}
+
+function indentMultiline(text, { dropEmpty = false } = {}) {
+  return String(text ?? '')
+    .split('\n')
+    .filter((line) => (dropEmpty ? line.length > 0 : true))
+    .map((line) => `    ${line}`)
+    .join('\n');
 }
 
 function replaceCanonicalPrefixInHtml(html, prefix) {
@@ -541,26 +558,15 @@ function createPageHtml({
     '    <meta name="viewport" content="width=device-width, initial-scale=1" />',
     `    <title>${title}</title>`,
     '',
-    importMapScript
-      .split('\n')
-      .filter(Boolean)
-      .map((line) => `    ${line}`)
-      .join('\n'),
+    indentMultiline(importMapScript, { dropEmpty: true }),
     '    <script type="module">',
     `      ${entryImportLine}`,
     '    </script>',
     '  </head>',
     '  <body>',
-    bodyHtml
-      .split('\n')
-      .map((line) => `    ${line}`)
-      .join('\n'),
+    indentMultiline(bodyHtml),
     '',
-    submitHandlerScript
-      .split('\n')
-      .filter(Boolean)
-      .map((line) => `    ${line}`)
-      .join('\n'),
+    indentMultiline(submitHandlerScript, { dropEmpty: true }),
     '  </body>',
     '</html>',
     '',
