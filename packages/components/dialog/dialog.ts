@@ -113,7 +113,7 @@ function isTabbable(el: Element): el is HTMLElement {
  * @attr {string} initial-focus - 初期フォーカス位置 (auto | title)
  * @attr {boolean} close-button - 閉じるボタン表示
  * @attr {string} close-label - 閉じるボタンラベル
- * @attr {string} aria-label - タイトルslot未使用時のダイアログ名
+ * @attr {string} aria-label - 指定時はタイトルより優先されるダイアログ名
  *
  * @cssprop --dads-dialog-backdrop-background - 背景(backdrop)色
  * @cssprop --dads-dialog-border-color - ダイアログ境界線色
@@ -342,7 +342,7 @@ export class DadsDialog extends TypographyWebComponent {
     if (this.#isOpen()) return true;
 
     const invoker = this.#resolveInvoker(context.invoker);
-    const beforeDetail = this.#createEventDetail(context, invoker);
+    const beforeDetail = this.#createEventDetail(context, invoker, invoker);
 
     const beforeEvent = new CustomEvent<DadsDialogEventDetail>('dads-dialog-before-open', {
       bubbles: true,
@@ -398,12 +398,16 @@ export class DadsDialog extends TypographyWebComponent {
     return true;
   }
 
-  #createEventDetail(context: DialogActionContext, invoker: Element | null): DadsDialogEventDetail {
+  #createEventDetail(
+    context: DialogActionContext,
+    invoker: Element | null,
+    returnFocusTo: HTMLElement | null = this.#lastInvoker,
+  ): DadsDialogEventDetail {
     return {
       reason: context.reason,
       invoker,
       originalEvent: context.originalEvent,
-      returnFocusTo: this.#lastInvoker,
+      returnFocusTo,
     };
   }
 

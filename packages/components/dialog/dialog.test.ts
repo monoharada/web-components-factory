@@ -10,7 +10,7 @@ import {
   renderWebComponent,
   waitForComponent,
 } from '../../../test/utils/test-helpers';
-import { DadsDialog } from './dialog.js';
+import { DadsDialog, type DadsDialogEventDetail } from './dialog.js';
 import { defineDialog } from './dialog-define.js';
 
 defineDialog();
@@ -39,6 +39,27 @@ function dispatchDocumentKeydown(
       shiftKey: options.shiftKey ?? false,
       cancelable: options.cancelable ?? false,
       composed: options.composed ?? false,
+    }),
+  );
+}
+
+function dispatchDialogCommand(
+  element: HTMLElement,
+  command: string,
+  invoker: HTMLElement | null,
+  originalEvent: Event | null = null,
+): void {
+  element.dispatchEvent(
+    new CustomEvent('dads-command', {
+      bubbles: true,
+      composed: true,
+      detail: {
+        command,
+        invoker,
+        target: element,
+        value: null,
+        originalEvent,
+      },
     }),
   );
 }
@@ -268,6 +289,103 @@ describe('DadsDialog - 開閉イベント', () => {
     expect(close).toHaveBeenCalledTimes(1);
   });
 
+  it('開閉イベントdetailに最新の invoker / returnFocusTo が入る', async () => {
+    const element = renderWebComponent(`
+      <dads-dialog close-button>
+        <span slot="title">タイトル</span>
+        本文
+      </dads-dialog>
+    `);
+
+    await waitForComponent('dads-dialog');
+
+    const invokerA = document.createElement('button');
+    const invokerB = document.createElement('button');
+    document.body.append(invokerA, invokerB);
+
+    const beforeOpenDetails: DadsDialogEventDetail[] = [];
+    const openDetails: DadsDialogEventDetail[] = [];
+    const beforeCloseDetails: DadsDialogEventDetail[] = [];
+    const closeDetails: DadsDialogEventDetail[] = [];
+
+    element.addEventListener('dads-dialog-before-open', (event) => {
+      beforeOpenDetails.push((event as CustomEvent<DadsDialogEventDetail>).detail);
+    });
+    element.addEventListener('dads-dialog-open', (event) => {
+      openDetails.push((event as CustomEvent<DadsDialogEventDetail>).detail);
+    });
+    element.addEventListener('dads-dialog-before-close', (event) => {
+      beforeCloseDetails.push((event as CustomEvent<DadsDialogEventDetail>).detail);
+    });
+    element.addEventListener('dads-dialog-close', (event) => {
+      closeDetails.push((event as CustomEvent<DadsDialogEventDetail>).detail);
+    });
+
+    dispatchDialogCommand(element, 'show-modal', invokerA);
+    await flushMicrotask();
+
+    dispatchDialogCommand(element, 'close', invokerA);
+    await flushMicrotask();
+
+    const openOrigin = new MouseEvent('click');
+    const closeOrigin = new KeyboardEvent('keydown', { key: 'Enter' });
+    dispatchDialogCommand(element, 'show-modal', invokerB, openOrigin);
+    await flushMicrotask();
+    dispatchDialogCommand(element, 'close', invokerB, closeOrigin);
+    await flushMicrotask();
+
+    expect(beforeOpenDetails).toHaveLength(2);
+    expect(openDetails).toHaveLength(2);
+    expect(beforeCloseDetails).toHaveLength(2);
+    expect(closeDetails).toHaveLength(2);
+
+    expect(beforeOpenDetails[0]).toMatchObject({
+      reason: 'command',
+      invoker: invokerA,
+      returnFocusTo: invokerA,
+    });
+    expect(openDetails[0]).toMatchObject({
+      reason: 'command',
+      invoker: invokerA,
+      returnFocusTo: invokerA,
+    });
+    expect(beforeCloseDetails[0]).toMatchObject({
+      reason: 'command',
+      invoker: invokerA,
+      returnFocusTo: invokerA,
+    });
+    expect(closeDetails[0]).toMatchObject({
+      reason: 'command',
+      invoker: invokerA,
+      returnFocusTo: invokerA,
+    });
+
+    expect(beforeOpenDetails[1]).toMatchObject({
+      reason: 'command',
+      invoker: invokerB,
+      originalEvent: openOrigin,
+      returnFocusTo: invokerB,
+    });
+    expect(openDetails[1]).toMatchObject({
+      reason: 'command',
+      invoker: invokerB,
+      originalEvent: openOrigin,
+      returnFocusTo: invokerB,
+    });
+    expect(beforeCloseDetails[1]).toMatchObject({
+      reason: 'command',
+      invoker: invokerB,
+      originalEvent: closeOrigin,
+      returnFocusTo: invokerB,
+    });
+    expect(closeDetails[1]).toMatchObject({
+      reason: 'command',
+      invoker: invokerB,
+      originalEvent: closeOrigin,
+      returnFocusTo: invokerB,
+    });
+  });
+
   it('dads-dialog-before-open が preventDefault されると開かない', async () => {
     const element = renderWebComponent(`
       <dads-dialog>
@@ -339,36 +457,12 @@ describe('DadsDialog - commandfor / command-store 連携', () => {
     const invoker = document.createElement('button');
     document.body.appendChild(invoker);
 
-    element.dispatchEvent(
-      new CustomEvent('dads-command', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          command: 'show-modal',
-          invoker,
-          target: element,
-          value: null,
-          originalEvent: null,
-        },
-      }),
-    );
+    dispatchDialogCommand(element, 'show-modal', invoker);
 
     await flushMicrotask();
     expect(element.hasAttribute('open')).toBe(true);
 
-    element.dispatchEvent(
-      new CustomEvent('dads-command', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          command: 'close',
-          invoker,
-          target: element,
-          value: null,
-          originalEvent: null,
-        },
-      }),
-    );
+    dispatchDialogCommand(element, 'close', invoker);
 
     await flushMicrotask();
     expect(element.hasAttribute('open')).toBe(false);
@@ -397,19 +491,7 @@ describe('DadsDialog - APG キーボード操作', () => {
 
     await waitForComponent('dads-dialog');
 
-    element.dispatchEvent(
-      new CustomEvent('dads-command', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          command: 'show-modal',
-          invoker,
-          target: element,
-          value: null,
-          originalEvent: null,
-        },
-      }),
-    );
+    dispatchDialogCommand(element, 'show-modal', invoker);
 
     await flushMicrotask();
     expect(element.hasAttribute('open')).toBe(true);

@@ -237,7 +237,7 @@ export const demos = {
                             <dads-input-text label="aria-label" value="" data-api-attr="aria-label" data-default=""></dads-input-text>
                           </div>
                         </td>
-                        <td>title未使用時のアクセシブル名</td>
+                        <td>指定時はtitleより優先されるアクセシブル名</td>
                       </tr>
                     </tbody>
                   </table>
