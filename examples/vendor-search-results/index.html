@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>検索＋結果一覧</title>
+
+    <script type="importmap">
+    {
+      "imports": {
+        "myui-heading": "./vendor/components/myui/components/heading.js",
+        "myui-search-box": "./vendor/components/myui/components/search-box.js",
+        "myui-card": "./vendor/components/myui/components/card.js",
+        "myui-page-navigation": "./vendor/components/myui/components/page-navigation.js"
+      }
+    }
+    </script>
+
+    <script type="module">
+      import './vendor/components/myui/boot.js';
+    </script>
+  </head>
+
+  <body>
+    <main>
+      <myui-heading level="1">検索</myui-heading>
+
+      <form id="search">
+        <myui-search-box aria-label="検索"></myui-search-box>
+      </form>
+
+      <h2>結果</h2>
+      <ul>
+        <li><myui-card>ダミー結果 1</myui-card></li>
+        <li><myui-card>ダミー結果 2</myui-card></li>
+        <li><myui-card>ダミー結果 3</myui-card></li>
+      </ul>
+
+      <myui-page-navigation current="1" total="1"></myui-page-navigation>
+    </main>
+
+    <script type="module">
+      const form = document.getElementById('search');
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('search submit');
+      });
+    </script>
+  </body>
+</html>

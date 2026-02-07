@@ -6,6 +6,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "customElements": "custom-elements.json",
+  "bin": {
+    "dads-template": "./scripts/dads-template/cli.js",
+    "wcf": "./scripts/wcf/cli.js"
+  },
   "scripts": {
     "dev": "bun server.ts",
     "dev:vite": "vite",
@@ -30,7 +34,7 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "tdd": "npm run test:watch",
-    "ci": "npm run type-check && npm run test:run && npm run build",
+    "ci": "npm run validate:templates && npm run vendor:check && npm run wcf:docs:check && npm run type-check && npm run test:run && npm run build",
     "update-tokens": "node scripts/update-design-tokens.js",
     "check-tokens": "npm view @digital-go-jp/design-tokens version",
     "claude:plan": "mkdir -p docs/plans && echo 'Create implementation plan' && ls -la docs/plans/",
@@ -47,6 +51,16 @@
     "dads:validate": "node scripts/dads/validate.cjs",
     "dads:figma:add": "node scripts/dads/figma-add.cjs",
     "dads:figma:expand": "node scripts/dads/figma-expand.cjs",
+    "validate:templates": "node scripts/dads-template/cli.js validate templates",
+    "vendor:build": "node scripts/vendor-runtime/build.js && npm run wcf:docs:build",
+    "vendor:check": "node scripts/vendor-runtime/build.js --check",
+    "wcf:docs:build": "node scripts/wcf/generate-docs.js",
+    "wcf:docs:check": "node scripts/wcf/generate-docs.js --check",
+    "wcf:smoke:node": "node scripts/wcf/smoke-ttfr.js --runner local",
+    "wcf:smoke:bun": "node scripts/wcf/smoke-ttfr.js --runner bun-local",
+    "wcf:smoke:npm": "node scripts/wcf/smoke-ttfr.js --runner npm",
+    "wcf:smoke:bunx": "node scripts/wcf/smoke-ttfr.js --runner bunx",
+    "runtime:build": "vite build --config vite.runtime.config.ts",
     "size:esm": "node scripts/size/measure-esm.mjs --entry packages/components/date-picker/date-picker.ts --entry packages/components/calendar/calendar.ts"
   },
   "devDependencies": {
@@ -76,7 +90,9 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "@digital-go-jp/design-tokens": "^1.1.1"
+    "@digital-go-jp/design-tokens": "^1.1.1",
+    "ajv": "^8.17.1",
+    "yaml": "^2.8.1"
   },
   "keywords": [
     "web-components",
