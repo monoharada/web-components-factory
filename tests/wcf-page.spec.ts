@@ -23,6 +23,9 @@ describe('wcf page create', () => {
       expect(text).toContain('<style data-wcf-typeset>');
       expect(text).toContain('@layer reset, tokens, base, layout, components, contents, page;');
       expect(text).toContain('@layer contents');
+      expect(text).toContain('--dads-typeset-density-factor: 1;');
+      expect(text).toContain('--dads-typeset-heading-margin-top-normal: 1lh;');
+      expect(text).toContain('--dads-typeset-heading-margin-top-compact: 1em;');
       expect(text).toContain('<script type="importmap">');
       expect(text).toContain('"myui-search-box": "./vendor/components/myui/components/search-box.js"');
       expect(text).toContain("import './vendor/components/myui/boot.js';");

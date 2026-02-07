@@ -32,15 +32,35 @@
 
 ## スペーシング設計
 
-- 基本ギャップ: `--dads-typeset-gap-normal: clamp(0.75lh, var(--spacing-6, 1rem), 1lh);`
-- compact: `--dads-typeset-gap-compact: calc(var(--dads-typeset-gap-normal) * 0.85);`
+- 密度係数: `--dads-typeset-density-factor`（default=`1`, compact=`0.85`）
+- 基本ギャップ: `--dads-typeset-gap-normal: 1lh;`
+- compact: `--dads-typeset-gap-compact: 1em;`
 - 実適用: `row-gap: var(--dads-typeset-gap-current);`
+- `dads-heading[margin="top"]` の上余白（default）: `--dads-typeset-heading-margin-top-normal: 1lh;`
+- `dads-heading[margin="top"]` の上余白（compact）: `--dads-typeset-heading-margin-top-compact: 1em;`
+- 見出し前余白（追加分）: `--dads-typeset-heading-before-extra-normal: 0.5lh;`
+- compact時見出し前余白（追加分）: `--dads-typeset-heading-before-extra-compact: calc(var(--dads-typeset-heading-before-extra-normal) * 0.85);`
+
+### 見出し上余白のコントロール方法
+
+native見出し（`h1`〜`h6`）の「見出し前の追加余白」は次で調整できる。
+
+```css
+[data-dads-typeset] {
+  --dads-typeset-heading-before-extra-normal: 0.75lh;
+}
+
+[data-dads-typeset][data-dads-density="compact"] {
+  --dads-typeset-heading-before-extra-compact: 0.5lh;
+}
+```
 
 ## 見出しポリシー（重要）
 
 - `dads-heading` の大きい余白は `margin="top"` を第一選択にする
 - 組版CSSは `dads-heading` の大余白を上書き/再定義しない
 - 組版側で加算するのは native 見出し (`h1`〜`h6`) のフォールバックのみ
+- `dads-heading[margin="top"]` は `--dads-typeset-density-factor` を参照して compact 連動できる
 
 ## テンプレート制作ルール
 

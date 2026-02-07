@@ -267,4 +267,25 @@ describe('DadsHeading - スタイル', () => {
     expect(sheetText).toContain(":host([margin='top']) [part='group']");
     expect(sheetText).toContain('margin-block-start: var(--dads-heading-margin-block-start);');
   });
+
+  it('margin="top" は density factor でスケールできる（compact連動）', async () => {
+    const { defineHeading } = await import('./heading-define');
+    defineHeading();
+
+    const component = await renderWebComponent('<dads-heading margin="top">見出し</dads-heading>');
+
+    await waitForComponent('dads-heading');
+    const sheets = component.shadowRoot?.adoptedStyleSheets ?? [];
+    const sheetText = sheets
+      .map(sheet => Array.from(sheet.cssRules ?? []).map(rule => rule.cssText).join('\n'))
+      .join('\n');
+
+    expect(sheetText).toContain(
+      '--heading-margin-block-start-base: var(--dads-heading-margin-block-start-base, 2lh);',
+    );
+    expect(sheetText).toContain(
+      '--heading-margin-scale: var(--dads-heading-margin-scale, var(--dads-typeset-density-factor, 1));',
+    );
+    expect(sheetText).toContain('--dads-heading-margin-block-start: var(--heading-margin-block-start);');
+  });
 });

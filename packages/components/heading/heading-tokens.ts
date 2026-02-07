@@ -52,7 +52,9 @@ const headingSemanticTokensText = `
     --heading-rule-padding: var(--spacing-6);
 
     /* margin="top" */
-    --heading-margin-block-start: 2lh;
+    --heading-margin-block-start-base: var(--dads-heading-margin-block-start-base, 2lh);
+    --heading-margin-scale: var(--dads-heading-margin-scale, var(--dads-typeset-density-factor, 1));
+    --heading-margin-block-start: calc(var(--heading-margin-block-start-base) * var(--heading-margin-scale));
   }
 
   :host([size='64']) {

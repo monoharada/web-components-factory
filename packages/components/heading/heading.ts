@@ -81,6 +81,8 @@ const normalizeMargin = (value: string | null): string => {
  * @cssprop --dads-heading-icon-size - アイコンサイズ
  * @cssprop --dads-heading-icon-gap - アイコンと本文の間隔
  * @cssprop --dads-heading-icon-vertical-align - アイコンのベースライン補正（vertical-align）
+ * @cssprop --dads-heading-margin-block-start-base - 上マージンのベース値
+ * @cssprop --dads-heading-margin-scale - 上マージンの倍率（例: compact連動）
  * @cssprop --dads-heading-margin-block-start - 上マージン
  * @cssprop --dads-heading-chip-color - チップ色
  * @cssprop --dads-heading-chip-width - チップの幅

@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { contentTypesetStylesText } from '../../vendor-runtime/src/styles/content-typeset.js';
 
 const CLI_PATTERN_CONTRACT_MAJOR = 1;
 
@@ -521,35 +522,6 @@ function createImportMapForPage({ entry, prefix, vendorDirImportPath, selectedCo
   return {};
 }
 
-const WCF_CONTENT_TYPESET_LAYER_ORDER = 'reset, tokens, base, layout, components, contents, page';
-const WCF_CONTENT_TYPESET_STYLE_TEXT = `@layer ${WCF_CONTENT_TYPESET_LAYER_ORDER};
-
-@layer contents {
-  [data-dads-typeset] {
-    --dads-typeset-gap-normal: clamp(0.75lh, var(--spacing-6, 1rem), 1lh);
-    --dads-typeset-gap-compact: calc(var(--dads-typeset-gap-normal) * 0.85);
-    --dads-typeset-gap-current: var(--dads-typeset-gap-normal);
-
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--dads-typeset-gap-current);
-  }
-
-  [data-dads-density='compact'][data-dads-typeset],
-  [data-dads-density='compact'] [data-dads-typeset] {
-    --dads-typeset-gap-current: var(--dads-typeset-gap-compact);
-  }
-
-  [data-dads-typeset] > :where(*) {
-    margin-block: 0;
-  }
-
-  [data-dads-typeset] > :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
-    margin-block-start: calc(var(--dads-typeset-gap-current) + 0.5lh);
-  }
-}
-`;
-
 function createPageHtml({
   title,
   importMap,
@@ -581,7 +553,7 @@ function createPageHtml({
 
   const typesetStyleTag = [
     '<style data-wcf-typeset>',
-    WCF_CONTENT_TYPESET_STYLE_TEXT,
+    contentTypesetStylesText,
     '</style>',
   ].join('\n');
 

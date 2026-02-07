@@ -12,9 +12,15 @@ describe('content typeset styles', () => {
     expect(contentTypesetStylesText).toContain('row-gap: var(--dads-typeset-gap-current);');
   });
 
-  it('uses compact density as 0.85 multiplier', () => {
+  it('uses compact density tokens for gap and heading spacing', () => {
+    expect(contentTypesetStylesText).toContain('--dads-typeset-density-factor: 1;');
+    expect(contentTypesetStylesText).toContain('--dads-typeset-density-factor: 0.85;');
+    expect(contentTypesetStylesText).toContain('--dads-typeset-gap-normal: 1lh;');
+    expect(contentTypesetStylesText).toContain('--dads-typeset-gap-compact: 1em;');
+    expect(contentTypesetStylesText).toContain('--dads-typeset-heading-margin-top-normal: 1lh;');
+    expect(contentTypesetStylesText).toContain('--dads-typeset-heading-margin-top-compact: 1em;');
     expect(contentTypesetStylesText).toContain(
-      '--dads-typeset-gap-compact: calc(var(--dads-typeset-gap-normal) * 0.85);',
+      '--dads-typeset-heading-before-extra-compact: calc(var(--dads-typeset-heading-before-extra-normal) * 0.85);',
     );
     expect(contentTypesetStylesText).toContain("[data-dads-density='compact'][data-dads-typeset]");
   });
@@ -23,7 +29,14 @@ describe('content typeset styles', () => {
     expect(contentTypesetStylesText).toContain(
       '[data-dads-typeset] > :is(h1, h2, h3, h4, h5, h6):not(:first-child)',
     );
-    expect(contentTypesetStylesText).not.toContain('dads-heading');
+    expect(contentTypesetStylesText).toContain(
+      '--dads-heading-margin-block-start-base: var(--dads-typeset-heading-margin-top-current);',
+    );
+    expect(contentTypesetStylesText).toContain('--dads-heading-margin-scale: 1;');
+    expect(contentTypesetStylesText).toContain(
+      'var(--dads-typeset-heading-before-extra-current)',
+    );
+    expect(contentTypesetStylesText).not.toContain('[data-dads-typeset] > dads-heading');
     expect(createContentTypesetStyles()).toBe(contentTypesetStylesText);
   });
 });
