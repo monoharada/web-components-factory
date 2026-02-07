@@ -4,6 +4,56 @@
 
 ---
 
+## MutationObserver Safe Sync Pattern（自己再帰防止）
+**タグ**: #webcomponents #mutationobserver #stability #debug
+**適用場面**: 監視対象DOMを同期処理の中で更新するコンポーネント（例: Light DOMミラー生成、自動属性正規化）
+
+### 問題
+`MutationObserver` のコールバックから呼ぶ同期処理が、監視対象DOMを再更新すると、Observerが自己再帰的に発火し続けて無限ループになりうる。
+
+### 解決策
+```ts
+const OBSERVER_OPTIONS: MutationObserverInit = {
+  childList: true,
+  subtree: true,
+  attributes: true,
+};
+
+class ExampleElement extends HTMLElement {
+  #observer: MutationObserver | null = null;
+
+  connectedCallback() {
+    this.#observer = new MutationObserver(() => this.#syncAll());
+    this.#startObserving();
+    this.#syncAll();
+  }
+
+  #startObserving() {
+    if (!this.#observer || !this.isConnected) return;
+    this.#observer.observe(this, OBSERVER_OPTIONS);
+  }
+
+  #syncAll() {
+    // 重要: 自分でDOMを書き換える前に監視を止める
+    this.#observer?.disconnect();
+    try {
+      this.#syncState();
+      this.#syncMirrorDom();
+    } finally {
+      // 重要: finallyで必ず監視を戻す
+      this.#startObserving();
+    }
+  }
+}
+```
+
+### 結果
+- **メリット**: 自己再帰によるCPUスパイク/タブフリーズを防止できる
+- **デメリット**: 同期処理の責務が増えるため、`sync` 経路の統一が必要
+
+### 関連パターン
+- Async Initialization Pattern
+
 ## Component Definition Pattern
 **タグ**: #webcomponents #architecture
 **適用場面**: 新しいWeb Componentを作成する時

@@ -1717,6 +1717,301 @@ export const demos = {
    */
 
 
+  breadcrumb: () => `
+    <div class="demo-breadcrumb" style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">現在位置ナビゲーション（パンくず）</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        現在位置ナビゲーション（パンくず）として、<code>p</code>要素ベースで実装しています。
+        <code>ul/ol/li</code> は使用せず、<code>role="list"</code>/<code>role="listitem"</code> でセマンティクスを補完します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+
+        <a11y-annotate target-selector="dads-breadcrumb">
+          <div style="display: grid; place-content: center; padding: 48px 0;">
+            <dads-breadcrumb show-label structured-data="microdata" base-url="https://design.example.go.jp/">
+              <dads-breadcrumb-item home href="/">ホーム</dads-breadcrumb-item>
+              <dads-breadcrumb-item href="/page-1">ページ 1</dads-breadcrumb-item>
+              <dads-breadcrumb-item href="/page-2">ページ 2</dads-breadcrumb-item>
+              <dads-breadcrumb-item href="/page-3">ページ 3</dads-breadcrumb-item>
+              <dads-breadcrumb-item>ページ 4</dads-breadcrumb-item>
+            </dads-breadcrumb>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          構造化データ（Microdata）は <code>structured-data="microdata"</code> で有効化できます（Light DOMにミラーを生成）。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-breadcrumb',
+            'dads-breadcrumb-item',
+            'a11y-annotate',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-breadcrumb
+                  data-api-target
+                  separator="chevron"
+                  structured-data="off"
+                  base-url="https://design.example.go.jp/"
+                >
+                  <dads-breadcrumb-item home href="/">ホーム</dads-breadcrumb-item>
+                  <dads-breadcrumb-item href="/page-1">ページ 1</dads-breadcrumb-item>
+                  <dads-breadcrumb-item href="/page-2">ページ 2</dads-breadcrumb-item>
+                  <dads-breadcrumb-item>ページ 3</dads-breadcrumb-item>
+                </dads-breadcrumb>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-breadcrumb separator="chevron" structured-data="off" base-url="https://design.example.go.jp/">
+                      <dads-breadcrumb-item home href="/">ホーム</dads-breadcrumb-item>
+                      <dads-breadcrumb-item href="/page-1">ページ 1</dads-breadcrumb-item>
+                      <dads-breadcrumb-item href="/page-2">ページ 2</dads-breadcrumb-item>
+                      <dads-breadcrumb-item>ページ 3</dads-breadcrumb-item>
+                    </dads-breadcrumb>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>show-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="show-label" data-api-attr="show-label" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>「現在位置」ラベルを表示する</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>structured-data</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>off</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="structured-data" data-api-attr="structured-data" data-default="off">
+                              <option value="off" selected>off</option>
+                              <option value="microdata">microdata</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>構造化データ出力モード</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>separator</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>chevron</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="separator" data-api-attr="separator" data-default="chevron">
+                              <option value="chevron" selected>chevron</option>
+                              <option value="slash">slash</option>
+                              <option value="pipe">pipe</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>区切り表示（山形矢印 / スラッシュ / パイプ）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>base-url</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>document.baseURI</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="base-url"
+                              value="https://design.example.go.jp/"
+                              data-api-attr="base-url"
+                              data-default="https://design.example.go.jp/"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>構造化データURL解決のベース</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>current</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>(auto: last)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch
+                              aria-label="current"
+                              data-api-attr="current"
+                              data-api-target-selector="dads-breadcrumb-item:nth-of-type(2)"
+                              data-default="false"
+                            >
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>2番目項目を明示的に現在ページにする</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>home</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>true(1st)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch
+                              aria-label="home"
+                              data-api-attr="home"
+                              data-api-target-selector="dads-breadcrumb-item:first-of-type"
+                              data-default="true"
+                              checked
+                            >
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>先頭項目のホームアイコン表示</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-breadcrumb-link-color</code></th>
+                        <td><code>--color-primitive-blue-1000</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-breadcrumb-link-color" value="" data-api-css-var="--dads-breadcrumb-link-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>リンク通常色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-breadcrumb-link-color-hover</code></th>
+                        <td><code>--color-primitive-blue-900</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-breadcrumb-link-color-hover" value="" data-api-css-var="--dads-breadcrumb-link-color-hover" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>リンクホバー色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-breadcrumb-link-color-active</code></th>
+                        <td><code>--color-primitive-orange-800</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-breadcrumb-link-color-active" value="" data-api-css-var="--dads-breadcrumb-link-color-active" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>リンクアクティブ色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-breadcrumb-separator-color</code></th>
+                        <td><code>--color-neutral-solid-gray-900</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-breadcrumb-separator-color" value="" data-api-css-var="--dads-breadcrumb-separator-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>区切り矢印の色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Variants</h3>
+        <div style="display: grid; gap: 24px;">
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">通常</p>
+            <dads-breadcrumb>
+              <dads-breadcrumb-item href="/">ホーム</dads-breadcrumb-item>
+              <dads-breadcrumb-item href="/page-1">ページ 1</dads-breadcrumb-item>
+              <dads-breadcrumb-item>ページ 2</dads-breadcrumb-item>
+            </dads-breadcrumb>
+          </div>
+
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">ホームアイコン + ラベル表示</p>
+            <dads-breadcrumb show-label>
+              <dads-breadcrumb-item home href="/">ホーム</dads-breadcrumb-item>
+              <dads-breadcrumb-item href="/section">セクション</dads-breadcrumb-item>
+              <dads-breadcrumb-item>現在ページ</dads-breadcrumb-item>
+            </dads-breadcrumb>
+          </div>
+
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">スラッシュ区切り</p>
+            <dads-breadcrumb separator="slash">
+              <dads-breadcrumb-item href="/">ホーム</dads-breadcrumb-item>
+              <dads-breadcrumb-item href="/page-1">ページ 1</dads-breadcrumb-item>
+              <dads-breadcrumb-item>ページ 2</dads-breadcrumb-item>
+            </dads-breadcrumb>
+          </div>
+
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">パイプ区切り</p>
+            <dads-breadcrumb separator="pipe">
+              <dads-breadcrumb-item href="/">ホーム</dads-breadcrumb-item>
+              <dads-breadcrumb-item href="/page-1">ページ 1</dads-breadcrumb-item>
+              <dads-breadcrumb-item>ページ 2</dads-breadcrumb-item>
+            </dads-breadcrumb>
+          </div>
+        </div>
+      </section>
+
+      <script type="module">
+        await import('dads-breadcrumb');
+        await import('dads-switch');
+        await import('a11y-annotate');
+      </script>
+    </div>
+  `,
+
+
   stepNavigation: () => `
     <div class="demo-step-navigation" style="padding: 40px; max-width: 1200px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ステップナビゲーション</h2>

@@ -4,6 +4,39 @@
 
 ---
 
+## [2026-02-06] MutationObserverの自己再帰でUIが固まる問題と防止ルール
+**タグ**: #webcomponents #mutationobserver #debug #performance #breadcrumb
+
+### 概要
+`dads-breadcrumb` の構造化データ（microdata）同期で、`MutationObserver` が**自分のDOM更新を再検知**し続け、`sync` が無限に再入してブラウザタブが実質フリーズする事象が発生した。
+
+### 根本原因
+- 監視対象が `subtree: true` で広く、`replaceChildren()` などの内部更新まで観測していた
+- 観測コールバック内で `sync` を呼び、その `sync` が再び観測対象DOMを更新していた
+- 「同期待ちフラグ」だけでは、コールバックキューに積まれた後続通知を十分に止められないケースがあった
+
+### 再発防止ルール
+1. **Observerが監視するDOMを、Observer自身の同期で更新する場合は必ず `disconnect()` してから更新する**
+2. 更新後にのみ `observe()` を再開する（`finally` で必ず再開）
+3. 監視オプションは定数化し、再登録時に同じ条件を使う
+4. `subtree: true` を使う場合は「同期対象に内部ミラーDOMが含まれるか」をレビュー観点に含める
+5. 「構造化データON時の再描画」を必ずテストに入れる（属性切替・子要素変更・off復帰）
+
+### 適用例（要点）
+```ts
+// sync前に監視停止
+observer.disconnect();
+try {
+  sync();
+} finally {
+  // sync後に監視再開
+  observer.observe(host, OBSERVER_OPTIONS);
+}
+```
+
+### 対象実装
+- `/packages/components/breadcrumb/breadcrumb.ts` の `#syncAll()` / `#startObservingMutations()`
+
 ## [2026-01-31] 見出し（Heading）のチップ/アイコンは相対単位（em/lh）でサイズ追従させる（トークン増殖を防ぐ）
 **タグ**: #heading #dads #figma #tokens #css #webcomponents #testing
 
