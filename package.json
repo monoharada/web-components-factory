@@ -14,7 +14,7 @@
     "url": "https://github.com/monoharada/web-components-factory.git"
   },
   "scripts": {
-    "dev": "bun server.ts",
+    "dev": "bun --watch serve.ts",
     "dev:vite": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",

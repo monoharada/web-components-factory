@@ -21,6 +21,15 @@ Codex の Skills は `~/.codex/skills` を参照するため、初回のみ以�
 - コンポーネントAPI設計（part/override/3層トークン等）は `headless-component-design` を適用する
 - `.claude/skills` の内容を勝手にコピーして別ファイルに二重管理しない（必要なら `.claude/skills` を更新する）
 
+## 開発サーバー（デフォルト）
+
+- デフォルト起動コマンド: `npm run dev`（実体: `bun --watch serve.ts`）
+- 単独起動: `bun --watch serve.ts`
+- watchなし起動: `bun serve.ts`
+- `serve.ts` は起動エントリで、実装本体は `server.ts`
+- 開発時は `Cache-Control: no-store` を返すため、変更確認は通常リロードで行う（ハード再読み込み不要）
+- キャッシュ有効化が必要な検証時のみ `DEV_DISABLE_HTTP_CACHE=0` を指定する
+
 ## CEM / 検証 / MCP（AIネイティブ）
 
 この repo では **CEM（`custom-elements.json`）を “単一の真実”** として、DX と AI 向けツールを駆動します。
