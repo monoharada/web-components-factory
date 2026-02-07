@@ -27,6 +27,19 @@
         "componentDir": "packages/components/blockquote"
       }
     },
+    "breadcrumb": {
+      "id": "breadcrumb",
+      "tags": [
+        "dads-breadcrumb",
+        "dads-breadcrumb-item"
+      ],
+      "define": "defineBreadcrumb",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/breadcrumb"
+      }
+    },
     "button": {
       "id": "button",
       "tags": [
@@ -329,6 +342,8 @@
     "dads-accordion-details": "accordion",
     "dads-accordion-item-details": "accordion",
     "dads-blockquote": "blockquote",
+    "dads-breadcrumb": "breadcrumb",
+    "dads-breadcrumb-item": "breadcrumb",
     "dads-button": "button",
     "dads-calendar": "calendar",
     "dads-card": "card",
