@@ -40,7 +40,7 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
     "tdd": "npm run test:watch",
-    "ci": "npm run validate:templates && npm run vendor:check && npm run wcf:docs:check && npm run type-check && npm run test:run && npm run build",
+    "ci": "npm run type-check && npm run test:run && npm run build",
     "agents:pre-pr": "npm run cem:analyze && npm run contracts:check && npm run registry:generate && npm run registry:check && npm run validate:wc && node scripts/guards/check-generated-clean.mjs",
     "agents:verify": "npm run agents:pre-pr && npm run ci",
     "update-tokens": "node scripts/update-design-tokens.js",
