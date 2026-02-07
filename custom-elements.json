@@ -3803,6 +3803,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "#syncA11yAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "base",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "#view",
               "privacy": "private",
@@ -3876,7 +3894,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), DelegatingPropertyAttr('[part=\"base\"]', 'command'), DelegatingPropertyAttr('[part=\"base\"]', 'commandfor'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }",
+              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), PropertyAttr('aria-describedby'), PropertyAttr('aria-labelledby'), DelegatingPropertyAttr('[part=\"base\"]', 'command'), DelegatingPropertyAttr('[part=\"base\"]', 'commandfor'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -4065,8 +4083,22 @@
               "type": {
                 "text": "string"
               },
+              "description": "補足説明要素ID（スペース区切り可）",
+              "name": "aria-describedby"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
               "description": "アクセシビリティラベル",
               "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ラベル要素ID（スペース区切り可）",
+              "name": "aria-labelledby"
             },
             {
               "type": {
@@ -11663,6 +11695,16 @@
               "default": "false"
             },
             {
+              "kind": "field",
+              "name": "#fullscreenDropOwner",
+              "privacy": "private",
+              "type": {
+                "text": "DadsFileUpload | null"
+              },
+              "static": true,
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "#getMode",
               "privacy": "private",
@@ -11878,6 +11920,24 @@
             },
             {
               "kind": "method",
+              "name": "#setExpandCheckboxChecked",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#setManagedError",
               "privacy": "private",
               "return": {
@@ -12024,6 +12084,16 @@
             },
             {
               "kind": "method",
+              "name": "#syncFileListDisabledState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "#syncFormValue",
               "privacy": "private",
               "return": {
@@ -12075,6 +12145,16 @@
             {
               "kind": "method",
               "name": "#syncTextLabels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValidity",
               "privacy": "private",
               "return": {
                 "type": {
@@ -12769,7 +12849,7 @@
                 ],
                 "states": [
                   "ファイル未選択時は「ファイルが選択されていません」を表示します。",
-                  "ファイルごとに状態（準備中/アップロード中/完了/エラー）を表示します。",
+                  "ファイルごとに状態ラベルは「アップロード中」「完了」を表示します（準備中/エラーは状態ラベルを出さず、エラーメッセージ表示を優先）。",
                   "バリデーションエラー時は上部エラーとファイル行エラーを表示します。"
                 ],
                 "labels": [

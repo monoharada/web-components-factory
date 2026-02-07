@@ -216,6 +216,52 @@ describe('DadsFileUpload - イベント契約', () => {
   });
 });
 
+describe('DadsFileUpload - required validity', () => {
+  let element: HTMLElement;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+  });
+
+  it('required かつ有効ファイル未選択では checkValidity/reportValidity が false になる', async () => {
+    const { defineFileUpload } = await import('./file-upload-define.js');
+    defineFileUpload();
+
+    element = createTestElement('dads-file-upload');
+    element.setAttribute('required', '');
+    await waitForCustomElement(element);
+
+    const api = element as unknown as {
+      checkValidity: () => boolean;
+      reportValidity: () => boolean;
+      validationMessage: string;
+    };
+    expect(api.checkValidity()).toBe(false);
+    expect(api.reportValidity()).toBe(false);
+    expect(api.validationMessage).toContain('ファイルを選択してください');
+  });
+
+  it('required が満たされると checkValidity が true に戻る', async () => {
+    const { defineFileUpload } = await import('./file-upload-define.js');
+    defineFileUpload();
+
+    element = createTestElement('dads-file-upload');
+    element.setAttribute('required', '');
+    await waitForCustomElement(element);
+
+    const api = element as unknown as {
+      addFiles: (files: File[]) => unknown[];
+      checkValidity: () => boolean;
+      validationMessage: string;
+    };
+
+    expect(api.checkValidity()).toBe(false);
+    api.addFiles([createFile('valid.pdf', 'application/pdf')]);
+    expect(api.checkValidity()).toBe(true);
+    expect(api.validationMessage).toBe('');
+  });
+});
+
 describe('DadsFileUpload - 検証', () => {
   let element: HTMLElement;
 
@@ -419,13 +465,39 @@ describe('DadsFileUpload - 公開メソッド', () => {
     expect(added).toHaveLength(0);
     expect(api.items).toHaveLength(0);
   });
+
+  it('disabled 時は解除ボタンが disabled になる', async () => {
+    const { defineFileUpload } = await import('./file-upload-define.js');
+    defineFileUpload();
+
+    element = createTestElement('dads-file-upload');
+    await waitForCustomElement(element);
+
+    const api = element as unknown as {
+      addFiles: (files: File[]) => unknown[];
+      items: Array<{ id: string }>;
+    };
+
+    api.addFiles([createFile('disable-remove.pdf', 'application/pdf')]);
+    const before = getShadowContent(element, '[part="remove-button"]') as HTMLButtonElement | null;
+    expect(before?.disabled).toBe(false);
+
+    element.setAttribute('disabled', '');
+
+    const after = getShadowContent(element, '[part="remove-button"]') as HTMLButtonElement | null;
+    expect(after?.disabled).toBe(true);
+    expect(api.items).toHaveLength(1);
+  });
 });
 
 describe('DadsFileUpload - 全画面ドロップ拡大', () => {
   let element: HTMLElement;
+  let secondaryElement: HTMLElement | null = null;
 
   afterEach(() => {
     if (element) cleanupTestElement(element);
+    if (secondaryElement) cleanupTestElement(secondaryElement);
+    secondaryElement = null;
   });
 
   it('チェックON時に全画面ドラッグでオーバーレイ表示し、fullscreen-change を発火する', async () => {
@@ -462,6 +534,56 @@ describe('DadsFileUpload - 全画面ドロップ拡大', () => {
     const api = element as unknown as { items: Array<{ file: File }> };
     expect(api.items).toHaveLength(1);
     expect(api.items[0]?.file.name).toBe('global-drop.pdf');
+  });
+
+  it('複数インスタンス有効時は最新ONの1インスタンスのみが window drop を取り込む', async () => {
+    const { defineFileUpload } = await import('./file-upload-define.js');
+    defineFileUpload();
+
+    element = createTestElement('dads-file-upload');
+    secondaryElement = createTestElement('dads-file-upload');
+    await waitForCustomElement(element);
+    await waitForCustomElement(secondaryElement);
+
+    const firstHandler = vi.fn();
+    const secondHandler = vi.fn();
+    element.addEventListener('dads-file-upload-fullscreen-change', firstHandler);
+    secondaryElement.addEventListener('dads-file-upload-fullscreen-change', secondHandler);
+
+    const firstCheckbox = getShadowContent(element, '#expand-checkbox') as HTMLElement | null;
+    firstCheckbox?.dispatchEvent(
+      new CustomEvent('dads-change', {
+        bubbles: true,
+        composed: true,
+        detail: { checked: true },
+      })
+    );
+    expect(firstHandler).toHaveBeenCalledTimes(1);
+    expect(firstHandler.mock.calls[0]?.[0]?.detail?.enabled).toBe(true);
+
+    const secondCheckbox = getShadowContent(secondaryElement, '#expand-checkbox') as HTMLElement | null;
+    secondCheckbox?.dispatchEvent(
+      new CustomEvent('dads-change', {
+        bubbles: true,
+        composed: true,
+        detail: { checked: true },
+      })
+    );
+
+    expect(firstHandler).toHaveBeenCalledTimes(2);
+    expect(firstHandler.mock.calls[1]?.[0]?.detail?.enabled).toBe(false);
+    expect(secondHandler).toHaveBeenCalledTimes(1);
+    expect(secondHandler.mock.calls[0]?.[0]?.detail?.enabled).toBe(true);
+
+    const file = createFile('owner-only.pdf', 'application/pdf');
+    window.dispatchEvent(createDragLikeEvent('dragenter', [file]));
+    window.dispatchEvent(createDragLikeEvent('drop', [file]));
+
+    const firstApi = element as unknown as { items: Array<{ file: File }> };
+    const secondApi = secondaryElement as unknown as { items: Array<{ file: File }> };
+    expect(firstApi.items).toHaveLength(0);
+    expect(secondApi.items).toHaveLength(1);
+    expect(secondApi.items[0]?.file.name).toBe('owner-only.pdf');
   });
 });
 

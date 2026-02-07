@@ -250,6 +250,7 @@ function findClosestElementInPath(path: EventTarget[], predicate: (node: EventTa
  */
 export class DadsFileUpload extends TypographyFormComponent {
   static override readonly formAssociated = true;
+  static #fullscreenDropOwner: DadsFileUpload | null = null;
 
   static definition = {
     name: 'dads-file-upload',
@@ -446,6 +447,9 @@ export class DadsFileUpload extends TypographyFormComponent {
   }
 
   disconnectedCallback(): void {
+    if (DadsFileUpload.#fullscreenDropOwner === this) {
+      DadsFileUpload.#fullscreenDropOwner = null;
+    }
     this.#teardownEventListeners();
     this.#detachWindowDragListeners();
     this.#windowDragDepth = 0;
@@ -473,6 +477,7 @@ export class DadsFileUpload extends TypographyFormComponent {
         break;
       case 'required':
         updateRequirement(this.#requirement, this.hasAttribute('required'), false);
+        this.#syncValidity();
         break;
       case 'error':
       case 'error-text':
@@ -498,6 +503,7 @@ export class DadsFileUpload extends TypographyFormComponent {
         break;
       case 'name':
         this.#syncFormValue();
+        this.#syncValidity();
         break;
       default:
         break;
@@ -684,6 +690,7 @@ export class DadsFileUpload extends TypographyFormComponent {
   formResetCallback(): void {
     this.clearFiles();
     this.#clearManagedError();
+    this.#syncValidity();
   }
 
   formStateRestoreCallback(_state: unknown, _mode: unknown): void {
@@ -751,6 +758,7 @@ export class DadsFileUpload extends TypographyFormComponent {
     this.#renderFileList();
     this.#syncEmptyState();
     this.#syncFormValue();
+    this.#syncValidity();
   }
 
   #syncDerivedState(): void {
@@ -759,6 +767,7 @@ export class DadsFileUpload extends TypographyFormComponent {
     this.#renderFileList();
     this.#syncEmptyState();
     this.#syncFormValue();
+    this.#syncValidity();
   }
 
   #syncInputAttributes(): void {
@@ -800,6 +809,10 @@ export class DadsFileUpload extends TypographyFormComponent {
     const isDisabled = this.#isDisabled();
     const supportsDropArea = this.#supportsDropArea();
 
+    if (isDisabled && this.#expandDropAreaEnabled) {
+      this.#toggleExpandDropArea(false, true);
+    }
+
     if (this.#browseButton) {
       this.#browseButton.toggleAttribute('disabled', isDisabled);
     }
@@ -818,8 +831,10 @@ export class DadsFileUpload extends TypographyFormComponent {
       this.#hideOverlay();
     }
 
+    this.#syncFileListDisabledState();
     this.#syncWindowDragListeners();
     this.#syncInputAttributes();
+    this.#syncValidity();
   }
 
   #syncAriaDescribedBy(): void {
@@ -864,12 +879,7 @@ export class DadsFileUpload extends TypographyFormComponent {
         this.#toggleExpandDropArea(false, false);
       }
 
-      if (this.#expandCheckbox) {
-        this.#expandCheckbox.removeAttribute('checked');
-        if ('checked' in this.#expandCheckbox) {
-          (this.#expandCheckbox as unknown as { checked: boolean }).checked = false;
-        }
-      }
+      this.#setExpandCheckboxChecked(false);
     }
   }
 
@@ -960,6 +970,33 @@ export class DadsFileUpload extends TypographyFormComponent {
     this._internals.setFormValue(formData);
   }
 
+  #syncValidity(): void {
+    if (this.#isDisabled()) {
+      this._internals.setValidity({});
+      return;
+    }
+
+    const validCount = this.#items.filter((item) => item.valid).length;
+    if (this.hasAttribute('required') && validCount === 0) {
+      this._internals.setValidity(
+        { valueMissing: true },
+        'ファイルを選択してください',
+        this.#browseButton ?? this.#dropzone ?? this
+      );
+      return;
+    }
+
+    this._internals.setValidity({});
+  }
+
+  #syncFileListDisabledState(): void {
+    const disabled = this.#isDisabled();
+    if (!this.#fileList) return;
+    for (const removeButton of this.#fileList.querySelectorAll<HTMLButtonElement>('[part="remove-button"]')) {
+      removeButton.disabled = disabled;
+    }
+  }
+
   #renderFileList(): void {
     if (!this.#fileList) return;
 
@@ -979,6 +1016,7 @@ export class DadsFileUpload extends TypographyFormComponent {
       removeButton.setAttribute('data-file-id', item.id);
       removeButton.setAttribute('aria-label', `${item.file.name} を解除`);
       removeButton.textContent = '解除';
+      removeButton.disabled = this.#isDisabled();
 
       const indexEl = document.createElement('span');
       indexEl.setAttribute('part', 'file-index');
@@ -1104,7 +1142,11 @@ export class DadsFileUpload extends TypographyFormComponent {
   }
 
   #syncWindowDragListeners(): void {
-    const shouldBind = this.#supportsDropArea() && this.#expandDropAreaEnabled && !this.#isDisabled();
+    const shouldBind =
+      this.#supportsDropArea() &&
+      this.#expandDropAreaEnabled &&
+      !this.#isDisabled() &&
+      DadsFileUpload.#fullscreenDropOwner === this;
     if (shouldBind) {
       this.#attachWindowDragListeners();
       return;
@@ -1146,9 +1188,25 @@ export class DadsFileUpload extends TypographyFormComponent {
   }
 
   #toggleExpandDropArea(enabled: boolean, emitEvent = true): void {
+    if (enabled) {
+      if (!this.#supportsDropArea() || this.#isDisabled()) {
+        this.#setExpandCheckboxChecked(false);
+        return;
+      }
+
+      const currentOwner = DadsFileUpload.#fullscreenDropOwner;
+      if (currentOwner && currentOwner !== this) {
+        currentOwner.#toggleExpandDropArea(false, true);
+      }
+      DadsFileUpload.#fullscreenDropOwner = this;
+    } else if (DadsFileUpload.#fullscreenDropOwner === this) {
+      DadsFileUpload.#fullscreenDropOwner = null;
+    }
+
     if (this.#expandDropAreaEnabled === enabled) return;
 
     this.#expandDropAreaEnabled = enabled;
+    this.#setExpandCheckboxChecked(enabled);
     this.#syncWindowDragListeners();
 
     if (!enabled) {
@@ -1161,6 +1219,16 @@ export class DadsFileUpload extends TypographyFormComponent {
         enabled,
       });
     }
+  }
+
+  #setExpandCheckboxChecked(checked: boolean): void {
+    if (!this.#expandCheckbox) return;
+
+    if ('checked' in this.#expandCheckbox) {
+      (this.#expandCheckbox as unknown as { checked: boolean }).checked = checked;
+    }
+
+    this.#expandCheckbox.toggleAttribute('checked', checked);
   }
 
   #handleBrowseClick = (event: Event): void => {
@@ -1240,6 +1308,7 @@ export class DadsFileUpload extends TypographyFormComponent {
   };
 
   #handleWindowDragEnter = (event: DragEvent): void => {
+    if (DadsFileUpload.#fullscreenDropOwner !== this) return;
     if (!this.#expandDropAreaEnabled || this.#isDisabled() || !hasFilesData(event)) return;
 
     event.preventDefault();
@@ -1248,6 +1317,7 @@ export class DadsFileUpload extends TypographyFormComponent {
   };
 
   #handleWindowDragOver = (event: DragEvent): void => {
+    if (DadsFileUpload.#fullscreenDropOwner !== this) return;
     if (!this.#expandDropAreaEnabled || this.#isDisabled() || !hasFilesData(event)) return;
 
     event.preventDefault();
@@ -1257,6 +1327,7 @@ export class DadsFileUpload extends TypographyFormComponent {
   };
 
   #handleWindowDragLeave = (event: DragEvent): void => {
+    if (DadsFileUpload.#fullscreenDropOwner !== this) return;
     if (!this.#expandDropAreaEnabled || this.#isDisabled()) return;
 
     event.preventDefault();
@@ -1268,6 +1339,7 @@ export class DadsFileUpload extends TypographyFormComponent {
   };
 
   #handleWindowDrop = (event: DragEvent): void => {
+    if (DadsFileUpload.#fullscreenDropOwner !== this) return;
     if (!this.#expandDropAreaEnabled || this.#isDisabled() || !hasFilesData(event)) return;
 
     const path = typeof event.composedPath === 'function' ? event.composedPath() : [];

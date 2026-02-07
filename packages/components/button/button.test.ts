@@ -272,6 +272,32 @@ describe('DadsButton - アクセシビリティ', () => {
     expect(button.getAttribute('aria-label')).toBe('Save document');
   });
 
+  it('aria-describedby属性が適用される', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button aria-describedby="help error">Save</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    const button = getShadowElement(component, '[part="base"]') as HTMLButtonElement;
+    expect(button.getAttribute('aria-describedby')).toBe('help error');
+  });
+
+  it('aria-labelledby属性が適用される', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button aria-labelledby="label-id">Save</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    const button = getShadowElement(component, '[part="base"]') as HTMLButtonElement;
+    expect(button.getAttribute('aria-labelledby')).toBe('label-id');
+  });
+
   it('full-width属性で幅100%になる', async () => {
     const { defineButton } = await import('./button-define');
     defineButton();
