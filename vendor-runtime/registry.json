@@ -97,7 +97,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main>\n  <dads-heading level=\"1\">申請フォーム</dads-heading>\n  <form id=\"application-form-single\">\n    <dads-fieldset>\n      <legend>申請情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n      <dads-select name=\"type\" required></dads-select>\n      <dads-textarea name=\"reason\" required></dads-textarea>\n    </dads-fieldset>\n    <dads-button type=\"submit\">送信</dads-button>\n  </form>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム</dads-heading>\n  <form id=\"application-form-single\">\n    <dads-fieldset>\n      <legend>申請情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n      <dads-select name=\"type\" required></dads-select>\n      <dads-textarea name=\"reason\" required></dads-textarea>\n    </dads-fieldset>\n    <dads-button type=\"submit\">送信</dads-button>\n  </form>\n</main>"
     },
     "application-form-step-validation": {
       "id": "application-form-step-validation",
@@ -123,7 +123,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main>\n  <dads-heading level=\"1\">申請フォーム（ステップ）</dads-heading>\n  <dads-step-navigation current=\"1\" total=\"3\"></dads-step-navigation>\n  <form id=\"application-form-step\">\n    <dads-fieldset>\n      <legend>ステップ1: 申請者情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n    </dads-fieldset>\n    <dads-button type=\"submit\">次へ</dads-button>\n  </form>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム（ステップ）</dads-heading>\n  <dads-step-navigation current=\"1\" total=\"3\"></dads-step-navigation>\n  <form id=\"application-form-step\">\n    <dads-fieldset>\n      <legend>ステップ1: 申請者情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n    </dads-fieldset>\n    <dads-button type=\"submit\">次へ</dads-button>\n  </form>\n</main>"
     },
     "card-grid": {
       "id": "card-grid",
@@ -145,7 +145,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main>\n  <dads-heading level=\"1\">お知らせ</dads-heading>\n  <section>\n    <dads-card>\n      <h2>カード1</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n    <dads-card>\n      <h2>カード2</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n  </section>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">お知らせ</dads-heading>\n  <section>\n    <dads-card>\n      <h2>カード1</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n    <dads-card>\n      <h2>カード2</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n  </section>\n</main>"
     },
     "search-form": {
       "id": "search-form",
@@ -167,7 +167,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main>\n  <dads-heading level=\"1\">検索</dads-heading>\n  <form id=\"search-form\">\n    <dads-search-box aria-label=\"検索\"></dads-search-box>\n  </form>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">検索</dads-heading>\n  <form id=\"search-form\">\n    <dads-search-box aria-label=\"検索\"></dads-search-box>\n  </form>\n</main>"
     },
     "search-results": {
       "id": "search-results",
@@ -192,7 +192,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main>\n  <dads-heading level=\"1\">検索</dads-heading>\n  <form id=\"search-form\">\n    <dads-search-box aria-label=\"検索\"></dads-search-box>\n  </form>\n  <h2>結果</h2>\n  <ul>\n    <li><dads-card>ダミー結果 1</dads-card></li>\n    <li><dads-card>ダミー結果 2</dads-card></li>\n    <li><dads-card>ダミー結果 3</dads-card></li>\n  </ul>\n  <dads-page-navigation current=\"1\" total=\"1\"></dads-page-navigation>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">検索</dads-heading>\n  <form id=\"search-form\">\n    <dads-search-box aria-label=\"検索\"></dads-search-box>\n  </form>\n  <h2>結果</h2>\n  <ul>\n    <li><dads-card>ダミー結果 1</dads-card></li>\n    <li><dads-card>ダミー結果 2</dads-card></li>\n    <li><dads-card>ダミー結果 3</dads-card></li>\n  </ul>\n  <dads-page-navigation current=\"1\" total=\"1\"></dads-page-navigation>\n</main>"
     },
     "table-with-pagination": {
       "id": "table-with-pagination",
@@ -214,7 +214,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main>\n  <dads-heading level=\"1\">一覧</dads-heading>\n  <dads-table>\n    <table>\n      <thead>\n        <tr><th>項目</th><th>値</th></tr>\n      </thead>\n      <tbody>\n        <tr><td>サンプル</td><td>1</td></tr>\n      </tbody>\n    </table>\n  </dads-table>\n  <dads-page-navigation current=\"1\" total=\"3\"></dads-page-navigation>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">一覧</dads-heading>\n  <dads-table>\n    <table>\n      <thead>\n        <tr><th>項目</th><th>値</th></tr>\n      </thead>\n      <tbody>\n        <tr><td>サンプル</td><td>1</td></tr>\n      </tbody>\n    </table>\n  </dads-table>\n  <dads-page-navigation current=\"1\" total=\"3\"></dads-page-navigation>\n</main>"
     }
   }
 }

@@ -14139,6 +14139,14 @@
               "name": "--dads-heading-icon-vertical-align"
             },
             {
+              "description": "上マージンのベース値",
+              "name": "--dads-heading-margin-block-start-base"
+            },
+            {
+              "description": "上マージンの倍率（例: compact連動）",
+              "name": "--dads-heading-margin-scale"
+            },
+            {
               "description": "上マージン",
               "name": "--dads-heading-margin-block-start"
             },
@@ -37241,6 +37249,77 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/styles/content-typeset.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "CONTENT_TYPESET_LAYER_ORDER",
+          "type": {
+            "text": "string"
+          },
+          "default": "'reset, tokens, base, layout, components, contents, page'",
+          "description": "Content Typeset Styles (Light DOM)\n\n- Scope with `[data-dads-typeset]`.\n- Density switch with `[data-dads-density=\"compact\"]`.\n- Keep heading large spacing policy in `dads-heading[margin=\"top\"]`."
+        },
+        {
+          "kind": "variable",
+          "name": "contentTypesetStylesText",
+          "default": "`@layer ${CONTENT_TYPESET_LAYER_ORDER}; @layer contents { [data-dads-typeset] { --dads-typeset-gap-normal: 1lh; --dads-typeset-gap-compact: 1em; --dads-typeset-gap-current: var(--dads-typeset-gap-normal); --dads-typeset-heading-margin-top-normal: 1lh; --dads-typeset-heading-margin-top-compact: 1em; --dads-typeset-heading-margin-top-current: var(--dads-typeset-heading-margin-top-normal); --dads-typeset-heading-before-extra-normal: 0.5lh; --dads-typeset-heading-before-extra-compact: calc(var(--dads-typeset-heading-before-extra-normal) * 0.85); --dads-typeset-heading-before-extra-current: var(--dads-typeset-heading-before-extra-normal); --dads-heading-margin-block-start-base: var(--dads-typeset-heading-margin-top-current); --dads-heading-margin-scale: 1; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--dads-typeset-gap-current); } [data-dads-density='compact'][data-dads-typeset], [data-dads-density='compact'] [data-dads-typeset] { --dads-typeset-gap-current: var(--dads-typeset-gap-compact); --dads-typeset-heading-margin-top-current: var(--dads-typeset-heading-margin-top-compact); --dads-typeset-heading-before-extra-current: var(--dads-typeset-heading-before-extra-compact); } [data-dads-typeset] > :where(*) { margin-block: 0; } [data-dads-typeset] > :is(h1, h2, h3, h4, h5, h6):not(:first-child) { margin-block-start: calc( var(--dads-typeset-gap-current) + var(--dads-typeset-heading-before-extra-current) ); } } `"
+        },
+        {
+          "kind": "function",
+          "name": "createContentTypesetStyles"
+        },
+        {
+          "kind": "function",
+          "name": "installContentTypesetStyle",
+          "parameters": [
+            {
+              "name": "doc",
+              "default": "document",
+              "type": {
+                "text": "Document"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CONTENT_TYPESET_LAYER_ORDER",
+          "declaration": {
+            "name": "CONTENT_TYPESET_LAYER_ORDER",
+            "module": "packages/styles/content-typeset.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "contentTypesetStylesText",
+          "declaration": {
+            "name": "contentTypesetStylesText",
+            "module": "packages/styles/content-typeset.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "createContentTypesetStyles",
+          "declaration": {
+            "name": "createContentTypesetStyles",
+            "module": "packages/styles/content-typeset.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "installContentTypesetStyle",
+          "declaration": {
+            "name": "installContentTypesetStyle",
+            "module": "packages/styles/content-typeset.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/styles/design-tokens/accordion-tokens.ts",
       "declarations": [
         {
@@ -37710,6 +37789,30 @@
         },
         {
           "kind": "js",
+          "name": "CONTENT_TYPESET_LAYER_ORDER",
+          "declaration": {
+            "name": "CONTENT_TYPESET_LAYER_ORDER",
+            "module": "./content-typeset.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "contentTypesetStylesText",
+          "declaration": {
+            "name": "contentTypesetStylesText",
+            "module": "./content-typeset.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "createContentTypesetStyles",
+          "declaration": {
+            "name": "createContentTypesetStyles",
+            "module": "./content-typeset.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "createIconSVG",
           "declaration": {
             "name": "createIconSVG",
@@ -37730,6 +37833,14 @@
           "declaration": {
             "name": "generateCSSVariables",
             "module": "./design-tokens/accordion-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "installContentTypesetStyle",
+          "declaration": {
+            "name": "installContentTypesetStyle",
+            "module": "./content-typeset.js"
           }
         },
         {

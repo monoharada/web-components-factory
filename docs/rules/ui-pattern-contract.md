@@ -38,6 +38,7 @@
   - `description`: 任意
   - `requires`: 直接必要な `componentId[]`（deps は install-registry から closure で解決される）
   - `html`: **canonical tag（`dads-*`）**で書かれた HTML snippet（必須）
+    - ルート要素には原則 `data-dads-typeset` を付与する
 
 ## 制約（AI/移植性のため）
 
@@ -46,6 +47,7 @@
 - `html` に **危険なURL**（`javascript:`）や `srcdoc=` を含めない
 - カスタム要素は **`dads-*` のみ**を使う（prefixed `<myui-*>` は書かない）
   - prefix 変換は MCP 側が行う（`prefix` 引数）
+- `dads-heading` の大きい上余白は `margin="top"` を優先し、組版CSS側はフォールバックにとどめる
 
 ## チェック（CIで強制）
 

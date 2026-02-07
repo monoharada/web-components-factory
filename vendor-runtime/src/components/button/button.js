@@ -9,7 +9,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _DadsButton_instances, _DadsButton_handleHostClick, _DadsButton_isLink, _DadsButton_renderTemplate, _DadsButton_createTemplate, _DadsButton_initButton, _DadsButton_handleClick, _DadsButton_handleFormAction, _DadsButton_emitClickEvent;
-import { html, BooleanAttr, PropertyAttr } from '../../core/web-components.js';
+import { html, BooleanAttr, PropertyAttr, DelegatingPropertyAttr } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { buttonTokens } from '../../styles/design-tokens/button-tokens.js';
@@ -39,6 +39,8 @@ import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
  * @attr {string} type - ボタンタイプ (button | submit | reset)
  * @attr {boolean} full-width - 幅100%表示
  * @attr {string} aria-label - アクセシビリティラベル
+ * @attr {string} command - command-store / commandfor 用（任意、動作は外部に委ねる）
+ * @attr {string} commandfor - command-store / commandfor 用（任意、動作は外部に委ねる）
  *
  * @fires click - クリック時に発火（detail: {variant, size}）
  *
@@ -112,6 +114,7 @@ export class DadsButton extends TypographyFormComponent {
         }
         // ボタン要素の初期化
         __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_initButton).call(this);
+        this.transferDelegatedAttributes();
         // ホスト要素へのクリックリスナー追加
         // Shadow DOM内のbutton要素に加えて、ホスト要素自体のクリックも処理
         // これにより遅延ロード時のクリックも確実に処理される
@@ -126,6 +129,7 @@ export class DadsButton extends TypographyFormComponent {
         if (name === 'as' || name === 'href') {
             __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_renderTemplate).call(this);
             __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_initButton).call(this);
+            this.transferDelegatedAttributes();
             return;
         }
         const base = this.shadowRoot?.querySelector('[part="base"]');
@@ -289,6 +293,8 @@ DadsButton.definition = {
         PropertyAttr('type'),
         BooleanAttr('full-width'),
         PropertyAttr('aria-label'),
+        DelegatingPropertyAttr('[part="base"]', 'command'),
+        DelegatingPropertyAttr('[part="base"]', 'commandfor'),
         PropertyAttr('as'),
         PropertyAttr('href'),
         PropertyAttr('target'),

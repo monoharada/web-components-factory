@@ -11,6 +11,14 @@ export { applyDADSTokens, componentTokens } from './design-tokens/index.js';
 // Spacing tokens (scale + derived)
 export { applySpacingTokens } from './spacing-tokens.js';
 
+// Content typeset styles (Light DOM)
+export {
+  CONTENT_TYPESET_LAYER_ORDER,
+  contentTypesetStylesText,
+  createContentTypesetStyles,
+  installContentTypesetStyle,
+} from './content-typeset.js';
+
 // ボタンコンポーネント用トークン
 export {
   buttonTokens,
