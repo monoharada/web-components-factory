@@ -71,7 +71,7 @@ const PATTERNS = {
     stability: 'stable',
     contractVersion: '1.0',
     entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main>
+    sampleHtml: `<main data-dads-typeset>
   <dads-heading level="1">検索</dads-heading>
   <form id="search-form">
     <dads-search-box aria-label="検索"></dads-search-box>
@@ -86,7 +86,7 @@ const PATTERNS = {
     stability: 'stable',
     contractVersion: '1.0',
     entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main>
+    sampleHtml: `<main data-dads-typeset>
   <dads-heading level="1">検索</dads-heading>
   <form id="search-form">
     <dads-search-box aria-label="検索"></dads-search-box>
@@ -108,7 +108,7 @@ const PATTERNS = {
     stability: 'stable',
     contractVersion: '1.0',
     entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main>
+    sampleHtml: `<main data-dads-typeset>
   <dads-heading level="1">一覧</dads-heading>
   <dads-table>
     <table>
@@ -131,7 +131,7 @@ const PATTERNS = {
     stability: 'stable',
     contractVersion: '1.0',
     entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main>
+    sampleHtml: `<main data-dads-typeset>
   <dads-heading level="1">お知らせ</dads-heading>
   <section>
     <dads-card>
@@ -153,7 +153,7 @@ const PATTERNS = {
     stability: 'experimental',
     contractVersion: '1.0',
     entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main>
+    sampleHtml: `<main data-dads-typeset>
   <dads-heading level="1">申請フォーム</dads-heading>
   <form id="application-form-single">
     <dads-fieldset>
@@ -174,7 +174,7 @@ const PATTERNS = {
     stability: 'experimental',
     contractVersion: '1.0',
     entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main>
+    sampleHtml: `<main data-dads-typeset>
   <dads-heading level="1">申請フォーム（ステップ）</dads-heading>
   <dads-step-navigation current="1" total="3"></dads-step-navigation>
   <form id="application-form-step">

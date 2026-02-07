@@ -43,7 +43,7 @@ node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myu
 ## サンプルHTML（canonical `dads-*`）
 
 ```html
-<main>
+<main data-dads-typeset>
   <dads-heading level="1">検索</dads-heading>
   <form id="search-form">
     <dads-search-box aria-label="検索"></dads-search-box>

@@ -41,7 +41,7 @@ node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myu
 ## サンプルHTML（canonical `dads-*`）
 
 ```html
-<main>
+<main data-dads-typeset>
   <dads-heading level="1">お知らせ</dads-heading>
   <section>
     <dads-card>

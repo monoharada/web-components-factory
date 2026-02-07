@@ -20,6 +20,7 @@ Codex の Skills は `~/.codex/skills` を参照するため、初回のみ以�
 - CSS/トークン設計/セレクタ設計の変更は `css-writing-rules` を最優先で適用する
 - コンポーネントAPI設計（part/override/3層トークン等）は `headless-component-design` を適用する
 - `.claude/skills` の内容を勝手にコピーして別ファイルに二重管理しない（必要なら `.claude/skills` を更新する）
+- 組版（コンテンツ内余白）は `docs/rules/content-typeset-rules.md` を基準にし、テンプレートは原則 `data-dads-typeset` を付与する
 
 ## 開発サーバー（デフォルト）
 
