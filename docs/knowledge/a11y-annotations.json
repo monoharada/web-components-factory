@@ -728,6 +728,68 @@
       }
     ]
   },
+  "dads-chip-tag": {
+    "version": 1,
+    "summary": "チップタグ（情報の表示・削除）",
+    "categories": {
+      "semantics": [
+        "アイテム化した情報を表示し、任意で削除できるコンポーネントです。"
+      ],
+      "keyboard": [
+        "action=\"none\" の場合、チップ本体がフォーカス可能になり Enter/Space でクリックできます。",
+        "action=\"remove\" の場合、末尾アクションボタンがフォーカス可能です。"
+      ],
+      "states": [
+        "hover/active でテキスト色が変化します。",
+        "action属性で末尾アクションの表示を切り替えます。"
+      ],
+      "labels": [
+        "末尾アクションには remove-label で aria-label を指定できます。",
+        "テキストが無い場合は aria-label 等で代替テキストの提供を検討してください。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "lead-icon",
+        "title": "リードアイコン",
+        "label": "リードアイコン",
+        "description": "先頭に配置されるアイコンです（装飾目的のSVGは aria-hidden=\"true\" を推奨）。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "light",
+          "selector": "[slot=\"start-icon\"]"
+        }
+      },
+      {
+        "id": "label",
+        "title": "ラベル",
+        "label": "ラベル",
+        "description": "チップタグの表示テキストです。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "action",
+        "title": "削除ボタン",
+        "label": "削除ボタン",
+        "description": "削除や取り外しのためのアクションボタンです。",
+        "category": "keyboard",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"action\"]"
+        }
+      }
+    ]
+  },
   "dads-date-picker": {
     "version": 1,
     "summary": "日付ピッカー／カレンダーコンポーネント仕様（アクセシビリティ注釈）",
@@ -1195,6 +1257,88 @@
         }
       }
     ]
+  },
+  "dads-list": {
+    "version": 1,
+    "summary": "箇条書きリスト仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "箇条書きの構造はリストとして表現します（role=\"list\" / role=\"listitem\"）。",
+        "項番タイプ（variant=\"number\"）では、項番を slot=\"marker\" に地のテキストとして記載します（<ol> や CSS カウンターで自動採番しません）。",
+        "入れ子のリストは、dads-list を正しくネストしてマークアップします。"
+      ],
+      "keyboard": [
+        "リスト自体はインタラクティブではありません。本文内のリンク等は通常どおりTabでフォーカス可能です。"
+      ],
+      "zoom": [
+        "インデントや間隔は相対単位（rem）ベースのトークンを利用し、ズーム時も読みやすさを維持します。"
+      ],
+      "states": [
+        "variant/spacing/marker-width 属性で表示を制御します。",
+        "ネスト深さ（data-depth）に応じてインデントとマーカー種別を切り替えます（深さはクランプされます）。"
+      ],
+      "labels": [
+        "テキストの中黒（・）等で箇条書きを再現する表現は避け、リスト構造を用います。",
+        "項番自体をリンクにする場合は、slot=\"marker\" 内にリンク要素を配置できます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "base",
+        "title": "リストコンテナ",
+        "label": "role=\"list\"",
+        "description": "リストのコンテナ。ネスト深さに応じてインデントとマーカーを切り替えます。",
+        "targetHint": "box",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "item-marker",
+        "title": "マーカー列",
+        "label": "marker",
+        "description": "markerタイプではマーカー記号を表示し、numberタイプでは slot=\"marker\" を表示します。",
+        "category": "states",
+        "placement": "top-left",
+        "target": {
+          "hostSelector": "dads-list-item",
+          "scope": "shadow",
+          "selector": "[part=\"marker-glyph\"]"
+        }
+      }
+    ]
+  },
+  "dads-list-item": {
+    "version": 1,
+    "summary": "箇条書きリストアイテム仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "リストアイテムは role=\"listitem\" として扱われます。",
+        "項番タイプでは slot=\"marker\" に項番を地のテキストとして記載します。"
+      ],
+      "keyboard": [
+        "本文内のリンク等は通常どおりTabでフォーカス可能です。"
+      ],
+      "zoom": [
+        "本文は折り返しを前提とし、ズーム時も情報が欠けないようにします。"
+      ],
+      "states": [
+        "表示モード（marker/number）は親（dads-list）からの CSS 変数継承で切り替えます。"
+      ],
+      "labels": [
+        "必要に応じて本文側で説明的なリンクテキストや見出しを用意します。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": []
   },
   "dads-menu-list": {
     "version": 1,

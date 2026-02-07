@@ -6,9 +6,9 @@
 
 import {
   html,
-  css,
   BooleanAttr,
-  PropertyAttr
+  PropertyAttr,
+  DelegatingPropertyAttr
 } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -40,6 +40,8 @@ import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
  * @attr {string} type - ボタンタイプ (button | submit | reset)
  * @attr {boolean} full-width - 幅100%表示
  * @attr {string} aria-label - アクセシビリティラベル
+ * @attr {string} command - command-store / commandfor 用（任意、動作は外部に委ねる）
+ * @attr {string} commandfor - command-store / commandfor 用（任意、動作は外部に委ねる）
  * 
  * @fires click - クリック時に発火（detail: {variant, size}）
  * 
@@ -85,6 +87,8 @@ export class DadsButton extends TypographyFormComponent {
       PropertyAttr('type'),
       BooleanAttr('full-width'),
       PropertyAttr('aria-label'),
+      DelegatingPropertyAttr('[part="base"]', 'command'),
+      DelegatingPropertyAttr('[part="base"]', 'commandfor'),
       PropertyAttr('as'),
       PropertyAttr('href'),
       PropertyAttr('target'),
@@ -107,6 +111,7 @@ export class DadsButton extends TypographyFormComponent {
 
     // ボタン要素の初期化
     this.#initButton();
+    this.transferDelegatedAttributes();
 
     // ホスト要素へのクリックリスナー追加
     // Shadow DOM内のbutton要素に加えて、ホスト要素自体のクリックも処理
@@ -226,6 +231,7 @@ export class DadsButton extends TypographyFormComponent {
     if (name === 'as' || name === 'href') {
       this.#renderTemplate();
       this.#initButton();
+      this.transferDelegatedAttributes();
       return;
     }
     

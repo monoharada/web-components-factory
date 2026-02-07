@@ -14,12 +14,14 @@ npm run codex:install-skills
 
 - `<repo>/.claude/skills/css-writing-rules` を `~/.codex/skills/css-writing-rules` にコピー
 - `<repo>/.claude/skills/headless-component-design` を `~/.codex/skills/headless-component-design` にコピー
+- `<repo>/.claude/skills/wcf-ui-builder` を `~/.codex/skills/wcf-ui-builder` にコピー
 
 ## 確認方法
 
 ```bash
 ls -la ~/.codex/skills/css-writing-rules
 ls -la ~/.codex/skills/headless-component-design
+ls -la ~/.codex/skills/wcf-ui-builder
 ```
 
 ## うまくいかないとき
@@ -34,4 +36,5 @@ ls -la ~/.codex/skills/headless-component-design
 ```bash
 rm ~/.codex/skills/css-writing-rules
 rm ~/.codex/skills/headless-component-design
+rm ~/.codex/skills/wcf-ui-builder
 ```

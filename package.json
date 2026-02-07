@@ -6,6 +6,13 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "customElements": "custom-elements.json",
+  "bin": {
+    "wcf": "bin/wcf.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/monoharada/web-components-factory.git"
+  },
   "scripts": {
     "dev": "bun --watch serve.ts",
     "dev:vite": "vite",
@@ -25,6 +32,8 @@
     "test:run": "vitest run",
     "test:run:json": "mkdir -p test-results && vitest run --reporter=json --outputFile=test-results/vitest.json",
     "test:e2e": "node scripts/run-playwright.cjs",
+    "test:e2e:list-fidelity": "node scripts/run-playwright.cjs e2e-evidence/list.fidelity.vrt.spec.ts",
+    "test:e2e:list-fidelity:update": "node scripts/run-playwright.cjs e2e-evidence/list.fidelity.vrt.spec.ts --update-snapshots",
     "test:e2e:menu-list-box": "node scripts/run-playwright.cjs e2e-evidence/menu-list-box.fidelity.spec.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint src/**/*.ts",
@@ -48,6 +57,11 @@
     "dads:figma:add": "node scripts/dads/figma-add.cjs",
     "dads:figma:expand": "node scripts/dads/figma-expand.cjs",
     "size:esm": "node scripts/size/measure-esm.mjs --entry packages/components/date-picker/date-picker.ts --entry packages/components/calendar/calendar.ts"
+    ,
+    "contracts:check": "node scripts/contracts/check-autoload.mjs && node scripts/contracts/check-install-metadata.mjs",
+    "registry:generate": "node scripts/registry/generate-install-registry.mjs",
+    "registry:check": "node scripts/registry/generate-install-registry.mjs --check",
+    "patterns:check": "node scripts/patterns/check-pattern-registry.mjs"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.11.0",
@@ -71,12 +85,12 @@
     "happy-dom": "^20.5.0",
     "lit": "^3.1.1",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.4",
     "vite": "^6.4.1",
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "@digital-go-jp/design-tokens": "^1.1.1"
+    "@digital-go-jp/design-tokens": "^1.1.1",
+    "typescript": "^5.5.4"
   },
   "keywords": [
     "web-components",

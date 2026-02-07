@@ -2,16 +2,25 @@
  * Selectコンポーネント登録
  */
 import { DadsSelect } from './select.js';
-
-let defined = false;
+import { WebComponentDefinition } from '../../core/web-components.js';
+import { getConfig, getPrefix } from '../../config.js';
 
 /**
  * DadsSelectコンポーネントをカスタム要素として登録する
  */
-export function defineSelect(): void {
-  if (defined) return;
-  DadsSelect.define();
-  defined = true;
+export function defineSelect(prefix?: string, registry?: CustomElementRegistry): void {
+  const effectivePrefix = prefix ?? getPrefix();
+  const effectiveRegistry = registry ?? getConfig().registry;
+
+  const name = `${effectivePrefix}-select`;
+  if (effectiveRegistry.get(name)) return;
+
+  const def = { ...DadsSelect.definition, name, registry: effectiveRegistry };
+  WebComponentDefinition.compose(DadsSelect, def).define(effectiveRegistry);
+}
+
+export function defineDefaultSelect(): void {
+  defineSelect();
 }
 
 /**
@@ -19,7 +28,6 @@ export function defineSelect(): void {
  */
 export function autoDefineSelect(): void {
   if (typeof customElements !== 'undefined') {
-    defineSelect();
+    defineDefaultSelect();
   }
 }
-

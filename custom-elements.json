@@ -260,6 +260,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -378,6 +391,20 @@
                     "selector": "[part=\"return-button\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "accordion",
+            "install": {
+              "id": "accordion",
+              "define": "defineAccordion",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/accordion"
+              },
+              "tags": [
+                "dads-accordion-details",
+                "dads-accordion-item-details"
               ]
             }
           }
@@ -701,6 +728,19 @@
             {
               "kind": "method",
               "name": "toggle"
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "events": [
@@ -828,6 +868,20 @@
                   }
                 }
               ]
+            },
+            "componentId": "accordion",
+            "install": {
+              "id": "accordion",
+              "define": "defineAccordion",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/accordion"
+              },
+              "tags": [
+                "dads-accordion-details",
+                "dads-accordion-item-details"
+              ]
             }
           }
         }
@@ -915,6 +969,19 @@
             }
           ],
           "members": [
+            {
+              "kind": "method",
+              "name": "#applyCalloutBoxHints",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "callouts",
+                  "type": {
+                    "text": "CalloutRender[]"
+                  }
+                }
+              ]
+            },
             {
               "kind": "field",
               "name": "#calloutLayer",
@@ -1441,7 +1508,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000); --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: var(--color-text-secondary, #475569); /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color); /* シャドウ */ --a11y-annotate-shadow: var( --component-shadow, var( --elevation-2, 0 2px 12px 2px rgba(0, 0, 0, 0.1), 0 1px 6px 0 rgba(0, 0, 0, 0.3) ) ); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; --a11y-annotate-callout-gutter: var(--spacing-16, 64px); } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; /* Expand all sides so callout tags can be placed outside the preview frame (including the right side). */ inset: calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: var(--border-radius-8, 0.5rem); background: transparent; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: var(--border-radius-8, 0.5rem); background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; flex: 1 1 auto; min-width: 0; font-weight: inherit; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { box-sizing: border-box; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; border: 2px solid var(--a11y-annotate-callout-color); background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: var(--border-radius-8, 0.5rem); border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
+              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000); --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid); --a11y-annotate-callout-line-inset: var(--spacing-0-5, 2px); --a11y-annotate-callout-line-inset-ratio: 0.35; --a11y-annotate-callout-anchor-corner-margin: var(--spacing-2-5, 10px); /* callout-layer の拡張量（= レーンの外側距離）。大きすぎると視認性が落ちるため clamp で抑える。 */ --a11y-annotate-callout-gutter: clamp(var(--spacing-12, 3rem), 8vw, var(--spacing-24, 6rem)); /* レーン（ラベル位置）のターゲット範囲からの距離 */ --a11y-annotate-callout-lane-offset: var(--spacing-14, 56px); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: var(--color-text-secondary, #475569); /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color); /* シャドウ */ --a11y-annotate-shadow: var( --component-shadow, var( --elevation-2, 0 2px 12px 2px rgba(0, 0, 0, 0.1), 0 1px 6px 0 rgba(0, 0, 0, 0.3) ) ); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; /* Expand all sides so callout tags can be placed outside the preview frame (including the right side). */ inset: calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: var(--border-radius-8, 0.5rem); background: transparent; } a11y-annotate .callout-box[hidden] { display: none; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: var(--border-radius-8, 0.5rem); background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; flex: 1 1 auto; min-width: 0; font-weight: inherit; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { box-sizing: border-box; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; border: 2px solid var(--a11y-annotate-callout-color); background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: var(--border-radius-8, 0.5rem); border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -1497,6 +1564,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -2036,6 +2116,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -2134,6 +2227,19 @@
                     "selector": "[part=\"close\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "blockquote",
+            "install": {
+              "id": "blockquote",
+              "define": "defineBlockquote",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/blockquote"
+              },
+              "tags": [
+                "dads-blockquote"
               ]
             }
           }
@@ -2459,15 +2565,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }"
+              "default": "{ name: 'dads-button', template: html` <button part=\"base\" type=\"button\" > <span part=\"icon-start\"> <slot name=\"icon-start\"></slot> </span> <span part=\"label\"> <slot></slot> </span> <span part=\"icon-end\"> <slot name=\"icon-end\"></slot> </span> </button> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), buttonTokens, buttonStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('size'), BooleanAttr('disabled'), PropertyAttr('type'), BooleanAttr('full-width'), PropertyAttr('aria-label'), DelegatingPropertyAttr('[part=\"base\"]', 'command'), DelegatingPropertyAttr('[part=\"base\"]', 'commandfor'), PropertyAttr('as'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download') ] }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -2589,6 +2695,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -2641,6 +2760,20 @@
               },
               "description": "アクセシビリティラベル",
               "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "command-store / commandfor 用（任意、動作は外部に委ねる）",
+              "name": "command"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "command-store / commandfor 用（任意、動作は外部に委ねる）",
+              "name": "commandfor"
             },
             {
               "type": {
@@ -2769,6 +2902,19 @@
                     "selector": "[part=\"icon-end\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "button",
+            "install": {
+              "id": "button",
+              "define": "defineButton",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/button"
+              },
+              "tags": [
+                "dads-button"
               ]
             }
           }
@@ -3719,6 +3865,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -3947,6 +4106,19 @@
                     "selector": "#range-live"
                   }
                 }
+              ]
+            },
+            "componentId": "calendar",
+            "install": {
+              "id": "calendar",
+              "define": "defineCalendar",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/calendar"
+              },
+              "tags": [
+                "dads-calendar"
               ]
             }
           }
@@ -4512,6 +4684,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -4608,6 +4793,19 @@
                     "selector": "[part=\"sub\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "card",
+            "install": {
+              "id": "card",
+              "define": "defineCard",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/card"
+              },
+              "tags": [
+                "dads-card"
               ]
             }
           }
@@ -5121,15 +5319,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-checkbox', template: html` <label part=\"base\" id=\"base\" class=\"dads-checkbox\"> <span part=\"checkbox\" id=\"checkbox\" class=\"dads-checkbox__checkbox\"> <input part=\"input\" id=\"input\" class=\"dads-checkbox__input\" type=\"checkbox\" /> </span> <span part=\"label\" id=\"label\" class=\"dads-checkbox__label\"></span> <span part=\"requirement\" id=\"requirement\"></span> </label> <!-- エラーメッセージ表示 --> <span part=\"error-text\" id=\"error-text\"></span> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> `, styles: withReset([applyDADSTokens(), checkboxStyles], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('size'), BooleanAttr('disabled'), BooleanAttr('required'), BooleanAttr('auto-validate'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('name'), // checked/indeterminate/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない { attribute: 'checked' }, { attribute: 'indeterminate' }, { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, ], }"
+              "default": "{ name: 'dads-checkbox', template: html` <label part=\"base\" id=\"base\" class=\"dads-checkbox\"> <span part=\"checkbox\" id=\"checkbox\" class=\"dads-checkbox__checkbox\"> <input part=\"input\" id=\"input\" class=\"dads-checkbox__input\" type=\"checkbox\" /> </span> <span part=\"label\" id=\"label\" class=\"dads-checkbox__label\"></span> <span part=\"requirement\" id=\"requirement\"></span> </label> <!-- エラーメッセージ表示 --> <span part=\"error-text\" id=\"error-text\"></span> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> `, styles: withReset([applyDADSTokens(), checkboxStyles], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('size'), BooleanAttr('disabled'), BooleanAttr('required'), BooleanAttr('auto-validate'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('name'), // checked/indeterminate/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない { attribute: 'checked' }, { attribute: 'indeterminate' }, { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -5321,6 +5519,19 @@
                 }
               },
               "description": "※必須表示の再同期\nfieldsetから呼び出される（スロット変更時やrequired属性変更時）"
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -5577,6 +5788,19 @@
                     "selector": "[part=\"error-text\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "checkbox",
+            "install": {
+              "id": "checkbox",
+              "define": "defineCheckbox",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/checkbox"
+              },
+              "tags": [
+                "dads-checkbox"
               ]
             }
           }
@@ -5871,6 +6095,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -5966,6 +6203,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "chip-label",
+            "install": {
+              "id": "chip-label",
+              "define": "defineChipLabel",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/chip-label"
+              },
+              "tags": [
+                "dads-chip-label"
+              ]
             }
           }
         }
@@ -5994,6 +6244,646 @@
           "declaration": {
             "name": "DadsChipLabel",
             "module": "./packages/components/chip-label/chip-label.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/chip-tag/chip-tag.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "チップタグコンポーネント",
+          "name": "DadsChipTag",
+          "cssProperties": [
+            {
+              "description": "背景色",
+              "name": "--dads-chip-tag-background"
+            },
+            {
+              "description": "枠線色",
+              "name": "--dads-chip-tag-border-color"
+            },
+            {
+              "description": "枠線の太さ",
+              "name": "--dads-chip-tag-border-width"
+            },
+            {
+              "description": "外周の補助線",
+              "name": "--dads-chip-tag-border-shadow"
+            },
+            {
+              "description": "hover時の外周補助線",
+              "name": "--dads-chip-tag-border-shadow-hover"
+            },
+            {
+              "description": "テキスト色",
+              "name": "--dads-chip-tag-text-color"
+            },
+            {
+              "description": "hover時のテキスト色",
+              "name": "--dads-chip-tag-text-color-hover"
+            },
+            {
+              "description": "active時のテキスト色",
+              "name": "--dads-chip-tag-text-color-active"
+            },
+            {
+              "description": "角丸",
+              "name": "--dads-chip-tag-border-radius"
+            },
+            {
+              "description": "最小高さ",
+              "name": "--dads-chip-tag-min-height"
+            },
+            {
+              "description": "上下パディング",
+              "name": "--dads-chip-tag-padding-block"
+            },
+            {
+              "description": "左右パディング",
+              "name": "--dads-chip-tag-padding-inline"
+            },
+            {
+              "description": "ラベルの左右パディング",
+              "name": "--dads-chip-tag-label-padding-inline"
+            },
+            {
+              "description": "ラベルの下パディング",
+              "name": "--dads-chip-tag-label-padding-bottom"
+            },
+            {
+              "description": "ラベルの装飾線",
+              "name": "--dads-chip-tag-label-text-decoration"
+            },
+            {
+              "description": "ラベル下線の太さ",
+              "name": "--dads-chip-tag-label-underline-thickness"
+            },
+            {
+              "description": "hover/active時のラベル下線の太さ",
+              "name": "--dads-chip-tag-label-underline-thickness-hover"
+            },
+            {
+              "description": "ラベル下線のオフセット",
+              "name": "--dads-chip-tag-label-underline-offset"
+            },
+            {
+              "description": "アイコンサイズ",
+              "name": "--dads-chip-tag-icon-size"
+            },
+            {
+              "description": "アクションのヒット領域（見た目は維持したまま拡張）",
+              "name": "--dads-chip-tag-action-hit-area"
+            },
+            {
+              "description": "アクション内アイコンサイズ",
+              "name": "--dads-chip-tag-action-icon-size"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "末尾アクションボタン",
+              "name": "action"
+            },
+            {
+              "description": "末尾アイコンコンテナ",
+              "name": "action-icon"
+            },
+            {
+              "description": "チップタグ本体",
+              "name": "base"
+            },
+            {
+              "description": "ラベルテキストコンテナ",
+              "name": "label"
+            },
+            {
+              "description": "先頭アイコンスロット",
+              "name": "start-icon"
+            },
+            {
+              "description": "value属性の表示テキスト",
+              "name": "value"
+            }
+          ],
+          "slots": [
+            {
+              "description": "ラベルテキスト",
+              "name": "default"
+            },
+            {
+              "description": "末尾アイコン（オプション / 削除アクション用）",
+              "name": "end-icon"
+            },
+            {
+              "description": "先頭アイコン（オプション）",
+              "name": "start-icon"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#action",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getLabelText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleActionClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleBaseClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleBaseKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDadsCommand",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#requestRemove",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncActionLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncActionState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValueLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#valueText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-chip-tag', template: html` <span part=\"base\"> <slot name=\"start-icon\" part=\"start-icon\"></slot> <span part=\"label\"> <span part=\"value\" data-value-text></span> <slot></slot> </span> <button part=\"action\" type=\"button\"> <span part=\"action-icon\"> <slot name=\"end-icon\"> <svg width=\"24\" height=\"24\" viewBox=\"0 0 19 19\" fill=\"currentcolor\" aria-hidden=\"true\"> <path d=\"M5.89998 14.1538L9.49998 10.5538L13.1 14.1538L14.1538 13.1L10.5538 9.49998L14.1538 5.89998L13.1 4.84615L9.49998 8.44615L5.89998 4.84615L4.84615 5.89998L8.44615 9.49998L4.84615 13.1L5.89998 14.1538Z\" /> </svg> </slot> </span> </button> </span> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), chipTagTokens, chipTagStyles, applyDADSFocusStyles(), ], 'minimal' ), attributes: [ PropertyAttr('action'), PropertyAttr('remove-label'), PropertyAttr('value'), PropertyAttr('size'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "action=\"none\"時、チップ本体押下で発火（detail: { label, value }) NOTE: Invoker API / commandfor は現時点では採用せず、CustomEvent で操作を公開します。",
+              "name": "dads-chip-tag-click"
+            },
+            {
+              "description": "末尾アクション押下時に発火（detail: { label, value, remove() })",
+              "name": "dads-chip-tag-remove"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'remove' | 'none'"
+              },
+              "description": "末尾アクションの表示制御",
+              "name": "action"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "末尾アクションのaria-label",
+              "name": "remove-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "サイズ (sm | md | lg)",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "任意の値（イベントdetailに含まれる）",
+              "name": "value"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-chip-tag",
+          "customElement": true,
+          "modulePath": "./packages/components/chip-tag/chip-tag.ts",
+          "definitionPath": "./packages/components/chip-tag/chip-tag.ts",
+          "typeDefinitionPath": "./packages/components/chip-tag/chip-tag.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "チップタグ（情報の表示・削除）",
+              "categories": {
+                "semantics": [
+                  "アイテム化した情報を表示し、任意で削除できるコンポーネントです。"
+                ],
+                "keyboard": [
+                  "action=\"none\" の場合、チップ本体がフォーカス可能になり Enter/Space でクリックできます。",
+                  "action=\"remove\" の場合、末尾アクションボタンがフォーカス可能です。"
+                ],
+                "states": [
+                  "hover/active でテキスト色が変化します。",
+                  "action属性で末尾アクションの表示を切り替えます。"
+                ],
+                "labels": [
+                  "末尾アクションには remove-label で aria-label を指定できます。",
+                  "テキストが無い場合は aria-label 等で代替テキストの提供を検討してください。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "lead-icon",
+                  "title": "リードアイコン",
+                  "label": "リードアイコン",
+                  "description": "先頭に配置されるアイコンです（装飾目的のSVGは aria-hidden=\"true\" を推奨）。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "light",
+                    "selector": "[slot=\"start-icon\"]"
+                  }
+                },
+                {
+                  "id": "label",
+                  "title": "ラベル",
+                  "label": "ラベル",
+                  "description": "チップタグの表示テキストです。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "action",
+                  "title": "削除ボタン",
+                  "label": "削除ボタン",
+                  "description": "削除や取り外しのためのアクションボタンです。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"action\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "chip-tag",
+            "install": {
+              "id": "chip-tag",
+              "define": "defineChipTag",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/chip-tag"
+              },
+              "tags": [
+                "dads-chip-tag"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsChipTag",
+          "declaration": {
+            "name": "DadsChipTag",
+            "module": "packages/components/chip-tag/chip-tag.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/chip-tag/chip-tag.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/chip-tag/chip-tag.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-chip-tag",
+          "declaration": {
+            "name": "DadsChipTag",
+            "module": "./packages/components/chip-tag/chip-tag.ts"
           }
         }
       ]
@@ -6341,6 +7231,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -6363,7 +7266,22 @@
           "typeDefinitionPath": "./packages/components/code-block/code-block.ts",
           "cssProperties": [],
           "cssStates": [],
-          "attributes": []
+          "attributes": [],
+          "custom": {
+            "componentId": "code-block",
+            "install": {
+              "id": "code-block",
+              "define": "defineCodeBlock",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/code-block"
+              },
+              "tags": [
+                "dads-code-block"
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -7219,15 +8137,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-date-picker', template: html` <div part=\"controls\" id=\"controls\"> <div part=\"inputs\" id=\"inputs\"> <label part=\"field year\" id=\"year-field\"> <span part=\"field-label\">年</span> <input part=\"field-input\" id=\"year-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-year-input /> </label> <label part=\"field month\" id=\"month-field\"> <span part=\"field-label\">月</span> <input part=\"field-input\" id=\"month-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-month-input /> </label> <label part=\"field day\" id=\"day-field\"> <span part=\"field-label\">日</span> <input part=\"field-input\" id=\"day-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-day-input /> </label> </div> <button part=\"calendar-button\" id=\"calendar-button\" type=\"button\" aria-haspopup=\"dialog\" aria-controls=\"calendar-popover\" aria-expanded=\"false\" > <svg part=\"calendar-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"カレンダー\"> <path d=\"M9 16.5C7.62 16.5 6.5 15.38 6.5 14C6.5 12.62 7.62 11.5 9 11.5C10.38 11.5 11.5 12.62 11.5 14C11.5 15.38 10.38 16.5 9 16.5ZM5 22C3.9 22 3 21.09 3 20V6C3 4.91 3.91 4 5 4H6V2H8V4H16V2H18V4H19C20.09 4 21 4.91 21 6V20C21 21.09 20.09 22 19 22H5ZM5 20H19V10H5V20Z\" fill=\"currentcolor\"/> </svg> <svg part=\"calendar-chevron\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17.1L3 8L4 7L12 15L20 7L21 8L12 17.1Z\" fill=\"currentcolor\" /> </svg> </button> <div part=\"calendar-popover\" id=\"calendar-popover\" role=\"dialog\" aria-label=\"カレンダー\" aria-modal=\"true\" style=\"display: none;\" > <div part=\"backdrop\" id=\"backdrop\"></div> <dads-calendar part=\"calendar\" id=\"calendar\"></dads-calendar> </div> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <div part=\"visually-hidden\" id=\"describedby-proxies\"></div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), datePickerStyles], 'minimal'), attributes: [ { attribute: 'data-type' }, PropertyAttr('size'), BooleanAttr('calendar'), BooleanAttr('disabled'), BooleanAttr('readonly'), BooleanAttr('error'), PropertyAttr('error-text'), { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'value' }, { attribute: 'aria-describedby' }, ], }"
+              "default": "{ name: 'dads-date-picker', template: html` <div part=\"controls\" id=\"controls\"> <div part=\"inputs\" id=\"inputs\"> <label part=\"field year\" id=\"year-field\"> <span part=\"field-label\">年</span> <input part=\"field-input\" id=\"year-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-year-input /> </label> <label part=\"field month\" id=\"month-field\"> <span part=\"field-label\">月</span> <input part=\"field-input\" id=\"month-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-month-input /> </label> <label part=\"field day\" id=\"day-field\"> <span part=\"field-label\">日</span> <input part=\"field-input\" id=\"day-input\" type=\"text\" inputmode=\"numeric\" pattern=\"[0-9]+\" data-js-day-input /> </label> </div> <button part=\"calendar-button\" id=\"calendar-button\" type=\"button\" aria-haspopup=\"dialog\" aria-controls=\"calendar-popover\" aria-expanded=\"false\" > <svg part=\"calendar-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"カレンダー\"> <path d=\"M9 16.5C7.62 16.5 6.5 15.38 6.5 14C6.5 12.62 7.62 11.5 9 11.5C10.38 11.5 11.5 12.62 11.5 14C11.5 15.38 10.38 16.5 9 16.5ZM5 22C3.9 22 3 21.09 3 20V6C3 4.91 3.91 4 5 4H6V2H8V4H16V2H18V4H19C20.09 4 21 4.91 21 6V20C21 21.09 20.09 22 19 22H5ZM5 20H19V10H5V20Z\" fill=\"currentcolor\"/> </svg> <svg part=\"calendar-chevron\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17.1L3 8L4 7L12 15L20 7L21 8L12 17.1Z\" fill=\"currentcolor\" /> </svg> </button> <div part=\"calendar-popover\" id=\"calendar-popover\" role=\"dialog\" aria-label=\"カレンダー\" aria-modal=\"true\" style=\"display: none;\" > <div part=\"backdrop\" id=\"backdrop\"></div> <dads-calendar part=\"calendar\" id=\"calendar\"></dads-calendar> </div> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <div part=\"visually-hidden\" id=\"describedby-proxies\"></div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), datePickerStyles], 'minimal'), attributes: [ { attribute: 'data-type' }, PropertyAttr('size'), BooleanAttr('calendar'), BooleanAttr('disabled'), BooleanAttr('readonly'), BooleanAttr('error'), PropertyAttr('error-text'), { attribute: 'min-date' }, { attribute: 'max-date' }, { attribute: 'value' }, { attribute: 'aria-describedby' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -7400,6 +8318,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -7681,6 +8612,21 @@
                     "selector": "[part=\"error-text\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "date-picker",
+            "install": {
+              "id": "date-picker",
+              "define": "defineDatePicker",
+              "call": "prefix-registry",
+              "deps": [
+                "calendar"
+              ],
+              "source": {
+                "componentDir": "packages/components/date-picker"
+              },
+              "tags": [
+                "dads-date-picker"
               ]
             }
           }
@@ -8109,6 +9055,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "events": [
@@ -8214,6 +9173,19 @@
                     "selector": "[part=\"back-link\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "disclosure",
+            "install": {
+              "id": "disclosure",
+              "define": "defineDisclosure",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/disclosure"
+              },
+              "tags": [
+                "dads-disclosure"
               ]
             }
           }
@@ -8665,15 +9637,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-fieldset', template: html` <fieldset part=\"fieldset\" id=\"fieldset\"> <legend part=\"legend\" id=\"legend\"> <slot name=\"legend\" id=\"legend-slot\"></slot> <span part=\"legend-fallback\" id=\"legend-fallback\"></span> <span part=\"requirement\" id=\"requirement\"></span> </legend> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span part=\"support-fallback\" id=\"support-fallback\"></span> </div> <div part=\"content\" id=\"content\"> <slot id=\"default-slot\"></slot> </div> </fieldset> `, styles: withReset([applyDADSTokens(), fieldsetStyles], 'minimal'), attributes: [ PropertyAttr('legend'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('disabled'), ], }"
+              "default": "{ name: 'dads-fieldset', template: html` <fieldset part=\"fieldset\" id=\"fieldset\"> <legend part=\"legend\" id=\"legend\"> <slot name=\"legend\" id=\"legend-slot\"></slot> <span part=\"legend-fallback\" id=\"legend-fallback\"></span> <span part=\"requirement\" id=\"requirement\"></span> </legend> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span part=\"support-fallback\" id=\"support-fallback\"></span> </div> <div part=\"content\" id=\"content\"> <slot id=\"default-slot\"></slot> </div> </fieldset> `, styles: withReset([applyDADSTokens(), fieldsetStyles], 'minimal'), attributes: [ PropertyAttr('legend'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('disabled'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -8791,6 +9763,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -8971,6 +9956,19 @@
                     "selector": "[part=\"error-text\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "fieldset",
+            "install": {
+              "id": "fieldset",
+              "define": "defineFieldset",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/fieldset"
+              },
+              "tags": [
+                "dads-fieldset"
               ]
             }
           }
@@ -9583,6 +10581,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -9713,6 +10724,19 @@
                     "selector": "[part=\"chip\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "heading",
+            "install": {
+              "id": "heading",
+              "define": "defineHeading",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/heading"
+              },
+              "tags": [
+                "dads-heading"
               ]
             }
           }
@@ -10247,15 +11271,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-input-text', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"input\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"input-wrapper\" id=\"input-wrapper\"> <input part=\"input\" id=\"input\" type=\"text\" /> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"type-mismatch-error\" id=\"type-mismatch-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), inputTextTokens, inputTextStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), PropertyAttr('type'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), PropertyAttr('name'), PropertyAttr('size'), PropertyAttr('input-width'), BooleanAttr('auto-validate'), PropertyAttr('autocomplete'), // value は observedAttributes に含めるが、PropertyAttr は使わない { attribute: 'value' }, ], }"
+              "default": "{ name: 'dads-input-text', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"input\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"input-wrapper\" id=\"input-wrapper\"> <input part=\"input\" id=\"input\" type=\"text\" /> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"type-mismatch-error\" id=\"type-mismatch-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), inputTextTokens, inputTextStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), PropertyAttr('type'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), PropertyAttr('name'), PropertyAttr('size'), PropertyAttr('input-width'), BooleanAttr('auto-validate'), PropertyAttr('autocomplete'), // value は observedAttributes に含めるが、PropertyAttr は使わない { attribute: 'value' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -10439,6 +11463,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -10699,6 +11736,19 @@
                   }
                 }
               ]
+            },
+            "componentId": "input-text",
+            "install": {
+              "id": "input-text",
+              "define": "defineInputText",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/input-text"
+              },
+              "tags": [
+                "dads-input-text"
+              ]
             }
           }
         }
@@ -10727,6 +11777,997 @@
           "declaration": {
             "name": "DadsInputText",
             "module": "./packages/components/input-text/input-text.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/list/list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "箇条書きリスト（コンテナ）コンポーネント",
+          "name": "DadsList",
+          "cssProperties": [
+            {
+              "description": "インデント（depthに応じて設定）",
+              "name": "--dads-list-indent"
+            },
+            {
+              "description": "アイテム間隔（spacingに応じて設定）",
+              "name": "--dads-list-item-gap"
+            },
+            {
+              "description": "マーカー列の幅（marker-widthで上書き可能）",
+              "name": "--dads-list-marker-width"
+            },
+            {
+              "description": "マーカー列と本文列の間隔",
+              "name": "--dads-list-marker-gap"
+            },
+            {
+              "description": "マーカー色",
+              "name": "--dads-list-marker-color"
+            },
+            {
+              "description": "マーカー記号のサイズ（markerタイプ向け）",
+              "name": "--dads-list-marker-size"
+            },
+            {
+              "description": "リストマーク（markerタイプ用、装飾用途）",
+              "name": "--dads-list-marker-content"
+            },
+            {
+              "description": "マーカー種別1（depth1）",
+              "name": "--dads-list-marker-content-1"
+            },
+            {
+              "description": "マーカー種別2（depth2-4）",
+              "name": "--dads-list-marker-content-2"
+            },
+            {
+              "description": "マーカー種別3（depth5+）",
+              "name": "--dads-list-marker-content-3"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "role=\"list\" のルート",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "リスト項目（dads-list-item）",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "#applyDefaultAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#rawDepth",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncClampedDepth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncMarkerWidth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncRawDepth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSpacing",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncVariant",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncVariantRenderingVars",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-list', template: html` <div part=\"base\" role=\"list\"> <slot></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), listTokens, listStyles, ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('spacing'), PropertyAttr('markerWidth', 'marker-width'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "markerWidth",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "markerWidthChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "spacing",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "spacingChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variantChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "項番タイプのマーカー幅（全角n文字相当、CSSでは n em）",
+              "name": "marker-width"
+            },
+            {
+              "type": {
+                "text": "'lg' | 'md' | 'sm'"
+              },
+              "description": "項目間隔（12/8/4）",
+              "name": "spacing"
+            },
+            {
+              "type": {
+                "text": "'marker' | 'number'"
+              },
+              "description": "表示タイプ（リストマーク / 項番）",
+              "name": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-list",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/list/list.ts",
+          "definitionPath": "./packages/components/list/list.ts",
+          "typeDefinitionPath": "./packages/components/list/list.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "箇条書きリスト仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "箇条書きの構造はリストとして表現します（role=\"list\" / role=\"listitem\"）。",
+                  "項番タイプ（variant=\"number\"）では、項番を slot=\"marker\" に地のテキストとして記載します（<ol> や CSS カウンターで自動採番しません）。",
+                  "入れ子のリストは、dads-list を正しくネストしてマークアップします。"
+                ],
+                "keyboard": [
+                  "リスト自体はインタラクティブではありません。本文内のリンク等は通常どおりTabでフォーカス可能です。"
+                ],
+                "zoom": [
+                  "インデントや間隔は相対単位（rem）ベースのトークンを利用し、ズーム時も読みやすさを維持します。"
+                ],
+                "states": [
+                  "variant/spacing/marker-width 属性で表示を制御します。",
+                  "ネスト深さ（data-depth）に応じてインデントとマーカー種別を切り替えます（深さはクランプされます）。"
+                ],
+                "labels": [
+                  "テキストの中黒（・）等で箇条書きを再現する表現は避け、リスト構造を用います。",
+                  "項番自体をリンクにする場合は、slot=\"marker\" 内にリンク要素を配置できます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "リストコンテナ",
+                  "label": "role=\"list\"",
+                  "description": "リストのコンテナ。ネスト深さに応じてインデントとマーカーを切り替えます。",
+                  "targetHint": "box",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "item-marker",
+                  "title": "マーカー列",
+                  "label": "marker",
+                  "description": "markerタイプではマーカー記号を表示し、numberタイプでは slot=\"marker\" を表示します。",
+                  "category": "states",
+                  "placement": "top-left",
+                  "target": {
+                    "hostSelector": "dads-list-item",
+                    "scope": "shadow",
+                    "selector": "[part=\"marker-glyph\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "list",
+            "install": {
+              "id": "list",
+              "define": "defineList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/list"
+              },
+              "tags": [
+                "dads-list",
+                "dads-list-item"
+              ]
+            }
+          }
+        },
+        {
+          "kind": "class",
+          "description": "箇条書きリスト（アイテム）コンポーネント",
+          "name": "DadsListItem",
+          "cssProperties": [
+            {
+              "description": "マーカー列の幅",
+              "name": "--dads-list-marker-width"
+            },
+            {
+              "description": "マーカー列と本文列の間隔",
+              "name": "--dads-list-marker-gap"
+            },
+            {
+              "description": "マーカー色",
+              "name": "--dads-list-marker-color"
+            },
+            {
+              "description": "マーカー記号のサイズ（markerタイプ向け）",
+              "name": "--dads-list-marker-size"
+            },
+            {
+              "description": "リストマーク（markerタイプ用、装飾用途）",
+              "name": "--dads-list-marker-content"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "本文列",
+              "name": "content"
+            },
+            {
+              "description": "role=\"listitem\" のルート",
+              "name": "item"
+            },
+            {
+              "description": "マーカー列",
+              "name": "marker"
+            },
+            {
+              "description": "予備のマーカー記号領域（通常は非表示）",
+              "name": "marker-glyph"
+            }
+          ],
+          "slots": [
+            {
+              "description": "本文（ネストした dads-list を含められます）",
+              "name": "default"
+            },
+            {
+              "description": "項番（numberタイプ向け、コピー可能な“地のテキスト”）",
+              "name": "marker"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-list-item', template: html` <div part=\"item\" role=\"listitem\"> <span part=\"marker\"> <span part=\"marker-glyph\" aria-hidden=\"true\"></span> <slot name=\"marker\"></slot> </span> <div part=\"content\"> <slot></slot> </div> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), listItemTokens, listItemStyles, ], 'minimal'), attributes: [], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-list-item",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/list/list.ts",
+          "definitionPath": "./packages/components/list/list.ts",
+          "typeDefinitionPath": "./packages/components/list/list.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "箇条書きリストアイテム仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "リストアイテムは role=\"listitem\" として扱われます。",
+                  "項番タイプでは slot=\"marker\" に項番を地のテキストとして記載します。"
+                ],
+                "keyboard": [
+                  "本文内のリンク等は通常どおりTabでフォーカス可能です。"
+                ],
+                "zoom": [
+                  "本文は折り返しを前提とし、ズーム時も情報が欠けないようにします。"
+                ],
+                "states": [
+                  "表示モード（marker/number）は親（dads-list）からの CSS 変数継承で切り替えます。"
+                ],
+                "labels": [
+                  "必要に応じて本文側で説明的なリンクテキストや見出しを用意します。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": []
+            },
+            "componentId": "list",
+            "install": {
+              "id": "list",
+              "define": "defineList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/list"
+              },
+              "tags": [
+                "dads-list",
+                "dads-list-item"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsList",
+          "declaration": {
+            "name": "DadsList",
+            "module": "packages/components/list/list.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsListItem",
+          "declaration": {
+            "name": "DadsListItem",
+            "module": "packages/components/list/list.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/list/list.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/list/list.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-list",
+          "declaration": {
+            "name": "DadsList",
+            "module": "./packages/components/list/list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/list/list.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-list-item",
+          "declaration": {
+            "name": "DadsListItem",
+            "module": "./packages/components/list/list.ts"
           }
         }
       ]
@@ -11508,6 +13549,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "variant",
               "type": {
@@ -11619,6 +13673,21 @@
                   },
                   "placement": "bottom-right"
                 }
+              ]
+            },
+            "componentId": "menu-list-box",
+            "install": {
+              "id": "menu-list-box",
+              "define": "defineMenuListBox",
+              "call": "prefix-registry",
+              "deps": [
+                "menu-list"
+              ],
+              "source": {
+                "componentDir": "packages/components/menu-list-box"
+              },
+              "tags": [
+                "dads-menu-list-box"
               ]
             }
           }
@@ -11927,6 +13996,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "attributes": [
@@ -11973,6 +14055,20 @@
                 ]
               },
               "callouts": []
+            },
+            "componentId": "menu-list",
+            "install": {
+              "id": "menu-list",
+              "define": "defineMenuList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/menu-list"
+              },
+              "tags": [
+                "dads-menu-list",
+                "dads-menu-list-item"
+              ]
             }
           }
         },
@@ -12545,6 +14641,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "variant",
               "type": {
@@ -12661,6 +14770,20 @@
                 ]
               },
               "callouts": []
+            },
+            "componentId": "menu-list",
+            "install": {
+              "id": "menu-list",
+              "define": "defineMenuList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/menu-list"
+              },
+              "tags": [
+                "dads-menu-list",
+                "dads-menu-list-item"
+              ]
             }
           }
         }
@@ -13437,6 +15560,19 @@
             },
             {
               "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "typeChanged",
               "return": {
                 "type": {
@@ -13643,6 +15779,19 @@
                   },
                   "placement": "bottom-right"
                 }
+              ]
+            },
+            "componentId": "page-navigation",
+            "install": {
+              "id": "page-navigation",
+              "define": "definePageNavigation",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/page-navigation"
+              },
+              "tags": [
+                "dads-page-navigation"
               ]
             }
           }
@@ -14313,15 +16462,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-radio', template: html` <label part=\"base\" id=\"base\"> <span part=\"radio\" id=\"radio\"> <input part=\"input\" id=\"input\" type=\"radio\" /> </span> <span part=\"label\" id=\"label\"></span> <span part=\"requirement\" id=\"requirement\"></span> </label> <!-- エラーメッセージ表示 --> <span part=\"error-text\" id=\"error-text\"></span> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), radioTokens, radioStyles], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('size'), BooleanAttr('disabled'), BooleanAttr('required'), BooleanAttr('auto-validate'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('name'), // checked/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない { attribute: 'checked' }, { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, ], }"
+              "default": "{ name: 'dads-radio', template: html` <label part=\"base\" id=\"base\"> <span part=\"radio\" id=\"radio\"> <input part=\"input\" id=\"input\" type=\"radio\" /> </span> <span part=\"label\" id=\"label\"></span> <span part=\"requirement\" id=\"requirement\"></span> </label> <!-- エラーメッセージ表示 --> <span part=\"error-text\" id=\"error-text\"></span> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), radioTokens, radioStyles], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('size'), BooleanAttr('disabled'), BooleanAttr('required'), BooleanAttr('auto-validate'), BooleanAttr('error'), PropertyAttr('error-text'), PropertyAttr('name'), // checked/value はカスタムgetter/setterを持つため PropertyAttr/BooleanAttr を使わない { attribute: 'checked' }, { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -14506,6 +16655,19 @@
                 }
               },
               "description": "※必須表示の再同期\nfieldsetから呼び出される（スロット変更時やrequired属性変更時）"
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -14757,6 +16919,19 @@
                     "selector": "[part=\"error-text\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "radio",
+            "install": {
+              "id": "radio",
+              "define": "defineRadio",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/radio"
+              },
+              "tags": [
+                "dads-radio"
               ]
             }
           }
@@ -15348,15 +17523,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-search-box', template: html` <div part=\"base\" id=\"base\"> <div part=\"fields\" id=\"fields\"> <label part=\"scope\" id=\"scope\"> <span part=\"scope-label\" id=\"scope-label\">検索対象</span> <select part=\"scope-select\" id=\"scope-select\"></select> <svg part=\"scope-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </label> <label part=\"query\" id=\"query\"> <svg part=\"search-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"m21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z\" fill=\"currentcolor\" /> </svg> <span part=\"visually-hidden\" id=\"label-text\">検索</span> <input part=\"input\" id=\"input\" type=\"search\" /> </label> </div> <dads-button part=\"button\" id=\"submit-button\" type=\"button\" variant=\"solid\" size=\"large\">検索</dads-button> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), searchBoxTokens, searchBoxStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('name'), PropertyAttr('label'), { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, { attribute: 'scope-name' }, { attribute: 'scope-value' }, { attribute: 'scope-label' }, { attribute: 'button-label' }, ], }"
+              "default": "{ name: 'dads-search-box', template: html` <div part=\"base\" id=\"base\"> <div part=\"fields\" id=\"fields\"> <label part=\"scope\" id=\"scope\"> <span part=\"scope-label\" id=\"scope-label\">検索対象</span> <select part=\"scope-select\" id=\"scope-select\"></select> <svg part=\"scope-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </label> <label part=\"query\" id=\"query\"> <svg part=\"search-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"m21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z\" fill=\"currentcolor\" /> </svg> <span part=\"visually-hidden\" id=\"label-text\">検索</span> <input part=\"input\" id=\"input\" type=\"search\" /> </label> </div> <dads-button part=\"button\" id=\"submit-button\" type=\"button\" variant=\"solid\" size=\"large\">検索</dads-button> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), searchBoxTokens, searchBoxStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('name'), PropertyAttr('label'), { attribute: 'value' }, { attribute: 'aria-label' }, { attribute: 'aria-labelledby' }, { attribute: 'aria-describedby' }, { attribute: 'scope-name' }, { attribute: 'scope-value' }, { attribute: 'scope-label' }, { attribute: 'button-label' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -15532,6 +17707,19 @@
               "name": "scopeValue",
               "type": {
                 "text": "string"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
               }
             },
             {
@@ -15747,6 +17935,21 @@
                     "selector": "[part=\"button\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "search-box",
+            "install": {
+              "id": "search-box",
+              "define": "defineSearchBox",
+              "call": "prefix-registry",
+              "deps": [
+                "button"
+              ],
+              "source": {
+                "componentDir": "packages/components/search-box"
+              },
+              "tags": [
+                "dads-search-box"
               ]
             }
           }
@@ -16396,15 +18599,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-select', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"select\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"select-wrapper\" id=\"select-wrapper\"> <select part=\"select\" id=\"select\"></select> <svg part=\"select-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), selectTokens, selectStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), // aria-disabled は文字列属性（\"true\"/\"false\" だけでなく空文字も許容） { attribute: 'aria-disabled' }, PropertyAttr('name'), PropertyAttr('size'), BooleanAttr('auto-validate'), // value は observedAttributes に含めるが、PropertyAttr は使わない（カスタム getter/setter） { attribute: 'value' }, ], }"
+              "default": "{ name: 'dads-select', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"select\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"select-wrapper\" id=\"select-wrapper\"> <select part=\"select\" id=\"select\"></select> <svg part=\"select-chevron\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\" fill=\"currentcolor\" /> </svg> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), selectTokens, selectStyles, applyDADSFocusStyles()], 'minimal' ), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), // aria-disabled は文字列属性（\"true\"/\"false\" だけでなく空文字も許容） { attribute: 'aria-disabled' }, PropertyAttr('name'), PropertyAttr('size'), BooleanAttr('auto-validate'), // value は observedAttributes に含めるが、PropertyAttr は使わない（カスタム getter/setter） { attribute: 'value' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -16577,6 +18780,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -16829,6 +19045,19 @@
                     "selector": "[part=\"error-text\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "select",
+            "install": {
+              "id": "select",
+              "define": "defineSelect",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/select"
+              },
+              "tags": [
+                "dads-select"
               ]
             }
           }
@@ -17256,6 +19485,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -17391,6 +19633,20 @@
                     "selector": "[data-state-label=\"editing\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "step-navigation",
+            "install": {
+              "id": "step-navigation",
+              "define": "defineStepNavigation",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/step-navigation"
+              },
+              "tags": [
+                "dads-step-navigation",
+                "dads-step-navigation-item"
               ]
             }
           }
@@ -17904,6 +20160,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -18139,6 +20408,20 @@
                     "selector": "[data-state-label=\"error\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "step-navigation",
+            "install": {
+              "id": "step-navigation",
+              "define": "defineStepNavigation",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/step-navigation"
+              },
+              "tags": [
+                "dads-step-navigation",
+                "dads-step-navigation-item"
               ]
             }
           }
@@ -18564,15 +20847,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-switch', template: html` <div part=\"wrapper\"> <span part=\"label-left\"> <slot name=\"label-left\"></slot> </span> <label part=\"switch\"> <input type=\"checkbox\" part=\"checkbox\" id=\"checkbox\" role=\"switch\" aria-checked=\"false\" /> <span part=\"track\"> <span part=\"knob\"></span> </span> </label> <span part=\"label-right\"> <slot name=\"label-right\"></slot> </span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), switchTokens, switchStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ BooleanAttr('checked'), BooleanAttr('disabled'), PropertyAttr('name'), // value は observedAttributes に含めるが、PropertyAttr は使わない（カスタムgetter/setterを保持） { attribute: 'value' }, PropertyAttr('size'), ], }"
+              "default": "{ name: 'dads-switch', template: html` <div part=\"wrapper\"> <span part=\"label-left\"> <slot name=\"label-left\"></slot> </span> <label part=\"switch\"> <input type=\"checkbox\" part=\"checkbox\" id=\"checkbox\" role=\"switch\" aria-checked=\"false\" /> <span part=\"track\"> <span part=\"knob\"></span> </span> </label> <span part=\"label-right\"> <slot name=\"label-right\"></slot> </span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), switchTokens, switchStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ BooleanAttr('checked'), BooleanAttr('disabled'), PropertyAttr('name'), // value は observedAttributes に含めるが、PropertyAttr は使わない（カスタムgetter/setterを保持） { attribute: 'value' }, PropertyAttr('size'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -18725,6 +21008,19 @@
               "name": "reportValidity",
               "inheritedFrom": {
                 "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
             },
@@ -18922,6 +21218,19 @@
                   },
                   "placement": "top-right"
                 }
+              ]
+            },
+            "componentId": "switch",
+            "install": {
+              "id": "switch",
+              "define": "defineSwitch",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/switch"
+              },
+              "tags": [
+                "dads-switch"
               ]
             }
           }
@@ -19733,6 +22042,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "version",
               "type": {
@@ -19920,6 +22242,19 @@
                     "selector": "[data-select-row], [data-js-check]"
                   }
                 }
+              ]
+            },
+            "componentId": "table",
+            "install": {
+              "id": "table",
+              "define": "defineTable",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/table"
+              },
+              "tags": [
+                "dads-table"
               ]
             }
           }
@@ -20479,15 +22814,15 @@
               "kind": "field",
               "name": "definition",
               "readonly": true,
-              "inheritedFrom": {
-                "name": "WebComponent",
-                "module": "packages/core/web-components.ts"
-              },
               "type": {
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-textarea', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"textarea\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"textarea-wrapper\" id=\"textarea-wrapper\"> <textarea part=\"textarea\" id=\"textarea\" rows=\"3\" ></textarea> </div> <span part=\"counter\" id=\"counter\"></span> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"overflow-error\" id=\"overflow-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), textareaTokens, textareaStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), PropertyAttr('maxlength'), BooleanAttr('show-counter'), PropertyAttr('counter-max'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), // placeholder は非推奨: support-text を使用してください PropertyAttr('name'), PropertyAttr('rows'), PropertyAttr('size'), // value は observedAttributes に含めるが、PropertyAttr は使わない // カスタム getter/setter が定義されているため (property フィールドなし) { attribute: 'value' }, BooleanAttr('auto-validate'), ], }"
+              "default": "{ name: 'dads-textarea', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"textarea\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"textarea-wrapper\" id=\"textarea-wrapper\"> <textarea part=\"textarea\" id=\"textarea\" rows=\"3\" ></textarea> </div> <span part=\"counter\" id=\"counter\"></span> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"overflow-error\" id=\"overflow-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), textareaTokens, textareaStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), PropertyAttr('maxlength'), BooleanAttr('show-counter'), PropertyAttr('counter-max'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), // placeholder は非推奨: support-text を使用してください PropertyAttr('name'), PropertyAttr('rows'), PropertyAttr('size'), // value は observedAttributes に含めるが、PropertyAttr は使わない // カスタム getter/setter が定義されているため (property フィールドなし) { attribute: 'value' }, BooleanAttr('auto-validate'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -20671,6 +23006,19 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             },
             {
               "kind": "field",
@@ -20952,6 +23300,19 @@
                     "selector": "[part=\"error-text\"]"
                   }
                 }
+              ]
+            },
+            "componentId": "textarea",
+            "install": {
+              "id": "textarea",
+              "define": "defineTextarea",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/textarea"
+              },
+              "tags": [
+                "dads-textarea"
               ]
             }
           }
@@ -21296,6 +23657,19 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "variant",
               "type": {
@@ -21395,7 +23769,22 @@
           "events": [],
           "modulePath": "./packages/components/typography/dads-text.ts",
           "definitionPath": "./packages/components/typography/dads-text.ts",
-          "typeDefinitionPath": "./packages/components/typography/dads-text.ts"
+          "typeDefinitionPath": "./packages/components/typography/dads-text.ts",
+          "custom": {
+            "componentId": "typography",
+            "install": {
+              "id": "typography",
+              "define": "defineText",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/typography"
+              },
+              "tags": [
+                "dads-text"
+              ]
+            }
+          }
         }
       ],
       "exports": [
@@ -21499,6 +23888,37 @@
               "type": {
                 "text": "unknown[]"
               }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "DelegatingPropertyAttr",
+          "return": {
+            "type": {
+              "text": "AttrBehavior & { property: string }"
+            }
+          },
+          "parameters": [
+            {
+              "name": "targetSelector",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "property",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "attribute",
+              "default": "property"
+            },
+            {
+              "name": "remove",
+              "default": "false"
             }
           ]
         },
@@ -21903,6 +24323,19 @@
               "name": "reportValidity"
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true
@@ -22298,6 +24731,15 @@
               "kind": "field",
               "name": "refs",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             }
           ],
           "events": [],
@@ -22539,6 +24981,14 @@
           "name": "css",
           "declaration": {
             "name": "css",
+            "module": "packages/core/web-components.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DelegatingPropertyAttr",
+          "declaration": {
+            "name": "DelegatingPropertyAttr",
             "module": "packages/core/web-components.ts"
           }
         },
@@ -22816,6 +25266,299 @@
           "declaration": {
             "name": "defineDefaultAnnotate",
             "module": "packages/components/annotate/annotate-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/annotate/annotate-geometry.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "buildAutoPath",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "start",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "end",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "targetRect",
+              "type": {
+                "text": "Rect"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "clampBoundaryPointAwayFromCorners",
+          "return": {
+            "type": {
+              "text": "Point"
+            }
+          },
+          "parameters": [
+            {
+              "name": "p",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "rect",
+              "type": {
+                "text": "Rect"
+              }
+            },
+            {
+              "name": "marginPx",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "dir",
+              "type": {
+                "text": "Point"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "computeInsetPx",
+          "return": {
+            "type": {
+              "text": "number"
+            }
+          },
+          "parameters": [
+            {
+              "name": "targetRect",
+              "type": {
+                "text": "Rect"
+              }
+            },
+            {
+              "name": "minInsetPx",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "ratio",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "insetPointTowards",
+          "return": {
+            "type": {
+              "text": "Point"
+            }
+          },
+          "parameters": [
+            {
+              "name": "hit",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "center",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "insetPx",
+              "type": {
+                "text": "number"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "intersectRayRect",
+          "return": {
+            "type": {
+              "text": "Point | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "start",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "center",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "rect",
+              "type": {
+                "text": "Rect"
+              }
+            }
+          ],
+          "description": "start→center のレイ（線分）と矩形の交点（startから最初に当たる点）を返す。\n- start が矩形内の場合は、境界へ出る交点を返す\n- 交点が求まらない場合は null"
+        },
+        {
+          "kind": "function",
+          "name": "pickRectBoundaryPoint",
+          "return": {
+            "type": {
+              "text": "Point | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "from",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "to",
+              "type": {
+                "text": "Point"
+              }
+            },
+            {
+              "name": "rect",
+              "type": {
+                "text": "Rect"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "pickTagStartPoint",
+          "return": {
+            "type": {
+              "text": "Point"
+            }
+          },
+          "parameters": [
+            {
+              "name": "tagRect",
+              "type": {
+                "text": "Rect"
+              }
+            },
+            {
+              "name": "targetCenter",
+              "type": {
+                "text": "Point"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "rectCenter",
+          "return": {
+            "type": {
+              "text": "Point"
+            }
+          },
+          "parameters": [
+            {
+              "name": "rect",
+              "type": {
+                "text": "Rect"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "buildAutoPath",
+          "declaration": {
+            "name": "buildAutoPath",
+            "module": "packages/components/annotate/annotate-geometry.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "clampBoundaryPointAwayFromCorners",
+          "declaration": {
+            "name": "clampBoundaryPointAwayFromCorners",
+            "module": "packages/components/annotate/annotate-geometry.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "computeInsetPx",
+          "declaration": {
+            "name": "computeInsetPx",
+            "module": "packages/components/annotate/annotate-geometry.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "insetPointTowards",
+          "declaration": {
+            "name": "insetPointTowards",
+            "module": "packages/components/annotate/annotate-geometry.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "intersectRayRect",
+          "declaration": {
+            "name": "intersectRayRect",
+            "module": "packages/components/annotate/annotate-geometry.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pickRectBoundaryPoint",
+          "declaration": {
+            "name": "pickRectBoundaryPoint",
+            "module": "packages/components/annotate/annotate-geometry.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "pickTagStartPoint",
+          "declaration": {
+            "name": "pickTagStartPoint",
+            "module": "packages/components/annotate/annotate-geometry.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "rectCenter",
+          "declaration": {
+            "name": "rectCenter",
+            "module": "packages/components/annotate/annotate-geometry.ts"
           }
         }
       ]
@@ -23908,6 +26651,162 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/chip-tag/chip-tag-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineChipTag",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "チップタグコンポーネントを定義"
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultChipTag",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-chip-tag`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineChipTag",
+          "declaration": {
+            "name": "defineChipTag",
+            "module": "packages/components/chip-tag/chip-tag-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultChipTag",
+          "declaration": {
+            "name": "defineDefaultChipTag",
+            "module": "packages/components/chip-tag/chip-tag-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/chip-tag/chip-tag-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "chipTagStyles",
+          "default": "css` :host { display: inline-block; vertical-align: middle; --dads-chip-tag-action-hit-padding: 0px; } [part='base'] { display: inline-flex; align-items: center; box-sizing: border-box; min-height: var(--dads-chip-tag-min-height); padding-block: var(--dads-chip-tag-padding-block); padding-inline: var(--dads-chip-tag-padding-inline); padding-inline-end: calc(var(--dads-chip-tag-padding-inline) + var(--dads-chip-tag-action-hit-padding)); border-radius: var(--dads-chip-tag-border-radius); border: var(--dads-chip-tag-border-width) solid var(--dads-chip-tag-border-color); background-color: var(--dads-chip-tag-background); color: var(--dads-chip-tag-text-color); box-shadow: var(--dads-chip-tag-border-shadow); font-family: var(--dads-chip-tag-font-family); font-size: var(--dads-chip-tag-font-size); font-weight: var(--dads-chip-tag-font-weight); line-height: var(--dads-chip-tag-line-height); letter-spacing: var(--dads-chip-tag-letter-spacing); overflow-wrap: anywhere; } /* 下線用の余白は action=\"none\" 時だけ有効にする（remove時のセンタリングを崩さない） */ :host(:not([action='none'])) { --dads-chip-tag-label-padding-bottom: 0; } :host([action='none']) { --dads-chip-tag-label-text-decoration: underline; } :host([action='remove']) { --dads-chip-tag-action-hit-padding: calc( (var(--dads-chip-tag-action-hit-area) - var(--dads-chip-tag-action-size)) / 2 ); } :host([action='none']:hover) { --dads-chip-tag-text-color: var(--dads-chip-tag-text-color-hover); --dads-chip-tag-label-underline-thickness: var( --dads-chip-tag-label-underline-thickness-hover ); --dads-chip-tag-border-shadow: var(--dads-chip-tag-border-shadow-hover); } :host([action='none']:active) { --dads-chip-tag-text-color: var(--dads-chip-tag-text-color-active); --dads-chip-tag-label-underline-thickness: var( --dads-chip-tag-label-underline-thickness-hover ); } [part='start-icon'] { display: inline-flex; align-items: center; flex-shrink: 0; padding-block-end: var(--dads-chip-tag-label-padding-bottom); } [part='start-icon']::slotted(*) { width: var(--dads-chip-tag-icon-size); height: var(--dads-chip-tag-icon-size); display: block; } [part='label'] { display: inline-flex; align-items: center; padding-inline: var(--dads-chip-tag-label-padding-inline); padding-block-end: var(--dads-chip-tag-label-padding-bottom); text-decoration: var(--dads-chip-tag-label-text-decoration); text-decoration-thickness: var(--dads-chip-tag-label-underline-thickness); text-underline-offset: var(--dads-chip-tag-label-underline-offset); } [part='value'] { display: none; } :host([data-has-value]) [part='value'] { display: inline; } :host([data-has-value]) [part='label'] slot { display: none; } [part='action'] { display: inline-flex; align-items: center; justify-content: center; width: var(--dads-chip-tag-action-size); height: var(--dads-chip-tag-action-size); padding: 0; position: relative; margin-inline-end: calc(-1 * var(--dads-chip-tag-action-hit-padding)); border: var(--dads-chip-tag-action-border-width) solid var(--dads-chip-tag-action-border-color); border-radius: var(--dads-chip-tag-border-radius); background: var(--dads-chip-tag-action-background); color: var(--dads-chip-tag-action-icon-color); cursor: pointer; -webkit-tap-highlight-color: transparent; appearance: none; } /* 見た目は変えずに、タップ領域だけを拡張する（主に右側へ広げる） */ [part='action']::before { content: ''; position: absolute; width: var(--dads-chip-tag-action-hit-area); height: var(--dads-chip-tag-action-hit-area); left: 50%; top: 50%; transform: translate(-50%, -50%); background: transparent; } :host([action='remove']) [part='action'] { --dads-chip-tag-action-background: var(--chip-tag-action-background); --dads-chip-tag-action-icon-color: var(--chip-tag-action-icon-color); } :host([action='remove']) [part='action']:hover { --dads-chip-tag-action-background: var(--dads-chip-tag-action-background-hover); --dads-chip-tag-action-icon-color: var(--dads-chip-tag-action-icon-color-hover); } :host([action='remove']) [part='action']:active { --dads-chip-tag-action-background: var(--dads-chip-tag-action-background-active); --dads-chip-tag-action-icon-color: var(--dads-chip-tag-action-icon-color-active); } [part='action-icon'] { display: inline-flex; align-items: center; justify-content: center; width: var(--dads-chip-tag-action-icon-size); height: var(--dads-chip-tag-action-icon-size); } [part='action-icon']::slotted(*) { width: var(--dads-chip-tag-action-icon-size); height: var(--dads-chip-tag-action-icon-size); display: block; } [part='action']:focus-visible { outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); background-color: var(--dads-chip-tag-focus-text-element-bg); } :host([action='none']) [part='action'] { display: none; } :host([action='none']) [part='base'] { cursor: pointer; } @media (forced-colors: active) { [part='start-icon']::slotted(*), [part='action-icon']::slotted(*) { fill: CanvasText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "chipTagStyles",
+          "declaration": {
+            "name": "chipTagStyles",
+            "module": "packages/components/chip-tag/chip-tag-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/chip-tag/chip-tag-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "chipTagTokens",
+          "default": "css` ${chipTagSemanticTokensText} ${chipTagLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "chipTagTokens",
+          "declaration": {
+            "name": "chipTagTokens",
+            "module": "packages/components/chip-tag/chip-tag-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/chip-tag/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "chipTagStyles",
+          "declaration": {
+            "name": "chipTagStyles",
+            "module": "./chip-tag-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "chipTagTokens",
+          "declaration": {
+            "name": "chipTagTokens",
+            "module": "./chip-tag-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsChipTag",
+          "declaration": {
+            "name": "DadsChipTag",
+            "module": "./chip-tag.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineChipTag",
+          "declaration": {
+            "name": "defineChipTag",
+            "module": "./chip-tag-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultChipTag",
+          "declaration": {
+            "name": "defineDefaultChipTag",
+            "module": "./chip-tag-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/code-block/code-block-define.ts",
       "declarations": [
         {
@@ -23919,6 +26818,14 @@
             }
           },
           "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
             {
               "name": "registry",
               "optional": true,
@@ -23943,10 +26850,7 @@
         {
           "kind": "variable",
           "name": "name",
-          "type": {
-            "text": "string"
-          },
-          "default": "'dads-code-block'"
+          "default": "`${effectivePrefix}-code-block`"
         }
       ],
       "exports": [
@@ -24864,6 +27768,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/chip-tag/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/page-navigation/index.js"
           }
         },
@@ -24920,6 +27832,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/list/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/disclosure/index.js"
           }
         }
@@ -24943,6 +27863,14 @@
           "name": "autoDefineInputText",
           "declaration": {
             "name": "autoDefineInputText",
+            "module": "./input-text-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultInputText",
+          "declaration": {
+            "name": "defineDefaultInputText",
             "module": "./input-text-define.js"
           }
         },
@@ -24972,13 +27900,43 @@
         },
         {
           "kind": "function",
+          "name": "defineDefaultInputText",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
           "name": "defineInputText",
           "return": {
             "type": {
               "text": "void"
             }
           },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
           "description": "DadsInputTextコンポーネントをカスタム要素として登録する"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-input-text`"
         }
       ],
       "exports": [
@@ -24987,6 +27945,14 @@
           "name": "autoDefineInputText",
           "declaration": {
             "name": "autoDefineInputText",
+            "module": "packages/components/input-text/input-text-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultInputText",
+          "declaration": {
+            "name": "defineDefaultInputText",
             "module": "packages/components/input-text/input-text-define.ts"
           }
         },
@@ -25066,6 +28032,164 @@
           "declaration": {
             "name": "inputTextTokens",
             "module": "packages/components/input-text/input-text-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/list/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/list/list.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultList",
+          "declaration": {
+            "name": "defineDefaultList",
+            "module": "./list-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineList",
+          "declaration": {
+            "name": "defineList",
+            "module": "./list-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/list/list-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultList",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineList",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultList",
+          "declaration": {
+            "name": "defineDefaultList",
+            "module": "packages/components/list/list-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineList",
+          "declaration": {
+            "name": "defineList",
+            "module": "packages/components/list/list-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/list/list-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "listItemStyles",
+          "default": "css` :host { display: block; font: inherit; color: inherit; } [part='item'] { display: var(--_dads-list-item-display); position: var(--_dads-list-item-position); grid-template-columns: var(--_dads-list-marker-width) minmax(0, 1fr); column-gap: var(--_dads-list-marker-gap); } [part='marker'] { position: var(--_dads-list-marker-position); inset-inline-start: var(--_dads-list-marker-inset-inline-start); inset-block-start: var(--_dads-list-marker-inset-block-start); color: var(--_dads-list-marker-color); line-height: var(--_dads-list-marker-line-height); text-align: var(--_dads-list-marker-text-align); } [part='marker-glyph'] { font-size: var(--_dads-list-marker-size); color: var(--_dads-list-marker-color); } [part='marker-glyph']::before { content: var(--_dads-list-marker-content); white-space: pre; } [part='marker'] slot[name='marker'] { display: var(--_dads-list-marker-slot-display); } [part='content'] { min-inline-size: 0; } [part='content'] > slot { display: flex; flex-direction: column; row-gap: var(--_dads-list-item-gap); } ::slotted(p), ::slotted(ul), ::slotted(ol), ::slotted(dl), ::slotted(blockquote), ::slotted(figure) { margin: 0; } ::slotted(dads-list) { margin: 0; } @media (forced-colors: active) { :host { --dads-list-marker-color: CanvasText; } } `"
+        },
+        {
+          "kind": "variable",
+          "name": "listStyles",
+          "default": "css` :host { display: block; font: inherit; color: inherit; } [part='base'] { display: flex; flex-direction: column; align-items: stretch; row-gap: var(--dads-list-item-gap); padding-inline-start: var(--dads-list-indent); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "listItemStyles",
+          "declaration": {
+            "name": "listItemStyles",
+            "module": "packages/components/list/list-styles.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "listStyles",
+          "declaration": {
+            "name": "listStyles",
+            "module": "packages/components/list/list-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/list/list-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "listItemTokens",
+          "default": "css` :host { --_dads-list-item-gap: var(--dads-list-item-gap, var(--spacing-2, 8px)); --_dads-list-item-display: var(--dads-list-item-display, block); --_dads-list-item-position: var(--dads-list-item-position, relative); --_dads-list-marker-width: var(--dads-list-marker-width, auto); --_dads-list-marker-gap: var(--dads-list-marker-gap, var(--spacing-2, 8px)); --_dads-list-marker-color: var(--dads-list-marker-color, currentColor); --_dads-list-marker-size: var(--dads-list-marker-size, 6px); --_dads-list-marker-content: var(--dads-list-marker-content, normal); --_dads-list-marker-slot-display: var(--dads-list-marker-slot-display, none); --_dads-list-marker-position: var(--dads-list-marker-position, absolute); --_dads-list-marker-inset-inline-start: var(--dads-list-marker-inset-inline-start, calc(-1 * (var(--_dads-list-marker-gap) + var(--_dads-list-marker-size)))); --_dads-list-marker-inset-block-start: var(--dads-list-marker-inset-block-start, 0); --_dads-list-marker-line-height: var(--dads-list-marker-line-height, 1); --_dads-list-marker-text-align: var(--dads-list-marker-text-align, start); } `",
+          "description": "List Item 側のフォールバックトークン（単体利用時の既定）"
+        },
+        {
+          "kind": "variable",
+          "name": "listTokens",
+          "default": "css` :host { /* Item spacing (DADS: 12 / 8 / 4) */ --list-item-gap-lg: var(--spacing-3, 12px); --list-item-gap-md: var(--spacing-2, 8px); --list-item-gap-sm: var(--spacing-1, 4px); --list-item-gap: var(--list-item-gap-md); /* Marker */ --list-marker-width: auto; --list-marker-gap: var(--spacing-2, 8px); --list-marker-color: var(--color-neutral-solid-gray-800, #333333); --list-marker-size: 6px; --list-marker-slot-display: none; /* Indentation */ --list-indent: 0px; /* Public API */ --dads-list-indent: var(--list-indent); --dads-list-item-gap: var(--list-item-gap); --dads-list-marker-width: var(--list-marker-width); --dads-list-marker-gap: var(--list-marker-gap); --dads-list-marker-color: var(--list-marker-color); --dads-list-marker-size: var(--list-marker-size); --dads-list-marker-slot-display: var(--list-marker-slot-display); /* Item layout mode (nearest dads-list controls dads-list-item rendering) */ --dads-list-item-display: block; --dads-list-item-position: relative; --dads-list-marker-position: absolute; --dads-list-marker-inset-inline-start: calc(-1 * (var(--list-marker-gap) + var(--list-marker-size))); --dads-list-marker-inset-block-start: 0; --dads-list-marker-line-height: 1; --dads-list-marker-text-align: start; /* Marker glyphs (3種) - override points */ --dads-list-marker-content-1: '●'; --dads-list-marker-content-2: '○'; --dads-list-marker-content-3: '■'; --dads-list-marker-content: normal; } :host([variant='number']) { --list-marker-width: 2em; --list-marker-slot-display: inline; --dads-list-item-display: grid; --dads-list-item-position: static; --dads-list-marker-position: static; --dads-list-marker-inset-inline-start: auto; --dads-list-marker-inset-block-start: auto; --dads-list-marker-line-height: 1em; --dads-list-marker-text-align: end; } :host([spacing='lg']) { --list-item-gap: var(--list-item-gap-lg); } :host([spacing='md']) { --list-item-gap: var(--list-item-gap-md); } :host([spacing='sm']) { --list-item-gap: var(--list-item-gap-sm); } :host([variant='marker'][data-depth='1']) { --list-indent: 0px; --dads-list-marker-content: var(--dads-list-marker-content-1); } :host([variant='marker'][data-depth='2']) { --list-indent: var(--spacing-4, 16px); --dads-list-marker-content: var(--dads-list-marker-content-2); } :host([variant='marker'][data-depth='3']) { --list-indent: var(--spacing-6, 24px); --dads-list-marker-content: var(--dads-list-marker-content-2); } :host([variant='marker'][data-depth='4']) { --list-indent: var(--spacing-8, 32px); --dads-list-marker-content: var(--dads-list-marker-content-2); } :host([variant='marker'][data-depth='5']) { --list-indent: var(--spacing-12, 48px); --dads-list-marker-content: var(--dads-list-marker-content-3); } :host([variant='marker'][data-depth='6']) { --list-indent: var(--spacing-14, 56px); --dads-list-marker-content: var(--dads-list-marker-content-3); } :host([variant='number'][data-depth='1']) { --list-indent: 0px; } :host([variant='number'][data-depth='2']) { --list-indent: var(--spacing-4, 16px); } :host([variant='number'][data-depth='3']) { --list-indent: var(--spacing-6, 24px); } :host([variant='number'][data-depth='4']) { --list-indent: var(--spacing-8, 32px); } :host([variant='number'][data-depth='5']) { --list-indent: var(--spacing-12, 48px); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "listItemTokens",
+          "declaration": {
+            "name": "listItemTokens",
+            "module": "packages/components/list/list-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "listTokens",
+          "declaration": {
+            "name": "listTokens",
+            "module": "packages/components/list/list-tokens.ts"
           }
         }
       ]
@@ -25974,6 +29098,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "superclass": {
@@ -26190,6 +29327,19 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
             }
           ],
           "superclass": {
@@ -26402,6 +29552,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -26631,6 +29794,14 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultSelect",
+          "declaration": {
+            "name": "defineDefaultSelect",
+            "module": "./select-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineSelect",
           "declaration": {
             "name": "defineSelect",
@@ -26655,13 +29826,43 @@
         },
         {
           "kind": "function",
+          "name": "defineDefaultSelect",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
           "name": "defineSelect",
           "return": {
             "type": {
               "text": "void"
             }
           },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
           "description": "DadsSelectコンポーネントをカスタム要素として登録する"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-select`"
         }
       ],
       "exports": [
@@ -26670,6 +29871,14 @@
           "name": "autoDefineSelect",
           "declaration": {
             "name": "autoDefineSelect",
+            "module": "packages/components/select/select-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultSelect",
+          "declaration": {
+            "name": "defineDefaultSelect",
             "module": "packages/components/select/select-define.ts"
           }
         },
@@ -26998,6 +30207,14 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultSwitch",
+          "declaration": {
+            "name": "defineDefaultSwitch",
+            "module": "./switch-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineSwitch",
           "declaration": {
             "name": "defineSwitch",
@@ -27022,13 +30239,43 @@
         },
         {
           "kind": "function",
+          "name": "defineDefaultSwitch",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
           "name": "defineSwitch",
           "return": {
             "type": {
               "text": "void"
             }
           },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
           "description": "スイッチコンポーネントを登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-switch`"
         }
       ],
       "exports": [
@@ -27037,6 +30284,14 @@
           "name": "autoDefineSwitch",
           "declaration": {
             "name": "autoDefineSwitch",
+            "module": "packages/components/switch/switch-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultSwitch",
+          "declaration": {
+            "name": "defineDefaultSwitch",
             "module": "packages/components/switch/switch-define.ts"
           }
         },
@@ -27335,6 +30590,14 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultTextarea",
+          "declaration": {
+            "name": "defineDefaultTextarea",
+            "module": "./textarea-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "defineTextarea",
           "declaration": {
             "name": "defineTextarea",
@@ -27391,13 +30654,43 @@
         },
         {
           "kind": "function",
+          "name": "defineDefaultTextarea",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
           "name": "defineTextarea",
           "return": {
             "type": {
               "text": "void"
             }
           },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
           "description": "DadsTextareaコンポーネントをカスタム要素として登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-textarea`"
         }
       ],
       "exports": [
@@ -27406,6 +30699,14 @@
           "name": "autoDefineTextarea",
           "declaration": {
             "name": "autoDefineTextarea",
+            "module": "packages/components/textarea/textarea-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultTextarea",
+          "declaration": {
+            "name": "defineDefaultTextarea",
             "module": "packages/components/textarea/textarea-define.ts"
           }
         },
@@ -27504,6 +30805,22 @@
         },
         {
           "kind": "js",
+          "name": "defineDefaultText",
+          "declaration": {
+            "name": "defineDefaultText",
+            "module": "./typography-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineText",
+          "declaration": {
+            "name": "defineText",
+            "module": "./typography-define.js"
+          }
+        },
+        {
+          "kind": "js",
           "name": "typographyLocalTokens",
           "declaration": {
             "name": "typographyLocalTokens",
@@ -27564,6 +30881,72 @@
           "declaration": {
             "name": "TypographyWeight",
             "module": "../../styles/design-tokens/typography-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/typography/typography-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultText",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineText",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "dads-text を定義（prefix対応）"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-text`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultText",
+          "declaration": {
+            "name": "defineDefaultText",
+            "module": "packages/components/typography/typography-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineText",
+          "declaration": {
+            "name": "defineText",
+            "module": "packages/components/typography/typography-define.ts"
           }
         }
       ]
@@ -28858,6 +32241,19 @@
               }
             },
             {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
               "kind": "field",
               "name": "type",
               "readonly": true,
@@ -29116,6 +32512,19 @@
               "kind": "field",
               "name": "refs",
               "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -29966,6 +33375,167 @@
           "declaration": {
             "name": "applyStandardFormElementBehavior",
             "module": "packages/utils/behaviors.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/utils/command-store.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "command"
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "CommandStore",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#handlersByCommand",
+              "privacy": "private",
+              "default": "new Map<string, Set<CommandHandler>>()"
+            },
+            {
+              "kind": "method",
+              "name": "bind",
+              "return": {
+                "type": {
+                  "text": "() => void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ParentNode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "invokeFromElement",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "invoker",
+                  "type": {
+                    "text": "Element"
+                  }
+                },
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "Readonly<{ root?: ParentNode; originalEvent?: Event | null }>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "on",
+              "return": {
+                "type": {
+                  "text": "() => void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "command",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "handler",
+                  "type": {
+                    "text": "CommandHandler"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "defaultCommandStore",
+          "default": "new CommandStore()"
+        },
+        {
+          "kind": "variable",
+          "name": "invoker"
+        },
+        {
+          "kind": "function",
+          "name": "resolveCommandTarget",
+          "return": {
+            "type": {
+              "text": "Element | null"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "ParentNode"
+              }
+            },
+            {
+              "name": "commandfor",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "target"
+        },
+        {
+          "kind": "variable",
+          "name": "value"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "CommandStore",
+          "declaration": {
+            "name": "CommandStore",
+            "module": "packages/utils/command-store.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCommandDetail",
+          "declaration": {
+            "name": "DadsCommandDetail",
+            "module": "packages/utils/command-store.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defaultCommandStore",
+          "declaration": {
+            "name": "defaultCommandStore",
+            "module": "packages/utils/command-store.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveCommandTarget",
+          "declaration": {
+            "name": "resolveCommandTarget",
+            "module": "packages/utils/command-store.ts"
           }
         }
       ]

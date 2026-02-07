@@ -3,7 +3,6 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const ts = require('typescript');
-const { staticPageAssets } = require('./build-pages-assets.cjs');
 
 const projectRoot = process.cwd();
 const outDir = path.join(projectRoot, 'dist-pages');
@@ -87,11 +86,6 @@ async function transpileFile(srcPath, destPath) {
   await fs.writeFile(destPath, js, 'utf8');
 }
 
-async function copyFile(srcPath, destPath) {
-  await ensureDir(path.dirname(destPath));
-  await fs.copyFile(srcPath, destPath);
-}
-
 async function transpileTree(srcRoot, destRoot) {
   const allFiles = await collectFiles(srcRoot);
   const tsFiles = allFiles.filter((p) => shouldTranspileTsFile(p));
@@ -150,18 +144,23 @@ function rewriteAbsoluteAssetPathsToRelative(html) {
   return out;
 }
 
-function rewriteDistPagesPrefixToRelative(html) {
-  return html.replace(/\.\/dist-pages\//g, './');
-}
-
 async function buildIndexHtml() {
-  const srcHtmlPath = path.join(projectRoot, 'averageCase.prebuilt.html');
+  const srcHtmlPath = path.join(projectRoot, 'viewer.html');
   const srcHtml = await fs.readFile(srcHtmlPath, 'utf8');
 
-  const html = rewriteDistPagesPrefixToRelative(srcHtml);
+  let html = srcHtml;
+  html = removeServiceWorkerRegistration(html);
+  html = rewriteImportMapToRelative(html);
+  html = rewriteAbsoluteAssetPathsToRelative(html);
   const destHtmlPath = path.join(outDir, 'index.html');
   await ensureDir(outDir);
   await fs.writeFile(destHtmlPath, html, 'utf8');
+}
+
+async function copyCustomElementsManifest() {
+  const srcPath = path.join(projectRoot, 'custom-elements.json');
+  const destPath = path.join(outDir, 'custom-elements.json');
+  await fs.copyFile(srcPath, destPath);
 }
 
 async function cleanOutDir() {
@@ -174,9 +173,7 @@ async function main() {
 
   await cleanOutDir();
   await buildIndexHtml();
-  for (const asset of staticPageAssets) {
-    await copyFile(path.join(projectRoot, asset), path.join(outDir, asset));
-  }
+  await copyCustomElementsManifest();
 
   await transpileFile(path.join(projectRoot, 'packages/config.ts'), path.join(outDir, 'config.js'));
 

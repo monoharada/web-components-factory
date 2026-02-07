@@ -187,6 +187,7 @@ export default DadsComponent;
 **注意**
 - `a11y-annotate` は dev専用で、`custom-elements.json`（CEM）から注釈を読み取る。
 - viewerで表示する場合は `?a11y=1` を付与する。
+- GitHub Pages（Project Pages）では `custom-elements.json` が `/<repo>/custom-elements.json` として配信される必要がある（`pages:build` の成果物に同梱されること）。
 - デモ実装パターンは `docs/knowledge/a11y-annotate-demo-patterns.md` を参照。
 
 ---
