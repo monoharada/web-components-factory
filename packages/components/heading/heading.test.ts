@@ -146,7 +146,8 @@ describe('DadsHeading - スタイル', () => {
         --dads-heading-margin-block-start-base: 1lh;
         --dads-heading-margin-scale: 1;
       }
-      [data-dads-density='compact'][data-dads-typeset] {
+      [data-dads-density='compact'][data-dads-typeset],
+      [data-dads-density='compact'] [data-dads-typeset] {
         --dads-heading-margin-block-start-base: 1em;
       }
     `;
@@ -325,6 +326,25 @@ describe('DadsHeading - スタイル', () => {
     expect(compactGroup).toBeTruthy();
     expect(getComputedStyle(defaultGroup as HTMLElement).marginBlockStart).toContain('1lh');
     expect(getComputedStyle(compactGroup as HTMLElement).marginBlockStart).toContain('1em');
+
+    typesetStyle.remove();
+  });
+
+  it('祖先に data-dads-density="compact" を置いた場合も margin="top" が切り替わる', async () => {
+    const { defineHeading } = await import('./heading-define');
+    defineHeading();
+    const typesetStyle = installTypesetStyle();
+
+    const wrapper = renderWebComponent(
+      '<section data-dads-density="compact"><main data-dads-typeset><dads-heading margin="top">見出し</dads-heading></main></section>'
+    );
+
+    await waitForComponent('dads-heading');
+    const heading = wrapper.querySelector('dads-heading') as HTMLElement | null;
+    const group = heading ? getShadowElement(heading, '[part="group"]') : null;
+
+    expect(group).toBeTruthy();
+    expect(getComputedStyle(group as HTMLElement).marginBlockStart).toContain('1em');
 
     typesetStyle.remove();
   });

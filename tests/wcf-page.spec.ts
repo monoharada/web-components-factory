@@ -18,7 +18,7 @@ describe('wcf page create', () => {
       .join('\n');
 
   const readEmbeddedTypesetStyle = (html: string): string => {
-    const match = html.match(/<style data-wcf-typeset>\n([\s\S]*?)\n\s*<\/style>/);
+    const match = html.match(/<style data-wcf-typeset>\r?\n([\s\S]*?)\r?\n\s*<\/style>/);
     if (!match) return '';
     return normalizeTypesetStyle(match[1].replace(/^ {4}/gm, ''));
   };
