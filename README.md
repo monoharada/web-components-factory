@@ -8,6 +8,42 @@ TypeScriptで実装された Web Components ライブラリとコンポーネン
 npm ci
 ```
 
+## ⚡ WCF導入体験（no-build / editable JS）
+
+`wcf` は「発見 → 1コマンド導入 → ページ生成」を想定した CLI です。  
+vendor 配下の JS は bundle せず、そのまま編集できます。
+導入後はまず `vendor/components/<prefix>/components/**` だけ見れば改修できます。
+`--entry` は `boot` を推奨し、`@wcf` / `index` は互換モード（N+1で廃止予定）です。
+
+```bash
+# ブロック一覧（shadcn blocks相当）
+node scripts/wcf/cli.js blocks list
+
+# 資材導入
+node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myui --pattern search-results
+
+# index.html生成
+node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir . --entry boot
+```
+
+同等導線:
+
+```bash
+# npm (npx互換)
+npm exec --yes --package=git+https://github.com/monoharada/web-components-factory.git -- \
+  wcf vendor install --prefix myui --dir vendor/components/myui --pattern search-results
+
+# bunx
+bunx --package git+https://github.com/monoharada/web-components-factory.git \
+  wcf vendor install --prefix myui --dir vendor/components/myui --pattern search-results
+
+# bun create
+bun create github.com/monoharada/web-components-factory my-app
+```
+
+- Blocks docs: `docs/blocks/index.md`
+- Components docs: `docs/components/*.md`
+
 ## 🚀 起動方法
 
 ```bash

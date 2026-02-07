@@ -1,0 +1,60 @@
+name: WCF Experience
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * *'
+
+jobs:
+  smoke-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: npm ci
+
+      - name: Smoke (local runner)
+        run: npm run wcf:smoke:node
+
+      - name: Smoke (bun-local runner)
+        run: npm run wcf:smoke:bun
+
+  smoke-nightly:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      WCF_PACKAGE: git+https://github.com/${{ github.repository }}.git#${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: npm ci
+
+      - name: Smoke (npm exec runner)
+        run: npm run wcf:smoke:npm
+
+      - name: Smoke (bunx runner)
+        run: npm run wcf:smoke:bunx

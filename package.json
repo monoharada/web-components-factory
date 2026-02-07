@@ -7,7 +7,8 @@
   "types": "dist/index.d.ts",
   "customElements": "custom-elements.json",
   "bin": {
-    "wcf": "bin/wcf.mjs"
+    "dads-template": "./scripts/dads-template/cli.js",
+    "wcf": "./scripts/wcf/cli.js"
   },
   "repository": {
     "type": "git",
@@ -58,6 +59,16 @@
     "dads:validate": "node scripts/dads/validate.cjs",
     "dads:figma:add": "node scripts/dads/figma-add.cjs",
     "dads:figma:expand": "node scripts/dads/figma-expand.cjs",
+    "validate:templates": "node scripts/dads-template/cli.js validate templates",
+    "vendor:build": "node scripts/vendor-runtime/build.js && npm run wcf:docs:build",
+    "vendor:check": "node scripts/vendor-runtime/build.js --check",
+    "wcf:docs:build": "node scripts/wcf/generate-docs.js",
+    "wcf:docs:check": "node scripts/wcf/generate-docs.js --check",
+    "wcf:smoke:node": "node scripts/wcf/smoke-ttfr.js --runner local",
+    "wcf:smoke:bun": "node scripts/wcf/smoke-ttfr.js --runner bun-local",
+    "wcf:smoke:npm": "node scripts/wcf/smoke-ttfr.js --runner npm",
+    "wcf:smoke:bunx": "node scripts/wcf/smoke-ttfr.js --runner bunx",
+    "runtime:build": "vite build --config vite.runtime.config.ts",
     "size:esm": "node scripts/size/measure-esm.mjs --entry packages/components/date-picker/date-picker.ts --entry packages/components/calendar/calendar.ts"
     ,
     "contracts:check": "node scripts/contracts/check-autoload.mjs && node scripts/contracts/check-install-metadata.mjs",
@@ -87,12 +98,14 @@
     "happy-dom": "^20.5.0",
     "lit": "^3.1.1",
     "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
     "vite": "^6.4.1",
     "vitest": "^4.0.18"
   },
   "dependencies": {
     "@digital-go-jp/design-tokens": "^1.1.1",
-    "typescript": "^5.5.4"
+    "ajv": "^8.17.1",
+    "yaml": "^2.8.1"
   },
   "keywords": [
     "web-components",

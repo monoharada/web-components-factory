@@ -1,0 +1,386 @@
+/**
+ * @module search-box
+ * デジタル庁デザインシステム SearchBoxコンポーネント
+ * @version 1.0.0
+ */
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _DadsSearchBox_instances, _DadsSearchBox_scopeLabel, _DadsSearchBox_scopeSelect, _DadsSearchBox_labelText, _DadsSearchBox_input, _DadsSearchBox_submitButton, _DadsSearchBox_optionsObserver, _DadsSearchBox_abortController, _DadsSearchBox_setupEventListeners, _DadsSearchBox_triggerSearch, _DadsSearchBox_syncAll, _DadsSearchBox_syncLabel, _DadsSearchBox_detail, _DadsSearchBox_syncInputAttributes, _DadsSearchBox_syncValueFromAttr, _DadsSearchBox_syncScopeLabel, _DadsSearchBox_syncButtonLabel, _DadsSearchBox_getLightDomOptionElements, _DadsSearchBox_syncOptions, _DadsSearchBox_setupOptionsObserver, _DadsSearchBox_shouldSyncOptionsFromMutation, _DadsSearchBox_syncFormValue;
+import { html, PropertyAttr } from '../../core/web-components.js';
+import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
+import { applyDADSTokens } from '../../styles/design-tokens/index.js';
+import { applySpacingTokens } from '../../styles/spacing-tokens.js';
+import { withReset } from '../../styles/reset-css.js';
+import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.js';
+import { searchBoxTokens } from './search-box-tokens.js';
+import { searchBoxStyles } from './search-box-styles.js';
+import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
+import { ensurePrefixedElement, getPrefixFromLocalName } from '../../utils/custom-element-name.js';
+import { defineButton } from '../button/button-define.js';
+/**
+ * SearchBoxコンポーネント
+ *
+ * @customElement
+ * @tagname dads-search-box
+ *
+ * @csspart base - ルート（横並びコンテナ）
+ * @csspart fields - フィールド群（scope + query）
+ * @csspart scope - 検索対象セレクトのラベルコンテナ
+ * @csspart scope-label - 検索対象ラベルテキスト
+ * @csspart scope-select - 検索対象セレクト
+ * @csspart scope-icon - 検索対象セレクトの矢印アイコン
+ * @csspart query - 検索語入力のラベルコンテナ
+ * @csspart search-icon - 虫眼鏡アイコン
+ * @csspart visually-hidden - スクリーンリーダー向けラベル
+ * @csspart input - 検索語 input[type="search"]
+ * @csspart button - 送信ボタン（<dads-button>）
+ *
+ * @attr {string} name - 検索語のフォーム名（デフォルト: q）
+ * @attr {string} value - 検索語
+ * @attr {string} label - 検索語の視覚的に非表示ラベル（デフォルト: 検索）
+ *
+ * @attr {string} aria-label - 検索語inputへ転写（labelの代替）
+ * @attr {string} aria-labelledby - 検索語inputへ転写（外部ラベル参照）
+ * @attr {string} aria-describedby - 検索語inputへ転写（外部説明参照）
+ *
+ * @attr {string} scope-name - 検索対象のフォーム名（デフォルト: scope）
+ * @attr {string} scope-value - 検索対象の選択値
+ * @attr {string} scope-label - 検索対象の可視ラベル（デフォルト: 検索対象）
+ *
+ * @attr {string} button-label - 送信ボタンのラベル（デフォルト: 検索）
+ *
+ * @cssprop --dads-search-box-gap - fields と button の間隔
+ * @cssprop --dads-search-box-color - 全体の文字色
+ * @cssprop --dads-search-box-font-size - ベース文字サイズ
+ * @cssprop --dads-search-box-letter-spacing - 文字詰め
+ * @cssprop --dads-search-box-border-color - 枠線色
+ * @cssprop --dads-search-box-border-color-hover - hover時の枠線色
+ * @cssprop --dads-search-box-border-radius - 角丸（8px）
+ * @cssprop --dads-search-box-border-width - 枠線幅（デフォルト: 1px）
+ * @cssprop --dads-search-box-control-min-height - input/select の最小高さ（44px相当）
+ * @cssprop --dads-search-box-scope-width - scope select 幅
+ * @cssprop --dads-search-box-scope-bg - scope select 背景
+ * @cssprop --dads-search-box-scope-label-color - scopeラベル色
+ * @cssprop --dads-search-box-scope-icon-color - scopeアイコン色
+ * @cssprop --dads-search-box-scope-icon-size - scopeアイコンサイズ（デフォルト: 16px）
+ * @cssprop --dads-search-box-scope-padding - scope select のパディング
+ * @cssprop --dads-search-box-input-bg - input 背景
+ * @cssprop --dads-search-box-input-min-width - input 最小幅（デフォルト: 8rem）
+ * @cssprop --dads-search-box-input-padding - input padding
+ * @cssprop --dads-search-box-search-icon-color - 虫眼鏡色
+ * @cssprop --dads-search-box-search-icon-size - 虫眼鏡アイコンサイズ（デフォルト: 24px）
+ * @cssprop --dads-search-box-button-bg - ボタン背景色
+ * @cssprop --dads-search-box-button-color - ボタン文字色
+ * @cssprop --dads-search-box-button-bg-hover - ボタンホバー時背景色
+ * @cssprop --dads-search-box-button-border-color - ボタン枠線色
+ *
+ * @fires dads-input - 入力時に発火（detail: { query: string, scope: string }）
+ * @fires dads-change - 値変更確定時に発火（detail: { query: string, scope: string }）
+ * @fires dads-search - 検索実行時に発火（detail: { query: string, scope: string }、cancelable）
+ *
+ * @example
+ * ```html
+ * <form>
+ *   <h1 id="site-search-heading">サイト内検索</h1>
+ *   <dads-search-box aria-labelledby="site-search-heading">
+ *     <option value="">すべて</option>
+ *     <option value="images">画像</option>
+ *   </dads-search-box>
+ * </form>
+ * ```
+ */
+export class DadsSearchBox extends TypographyFormComponent {
+    constructor() {
+        super(...arguments);
+        _DadsSearchBox_instances.add(this);
+        // DOM refs
+        _DadsSearchBox_scopeLabel.set(this, null);
+        _DadsSearchBox_scopeSelect.set(this, null);
+        _DadsSearchBox_labelText.set(this, null);
+        _DadsSearchBox_input.set(this, null);
+        _DadsSearchBox_submitButton.set(this, null);
+        // Light DOM option監視
+        _DadsSearchBox_optionsObserver.set(this, null);
+        // イベントリスナー管理
+        _DadsSearchBox_abortController.set(this, null);
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        // 依存コンポーネントを先に登録（内部でdads-buttonを利用）
+        const prefix = getPrefixFromLocalName(this.localName, '-search-box');
+        defineButton(prefix);
+        setDefaultAttributes(this, {
+            name: 'q',
+            label: '検索',
+            'scope-name': 'scope',
+            'scope-label': '検索対象',
+            'button-label': '検索',
+        });
+        __classPrivateFieldSet(this, _DadsSearchBox_scopeLabel, this.shadowRoot?.querySelector('#scope-label'), "f");
+        __classPrivateFieldSet(this, _DadsSearchBox_scopeSelect, this.shadowRoot?.querySelector('#scope-select'), "f");
+        __classPrivateFieldSet(this, _DadsSearchBox_labelText, this.shadowRoot?.querySelector('#label-text'), "f");
+        __classPrivateFieldSet(this, _DadsSearchBox_input, this.shadowRoot?.querySelector('#input'), "f");
+        if (this.shadowRoot) {
+            __classPrivateFieldSet(this, _DadsSearchBox_submitButton, ensurePrefixedElement(this.shadowRoot, 'submit-button', `${prefix}-button`), "f");
+        }
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_setupEventListeners).call(this);
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_setupOptionsObserver).call(this);
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncAll).call(this);
+    }
+    disconnectedCallback() {
+        __classPrivateFieldGet(this, _DadsSearchBox_abortController, "f")?.abort();
+        __classPrivateFieldSet(this, _DadsSearchBox_abortController, null, "f");
+        __classPrivateFieldGet(this, _DadsSearchBox_optionsObserver, "f")?.disconnect();
+        __classPrivateFieldSet(this, _DadsSearchBox_optionsObserver, null, "f");
+        super.disconnectedCallback();
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
+        if (!__classPrivateFieldGet(this, _DadsSearchBox_input, "f"))
+            return;
+        switch (name) {
+            case 'label':
+                __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncLabel).call(this);
+                break;
+            case 'aria-label':
+            case 'aria-labelledby':
+            case 'aria-describedby':
+                __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncInputAttributes).call(this);
+                break;
+            case 'button-label':
+                __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncButtonLabel).call(this);
+                break;
+            case 'scope-label':
+                __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncScopeLabel).call(this);
+                break;
+            case 'scope-name':
+                __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+                break;
+            case 'scope-value':
+                if (newValue !== null)
+                    this.scopeValue = newValue;
+                break;
+            case 'name':
+                __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+                break;
+            case 'value':
+                if (newValue !== null)
+                    this.value = newValue;
+                break;
+        }
+    }
+    // Public API
+    get value() {
+        return __classPrivateFieldGet(this, _DadsSearchBox_input, "f")?.value ?? '';
+    }
+    set value(v) {
+        if (!__classPrivateFieldGet(this, _DadsSearchBox_input, "f"))
+            return;
+        __classPrivateFieldGet(this, _DadsSearchBox_input, "f").value = v;
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+    }
+    get scopeValue() {
+        return __classPrivateFieldGet(this, _DadsSearchBox_scopeSelect, "f")?.value ?? '';
+    }
+    set scopeValue(v) {
+        if (!__classPrivateFieldGet(this, _DadsSearchBox_scopeSelect, "f"))
+            return;
+        __classPrivateFieldGet(this, _DadsSearchBox_scopeSelect, "f").value = v;
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+    }
+    // Form callbacks
+    formResetCallback() {
+        const defaultQuery = this.getAttribute('value') ?? '';
+        const defaultScope = this.getAttribute('scope-value') ?? '';
+        this.value = defaultQuery;
+        this.scopeValue = defaultScope;
+    }
+    formStateRestoreCallback(state, _mode) {
+        if (state instanceof FormData) {
+            const queryName = this.getAttribute('name') ?? 'q';
+            const scopeName = this.getAttribute('scope-name') ?? 'scope';
+            const q = state.get(queryName);
+            const s = state.get(scopeName);
+            if (typeof q === 'string')
+                this.value = q;
+            if (typeof s === 'string')
+                this.scopeValue = s;
+        }
+    }
+    focus(options) {
+        __classPrivateFieldGet(this, _DadsSearchBox_input, "f")?.focus(options);
+    }
+    blur() {
+        __classPrivateFieldGet(this, _DadsSearchBox_input, "f")?.blur();
+    }
+}
+_DadsSearchBox_scopeLabel = new WeakMap(), _DadsSearchBox_scopeSelect = new WeakMap(), _DadsSearchBox_labelText = new WeakMap(), _DadsSearchBox_input = new WeakMap(), _DadsSearchBox_submitButton = new WeakMap(), _DadsSearchBox_optionsObserver = new WeakMap(), _DadsSearchBox_abortController = new WeakMap(), _DadsSearchBox_instances = new WeakSet(), _DadsSearchBox_setupEventListeners = function _DadsSearchBox_setupEventListeners() {
+    __classPrivateFieldSet(this, _DadsSearchBox_abortController, new AbortController(), "f");
+    const { signal } = __classPrivateFieldGet(this, _DadsSearchBox_abortController, "f");
+    __classPrivateFieldGet(this, _DadsSearchBox_input, "f")?.addEventListener('input', () => {
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+        this.emitEvent('dads-input', __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_detail).call(this));
+    }, { signal });
+    __classPrivateFieldGet(this, _DadsSearchBox_input, "f")?.addEventListener('change', () => {
+        this.emitEvent('dads-change', __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_detail).call(this));
+    }, { signal });
+    __classPrivateFieldGet(this, _DadsSearchBox_input, "f")?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.isComposing)
+            __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_triggerSearch).call(this);
+    }, { signal });
+    __classPrivateFieldGet(this, _DadsSearchBox_scopeSelect, "f")?.addEventListener('input', () => {
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+        this.emitEvent('dads-input', __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_detail).call(this));
+    }, { signal });
+    __classPrivateFieldGet(this, _DadsSearchBox_scopeSelect, "f")?.addEventListener('change', () => {
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+        this.emitEvent('dads-change', __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_detail).call(this));
+    }, { signal });
+    __classPrivateFieldGet(this, _DadsSearchBox_submitButton, "f")?.addEventListener('click', (event) => {
+        // <dads-button> はネイティブclick（MouseEvent）に加えて
+        // detail付きの CustomEvent('click') を発火するため、二重実行を防ぐ
+        if (!(event instanceof MouseEvent))
+            return;
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_triggerSearch).call(this);
+    }, { signal });
+}, _DadsSearchBox_triggerSearch = function _DadsSearchBox_triggerSearch() {
+    const ok = this.emitEvent('dads-search', __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_detail).call(this));
+    if (!ok)
+        return;
+    const form = this._internals.form;
+    form?.requestSubmit();
+}, _DadsSearchBox_syncAll = function _DadsSearchBox_syncAll() {
+    __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncLabel).call(this);
+    __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncInputAttributes).call(this);
+    __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncValueFromAttr).call(this);
+    __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncScopeLabel).call(this);
+    __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncButtonLabel).call(this);
+    __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncOptions).call(this);
+    __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+}, _DadsSearchBox_syncLabel = function _DadsSearchBox_syncLabel() {
+    if (!__classPrivateFieldGet(this, _DadsSearchBox_labelText, "f"))
+        return;
+    __classPrivateFieldGet(this, _DadsSearchBox_labelText, "f").textContent = this.getAttribute('label') ?? '検索';
+}, _DadsSearchBox_detail = function _DadsSearchBox_detail() {
+    return { query: this.value, scope: this.scopeValue };
+}, _DadsSearchBox_syncInputAttributes = function _DadsSearchBox_syncInputAttributes() {
+    const input = __classPrivateFieldGet(this, _DadsSearchBox_input, "f");
+    if (!input)
+        return;
+    for (const attr of ['aria-label', 'aria-labelledby', 'aria-describedby']) {
+        const value = this.getAttribute(attr);
+        value !== null ? input.setAttribute(attr, value) : input.removeAttribute(attr);
+    }
+}, _DadsSearchBox_syncValueFromAttr = function _DadsSearchBox_syncValueFromAttr() {
+    const attrValue = this.getAttribute('value');
+    if (attrValue === null)
+        return;
+    this.value = attrValue;
+}, _DadsSearchBox_syncScopeLabel = function _DadsSearchBox_syncScopeLabel() {
+    if (!__classPrivateFieldGet(this, _DadsSearchBox_scopeLabel, "f"))
+        return;
+    __classPrivateFieldGet(this, _DadsSearchBox_scopeLabel, "f").textContent = this.getAttribute('scope-label') ?? '検索対象';
+}, _DadsSearchBox_syncButtonLabel = function _DadsSearchBox_syncButtonLabel() {
+    if (!__classPrivateFieldGet(this, _DadsSearchBox_submitButton, "f"))
+        return;
+    __classPrivateFieldGet(this, _DadsSearchBox_submitButton, "f").textContent = this.getAttribute('button-label') ?? '検索';
+}, _DadsSearchBox_getLightDomOptionElements = function _DadsSearchBox_getLightDomOptionElements() {
+    return Array.from(this.children).filter((el) => el instanceof HTMLOptionElement || el instanceof HTMLOptGroupElement);
+}, _DadsSearchBox_syncOptions = function _DadsSearchBox_syncOptions() {
+    const select = __classPrivateFieldGet(this, _DadsSearchBox_scopeSelect, "f");
+    if (!select)
+        return;
+    const preserveValue = this.getAttribute('scope-value') ?? (select.options.length > 0 ? select.value : null);
+    select.replaceChildren(...__classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_getLightDomOptionElements).call(this).map((el) => el.cloneNode(true)));
+    if (preserveValue !== null)
+        select.value = preserveValue;
+    this.toggleAttribute('data-has-scope', select.options.length > 0);
+}, _DadsSearchBox_setupOptionsObserver = function _DadsSearchBox_setupOptionsObserver() {
+    __classPrivateFieldGet(this, _DadsSearchBox_optionsObserver, "f")?.disconnect();
+    __classPrivateFieldSet(this, _DadsSearchBox_optionsObserver, new MutationObserver((mutations) => {
+        if (!mutations.some((mutation) => __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_shouldSyncOptionsFromMutation).call(this, mutation)))
+            return;
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncOptions).call(this);
+        __classPrivateFieldGet(this, _DadsSearchBox_instances, "m", _DadsSearchBox_syncFormValue).call(this);
+    }), "f");
+    __classPrivateFieldGet(this, _DadsSearchBox_optionsObserver, "f").observe(this, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+    });
+}, _DadsSearchBox_shouldSyncOptionsFromMutation = function _DadsSearchBox_shouldSyncOptionsFromMutation(mutation) {
+    if (mutation.type === 'childList')
+        return true;
+    const el = mutation.type === 'attributes'
+        ? mutation.target
+        : mutation.target.parentElement;
+    return el instanceof Element && (el.tagName === 'OPTION' || el.tagName === 'OPTGROUP');
+}, _DadsSearchBox_syncFormValue = function _DadsSearchBox_syncFormValue() {
+    const queryName = this.getAttribute('name');
+    const queryValue = this.value;
+    const scopeName = this.getAttribute('scope-name');
+    const scopeValue = this.scopeValue;
+    const formData = new FormData();
+    let appended = false;
+    if (queryName) {
+        formData.append(queryName, queryValue);
+        appended = true;
+    }
+    const hasScope = this.hasAttribute('data-has-scope');
+    if (hasScope && scopeName) {
+        formData.append(scopeName, scopeValue);
+        appended = true;
+    }
+    this._internals.setFormValue(appended ? formData : null);
+};
+DadsSearchBox.formAssociated = true;
+DadsSearchBox.version = '1.0.0';
+DadsSearchBox.definition = {
+    name: 'dads-search-box',
+    template: html `
+      <div part="base" id="base">
+        <div part="fields" id="fields">
+          <label part="scope" id="scope">
+            <span part="scope-label" id="scope-label">検索対象</span>
+            <select part="scope-select" id="scope-select"></select>
+            <svg part="scope-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z" fill="currentcolor" />
+            </svg>
+          </label>
+
+          <label part="query" id="query">
+            <svg part="search-icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z" fill="currentcolor" />
+            </svg>
+            <span part="visually-hidden" id="label-text">検索</span>
+            <input part="input" id="input" type="search" />
+          </label>
+        </div>
+
+        <dads-button part="button" id="submit-button" type="button" variant="solid" size="large">検索</dads-button>
+      </div>
+    `,
+    styles: withReset([applyDADSTokens(), applySpacingTokens(), searchBoxTokens, searchBoxStyles, applyDADSFocusStyles()], 'minimal'),
+    attributes: [
+        PropertyAttr('name'),
+        PropertyAttr('label'),
+        { attribute: 'value' },
+        { attribute: 'aria-label' },
+        { attribute: 'aria-labelledby' },
+        { attribute: 'aria-describedby' },
+        { attribute: 'scope-name' },
+        { attribute: 'scope-value' },
+        { attribute: 'scope-label' },
+        { attribute: 'button-label' },
+    ],
+};
