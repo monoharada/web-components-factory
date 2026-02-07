@@ -104,6 +104,22 @@ describe('DadsDialog - 基本', () => {
     expect(base?.hasAttribute('aria-labelledby')).toBe(false);
   });
 
+  it('aria-label未指定かつtitleあり時はaria-labelledbyを設定する', async () => {
+    const element = renderWebComponent(`
+      <dads-dialog open>
+        <span slot="title">タイトル</span>
+        本文
+      </dads-dialog>
+    `);
+
+    await waitForComponent('dads-dialog');
+    await flushMicrotask();
+
+    const base = getShadowElement(element, '#base') as HTMLElement | null;
+    expect(base?.getAttribute('aria-labelledby')).toBe('title');
+    expect(base?.hasAttribute('aria-label')).toBe(false);
+  });
+
   it('title/aria-label未指定時はaria-labelにフォールバックする', async () => {
     const element = renderWebComponent(`
       <dads-dialog open>
