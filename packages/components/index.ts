@@ -82,3 +82,6 @@ export * from './list/index.js';
 
 // ディスクロージャー
 export * from './disclosure/index.js';
+
+// ダイアログ
+export * from './dialog/index.js';
