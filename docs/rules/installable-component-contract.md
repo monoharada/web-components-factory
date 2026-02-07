@@ -64,3 +64,16 @@ CI は次を満たさない場合に失敗します：
 ```bash
 npm run contracts:check
 ```
+
+## 7) PR前ガードレール（AIエージェント共通）
+
+CEM を単一の真実として運用するため、Codex / Claude Code を含む AI エージェントは PR作成・更新前に次を実行します。
+
+```bash
+npm run agents:pre-pr
+npm run agents:verify
+```
+
+- `agents:pre-pr` は CEM生成・contracts・registry・markup検証・生成物クリーンチェックを一括実行
+- `agents:verify` は `agents:pre-pr` + `npm run ci` を実行
+- `custom-elements.json` / `registry/install-registry.json` に差分がある場合、同一PRに含めるまで更新禁止

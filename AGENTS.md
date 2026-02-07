@@ -60,6 +60,26 @@ Codex の Skills は `~/.codex/skills` を参照するため、初回のみ以�
 - `docs/knowledge/design-system-mcp.md`
 - `docs/knowledge/chrome-devtools-mcp.md`
 
+## AIエージェントPR前必須ガードレール
+
+Codex / Claude Code を含む AI エージェントは、PR作成・更新前に以下を必ず実行してください。
+
+- 必須コマンド: `npm run agents:verify`
+- 日常の軽量チェック: `npm run agents:pre-pr`
+- `custom-elements.json` / `registry/install-registry.json` に差分が出た場合は、同一PRに含めるまでPR更新禁止
+
+### 対象変更トリガ（この変更がある場合は必須）
+
+- `packages/components/**`
+- `packages/core/**`
+- `packages/autoload/**`
+- `custom-elements-manifest.config.js`
+- `registry/overrides.json`
+- `src/demos.ts`
+- `viewer.html`
+
+迷ったら常に `npm run agents:verify` を実行してください。
+
 ## 新規コンポーネント作成
 
 新規コンポーネントを追加する際は、以下のドキュメントを参照してください：
