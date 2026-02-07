@@ -260,6 +260,37 @@ describe('DadsFileUpload - required validity', () => {
     expect(api.checkValidity()).toBe(true);
     expect(api.validationMessage).toBe('');
   });
+
+  it('required と customError が競合した場合は required（valueMissing）に同期される', async () => {
+    const { defineFileUpload } = await import('./file-upload-define.js');
+    defineFileUpload();
+
+    element = createTestElement('dads-file-upload');
+    element.setAttribute('required', '');
+    await waitForCustomElement(element);
+
+    const api = element as unknown as {
+      checkValidity: () => boolean;
+      validity: ValidityState;
+      validationMessage: string;
+    };
+
+    const internalsHost = element as unknown as {
+      _internals: ElementInternals;
+    };
+
+    internalsHost._internals.setValidity({ customError: true }, 'カスタムエラー');
+    expect(api.validationMessage).toBe('カスタムエラー');
+    expect(api.validity.customError).toBe(true);
+
+    // attributeChanged(name) 経由で #syncValidity を発火
+    element.setAttribute('name', 'upload-file');
+
+    expect(api.checkValidity()).toBe(false);
+    expect(api.validity.customError).toBe(false);
+    expect(api.validity.valueMissing).toBe(true);
+    expect(api.validationMessage).toBe('ファイルを選択してください');
+  });
 });
 
 describe('DadsFileUpload - 検証', () => {
@@ -584,6 +615,44 @@ describe('DadsFileUpload - 全画面ドロップ拡大', () => {
     expect(firstApi.items).toHaveLength(0);
     expect(secondApi.items).toHaveLength(1);
     expect(secondApi.items[0]?.file.name).toBe('owner-only.pdf');
+  });
+
+  it('全画面drop有効の要素が切断されても次の要素で有効化・dropできる', async () => {
+    const { defineFileUpload } = await import('./file-upload-define.js');
+    defineFileUpload();
+
+    element = createTestElement('dads-file-upload');
+    secondaryElement = createTestElement('dads-file-upload');
+    await waitForCustomElement(element);
+    await waitForCustomElement(secondaryElement);
+
+    const firstCheckbox = getShadowContent(element, '#expand-checkbox') as HTMLElement | null;
+    firstCheckbox?.dispatchEvent(
+      new CustomEvent('dads-change', {
+        bubbles: true,
+        composed: true,
+        detail: { checked: true },
+      })
+    );
+
+    element.remove();
+
+    const secondCheckbox = getShadowContent(secondaryElement, '#expand-checkbox') as HTMLElement | null;
+    secondCheckbox?.dispatchEvent(
+      new CustomEvent('dads-change', {
+        bubbles: true,
+        composed: true,
+        detail: { checked: true },
+      })
+    );
+
+    const file = createFile('after-disconnect.pdf', 'application/pdf');
+    window.dispatchEvent(createDragLikeEvent('dragenter', [file]));
+    window.dispatchEvent(createDragLikeEvent('drop', [file]));
+
+    const secondApi = secondaryElement as unknown as { items: Array<{ file: File }> };
+    expect(secondApi.items).toHaveLength(1);
+    expect(secondApi.items[0]?.file.name).toBe('after-disconnect.pdf');
   });
 });
 

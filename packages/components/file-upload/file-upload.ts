@@ -978,6 +978,8 @@ export class DadsFileUpload extends TypographyFormComponent {
 
     const validCount = this.#items.filter((item) => item.valid).length;
     if (this.hasAttribute('required') && validCount === 0) {
+      // 先に空状態へ戻してから required を適用し、以前の customError を持ち越さない
+      this._internals.setValidity({});
       this._internals.setValidity(
         { valueMissing: true },
         'ファイルを選択してください',
