@@ -4,16 +4,18 @@
  */
 
 import { WebComponentDefinition } from '../../core/web-components.js';
-import { getConfig } from '../../config.js';
+import { getConfig, getPrefix } from '../../config.js';
 import { DadsCodeBlock } from './code-block.js';
 
 /**
  * dads-code-block を定義
+ * @param prefix - コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）
  * @param registry - カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）
  */
-export function defineCodeBlock(registry?: CustomElementRegistry): void {
+export function defineCodeBlock(prefix?: string, registry?: CustomElementRegistry): void {
+  const effectivePrefix = prefix ?? getPrefix();
   const effectiveRegistry = registry ?? getConfig().registry;
-  const name = 'dads-code-block';
+  const name = `${effectivePrefix}-code-block`;
   if (effectiveRegistry.get(name)) return;
 
   const def = { ...DadsCodeBlock.definition, name, registry: effectiveRegistry };

@@ -34,6 +34,8 @@ export type A11yElementRef =
 
 export type A11yCalloutMode = 'marker' | 'panel' | 'both';
 
+export type A11yCalloutTargetHint = 'auto' | 'box' | 'none';
+
 export type A11yCallout = Readonly<{
   id: string;
   title: string;
@@ -42,6 +44,13 @@ export type A11yCallout = Readonly<{
    * 省略時は、ターゲット要素の role/aria 等から自動生成します。
    */
   label?: string;
+  /**
+   * マーカー表示のヒント（枠の表示可否）
+   * - auto: 既定（他の注釈対象を包含している場合のみ枠を表示）
+   * - box: 常に枠を表示
+   * - none: 常に枠を非表示
+   */
+  targetHint?: A11yCalloutTargetHint;
   description?: string;
   category?: A11yAnnotationCategory;
   mode?: A11yCalloutMode;

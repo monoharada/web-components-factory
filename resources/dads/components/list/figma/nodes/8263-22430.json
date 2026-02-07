@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-02-06T04:03:36.527Z",
+  "fileKey": "MlgRomC0DHXGlB0t79w4wL",
+  "root": {
+    "id": "8263:22430",
+    "name": "Unordered List: Tight Spacing",
+    "type": "FRAME",
+    "url": "https://www.figma.com/design/MlgRomC0DHXGlB0t79w4wL/Digital-Agency-Design-Data-2.10.2?node-id=8263-22430&m=dev"
+  },
+  "match": {
+    "includeNameIncludes": [
+      "List"
+    ],
+    "excludeNameIncludes": []
+  },
+  "instances": [
+    {
+      "id": "8263:22431",
+      "name": "List with List Marks",
+      "componentId": "8263:22743",
+      "absoluteBoundingBox": {
+        "x": 4223,
+        "y": -2105,
+        "width": 280,
+        "height": 35
+      },
+      "componentProperties": {
+        "List Item#6037:0": {
+          "type": "TEXT",
+          "value": "リストアイテム1"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Show Marker#5948:4": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "0",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "4",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22432",
+      "name": "List with List Marks",
+      "componentId": "8263:22743",
+      "absoluteBoundingBox": {
+        "x": 4223,
+        "y": -2070,
+        "width": 280,
+        "height": 35
+      },
+      "componentProperties": {
+        "List Item#6037:0": {
+          "type": "TEXT",
+          "value": "リストアイテム2"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Show Marker#5948:4": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "0",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "4",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22433",
+      "name": "List with List Marks",
+      "componentId": "8263:22743",
+      "absoluteBoundingBox": {
+        "x": 4223,
+        "y": -2035,
+        "width": 280,
+        "height": 35
+      },
+      "componentProperties": {
+        "List Item#6037:0": {
+          "type": "TEXT",
+          "value": "リストアイテム3"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Show Marker#5948:4": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "0",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "4",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22434",
+      "name": "List with List Marks",
+      "componentId": "8263:22780",
+      "absoluteBoundingBox": {
+        "x": 4223,
+        "y": -2000,
+        "width": 280,
+        "height": 35
+      },
+      "componentProperties": {
+        "List Item#6037:0": {
+          "type": "TEXT",
+          "value": "リストアイテム3.1"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Show Marker#5948:4": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "32",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "4",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22435",
+      "name": "List with List Marks",
+      "componentId": "8263:22780",
+      "absoluteBoundingBox": {
+        "x": 4223,
+        "y": -1965,
+        "width": 280,
+        "height": 35
+      },
+      "componentProperties": {
+        "List Item#6037:0": {
+          "type": "TEXT",
+          "value": "リストアイテム3.2"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Show Marker#5948:4": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "32",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "4",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22436",
+      "name": "List with List Marks",
+      "componentId": "8263:22780",
+      "absoluteBoundingBox": {
+        "x": 4223,
+        "y": -1930,
+        "width": 280,
+        "height": 35
+      },
+      "componentProperties": {
+        "List Item#6037:0": {
+          "type": "TEXT",
+          "value": "リストアイテム3.3"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Show Marker#5948:4": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "32",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "4",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22437",
+      "name": "List with List Marks",
+      "componentId": "8263:22891",
+      "absoluteBoundingBox": {
+        "x": 4223,
+        "y": -1895,
+        "width": 280,
+        "height": 35
+      },
+      "componentProperties": {
+        "List Item#6037:0": {
+          "type": "TEXT",
+          "value": "リストアイテム3.3.1"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Show Marker#5948:4": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "64",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "4",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    },
+    {
+      "id": "8263:22438",
+      "name": "List with List Marks",
+      "componentId": "8263:22891",
+      "absoluteBoundingBox": {
+        "x": 4223,
+        "y": -1860,
+        "width": 280,
+        "height": 35
+      },
+      "componentProperties": {
+        "List Item#6037:0": {
+          "type": "TEXT",
+          "value": "リストアイテム3.3.2"
+        },
+        "Show Tail-icon#5948:12": {
+          "type": "BOOLEAN",
+          "value": false
+        },
+        "Show Marker#5948:4": {
+          "type": "BOOLEAN",
+          "value": true
+        },
+        "Link": {
+          "value": "False",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Indent": {
+          "value": "64",
+          "type": "VARIANT",
+          "boundVariables": {}
+        },
+        "Spacing": {
+          "value": "4",
+          "type": "VARIANT",
+          "boundVariables": {}
+        }
+      }
+    }
+  ]
+}

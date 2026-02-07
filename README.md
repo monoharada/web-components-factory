@@ -47,14 +47,18 @@ bun create github.com/monoharada/web-components-factory my-app
 ## 🚀 起動方法
 
 ```bash
-# Bunで開発サーバーを起動（TypeScript自動トランスパイル対応）
-bun server.ts
+# Bunで開発サーバーを起動（推奨: watchあり）
+bun --watch serve.ts
+
+# watchなし（`bun serve.ts` でも通常リロード反映）
+bun serve.ts
 
 # npm 経由でもOK（Bunが必要）
 npm run dev
 ```
 
 http://localhost:3000/ にアクセスして、コンポーネントビューアが表示されます。
+通常リロードで変更反映できるよう、開発サーバーはHTTPキャッシュを `no-store` で返します。
 
 ## 🧩 CEM（Custom Elements Manifest）/ 検証 / MCP（AIネイティブ）
 
@@ -151,6 +155,7 @@ web-components-factory/
 │       └── dom.ts                  # DOM操作ヘルパー
 ├── src/
 │   └── entry.ts                    # エントリーポイント
+├── serve.ts                         # 開発サーバー起動エントリ（watch用）
 ├── server.ts                        # 開発サーバー（TypeScript対応）
 ├── viewer.html                      # コンポーネントビューア
 └── CLAUDE.md                        # Claude Code用ガイドライン
@@ -221,7 +226,7 @@ defineAllComponents();
 
 ```bash
 # 開発サーバー起動
-bun server.ts
+bun --watch serve.ts
 
 # CEM生成（custom-elements.json）
 npm run cem:analyze
@@ -242,5 +247,7 @@ npm run ci
 ## ⚠️ 注意事項
 
 - **HTMLファイルの作成について**: 新しいデモHTMLファイルを作成する代わりに、`viewer.html`を使用してください
-- **TypeScriptコンパイル**: `server.ts`が自動的に.tsファイルをトランスパイルします
+- **TypeScriptコンパイル**: `serve.ts`（実体は `server.ts`）が自動的に `.ts` をトランスパイルします
+- **開発時キャッシュ**: 開発サーバーは `Cache-Control: no-store` を返すため、通常リロードで最新コードを取得します（ハード再読み込み不要）
+- **キャッシュを有効化したい場合**: `DEV_DISABLE_HTTP_CACHE=0 bun --watch serve.ts`
 - **インポート**: TypeScriptファイルでも`.js`拡張子でインポートしてください（ESモジュール仕様準拠）

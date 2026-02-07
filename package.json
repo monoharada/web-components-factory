@@ -10,8 +10,12 @@
     "dads-template": "./scripts/dads-template/cli.js",
     "wcf": "./scripts/wcf/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/monoharada/web-components-factory.git"
+  },
   "scripts": {
-    "dev": "bun server.ts",
+    "dev": "bun --watch serve.ts",
     "dev:vite": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -29,6 +33,8 @@
     "test:run": "vitest run",
     "test:run:json": "mkdir -p test-results && vitest run --reporter=json --outputFile=test-results/vitest.json",
     "test:e2e": "node scripts/run-playwright.cjs",
+    "test:e2e:list-fidelity": "node scripts/run-playwright.cjs e2e-evidence/list.fidelity.vrt.spec.ts",
+    "test:e2e:list-fidelity:update": "node scripts/run-playwright.cjs e2e-evidence/list.fidelity.vrt.spec.ts --update-snapshots",
     "test:e2e:menu-list-box": "node scripts/run-playwright.cjs e2e-evidence/menu-list-box.fidelity.spec.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint src/**/*.ts",
@@ -62,6 +68,11 @@
     "wcf:smoke:bunx": "node scripts/wcf/smoke-ttfr.js --runner bunx",
     "runtime:build": "vite build --config vite.runtime.config.ts",
     "size:esm": "node scripts/size/measure-esm.mjs --entry packages/components/date-picker/date-picker.ts --entry packages/components/calendar/calendar.ts"
+    ,
+    "contracts:check": "node scripts/contracts/check-autoload.mjs && node scripts/contracts/check-install-metadata.mjs",
+    "registry:generate": "node scripts/registry/generate-install-registry.mjs",
+    "registry:check": "node scripts/registry/generate-install-registry.mjs --check",
+    "patterns:check": "node scripts/patterns/check-pattern-registry.mjs"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.11.0",

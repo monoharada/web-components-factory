@@ -33,6 +33,10 @@ MCP クライアント側からは、stdio サーバーとして次のように�
 
 指定コンポーネントの最小 usage snippet を返します。
 
+### `get_install_recipe({ component, prefix? })`
+
+install recipe（componentId / deps / define / usageSnippet）を返します。
+
 ### `validate_markup({ html, prefix? })`
 
 HTML 断片を CEM と突き合わせて検証し、diagnostics を返します。
@@ -40,8 +44,23 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 - `unknownElement`: `error`
 - `unknownAttribute`: `warning`
 
+## UI パターン（レイアウト/画面レシピ）
+
+`registry/pattern-registry.json` に、AI がそのまま使える **画面/レイアウトのレシピ**を持ちます。
+
+### `list_patterns()`
+
+パターンの一覧を返します。
+
+### `get_pattern_recipe({ patternId, prefix? })`
+
+パターンの recipe を返します（必要 componentId + prefix適用済み snippet）。
+
+### `generate_pattern_snippet({ patternId, prefix? })`
+
+HTML snippet だけを返します。
+
 ## wctools MCP / language server との違い
 
 - wctools / language server: CEM を中心にした汎用ツール（ドキュメント/補完/検証）
 - この DS-MCP: **この repo 固有の前提（prefix 戦略、viewer 運用、usage snippet 生成、validate など）**まで含めた “設計システム専用スキル”
-

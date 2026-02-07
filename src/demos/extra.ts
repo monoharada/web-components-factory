@@ -1325,6 +1325,206 @@ export const demos = {
     </div>
   `,
 
+  listFidelity: () => `
+    <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">List - Fidelity (Figma structures)</h2>
+      <p style="color: #666; margin-bottom: 24px;">
+        E2E・VRT検証用デモ（ID安定性優先）。人間向けショーケースは <code>list</code> を参照してください。
+      </p>
+
+      <style>
+        .list-fidelity-caption {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 12px;
+          color: #666;
+          margin-bottom: 12px;
+        }
+        .list-fidelity-section {
+          margin-bottom: 32px;
+        }
+        .list-fidelity-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        @media (min-width: 900px) {
+          .list-fidelity-grid {
+            grid-template-columns: 1fr 1fr 1fr;
+          }
+        }
+        .list-fidelity-capture {
+          width: 280px; /* Figma frames are 280px wide */
+          box-sizing: border-box;
+        }
+        .list-fidelity-capture--unordered {
+          padding: 12px 0 12px 24px;
+        }
+        .list-fidelity-capture--ordered {
+          padding: 12px 0;
+        }
+      </style>
+
+      <section class="list-fidelity-section">
+        <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">Unordered (marker)</h3>
+        <div class="list-fidelity-grid">
+          <div>
+            <div class="list-fidelity-caption">spacing=lg (8263:22351)</div>
+            <div id="demo-list-unordered-spacing-lg" class="list-fidelity-capture list-fidelity-capture--unordered">
+              <dads-list variant="marker" spacing="lg">
+                <dads-list-item>リストアイテム1</dads-list-item>
+                <dads-list-item>リストアイテム2</dads-list-item>
+                <dads-list-item>
+                  リストアイテム3
+                  <dads-list variant="marker" spacing="lg">
+                    <dads-list-item>リストアイテム3.1</dads-list-item>
+                    <dads-list-item>リストアイテム3.2</dads-list-item>
+                    <dads-list-item>
+                      リストアイテム3.3
+                      <dads-list variant="marker" spacing="lg">
+                        <dads-list-item>リストアイテム3.3.1</dads-list-item>
+                        <dads-list-item>リストアイテム3.3.2</dads-list-item>
+                      </dads-list>
+                    </dads-list-item>
+                  </dads-list>
+                </dads-list-item>
+              </dads-list>
+            </div>
+          </div>
+
+          <div>
+            <div class="list-fidelity-caption">spacing=md (8263:22341)</div>
+            <div id="demo-list-unordered-spacing-md" class="list-fidelity-capture list-fidelity-capture--unordered">
+              <dads-list variant="marker" spacing="md">
+                <dads-list-item>リストアイテム1</dads-list-item>
+                <dads-list-item>リストアイテム2</dads-list-item>
+                <dads-list-item>
+                  リストアイテム3
+                  <dads-list variant="marker" spacing="md">
+                    <dads-list-item>リストアイテム3.1</dads-list-item>
+                    <dads-list-item>リストアイテム3.2</dads-list-item>
+                    <dads-list-item>
+                      リストアイテム3.3
+                      <dads-list variant="marker" spacing="md">
+                        <dads-list-item>リストアイテム3.3.1</dads-list-item>
+                        <dads-list-item>リストアイテム3.3.2</dads-list-item>
+                      </dads-list>
+                    </dads-list-item>
+                  </dads-list>
+                </dads-list-item>
+              </dads-list>
+            </div>
+          </div>
+
+          <div>
+            <div class="list-fidelity-caption">spacing=sm (8263:22430)</div>
+            <div id="demo-list-unordered-spacing-sm" class="list-fidelity-capture list-fidelity-capture--unordered">
+              <dads-list variant="marker" spacing="sm">
+                <dads-list-item>リストアイテム1</dads-list-item>
+                <dads-list-item>リストアイテム2</dads-list-item>
+                <dads-list-item>
+                  リストアイテム3
+                  <dads-list variant="marker" spacing="sm">
+                    <dads-list-item>リストアイテム3.1</dads-list-item>
+                    <dads-list-item>リストアイテム3.2</dads-list-item>
+                    <dads-list-item>
+                      リストアイテム3.3
+                      <dads-list variant="marker" spacing="sm">
+                        <dads-list-item>リストアイテム3.3.1</dads-list-item>
+                        <dads-list-item>リストアイテム3.3.2</dads-list-item>
+                      </dads-list>
+                    </dads-list-item>
+                  </dads-list>
+                </dads-list-item>
+              </dads-list>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="list-fidelity-section">
+        <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">Ordered (number, copyable marker slot)</h3>
+        <div class="list-fidelity-grid">
+          <div>
+            <div class="list-fidelity-caption">spacing=lg (8263:22408)</div>
+            <div id="demo-list-ordered-spacing-lg" class="list-fidelity-capture list-fidelity-capture--ordered">
+              <dads-list variant="number" spacing="lg" marker-width="2">
+                <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                <dads-list-item>
+                  <span slot="marker">3.</span>リストアイテム
+                  <dads-list variant="number" spacing="lg" marker-width="2">
+                    <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                    <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                    <dads-list-item>
+                      <span slot="marker">3.</span>リストアイテム
+                      <dads-list variant="number" spacing="lg" marker-width="2">
+                        <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                        <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                        <dads-list-item><span slot="marker">3.</span>リストアイテム</dads-list-item>
+                      </dads-list>
+                    </dads-list-item>
+                  </dads-list>
+                </dads-list-item>
+              </dads-list>
+            </div>
+          </div>
+
+          <div>
+            <div class="list-fidelity-caption">spacing=md (8263:22397)</div>
+            <div id="demo-list-ordered-spacing-md" class="list-fidelity-capture list-fidelity-capture--ordered">
+              <dads-list variant="number" spacing="md" marker-width="2">
+                <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                <dads-list-item>
+                  <span slot="marker">3.</span>リストアイテム
+                  <dads-list variant="number" spacing="md" marker-width="2">
+                    <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                    <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                    <dads-list-item>
+                      <span slot="marker">3.</span>リストアイテム
+                      <dads-list variant="number" spacing="md" marker-width="2">
+                        <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                        <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                        <dads-list-item><span slot="marker">3.</span>リストアイテム</dads-list-item>
+                      </dads-list>
+                    </dads-list-item>
+                  </dads-list>
+                </dads-list-item>
+              </dads-list>
+            </div>
+          </div>
+
+          <div>
+            <div class="list-fidelity-caption">spacing=sm (8263:22419)</div>
+            <div id="demo-list-ordered-spacing-sm" class="list-fidelity-capture list-fidelity-capture--ordered">
+              <dads-list variant="number" spacing="sm" marker-width="2">
+                <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                <dads-list-item>
+                  <span slot="marker">3.</span>リストアイテム
+                  <dads-list variant="number" spacing="sm" marker-width="2">
+                    <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                    <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                    <dads-list-item>
+                      <span slot="marker">3.</span>リストアイテム
+                      <dads-list variant="number" spacing="sm" marker-width="2">
+                        <dads-list-item><span slot="marker">1.</span>リストアイテム</dads-list-item>
+                        <dads-list-item><span slot="marker">2.</span>リストアイテム</dads-list-item>
+                        <dads-list-item><span slot="marker">3.</span>リストアイテム</dads-list-item>
+                      </dads-list>
+                    </dads-list-item>
+                  </dads-list>
+                </dads-list-item>
+              </dads-list>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      ${modulePreloadScript(['dads-list'])}
+    </div>
+  `,
+
   empty: () => `
     <div style="padding: 40px; text-align: center; color: #666;">
       コンポーネントを選択してください

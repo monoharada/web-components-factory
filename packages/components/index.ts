@@ -47,8 +47,14 @@ export * from './switch/index.js';
 // チップラベル
 export * from './chip-label/index.js';
 
+// チップタグ
+export * from './chip-tag/index.js';
+
 // ページナビゲーション
 export * from './page-navigation/index.js';
+
+// パンくずリスト
+export * from './breadcrumb/index.js';
 
 // テーブル
 export * from './table/index.js';
@@ -67,6 +73,9 @@ export * from './search-box/index.js';
 
 // 見出し
 export * from './heading/index.js';
+
+// 箇条書きリスト
+export * from './list/index.js';
 
 // ディスクロージャー
 export * from './disclosure/index.js';

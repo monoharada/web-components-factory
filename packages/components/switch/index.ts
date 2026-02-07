@@ -2,4 +2,4 @@
  * スイッチコンポーネント モジュールエクスポート
  */
 export * from './switch.js';
-export { defineSwitch, autoDefineSwitch } from './switch-define.js';
+export { defineSwitch, defineDefaultSwitch, autoDefineSwitch } from './switch-define.js';

@@ -285,6 +285,48 @@ describe('DadsButton - アクセシビリティ', () => {
   });
 });
 
+// ========== Phase 8: 属性デリゲーション（command/commandfor） ==========
+describe('DadsButton - commandfor デリゲーション', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('hostのcommand/commandforがshadow内baseへ委譲される', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button command="clear" commandfor="#x">Clear</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    const base = getShadowElement(component, '[part="base"]');
+    expect(base?.getAttribute('command')).toBe('clear');
+    expect(base?.getAttribute('commandfor')).toBe('#x');
+  });
+
+  it('再レンダリング（as/href変更）後もbaseがcommand/commandforを保持する', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button command="clear" commandfor="#x">Clear</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+
+    component.setAttribute('as', 'link');
+    component.setAttribute('href', '/test');
+
+    await waitFor(() => {
+      const base = getShadowElement(component, '[part="base"]');
+      expect(base?.tagName.toLowerCase()).toBe('a');
+      expect(base?.getAttribute('command')).toBe('clear');
+      expect(base?.getAttribute('commandfor')).toBe('#x');
+    });
+  });
+});
+
 // ========== Phase 7: フォーム統合 ==========
 describe('DadsButton - フォーム統合', () => {
   afterEach(() => {

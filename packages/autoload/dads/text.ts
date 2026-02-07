@@ -1,7 +1,9 @@
 /**
  * wc-autoloader アダプター: dads-text
- * DadsText は DadsText.define() で自己登録するため、インポートのみで登録される
+ * このファイルがインポートされるとコンポーネントが自動登録される
  */
-import { DadsText } from '../../components/typography/index.js';
+import { DadsText, defineDefaultText } from '../../components/typography/index.js';
+
+defineDefaultText();
 
 export default DadsText;
