@@ -162,6 +162,21 @@
         "componentDir": "packages/components/fieldset"
       }
     },
+    "file-upload": {
+      "id": "file-upload",
+      "tags": [
+        "dads-file-upload"
+      ],
+      "define": "defineFileUpload",
+      "call": "prefix-registry",
+      "deps": [
+        "button",
+        "checkbox"
+      ],
+      "source": {
+        "componentDir": "packages/components/file-upload"
+      }
+    },
     "heading": {
       "id": "heading",
       "tags": [
@@ -354,6 +369,7 @@
     "dads-date-picker": "date-picker",
     "dads-disclosure": "disclosure",
     "dads-fieldset": "fieldset",
+    "dads-file-upload": "file-upload",
     "dads-heading": "heading",
     "dads-input-text": "input-text",
     "dads-list": "list",

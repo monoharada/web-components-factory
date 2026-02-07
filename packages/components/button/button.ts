@@ -40,6 +40,8 @@ import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
  * @attr {string} type - ボタンタイプ (button | submit | reset)
  * @attr {boolean} full-width - 幅100%表示
  * @attr {string} aria-label - アクセシビリティラベル
+ * @attr {string} aria-describedby - 補足説明要素ID（スペース区切り可）
+ * @attr {string} aria-labelledby - ラベル要素ID（スペース区切り可）
  * @attr {string} command - command-store / commandfor 用（任意、動作は外部に委ねる）
  * @attr {string} commandfor - command-store / commandfor 用（任意、動作は外部に委ねる）
  * 
@@ -87,6 +89,8 @@ export class DadsButton extends TypographyFormComponent {
       PropertyAttr('type'),
       BooleanAttr('full-width'),
       PropertyAttr('aria-label'),
+      PropertyAttr('aria-describedby'),
+      PropertyAttr('aria-labelledby'),
       DelegatingPropertyAttr('[part="base"]', 'command'),
       DelegatingPropertyAttr('[part="base"]', 'commandfor'),
       PropertyAttr('as'),
@@ -217,8 +221,7 @@ export class DadsButton extends TypographyFormComponent {
     // a要素の場合はdisabled処理不要
     
     // 共通属性
-    const ariaLabel = this.getAttribute('aria-label');
-    if (ariaLabel) base.setAttribute('aria-label', ariaLabel);
+    this.#syncA11yAttributes(base);
     
     // イベントリスナー
     base.addEventListener('click', this.#handleClick);
@@ -266,9 +269,18 @@ export class DadsButton extends TypographyFormComponent {
         }
         break;
       case 'aria-label':
-        if (newValue) base.setAttribute('aria-label', newValue);
-        else base.removeAttribute('aria-label');
+      case 'aria-describedby':
+      case 'aria-labelledby':
+        this.#syncA11yAttributes(base);
         break;
+    }
+  }
+
+  #syncA11yAttributes(base: HTMLElement): void {
+    for (const name of ['aria-label', 'aria-describedby', 'aria-labelledby']) {
+      const value = this.getAttribute(name);
+      if (value) base.setAttribute(name, value);
+      else base.removeAttribute(name);
     }
   }
 

@@ -2458,5 +2458,150 @@
         }
       }
     ]
+  },
+  "dads-file-upload": {
+    "version": 1,
+    "summary": "ファイルアップロード／ドロップエリア仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "ファイル選択ボタンを常設し、ドラッグ&ドロップは補助操作として提供します。",
+        "通常時（未選択）も、項目ラベル・要否ラベル・サポートテキスト・未選択メッセージを表示して状態を明示します。",
+        "ドロップエリア内には、ボタン、ドロップヒント、全画面範囲拡大チェックを配置します。"
+      ],
+      "keyboard": [
+        "Tabでファイル選択ボタンと拡大チェックボックスへ到達できます。",
+        "Enter/Spaceでファイル選択ボタンを操作し、ドラッグなしで完遂できます。",
+        "チェックボックスはラベルを含む操作領域でON/OFFでき、全画面ドロップ範囲の切替に到達できます。"
+      ],
+      "zoom": [
+        "ファイル名は折り返して表示し、拡大時も情報欠落を防ぎます。",
+        "全画面ドロップオーバーレイの文言は可変サイズで表示されます。"
+      ],
+      "states": [
+        "ファイル未選択時は「ファイルが選択されていません」を表示します。",
+        "ファイルごとに状態ラベルは「アップロード中」「完了」を表示します（準備中/エラーは状態ラベルを出さず、エラーメッセージ表示を優先）。",
+        "バリデーションエラー時は上部エラーとファイル行エラーを表示します。"
+      ],
+      "labels": [
+        "label/support-text/error-text を公開し、aria-describedbyで関連付けます。",
+        "要否ラベル（※必須）は項目ラベルと一体で提示し、必須項目であることを視覚的に示します。",
+        "拡大チェックボックスの文言は expand-label 属性で変更できます。"
+      ],
+      "motion": [
+        "ドラッグ中のみ全画面オーバーレイを表示し、不要時は非表示に戻します。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "browse-button",
+        "title": "ファイル選択ボタン",
+        "label": "ファイル選択ボタン（必須）",
+        "description": "ドラッグ操作が難しい利用者でも完遂できる必須導線です。",
+        "category": "keyboard",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"browse-button\"]"
+        }
+      },
+      {
+        "id": "expand-checkbox",
+        "title": "範囲拡大チェックボックス",
+        "label": "ドロップ領域拡大チェック",
+        "description": "ドロップ範囲をブラウザウィンドウ全体に広げる切替です。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"expand-checkbox\"]"
+        }
+      },
+      {
+        "id": "dropzone",
+        "title": "ドロップエリア",
+        "label": "ドロップエリア",
+        "description": "ボタンとドロップヒントを含む補助領域です。ドロップ操作が可能です。",
+        "category": "semantics",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"dropzone\"]"
+        }
+      },
+      {
+        "id": "field-label",
+        "title": "項目ラベル",
+        "label": "項目ラベル（必須）",
+        "description": "入力項目名を示す主ラベルです。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "requirement-label",
+        "title": "要否ラベル",
+        "label": "※必須",
+        "description": "必須項目であることを明示する補助ラベルです。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"requirement\"]"
+        }
+      },
+      {
+        "id": "support-text",
+        "title": "サポートテキスト",
+        "label": "サポートテキスト",
+        "description": "対応形式や上限サイズなどの補足条件を示します。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"support-text\"]"
+        }
+      },
+      {
+        "id": "empty-text",
+        "title": "未選択メッセージ",
+        "label": "ファイル未選択メッセージ",
+        "description": "未選択状態を明示し、現在の状態が分かるようにします。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"empty-text\"]"
+        }
+      },
+      {
+        "id": "drop-hint",
+        "title": "ドロップヒント",
+        "label": "補助文: ドロップ可能範囲",
+        "description": "ボタン以外にドラッグ&ドロップでも選択できることを案内します。",
+        "category": "semantics",
+        "mode": "panel",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"drop-hint\"]"
+        }
+      },
+      {
+        "id": "file-list",
+        "title": "選択ファイル一覧",
+        "label": "選択ファイル一覧（選択時）",
+        "description": "選択ファイル、サイズ、状態、エラーを一覧表示します（ファイル選択後に表示）。",
+        "category": "states",
+        "mode": "panel",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"wrapper\"]"
+        }
+      }
+    ]
   }
 }
