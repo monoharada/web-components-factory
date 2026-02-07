@@ -10001,6 +10001,1063 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/dialog/dialog.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Dialog（モーダル）コンポーネント",
+          "name": "DadsDialog",
+          "cssProperties": [
+            {
+              "description": "背景(backdrop)色",
+              "name": "--dads-dialog-backdrop-background"
+            },
+            {
+              "description": "ダイアログ境界線色",
+              "name": "--dads-dialog-border-color"
+            },
+            {
+              "description": "ダイアログ境界線幅",
+              "name": "--dads-dialog-border-width"
+            },
+            {
+              "description": "ダイアログ幅",
+              "name": "--dads-dialog-width"
+            },
+            {
+              "description": "ダイアログ角丸",
+              "name": "--dads-dialog-border-radius"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルートの dialog 要素",
+              "name": "base"
+            },
+            {
+              "description": "閉じるボタン（オプション）",
+              "name": "close-button"
+            },
+            {
+              "description": "本文領域",
+              "name": "content"
+            },
+            {
+              "description": "フッター領域",
+              "name": "footer"
+            },
+            {
+              "description": "ヘッダー領域",
+              "name": "header"
+            },
+            {
+              "description": "ダイアログ本体",
+              "name": "panel"
+            },
+            {
+              "description": "タイトル領域",
+              "name": "title"
+            }
+          ],
+          "slots": [
+            {
+              "description": "ダイアログ本文",
+              "name": "default"
+            },
+            {
+              "description": "フッター（操作ボタン群）",
+              "name": "footer"
+            },
+            {
+              "description": "ダイアログタイトル",
+              "name": "title"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "#applyClosedState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "Readonly<{ restoreFocus: boolean }>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#applyOpenState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDialogElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#closeButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#closeButtonLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#createEventDetail",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DadsDialogEventDetail"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "DialogActionContext"
+                  }
+                },
+                {
+                  "name": "invoker",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#documentSubscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#findInitialFocusElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#focusInitialElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#footerSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#getDeepActiveElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getFocusableElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getTitleFocusTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleBaseClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleCloseButtonClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#handleCommand",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "command",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "invoker",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                },
+                {
+                  "name": "originalEvent",
+                  "type": {
+                    "text": "Event | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#handleCommandEvent",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDadsCommand",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDocumentFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDocumentKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleNativeCancel",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#ignoreOpenAttrChange",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isElementInsidePanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isEventInsideDialog",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isPreviewContained",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#lastInvoker",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#openState",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#panel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#requestClose",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "DialogActionContext"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#requestOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "DialogActionContext"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resolveInitialFocus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DadsDialogInitialFocus"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveInvoker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "invoker",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#restoreFocusToInvoker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setOpenAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isOpen",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#subscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#syncAccessibleName",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#syncCloseButtonLabel",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#syncCloseButtonVisibility",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#syncDocumentListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isOpen",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#syncFooterVisibility",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#syncSize",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#titleSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-dialog', template: html` <dialog part=\"base\" id=\"base\" closedby=\"none\"> <section part=\"panel\" id=\"panel\" tabindex=\"-1\"> <header part=\"header\"> <div part=\"title\" id=\"title\" tabindex=\"-1\"> <slot name=\"title\" id=\"title-slot\"></slot> </div> <button part=\"close-button\" id=\"close-button\" type=\"button\" hidden> <span part=\"close-button-label\" id=\"close-button-label\">閉じる</span> </button> </header> <div part=\"content\" id=\"content\"> <slot></slot> </div> <footer part=\"footer\" id=\"footer\"> <slot name=\"footer\" id=\"footer-slot\"></slot> </footer> </section> </dialog> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), dialogTokens, dialogStyles, applyDADSFocusStyles()], 'minimal', ), attributes: [ BooleanAttr('open'), PropertyAttr('size'), PropertyAttr('initial-focus'), { attribute: 'data-preview-contained' }, BooleanAttr('close-button'), PropertyAttr('close-label'), PropertyAttr('aria-label'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "openChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "閉じる前に発火（cancelable）",
+              "name": "dads-dialog-before-close"
+            },
+            {
+              "description": "開く前に発火（cancelable）",
+              "name": "dads-dialog-before-open"
+            },
+            {
+              "name": "dads-dialog-close",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "閉じた後に発火"
+            },
+            {
+              "name": "dads-dialog-open",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "開いた後に発火"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "タイトルslot未使用時のダイアログ名",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "閉じるボタン表示",
+              "name": "close-button"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "閉じるボタンラベル",
+              "name": "close-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "初期フォーカス位置 (auto | title)",
+              "name": "initial-focus"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "開閉状態",
+              "name": "open"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "サイズ (s | m | l)",
+              "name": "size"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-dialog",
+          "customElement": true,
+          "modulePath": "./packages/components/dialog/dialog.ts",
+          "definitionPath": "./packages/components/dialog/dialog.ts",
+          "typeDefinitionPath": "./packages/components/dialog/dialog.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "モーダルダイアログコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部に <dialog> 要素を使用し、role=\"dialog\" と aria-modal=\"true\" を付与します。",
+                  "タイトルslotがある場合は aria-labelledby=\"title\"、ない場合は aria-label を使用します。"
+                ],
+                "keyboard": [
+                  "Escで閉じることができ、Tab/Shift+Tab でフォーカスをダイアログ内に維持します。",
+                  "close-button 属性がある場合、閉じるボタンをキーボード操作できます。"
+                ],
+                "zoom": [
+                  "サイズ（s/m/l）でダイアログ幅を切り替えできます。"
+                ],
+                "states": [
+                  "open 属性で開閉状態を制御できます。",
+                  "light dismiss は無効化され、明示操作またはEscで閉じます。"
+                ],
+                "labels": [
+                  "title スロットまたは aria-label でアクセシブルネームを提供します。",
+                  "本文領域は aria-describedby=\"content\" で関連付けます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "dialog ルート",
+                  "label": "<dialog>",
+                  "description": "モーダル全体を管理するルート要素です。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "panel",
+                  "title": "ダイアログ本体",
+                  "label": "panel",
+                  "description": "見出し・本文・フッターを含む内容領域です。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"panel\"]"
+                  }
+                },
+                {
+                  "id": "title",
+                  "title": "タイトル",
+                  "label": "slot=\"title\"",
+                  "description": "aria-labelledby の参照先となるタイトル領域です。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"title\"]"
+                  }
+                },
+                {
+                  "id": "content",
+                  "title": "本文",
+                  "label": "content",
+                  "description": "aria-describedby の参照先となる本文領域です。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"content\"]"
+                  }
+                },
+                {
+                  "id": "close-button",
+                  "title": "閉じるボタン",
+                  "label": "button",
+                  "description": "close-button 属性指定時に表示される閉じる操作です。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"close-button\"]"
+                  }
+                },
+                {
+                  "id": "footer",
+                  "title": "フッター",
+                  "label": "slot=\"footer\"",
+                  "description": "確認・キャンセルなどの操作ボタンを配置する領域です。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"footer\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "dialog",
+            "install": {
+              "id": "dialog",
+              "define": "defineDialog",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/dialog"
+              },
+              "tags": [
+                "dads-dialog"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDialog",
+          "declaration": {
+            "name": "DadsDialog",
+            "module": "packages/components/dialog/dialog.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/dialog/dialog.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/dialog/dialog.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-dialog",
+          "declaration": {
+            "name": "DadsDialog",
+            "module": "./packages/components/dialog/dialog.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/disclosure/disclosure.ts",
       "declarations": [
         {
@@ -30456,6 +31513,168 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/dialog/dialog-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultDialog",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDialog",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-dialog`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultDialog",
+          "declaration": {
+            "name": "defineDefaultDialog",
+            "module": "packages/components/dialog/dialog-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDialog",
+          "declaration": {
+            "name": "defineDialog",
+            "module": "packages/components/dialog/dialog-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/dialog/dialog-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dialogStyles",
+          "default": "css` :host { display: block; } :host([data-preview-contained]) { position: relative; min-block-size: 20rem; } [part='base'] { margin: 0; padding: 0; border: 0; background: transparent; color: var(--dads-dialog-color); inline-size: 100dvw; max-inline-size: 100dvw; block-size: 100dvh; max-block-size: 100dvh; } :host([data-preview-contained]) [part='base'] { position: absolute; inset: 0; inline-size: 100%; max-inline-size: 100%; block-size: 100%; max-block-size: 100%; background-color: var(--dads-dialog-backdrop-background); } [part='base'][open] { display: grid; place-items: center; padding: var(--dads-dialog-viewport-padding); } [part='base']::backdrop { background-color: var(--dads-dialog-backdrop-background); } [part='panel'] { display: flex; flex-direction: column; row-gap: var(--dads-dialog-gap); inline-size: min(var(--dads-dialog-width), calc(100dvw - var(--dads-dialog-viewport-padding) * 2)); max-inline-size: 100%; max-block-size: var(--dads-dialog-max-height); overflow: auto; background-color: var(--dads-dialog-background); color: var(--dads-dialog-color); border: var(--dads-dialog-border-width) solid var(--dads-dialog-border-color); border-radius: var(--dads-dialog-border-radius); padding: var(--dads-dialog-padding-block) var(--dads-dialog-padding-inline); } :host([data-preview-contained]) [part='panel'] { inline-size: min(var(--dads-dialog-width), calc(100% - var(--dads-dialog-viewport-padding) * 2)); max-block-size: calc(100% - var(--dads-dialog-viewport-padding) * 2); } [part='header'] { display: flex; align-items: start; justify-content: space-between; column-gap: var(--dads-dialog-header-gap); } [part='title'] { margin: 0; font-size: var(--dads-dialog-title-size); line-height: var(--dads-dialog-title-line-height); font-weight: var(--font-weight-700, 700); } #title-slot::slotted(h1), #title-slot::slotted(h2), #title-slot::slotted(h3), #title-slot::slotted(h4), #title-slot::slotted(h5), #title-slot::slotted(h6) { margin: 0; font-size: inherit; line-height: inherit; font-weight: inherit; } [part='content'] { font-size: var(--font-size-16, 1rem); line-height: var(--line-height-170, 1.7); } [part='footer'] { display: none; align-items: center; justify-content: end; column-gap: var(--dads-dialog-footer-gap); flex-wrap: wrap; } :host([data-has-footer]) [part='footer'] { display: flex; } [part='close-button'] { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; min-inline-size: var(--dads-dialog-close-button-size); min-block-size: var(--dads-dialog-close-button-size); padding: var(--dads-dialog-close-button-padding); border: 1px solid var(--dads-dialog-close-button-border-color); border-radius: var(--dads-dialog-close-button-border-radius); background-color: transparent; color: inherit; cursor: pointer; font-size: var(--font-size-16, 1rem); line-height: var(--line-height-100, 1); white-space: nowrap; } @media (any-hover: hover) { [part='close-button']:hover { background-color: var(--dads-dialog-close-button-hover-background); } } [part='close-button'][hidden] { display: none; } @media (forced-colors: active) { [part='panel'] { border-color: CanvasText; } [part='close-button'] { border-color: CanvasText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dialogStyles",
+          "declaration": {
+            "name": "dialogStyles",
+            "module": "packages/components/dialog/dialog-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/dialog/dialog-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dialogLocalTokens",
+          "default": "css`${dialogLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "dialogSemanticTokens",
+          "default": "css`${dialogSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "dialogTokens",
+          "default": "css` ${dialogSemanticTokensText} ${dialogLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dialogLocalTokens",
+          "declaration": {
+            "name": "dialogLocalTokens",
+            "module": "packages/components/dialog/dialog-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dialogSemanticTokens",
+          "declaration": {
+            "name": "dialogSemanticTokens",
+            "module": "packages/components/dialog/dialog-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dialogTokens",
+          "declaration": {
+            "name": "dialogTokens",
+            "module": "packages/components/dialog/dialog-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/dialog/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/dialog/dialog.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultDialog",
+          "declaration": {
+            "name": "defineDefaultDialog",
+            "module": "./dialog-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDialog",
+          "declaration": {
+            "name": "defineDialog",
+            "module": "./dialog-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/disclosure/disclosure-define.ts",
       "declarations": [
         {
@@ -31268,6 +32487,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/disclosure/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/dialog/index.js"
           }
         }
       ]

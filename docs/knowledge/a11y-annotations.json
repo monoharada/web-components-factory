@@ -2603,5 +2603,107 @@
         }
       }
     ]
+  },
+  "dads-dialog": {
+    "version": 1,
+    "summary": "モーダルダイアログコンポーネント仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部に <dialog> 要素を使用し、role=\"dialog\" と aria-modal=\"true\" を付与します。",
+        "aria-label が指定されている場合はそれを優先し、未指定かつタイトルslotがある場合は aria-labelledby=\"title\" を使用します。"
+      ],
+      "keyboard": [
+        "Escで閉じることができ、Tab/Shift+Tab でフォーカスをダイアログ内に維持します。",
+        "close-button 属性がある場合、閉じるボタンをキーボード操作できます。"
+      ],
+      "zoom": [
+        "サイズ（s/m/l）でダイアログ幅を切り替えできます。"
+      ],
+      "states": [
+        "open 属性で開閉状態を制御できます。",
+        "light dismiss は無効化され、明示操作またはEscで閉じます。"
+      ],
+      "labels": [
+        "title スロットまたは aria-label でアクセシブルネームを提供します（aria-label 指定時は優先）。",
+        "本文領域は aria-describedby=\"content\" で関連付けます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "base",
+        "title": "dialog ルート",
+        "label": "<dialog>",
+        "description": "モーダル全体を管理するルート要素です。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "panel",
+        "title": "ダイアログ本体",
+        "label": "panel",
+        "description": "見出し・本文・フッターを含む内容領域です。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"panel\"]"
+        }
+      },
+      {
+        "id": "title",
+        "title": "タイトル",
+        "label": "slot=\"title\"",
+        "description": "aria-labelledby の参照先となるタイトル領域です。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"title\"]"
+        }
+      },
+      {
+        "id": "content",
+        "title": "本文",
+        "label": "content",
+        "description": "aria-describedby の参照先となる本文領域です。",
+        "category": "labels",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"content\"]"
+        }
+      },
+      {
+        "id": "close-button",
+        "title": "閉じるボタン",
+        "label": "button",
+        "description": "close-button 属性指定時に表示される閉じる操作です。",
+        "category": "keyboard",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"close-button\"]"
+        }
+      },
+      {
+        "id": "footer",
+        "title": "フッター",
+        "label": "slot=\"footer\"",
+        "description": "確認・キャンセルなどの操作ボタンを配置する領域です。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"footer\"]"
+        }
+      }
+    ]
   }
 }
