@@ -12,7 +12,6 @@ export const contentTypesetStylesText = `@layer ${CONTENT_TYPESET_LAYER_ORDER};
 
 @layer contents {
   [data-dads-typeset] {
-    --dads-typeset-density-factor: 1;
     --dads-typeset-gap-normal: 1lh;
     --dads-typeset-gap-compact: 1em;
     --dads-typeset-gap-current: var(--dads-typeset-gap-normal);
@@ -32,7 +31,6 @@ export const contentTypesetStylesText = `@layer ${CONTENT_TYPESET_LAYER_ORDER};
 
   [data-dads-density='compact'][data-dads-typeset],
   [data-dads-density='compact'] [data-dads-typeset] {
-    --dads-typeset-density-factor: 0.85;
     --dads-typeset-gap-current: var(--dads-typeset-gap-compact);
     --dads-typeset-heading-margin-top-current: var(--dads-typeset-heading-margin-top-compact);
     --dads-typeset-heading-before-extra-current: var(--dads-typeset-heading-before-extra-compact);

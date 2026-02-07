@@ -12,7 +12,8 @@
 
 - コンテナに `data-dads-typeset` を付与する
 - 密度を詰める場合だけ `data-dads-density="compact"` を付与する
-- `compact` は標準の約 15% 圧縮（`0.85` 倍）
+- `compact` は固定値 (`gap: 1em`, `dads-heading[margin="top"]`: `1em`) を使う
+- 実際の見た目の圧縮率はフォント/line-height により変動する
 
 ```html
 <main data-dads-typeset>
@@ -32,7 +33,6 @@
 
 ## スペーシング設計
 
-- 密度係数: `--dads-typeset-density-factor`（default=`1`, compact=`0.85`）
 - 基本ギャップ: `--dads-typeset-gap-normal: 1lh;`
 - compact: `--dads-typeset-gap-compact: 1em;`
 - 実適用: `row-gap: var(--dads-typeset-gap-current);`
@@ -60,7 +60,18 @@ native見出し（`h1`〜`h6`）の「見出し前の追加余白」は次で調
 - `dads-heading` の大きい余白は `margin="top"` を第一選択にする
 - 組版CSSは `dads-heading` の大余白を上書き/再定義しない
 - 組版側で加算するのは native 見出し (`h1`〜`h6`) のフォールバックのみ
-- `dads-heading[margin="top"]` は `--dads-typeset-density-factor` を参照して compact 連動できる
+- `dads-heading[margin="top"]` の最終値は `calc(base * scale)` で計算される
+
+```css
+[data-dads-typeset] {
+  --dads-heading-margin-block-start-base: 1lh;
+  --dads-heading-margin-scale: 1;
+}
+
+[data-dads-typeset][data-dads-density="compact"] {
+  --dads-heading-margin-block-start-base: 1em;
+}
+```
 
 ## テンプレート制作ルール
 

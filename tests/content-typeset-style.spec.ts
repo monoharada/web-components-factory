@@ -13,8 +13,6 @@ describe('content typeset styles', () => {
   });
 
   it('uses compact density tokens for gap and heading spacing', () => {
-    expect(contentTypesetStylesText).toContain('--dads-typeset-density-factor: 1;');
-    expect(contentTypesetStylesText).toContain('--dads-typeset-density-factor: 0.85;');
     expect(contentTypesetStylesText).toContain('--dads-typeset-gap-normal: 1lh;');
     expect(contentTypesetStylesText).toContain('--dads-typeset-gap-compact: 1em;');
     expect(contentTypesetStylesText).toContain('--dads-typeset-heading-margin-top-normal: 1lh;');
@@ -33,6 +31,7 @@ describe('content typeset styles', () => {
       '--dads-heading-margin-block-start-base: var(--dads-typeset-heading-margin-top-current);',
     );
     expect(contentTypesetStylesText).toContain('--dads-heading-margin-scale: 1;');
+    expect(contentTypesetStylesText).not.toContain('--dads-typeset-density-factor');
     expect(contentTypesetStylesText).toContain(
       'var(--dads-typeset-heading-before-extra-current)',
     );

@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
+import { contentTypesetStylesText } from '../packages/styles/content-typeset.ts';
 import { createPage, getPattern, listPatterns } from '../scripts/wcf/core.js';
 
 async function mkdtemp() {
@@ -9,6 +10,19 @@ async function mkdtemp() {
 }
 
 describe('wcf page create', () => {
+  const normalizeTypesetStyle = (cssText: string): string =>
+    cssText
+      .split('\n')
+      .map(line => line.trimEnd())
+      .filter(line => line.length > 0)
+      .join('\n');
+
+  const readEmbeddedTypesetStyle = (html: string): string => {
+    const match = html.match(/<style data-wcf-typeset>\n([\s\S]*?)\n\s*<\/style>/);
+    if (!match) return '';
+    return normalizeTypesetStyle(match[1].replace(/^ {4}/gm, ''));
+  };
+
   it('creates index.html for boot entry with tag importmap', async () => {
     const tmp = await mkdtemp();
     try {
@@ -23,9 +37,9 @@ describe('wcf page create', () => {
       expect(text).toContain('<style data-wcf-typeset>');
       expect(text).toContain('@layer reset, tokens, base, layout, components, contents, page;');
       expect(text).toContain('@layer contents');
-      expect(text).toContain('--dads-typeset-density-factor: 1;');
       expect(text).toContain('--dads-typeset-heading-margin-top-normal: 1lh;');
       expect(text).toContain('--dads-typeset-heading-margin-top-compact: 1em;');
+      expect(readEmbeddedTypesetStyle(text)).toBe(normalizeTypesetStyle(contentTypesetStylesText));
       expect(text).toContain('<script type="importmap">');
       expect(text).toContain('"myui-search-box": "./vendor/components/myui/components/search-box.js"');
       expect(text).toContain("import './vendor/components/myui/boot.js';");
