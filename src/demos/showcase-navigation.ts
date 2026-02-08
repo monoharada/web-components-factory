@@ -1719,7 +1719,7 @@ export const demos = {
 
   breadcrumb: () => `
     <div class="demo-breadcrumb" style="padding: 40px; max-width: 1200px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">現在位置ナビゲーション（パンくず）</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">パンくずリスト</h2>
       <p style="color: #666; margin-bottom: 32px;">
         現在位置ナビゲーション（パンくず）として、<code>p</code>要素ベースで実装しています。
         <code>ul/ol/li</code> は使用せず、<code>role="list"</code>/<code>role="listitem"</code> でセマンティクスを補完します。
