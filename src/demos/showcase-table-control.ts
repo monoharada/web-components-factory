@@ -1248,6 +1248,30 @@ export const demos = {
           </div>
       </section>
 
+      <section style="margin-top: 56px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Usage (HTML)</h3>
+        <dads-code-block>
+          <template>
+<dads-table-control variant="header" result-count="120" popular-label="よくある検索：">
+  <div slot="presets">
+    <dads-chip-tag action="none" value="マイナンバーカード">マイナンバーカード</dads-chip-tag>
+    <dads-chip-tag action="none" value="パスポート">パスポート</dads-chip-tag>
+  </div>
+</dads-table-control>
+
+<dads-table-control
+  variant="footer"
+  items-per-page="10"
+  page-size-options="10,50,100"
+  page-size-label="表示件数"
+  pagination-position="end"
+>
+  <dads-page-navigation slot="page-navigation" as="button" type="arrow" current="1" total="12"></dads-page-navigation>
+</dads-table-control>
+          </template>
+        </dads-code-block>
+      </section>
+
     </div>
 
     <script type="module">
@@ -1264,6 +1288,7 @@ export const demos = {
         import('dads-switch'),
         import('dads-chip-label'),
         import('dads-menu-list-box'),
+        import('dads-code-block'),
         import('a11y-annotate'),
       ]);
 
