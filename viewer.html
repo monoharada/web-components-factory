@@ -27,6 +27,7 @@
       "dads-button": "/@components/dads/button.js",
       "dads-card": "/@components/dads/card.js",
       "dads-table": "/@components/dads/table.js",
+      "dads-table-control": "/@components/dads/table-control.js",
       "dads-textarea": "/@components/dads/textarea.js",
       "dads-accordion-details": "/@components/dads/accordion-details.js",
       "dads-accordion-item-details": "/@components/dads/accordion-item-details.js",
@@ -168,6 +169,15 @@
     }
 
     body[data-component="card"] #component-container {
+      padding: 24px;
+    }
+
+    body[data-component="tableControl"] main {
+      max-width: 1560px;
+      padding: 0 16px;
+    }
+
+    body[data-component="tableControl"] #component-container {
       padding: 24px;
     }
 
@@ -393,6 +403,7 @@
             <option value="button">Button</option>
             <option value="card">Card</option>
             <option value="table">Table</option>
+            <option value="tableControl">Table Control</option>
             <option value="pageNavigation">Page Navigation</option>
             <option value="breadcrumb">Breadcrumb</option>
             <option value="chipLabel">チップラベル</option>
@@ -601,6 +612,7 @@
     // バックグラウンドプリロード対象（アイドル時にロード）
     const componentAdapters = [
       '/@components/dads/table.js',
+      '/@components/dads/table-control.js',
       '/@components/dads/textarea.js',
       '/@components/dads/input-text.js',
       '/@components/dads/file-upload.js',

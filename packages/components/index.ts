@@ -62,6 +62,9 @@ export * from './breadcrumb/index.js';
 // テーブル
 export * from './table/index.js';
 
+// テーブルコントロール
+export * from './table-control/index.js';
+
 // ステップナビゲーション
 export * from './step-navigation/index.js';
 

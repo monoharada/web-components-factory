@@ -352,6 +352,23 @@
         "componentDir": "packages/components/table"
       }
     },
+    "table-control": {
+      "id": "table-control",
+      "tags": [
+        "dads-table-control"
+      ],
+      "define": "defineTableControl",
+      "call": "prefix-registry",
+      "deps": [
+        "button",
+        "chip-tag",
+        "page-navigation",
+        "search-box"
+      ],
+      "source": {
+        "componentDir": "packages/components/table-control"
+      }
+    },
     "textarea": {
       "id": "textarea",
       "tags": [
@@ -411,6 +428,7 @@
     "dads-step-navigation-item": "step-navigation",
     "dads-switch": "switch",
     "dads-table": "table",
+    "dads-table-control": "table-control",
     "dads-text": "typography",
     "dads-textarea": "textarea"
   }
