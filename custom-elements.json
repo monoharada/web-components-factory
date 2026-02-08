@@ -1326,6 +1326,16 @@
             },
             {
               "kind": "method",
+              "name": "#resolveCalloutLane",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "'side' | 'top'"
+                }
+              }
+            },
+            {
+              "kind": "method",
               "name": "#resolveElementRef",
               "privacy": "private",
               "return": {
@@ -1508,7 +1518,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000); --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid); --a11y-annotate-callout-line-inset: var(--spacing-0-5, 2px); --a11y-annotate-callout-line-inset-ratio: 0.35; --a11y-annotate-callout-anchor-corner-margin: var(--spacing-2-5, 10px); /* callout-layer の拡張量（= レーンの外側距離）。大きすぎると視認性が落ちるため clamp で抑える。 */ --a11y-annotate-callout-gutter: clamp(var(--spacing-12, 3rem), 8vw, var(--spacing-24, 6rem)); /* レーン（ラベル位置）のターゲット範囲からの距離 */ --a11y-annotate-callout-lane-offset: var(--spacing-14, 56px); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: var(--color-text-secondary, #475569); /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color); /* シャドウ */ --a11y-annotate-shadow: var( --component-shadow, var( --elevation-2, 0 2px 12px 2px rgba(0, 0, 0, 0.1), 0 1px 6px 0 rgba(0, 0, 0, 0.3) ) ); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; /* Expand all sides so callout tags can be placed outside the preview frame (including the right side). */ inset: calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: var(--border-radius-8, 0.5rem); background: transparent; } a11y-annotate .callout-box[hidden] { display: none; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: var(--border-radius-8, 0.5rem); background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; flex: 1 1 auto; min-width: 0; font-weight: inherit; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { box-sizing: border-box; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; border: 2px solid var(--a11y-annotate-callout-color); background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: var(--border-radius-8, 0.5rem); border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), BooleanAttr('no-live'), ], }",
+              "default": "{ name: 'a11y-annotate', shadowOptions: null, template: html` <div part=\"layout\"> <div part=\"preview\"> <div part=\"preview-inner\"> <div part=\"target-root\"></div> </div> <div part=\"callout-layer\" aria-hidden=\"true\"></div> </div> <aside part=\"panel\" aria-label=\"アクセシビリティ注釈\"> <div part=\"panel-header\"> <div part=\"panel-title-row\"> <h2 part=\"panel-title\">アクセシビリティ注釈</h2> <div part=\"panel-badges\"></div> </div> <p part=\"panel-subtitle\"></p> </div> <div part=\"panel-body\"></div> </aside> </div> `, styles: css` a11y-annotate { display: block; /* カスタマイズ可能な注釈カラー */ --a11y-annotate-callout-color-solid: var(--color-semantic-error-1, #ec0000); --a11y-annotate-callout-color: var(--a11y-annotate-callout-color-solid); --a11y-annotate-callout-line-inset: var(--spacing-0-5, 2px); --a11y-annotate-callout-line-inset-ratio: 0.35; --a11y-annotate-callout-anchor-corner-margin: var(--spacing-2-5, 10px); /* callout-layer の拡張量（= レーンの外側距離）。大きすぎると視認性が落ちるため clamp で抑える。 */ --a11y-annotate-callout-gutter: clamp(var(--spacing-12, 3rem), 8vw, var(--spacing-24, 6rem)); /* レーン（ラベル位置）のターゲット範囲からの距離 */ --a11y-annotate-callout-lane-offset: var(--spacing-14, 56px); /* レーン上のタグ同士の最小間隔 */ --a11y-annotate-callout-lane-gap: var(--spacing-2, 8px); /* Typography */ --a11y-annotate-font-size: var(--font-size-16, 1rem); --a11y-annotate-circle-size: var(--spacing-6, 24px); --a11y-annotate-body-line-height: var(--line-height-170, 1.7); /* Spacing */ --a11y-annotate-space-xs: var(--spacing-2, 8px); --a11y-annotate-space-sm: var(--spacing-3, 12px); --a11y-annotate-space-md: var(--spacing-4, 16px); /* パネル・レイアウト用カラー */ --a11y-annotate-border-color: var(--color-border-light, #e5e7eb); --a11y-annotate-background: var(--color-neutral-white, #ffffff); --a11y-annotate-background-muted: var(--color-background-hover, #f8fafc); --a11y-annotate-text-primary: var(--color-text-primary, #0f172a); --a11y-annotate-text-secondary: var(--color-text-secondary, #475569); --a11y-annotate-text-muted: var(--color-text-secondary, #475569); /* バッジ用カラー */ --a11y-annotate-badge-bg: var(--color-primitive-light-blue-50, #e0f2fe); --a11y-annotate-badge-color: var(--color-primitive-light-blue-1000, #075985); --a11y-annotate-badge-border: var(--color-primitive-light-blue-200, #bae6fd); /* スナップショット用 */ --a11y-annotate-snapshot-border: var(--a11y-annotate-border-color); /* シャドウ */ --a11y-annotate-shadow: var( --component-shadow, var( --elevation-2, 0 2px 12px 2px rgba(0, 0, 0, 0.1), 0 1px 6px 0 rgba(0, 0, 0, 0.3) ) ); } a11y-annotate [part=\"layout\"] { display: grid; grid-template-columns: 1fr; gap: var(--spacing-6, 24px); } a11y-annotate [part=\"preview\"] { min-width: 0; border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); padding: var(--spacing-12, 48px); position: relative; overflow: visible; } a11y-annotate [part=\"preview-inner\"] { position: relative; min-width: 0; } a11y-annotate [part=\"callout-layer\"] { position: absolute; /* Expand all sides so callout tags can be placed outside the preview frame (including the right side). */ inset: calc(var(--a11y-annotate-callout-gutter) * -1); pointer-events: none; } a11y-annotate [part=\"panel\"] { border: 1px solid var(--a11y-annotate-border-color); border-radius: var(--border-radius-12, 0.75rem); background: var(--a11y-annotate-background); overflow: hidden; } a11y-annotate [part=\"panel-header\"] { padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px); border-bottom: 1px solid var(--a11y-annotate-border-color); background: var(--a11y-annotate-background-muted); } a11y-annotate [part=\"panel-title-row\"] { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2-5, 10px); } a11y-annotate [part=\"panel-title\"] { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate [part=\"panel-badges\"] { display: flex; flex-wrap: wrap; gap: var(--spacing-1-5, 6px); justify-content: flex-end; } a11y-annotate [part=\"panel-subtitle\"] { margin: var(--spacing-2, 8px) 0 0; font-size: var(--a11y-annotate-font-size); line-height: 1.4; color: var(--a11y-annotate-text-secondary); } a11y-annotate [part=\"panel-body\"] { padding: var(--a11y-annotate-space-md); display: grid; gap: var(--a11y-annotate-space-md); } a11y-annotate section { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate section > h3 { font-size: var(--a11y-annotate-font-size); line-height: 1.2; font-weight: 700; margin: 0; color: var(--a11y-annotate-text-primary); } a11y-annotate section > ul { margin: 0; padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px)); display: grid; gap: var(--a11y-annotate-space-xs); color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate section > p { margin: 0; color: var(--a11y-annotate-text-primary); font-size: var(--a11y-annotate-font-size); line-height: var(--a11y-annotate-body-line-height); } a11y-annotate .badge { font-size: var(--a11y-annotate-font-size); line-height: 1; padding: var(--spacing-1, 4px) var(--spacing-2, 8px); border-radius: 999px; background: var(--a11y-annotate-badge-bg); color: var(--a11y-annotate-badge-color); border: 1px solid var(--a11y-annotate-badge-border); white-space: nowrap; } a11y-annotate .callout-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 40; } a11y-annotate .callout-line { fill: none; stroke: var(--a11y-annotate-callout-color); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; } a11y-annotate .callout-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 30; } a11y-annotate .callout-box { position: absolute; border: 2px dashed var(--a11y-annotate-callout-color); border-radius: var(--border-radius-8, 0.5rem); background: transparent; } a11y-annotate .callout-box[hidden] { display: none; } a11y-annotate .callout-tag { position: absolute; z-index: 50; max-width: min(320px, calc(100vw - 40px)); padding: var(--spacing-1-5, 6px) var(--spacing-2-5, 10px); border-radius: var(--border-radius-8, 0.5rem); background: var(--a11y-annotate-callout-color); border: 1px solid var(--a11y-annotate-callout-color); color: var(--a11y-annotate-background); font-size: var(--a11y-annotate-font-size); line-height: 1.3; font-weight: 700; box-shadow: var(--a11y-annotate-shadow); display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--spacing-1-5, 6px); white-space: normal; } a11y-annotate .callout-tag-number { display: inline-flex; align-items: center; justify-content: center; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); font-size: var(--a11y-annotate-font-size); font-weight: 700; flex-shrink: 0; } a11y-annotate .callout-tag code { font-family: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; flex: 1 1 auto; min-width: 0; font-weight: inherit; background: transparent; border: 0; padding: 0; color: inherit; white-space: normal; overflow-wrap: anywhere; } a11y-annotate .callout-list { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--a11y-annotate-space-sm); } a11y-annotate .callout-item { display: grid; grid-template-columns: minmax(var(--a11y-annotate-circle-size), max-content) minmax(0, 1fr); gap: var(--spacing-2-5, 10px); align-items: start; } a11y-annotate .callout-number { box-sizing: border-box; min-width: var(--a11y-annotate-circle-size); height: var(--a11y-annotate-circle-size); padding: 0 var(--spacing-1, 4px); border-radius: 999px; border: 2px solid var(--a11y-annotate-callout-color); background: var(--a11y-annotate-background); color: var(--a11y-annotate-callout-color-solid); display: inline-flex; align-items: center; justify-content: center; font-size: var(--a11y-annotate-font-size); font-weight: 700; } a11y-annotate .callout-text { display: grid; gap: var(--a11y-annotate-space-xs); } a11y-annotate .callout-title { font-size: var(--a11y-annotate-font-size); line-height: 1.4; font-weight: 700; color: var(--a11y-annotate-text-primary); } a11y-annotate .callout-desc { font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-muted); } a11y-annotate .snapshot { margin: 0; padding: var(--spacing-2-5, 10px) var(--spacing-3, 12px); border-radius: var(--border-radius-8, 0.5rem); border: 1px solid var(--a11y-annotate-snapshot-border); background: var(--a11y-annotate-background-muted); font-size: var(--a11y-annotate-font-size); line-height: 1.5; color: var(--a11y-annotate-text-primary); } a11y-annotate .snapshot code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: var(--a11y-annotate-font-size); } @media (max-width: 900px) { a11y-annotate [part=\"layout\"] { grid-template-columns: 1fr; } } `, attributes: [ PropertyAttr('target-selector'), PropertyAttr('mode'), PropertyAttr('callout-lane'), BooleanAttr('no-live'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -1594,6 +1604,13 @@
             }
           ],
           "attributes": [
+            {
+              "type": {
+                "text": "'side' | 'top'"
+              },
+              "description": "コールアウト配置レーン（既定: side）",
+              "name": "callout-lane"
+            },
             {
               "type": {
                 "text": "string"
@@ -12251,6 +12268,1024 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/drawer/drawer.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Drawer（ドロワー）コンポーネント",
+          "name": "DadsDrawer",
+          "cssProperties": [
+            {
+              "description": "ドロワー幅",
+              "name": "--dads-drawer-width"
+            },
+            {
+              "description": "背景(backdrop)色",
+              "name": "--dads-drawer-backdrop-background"
+            },
+            {
+              "description": "ドロワー影",
+              "name": "--dads-drawer-shadow"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルートの dialog 要素",
+              "name": "base"
+            },
+            {
+              "description": "閉じるボタン",
+              "name": "close-button"
+            },
+            {
+              "description": "閉じるアイコン",
+              "name": "close-button-icon"
+            },
+            {
+              "description": "本文領域",
+              "name": "content"
+            },
+            {
+              "description": "ヘッダー領域",
+              "name": "header"
+            },
+            {
+              "description": "ドロワー本体",
+              "name": "panel"
+            },
+            {
+              "description": "タイトル領域",
+              "name": "title"
+            }
+          ],
+          "slots": [
+            {
+              "description": "ドロワー本文",
+              "name": "default"
+            },
+            {
+              "description": "ドロワータイトル",
+              "name": "title"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "#applyClosedState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "Readonly<{ restoreFocus: boolean }>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#applyOpenState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDialogElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#closeButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#closeButtonLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#createEventDetail",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DadsDrawerEventDetail"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "DrawerActionContext"
+                  }
+                },
+                {
+                  "name": "invoker",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                },
+                {
+                  "name": "returnFocusTo",
+                  "default": "this.#lastInvoker",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#documentSubscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#findInitialFocusElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#focusInitialElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getDeepActiveElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getFocusableElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleBaseClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleCloseButtonClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#handleCommand",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "command",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "invoker",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                },
+                {
+                  "name": "originalEvent",
+                  "type": {
+                    "text": "Event | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#handleCommandEvent",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDadsCommand",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDocumentFocusIn",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDocumentKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleNativeCancel",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#ignoreOpenAttrChange",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isElementInsidePanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isEventInsideDrawer",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isPreviewContained",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#lastInvoker",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#openState",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#panel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#requestClose",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "DrawerActionContext"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#requestOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "DrawerActionContext"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resolveInvoker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "invoker",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#restoreFocusToInvoker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setOpenAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isOpen",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#subscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#syncAccessibleName",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#syncCloseButtonLabel",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#syncDocumentListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isOpen",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#syncPlacement",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#titleSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "close",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-drawer', template: html` <dialog part=\"base\" id=\"base\" closedby=\"none\"> <span part=\"backdrop-anchor\" id=\"backdrop-anchor\" aria-hidden=\"true\"></span> <section part=\"panel\" id=\"panel\" tabindex=\"-1\"> <header part=\"header\"> <div part=\"title\" id=\"title\" tabindex=\"-1\"> <slot name=\"title\" id=\"title-slot\"></slot> </div> <button part=\"close-button\" id=\"close-button\" type=\"button\"> <span part=\"close-button-icon\" id=\"close-button-icon\" aria-hidden=\"true\"> <svg id=\"close-button-icon-svg\" viewBox=\"0 0 14 14\" fill=\"none\" width=\"14\" height=\"14\" focusable=\"false\" > <path id=\"close-button-icon-path\" fill=\"currentColor\" d=\"M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z\" ></path> </svg> </span> <span part=\"close-button-label\" id=\"close-button-label\">閉じる</span> </button> </header> <div part=\"content\" id=\"content\"> <slot></slot> </div> </section> </dialog> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), drawerTokens, drawerStyles, applyDADSFocusStyles()], 'minimal', ), attributes: [ BooleanAttr('open'), PropertyAttr('placement'), PropertyAttr('close-label'), PropertyAttr('aria-label'), BooleanAttr('light-dismiss'), { attribute: 'data-preview-contained' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "openChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "閉じる前に発火（cancelable）",
+              "name": "dads-drawer-before-close"
+            },
+            {
+              "description": "開く前に発火（cancelable）",
+              "name": "dads-drawer-before-open"
+            },
+            {
+              "name": "dads-drawer-close",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "閉じた後に発火"
+            },
+            {
+              "name": "dads-drawer-open",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "開いた後に発火"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "指定時はタイトルより優先されるアクセシブル名",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "閉じるボタンラベル",
+              "name": "close-label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "背景クリックで閉じる",
+              "name": "light-dismiss"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "開閉状態",
+              "name": "open"
+            },
+            {
+              "type": {
+                "text": "'left' | 'right'"
+              },
+              "description": "表示位置",
+              "name": "placement"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-drawer",
+          "customElement": true,
+          "modulePath": "./packages/components/drawer/drawer.ts",
+          "definitionPath": "./packages/components/drawer/drawer.ts",
+          "typeDefinitionPath": "./packages/components/drawer/drawer.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ドロワーコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部に <dialog> を利用し、モーダル表示時は背景操作を抑制します。",
+                  "ドロワー本体はヘッダー（タイトル・閉じる）と本文領域で構成されます。"
+                ],
+                "keyboard": [
+                  "Esc で閉じることができ、Tab/Shift+Tab でフォーカスをドロワー内に維持します。",
+                  "閉じるボタンはキーボード操作で実行できます。"
+                ],
+                "zoom": [
+                  "幅はトークンで管理され、表示倍率変更時も内容が読めることを前提にします。"
+                ],
+                "states": [
+                  "open 属性で開閉状態を制御できます。",
+                  "light-dismiss 属性がある時のみ背景クリックで閉じます。"
+                ],
+                "labels": [
+                  "aria-label 指定時はそれを優先し、未指定かつ title slot がある場合は aria-labelledby を使用します。",
+                  "本文領域は aria-describedby で関連付けられます。"
+                ],
+                "motion": [
+                  "アニメーションは前提としません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "drawer ルート",
+                  "label": "<dialog>",
+                  "description": "ドロワー全体を管理するルート要素です。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "backdrop",
+                  "title": "背景（backdrop）",
+                  "label": "::backdrop",
+                  "description": "背景レイヤーです。擬似要素（::backdrop）は直接参照できないため、注釈用アンカーで説明しています。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"backdrop-anchor\"]"
+                  }
+                },
+                {
+                  "id": "panel",
+                  "title": "ドロワー本体",
+                  "label": "panel",
+                  "description": "見出しと本文を含む内容領域です。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"panel\"]"
+                  }
+                },
+                {
+                  "id": "header",
+                  "title": "ヘッダー",
+                  "label": "header",
+                  "description": "タイトルと閉じる操作を含む領域です。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"header\"]"
+                  }
+                },
+                {
+                  "id": "title",
+                  "title": "タイトル",
+                  "label": "slot=\"title\"",
+                  "description": "ドロワーのアクセシブルネームに関与するタイトル領域です。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "hostSelector": "dads-drawer",
+                    "selector": "[slot=\"title\"]"
+                  }
+                },
+                {
+                  "id": "close-button",
+                  "title": "閉じるボタン",
+                  "label": "button",
+                  "description": "ドロワーを閉じる明示操作です。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"close-button\"]"
+                  }
+                },
+                {
+                  "id": "content",
+                  "title": "本文",
+                  "label": "content",
+                  "description": "ナビゲーションや補足情報を配置する本文領域です。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"content\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "drawer",
+            "install": {
+              "id": "drawer",
+              "define": "defineDrawer",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/drawer"
+              },
+              "tags": [
+                "dads-drawer"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDrawer",
+          "declaration": {
+            "name": "DadsDrawer",
+            "module": "packages/components/drawer/drawer.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/drawer/drawer.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/drawer/drawer.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-drawer",
+          "declaration": {
+            "name": "DadsDrawer",
+            "module": "./packages/components/drawer/drawer.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/fieldset/fieldset.ts",
       "declarations": [
         {
@@ -14720,6 +15755,537 @@
           "declaration": {
             "name": "DadsFileUpload",
             "module": "./packages/components/file-upload/file-upload.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "ハンバーガーメニューボタンコンポーネント",
+          "name": "DadsHamburgerMenuButton",
+          "cssProperties": [
+            {
+              "description": "アイコンサイズ",
+              "name": "--dads-hamburger-menu-button-icon-size"
+            },
+            {
+              "description": "最小高さ",
+              "name": "--dads-hamburger-menu-button-min-height"
+            },
+            {
+              "description": "hover背景色",
+              "name": "--dads-hamburger-menu-button-background-hover"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルートボタン",
+              "name": "base"
+            },
+            {
+              "description": "アイコン領域",
+              "name": "icon"
+            },
+            {
+              "description": "ラベル領域",
+              "name": "label"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#iconPath",
+              "privacy": "private",
+              "type": {
+                "text": "SVGPathElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#iconSvg",
+              "privacy": "private",
+              "type": {
+                "text": "SVGSVGElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#label",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAriaLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "fallbackLabel",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-hamburger-menu-button', template: html` <button part=\"base\" id=\"base\" type=\"button\"> <span part=\"icon\" id=\"icon\" aria-hidden=\"true\"> <svg id=\"icon-svg\" viewBox=\"0 0 24 24\" fill=\"none\" width=\"24\" height=\"24\"> <path id=\"icon-path\" fill=\"currentColor\"></path> </svg> </span> <span part=\"label\" id=\"label\"></span> </button> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), hamburgerMenuButtonTokens, hamburgerMenuButtonStyles, applyDADSFocusStyles(), ], 'minimal', ), attributes: [ PropertyAttr('variant'), PropertyAttr('type'), { attribute: 'lang' }, DelegatingPropertyAttr('[part=\"base\"]', 'command'), DelegatingPropertyAttr('[part=\"base\"]', 'commandfor'), DelegatingPropertyAttr('[part=\"base\"]', 'aria-controls'), DelegatingPropertyAttr('[part=\"base\"]', 'aria-expanded'), DelegatingPropertyAttr('[part=\"base\"]', 'aria-label'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "制御対象ID",
+              "name": "aria-controls"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "展開状態",
+              "name": "aria-expanded"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "アクセシブル名",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "command-store のコマンド",
+              "name": "command"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "command-store のターゲット",
+              "name": "commandfor"
+            },
+            {
+              "type": {
+                "text": "'ja' | 'en'"
+              },
+              "description": "ラベル言語",
+              "name": "lang"
+            },
+            {
+              "type": {
+                "text": "'menu' | 'close'"
+              },
+              "description": "メニュー表示/閉じる表示",
+              "name": "type"
+            },
+            {
+              "type": {
+                "text": "'standard' | 'icon'"
+              },
+              "description": "見た目バリアント",
+              "name": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-hamburger-menu-button",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts",
+          "definitionPath": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts",
+          "typeDefinitionPath": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ハンバーガーメニューボタン仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部に <button> を使用し、variant により標準型とアイコン型を切り替えます。",
+                  "アイコンは補助表現で、ボタン名はラベルまたは aria-label で提供します。"
+                ],
+                "keyboard": [
+                  "Tab でフォーカスし、Enter/Space で操作できます（ネイティブ挙動）。"
+                ],
+                "zoom": [
+                  "最小44pxターゲットを前提にし、表示倍率変更時も押下しやすさを維持します。"
+                ],
+                "states": [
+                  "type 属性で menu/close の表示を切り替えます。",
+                  "aria-expanded と command の組み合わせで開閉状態を外部コンポーネントと同期します。"
+                ],
+                "labels": [
+                  "aria-label 指定時は明示ラベルを優先し、未指定時は type/lang からラベルを補完します。"
+                ],
+                "motion": [
+                  "アニメーションは前提としません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "ボタン本体",
+                  "label": "<button>",
+                  "description": "command/commandfor を受けて操作を発火するルートボタンです。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "icon",
+                  "title": "アイコン",
+                  "label": "icon",
+                  "description": "menu/close 状態を視覚的に補助するアイコンです。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "label",
+                  "title": "ラベル",
+                  "label": "label",
+                  "description": "ボタンの視覚ラベルを表示し、アクセシブルネームの基礎になります。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "hamburger-menu-button",
+            "install": {
+              "id": "hamburger-menu-button",
+              "define": "defineHamburgerMenuButton",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/hamburger-menu-button"
+              },
+              "tags": [
+                "dads-hamburger-menu-button"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsHamburgerMenuButton",
+          "declaration": {
+            "name": "DadsHamburgerMenuButton",
+            "module": "packages/components/hamburger-menu-button/hamburger-menu-button.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-hamburger-menu-button",
+          "declaration": {
+            "name": "DadsHamburgerMenuButton",
+            "module": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts"
           }
         }
       ]
@@ -19566,6 +21132,344 @@
           "declaration": {
             "name": "DadsMenuListItem",
             "module": "./packages/components/menu-list/menu-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/mobile-mock/mobile-mock.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "スマートフォン画面モック\n\n402x856 の端末フレームと safe-area コンテナを提供します。",
+          "name": "DadsMobileMock",
+          "cssProperties": [
+            {
+              "description": "フレーム幅（既定: 402px）",
+              "name": "--dads-mobile-mock-frame-width"
+            },
+            {
+              "description": "フレーム比率（既定: 402/856）",
+              "name": "--dads-mobile-mock-aspect-ratio"
+            },
+            {
+              "description": "画面領域の内側余白（既定: 6px）",
+              "name": "--dads-mobile-mock-screen-inset"
+            },
+            {
+              "description": "画面領域の角丸（既定: 24px）",
+              "name": "--dads-mobile-mock-screen-radius"
+            },
+            {
+              "description": "上部safe-area（既定: 44px）",
+              "name": "--dads-mobile-mock-safe-area-top"
+            },
+            {
+              "description": "画面背景色",
+              "name": "--dads-mobile-mock-screen-background"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "外側ラッパー",
+              "name": "base"
+            },
+            {
+              "description": "端末フレーム SVG",
+              "name": "frame"
+            },
+            {
+              "description": "端末枠線の矩形",
+              "name": "frame-shape"
+            },
+            {
+              "description": "safe-area コンテンツ領域",
+              "name": "safe-area"
+            },
+            {
+              "description": "画面領域",
+              "name": "screen"
+            }
+          ],
+          "slots": [
+            {
+              "description": "safe-area 内に配置するコンテンツ",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-mobile-mock', template: html` <div part=\"base\"> <svg part=\"frame\" viewBox=\"0 0 402 856\" aria-hidden=\"true\" focusable=\"false\"> <rect part=\"frame-shape\" x=\"3\" y=\"3\" width=\"396\" height=\"850\" rx=\"27\"></rect> </svg> <div part=\"screen\"> <div part=\"safe-area\"> <slot></slot> </div> </div> </div> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), mobileMockTokens, mobileMockStyles, ], 'minimal', ), }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "WebComponent",
+            "module": "/packages/core/web-components.js"
+          },
+          "tagName": "dads-mobile-mock",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/mobile-mock/mobile-mock.ts",
+          "definitionPath": "./packages/components/mobile-mock/mobile-mock.ts",
+          "typeDefinitionPath": "./packages/components/mobile-mock/mobile-mock.ts",
+          "cssStates": [],
+          "attributes": [],
+          "custom": {
+            "componentId": "mobile-mock",
+            "install": {
+              "id": "mobile-mock",
+              "define": "defineMobileMock",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/mobile-mock"
+              },
+              "tags": [
+                "dads-mobile-mock"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsMobileMock",
+          "declaration": {
+            "name": "DadsMobileMock",
+            "module": "packages/components/mobile-mock/mobile-mock.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/mobile-mock/mobile-mock.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/mobile-mock/mobile-mock.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-mobile-mock",
+          "declaration": {
+            "name": "DadsMobileMock",
+            "module": "./packages/components/mobile-mock/mobile-mock.ts"
           }
         }
       ]
@@ -34948,6 +36852,168 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/drawer/drawer-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultDrawer",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDrawer",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-drawer`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultDrawer",
+          "declaration": {
+            "name": "defineDefaultDrawer",
+            "module": "packages/components/drawer/drawer-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDrawer",
+          "declaration": {
+            "name": "defineDrawer",
+            "module": "packages/components/drawer/drawer-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/drawer/drawer-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "drawerStyles",
+          "default": "css` :host { display: block; } :host([data-preview-contained]) { position: relative; min-block-size: 20rem; } [part='base'] { margin: 0; padding: 0; border: 0; background: transparent; color: var(--dads-drawer-color); inline-size: 100dvw; max-inline-size: 100dvw; block-size: 100dvh; max-block-size: 100dvh; z-index: var(--dads-drawer-z-index); } :host([data-preview-contained]) [part='base'] { position: absolute; inset: 0; inline-size: 100%; max-inline-size: 100%; block-size: 100%; max-block-size: 100%; background-color: var(--dads-drawer-backdrop-background); } [part='base'][open] { display: flex; justify-content: start; align-items: stretch; } :host([placement='right']) [part='base'][open] { justify-content: end; } [part='base']::backdrop { background-color: var(--dads-drawer-backdrop-background); } /* * a11y-annotate 用アンカー。 * ::backdrop は直接ターゲットできないため、同等領域を示す透明要素を置く。 */ [part='backdrop-anchor'] { position: absolute; top: 50%; inline-size: clamp(2.5rem, 12vw, 6rem); block-size: clamp(2.5rem, 12vh, 6rem); transform: translateY(-50%); pointer-events: none; opacity: 0; } :host([placement='left']) [part='backdrop-anchor'] { left: calc(min(var(--dads-drawer-width), var(--dads-drawer-max-width)) + var(--spacing-4, 1rem)); } :host([placement='right']) [part='backdrop-anchor'] { right: calc(min(var(--dads-drawer-width), var(--dads-drawer-max-width)) + var(--spacing-4, 1rem)); } [part='panel'] { display: flex; flex-direction: column; inline-size: min(var(--dads-drawer-width), var(--dads-drawer-max-width)); max-inline-size: 100dvw; block-size: 100dvh; max-block-size: 100dvh; overflow: hidden; background-color: var(--dads-drawer-background); color: var(--dads-drawer-color); box-shadow: var(--dads-drawer-shadow); border-inline-end: var(--dads-drawer-border-width) solid var(--dads-drawer-border-color); } :host([placement='right']) [part='panel'] { border-inline-end: 0; border-inline-start: var(--dads-drawer-border-width) solid var(--dads-drawer-border-color); } :host([data-preview-contained]) [part='panel'] { block-size: 100%; max-block-size: 100%; } [part='header'] { display: flex; align-items: center; justify-content: space-between; column-gap: var(--spacing-2, 0.5rem); min-block-size: var(--dads-drawer-header-min-height); padding-inline: var(--dads-drawer-header-padding-inline); border-block-end: var(--dads-drawer-border-width) solid var(--dads-drawer-border-color); } [part='title'] { margin: 0; font-size: var(--dads-drawer-title-size); line-height: var(--dads-drawer-title-line-height); font-weight: var(--font-weight-700, 700); min-inline-size: 0; } #title-slot::slotted(h1), #title-slot::slotted(h2), #title-slot::slotted(h3), #title-slot::slotted(h4), #title-slot::slotted(h5), #title-slot::slotted(h6) { margin: 0; font-size: inherit; line-height: inherit; font-weight: inherit; } [part='content'] { flex: 1 1 auto; overflow: auto; padding: var(--dads-drawer-content-padding-block) var(--dads-drawer-content-padding-inline); font-size: var(--font-size-16, 1rem); line-height: var(--line-height-170, 1.7); } [part='close-button'] { display: inline-flex; align-items: center; justify-content: center; gap: var(--dads-drawer-close-button-gap); padding-inline: var(--dads-drawer-close-button-padding-inline); min-inline-size: var(--dads-drawer-close-button-size); min-block-size: var(--dads-drawer-close-button-size); border: 1px solid var(--dads-drawer-close-button-border-color); border-radius: var(--dads-drawer-close-button-radius); background: transparent; color: inherit; cursor: pointer; font-size: var(--font-size-16, 1rem); line-height: var(--line-height-100, 1); white-space: nowrap; } [part='close-button-icon'] { display: inline-flex; flex: 0 0 auto; inline-size: var(--dads-drawer-close-button-icon-size); block-size: var(--dads-drawer-close-button-icon-size); } [part='close-button-icon'] > svg { display: block; inline-size: 100%; block-size: 100%; } @media (any-hover: hover) { [part='close-button']:hover { background-color: var(--dads-drawer-close-button-hover-background); text-decoration: underline; text-underline-offset: calc(3 / 16 * 1rem); } } @media (forced-colors: active) { [part='panel'] { border-color: CanvasText; } [part='close-button'] { border-color: CanvasText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "drawerStyles",
+          "declaration": {
+            "name": "drawerStyles",
+            "module": "packages/components/drawer/drawer-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/drawer/drawer-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "drawerLocalTokens",
+          "default": "css`${drawerLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "drawerSemanticTokens",
+          "default": "css`${drawerSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "drawerTokens",
+          "default": "css` ${drawerSemanticTokensText} ${drawerLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "drawerLocalTokens",
+          "declaration": {
+            "name": "drawerLocalTokens",
+            "module": "packages/components/drawer/drawer-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "drawerSemanticTokens",
+          "declaration": {
+            "name": "drawerSemanticTokens",
+            "module": "packages/components/drawer/drawer-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "drawerTokens",
+          "declaration": {
+            "name": "drawerTokens",
+            "module": "packages/components/drawer/drawer-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/drawer/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/drawer/drawer.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultDrawer",
+          "declaration": {
+            "name": "defineDefaultDrawer",
+            "module": "./drawer-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDrawer",
+          "declaration": {
+            "name": "defineDrawer",
+            "module": "./drawer-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/fieldset/fieldset-define.ts",
       "declarations": [
         {
@@ -35231,6 +37297,168 @@
           "declaration": {
             "name": "defineFileUpload",
             "module": "./file-upload-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/hamburger-menu-button/hamburger-menu-button-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultHamburgerMenuButton",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineHamburgerMenuButton",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-hamburger-menu-button`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultHamburgerMenuButton",
+          "declaration": {
+            "name": "defineDefaultHamburgerMenuButton",
+            "module": "packages/components/hamburger-menu-button/hamburger-menu-button-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineHamburgerMenuButton",
+          "declaration": {
+            "name": "defineHamburgerMenuButton",
+            "module": "packages/components/hamburger-menu-button/hamburger-menu-button-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/hamburger-menu-button/hamburger-menu-button-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "hamburgerMenuButtonStyles",
+          "default": "css` :host { display: inline-block; } [part='base'] { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--dads-hamburger-menu-button-gap); min-block-size: var(--dads-hamburger-menu-button-min-height); padding: var(--dads-hamburger-menu-button-padding-block) var(--dads-hamburger-menu-button-padding-inline); border: 0; border-radius: var(--dads-hamburger-menu-button-radius); background-color: var(--dads-hamburger-menu-button-background); color: var(--dads-hamburger-menu-button-color); cursor: pointer; touch-action: manipulation; text-decoration: none; font-size: var(--dads-hamburger-menu-button-label-size); line-height: var(--dads-hamburger-menu-button-label-line-height); font-weight: var(--font-weight-400, 400); } [part='icon'] { display: inline-flex; flex: 0 0 auto; inline-size: var(--dads-hamburger-menu-button-icon-size); block-size: var(--dads-hamburger-menu-button-icon-size); } [part='icon'] > svg { display: block; inline-size: 100%; block-size: 100%; } [part='label'] { display: inline-block; text-decoration: inherit; white-space: nowrap; } :host([variant='standard']) [part='base']:active { background-color: var(--dads-hamburger-menu-button-background-active); } :host([variant='standard']) [part='base']:focus-visible { background-color: var(--dads-focus-text-element-bg); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); text-decoration: underline; text-underline-offset: var(--dads-hamburger-menu-button-underline-offset); } @media (any-hover: hover) { :host([variant='standard']) [part='base']:hover { background-color: var(--dads-hamburger-menu-button-background-hover); text-decoration: underline; text-underline-offset: var(--dads-hamburger-menu-button-underline-offset); } } :host([variant='icon']) [part='base'] { inline-size: var(--dads-hamburger-menu-button-icon-only-size); block-size: var(--dads-hamburger-menu-button-icon-only-size); min-inline-size: var(--dads-hamburger-menu-button-icon-only-size); min-block-size: var(--dads-hamburger-menu-button-icon-only-size); padding: 0; border-radius: var(--dads-hamburger-menu-button-icon-only-radius); } :host([variant='icon']) [part='icon'] { inline-size: var(--dads-hamburger-menu-button-icon-only-size); block-size: var(--dads-hamburger-menu-button-icon-only-size); } :host([variant='icon']) [part='label'] { position: absolute; inline-size: 1px; block-size: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; white-space: nowrap; clip: rect(0 0 0 0); clip-path: inset(50%); } :host([variant='icon']) [part='base']:active { background-color: var(--dads-hamburger-menu-button-background-active); } @media (any-hover: hover) { :host([variant='icon']) [part='base']:hover { background-color: var(--dads-hamburger-menu-button-background-hover); outline: var(--dads-hamburger-menu-button-icon-only-hover-outline-width) solid var(--dads-hamburger-menu-button-icon-only-hover-outline-color); outline-offset: -1px; text-decoration: none; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "hamburgerMenuButtonStyles",
+          "declaration": {
+            "name": "hamburgerMenuButtonStyles",
+            "module": "packages/components/hamburger-menu-button/hamburger-menu-button-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/hamburger-menu-button/hamburger-menu-button-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "hamburgerMenuButtonLocalTokens",
+          "default": "css`${hamburgerMenuButtonLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "hamburgerMenuButtonSemanticTokens",
+          "default": "css`${hamburgerMenuButtonSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "hamburgerMenuButtonTokens",
+          "default": "css` ${hamburgerMenuButtonSemanticTokensText} ${hamburgerMenuButtonLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "hamburgerMenuButtonLocalTokens",
+          "declaration": {
+            "name": "hamburgerMenuButtonLocalTokens",
+            "module": "packages/components/hamburger-menu-button/hamburger-menu-button-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hamburgerMenuButtonSemanticTokens",
+          "declaration": {
+            "name": "hamburgerMenuButtonSemanticTokens",
+            "module": "packages/components/hamburger-menu-button/hamburger-menu-button-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hamburgerMenuButtonTokens",
+          "declaration": {
+            "name": "hamburgerMenuButtonTokens",
+            "module": "packages/components/hamburger-menu-button/hamburger-menu-button-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/hamburger-menu-button/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/hamburger-menu-button/hamburger-menu-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultHamburgerMenuButton",
+          "declaration": {
+            "name": "defineDefaultHamburgerMenuButton",
+            "module": "./hamburger-menu-button-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineHamburgerMenuButton",
+          "declaration": {
+            "name": "defineHamburgerMenuButton",
+            "module": "./hamburger-menu-button-define.js"
           }
         }
       ]
@@ -35626,6 +37854,30 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/dialog/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/drawer/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/hamburger-menu-button/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/mobile-mock/index.js"
           }
         }
       ]
@@ -36307,6 +38559,176 @@
           "declaration": {
             "name": "menuListTokens",
             "module": "packages/components/menu-list/menu-list-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/mobile-mock/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsMobileMock",
+          "declaration": {
+            "name": "DadsMobileMock",
+            "module": "./mobile-mock.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultMobileMock",
+          "declaration": {
+            "name": "defineDefaultMobileMock",
+            "module": "./mobile-mock-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineMobileMock",
+          "declaration": {
+            "name": "defineMobileMock",
+            "module": "./mobile-mock-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mobileMockStyles",
+          "declaration": {
+            "name": "mobileMockStyles",
+            "module": "./mobile-mock-styles.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/mobile-mock/mobile-mock-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultMobileMock",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineMobileMock",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-mobile-mock`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultMobileMock",
+          "declaration": {
+            "name": "defineDefaultMobileMock",
+            "module": "packages/components/mobile-mock/mobile-mock-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineMobileMock",
+          "declaration": {
+            "name": "defineMobileMock",
+            "module": "packages/components/mobile-mock/mobile-mock-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/mobile-mock/mobile-mock-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "mobileMockStyles",
+          "default": "css` :host { display: block; inline-size: 100%; min-inline-size: 0; } [part='base'] { position: relative; inline-size: min(100%, var(--dads-mobile-mock-frame-width)); aspect-ratio: var(--dads-mobile-mock-aspect-ratio); margin-inline: auto; } [part='frame'] { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; pointer-events: none; z-index: 5; } [part='frame-shape'] { fill: none; stroke: var(--dads-mobile-mock-frame-stroke-color); stroke-width: var(--dads-mobile-mock-frame-stroke-width); } [part='screen'] { position: absolute; inset: var(--dads-mobile-mock-screen-inset); border-radius: var(--dads-mobile-mock-screen-radius); background: var(--dads-mobile-mock-screen-background); overflow: hidden; } [part='safe-area'] { position: absolute; inset: var(--dads-mobile-mock-safe-area-top) 0 0; background: var(--dads-mobile-mock-screen-background); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "mobileMockStyles",
+          "declaration": {
+            "name": "mobileMockStyles",
+            "module": "packages/components/mobile-mock/mobile-mock-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/mobile-mock/mobile-mock-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "mobileMockLocalTokens",
+          "default": "css`${mobileMockLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "mobileMockSemanticTokens",
+          "default": "css`${mobileMockSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "mobileMockTokens",
+          "default": "css` ${mobileMockSemanticTokensText} ${mobileMockLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "mobileMockLocalTokens",
+          "declaration": {
+            "name": "mobileMockLocalTokens",
+            "module": "packages/components/mobile-mock/mobile-mock-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mobileMockSemanticTokens",
+          "declaration": {
+            "name": "mobileMockSemanticTokens",
+            "module": "packages/components/mobile-mock/mobile-mock-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mobileMockTokens",
+          "declaration": {
+            "name": "mobileMockTokens",
+            "module": "packages/components/mobile-mock/mobile-mock-tokens.ts"
           }
         }
       ]

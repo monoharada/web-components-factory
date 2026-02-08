@@ -10,6 +10,8 @@ import { demos as showcaseNavigation } from './demos/showcase-navigation.js';
 import { demos as showcaseTableControl } from './demos/showcase-table-control.js';
 import { demos as extra } from './demos/extra.js';
 import { demos as dialog } from './demos/dialog.js';
+import { demos as drawer } from './demos/drawer.js';
+import { demos as hamburgerMenuButton } from './demos/hamburger-menu-button.js';
 
 export const demos = {
   ...showcaseForm,
@@ -19,6 +21,8 @@ export const demos = {
   ...showcaseTableControl,
   ...extra,
   ...dialog,
+  ...drawer,
+  ...hamburgerMenuButton,
 } as const;
 
 export type DemoName = keyof typeof demos;

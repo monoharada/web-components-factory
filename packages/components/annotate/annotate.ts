@@ -213,6 +213,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
  *
  * @attr {string} target-selector - 対象要素セレクタ
  * @attr {string} mode - 表示モード
+ * @attr {'side' | 'top'} callout-lane - コールアウト配置レーン（既定: side）
  * @attr {boolean} no-live - aria-live を無効化
  */
 export class DadsAnnotate extends TypographyWebComponent {
@@ -256,6 +257,8 @@ export class DadsAnnotate extends TypographyWebComponent {
         --a11y-annotate-callout-gutter: clamp(var(--spacing-12, 3rem), 8vw, var(--spacing-24, 6rem));
         /* レーン（ラベル位置）のターゲット範囲からの距離 */
         --a11y-annotate-callout-lane-offset: var(--spacing-14, 56px);
+        /* レーン上のタグ同士の最小間隔 */
+        --a11y-annotate-callout-lane-gap: var(--spacing-2, 8px);
 
         /* Typography */
         --a11y-annotate-font-size: var(--font-size-16, 1rem);
@@ -572,6 +575,7 @@ export class DadsAnnotate extends TypographyWebComponent {
     attributes: [
       PropertyAttr('target-selector'),
       PropertyAttr('mode'),
+      PropertyAttr('callout-lane'),
       BooleanAttr('no-live'),
     ],
   };
@@ -597,6 +601,11 @@ export class DadsAnnotate extends TypographyWebComponent {
     const value = getComputedStyle(this).getPropertyValue(varName).trim();
     const parsed = Number.parseFloat(value);
     return Number.isFinite(parsed) ? parsed : fallback;
+  }
+
+  #resolveCalloutLane(): 'side' | 'top' {
+    const lane = this.getAttribute('callout-lane')?.trim().toLowerCase();
+    return lane === 'top' ? 'top' : 'side';
   }
 
   static #instanceCounter = 0;
@@ -629,7 +638,7 @@ export class DadsAnnotate extends TypographyWebComponent {
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
     super.attributeChangedCallback(name, oldValue, newValue);
     if (oldValue === newValue) return;
-    if (name === 'target-selector' || name === 'mode' || name === 'no-live') {
+    if (name === 'target-selector' || name === 'mode' || name === 'callout-lane' || name === 'no-live') {
       this.#refresh();
     }
   }
@@ -1131,7 +1140,7 @@ export class DadsAnnotate extends TypographyWebComponent {
     const ratio = Number.parseFloat(ratioRaw);
 
     const clampMargin = 10;
-    const laneGap = 8;
+    const laneGap = this.#readCssPx('--a11y-annotate-callout-lane-gap', 8);
     const laneOffset = this.#readCssPx('--a11y-annotate-callout-lane-offset', 24);
 
     type FocusRectLocal = {
@@ -1270,6 +1279,122 @@ export class DadsAnnotate extends TypographyWebComponent {
     }
     if (!laneFocusRectLocal) laneFocusRectLocal = focusRectLocal;
 
+    const calloutLane = this.#resolveCalloutLane();
+
+    const viewportMargin = clampMargin;
+    const viewportMinXLocal = viewportMargin - containerRect.left;
+    const viewportMaxXLocal = window.innerWidth - viewportMargin - containerRect.left;
+    const minXLocal = Math.max(clampMargin, viewportMinXLocal);
+    const maxXLocal = Math.min(containerRect.width - clampMargin, viewportMaxXLocal);
+
+    if (calloutLane === 'top') {
+      type TopLaneItem = {
+        item: CalloutRender;
+        desiredX: number;
+        centerX: number;
+        width: number;
+        height: number;
+      };
+
+      const topLaneItems: TopLaneItem[] = [];
+      const laneBottomYBase = laneFocusRectLocal.top - laneOffset;
+
+      const clampCenterX = (x: number, width: number): number => {
+        const minCenterX = Math.min(maxXLocal, minXLocal + width / 2);
+        const maxCenterX = Math.max(minXLocal, maxXLocal - width / 2);
+        return clamp(x, minCenterX, maxCenterX);
+      };
+
+      const clampBottomY = (y: number, height: number): number => {
+        const minBottomY = Math.min(containerRect.height - clampMargin, clampMargin + height);
+        const maxBottomY = Math.max(minBottomY, containerRect.height - clampMargin);
+        return clamp(y, minBottomY, maxBottomY);
+      };
+
+      for (const item of this.#callouts) {
+        const info = targetInfo.get(item);
+        if (!info) continue;
+
+        const { targetCenter } = info;
+        item.tagEl.style.transform = 'translate(-50%, -100%)';
+        item.tagEl.style.left = `${targetCenter.x}px`;
+        item.tagEl.style.top = `${laneBottomYBase}px`;
+
+        const measured = item.tagEl.getBoundingClientRect();
+        const width = measured.width || 0;
+        const height = measured.height || 0;
+        const centerX = clampCenterX(targetCenter.x, width);
+        const bottomY = clampBottomY(laneBottomYBase, height);
+
+        item.tagEl.style.left = `${centerX}px`;
+        item.tagEl.style.top = `${bottomY}px`;
+
+        topLaneItems.push({
+          item,
+          desiredX: targetCenter.x,
+          centerX,
+          width,
+          height,
+        });
+      }
+
+      const sorted = topLaneItems.sort((a, b) => a.desiredX - b.desiredX);
+
+      for (let i = 1; i < sorted.length; i += 1) {
+        const prev = sorted[i - 1]!;
+        const cur = sorted[i]!;
+        const minCenterX = prev.centerX + prev.width / 2 + laneGap + cur.width / 2;
+        cur.centerX = Math.max(cur.centerX, minCenterX);
+        cur.centerX = clampCenterX(cur.centerX, cur.width);
+      }
+
+      for (let i = sorted.length - 2; i >= 0; i -= 1) {
+        const next = sorted[i + 1]!;
+        const cur = sorted[i]!;
+        const maxCenterX = next.centerX - next.width / 2 - laneGap - cur.width / 2;
+        cur.centerX = Math.min(cur.centerX, maxCenterX);
+        cur.centerX = clampCenterX(cur.centerX, cur.width);
+      }
+
+      for (const entry of sorted) {
+        entry.item.tagEl.style.left = `${entry.centerX}px`;
+      }
+
+      for (const { item } of sorted) {
+        const info = targetInfo.get(item);
+        if (!info) continue;
+
+        const { targetRectLocal, targetCenter } = info;
+
+        const tagRect = item.tagEl.getBoundingClientRect();
+        const tagRectLocal = {
+          left: tagRect.left - containerRect.left,
+          top: tagRect.top - containerRect.top,
+          width: tagRect.width,
+          height: tagRect.height,
+        };
+        const tagCenter = rectCenter(tagRectLocal);
+
+        const start =
+          pickRectBoundaryPoint(tagCenter, targetCenter, tagRectLocal) ??
+          // fallback (should be rare)
+          { x: tagCenter.x, y: tagCenter.y };
+
+        const hit =
+          pickRectBoundaryPoint(tagCenter, targetCenter, targetRectLocal) ??
+          { x: targetCenter.x, y: targetCenter.y };
+
+        const dir = { x: targetCenter.x - tagCenter.x, y: targetCenter.y - tagCenter.y };
+        const safeHit = clampBoundaryPointAwayFromCorners(hit, targetRectLocal, cornerMargin, dir);
+
+        const insetPx = computeInsetPx(targetRectLocal, lineInsetMin, Number.isFinite(ratio) ? ratio : 0.35);
+        const end = insetPointTowards(safeHit, targetCenter, insetPx);
+
+        item.lineEl.setAttribute('d', buildAutoPath(start, end, targetRectLocal));
+      }
+      return;
+    }
+
     const focusCenterXLocal = (laneFocusRectLocal.left + laneFocusRectLocal.right) / 2;
 
     // レーン固定（left-only/right-only）の判定には、コールアウト対象の union ではなく
@@ -1348,12 +1473,6 @@ export class DadsAnnotate extends TypographyWebComponent {
       if (placement === 'top-right' || placement === 'bottom-right') return 'right';
       return targetCenterX < focusCenterXLocal ? 'left' : 'right';
     };
-
-    const viewportMargin = clampMargin;
-    const viewportMinXLocal = viewportMargin - containerRect.left;
-    const viewportMaxXLocal = window.innerWidth - viewportMargin - containerRect.left;
-    const minXLocal = Math.max(clampMargin, viewportMinXLocal);
-    const maxXLocal = Math.min(containerRect.width - clampMargin, viewportMaxXLocal);
 
     const dockToSide = (
       item: CalloutRender,
