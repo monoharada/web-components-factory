@@ -69,6 +69,129 @@ const renderChipTagPersonChip = (label: string) => `
   </dads-chip-tag>
 `;
 
+const NOTIFICATION_BANNER_TYPES = ['success', 'error', 'warning', 'info-1', 'info-2'] as const;
+type NotificationBannerDemoType = (typeof NOTIFICATION_BANNER_TYPES)[number];
+
+const NOTIFICATION_BANNER_COPY: Record<NotificationBannerDemoType, { title: string }> = {
+  success: { title: '登録手続きは全て完了しました' },
+  error: { title: '操作を完了できませんでした' },
+  warning: { title: '偽SNSアカウントにご注意ください' },
+  'info-1': { title: '登録期間が延長されました' },
+  'info-2': { title: '重要なお知らせ' },
+};
+
+const NOTIFICATION_BANNER_API_COPY: Record<
+  NotificationBannerDemoType,
+  {
+    title: string;
+    meta: string;
+    description: string;
+    secondaryAction: string;
+    primaryAction: string;
+  }
+> = {
+  success: {
+    title: '登録手続きは全て完了しました',
+    meta: '2024年7月1日',
+    description: '申請の受付が完了しました。続けて申請状況をご確認ください。',
+    secondaryAction: '詳細',
+    primaryAction: '確認',
+  },
+  error: {
+    title: '操作を完了できませんでした',
+    meta: '2024年7月1日',
+    description: '通信状況をご確認のうえ、時間をおいて再度お試しください。',
+    secondaryAction: 'ヘルプ',
+    primaryAction: '再試行',
+  },
+  warning: {
+    title: '偽SNSアカウントにご注意ください',
+    meta: '2024年7月1日',
+    description: '公式情報は自治体ポータルから確認し、不審なリンクは開かないでください。',
+    secondaryAction: '注意事項',
+    primaryAction: '確認しました',
+  },
+  'info-1': {
+    title: '登録期間が延長されました',
+    meta: '2024年7月1日',
+    description: '期限が延長されたため、期日までに必要な手続きを行ってください。',
+    secondaryAction: '対象を確認',
+    primaryAction: '手続きを進める',
+  },
+  'info-2': {
+    title: '重要なお知らせ',
+    meta: '2024年7月1日',
+    description: '制度更新に伴い、提出書類の要件が一部変更されています。',
+    secondaryAction: '変更点を見る',
+    primaryAction: '詳細を確認',
+  },
+};
+
+const NOTIFICATION_BANNER_BACKGROUND_COPY: Record<
+  NotificationBannerDemoType,
+  {
+    title: string;
+    description: string;
+  }
+> = {
+  success: {
+    title: '登録手続きは全て完了しました',
+    description: 'ダミーテキストは、デザインの作成時に使用される仮の文章です。',
+  },
+  error: {
+    title: '操作を完了できませんでした',
+    description: 'ダミーテキストは、デザインの作成時に使用される仮の文章です。',
+  },
+  warning: {
+    title: '偽SNSアカウントにご注意ください',
+    description: 'ダミーテキストは、デザインの作成時に使用される仮の文章です。',
+  },
+  'info-1': {
+    title: '登録期間が延長されました',
+    description: 'ダミーテキストは、デザインの作成時に使用される仮の文章です。',
+  },
+  'info-2': {
+    title: '重要なお知らせ',
+    description: 'ダミーテキストは、デザインの作成時に使用される仮の文章です。',
+  },
+};
+
+type NotificationBannerDemoOptions = {
+  variant?: 'standard' | 'color-chip';
+  dense?: boolean;
+  compactClose?: boolean;
+  dismissMode?: 'hide' | 'collapse';
+  restoreLabel?: string;
+};
+
+const renderNotificationBannerDemoItem = (
+  type: NotificationBannerDemoType,
+  options: NotificationBannerDemoOptions = {}
+): string => {
+  const copy = NOTIFICATION_BANNER_COPY[type];
+  const variant = options.variant ?? 'standard';
+  const denseAttr = options.dense ? ' dense' : '';
+  const closeStyleAttr = options.compactClose ? ' close-style="compact"' : '';
+  const dismissModeAttr = options.dismissMode ? ` dismiss-mode="${options.dismissMode}"` : '';
+  const restoreLabelAttr = options.restoreLabel ? ` restore-label="${options.restoreLabel}"` : '';
+  const buttonSize = options.dense ? 'small' : 'medium';
+
+  return `
+    <dads-notification-banner type="${type}" variant="${variant}" dismissible${denseAttr}${closeStyleAttr}${dismissModeAttr}${restoreLabelAttr}>
+      <span slot="title">${copy.title}</span>
+      <time slot="meta" datetime="2024-07-01">年月日</time>
+      <p>バナーデスクリプション</p>
+      <dads-button slot="actions" variant="outlined" size="${buttonSize}">ラベル</dads-button>
+      <dads-button slot="actions" variant="solid" size="${buttonSize}">アクションボタン</dads-button>
+    </dads-notification-banner>
+  `;
+};
+
+const renderNotificationBannerDemoItems = (
+  options: NotificationBannerDemoOptions = {}
+): string =>
+  NOTIFICATION_BANNER_TYPES.map((type) => renderNotificationBannerDemoItem(type, options)).join('');
+
 export const demos = {
 
   heading: headingDemo,
@@ -4720,6 +4843,574 @@ ${dadsDataRows(6, 6)}
         </div>
       </section>
     </div>
+  `,
+
+  notificationBanner: () => `
+    <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">ノティフィケーションバナー</h2>
+      <p style="color: var(--color-neutral-solid-gray-700, #4d4d4d); margin-bottom: 32px;">
+        DADS仕様（type/variant/close/actions）の通知バナー。重要度の高い情報をページ内で提示します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: var(--color-neutral-solid-gray-700, #4d4d4d); margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate
+          target-selector="dads-notification-banner"
+          style="
+            --a11y-annotate-callout-gutter: clamp(4rem, 10vw, 7rem);
+            --a11y-annotate-callout-lane-offset: 40px;
+          "
+        >
+          <div style="padding: 60px 0;">
+            <div style="max-width: 880px; margin: 0 auto;">
+              <dads-notification-banner type="info-2" variant="standard" dismissible close-label="閉じる">
+                <span slot="title">バナータイトル</span>
+                <time slot="meta" datetime="2024-07-01">年月日</time>
+                <p>バナーデスクリプション</p>
+                <dads-button slot="actions" variant="solid" size="medium">ボタン</dads-button>
+              </dads-notification-banner>
+            </div>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">API / Controls（Storybook風）</h3>
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-notification-banner',
+            'dads-button',
+            'dads-input-text',
+            'dads-switch',
+            'dads-select',
+            'dads-table',
+            'dads-code-block',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed var(--color-neutral-solid-gray-200, #cccccc); border-radius: 12px;">
+                <dads-notification-banner data-api-target type="info-1" variant="standard" dismissible close-label="閉じる" actions-layout="horizontal">
+                  <span slot="title" data-api-copy="title">登録期間が延長されました</span>
+                  <time slot="meta" datetime="2024-07-01" data-api-copy="meta">2024年7月1日</time>
+                  <p data-api-copy="description">期限が延長されたため、期日までに必要な手続きを行ってください。</p>
+                  <dads-button slot="actions" variant="outlined" size="medium" data-api-copy="secondary-action">対象を確認</dads-button>
+                  <dads-button slot="actions" variant="solid" size="medium" data-api-copy="primary-action">手続きを進める</dads-button>
+                </dads-notification-banner>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-notification-banner type="info-1" variant="standard" dismissible actions-layout="horizontal">
+                      <span slot="title">登録期間が延長されました</span>
+                      <time slot="meta" datetime="2024-07-01">2024年7月1日</time>
+                      <p>期限が延長されたため、期日までに必要な手続きを行ってください。</p>
+                      <dads-button slot="actions" variant="outlined">対象を確認</dads-button>
+                      <dads-button slot="actions" variant="solid">手続きを進める</dads-button>
+                    </dads-notification-banner>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>type</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'success' | 'error' | 'warning' | 'info-1' | 'info-2'</code></td>
+                        <td><code>info-1</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="type" size="md 240" value="info-1" data-api-attr="type" data-default="info-1">
+                              <option value="success">サクセス（success）</option>
+                              <option value="error">エラー（error）</option>
+                              <option value="warning">警告（warning）</option>
+                              <option value="info-1">情報提示 1（info-1）</option>
+                              <option value="info-2">情報提示 2（info-2）</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>通知の意味タイプ</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>variant</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'standard' | 'color-chip'</code></td>
+                        <td><code>standard</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="variant" size="md 240" value="standard" data-api-attr="variant" data-default="standard">
+                              <option value="standard">standard</option>
+                              <option value="color-chip">color-chip</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>表示スタイル</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>dismissible</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="dismissible" size="md 240" value="" data-api-attr="dismissible" data-default="">
+                              <option value="">false</option>
+                              <option value="true">true</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>閉じるボタンの表示</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>dense</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="dense" size="md 240" value="" data-api-attr="dense" data-default="">
+                              <option value="">false</option>
+                              <option value="true">true</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>省スペース表示（モバイル向け）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>close-style</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'default' | 'compact'</code></td>
+                        <td><code>default</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="close-style" size="md 240" value="default" data-api-attr="close-style" data-default="default">
+                              <option value="default">default</option>
+                              <option value="compact">compact</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>閉じるボタン見た目</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>actions-layout</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'vertical' | 'horizontal'</code></td>
+                        <td><code>horizontal</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="actions-layout" size="md 240" value="horizontal" data-api-attr="actions-layout" data-default="horizontal">
+                              <option value="vertical">vertical（垂直）</option>
+                              <option value="horizontal">horizontal（水平）</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>アクションボタンの並び方向（垂直/水平）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>interaction</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'none' | 'title-and-actions' | 'whole' | 'actions-only'</code></td>
+                        <td><code>none</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="interaction" size="md 240" value="none" data-api-attr="interaction" data-default="none">
+                              <option value="none">none</option>
+                              <option value="title-and-actions">title-and-actions</option>
+                              <option value="whole">whole</option>
+                              <option value="actions-only">actions-only</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>リンク委譲領域</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>dismiss-mode</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'hide' | 'collapse'</code></td>
+                        <td><code>hide</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="dismiss-mode" size="md 240" value="hide" data-api-attr="dismiss-mode" data-default="hide">
+                              <option value="hide">hide</option>
+                              <option value="collapse">collapse</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>閉じる押下時の挙動</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>close-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>閉じる</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="close-label" value="閉じる" data-api-attr="close-label" data-default="閉じる"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>閉じるラベル</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>restore-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>再表示</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="restore-label" value="再表示" data-api-attr="restore-label" data-default="再表示"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>再表示ボタンラベル（dismiss-mode=&quot;collapse&quot;時）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-notification-banner-border-color</code></th>
+                        <td><code>(type依存)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-notification-banner-border-color" value="" data-api-css-var="--dads-notification-banner-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>外枠色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-notification-banner-background</code></th>
+                        <td><code>#fff</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <div style="display: grid; gap: 8px;">
+                              <dads-select
+                                label="背景色プリセット"
+                                size="md 240"
+                                value=""
+                                data-api-css-var="--dads-notification-banner-background"
+                                data-default=""
+                              >
+                                <option value="">デフォルト（トークン）</option>
+                                <option value="var(--color-primitive-green-50, #e6f5ec)">サクセス（淡色）</option>
+                                <option value="var(--color-primitive-red-50, #fdeeee)">エラー（淡色）</option>
+                                <option value="var(--color-primitive-yellow-50, #fbf5e0)">警告（淡色）</option>
+                                <option value="var(--color-primitive-blue-50, #e8f1fe)">情報提示 1（淡色）</option>
+                                <option value="var(--color-neutral-solid-gray-50, #f2f2f2)">情報提示 2（淡色）</option>
+                              </dads-select>
+                              <dads-input-text label="--dads-notification-banner-background" value="" data-api-css-var="--dads-notification-banner-background" data-default=""></dads-input-text>
+                            </div>
+                          </div>
+                        </td>
+                        <td>背景色（プリセットまたは直接入力）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-notification-banner-title-color</code></th>
+                        <td><code>#1a1a1a</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-notification-banner-title-color" value="" data-api-css-var="--dads-notification-banner-title-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>タイトル文字色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-notification-banner-action-color</code></th>
+                        <td><code>(type依存)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-notification-banner-action-color" value="" data-api-css-var="--dads-notification-banner-action-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アクション色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">Standard（Desktop）</h3>
+        <div style="display: grid; gap: 16px;">
+          ${renderNotificationBannerDemoItems({ variant: 'standard' })}
+        </div>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">Color Chip（Desktop）</h3>
+        <div style="display: grid; gap: 16px;">
+          ${renderNotificationBannerDemoItems({ variant: 'color-chip' })}
+        </div>
+      </section>
+
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">背景色を使用した作例</h3>
+        <p style="font-size: 14px; line-height: 1.7; color: var(--color-neutral-solid-gray-800, #333333); margin: 0 0 16px;">
+          type を切り替えると、作例のタイトル・説明・背景色が連動して更新されます。
+        </p>
+        <div style="margin: 0 0 16px;">
+          <dads-select
+            label="タイプ"
+            size="md 240"
+            value="success"
+            data-background-demo-type
+          >
+            <option value="success">サクセス</option>
+            <option value="error">エラー</option>
+            <option value="warning">警告</option>
+            <option value="info-1">情報提示 1</option>
+            <option value="info-2">情報提示 2</option>
+          </dads-select>
+        </div>
+        <div style="box-shadow: 0 0 0 1px var(--color-neutral-solid-gray-420, #949494); background: var(--color-neutral-white, #ffffff); padding: clamp(20px, 4vw, 48px);">
+          <div style="display: grid; gap: 24px; max-width: 860px; margin: 0 auto;">
+            <dads-notification-banner
+              data-background-demo-banner
+              type="success"
+              variant="standard"
+              style="--dads-notification-banner-background: var(--color-primitive-green-50, #e6f5ec);"
+            >
+              <span slot="title" data-background-demo-title>登録手続きは全て完了しました</span>
+              <p data-background-demo-description>ダミーテキストは、デザインの作成時に使用される仮の文章です。</p>
+            </dads-notification-banner>
+
+            <dads-notification-banner
+              data-background-demo-banner
+              type="success"
+              variant="color-chip"
+              style="--dads-notification-banner-background: var(--color-primitive-green-50, #e6f5ec);"
+            >
+              <span slot="title" data-background-demo-title>登録手続きは全て完了しました</span>
+              <p data-background-demo-description>ダミーテキストは、デザインの作成時に使用される仮の文章です。</p>
+            </dads-notification-banner>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">特定のコンテンツに付随する場合の作例</h3>
+        <p style="font-size: 14px; line-height: 1.7; color: var(--color-neutral-solid-gray-800, #333333); margin: 0 0 24px;">
+          ノティフィケーションバナーが特定のコンテンツに付随する場合はそのコンテンツセクション内に配置される場合があります。これにより、通知が必要となる情報の単位ごとに、的確な告知が可能となります。
+        </p>
+
+        <div style="box-shadow: 0 0 0 1px var(--color-neutral-solid-gray-420, #949494); background: var(--color-neutral-solid-gray-50, #f2f2f2); padding: clamp(20px, 4vw, 40px);">
+          <div data-attached-notification-demo style="max-width: 360px; width: 100%;">
+            <article data-attached-demo-panel="single" style="background: var(--color-neutral-white, #ffffff); border: 1px solid var(--color-neutral-solid-gray-500, #7f7f7f); padding: 16px;">
+              <div style="height: 38px; border-radius: 8px; background: var(--color-neutral-solid-gray-100, #e6e6e6); margin-bottom: 16px;"></div>
+              <h4 style="font-size: 18px; margin: 0 0 12px; line-height: 1.4;">〇〇の利用に関して</h4>
+              <ul style="margin: 0 0 16px; padding-left: 20px; line-height: 1.7;">
+                <li>コピー、出版、配布、送信する。</li>
+                <li>編集する。</li>
+                <li>商業的および非商業的に利用する。</li>
+              </ul>
+
+              <dads-notification-banner data-attached-before-banner data-mobile-demo type="warning" variant="standard" dismissible close-style="compact">
+                <span slot="title">ご利用には出典やクレジットの記載が必要となりました</span>
+                <p>全ての利用において、出典やクレジットを記載することが必要となりました。これに従わない場合、付与されたライセンスの権利は自動的に終了します。</p>
+                <dads-button slot="actions" variant="solid" size="small" data-attached-ack>了解しました</dads-button>
+              </dads-notification-banner>
+
+              <dads-notification-banner data-attached-after-banner data-mobile-demo type="warning" variant="standard" hidden>
+                <span slot="title">ご利用には出典やクレジットの記載が必要となりました</span>
+              </dads-notification-banner>
+
+              <h4 style="font-size: 18px; margin: 16px 0 8px; line-height: 1.4;">ライセンスが適用されない場合</h4>
+              <ul style="margin: 0; padding-left: 20px; line-height: 1.7;">
+                <li>素材を独立したファイルとして配布する場合</li>
+                <li>素材自体を商品として再販売する場合</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <p style="font-size: 14px; line-height: 1.7; color: var(--color-neutral-solid-gray-800, #333333); margin: 24px 0 0;">
+          この作例では「了解しました」または「閉じる」を押下すると、同一コンテンツ内で詳細表示から簡易表示へ実際に切り替わります。
+        </p>
+        <p style="margin: 12px 0 0;">
+          <dads-button variant="outlined" size="small" data-attached-demo-reset>作例を初期状態に戻す</dads-button>
+        </p>
+      </section>
+    </div>
+
+    <script>
+      (function() {
+        var currentScript = document.currentScript;
+        customElements.whenDefined('dads-notification-banner').then(function() {
+          var root = currentScript?.parentElement;
+          if (!root || !root.isConnected) return;
+
+          var query = function(selector, parent) {
+            var scope = parent || root;
+            return scope ? scope.querySelector(selector) : null;
+          };
+          var queryAll = function(selector, parent) {
+            var scope = parent || root;
+            return scope ? scope.querySelectorAll(selector) : [];
+          };
+          var addValueChangeListeners = function(control, handler) {
+            if (!control) return;
+            control.addEventListener('dads-change', handler);
+            control.addEventListener('change', handler);
+          };
+          var readControlValue = function(control, fallback) {
+            if (!control) return fallback;
+            if (typeof control.value === 'string' && control.value.length > 0) {
+              return control.value;
+            }
+            var attrValue = control.getAttribute('value');
+            return attrValue || fallback;
+          };
+
+          var preview = query('dads-notification-banner[data-api-target]');
+          if (!preview) return;
+
+          var copyByType = ${JSON.stringify(NOTIFICATION_BANNER_API_COPY)};
+          var copyTargets = {
+            title: query('[data-api-copy="title"]', preview),
+            meta: query('[data-api-copy="meta"]', preview),
+            description: query('[data-api-copy="description"]', preview),
+            secondaryAction: query('[data-api-copy="secondary-action"]', preview),
+            primaryAction: query('[data-api-copy="primary-action"]', preview),
+          };
+
+          var resolveCopy = function(typeValue) {
+            if (typeof typeValue !== 'string') return copyByType['info-1'];
+            return copyByType[typeValue] || copyByType['info-1'];
+          };
+
+          var syncCopyByType = function() {
+            var copy = resolveCopy(preview.getAttribute('type'));
+            if (copyTargets.title) copyTargets.title.textContent = copy.title;
+            if (copyTargets.meta) copyTargets.meta.textContent = copy.meta;
+            if (copyTargets.description) copyTargets.description.textContent = copy.description;
+            if (copyTargets.secondaryAction) copyTargets.secondaryAction.textContent = copy.secondaryAction;
+            if (copyTargets.primaryAction) copyTargets.primaryAction.textContent = copy.primaryAction;
+          };
+
+          var observer = new MutationObserver(function(records) {
+            for (var index = 0; index < records.length; index += 1) {
+              var record = records[index];
+              if (record.type === 'attributes' && record.attributeName === 'type') {
+                syncCopyByType();
+                return;
+              }
+            }
+          });
+          observer.observe(preview, { attributes: true, attributeFilter: ['type'] });
+
+          var resetButton = query('[data-api-reset]');
+          if (resetButton) {
+            resetButton.addEventListener('click', function() {
+              queueMicrotask(syncCopyByType);
+            });
+          }
+
+          var backgroundTypeSelect = query('[data-background-demo-type]');
+          var backgroundBanners = queryAll('dads-notification-banner[data-background-demo-banner]');
+          var backgroundTitles = queryAll('[data-background-demo-title]');
+          var backgroundDescriptions = queryAll('[data-background-demo-description]');
+          var backgroundCopyByType = ${JSON.stringify(NOTIFICATION_BANNER_BACKGROUND_COPY)};
+          var backgroundColorByType = {
+            success: 'var(--color-primitive-green-50, #e6f5ec)',
+            error: 'var(--color-primitive-red-50, #fdeeee)',
+            warning: 'var(--color-primitive-yellow-50, #fbf5e0)',
+            'info-1': 'var(--color-primitive-blue-50, #e8f1fe)',
+            'info-2': 'var(--color-neutral-solid-gray-50, #f2f2f2)',
+          };
+
+          var syncBackgroundDemo = function() {
+            var selectedType = readControlValue(backgroundTypeSelect, 'success');
+            var copy = backgroundCopyByType[selectedType] || backgroundCopyByType['info-1'];
+            var backgroundColor = backgroundColorByType[selectedType] || backgroundColorByType['info-1'];
+
+            backgroundBanners.forEach(function(banner) {
+              banner.setAttribute('type', selectedType);
+              banner.style.setProperty('--dads-notification-banner-background', backgroundColor);
+            });
+            backgroundTitles.forEach(function(title) {
+              title.textContent = copy.title;
+            });
+            backgroundDescriptions.forEach(function(description) {
+              description.textContent = copy.description;
+            });
+          };
+
+          addValueChangeListeners(backgroundTypeSelect, syncBackgroundDemo);
+
+          var attachedDemo = query('[data-attached-notification-demo]');
+          if (attachedDemo) {
+            var beforeBanner = query('dads-notification-banner[data-attached-before-banner]', attachedDemo);
+            var afterBanner = query('dads-notification-banner[data-attached-after-banner]', attachedDemo);
+            var ackButton = query('[data-attached-ack]', attachedDemo);
+            var attachedResetButton = query('[data-attached-demo-reset]');
+
+            var activateAfterState = function() {
+              if (beforeBanner) beforeBanner.hidden = true;
+              if (afterBanner) afterBanner.hidden = false;
+            };
+
+            var resetAttachedState = function() {
+              if (beforeBanner) {
+                beforeBanner.hidden = false;
+                beforeBanner.removeAttribute('data-dismissed');
+              }
+              if (afterBanner) {
+                afterBanner.hidden = true;
+                afterBanner.removeAttribute('data-dismissed');
+              }
+            };
+
+            if (beforeBanner) {
+              beforeBanner.addEventListener('dads-notification-banner-close', function() {
+                activateAfterState();
+              });
+            }
+            if (ackButton) {
+              ackButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                activateAfterState();
+              });
+            }
+            if (attachedResetButton) {
+              attachedResetButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                resetAttachedState();
+              });
+            }
+
+            resetAttachedState();
+          }
+
+          syncCopyByType();
+          syncBackgroundDemo();
+        });
+      })();
+    </script>
   `,
 
 

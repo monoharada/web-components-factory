@@ -18945,6 +18945,1204 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/notification-banner/notification-banner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "ノティフィケーションバナーコンポーネント",
+          "name": "DadsNotificationBanner",
+          "cssProperties": [
+            {
+              "description": "背景色",
+              "name": "--dads-notification-banner-background"
+            },
+            {
+              "description": "本文文字色",
+              "name": "--dads-notification-banner-color"
+            },
+            {
+              "description": "タイトル文字色",
+              "name": "--dads-notification-banner-title-color"
+            },
+            {
+              "description": "外枠色",
+              "name": "--dads-notification-banner-border-color"
+            },
+            {
+              "description": "外枠線幅",
+              "name": "--dads-notification-banner-border-width"
+            },
+            {
+              "description": "角丸",
+              "name": "--dads-notification-banner-border-radius"
+            },
+            {
+              "description": "color-chip左帯色",
+              "name": "--dads-notification-banner-chip-color"
+            },
+            {
+              "description": "アイコン色",
+              "name": "--dads-notification-banner-icon-color"
+            },
+            {
+              "description": "アクション色",
+              "name": "--dads-notification-banner-action-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "アクション領域",
+              "name": "actions"
+            },
+            {
+              "description": "ルート要素",
+              "name": "base"
+            },
+            {
+              "description": "説明領域",
+              "name": "body"
+            },
+            {
+              "description": "閉じるボタン",
+              "name": "close"
+            },
+            {
+              "description": "閉じるアイコン",
+              "name": "close-icon"
+            },
+            {
+              "description": "閉じるラベル",
+              "name": "close-label"
+            },
+            {
+              "description": "バナーデスクリプション領域",
+              "name": "description"
+            },
+            {
+              "description": "ヘッダー領域",
+              "name": "header"
+            },
+            {
+              "description": "アイコン領域",
+              "name": "icon"
+            },
+            {
+              "description": "年月日などの領域",
+              "name": "meta"
+            },
+            {
+              "description": "再表示導線の領域（dismiss-mode=\"collapse\" 時）",
+              "name": "restore"
+            },
+            {
+              "description": "再表示ボタン",
+              "name": "restore-button"
+            },
+            {
+              "description": "折りたたみ時の補助テキスト",
+              "name": "restore-text"
+            },
+            {
+              "description": "タイトル領域",
+              "name": "title"
+            }
+          ],
+          "slots": [
+            {
+              "description": "アクションボタン群",
+              "name": "actions"
+            },
+            {
+              "description": "バナーデスクリプション",
+              "name": "default"
+            },
+            {
+              "description": "バナーアイコン（未指定時はtypeに応じた既定アイコン）",
+              "name": "icon"
+            },
+            {
+              "description": "年月日などの補助情報",
+              "name": "meta"
+            },
+            {
+              "description": "バナータイトル（必須）",
+              "name": "title"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#abortController",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#actions",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#actionsSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#activatePrimaryLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#applyDismissState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#bindEvents",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#body",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#buildRestoreText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#close",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#closeLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#description",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#descriptionSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureDefaultAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#findAnchorInSlot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLAnchorElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#findPrimaryLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLAnchorElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getDismissMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerDismissMode"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getInteraction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerInteraction"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getType",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerType"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getVariant",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerVariant"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleBaseClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleBaseKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleCloseClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#handleLinkDelegationKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                },
+                {
+                  "name": "expected",
+                  "type": {
+                    "text": "Exclude<NotificationBannerInteraction, 'none' | 'actions-only'>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#handleRestoreClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleTitleClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleTitleKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#header",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isDismissedCollapsed",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isInteractiveTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "Element"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#maybeDelegateByInteraction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                },
+                {
+                  "name": "expected",
+                  "type": {
+                    "text": "Exclude<NotificationBannerInteraction, 'none' | 'actions-only'>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#meta",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#metaSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeActionsLayout",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerActionsLayout"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeAttributeValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "attrName",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "normalize",
+                  "type": {
+                    "text": "(value: string | null) => T"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeCloseStyle",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerCloseStyle"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeDismissMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerDismissMode"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeEnumAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeInteraction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerInteraction"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeType",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerType"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeVariant",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "NotificationBannerVariant"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#primaryLink",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLAnchorElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#restore",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#restoreButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#restoreText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncCloseState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncDismissState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncInteractionState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPrimaryLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSectionVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#title",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#titleSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-notification-banner', template: html` <div part=\"base\" id=\"base\"> <div part=\"header\" id=\"header\"> <div part=\"icon\" id=\"icon\" aria-hidden=\"true\"> <slot name=\"icon\" id=\"icon-slot\"> <svg data-default-icon=\"success\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"成功\"> <circle cx=\"12\" cy=\"12\" r=\"12\" fill=\"currentcolor\"></circle> <path d=\"M9.6 18 3.6 12 5.292 10.308 9.6 14.604l9.108-9.108L20.4 7.2 9.6 18Z\" fill=\"Canvas\"></path> </svg> <svg data-default-icon=\"error\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"エラー\"> <path d=\"M8.25 24 0 15.75v-7.5L8.25 0h7.5L24 8.25v7.5L15.75 24h-7.5Z\" fill=\"currentcolor\"></path> <path d=\"m12 13.4-2.85 2.85-1.4-1.4L10.6 12 7.75 9.15l1.4-1.4L12 10.6l2.85-2.85 1.4 1.4L13.4 12l2.85 2.85-1.4 1.4L12 13.4Z\" fill=\"Canvas\"></path> </svg> <svg data-default-icon=\"warning\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"警告\"> <path d=\"M0 20.7273h24L12 0 0 20.7273Z\" fill=\"currentcolor\"></path> <path d=\"M13.0909 17.4545h-2.1818v-2.1818h2.1818v2.1818Zm0-4.3636h-2.1818V8.7273h2.1818v4.3636Z\" fill=\"Canvas\"></path> </svg> <svg data-default-icon=\"info-1\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"インフォメーション\"> <circle cx=\"12\" cy=\"12\" r=\"12\" fill=\"currentcolor\"></circle> <circle cx=\"12\" cy=\"7.2\" r=\"1.2\" fill=\"Canvas\"></circle> <path d=\"M10.8 10.8h2.4V18h-2.4z\" fill=\"Canvas\"></path> </svg> <svg data-default-icon=\"info-2\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" role=\"img\" aria-label=\"インフォメーション\"> <circle cx=\"12\" cy=\"12\" r=\"12\" fill=\"currentcolor\"></circle> <circle cx=\"12\" cy=\"7.2\" r=\"1.2\" fill=\"Canvas\"></circle> <path d=\"M10.8 10.8h2.4V18h-2.4z\" fill=\"Canvas\"></path> </svg> </slot> </div> <div part=\"title\" id=\"title\"> <slot name=\"title\" id=\"title-slot\"></slot> </div> <button part=\"close\" id=\"close\" type=\"button\" hidden> <svg part=\"close-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <path d=\"m6.4 18.6-1-1 5.5-5.6-5.6-5.6 1.1-1 5.6 5.5 5.6-5.6 1 1.1L13 12l5.6 5.6-1 1L12 13l-5.6 5.6Z\" fill=\"currentcolor\"></path> </svg> <span part=\"close-label\" id=\"close-label\">閉じる</span> </button> </div> <div part=\"body\" id=\"body\"> <div part=\"meta\" id=\"meta\" hidden> <slot name=\"meta\" id=\"meta-slot\"></slot> </div> <div part=\"description\" id=\"description\" hidden> <slot id=\"description-slot\"></slot> </div> </div> <div part=\"actions\" id=\"actions\" hidden> <slot name=\"actions\" id=\"actions-slot\"></slot> </div> <div part=\"restore\" id=\"restore\" hidden> <span part=\"restore-text\" id=\"restore-text\"></span> <button part=\"restore-button\" id=\"restore-button\" type=\"button\">再表示</button> </div> </div> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), notificationBannerTokens, notificationBannerStyles, applyDADSFocusStyles(), ], 'minimal' ), attributes: [ { attribute: 'type' }, { attribute: 'variant' }, BooleanAttr('dismissible'), BooleanAttr('dense'), { attribute: 'close-style' }, { attribute: 'actions-layout' }, { attribute: 'interaction' }, { attribute: 'dismiss-mode' }, { attribute: 'close-label' }, { attribute: 'restore-label' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "閉じる押下時に発火（detail: { type, variant, dismissMode }）",
+              "name": "dads-notification-banner-close"
+            },
+            {
+              "description": "再表示押下時に発火（detail: { type, variant, dismissMode }）",
+              "name": "dads-notification-banner-restore"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'vertical' | 'horizontal'"
+              },
+              "description": "アクションボタンの並び方向",
+              "name": "actions-layout"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "閉じるボタンのラベル",
+              "name": "close-label"
+            },
+            {
+              "type": {
+                "text": "'default' | 'compact'"
+              },
+              "description": "閉じるボタンの見た目",
+              "name": "close-style"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "省スペース表示（モバイル向け）",
+              "name": "dense"
+            },
+            {
+              "type": {
+                "text": "'hide' | 'collapse'"
+              },
+              "description": "閉じる押下時の挙動",
+              "name": "dismiss-mode"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "閉じるボタンを表示",
+              "name": "dismissible"
+            },
+            {
+              "type": {
+                "text": "'none' | 'title-and-actions' | 'whole' | 'actions-only'"
+              },
+              "description": "リンク委譲のクリック領域",
+              "name": "interaction"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "再表示ボタンのラベル",
+              "name": "restore-label"
+            },
+            {
+              "type": {
+                "text": "'success' | 'error' | 'warning' | 'info-1' | 'info-2'"
+              },
+              "description": "情報タイプ",
+              "name": "type"
+            },
+            {
+              "type": {
+                "text": "'standard' | 'color-chip'"
+              },
+              "description": "表示スタイル",
+              "name": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-notification-banner",
+          "customElement": true,
+          "modulePath": "./packages/components/notification-banner/notification-banner.ts",
+          "definitionPath": "./packages/components/notification-banner/notification-banner.ts",
+          "typeDefinitionPath": "./packages/components/notification-banner/notification-banner.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ノティフィケーションバナーのパーツ構成（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "通知バナーは、アイコン・タイトル・補助情報・説明・アクションをまとめる情報提示コンテナです。",
+                  "title / meta / default / actions の各スロットで内容を構造化します。"
+                ],
+                "keyboard": [
+                  "閉じるボタンとアクションボタンはTabでフォーカスでき、Enter/Spaceで操作できます。",
+                  "dismiss-mode=\"collapse\" の場合は再表示ボタンもキーボード操作できます。"
+                ],
+                "zoom": [
+                  "タイトルや説明は折り返しを前提とし、拡大時も情報欠落を防ぎます。",
+                  "アクション領域は幅に応じて配置が変化し、狭い表示でも操作要素を保持します。"
+                ],
+                "states": [
+                  "type（success/error/warning/info-1/info-2）で通知の意味を表します。",
+                  "variant（standard/color-chip）や dismissible / dismiss-mode で表示状態を切り替えます。"
+                ],
+                "labels": [
+                  "タイトルスロットの文言が通知の主要ラベルになります。",
+                  "close-label / restore-label で閉じる・再表示操作のラベルを指定できます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "notification-icon",
+                  "title": "アイコン",
+                  "label": "アイコン",
+                  "description": "通知タイプに応じた状態アイコンを表示します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "notification-title",
+                  "title": "バナータイトル",
+                  "label": "タイトル",
+                  "description": "通知の主題を示す見出し領域です。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "selector": "[slot=\"title\"]"
+                  }
+                },
+                {
+                  "id": "notification-close",
+                  "title": "閉じるボタン",
+                  "label": "閉じる",
+                  "description": "dismissible 指定時に表示される閉じる操作です。",
+                  "category": "keyboard",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"close\"]"
+                  }
+                },
+                {
+                  "id": "notification-meta",
+                  "title": "年月日",
+                  "label": "年月日",
+                  "description": "更新日時などの補助情報を表示します。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "selector": "[slot=\"meta\"]"
+                  }
+                },
+                {
+                  "id": "notification-description",
+                  "title": "バナーデスクリプション",
+                  "label": "説明",
+                  "description": "通知内容の説明テキストです。",
+                  "category": "labels",
+                  "placement": "bottom-left",
+                  "target": {
+                    "selector": ":scope > p:not([slot])"
+                  }
+                },
+                {
+                  "id": "notification-actions",
+                  "title": "アクション",
+                  "label": "ボタン",
+                  "description": "通知に関連する操作ボタン群を配置します。",
+                  "category": "keyboard",
+                  "placement": "bottom-right",
+                  "target": {
+                    "selector": "[slot=\"actions\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "notification-banner",
+            "install": {
+              "id": "notification-banner",
+              "define": "defineNotificationBanner",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/notification-banner"
+              },
+              "tags": [
+                "dads-notification-banner"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsNotificationBanner",
+          "declaration": {
+            "name": "DadsNotificationBanner",
+            "module": "packages/components/notification-banner/notification-banner.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/notification-banner/notification-banner.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/notification-banner/notification-banner.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-notification-banner",
+          "declaration": {
+            "name": "DadsNotificationBanner",
+            "module": "./packages/components/notification-banner/notification-banner.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/page-navigation/page-navigation.ts",
       "declarations": [
         {
@@ -32485,6 +33683,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/notification-banner/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/heading/index.js"
           }
         },
@@ -33191,6 +34397,142 @@
           "declaration": {
             "name": "menuListTokens",
             "module": "packages/components/menu-list/menu-list-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/notification-banner/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/notification-banner/notification-banner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultNotificationBanner",
+          "declaration": {
+            "name": "defineDefaultNotificationBanner",
+            "module": "./notification-banner-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineNotificationBanner",
+          "declaration": {
+            "name": "defineNotificationBanner",
+            "module": "./notification-banner-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/notification-banner/notification-banner-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultNotificationBanner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineNotificationBanner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-notification-banner`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultNotificationBanner",
+          "declaration": {
+            "name": "defineDefaultNotificationBanner",
+            "module": "packages/components/notification-banner/notification-banner-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineNotificationBanner",
+          "declaration": {
+            "name": "defineNotificationBanner",
+            "module": "packages/components/notification-banner/notification-banner-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/notification-banner/notification-banner-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "notificationBannerStyles",
+          "default": "css` :host { display: block; container-type: inline-size; } :host([hidden]) { display: none; } [part='base'] { --_border-width: var(--dads-notification-banner-border-width); display: grid; grid-template-columns: var(--dads-notification-banner-icon-size) minmax(0, 1fr) auto; grid-template-rows: minmax(calc(36 / 16 * 1rem), auto); gap: var(--dads-notification-banner-gap); padding-top: var(--dads-notification-banner-padding-block-start); padding-right: var(--dads-notification-banner-padding-inline-end); padding-bottom: var(--dads-notification-banner-padding-block-end); padding-left: var(--dads-notification-banner-padding-inline-start); border: var(--_border-width) solid var(--dads-notification-banner-border-color); border-radius: var(--dads-notification-banner-border-radius); background-color: var(--dads-notification-banner-background); color: var(--dads-notification-banner-color); font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: var(--line-height-170, 1.7); letter-spacing: 0.02em; position: relative; min-width: 0; } :host([variant='color-chip']) [part='base'] { --_border-width: var(--dads-notification-banner-color-chip-border-width); border-radius: var(--dads-notification-banner-color-chip-radius); padding-left: var(--dads-notification-banner-color-chip-padding-inline-start); box-shadow: inset var(--dads-notification-banner-color-chip-inset-width) 0 0 0 var(--dads-notification-banner-chip-color); } [part='header'] { grid-column: 1 / 4; display: grid; grid-template-columns: inherit; gap: inherit; min-width: 0; } [part='icon'] { grid-column: 1; justify-self: center; padding-top: var(--dads-notification-banner-icon-padding-top); color: var(--dads-notification-banner-icon-color); width: var(--dads-notification-banner-icon-size); height: var(--dads-notification-banner-icon-size); pointer-events: none; } [part='icon'] slot[name='icon'] { display: block; width: 100%; height: 100%; } [part='icon'] [data-default-icon] { display: none; width: 100%; height: 100%; } :host([type='success']) [part='icon'] [data-default-icon='success'] { display: block; } :host([type='error']) [part='icon'] [data-default-icon='error'] { display: block; } :host([type='warning']) [part='icon'] [data-default-icon='warning'] { display: block; } :host([type='info-2']) [part='icon'] [data-default-icon='info-2'] { display: block; } :host([type='info-1']) [part='icon'] [data-default-icon='info-1'] { display: block; } [part='title'] { grid-column: 2; min-width: 0; color: var(--dads-notification-banner-title-color); font-size: var(--dads-notification-banner-title-font-size); font-weight: var(--dads-notification-banner-title-font-weight); line-height: var(--dads-notification-banner-title-line-height); letter-spacing: var(--dads-notification-banner-title-letter-spacing); } [part='title']::before { content: ''; position: absolute; inset: 0; pointer-events: none; } [part='title'] ::slotted(*) { display: block; margin: 0; color: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; letter-spacing: inherit; } [part='close'] { grid-column: 3; align-self: start; position: relative; z-index: 1; margin-left: calc(4 / 16 * 1rem); display: inline-flex; align-items: center; column-gap: calc(4 / 16 * 1rem); border: 0; border-radius: calc(6 / 16 * 1rem); background: transparent; min-height: calc(36 / 16 * 1rem); padding: 0 calc(12 / 16 * 1rem); color: var(--dads-notification-banner-close-color); font: inherit; line-height: 1; letter-spacing: inherit; cursor: pointer; } [part='close'][hidden] { display: none; } [part='close-icon'] { margin-top: calc(2 / 16 * 1rem); width: var(--dads-notification-banner-close-icon-size); height: var(--dads-notification-banner-close-icon-size); flex-shrink: 0; } @media (any-hover: hover) { [part='close']:hover { background-color: var(--dads-notification-banner-close-hover-bg); text-decoration: underline; text-decoration-thickness: calc(1 / 16 * 1rem); text-underline-offset: calc(3 / 16 * 1rem); } } [part='close']:focus-visible, [part='base']:focus-visible, [part='title']:focus-visible { outline: var(--dads-focus-outline-width, 0.25rem) solid var(--dads-focus-outline-color, var(--color-neutral-black, #000000)); outline-offset: var(--dads-focus-outline-offset, 0.125rem); background-color: var(--dads-focus-ring-color, var(--color-primitive-yellow-300, #ffd43d)); box-shadow: 0 0 0 var(--dads-focus-ring-width, 0.125rem) var(--dads-focus-ring-color, var(--color-primitive-yellow-300, #ffd43d)); } :host([close-style='compact']) [part='close'] { margin-right: 0; min-width: var(--dads-notification-banner-close-compact-size); min-height: var(--dads-notification-banner-close-compact-size); width: var(--dads-notification-banner-close-compact-size); height: var(--dads-notification-banner-close-compact-size); padding: 0; justify-content: center; border-radius: calc(4 / 16 * 1rem); } :host([close-style='compact']) [part='close-label'] { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } :host([dense]) [part='base'] { grid-template-columns: var(--dads-notification-banner-dense-icon-size) minmax(0, 1fr) auto; gap: var(--dads-notification-banner-dense-gap); padding-top: var(--dads-notification-banner-dense-padding-block-start); padding-right: var(--dads-notification-banner-dense-padding-inline-end); padding-bottom: var(--dads-notification-banner-dense-padding-block-end); padding-left: var(--dads-notification-banner-dense-padding-inline-start); } :host([dense][variant='color-chip']) [part='base'] { padding-left: var(--dads-notification-banner-dense-color-chip-padding-inline-start); box-shadow: inset var(--dads-notification-banner-dense-color-chip-inset-width) 0 0 0 var(--dads-notification-banner-chip-color); } :host([dense]) [part='icon'] { width: var(--dads-notification-banner-dense-icon-size); height: var(--dads-notification-banner-dense-icon-size); padding-top: var(--dads-notification-banner-dense-icon-padding-top); } /* Warning（三角）アイコンは視覚的に上寄りに見えるため、dense時のみ補正 */ :host([dense][type='warning']) [part='icon'] { padding-top: calc(6 / 16 * 1rem); } :host([dense]) [part='body'] { margin-top: var(--dads-notification-banner-dense-body-margin-top); row-gap: var(--dads-notification-banner-dense-body-gap); } [part='body'] { grid-column: 1 / 4; margin-top: var(--dads-notification-banner-body-margin-top); padding-right: var(--dads-notification-banner-body-padding-inline-end); padding-bottom: var(--dads-notification-banner-body-padding-block-end); display: grid; row-gap: var(--dads-notification-banner-body-gap); min-width: 0; } [part='body'][hidden], [part='meta'][hidden], [part='description'][hidden], [part='actions'][hidden] { display: none; } [part='meta'], [part='description'] { min-width: 0; } [part='meta'] ::slotted(*), [part='description'] ::slotted(*) { margin: 0; color: inherit; } [part='actions'] { grid-column: 1 / 4; padding-right: var(--dads-notification-banner-actions-padding-inline-end); display: flex; flex-wrap: wrap; align-items: center; gap: var(--dads-notification-banner-dense-action-gap); min-width: 0; } [part='restore'] { grid-column: 1 / 4; display: flex; align-items: center; justify-content: space-between; gap: var(--dads-notification-banner-restore-gap); min-width: 0; } [part='restore'][hidden] { display: none; } [part='restore-text'] { min-width: 0; color: var(--dads-notification-banner-restore-text-color); font-size: var(--dads-notification-banner-restore-text-size); } [part='restore-button'] { flex-shrink: 0; border: calc(1 / 16 * 1rem) solid var(--dads-notification-banner-restore-button-color); border-radius: var(--dads-notification-banner-restore-button-radius); background: var(--dads-notification-banner-restore-button-background); color: var(--dads-notification-banner-restore-button-color); padding: var(--dads-notification-banner-restore-button-padding-block) var(--dads-notification-banner-restore-button-padding-inline); font: inherit; font-weight: var(--font-weight-700, 700); line-height: 1; cursor: pointer; } @media (any-hover: hover) { [part='restore-button']:hover { color: var(--dads-notification-banner-restore-button-color-hover); border-color: var(--dads-notification-banner-restore-button-color-hover); background: var(--dads-notification-banner-restore-button-hover-bg); } } [part='restore-button']:active { color: var(--dads-notification-banner-restore-button-color-active); border-color: var(--dads-notification-banner-restore-button-color-active); background: var(--dads-notification-banner-restore-button-active-bg); } [part='restore-button']:focus-visible { outline: var(--dads-focus-outline-width, 0.25rem) solid var(--dads-focus-outline-color, var(--color-neutral-black, #000000)); outline-offset: var(--dads-focus-outline-offset, 0.125rem); box-shadow: 0 0 0 var(--dads-focus-ring-width, 0.125rem) var(--dads-focus-ring-color, var(--color-primitive-yellow-300, #ffd43d)); } :host([dense]) [part='actions'] { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dads-notification-banner-dense-action-gap); } #actions-slot::slotted(dads-button) { width: auto; inline-size: auto; max-inline-size: 100%; --button-primary-bg: var(--dads-notification-banner-action-color); --button-primary-bg-hover: var(--dads-notification-banner-action-color-hover); --button-primary-bg-active: var(--dads-notification-banner-action-color-active); --button-primary-border: var(--dads-notification-banner-action-color); --button-secondary-text: var(--dads-notification-banner-action-color); --button-secondary-text-hover: var(--dads-notification-banner-action-color-hover); --button-secondary-text-active: var(--dads-notification-banner-action-color-active); --button-secondary-border: var(--dads-notification-banner-action-color); --button-secondary-border-hover: var(--dads-notification-banner-action-color-hover); --button-secondary-border-active: var(--dads-notification-banner-action-color-active); --button-secondary-bg-hover: var(--dads-notification-banner-action-outline-hover-bg); --button-secondary-bg-active: var(--dads-notification-banner-action-outline-active-bg); --button-tertiary-text: var(--dads-notification-banner-action-color); --button-tertiary-text-hover: var(--dads-notification-banner-action-color-hover); --button-tertiary-text-active: var(--dads-notification-banner-action-color-active); } :host([dense]) #actions-slot::slotted(dads-button) { width: auto; } :host([actions-layout='vertical']) [part='actions'] { display: grid; gap: var(--dads-notification-banner-action-gap); } :host([actions-layout='vertical']) #actions-slot::slotted(dads-button) { width: 100%; inline-size: 100%; max-inline-size: 100%; display: block; --dads-button-width: 100%; --dads-button-max-width: 100%; } :host([actions-layout='horizontal']) [part='actions'] { display: flex; flex-wrap: nowrap; align-items: stretch; gap: var(--dads-notification-banner-action-gap); } :host([actions-layout='horizontal']) #actions-slot::slotted(dads-button) { width: auto; inline-size: auto; max-inline-size: 100%; display: inline-block; flex: 0 0 auto; --dads-button-width: auto; --dads-button-max-width: none; } :host([actions-layout='horizontal'][data-multiple-actions]) #actions-slot::slotted(dads-button) { display: block; flex: 1 1 0; min-inline-size: calc(96 / 16 * 1rem); width: auto; inline-size: auto; max-inline-size: none; --dads-button-width: 100%; --dads-button-max-width: 100%; } :host([dense]) [part='restore'] { align-items: stretch; flex-direction: column; } :host([dense]) [part='restore-button'] { width: 100%; } :host([data-link-target='whole']) [part='base'] { cursor: pointer; } :host([data-link-target='title']) [part='title'] { cursor: pointer; } @media (any-hover: hover) { :host([data-link-target='whole']) [part='base']:hover [part='title'], :host([data-link-target='title']) [part='title']:hover { text-decoration: underline; text-decoration-thickness: calc(2 / 16 * 1rem); text-underline-offset: calc(3 / 16 * 1rem); } } @container (min-width: 48rem) { :host(:not([data-mobile-demo])) [part='body'] { grid-column: 2 / 4; margin-top: 0; padding-right: 0; padding-bottom: 0; } :host(:not([data-mobile-demo])) [part='actions'] { grid-column: 2 / 4; padding-right: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: end; gap: var(--dads-notification-banner-action-gap); } :host(:not([data-mobile-demo])) #actions-slot::slotted(dads-button) { width: auto; } :host(:not([data-mobile-demo])[variant='color-chip']) [part='base'] { padding-left: var(--dads-notification-banner-color-chip-padding-inline-start); box-shadow: inset var(--dads-notification-banner-color-chip-inset-width) 0 0 0 var(--dads-notification-banner-chip-color); } :host(:not([data-mobile-demo])[actions-layout='vertical']) [part='actions'] { display: grid; grid-auto-flow: row; justify-content: stretch; gap: var(--dads-notification-banner-action-gap); } :host(:not([data-mobile-demo])[actions-layout='vertical']) #actions-slot::slotted(dads-button) { width: 100%; inline-size: 100%; max-inline-size: 100%; display: block; --dads-button-width: 100%; --dads-button-max-width: 100%; } :host(:not([data-mobile-demo])[actions-layout='horizontal']) [part='actions'] { display: flex; flex-wrap: wrap; align-items: center; justify-content: end; gap: var(--dads-notification-banner-action-gap); } :host(:not([data-mobile-demo])[actions-layout='horizontal']) #actions-slot::slotted(dads-button) { flex: 0 0 auto; width: auto; inline-size: auto; max-inline-size: 100%; display: inline-block; --dads-button-width: auto; --dads-button-max-width: none; } } @media (forced-colors: active) { [part='icon'] { color: currentColor; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "notificationBannerStyles",
+          "declaration": {
+            "name": "notificationBannerStyles",
+            "module": "packages/components/notification-banner/notification-banner-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/notification-banner/notification-banner-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "notificationBannerTokens",
+          "default": "css` ${notificationBannerSemanticTokensText} ${notificationBannerLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "notificationBannerTokens",
+          "declaration": {
+            "name": "notificationBannerTokens",
+            "module": "packages/components/notification-banner/notification-banner-tokens.ts"
           }
         }
       ]

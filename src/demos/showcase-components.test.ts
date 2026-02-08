@@ -29,3 +29,85 @@ describe('showcase-components (chipTag demo)', () => {
     expect(html).toContain('commandfor="#mail-cc-row"');
   });
 });
+
+describe('showcase-components (notificationBanner demo)', () => {
+  it('冒頭にアクセシビリティ注釈セクションを含む', () => {
+    const html = demos.notificationBanner();
+    expect(html).toContain('アクセシビリティ注釈（a11y-annotate）');
+    expect(html).toContain('target-selector="dads-notification-banner"');
+    expect(html.indexOf('アクセシビリティ注釈（a11y-annotate）')).toBeLessThan(
+      html.indexOf('API / Controls（Storybook風）')
+    );
+  });
+
+  it('モバイル作例セクションを含めない', () => {
+    const html = demos.notificationBanner();
+    expect(html).not.toContain('モバイル作例');
+    expect(html).not.toContain('repeat(auto-fit, minmax(280px, 1fr))');
+  });
+
+  it('Desktop作例は standard / color-chip を保持する', () => {
+    const html = demos.notificationBanner();
+    expect(html).toContain('Standard（Desktop）');
+    expect(html).toContain('Color Chip（Desktop）');
+  });
+
+  it('背景色作例と特定コンテンツ付随作例を含む', () => {
+    const html = demos.notificationBanner();
+    expect(html).toContain('背景色を使用した作例');
+    expect(html).toContain('特定のコンテンツに付随する場合の作例');
+    expect(html).toContain('--dads-notification-banner-background');
+    expect(html).toContain('var(--color-primitive-green-50');
+    expect(html).toContain('var(--color-primitive-red-50');
+    expect(html).toContain('var(--color-primitive-yellow-50');
+    expect(html).toContain('var(--color-primitive-blue-50');
+    expect(html).toContain('var(--color-neutral-solid-gray-50');
+    expect(html).toContain('data-background-demo-type');
+    expect(html).toContain('<dads-select');
+    expect(html).toContain('label="背景色プリセット"');
+    expect(html).toContain('label="タイプ"');
+    expect(html).toContain('>サクセス<');
+    expect(html).toContain('>警告<');
+    const backgroundBannerCount =
+      html.match(/<dads-notification-banner[^>]*data-background-demo-banner/g)?.length ?? 0;
+    expect(backgroundBannerCount).toBe(2);
+  });
+
+  it('特定コンテンツ付随作例は単一パネル内で切り替える操作フックを含む', () => {
+    const html = demos.notificationBanner();
+    expect(html).toContain('data-attached-before-banner');
+    expect(html).toContain('data-attached-after-banner');
+    expect(html).toContain('data-attached-ack');
+    expect(html).toContain('activateAfterState');
+    expect(html).toContain('data-attached-demo-panel="single"');
+    expect(html).not.toContain('data-attached-demo-panel="after"');
+    expect(html).toContain('data-attached-after-banner data-mobile-demo type="warning" variant="standard" hidden');
+    expect(html).toContain('max-width: 360px; width: 100%;');
+    const mobileDemoCount = html.match(/data-mobile-demo/g)?.length ?? 0;
+    expect(mobileDemoCount).toBeGreaterThanOrEqual(2);
+    expect(html).toContain('作例を初期状態に戻す');
+  });
+
+  it('type変更時に表示文言を同期するためのフックを含む', () => {
+    const html = demos.notificationBanner();
+    expect(html).toContain('data-api-copy="title"');
+    expect(html).toContain('data-api-copy="description"');
+    expect(html).toContain('syncCopyByType');
+    expect(html).toContain('<dads-select label="type"');
+    expect(html).toContain('<dads-select label="dismiss-mode"');
+    expect(html).toContain('data-api-attr="type"');
+    expect(html).toContain('data-api-attr="dismiss-mode"');
+    expect(html).toContain('<code>actions-layout</code>');
+    expect(html).toContain('vertical（垂直）');
+    expect(html).toContain('horizontal（水平）');
+    expect(html).toContain('actions-layout="horizontal"');
+    expect(html).toContain('data-default="horizontal"');
+    expect(html).not.toContain('<select ');
+  });
+
+  it('dismiss-mode のAPI説明は保持する', () => {
+    const html = demos.notificationBanner();
+    expect(html).toContain('<code>dismiss-mode</code>');
+    expect(html).toContain("'hide' | 'collapse'");
+  });
+});

@@ -253,6 +253,18 @@
         "componentDir": "packages/components/menu-list-box"
       }
     },
+    "notification-banner": {
+      "id": "notification-banner",
+      "tags": [
+        "dads-notification-banner"
+      ],
+      "define": "defineNotificationBanner",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/notification-banner"
+      }
+    },
     "page-navigation": {
       "id": "page-navigation",
       "tags": [
@@ -390,6 +402,7 @@
     "dads-menu-list": "menu-list",
     "dads-menu-list-box": "menu-list-box",
     "dads-menu-list-item": "menu-list",
+    "dads-notification-banner": "notification-banner",
     "dads-page-navigation": "page-navigation",
     "dads-radio": "radio",
     "dads-search-box": "search-box",
