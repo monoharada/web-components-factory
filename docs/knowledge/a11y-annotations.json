@@ -2991,5 +2991,183 @@
         }
       }
     ]
+  },
+  "dads-drawer": {
+    "version": 1,
+    "summary": "ドロワーコンポーネント仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部に <dialog> を利用し、モーダル表示時は背景操作を抑制します。",
+        "ドロワー本体はヘッダー（タイトル・閉じる）と本文領域で構成されます。"
+      ],
+      "keyboard": [
+        "Esc で閉じることができ、Tab/Shift+Tab でフォーカスをドロワー内に維持します。",
+        "閉じるボタンはキーボード操作で実行できます。"
+      ],
+      "zoom": [
+        "幅はトークンで管理され、表示倍率変更時も内容が読めることを前提にします。"
+      ],
+      "states": [
+        "open 属性で開閉状態を制御できます。",
+        "light-dismiss 属性がある時のみ背景クリックで閉じます。"
+      ],
+      "labels": [
+        "aria-label 指定時はそれを優先し、未指定かつ title slot がある場合は aria-labelledby を使用します。",
+        "本文領域は aria-describedby で関連付けられます。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "base",
+        "title": "drawer ルート",
+        "label": "<dialog>",
+        "description": "ドロワー全体を管理するルート要素です。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "backdrop",
+        "title": "背景（backdrop）",
+        "label": "::backdrop",
+        "description": "背景レイヤーです。擬似要素（::backdrop）は直接参照できないため、注釈用アンカーで説明しています。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"backdrop-anchor\"]"
+        }
+      },
+      {
+        "id": "panel",
+        "title": "ドロワー本体",
+        "label": "panel",
+        "description": "見出しと本文を含む内容領域です。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"panel\"]"
+        }
+      },
+      {
+        "id": "header",
+        "title": "ヘッダー",
+        "label": "header",
+        "description": "タイトルと閉じる操作を含む領域です。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"header\"]"
+        }
+      },
+      {
+        "id": "title",
+        "title": "タイトル",
+        "label": "slot=\"title\"",
+        "description": "ドロワーのアクセシブルネームに関与するタイトル領域です。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "hostSelector": "dads-drawer",
+          "selector": "[slot=\"title\"]"
+        }
+      },
+      {
+        "id": "close-button",
+        "title": "閉じるボタン",
+        "label": "button",
+        "description": "ドロワーを閉じる明示操作です。",
+        "category": "keyboard",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"close-button\"]"
+        }
+      },
+      {
+        "id": "content",
+        "title": "本文",
+        "label": "content",
+        "description": "ナビゲーションや補足情報を配置する本文領域です。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"content\"]"
+        }
+      }
+    ]
+  },
+  "dads-hamburger-menu-button": {
+    "version": 1,
+    "summary": "ハンバーガーメニューボタン仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部に <button> を使用し、variant により標準型とアイコン型を切り替えます。",
+        "アイコンは補助表現で、ボタン名はラベルまたは aria-label で提供します。"
+      ],
+      "keyboard": [
+        "Tab でフォーカスし、Enter/Space で操作できます（ネイティブ挙動）。"
+      ],
+      "zoom": [
+        "最小44pxターゲットを前提にし、表示倍率変更時も押下しやすさを維持します。"
+      ],
+      "states": [
+        "type 属性で menu/close の表示を切り替えます。",
+        "aria-expanded と command の組み合わせで開閉状態を外部コンポーネントと同期します。"
+      ],
+      "labels": [
+        "aria-label 指定時は明示ラベルを優先し、未指定時は type/lang からラベルを補完します。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "base",
+        "title": "ボタン本体",
+        "label": "<button>",
+        "description": "command/commandfor を受けて操作を発火するルートボタンです。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "icon",
+        "title": "アイコン",
+        "label": "icon",
+        "description": "menu/close 状態を視覚的に補助するアイコンです。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"icon\"]"
+        }
+      },
+      {
+        "id": "label",
+        "title": "ラベル",
+        "label": "label",
+        "description": "ボタンの視覚ラベルを表示し、アクセシブルネームの基礎になります。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      }
+    ]
   }
 }

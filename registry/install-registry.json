@@ -174,6 +174,18 @@
         "componentDir": "packages/components/disclosure"
       }
     },
+    "drawer": {
+      "id": "drawer",
+      "tags": [
+        "dads-drawer"
+      ],
+      "define": "defineDrawer",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/drawer"
+      }
+    },
     "fieldset": {
       "id": "fieldset",
       "tags": [
@@ -199,6 +211,18 @@
       ],
       "source": {
         "componentDir": "packages/components/file-upload"
+      }
+    },
+    "hamburger-menu-button": {
+      "id": "hamburger-menu-button",
+      "tags": [
+        "dads-hamburger-menu-button"
+      ],
+      "define": "defineHamburgerMenuButton",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/hamburger-menu-button"
       }
     },
     "heading": {
@@ -263,6 +287,18 @@
       ],
       "source": {
         "componentDir": "packages/components/menu-list-box"
+      }
+    },
+    "mobile-mock": {
+      "id": "mobile-mock",
+      "tags": [
+        "dads-mobile-mock"
+      ],
+      "define": "defineMobileMock",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/mobile-mock"
       }
     },
     "notification-banner": {
@@ -423,8 +459,10 @@
     "dads-description-list": "description-list",
     "dads-dialog": "dialog",
     "dads-disclosure": "disclosure",
+    "dads-drawer": "drawer",
     "dads-fieldset": "fieldset",
     "dads-file-upload": "file-upload",
+    "dads-hamburger-menu-button": "hamburger-menu-button",
     "dads-heading": "heading",
     "dads-input-text": "input-text",
     "dads-list": "list",
@@ -432,6 +470,7 @@
     "dads-menu-list": "menu-list",
     "dads-menu-list-box": "menu-list-box",
     "dads-menu-list-item": "menu-list",
+    "dads-mobile-mock": "mobile-mock",
     "dads-notification-banner": "notification-banner",
     "dads-page-navigation": "page-navigation",
     "dads-radio": "radio",

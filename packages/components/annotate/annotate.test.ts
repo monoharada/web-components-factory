@@ -23,9 +23,12 @@ function stubTagBcr(tagEl: HTMLElement, width = 80, height = 40) {
     const leftRaw = Number.parseFloat(tagEl.style.left || '0') || 0;
     const topRaw = Number.parseFloat(tagEl.style.top || '0') || 0;
     const transform = tagEl.style.transform || '';
+    const translate = transform.match(/translate\(\s*([-\d.]+)%\s*,\s*([-\d.]+)%\s*\)/);
+    const translateX = translate ? Number.parseFloat(translate[1] ?? '0') : 0;
+    const translateY = translate ? Number.parseFloat(translate[2] ?? '0') : 0;
 
-    const dx = transform.includes('-100%') ? -width : 0;
-    const dy = transform.includes('-50%') ? -height / 2 : 0;
+    const dx = Number.isFinite(translateX) ? (translateX / 100) * width : 0;
+    const dy = Number.isFinite(translateY) ? (translateY / 100) * height : 0;
     const left = leftRaw + dx;
     const top = topRaw + dy;
     return domRect(left, top, width, height);
@@ -322,6 +325,66 @@ describe('DadsAnnotate', () => {
 
     // 境界交点(x=200)から、minDim(40)*ratio(0.35)=14px 内側へ入る (x=214) ことを期待する。
     expect(d).toContain('L 214 220');
+  });
+
+  it('callout-lane="top" ではラベルを上側レーンに配置する', async () => {
+    const { defineDefaultAnnotate } = await import('./annotate-define');
+    defineDefaultAnnotate();
+
+    class TestTargetTopLane extends HTMLElement {
+      static a11yAnnotations = {
+        version: 1,
+        summary: 'Top lane',
+        categories: {},
+        callouts: [
+          {
+            id: 'anchor',
+            title: 'Anchor',
+            placement: 'top-left',
+            target: { selector: '#anchor', scope: 'light' },
+          },
+        ],
+      } as const;
+    }
+
+    const tagName = 'test-a11y-target-top-lane';
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, TestTargetTopLane);
+    }
+
+    const el = renderWebComponent(`
+      <a11y-annotate callout-lane="top" style="--a11y-annotate-callout-lane-offset: 24px;">
+        <${tagName}>
+          <div id="anchor">x</div>
+        </${tagName}>
+      </a11y-annotate>
+    `);
+
+    await waitForComponent('a11y-annotate');
+
+    const layer = el.querySelector('[part="callout-layer"]') as HTMLElement | null;
+    const tagEl = el.querySelector('.callout-tag') as HTMLElement | null;
+    const line = el.querySelector('.callout-line') as SVGPathElement | null;
+    const anchor = el.querySelector('#anchor') as HTMLElement | null;
+
+    expect(layer).toBeTruthy();
+    expect(tagEl).toBeTruthy();
+    expect(line).toBeTruthy();
+    expect(anchor).toBeTruthy();
+
+    stubBcr(layer!, domRect(0, 0, 400, 400));
+    stubTagBcr(tagEl!);
+    stubBcr(anchor!, domRect(200, 200, 100, 40));
+    stubClientRects(anchor!);
+
+    window.dispatchEvent(new Event('resize'));
+    await waitForDoubleRaf();
+
+    expect(tagEl!.style.transform).toBe('translate(-50%, -100%)');
+    expect(tagEl!.style.left).toBe('250px');
+    expect(tagEl!.style.top).toBe('176px');
+    expect(Number.parseFloat(tagEl!.style.top)).toBeLessThan(200);
+    expect(line!.getAttribute('d')).toBeTruthy();
   });
 
   it('右寄せコンポーネントではラベルが左レーンに固定される', async () => {
