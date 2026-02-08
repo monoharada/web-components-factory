@@ -16,6 +16,11 @@ function waitForMicrotask(): Promise<void> {
   return new Promise<void>((resolve) => queueMicrotask(() => resolve()));
 }
 
+async function waitForMutationObserver(): Promise<void> {
+  await waitForMicrotask();
+  await waitForMicrotask();
+}
+
 describe('DadsDescriptionList - 基本', () => {
   let element: HTMLElement | null = null;
 
@@ -67,6 +72,17 @@ describe('DadsDescriptionList - 基本', () => {
 
     expect(element.getAttribute('marker')).toBe('none');
     expect(element.getAttribute('data-marker')).toBe('none');
+  });
+
+  it('data-marker に不正値を設定すると none にフォールバックする', async () => {
+    const { defineDefaultDescriptionList } = await import('./description-list-define.js');
+    defineDefaultDescriptionList();
+
+    element = renderWebComponent('<dads-description-list data-marker="unknown"></dads-description-list>');
+    await waitForCustomElement(element);
+
+    expect(element.getAttribute('data-marker')).toBe('none');
+    expect(element.getAttribute('marker')).toBe('none');
   });
 
   it('marker 変更時に data-marker へ同期する', async () => {
@@ -132,6 +148,67 @@ describe('DadsDescriptionList - 基本', () => {
     expect(base).not.toBeNull();
     expect(base?.querySelectorAll('dt').length).toBe(2);
     expect(base?.querySelectorAll('dd').length).toBe(2);
+  });
+
+  it('接続後に子要素を追加しても dt/dd は dl 内へ再配置される', async () => {
+    const { defineDefaultDescriptionList } = await import('./description-list-define.js');
+    defineDefaultDescriptionList();
+
+    element = renderWebComponent(`
+      <dads-description-list>
+        <div>
+          <dt>項目名1</dt>
+          <dd>説明1</dd>
+        </div>
+      </dads-description-list>
+    `);
+    await waitForCustomElement(element);
+
+    element.insertAdjacentHTML(
+      'beforeend',
+      `
+        <div>
+          <dt>項目名2</dt>
+          <dd>説明2</dd>
+        </div>
+      `
+    );
+    await waitForMutationObserver();
+
+    const base = element.querySelector('dl[data-dads-description-list-base]');
+    expect(base).not.toBeNull();
+    expect(element.children.length).toBe(1);
+    expect(base?.querySelectorAll('dt').length).toBe(2);
+    expect(base?.querySelectorAll('dd').length).toBe(2);
+  });
+
+  it('接続後に innerHTML を更新しても dl 構造を再構築する', async () => {
+    const { defineDefaultDescriptionList } = await import('./description-list-define.js');
+    defineDefaultDescriptionList();
+
+    element = renderWebComponent(`
+      <dads-description-list>
+        <div>
+          <dt>項目名1</dt>
+          <dd>説明1</dd>
+        </div>
+      </dads-description-list>
+    `);
+    await waitForCustomElement(element);
+
+    element.innerHTML = `
+      <div>
+        <dt>更新後項目</dt>
+        <dd>更新後説明</dd>
+      </div>
+    `;
+    await waitForMutationObserver();
+
+    const base = element.querySelector('dl[data-dads-description-list-base]');
+    expect(base).not.toBeNull();
+    expect(element.children.length).toBe(1);
+    expect(base?.querySelectorAll('dt').length).toBe(1);
+    expect(base?.querySelectorAll('dd').length).toBe(1);
   });
 });
 

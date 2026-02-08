@@ -20,7 +20,7 @@ E2E テストは **Fidelity用デモページ** を参照します。人間向�
 | menuListBox | `/?component=menuListBox` | 人間向けショーケース（API/CSS Variables/実務例） |
 | menuListBoxFidelity | `/?component=menuListBoxFidelity` | E2E/Figma検証用（ID安定性優先） |
 | listFidelity | `/?component=listFidelity` | E2E/VRT検証用（ID安定性優先） |
-| descriptionListFidelity | `/?component=descriptionListFidelity` | Storybook Playgroundとのピクセル一致検証用 |
+| descriptionListFidelity | `/?component=descriptionListFidelity` | Storybook PlaygroundとのVRT比較検証用（`maxDiffPixelRatio: 0.01`） |
 
 **重要**: E2E テストは `menuListBoxFidelity` を参照するため、ショーケース整理時にE2Eが壊れることはありません。
 

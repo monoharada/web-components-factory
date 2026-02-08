@@ -10127,12 +10127,31 @@
             },
             {
               "kind": "field",
+              "name": "#isStructuring",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "#isSyncing",
               "privacy": "private",
               "type": {
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#observeStructureChanges",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "method",
@@ -10178,6 +10197,15 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "#structureObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
             },
             {
               "kind": "method",
@@ -10487,7 +10515,8 @@
               "categories": {
                 "semantics": [
                   "項目名（dt）と説明（dd）を対で示す、説明リスト構造を提供します。",
-                  "DADS互換として marker / data-marker で表示バリエーションを切り替えます。"
+                  "DADS互換として marker / data-marker で表示バリエーションを切り替えます。",
+                  "内部の <dl> が dt/dd の組を束ね、意味的な関連を維持します。"
                 ],
                 "keyboard": [
                   "説明リスト自体はインタラクティブではありません。本文内のリンク等は通常どおりTabでフォーカス可能です。"
@@ -10507,6 +10536,17 @@
                 ]
               },
               "callouts": [
+                {
+                  "id": "definition-list-base",
+                  "title": "説明リスト本体（dl）",
+                  "label": "<dl>",
+                  "description": "dt と dd の対応関係を束ねる説明リストのルートです。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "selector": "dl[data-dads-description-list-base]"
+                  }
+                },
                 {
                   "id": "term",
                   "title": "項目名（dt）",

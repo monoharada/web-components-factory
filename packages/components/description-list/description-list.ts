@@ -78,11 +78,20 @@ export class DadsDescriptionList extends TypographyWebComponent {
   declare dataMarker: string | null;
 
   #isSyncing = false;
+  #isStructuring = false;
+  #structureObserver: MutationObserver | null = null;
 
   connectedCallback(): void {
     super.connectedCallback();
     this.#ensureDefinitionListStructure();
+    this.#observeStructureChanges();
     this.#syncInitialMarker();
+  }
+
+  disconnectedCallback(): void {
+    this.#structureObserver?.disconnect();
+    this.#structureObserver = null;
+    super.disconnectedCallback();
   }
 
   markerChanged(_oldValue: string | null, newValue: string | null): void {
@@ -106,12 +115,34 @@ export class DadsDescriptionList extends TypographyWebComponent {
   }
 
   #ensureDefinitionListStructure(): void {
-    const base = this.#findOrCreateBaseList();
-    for (const node of Array.from(this.childNodes)) {
-      if (node === base) continue;
-      base.append(node);
+    if (this.#isStructuring) return;
+
+    this.#isStructuring = true;
+    try {
+      const base = this.#findOrCreateBaseList();
+      const nodesToMove = Array.from(this.childNodes).filter((node) => node !== base);
+      if (nodesToMove.length > 0) base.append(...nodesToMove);
+      this.#syncBasePart(base);
+    } finally {
+      this.#isStructuring = false;
     }
-    this.#syncBasePart(base);
+  }
+
+  #observeStructureChanges(): void {
+    if (typeof MutationObserver === 'undefined' || this.#structureObserver) return;
+
+    this.#structureObserver = new MutationObserver((mutations) => {
+      if (this.#isStructuring) return;
+
+      for (const mutation of mutations) {
+        if (mutation.type !== 'childList') continue;
+        if (mutation.target !== this) continue;
+        if (mutation.addedNodes.length === 0 && mutation.removedNodes.length === 0) continue;
+        this.#ensureDefinitionListStructure();
+        break;
+      }
+    });
+    this.#structureObserver.observe(this, { childList: true });
   }
 
   #findOrCreateBaseList(): HTMLDListElement {
