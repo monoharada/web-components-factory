@@ -581,7 +581,7 @@ export class DadsNotificationBanner extends TypographyWebComponent {
   }
 
   #isInteractiveTarget(target: Element): boolean {
-    return Boolean(target.closest('a[href],button,input,select,textarea,[role="button"]'));
+    return Boolean(target.closest('a[href],button,input,select,textarea,[role=button]'));
   }
 
   #activatePrimaryLink(): void {
