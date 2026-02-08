@@ -1442,6 +1442,105 @@
     },
     "callouts": []
   },
+  "dads-notification-banner": {
+    "version": 1,
+    "summary": "ノティフィケーションバナーのパーツ構成（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "通知バナーは、アイコン・タイトル・補助情報・説明・アクションをまとめる情報提示コンテナです。",
+        "title / meta / default / actions の各スロットで内容を構造化します。"
+      ],
+      "keyboard": [
+        "閉じるボタンとアクションボタンはTabでフォーカスでき、Enter/Spaceで操作できます。",
+        "dismiss-mode=\"collapse\" の場合は再表示ボタンもキーボード操作できます。"
+      ],
+      "zoom": [
+        "タイトルや説明は折り返しを前提とし、拡大時も情報欠落を防ぎます。",
+        "アクション領域は幅に応じて配置が変化し、狭い表示でも操作要素を保持します。"
+      ],
+      "states": [
+        "type（success/error/warning/info-1/info-2）で通知の意味を表します。",
+        "variant（standard/color-chip）や dismissible / dismiss-mode で表示状態を切り替えます。"
+      ],
+      "labels": [
+        "タイトルスロットの文言が通知の主要ラベルになります。",
+        "close-label / restore-label で閉じる・再表示操作のラベルを指定できます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "notification-icon",
+        "title": "アイコン",
+        "label": "アイコン",
+        "description": "通知タイプに応じた状態アイコンを表示します。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"icon\"]"
+        }
+      },
+      {
+        "id": "notification-title",
+        "title": "バナータイトル",
+        "label": "タイトル",
+        "description": "通知の主題を示す見出し領域です。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "selector": "[slot=\"title\"]"
+        }
+      },
+      {
+        "id": "notification-close",
+        "title": "閉じるボタン",
+        "label": "閉じる",
+        "description": "dismissible 指定時に表示される閉じる操作です。",
+        "category": "keyboard",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"close\"]"
+        }
+      },
+      {
+        "id": "notification-meta",
+        "title": "年月日",
+        "label": "年月日",
+        "description": "更新日時などの補助情報を表示します。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "selector": "[slot=\"meta\"]"
+        }
+      },
+      {
+        "id": "notification-description",
+        "title": "バナーデスクリプション",
+        "label": "説明",
+        "description": "通知内容の説明テキストです。",
+        "category": "labels",
+        "placement": "bottom-left",
+        "target": {
+          "selector": ":scope > p:not([slot])"
+        }
+      },
+      {
+        "id": "notification-actions",
+        "title": "アクション",
+        "label": "ボタン",
+        "description": "通知に関連する操作ボタン群を配置します。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "selector": "[slot=\"actions\"]"
+        }
+      }
+    ]
+  },
   "dads-breadcrumb": {
     "version": 1,
     "summary": "現在位置ナビゲーション（パンくず）仕様（アクセシビリティ注釈）",

@@ -74,6 +74,9 @@ export * from './menu-list-box/index.js';
 // 検索ボックス
 export * from './search-box/index.js';
 
+// ノティフィケーションバナー
+export * from './notification-banner/index.js';
+
 // 見出し
 export * from './heading/index.js';
 
