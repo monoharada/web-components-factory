@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-02-08T13:04:13.109Z",
+  "component": {
+    "slug": "description-list"
+  },
+  "sources": {
+    "dadsDocs": {
+      "baseUrl": "https://design.digital.go.jp/dads/components/description-list/",
+      "overviewUrl": "https://design.digital.go.jp/dads/components/description-list/",
+      "usageUrl": "https://design.digital.go.jp/dads/components/description-list/usage/",
+      "accessibilityUrl": "https://design.digital.go.jp/dads/components/description-list/accessibility/"
+    },
+    "dadsHtmlStorybook": {
+      "baseUrl": "https://design.digital.go.jp/dads/html/",
+      "indexUrl": "https://design.digital.go.jp/dads/html/index.json"
+    },
+    "upstreamHtmlRepo": {
+      "repoUrl": "https://github.com/digital-go-jp/design-system-example-components-html.git",
+      "ref": "main"
+    }
+  },
+  "docs": {
+    "overview": {
+      "status": "ok",
+      "url": "https://design.digital.go.jp/dads/components/description-list/",
+      "httpStatus": 200,
+      "files": {
+        "html": "docs/overview/page.html",
+        "text": "docs/overview/page.txt",
+        "screenshot": "docs/overview/screenshot.png"
+      },
+      "images": []
+    },
+    "usage": {
+      "status": "missing",
+      "url": "https://design.digital.go.jp/dads/components/description-list/usage/",
+      "httpStatus": 404
+    },
+    "accessibility": {
+      "status": "missing",
+      "url": "https://design.digital.go.jp/dads/components/description-list/accessibility/",
+      "httpStatus": 404
+    }
+  },
+  "storybook": {
+    "status": "ok",
+    "entries": [
+      {
+        "id": "components-説明リスト--docs",
+        "type": "docs",
+        "name": "Docs",
+        "title": "Components/説明リスト",
+        "uiUrl": "https://design.digital.go.jp/dads/html/?path=/docs/components-%E8%AA%AC%E6%98%8E%E3%83%AA%E3%82%B9%E3%83%88--docs",
+        "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E8%AA%AC%E6%98%8E%E3%83%AA%E3%82%B9%E3%83%88--docs",
+        "status": "ok",
+        "error": null,
+        "ui": {
+          "status": "ok",
+          "error": null
+        },
+        "canvas": {
+          "status": "ok",
+          "error": null
+        },
+        "files": {
+          "uiPng": "storybook/ui/docs--docs--5f646438.png",
+          "canvasPng": "storybook/canvas/docs--docs--5f646438.png",
+          "canvasHtml": "storybook/html/docs--docs--5f646438.html"
+        }
+      },
+      {
+        "id": "components-説明リスト--playground",
+        "type": "story",
+        "name": "Playground",
+        "title": "Components/説明リスト",
+        "uiUrl": "https://design.digital.go.jp/dads/html/?path=/story/components-%E8%AA%AC%E6%98%8E%E3%83%AA%E3%82%B9%E3%83%88--playground",
+        "iframeUrl": "https://design.digital.go.jp/dads/html/iframe.html?id=components-%E8%AA%AC%E6%98%8E%E3%83%AA%E3%82%B9%E3%83%88--playground",
+        "status": "ok",
+        "error": null,
+        "ui": {
+          "status": "ok",
+          "error": null
+        },
+        "canvas": {
+          "status": "ok",
+          "error": null
+        },
+        "files": {
+          "uiPng": "storybook/ui/story--playground--6c0feca9.png",
+          "canvasPng": "storybook/canvas/story--playground--6c0feca9.png",
+          "canvasHtml": "storybook/html/story--playground--6c0feca9.html"
+        }
+      }
+    ],
+    "files": {
+      "entries": "storybook/entries.json"
+    }
+  },
+  "upstream": {
+    "status": "ok",
+    "commit": "fd97fd253b45064d50d9788eda28bfdc2f76badd",
+    "copied": [
+      "upstream/design-system-example-components-html/src/components/description-list",
+      "upstream/design-system-example-components-html/src/global.css",
+      "upstream/design-system-example-components-html/src/helpers/html-fragment.ts"
+    ],
+    "files": {
+      "meta": "upstream/design-system-example-components-html/META.json",
+      "license": "upstream/design-system-example-components-html/LICENSE"
+    }
+  },
+  "notes": [
+    "agent-browser set media failed (ignored): Validation error: agent-browser action unsupported in this environment"
+  ],
+  "figma": {
+    "status": "unconfigured",
+    "reason": "missing_config",
+    "hint": "Provide Figma URLs and run: npm run dads:figma:add -- --component description-list --url \"<figma-url>\""
+  }
+}

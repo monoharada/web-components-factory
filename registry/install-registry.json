@@ -138,6 +138,18 @@
         "componentDir": "packages/components/date-picker"
       }
     },
+    "description-list": {
+      "id": "description-list",
+      "tags": [
+        "dads-description-list"
+      ],
+      "define": "defineDescriptionList",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/description-list"
+      }
+    },
     "dialog": {
       "id": "dialog",
       "tags": [
@@ -408,6 +420,7 @@
     "dads-chip-tag": "chip-tag",
     "dads-code-block": "code-block",
     "dads-date-picker": "date-picker",
+    "dads-description-list": "description-list",
     "dads-dialog": "dialog",
     "dads-disclosure": "disclosure",
     "dads-fieldset": "fieldset",

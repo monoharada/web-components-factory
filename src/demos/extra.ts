@@ -1525,6 +1525,51 @@ export const demos = {
     </div>
   `,
 
+  descriptionListFidelity: () => `
+    <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Description List - Fidelity (Storybook Playground)</h2>
+      <p style="color: #666; margin-bottom: 24px;">
+        E2E・VRT検証用デモ（ID安定性優先）。人間向けショーケースは <code>descriptionList</code> を参照してください。
+      </p>
+
+      <style>
+        .description-list-fidelity-caption {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 12px;
+          color: #666;
+          margin-bottom: 12px;
+        }
+        .description-list-fidelity-capture {
+          inline-size: 760px;
+          max-inline-size: 100%;
+        }
+      </style>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">Playground（marker=none）</h3>
+        <div class="description-list-fidelity-caption">Storybook: components-説明リスト--playground</div>
+        <div class="description-list-fidelity-capture">
+          <dads-description-list id="demo-description-list-playground" marker="none">
+            <div>
+              <dt>項目名1</dt>
+              <dd>これは項目1の説明文です。説明リストは用語とその説明をセットで表示するのに適しています。</dd>
+            </div>
+            <div>
+              <dt>項目名2</dt>
+              <dd>これは項目2の説明文です。マーカーの種類を変更することで、ブレットや連番を表示できます。</dd>
+            </div>
+            <div>
+              <dt>項目名3</dt>
+              <dd>これは項目3の説明文です。HTMLのdl、dt、dd要素に対応したコンポーネントです。</dd>
+            </div>
+          </dads-description-list>
+        </div>
+      </section>
+
+      ${modulePreloadScript(['dads-description-list'])}
+    </div>
+  `,
+
   empty: () => `
     <div style="padding: 40px; text-align: center; color: #666;">
       コンポーネントを選択してください

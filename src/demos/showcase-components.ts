@@ -3097,6 +3097,240 @@ export const demos = {
     </div>
   `,
 
+  descriptionList: () => `
+    <div data-dads-typeset style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">説明リスト</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        DADS準拠の説明リスト。<code>dt</code> / <code>dd</code> の組を使って「項目名: 説明」を表現します。
+        <br>※ <code>div</code> ラップは任意です。<code>dt</code> / <code>dd</code> を直接書いた場合も内部で <code>dl</code> を構築します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <!-- アクセシビリティ注釈（a11y-annotate） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate
+          target-selector="dads-description-list"
+          style="
+            --a11y-annotate-callout-lane-offset: 40px;
+            --a11y-annotate-callout-gutter: clamp(3rem, 8vw, 6rem);
+          "
+        >
+          <div style="padding: 48px 24px;">
+            <div style="max-width: 760px; margin-inline: auto;">
+              <style>
+                dads-description-list[data-a11y-demo='description-list'] dt {
+                  display: inline-block;
+                }
+              </style>
+              <dads-description-list data-a11y-demo="description-list" marker="none">
+                <div>
+                  <dt>項目名1</dt>
+                  <dd>これは項目1の説明文です。説明リストは用語とその説明を対応付ける用途に適しています。</dd>
+                </div>
+                <div>
+                  <dt>項目名2</dt>
+                  <dd>これは項目2の説明文です。確認画面や詳細画面の情報表示に使えます。</dd>
+                </div>
+              </dads-description-list>
+            </div>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <!-- API / Controls（Storybook風） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          Props/Attrs と CSS vars の変更が Preview に即時反映されます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-description-list',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-description-list data-api-target marker="none">
+                  <div>
+                    <dt>項目名1</dt>
+                    <dd>これは項目1の説明文です。説明リストは用語と説明の対を表すのに適しています。</dd>
+                  </div>
+                  <div>
+                    <dt><span>2.</span>項目名2</dt>
+                    <dd>これは項目2の説明文です。確認画面・審査画面などで頻繁に使われます。</dd>
+                  </div>
+                </dads-description-list>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <!-- 通常 -->
+                    <dads-description-list marker="none">
+                      <div>
+                        <dt>項目名1</dt>
+                        <dd>これは項目1の説明文です。</dd>
+                      </div>
+                      <div>
+                        <dt>項目名2</dt>
+                        <dd>これは項目2の説明文です。</dd>
+                      </div>
+                    </dads-description-list>
+
+                    <!-- ブレット -->
+                    <dads-description-list marker="bullet">
+                      <div>
+                        <dt>項目名1</dt>
+                        <dd>これは項目1の説明文です。</dd>
+                      </div>
+                    </dads-description-list>
+
+                    <!-- カスタムマーカー -->
+                    <dads-description-list marker="custom">
+                      <div>
+                        <dt><span>1.</span>項目名1</dt>
+                        <dd>これは項目1の説明文です。</dd>
+                      </div>
+                    </dads-description-list>
+
+                    <!-- DADS HTML 互換属性 -->
+                    <dads-description-list data-marker="bullet">
+                      <div>
+                        <dt>項目名</dt>
+                        <dd>data-marker 属性も利用できます。</dd>
+                      </div>
+                    </dads-description-list>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>marker</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>"none" | "bullet" | "custom"</code></td>
+                        <td><code>none</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="marker" size="md 240" value="none" data-api-attr="marker" data-default="none">
+                              <option value="none">none</option>
+                              <option value="bullet">bullet</option>
+                              <option value="custom">custom</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>マーカー表示種別</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>data-marker</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>"none" | "bullet" | "custom"</code></td>
+                        <td><code>none</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="data-marker" size="md 240" value="none" data-api-attr="data-marker" data-default="none">
+                              <option value="none">none</option>
+                              <option value="bullet">bullet</option>
+                              <option value="custom">custom</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>DADS HTML 互換属性（marker と同期）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-description-list-margin-block</code></th>
+                        <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-description-list-margin-block" value="" data-api-css-var="--dads-description-list-margin-block" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ブロック方向マージン</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-description-list-item-gap</code></th>
+                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-description-list-item-gap" value="" data-api-css-var="--dads-description-list-item-gap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>項目間の行間</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-description-list-indent</code></th>
+                        <td><code>--spacing-8</code><br><small style="color:#666">(32px)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-description-list-indent" value="" data-api-css-var="--dads-description-list-indent" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>インデント幅</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-description-list-term-font-weight</code></th>
+                        <td><code>--font-weight-700</code><br><small style="color:#666">(700)</small></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-description-list-term-font-weight" value="" data-api-css-var="--dads-description-list-term-font-weight" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>用語（dt）の文字ウェイト</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-description-list-overflow-wrap</code></th>
+                        <td><code>anywhere</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-description-list-overflow-wrap" value="" data-api-css-var="--dads-description-list-overflow-wrap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>折り返し規則</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+    </div>
+  `,
+
   chipLabel: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">チップラベル</h2>

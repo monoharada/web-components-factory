@@ -30,6 +30,32 @@ describe('showcase-components (chipTag demo)', () => {
   });
 });
 
+describe('showcase-components (descriptionList demo)', () => {
+  it('説明リストデモに marker 切り替え UI が含まれる', () => {
+    const html = demos.descriptionList();
+    expect(html).toContain('<dads-description-list');
+    expect(html).toContain('data-api-attr="marker"');
+    expect(html).toContain('value="none"');
+    expect(html).toContain('value="bullet"');
+    expect(html).toContain('value="custom"');
+  });
+
+  it('説明リストデモに Usage コードブロックが含まれる', () => {
+    const html = demos.descriptionList();
+    expect(html).toContain('<dads-code-block data-api-code>');
+    expect(html).toContain('<dads-description-list marker="none">');
+    expect(html).toContain('<dads-description-list marker="bullet">');
+    expect(html).toContain('<dads-description-list marker="custom">');
+  });
+
+  it('data-marker 互換属性の作例が含まれる', () => {
+    const html = demos.descriptionList();
+    expect(html).toContain('data-api-attr="data-marker"');
+    expect(html).toContain('<dads-description-list data-marker="bullet">');
+    expect(html).toContain('DADS HTML 互換属性（marker と同期）');
+  });
+});
+
 describe('showcase-components (notificationBanner demo)', () => {
   it('冒頭にアクセシビリティ注釈セクションを含む', () => {
     const html = demos.notificationBanner();
