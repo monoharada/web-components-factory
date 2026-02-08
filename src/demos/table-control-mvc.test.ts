@@ -152,6 +152,31 @@ describe('table-control-mvc', () => {
     expect(pagination?.getAttribute('current')).toBe('2');
   });
 
+  it('Tab移動とSpace操作でキーボード経路を通過できる', async () => {
+    const root = setupDemo();
+    const user = userEvent.setup();
+
+    const before = document.querySelector<HTMLButtonElement>('[data-table-control-scenario="before-search"]');
+    const beforeBase = before?.shadowRoot?.querySelector<HTMLButtonElement>('button');
+    const sortButton = root.querySelector<HTMLButtonElement>('button[data-sort]');
+    if (!before || !beforeBase || !sortButton) {
+      throw new Error('キーボード検証用の要素が見つかりません。');
+    }
+
+    beforeBase.focus();
+    const activeBeforeTab = document.activeElement;
+    await user.tab();
+    expect(document.activeElement).not.toBe(activeBeforeTab);
+
+    const sortKeydownSpy = vi.fn<(event: KeyboardEvent) => void>();
+    sortButton.addEventListener('keydown', sortKeydownSpy);
+    sortButton.focus();
+    await user.keyboard('{Space}');
+    expect(sortKeydownSpy).toHaveBeenCalled();
+    const lastCall = sortKeydownSpy.mock.calls.at(-1)?.[0];
+    expect(lastCall?.key).toBe('Space');
+  });
+
   it('表示件数切替とページ送りが動作する', () => {
     const root = setupDemo();
     const footer = root.querySelector<HTMLElement>('#demo-table-control-footer');
