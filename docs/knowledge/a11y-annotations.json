@@ -2705,5 +2705,119 @@
         }
       }
     ]
+  },
+  "dads-table-control": {
+    "version": 1,
+    "summary": "テーブルコントロール（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "variant=\"header\" では検索・件数・リセット・アクション領域を表示します。",
+        "variant=\"footer\" では表示件数とページナビゲーション領域を表示します。"
+      ],
+      "keyboard": [
+        "検索実行・リセット・表示件数切替はボタン操作で、Tab移動とEnter/Space操作に対応します。",
+        "ページナビゲーションは slot に差し込んだ dads-page-navigation のキーボード操作に従います。"
+      ],
+      "zoom": [
+        "検索入力の高さや余白はCSS変数で調整でき、拡大時も操作領域を維持できます。"
+      ],
+      "states": [
+        "show-reset 属性でリセット操作の表示/非表示を切り替えます。",
+        "pagination-position 属性で footer の表示件数とページナビゲーションの並び順を切り替えます。"
+      ],
+      "labels": [
+        "検索語入力には内部の dads-search-box がラベルを提供します。",
+        "検索件数は aria-live=\"polite\" で更新通知されます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "search",
+        "title": "検索エリア",
+        "label": "part=\"search\"",
+        "description": "検索入力・検索ボタン・件数・リセットの起点となる領域です。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"header\"]:not([hidden]) [part=\"search\"]"
+        }
+      },
+      {
+        "id": "count",
+        "title": "検索件数",
+        "label": "part=\"count\"",
+        "description": "検索結果件数を表示し、aria-liveで変更を通知します。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"header\"]:not([hidden]) [part=\"count\"]"
+        }
+      },
+      {
+        "id": "reset",
+        "title": "リセット",
+        "label": "part=\"reset\"",
+        "description": "検索後に表示され、現在の検索条件を解除します。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"header\"]:not([hidden]) [part=\"reset\"]:not([hidden])"
+        }
+      },
+      {
+        "id": "actions",
+        "title": "アクション領域",
+        "label": "slot=\"actions\"",
+        "description": "印刷やCSV出力などの業務アクションを差し込む領域です。",
+        "category": "semantics",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"header\"]:not([hidden]) [part=\"actions\"]:not([hidden])"
+        }
+      },
+      {
+        "id": "items-per-page",
+        "title": "表示件数",
+        "label": "part=\"items-per-page\"",
+        "description": "ページ内に表示する件数と選択肢を提示する領域です。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"footer\"]:not([hidden]) [part=\"items-per-page\"]"
+        }
+      },
+      {
+        "id": "items-option",
+        "title": "件数オプション",
+        "label": "part=\"items-option\"",
+        "description": "10件 / 50件などの表示件数を切り替える操作要素です。",
+        "category": "keyboard",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"footer\"]:not([hidden]) [part=\"items-option\"]"
+        }
+      },
+      {
+        "id": "page-navigation",
+        "title": "ページナビゲーション",
+        "label": "slot=\"page-navigation\"",
+        "description": "ページナビゲーションを差し込む領域です。",
+        "category": "semantics",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"footer\"]:not([hidden]) [part=\"pagination\"]:not([hidden])"
+        }
+      }
+    ]
   }
 }

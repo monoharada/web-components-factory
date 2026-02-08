@@ -25369,6 +25369,1097 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/table-control/table-control.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Table Control component.",
+          "name": "DadsTableControl",
+          "cssProperties": [
+            {
+              "description": "Primary spacing between blocks",
+              "name": "--dads-table-control-gap"
+            },
+            {
+              "description": "Result count text color",
+              "name": "--dads-table-control-count-color"
+            },
+            {
+              "description": "Divider color for action group",
+              "name": "--dads-table-control-divider-color"
+            },
+            {
+              "description": "Gap between page size options",
+              "name": "--dads-table-control-items-gap"
+            },
+            {
+              "description": "Gap between search and popular areas",
+              "name": "--dads-table-control-popular-gap"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "Header actions area",
+              "name": "actions"
+            },
+            {
+              "description": "Root wrapper",
+              "name": "base"
+            },
+            {
+              "description": "Result count label",
+              "name": "count"
+            },
+            {
+              "description": "Footer control row",
+              "name": "footer"
+            },
+            {
+              "description": "Header control row",
+              "name": "header"
+            },
+            {
+              "description": "Items-per-page option button",
+              "name": "items-option"
+            },
+            {
+              "description": "Items-per-page block",
+              "name": "items-per-page"
+            },
+            {
+              "description": "Pagination area",
+              "name": "pagination"
+            },
+            {
+              "description": "Popular-search area",
+              "name": "popular"
+            },
+            {
+              "description": "Reset trigger button",
+              "name": "reset"
+            },
+            {
+              "description": "Search control block",
+              "name": "search"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Header action area (e.g. print / csv / create buttons)",
+              "name": "actions"
+            },
+            {
+              "description": "Footer page navigation area (e.g. dads-page-navigation)",
+              "name": "page-navigation"
+            },
+            {
+              "description": "Header popular-search presets (e.g. chip tags)",
+              "name": "presets"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#actions",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#actionsSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#count",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#currentQuery",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#footer",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#formatNumber",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "raw",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#handleActionsSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleItemsOptionClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePageNavigationSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePresetsSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleResetClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSearchInput",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSearchRequest",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#hasVisibleAssignedElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#header",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#itemsOptions",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#itemsPerPage",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pageNavigationSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pageSizeLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pagination",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#parsePageSizeOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#popular",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#popularLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#presetsSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#renderPageSizeOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reset",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#resolvePaginationPosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DadsTableControlPaginationPosition"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveQuery",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "SearchBoxEventDetail | undefined"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resolveVariant",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "DadsTableControlVariant"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#searchBox",
+              "privacy": "private",
+              "type": {
+                "text": "SearchBoxElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncActions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPageSizeLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPaginationPosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPaginationVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPopular",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncQuery",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncReset",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncResultCount",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSlotVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "container",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncVariant",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-table-control', template: html` <div part=\"base\" id=\"base\"> <div part=\"header\" id=\"header\"> <div id=\"header-leading\"> <div part=\"search\" id=\"search\"> <dads-search-box id=\"search-box\" aria-label=\"検索\"></dads-search-box> <span part=\"count\" id=\"count\" aria-live=\"polite\"></span> <button part=\"reset\" id=\"reset\" type=\"button\"></button> </div> <div part=\"popular\" id=\"popular\"> <span id=\"popular-label\"></span> <slot name=\"presets\" id=\"presets-slot\"></slot> </div> </div> <div part=\"actions\" id=\"actions\"> <slot name=\"actions\" id=\"actions-slot\"></slot> </div> </div> <div part=\"footer\" id=\"footer\"> <div part=\"items-per-page\" id=\"items-per-page\"> <span id=\"page-size-label\"></span> <div id=\"items-options\"></div> </div> <div part=\"pagination\" id=\"pagination\"> <slot name=\"page-navigation\" id=\"page-navigation-slot\"></slot> </div> </div> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), tableControlTokens, tableControlStyles, ], 'minimal'), attributes: [ PropertyAttr('variant'), PropertyAttr('query'), PropertyAttr('resultCount', 'result-count'), BooleanAttr('showReset', 'show-reset'), PropertyAttr('resetLabel', 'reset-label'), PropertyAttr('popularLabel', 'popular-label'), PropertyAttr('itemsPerPage', 'items-per-page'), PropertyAttr('pageSizeOptions', 'page-size-options'), PropertyAttr('pageSizeLabel', 'page-size-label'), PropertyAttr('paginationPosition', 'pagination-position'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "itemsPerPageChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "pageSizeLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "pageSizeOptionsChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "paginationPositionChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "popularLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "queryChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resetLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resultCountChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "showResetChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "variantChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "events": [
+            {
+              "description": "Fired when page size option changes",
+              "name": "dads-table-control-page-size-change"
+            },
+            {
+              "description": "Fired when reset is requested",
+              "name": "dads-table-control-reset"
+            },
+            {
+              "description": "Fired when search is requested",
+              "name": "dads-table-control-search"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Current page size for footer",
+              "name": "items-per-page"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Page size label",
+              "name": "page-size-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Comma separated page size options",
+              "name": "page-size-options"
+            },
+            {
+              "type": {
+                "text": "'start' | 'end'"
+              },
+              "description": "Footer pagination alignment",
+              "name": "pagination-position"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Popular search area label",
+              "name": "popular-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Search query for header",
+              "name": "query"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Reset button label",
+              "name": "reset-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Result count for header",
+              "name": "result-count"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows reset button in header",
+              "name": "show-reset"
+            },
+            {
+              "type": {
+                "text": "'header' | 'footer'"
+              },
+              "description": "Render variant",
+              "name": "variant"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-table-control",
+          "customElement": true,
+          "modulePath": "./packages/components/table-control/table-control.ts",
+          "definitionPath": "./packages/components/table-control/table-control.ts",
+          "typeDefinitionPath": "./packages/components/table-control/table-control.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "テーブルコントロール（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "variant=\"header\" では検索・件数・リセット・アクション領域を表示します。",
+                  "variant=\"footer\" では表示件数とページナビゲーション領域を表示します。"
+                ],
+                "keyboard": [
+                  "検索実行・リセット・表示件数切替はボタン操作で、Tab移動とEnter/Space操作に対応します。",
+                  "ページナビゲーションは slot に差し込んだ dads-page-navigation のキーボード操作に従います。"
+                ],
+                "zoom": [
+                  "検索入力の高さや余白はCSS変数で調整でき、拡大時も操作領域を維持できます。"
+                ],
+                "states": [
+                  "show-reset 属性でリセット操作の表示/非表示を切り替えます。",
+                  "pagination-position 属性で footer の表示件数とページナビゲーションの並び順を切り替えます。"
+                ],
+                "labels": [
+                  "検索語入力には内部の dads-search-box がラベルを提供します。",
+                  "検索件数は aria-live=\"polite\" で更新通知されます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "search",
+                  "title": "検索エリア",
+                  "label": "part=\"search\"",
+                  "description": "検索入力・検索ボタン・件数・リセットの起点となる領域です。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"header\"]:not([hidden]) [part=\"search\"]"
+                  }
+                },
+                {
+                  "id": "count",
+                  "title": "検索件数",
+                  "label": "part=\"count\"",
+                  "description": "検索結果件数を表示し、aria-liveで変更を通知します。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"header\"]:not([hidden]) [part=\"count\"]"
+                  }
+                },
+                {
+                  "id": "reset",
+                  "title": "リセット",
+                  "label": "part=\"reset\"",
+                  "description": "検索後に表示され、現在の検索条件を解除します。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"header\"]:not([hidden]) [part=\"reset\"]:not([hidden])"
+                  }
+                },
+                {
+                  "id": "actions",
+                  "title": "アクション領域",
+                  "label": "slot=\"actions\"",
+                  "description": "印刷やCSV出力などの業務アクションを差し込む領域です。",
+                  "category": "semantics",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"header\"]:not([hidden]) [part=\"actions\"]:not([hidden])"
+                  }
+                },
+                {
+                  "id": "items-per-page",
+                  "title": "表示件数",
+                  "label": "part=\"items-per-page\"",
+                  "description": "ページ内に表示する件数と選択肢を提示する領域です。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"footer\"]:not([hidden]) [part=\"items-per-page\"]"
+                  }
+                },
+                {
+                  "id": "items-option",
+                  "title": "件数オプション",
+                  "label": "part=\"items-option\"",
+                  "description": "10件 / 50件などの表示件数を切り替える操作要素です。",
+                  "category": "keyboard",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"footer\"]:not([hidden]) [part=\"items-option\"]"
+                  }
+                },
+                {
+                  "id": "page-navigation",
+                  "title": "ページナビゲーション",
+                  "label": "slot=\"page-navigation\"",
+                  "description": "ページナビゲーションを差し込む領域です。",
+                  "category": "semantics",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"footer\"]:not([hidden]) [part=\"pagination\"]:not([hidden])"
+                  }
+                }
+              ]
+            },
+            "componentId": "table-control",
+            "install": {
+              "id": "table-control",
+              "define": "defineTableControl",
+              "call": "prefix-registry",
+              "deps": [
+                "button",
+                "chip-tag",
+                "page-navigation",
+                "search-box"
+              ],
+              "source": {
+                "componentDir": "packages/components/table-control"
+              },
+              "tags": [
+                "dads-table-control"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsTableControl",
+          "declaration": {
+            "name": "DadsTableControl",
+            "module": "packages/components/table-control/table-control.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/table-control/table-control.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/table-control/table-control.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-table-control",
+          "declaration": {
+            "name": "DadsTableControl",
+            "module": "./packages/components/table-control/table-control.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/table/table.ts",
       "declarations": [
         {
@@ -32453,6 +33544,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/table-control/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/step-navigation/index.js"
           }
         },
@@ -35040,6 +36139,188 @@
           "declaration": {
             "name": "switchTokens",
             "module": "packages/components/switch/switch-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/table-control/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsTableControl",
+          "declaration": {
+            "name": "DadsTableControl",
+            "module": "./table-control.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultTableControl",
+          "declaration": {
+            "name": "defineDefaultTableControl",
+            "module": "./table-control-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineTableControl",
+          "declaration": {
+            "name": "defineTableControl",
+            "module": "./table-control-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tableControlStyles",
+          "declaration": {
+            "name": "tableControlStyles",
+            "module": "./table-control-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tableControlTokens",
+          "declaration": {
+            "name": "tableControlTokens",
+            "module": "./table-control-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/table-control/table-control-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultTableControl",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "function",
+          "name": "defineTableControl",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "Table Control コンポーネントを定義"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-table-control`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultTableControl",
+          "declaration": {
+            "name": "defineDefaultTableControl",
+            "module": "packages/components/table-control/table-control-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineTableControl",
+          "declaration": {
+            "name": "defineTableControl",
+            "module": "packages/components/table-control/table-control-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/table-control/table-control-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tableControlStyles",
+          "default": "css` :host { display: block; color: var(--dads-table-control-count-color); font-family: var(--dads-table-control-font-family); font-size: var(--dads-table-control-font-size); letter-spacing: var(--dads-table-control-letter-spacing); } [part='base'] { display: block; inline-size: 100%; min-inline-size: 0; } [part='header'], [part='footer'] { display: flex; align-items: center; justify-content: space-between; gap: var(--dads-table-control-gap); inline-size: 100%; min-inline-size: 0; } [part='header'][hidden], [part='footer'][hidden] { display: none; } #header-leading { display: flex; align-items: center; gap: var(--dads-table-control-popular-gap); min-inline-size: 0; flex-wrap: wrap; } [part='search'] { display: flex; align-items: center; gap: var(--dads-table-control-gap); min-inline-size: 0; } #search-box { min-inline-size: var(--dads-table-control-search-min-width); max-inline-size: var(--dads-table-control-search-max-width); flex: 1 1 auto; --dads-search-box-gap: calc(8 / 16 * 1rem); --dads-search-box-border-radius: var(--border-radius-4, 0.25rem); --dads-search-box-border-width: 1px; --dads-search-box-control-min-height: calc(30 / 16 * 1rem); --dads-search-box-input-min-width: calc(312 / 16 * 1rem); --dads-search-box-input-padding: calc(3 / 16 * 1rem) calc(12 / 16 * 1rem) calc(3 / 16 * 1rem) calc(36 / 16 * 1rem); --dads-search-box-search-icon-size: calc(20 / 16 * 1rem); } #search-box::part(base) { gap: calc(8 / 16 * 1rem); } #search-box::part(input) { min-block-size: calc(30 / 16 * 1rem); border-radius: var(--border-radius-4, 0.25rem); padding: calc(3 / 16 * 1rem) calc(12 / 16 * 1rem) calc(3 / 16 * 1rem) calc(36 / 16 * 1rem); } #search-box::part(search-icon) { inset-inline-start: calc(8 / 16 * 1rem); inline-size: calc(20 / 16 * 1rem); block-size: calc(20 / 16 * 1rem); } #search-box::part(button) { --dads-button-min-height: calc(30 / 16 * 1rem); --dads-button-padding: calc(7 / 16 * 1rem) calc(8 / 16 * 1rem); --dads-button-font-size: var(--font-size-16, 1rem); --dads-button-min-width: calc(72 / 16 * 1rem); --dads-button-border-width: 1px; --dads-button-border-radius: var(--border-radius-4, 0.25rem); } [part='count'] { white-space: nowrap; color: var(--dads-table-control-count-color); font-weight: var(--dads-table-control-font-weight-regular); line-height: 1.7; } [part='reset'] { min-inline-size: var(--dads-table-control-reset-min-width); border: none; background: transparent; color: var(--dads-table-control-link-color); text-decoration: underline; text-underline-offset: .2em; font: inherit; font-weight: var(--dads-table-control-font-weight-bold); line-height: 1; cursor: pointer; padding: calc(7 / 16 * 1rem) calc(8 / 16 * 1rem); border-radius: var(--border-radius-4, 0.25rem); } [part='reset'][hidden] { display: none; } @media (any-hover: hover) { [part='reset']:hover { color: var(--dads-table-control-link-color-hover); } [part='items-option']:hover { color: var(--dads-table-control-link-color-hover); } } [part='reset']:focus-visible, [part='items-option']:focus-visible { outline: var(--dads-table-control-focus-outline-width) solid var(--dads-table-control-focus-outline-color); outline-offset: var(--dads-table-control-focus-outline-offset); box-shadow: 0 0 0 var(--dads-table-control-focus-ring-width) var(--dads-table-control-focus-ring-color); } [part='actions'] { margin-inline-start: auto; display: flex; align-items: center; gap: var(--dads-table-control-gap); min-inline-size: 0; } [part='actions'][hidden] { display: none; } [part='actions'] ::slotted(*) { display: inline-flex; align-items: center; } [part='popular'] { display: flex; align-items: center; gap: var(--dads-table-control-gap); color: var(--table-control-muted-color); font-weight: var(--dads-table-control-font-weight-regular); line-height: 1.7; } [part='popular'][hidden] { display: none; } #popular-label[hidden] { display: none; } [part='popular'] ::slotted([slot='presets']) { display: inline-flex; align-items: center; } [part='footer'] { min-block-size: calc(21 / 16 * 1rem); } [part='footer'][data-pagination-position='start'] [part='pagination'] { order: 0; margin-inline-end: auto; } [part='footer'][data-pagination-position='start'] [part='items-per-page'] { order: 1; } [part='footer'][data-pagination-position='end'] [part='items-per-page'] { order: 0; } [part='footer'][data-pagination-position='end'] [part='pagination'] { order: 1; margin-inline-start: auto; } [part='items-per-page'] { display: flex; align-items: center; gap: var(--dads-table-control-gap); color: var(--table-control-muted-color); white-space: nowrap; min-inline-size: 0; } #items-options { display: flex; align-items: center; gap: var(--dads-table-control-items-gap); } [part='items-option'] { min-inline-size: var(--dads-table-control-option-min-width); border: none; background: transparent; color: var(--dads-table-control-link-color); text-decoration: underline; text-underline-offset: .2em; font: inherit; line-height: 1; cursor: pointer; padding: 0; border-radius: var(--border-radius-4, 0.25rem); } [part='items-option'][data-active] { color: var(--table-control-muted-color); text-decoration: none; cursor: default; } [part='pagination'] { display: flex; align-items: center; min-inline-size: 0; } [part='pagination'][hidden] { display: none; } @media (max-width: 960px) { [part='header'], [part='footer'] { flex-wrap: wrap; align-items: flex-start; } #header-leading { inline-size: 100%; gap: var(--dads-table-control-gap); } [part='search'] { inline-size: 100%; flex-wrap: wrap; gap: calc(8 / 16 * 1rem) var(--dads-table-control-gap); } #search-box { inline-size: 100%; min-inline-size: 0; max-inline-size: 100%; } [part='actions'] { inline-size: 100%; justify-content: flex-end; } [part='popular'] { inline-size: 100%; flex-wrap: wrap; gap: calc(8 / 16 * 1rem) var(--dads-table-control-gap); } [part='items-per-page'] { flex-wrap: wrap; gap: calc(8 / 16 * 1rem) var(--dads-table-control-gap); } #items-options { gap: var(--dads-table-control-gap); flex-wrap: wrap; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tableControlStyles",
+          "declaration": {
+            "name": "tableControlStyles",
+            "module": "packages/components/table-control/table-control-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/table-control/table-control-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tableControlLocalTokens",
+          "default": "css`${tableControlLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "tableControlSemanticTokens",
+          "default": "css`${tableControlSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "tableControlTokens",
+          "default": "css` ${tableControlSemanticTokensText} ${tableControlLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tableControlLocalTokens",
+          "declaration": {
+            "name": "tableControlLocalTokens",
+            "module": "packages/components/table-control/table-control-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tableControlSemanticTokens",
+          "declaration": {
+            "name": "tableControlSemanticTokens",
+            "module": "packages/components/table-control/table-control-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tableControlTokens",
+          "declaration": {
+            "name": "tableControlTokens",
+            "module": "packages/components/table-control/table-control-tokens.ts"
           }
         }
       ]
