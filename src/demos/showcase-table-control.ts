@@ -3,7 +3,7 @@ import { annotationToggleScript, annotationToggleUI } from './shared.js';
 export const demos = {
   tableControl: () => `
     <div style="padding: 40px; max-width: 1440px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">テーブルコントロール</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">テーブルコントロール（独自）</h2>
       <p style="color: #666; margin-bottom: 32px;">
         検索・件数表示・ページング・表示件数切替を組み合わせた、テーブル操作UIの作例をまとめています。
         実際の連動挙動を確認できるデモと、業務画面を想定した作例を同じページで比較できます。
