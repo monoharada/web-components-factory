@@ -130,16 +130,6 @@ describe('table-control-mvc', () => {
     pageSize10.focus();
     await user.keyboard('{Enter}');
     expect(footer?.getAttribute('items-per-page')).toBe('10');
-    expect(pagination?.getAttribute('total')).toBe('1');
-
-    const nextButton = pagination?.shadowRoot?.querySelector<HTMLButtonElement>('#next-button');
-    if (!nextButton) {
-      throw new Error('ページナビゲーションの次へボタンが見つかりません。');
-    }
-    expect(pagination?.hasAttribute('disabled-next')).toBe(true);
-    nextButton.focus();
-    await user.keyboard('{Enter}');
-    expect(pagination?.getAttribute('current')).toBe('1');
 
     const resetButton = header?.shadowRoot?.querySelector<HTMLButtonElement>('#reset');
     if (!resetButton) {
@@ -149,6 +139,17 @@ describe('table-control-mvc', () => {
     await user.keyboard('{Enter}');
     expect(header?.getAttribute('query')).toBe('');
     expect(header?.hasAttribute('show-reset')).toBe(false);
+    expect(pagination?.getAttribute('current')).toBe('1');
+    expect(pagination?.getAttribute('total')).toBe('3');
+    expect(pagination?.hasAttribute('disabled-next')).toBe(false);
+
+    const nextButton = pagination?.shadowRoot?.querySelector<HTMLButtonElement>('#next-button');
+    if (!nextButton) {
+      throw new Error('ページナビゲーションの次へボタンが見つかりません。');
+    }
+    nextButton.focus();
+    await user.keyboard('{Enter}');
+    expect(pagination?.getAttribute('current')).toBe('2');
   });
 
   it('表示件数切替とページ送りが動作する', () => {
