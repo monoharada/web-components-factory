@@ -1,0 +1,34 @@
+{
+  "component": "description-list",
+  "generatedAt": "2026-02-08T13:04:21.062Z",
+  "entries": [
+    {
+      "id": "components-説明リスト--docs",
+      "title": "Components/説明リスト",
+      "name": "Docs",
+      "importPath": "./src/components/description-list/description-list.mdx",
+      "storiesImports": [
+        "./src/components/description-list/description-list.stories.ts"
+      ],
+      "type": "docs",
+      "tags": [
+        "dev",
+        "test",
+        "attached-mdx"
+      ]
+    },
+    {
+      "type": "story",
+      "subtype": "story",
+      "id": "components-説明リスト--playground",
+      "name": "Playground",
+      "title": "Components/説明リスト",
+      "importPath": "./src/components/description-list/description-list.stories.ts",
+      "tags": [
+        "dev",
+        "test"
+      ],
+      "exportName": "Playground"
+    }
+  ]
+}

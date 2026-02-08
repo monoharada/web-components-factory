@@ -10001,6 +10001,633 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/description-list/description-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "説明リストコンポーネント\n\nDADS HTML 実装と互換の `dt` / `dd` 構造を受け入れる light DOM コンポーネント。",
+          "name": "DadsDescriptionList",
+          "cssProperties": [
+            {
+              "description": "ブロック方向マージン",
+              "name": "--dads-description-list-margin-block"
+            },
+            {
+              "description": "項目間の行間",
+              "name": "--dads-description-list-item-gap"
+            },
+            {
+              "description": "dt/dd のインデント",
+              "name": "--dads-description-list-indent"
+            },
+            {
+              "description": "用語（dt）の文字ウェイト",
+              "name": "--dads-description-list-term-font-weight"
+            },
+            {
+              "description": "折り返し規則",
+              "name": "--dads-description-list-overflow-wrap"
+            }
+          ],
+          "slots": [
+            {
+              "description": "説明リスト項目（例: div > dt + dd）",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureDefinitionListStructure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#findOrCreateBaseList",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLDListElement"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#isStructuring",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#isSyncing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#observeStructureChanges",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setAttributeIfChanged",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#structureObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncBasePart",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "base",
+                  "type": {
+                    "text": "HTMLDListElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncInitialMarker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncMarker",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "typeof MARKER_ATTR | typeof DATA_MARKER_ATTR"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dataMarker",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dataMarkerChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-description-list', shadowOptions: null, styles: [ createDescriptionListTokens('dads-description-list'), createDescriptionListStyles('dads-description-list'), ], attributes: [ PropertyAttr('marker'), PropertyAttr('dataMarker', 'data-marker'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "marker",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "markerChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'none' | 'bullet' | 'custom'"
+              },
+              "description": "DADS HTML 互換属性（marker と同期）",
+              "name": "data-marker"
+            },
+            {
+              "type": {
+                "text": "'none' | 'bullet' | 'custom'"
+              },
+              "description": "マーカー表示種別",
+              "name": "marker"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-description-list",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/description-list/description-list.ts",
+          "definitionPath": "./packages/components/description-list/description-list.ts",
+          "typeDefinitionPath": "./packages/components/description-list/description-list.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "説明リスト仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "項目名（dt）と説明（dd）を対で示す、説明リスト構造を提供します。",
+                  "DADS互換として marker / data-marker で表示バリエーションを切り替えます。",
+                  "内部の <dl> が dt/dd の組を束ね、意味的な関連を維持します。"
+                ],
+                "keyboard": [
+                  "説明リスト自体はインタラクティブではありません。本文内のリンク等は通常どおりTabでフォーカス可能です。"
+                ],
+                "zoom": [
+                  "項目名・説明文は折り返しを前提とし、ズーム時も情報が欠けないことを想定します。"
+                ],
+                "states": [
+                  "marker=\"none|bullet|custom\" で表示状態を切り替えます。",
+                  "custom では dt > span:first-child をマーカー領域として扱います。"
+                ],
+                "labels": [
+                  "dt は項目名、dd は説明文として対応づけて記述します。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "definition-list-base",
+                  "title": "説明リスト本体（dl）",
+                  "label": "<dl>",
+                  "description": "dt と dd の対応関係を束ねる説明リストのルートです。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "selector": "dl[data-dads-description-list-base]"
+                  }
+                },
+                {
+                  "id": "term",
+                  "title": "項目名（dt）",
+                  "label": "<dt>",
+                  "description": "説明対象の見出し（項目名）を示します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "selector": "dt"
+                  }
+                },
+                {
+                  "id": "description",
+                  "title": "説明文（dd）",
+                  "label": "<dd>",
+                  "description": "項目名に対応する説明文を示します。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "selector": "dd"
+                  }
+                },
+                {
+                  "id": "custom-marker",
+                  "title": "カスタムマーカー領域",
+                  "label": "dt > span:first-child",
+                  "description": "marker=\"custom\" 時に先頭 span をマーカー領域として表示します。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "selector": "dt > span:first-child"
+                  }
+                }
+              ]
+            },
+            "componentId": "description-list",
+            "install": {
+              "id": "description-list",
+              "define": "defineDescriptionList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/description-list"
+              },
+              "tags": [
+                "dads-description-list"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDescriptionList",
+          "declaration": {
+            "name": "DadsDescriptionList",
+            "module": "packages/components/description-list/description-list.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/description-list/description-list.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/description-list/description-list.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-description-list",
+          "declaration": {
+            "name": "DadsDescriptionList",
+            "module": "./packages/components/description-list/description-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/dialog/dialog.ts",
       "declarations": [
         {
@@ -33817,6 +34444,182 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/description-list/description-list-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultDescriptionList",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDescriptionList",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-description-list`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultDescriptionList",
+          "declaration": {
+            "name": "defineDefaultDescriptionList",
+            "module": "packages/components/description-list/description-list-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDescriptionList",
+          "declaration": {
+            "name": "defineDescriptionList",
+            "module": "packages/components/description-list/description-list-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/description-list/description-list-styles.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "createDescriptionListStyles",
+          "return": {
+            "type": {
+              "text": "CSSStyleSheet"
+            }
+          },
+          "parameters": [
+            {
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "createDescriptionListStyles",
+          "declaration": {
+            "name": "createDescriptionListStyles",
+            "module": "packages/components/description-list/description-list-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/description-list/description-list-tokens.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "createDescriptionListTokens",
+          "return": {
+            "type": {
+              "text": "CSSStyleSheet"
+            }
+          },
+          "parameters": [
+            {
+              "name": "tagName",
+              "type": {
+                "text": "string"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "createDescriptionListTokens",
+          "declaration": {
+            "name": "createDescriptionListTokens",
+            "module": "packages/components/description-list/description-list-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/description-list/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "createDescriptionListStyles",
+          "declaration": {
+            "name": "createDescriptionListStyles",
+            "module": "./description-list-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "createDescriptionListTokens",
+          "declaration": {
+            "name": "createDescriptionListTokens",
+            "module": "./description-list-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsDescriptionList",
+          "declaration": {
+            "name": "DadsDescriptionList",
+            "module": "./description-list.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultDescriptionList",
+          "declaration": {
+            "name": "defineDefaultDescriptionList",
+            "module": "./description-list-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDescriptionList",
+          "declaration": {
+            "name": "defineDescriptionList",
+            "module": "./description-list-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/dialog/dialog-define.ts",
       "declarations": [
         {
@@ -34799,6 +35602,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/list/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/description-list/index.js"
           }
         },
         {

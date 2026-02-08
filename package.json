@@ -35,6 +35,8 @@
     "test:e2e": "node scripts/run-playwright.cjs",
     "test:e2e:list-fidelity": "node scripts/run-playwright.cjs e2e-evidence/list.fidelity.vrt.spec.ts",
     "test:e2e:list-fidelity:update": "node scripts/run-playwright.cjs e2e-evidence/list.fidelity.vrt.spec.ts --update-snapshots",
+    "test:e2e:description-list-fidelity": "node scripts/run-playwright.cjs e2e-evidence/description-list.fidelity.vrt.spec.ts",
+    "test:e2e:description-list-fidelity:update": "node scripts/run-playwright.cjs e2e-evidence/description-list.fidelity.vrt.spec.ts --update-snapshots",
     "test:e2e:menu-list-box": "node scripts/run-playwright.cjs e2e-evidence/menu-list-box.fidelity.spec.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint src/**/*.ts",

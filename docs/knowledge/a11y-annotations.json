@@ -245,6 +245,142 @@
       }
     ]
   },
+  "dads-breadcrumb": {
+    "version": 1,
+    "summary": "現在位置ナビゲーション（パンくず）仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部は <nav> 要素と <p role=\"list\"> を使って現在位置ナビゲーションを提供します（ul/olは使用しません）。",
+        "各項目は dads-breadcrumb-item（role=\"listitem\"）として扱います。",
+        "現在位置は aria-current=\"page\" で表現します（明示指定がなければ末尾要素を現在位置として補完）。"
+      ],
+      "keyboard": [
+        "リンク項目はTabでフォーカスし、Enterで遷移できます（ネイティブ挙動）。",
+        "現在位置項目はリンク化されず、テキストとして表示されます。"
+      ],
+      "zoom": [
+        "長いラベルは折り返し可能です（overflow-wrap）。"
+      ],
+      "states": [
+        "show-label 属性で「現在位置」ラベルの視覚表示を切り替えます。",
+        "home 属性で先頭項目にホームアイコンを表示できます。",
+        "separator 属性（chevron / slash / pipe）で区切り表示を切り替えできます。",
+        "structured-data=\"microdata\" でLight DOMにBreadcrumbListのMicrodataをミラー出力します。"
+      ],
+      "labels": [
+        "aria-label / aria-labelledby でナビゲーション名を指定できます。",
+        "show-label 未指定時はラベルを視覚非表示にしつつ、ランドマーク名として利用します。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "breadcrumb-nav",
+        "title": "ナビゲーション領域",
+        "label": "<nav>",
+        "description": "現在位置ナビゲーションのランドマークです。aria-label / aria-labelledby で名称を提供します。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"nav\"]"
+        }
+      },
+      {
+        "id": "breadcrumb-list",
+        "title": "現在位置ナビゲーション本体（p + role=list）",
+        "label": "role=\"list\"",
+        "description": "p要素ベースの現在位置ナビゲーション。ul/ol/liを使わずに構成します。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"list\"]"
+        }
+      },
+      {
+        "id": "breadcrumb-current",
+        "title": "現在位置",
+        "label": "aria-current=\"page\"",
+        "description": "現在のページ項目。リンクではなくテキスト表示されます。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "hostSelector": "dads-breadcrumb-item[current], dads-breadcrumb-item[aria-current=\"page\"]",
+          "scope": "shadow",
+          "selector": "[part=\"current\"]"
+        }
+      }
+    ]
+  },
+  "dads-breadcrumb-item": {
+    "version": 1,
+    "summary": "現在位置ナビゲーション項目（パンくず）仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "項目は role=\"listitem\" を持ち、href指定時はリンクとして動作します。",
+        "current / aria-current=\"page\" の項目はリンクではなくテキスト表示に切り替わります。"
+      ],
+      "keyboard": [
+        "リンク項目はTab/Enterで操作できます。",
+        "現在位置項目はフォーカス対象になりません。"
+      ],
+      "zoom": [
+        "項目テキストは折り返しを許容します。"
+      ],
+      "states": [
+        "home属性でホームアイコンを前置表示します。",
+        "current状態では区切り記号（separator）を非表示にします。",
+        "区切り記号は chevron / slash / pipe のいずれでも aria-hidden で支援技術から除外されます。"
+      ],
+      "labels": [
+        "項目テキストがパンくずラベルとして読み上げられます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "breadcrumb-item-link",
+        "title": "リンク項目",
+        "label": "<a>",
+        "description": "hrefがある非現在項目はリンクとして表示されます。",
+        "category": "keyboard",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"link\"]"
+        }
+      },
+      {
+        "id": "breadcrumb-item-separator",
+        "title": "区切り記号",
+        "label": "separator",
+        "description": "現在項目以外の末尾に表示される視覚的な区切りです（chevron / slash / pipe、いずれも aria-hidden）。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"separator\"]"
+        }
+      },
+      {
+        "id": "breadcrumb-item-home-icon",
+        "title": "ホームアイコン",
+        "label": "home",
+        "description": "home属性指定時に表示される先頭アイコンです（aria-hidden）。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"home-icon\"]"
+        }
+      }
+    ]
+  },
   "dads-button": {
     "version": 1,
     "summary": "ボタンコンポーネント仕様（アクセシビリティ注釈）",
@@ -917,6 +1053,181 @@
       }
     ]
   },
+  "dads-description-list": {
+    "version": 1,
+    "summary": "説明リスト仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "項目名（dt）と説明（dd）を対で示す、説明リスト構造を提供します。",
+        "DADS互換として marker / data-marker で表示バリエーションを切り替えます。",
+        "内部の <dl> が dt/dd の組を束ね、意味的な関連を維持します。"
+      ],
+      "keyboard": [
+        "説明リスト自体はインタラクティブではありません。本文内のリンク等は通常どおりTabでフォーカス可能です。"
+      ],
+      "zoom": [
+        "項目名・説明文は折り返しを前提とし、ズーム時も情報が欠けないことを想定します。"
+      ],
+      "states": [
+        "marker=\"none|bullet|custom\" で表示状態を切り替えます。",
+        "custom では dt > span:first-child をマーカー領域として扱います。"
+      ],
+      "labels": [
+        "dt は項目名、dd は説明文として対応づけて記述します。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "definition-list-base",
+        "title": "説明リスト本体（dl）",
+        "label": "<dl>",
+        "description": "dt と dd の対応関係を束ねる説明リストのルートです。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "selector": "dl[data-dads-description-list-base]"
+        }
+      },
+      {
+        "id": "term",
+        "title": "項目名（dt）",
+        "label": "<dt>",
+        "description": "説明対象の見出し（項目名）を示します。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "selector": "dt"
+        }
+      },
+      {
+        "id": "description",
+        "title": "説明文（dd）",
+        "label": "<dd>",
+        "description": "項目名に対応する説明文を示します。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "selector": "dd"
+        }
+      },
+      {
+        "id": "custom-marker",
+        "title": "カスタムマーカー領域",
+        "label": "dt > span:first-child",
+        "description": "marker=\"custom\" 時に先頭 span をマーカー領域として表示します。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "selector": "dt > span:first-child"
+        }
+      }
+    ]
+  },
+  "dads-dialog": {
+    "version": 1,
+    "summary": "モーダルダイアログコンポーネント仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部に <dialog> 要素を使用し、role=\"dialog\" と aria-modal=\"true\" を付与します。",
+        "aria-label が指定されている場合はそれを優先し、未指定かつタイトルslotがある場合は aria-labelledby=\"title\" を使用します。"
+      ],
+      "keyboard": [
+        "Escで閉じることができ、Tab/Shift+Tab でフォーカスをダイアログ内に維持します。",
+        "close-button 属性がある場合、閉じるボタンをキーボード操作できます。"
+      ],
+      "zoom": [
+        "サイズ（s/m/l）でダイアログ幅を切り替えできます。"
+      ],
+      "states": [
+        "open 属性で開閉状態を制御できます。",
+        "light dismiss は無効化され、明示操作またはEscで閉じます。"
+      ],
+      "labels": [
+        "title スロットまたは aria-label でアクセシブルネームを提供します（aria-label 指定時は優先）。",
+        "本文領域は aria-describedby=\"content\" で関連付けます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "base",
+        "title": "dialog ルート",
+        "label": "<dialog>",
+        "description": "モーダル全体を管理するルート要素です。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "panel",
+        "title": "ダイアログ本体",
+        "label": "panel",
+        "description": "見出し・本文・フッターを含む内容領域です。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"panel\"]"
+        }
+      },
+      {
+        "id": "title",
+        "title": "タイトル",
+        "label": "slot=\"title\"",
+        "description": "aria-labelledby の参照先となるタイトル領域です。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"title\"]"
+        }
+      },
+      {
+        "id": "content",
+        "title": "本文",
+        "label": "content",
+        "description": "aria-describedby の参照先となる本文領域です。",
+        "category": "labels",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"content\"]"
+        }
+      },
+      {
+        "id": "close-button",
+        "title": "閉じるボタン",
+        "label": "button",
+        "description": "close-button 属性指定時に表示される閉じる操作です。",
+        "category": "keyboard",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"close-button\"]"
+        }
+      },
+      {
+        "id": "footer",
+        "title": "フッター",
+        "label": "slot=\"footer\"",
+        "description": "確認・キャンセルなどの操作ボタンを配置する領域です。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"footer\"]"
+        }
+      }
+    ]
+  },
   "dads-disclosure": {
     "version": 1,
     "summary": "ディスクロージャーコンポーネント仕様（アクセシビリティ注釈）",
@@ -1084,6 +1395,151 @@
           "hostSelector": "dads-checkbox",
           "scope": "shadow",
           "selector": "[part=\"error-text\"]"
+        }
+      }
+    ]
+  },
+  "dads-file-upload": {
+    "version": 1,
+    "summary": "ファイルアップロード／ドロップエリア仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "ファイル選択ボタンを常設し、ドラッグ&ドロップは補助操作として提供します。",
+        "通常時（未選択）も、項目ラベル・要否ラベル・サポートテキスト・未選択メッセージを表示して状態を明示します。",
+        "ドロップエリア内には、ボタン、ドロップヒント、全画面範囲拡大チェックを配置します。"
+      ],
+      "keyboard": [
+        "Tabでファイル選択ボタンと拡大チェックボックスへ到達できます。",
+        "Enter/Spaceでファイル選択ボタンを操作し、ドラッグなしで完遂できます。",
+        "チェックボックスはラベルを含む操作領域でON/OFFでき、全画面ドロップ範囲の切替に到達できます。"
+      ],
+      "zoom": [
+        "ファイル名は折り返して表示し、拡大時も情報欠落を防ぎます。",
+        "全画面ドロップオーバーレイの文言は可変サイズで表示されます。"
+      ],
+      "states": [
+        "ファイル未選択時は「ファイルが選択されていません」を表示します。",
+        "ファイルごとに状態ラベルは「アップロード中」「完了」を表示します（準備中/エラーは状態ラベルを出さず、エラーメッセージ表示を優先）。",
+        "バリデーションエラー時は上部エラーとファイル行エラーを表示します。"
+      ],
+      "labels": [
+        "label/support-text/error-text を公開し、aria-describedbyで関連付けます。",
+        "要否ラベル（※必須）は項目ラベルと一体で提示し、必須項目であることを視覚的に示します。",
+        "拡大チェックボックスの文言は expand-label 属性で変更できます。"
+      ],
+      "motion": [
+        "ドラッグ中のみ全画面オーバーレイを表示し、不要時は非表示に戻します。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "browse-button",
+        "title": "ファイル選択ボタン",
+        "label": "ファイル選択ボタン（必須）",
+        "description": "ドラッグ操作が難しい利用者でも完遂できる必須導線です。",
+        "category": "keyboard",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"browse-button\"]"
+        }
+      },
+      {
+        "id": "expand-checkbox",
+        "title": "範囲拡大チェックボックス",
+        "label": "ドロップ領域拡大チェック",
+        "description": "ドロップ範囲をブラウザウィンドウ全体に広げる切替です。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"expand-checkbox\"]"
+        }
+      },
+      {
+        "id": "dropzone",
+        "title": "ドロップエリア",
+        "label": "ドロップエリア",
+        "description": "ボタンとドロップヒントを含む補助領域です。ドロップ操作が可能です。",
+        "category": "semantics",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"dropzone\"]"
+        }
+      },
+      {
+        "id": "field-label",
+        "title": "項目ラベル",
+        "label": "項目ラベル（必須）",
+        "description": "入力項目名を示す主ラベルです。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "requirement-label",
+        "title": "要否ラベル",
+        "label": "※必須",
+        "description": "必須項目であることを明示する補助ラベルです。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"requirement\"]"
+        }
+      },
+      {
+        "id": "support-text",
+        "title": "サポートテキスト",
+        "label": "サポートテキスト",
+        "description": "対応形式や上限サイズなどの補足条件を示します。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"support-text\"]"
+        }
+      },
+      {
+        "id": "empty-text",
+        "title": "未選択メッセージ",
+        "label": "ファイル未選択メッセージ",
+        "description": "未選択状態を明示し、現在の状態が分かるようにします。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"empty-text\"]"
+        }
+      },
+      {
+        "id": "drop-hint",
+        "title": "ドロップヒント",
+        "label": "補助文: ドロップ可能範囲",
+        "description": "ボタン以外にドラッグ&ドロップでも選択できることを案内します。",
+        "category": "semantics",
+        "mode": "panel",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"drop-hint\"]"
+        }
+      },
+      {
+        "id": "file-list",
+        "title": "選択ファイル一覧",
+        "label": "選択ファイル一覧（選択時）",
+        "description": "選択ファイル、サイズ、状態、エラーを一覧表示します（ファイル選択後に表示）。",
+        "category": "states",
+        "mode": "panel",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"wrapper\"]"
         }
       }
     ]
@@ -1537,142 +1993,6 @@
         "placement": "bottom-right",
         "target": {
           "selector": "[slot=\"actions\"]"
-        }
-      }
-    ]
-  },
-  "dads-breadcrumb": {
-    "version": 1,
-    "summary": "現在位置ナビゲーション（パンくず）仕様（アクセシビリティ注釈）",
-    "categories": {
-      "semantics": [
-        "内部は <nav> 要素と <p role=\"list\"> を使って現在位置ナビゲーションを提供します（ul/olは使用しません）。",
-        "各項目は dads-breadcrumb-item（role=\"listitem\"）として扱います。",
-        "現在位置は aria-current=\"page\" で表現します（明示指定がなければ末尾要素を現在位置として補完）。"
-      ],
-      "keyboard": [
-        "リンク項目はTabでフォーカスし、Enterで遷移できます（ネイティブ挙動）。",
-        "現在位置項目はリンク化されず、テキストとして表示されます。"
-      ],
-      "zoom": [
-        "長いラベルは折り返し可能です（overflow-wrap）。"
-      ],
-      "states": [
-        "show-label 属性で「現在位置」ラベルの視覚表示を切り替えます。",
-        "home 属性で先頭項目にホームアイコンを表示できます。",
-        "separator 属性（chevron / slash / pipe）で区切り表示を切り替えできます。",
-        "structured-data=\"microdata\" でLight DOMにBreadcrumbListのMicrodataをミラー出力します。"
-      ],
-      "labels": [
-        "aria-label / aria-labelledby でナビゲーション名を指定できます。",
-        "show-label 未指定時はラベルを視覚非表示にしつつ、ランドマーク名として利用します。"
-      ],
-      "motion": [
-        "アニメーションは使用しません。"
-      ]
-    },
-    "callouts": [
-      {
-        "id": "breadcrumb-nav",
-        "title": "ナビゲーション領域",
-        "label": "<nav>",
-        "description": "現在位置ナビゲーションのランドマークです。aria-label / aria-labelledby で名称を提供します。",
-        "category": "semantics",
-        "placement": "top-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"nav\"]"
-        }
-      },
-      {
-        "id": "breadcrumb-list",
-        "title": "現在位置ナビゲーション本体（p + role=list）",
-        "label": "role=\"list\"",
-        "description": "p要素ベースの現在位置ナビゲーション。ul/ol/liを使わずに構成します。",
-        "category": "semantics",
-        "placement": "top-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"list\"]"
-        }
-      },
-      {
-        "id": "breadcrumb-current",
-        "title": "現在位置",
-        "label": "aria-current=\"page\"",
-        "description": "現在のページ項目。リンクではなくテキスト表示されます。",
-        "category": "states",
-        "placement": "bottom-right",
-        "target": {
-          "hostSelector": "dads-breadcrumb-item[current], dads-breadcrumb-item[aria-current=\"page\"]",
-          "scope": "shadow",
-          "selector": "[part=\"current\"]"
-        }
-      }
-    ]
-  },
-  "dads-breadcrumb-item": {
-    "version": 1,
-    "summary": "現在位置ナビゲーション項目（パンくず）仕様（アクセシビリティ注釈）",
-    "categories": {
-      "semantics": [
-        "項目は role=\"listitem\" を持ち、href指定時はリンクとして動作します。",
-        "current / aria-current=\"page\" の項目はリンクではなくテキスト表示に切り替わります。"
-      ],
-      "keyboard": [
-        "リンク項目はTab/Enterで操作できます。",
-        "現在位置項目はフォーカス対象になりません。"
-      ],
-      "zoom": [
-        "項目テキストは折り返しを許容します。"
-      ],
-      "states": [
-        "home属性でホームアイコンを前置表示します。",
-        "current状態では区切り記号（separator）を非表示にします。",
-        "区切り記号は chevron / slash / pipe のいずれでも aria-hidden で支援技術から除外されます。"
-      ],
-      "labels": [
-        "項目テキストがパンくずラベルとして読み上げられます。"
-      ],
-      "motion": [
-        "アニメーションは使用しません。"
-      ]
-    },
-    "callouts": [
-      {
-        "id": "breadcrumb-item-link",
-        "title": "リンク項目",
-        "label": "<a>",
-        "description": "hrefがある非現在項目はリンクとして表示されます。",
-        "category": "keyboard",
-        "placement": "top-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"link\"]"
-        }
-      },
-      {
-        "id": "breadcrumb-item-separator",
-        "title": "区切り記号",
-        "label": "separator",
-        "description": "現在項目以外の末尾に表示される視覚的な区切りです（chevron / slash / pipe、いずれも aria-hidden）。",
-        "category": "semantics",
-        "placement": "top-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"separator\"]"
-        }
-      },
-      {
-        "id": "breadcrumb-item-home-icon",
-        "title": "ホームアイコン",
-        "label": "home",
-        "description": "home属性指定時に表示される先頭アイコンです（aria-hidden）。",
-        "category": "states",
-        "placement": "bottom-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"home-icon\"]"
         }
       }
     ]
@@ -2447,364 +2767,6 @@
       }
     ]
   },
-  "dads-textarea": {
-    "version": 1,
-    "summary": "テキストエリアコンポーネント仕様（アクセシビリティ注釈）",
-    "categories": {
-      "semantics": [
-        "ネイティブの <textarea> 要素を使用し、複数行テキスト入力のセマンティクスを提供します。",
-        "<label> 要素でラベルとtextareaを関連付けます。",
-        "Form-Associated Custom Elementとしてネイティブフォームに参加します。"
-      ],
-      "keyboard": [
-        "Tabでフォーカス可能です。",
-        "標準のテキスト入力キーボード操作が利用できます。",
-        "複数行入力のため、Enterで改行されます。"
-      ],
-      "zoom": [
-        "サイズバリエーション: sm / md / lg。",
-        "rows属性で行数を指定できます（デフォルト: 3行）。",
-        "テキストは相対単位で定義され、拡大時も操作可能です。"
-      ],
-      "states": [
-        "required属性で「※必須」ラベル表示、aria-required=\"true\"設定。",
-        "readonly属性で「読み取り専用」ラベル表示、編集不可。",
-        "disabled属性で無効状態。",
-        "error属性でエラー状態（aria-invalid=\"true\"、赤枠表示）。",
-        "show-counter属性で文字数カウンター表示。"
-      ],
-      "labels": [
-        "label属性またはスロットでラベルを提供します。",
-        "support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。",
-        "error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。",
-        "カウンター表示時はaria-describedbyに追加されます。"
-      ],
-      "motion": [
-        "アニメーションは使用しません。"
-      ]
-    },
-    "callouts": [
-      {
-        "id": "label",
-        "title": "ラベル要素",
-        "label": "<label>",
-        "description": "ネイティブのlabel要素でtextareaと関連付けます。クリックでフォーカス移動。",
-        "category": "semantics",
-        "placement": "top-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"label\"]"
-        }
-      },
-      {
-        "id": "requirement",
-        "title": "要否ラベル",
-        "label": "※必須/読み取り専用",
-        "description": "required/readonly属性に応じて表示されるラベルです。",
-        "category": "labels",
-        "placement": "top-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"requirement\"]"
-        }
-      },
-      {
-        "id": "support-text",
-        "title": "サポートテキスト",
-        "label": "support-text",
-        "description": "入力のヒントや補足説明を提供します。aria-describedbyで関連付け。",
-        "category": "labels",
-        "placement": "bottom-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"support-text\"]"
-        }
-      },
-      {
-        "id": "textarea",
-        "title": "ネイティブテキストエリア要素",
-        "label": "<textarea>",
-        "description": "複数行テキスト入力を受け付けます。rows属性で行数指定。",
-        "category": "keyboard",
-        "placement": "top-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"textarea\"]"
-        }
-      },
-      {
-        "id": "counter",
-        "title": "文字数カウンター",
-        "label": "counter",
-        "description": "現在の文字数と上限を「0/100」形式で表示。aria-describedbyで関連付け。",
-        "category": "states",
-        "placement": "bottom-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"counter\"]"
-        }
-      },
-      {
-        "id": "error-text",
-        "title": "エラーメッセージ",
-        "label": "error-text",
-        "description": "バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。",
-        "category": "states",
-        "placement": "bottom-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"error-text\"]"
-        }
-      }
-    ]
-  },
-  "dads-file-upload": {
-    "version": 1,
-    "summary": "ファイルアップロード／ドロップエリア仕様（アクセシビリティ注釈）",
-    "categories": {
-      "semantics": [
-        "ファイル選択ボタンを常設し、ドラッグ&ドロップは補助操作として提供します。",
-        "通常時（未選択）も、項目ラベル・要否ラベル・サポートテキスト・未選択メッセージを表示して状態を明示します。",
-        "ドロップエリア内には、ボタン、ドロップヒント、全画面範囲拡大チェックを配置します。"
-      ],
-      "keyboard": [
-        "Tabでファイル選択ボタンと拡大チェックボックスへ到達できます。",
-        "Enter/Spaceでファイル選択ボタンを操作し、ドラッグなしで完遂できます。",
-        "チェックボックスはラベルを含む操作領域でON/OFFでき、全画面ドロップ範囲の切替に到達できます。"
-      ],
-      "zoom": [
-        "ファイル名は折り返して表示し、拡大時も情報欠落を防ぎます。",
-        "全画面ドロップオーバーレイの文言は可変サイズで表示されます。"
-      ],
-      "states": [
-        "ファイル未選択時は「ファイルが選択されていません」を表示します。",
-        "ファイルごとに状態ラベルは「アップロード中」「完了」を表示します（準備中/エラーは状態ラベルを出さず、エラーメッセージ表示を優先）。",
-        "バリデーションエラー時は上部エラーとファイル行エラーを表示します。"
-      ],
-      "labels": [
-        "label/support-text/error-text を公開し、aria-describedbyで関連付けます。",
-        "要否ラベル（※必須）は項目ラベルと一体で提示し、必須項目であることを視覚的に示します。",
-        "拡大チェックボックスの文言は expand-label 属性で変更できます。"
-      ],
-      "motion": [
-        "ドラッグ中のみ全画面オーバーレイを表示し、不要時は非表示に戻します。"
-      ]
-    },
-    "callouts": [
-      {
-        "id": "browse-button",
-        "title": "ファイル選択ボタン",
-        "label": "ファイル選択ボタン（必須）",
-        "description": "ドラッグ操作が難しい利用者でも完遂できる必須導線です。",
-        "category": "keyboard",
-        "placement": "top-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"browse-button\"]"
-        }
-      },
-      {
-        "id": "expand-checkbox",
-        "title": "範囲拡大チェックボックス",
-        "label": "ドロップ領域拡大チェック",
-        "description": "ドロップ範囲をブラウザウィンドウ全体に広げる切替です。",
-        "category": "states",
-        "placement": "bottom-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"expand-checkbox\"]"
-        }
-      },
-      {
-        "id": "dropzone",
-        "title": "ドロップエリア",
-        "label": "ドロップエリア",
-        "description": "ボタンとドロップヒントを含む補助領域です。ドロップ操作が可能です。",
-        "category": "semantics",
-        "placement": "bottom-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"dropzone\"]"
-        }
-      },
-      {
-        "id": "field-label",
-        "title": "項目ラベル",
-        "label": "項目ラベル（必須）",
-        "description": "入力項目名を示す主ラベルです。",
-        "category": "labels",
-        "placement": "top-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"label\"]"
-        }
-      },
-      {
-        "id": "requirement-label",
-        "title": "要否ラベル",
-        "label": "※必須",
-        "description": "必須項目であることを明示する補助ラベルです。",
-        "category": "labels",
-        "placement": "top-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"requirement\"]"
-        }
-      },
-      {
-        "id": "support-text",
-        "title": "サポートテキスト",
-        "label": "サポートテキスト",
-        "description": "対応形式や上限サイズなどの補足条件を示します。",
-        "category": "labels",
-        "placement": "top-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"support-text\"]"
-        }
-      },
-      {
-        "id": "empty-text",
-        "title": "未選択メッセージ",
-        "label": "ファイル未選択メッセージ",
-        "description": "未選択状態を明示し、現在の状態が分かるようにします。",
-        "category": "states",
-        "placement": "bottom-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"empty-text\"]"
-        }
-      },
-      {
-        "id": "drop-hint",
-        "title": "ドロップヒント",
-        "label": "補助文: ドロップ可能範囲",
-        "description": "ボタン以外にドラッグ&ドロップでも選択できることを案内します。",
-        "category": "semantics",
-        "mode": "panel",
-        "placement": "top-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"drop-hint\"]"
-        }
-      },
-      {
-        "id": "file-list",
-        "title": "選択ファイル一覧",
-        "label": "選択ファイル一覧（選択時）",
-        "description": "選択ファイル、サイズ、状態、エラーを一覧表示します（ファイル選択後に表示）。",
-        "category": "states",
-        "mode": "panel",
-        "placement": "bottom-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"wrapper\"]"
-        }
-      }
-    ]
-  },
-  "dads-dialog": {
-    "version": 1,
-    "summary": "モーダルダイアログコンポーネント仕様（アクセシビリティ注釈）",
-    "categories": {
-      "semantics": [
-        "内部に <dialog> 要素を使用し、role=\"dialog\" と aria-modal=\"true\" を付与します。",
-        "aria-label が指定されている場合はそれを優先し、未指定かつタイトルslotがある場合は aria-labelledby=\"title\" を使用します。"
-      ],
-      "keyboard": [
-        "Escで閉じることができ、Tab/Shift+Tab でフォーカスをダイアログ内に維持します。",
-        "close-button 属性がある場合、閉じるボタンをキーボード操作できます。"
-      ],
-      "zoom": [
-        "サイズ（s/m/l）でダイアログ幅を切り替えできます。"
-      ],
-      "states": [
-        "open 属性で開閉状態を制御できます。",
-        "light dismiss は無効化され、明示操作またはEscで閉じます。"
-      ],
-      "labels": [
-        "title スロットまたは aria-label でアクセシブルネームを提供します（aria-label 指定時は優先）。",
-        "本文領域は aria-describedby=\"content\" で関連付けます。"
-      ],
-      "motion": [
-        "アニメーションは使用しません。"
-      ]
-    },
-    "callouts": [
-      {
-        "id": "base",
-        "title": "dialog ルート",
-        "label": "<dialog>",
-        "description": "モーダル全体を管理するルート要素です。",
-        "category": "semantics",
-        "placement": "top-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"base\"]"
-        }
-      },
-      {
-        "id": "panel",
-        "title": "ダイアログ本体",
-        "label": "panel",
-        "description": "見出し・本文・フッターを含む内容領域です。",
-        "category": "semantics",
-        "placement": "top-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"panel\"]"
-        }
-      },
-      {
-        "id": "title",
-        "title": "タイトル",
-        "label": "slot=\"title\"",
-        "description": "aria-labelledby の参照先となるタイトル領域です。",
-        "category": "labels",
-        "placement": "top-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"title\"]"
-        }
-      },
-      {
-        "id": "content",
-        "title": "本文",
-        "label": "content",
-        "description": "aria-describedby の参照先となる本文領域です。",
-        "category": "labels",
-        "placement": "bottom-left",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"content\"]"
-        }
-      },
-      {
-        "id": "close-button",
-        "title": "閉じるボタン",
-        "label": "button",
-        "description": "close-button 属性指定時に表示される閉じる操作です。",
-        "category": "keyboard",
-        "placement": "top-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"close-button\"]"
-        }
-      },
-      {
-        "id": "footer",
-        "title": "フッター",
-        "label": "slot=\"footer\"",
-        "description": "確認・キャンセルなどの操作ボタンを配置する領域です。",
-        "category": "states",
-        "placement": "bottom-right",
-        "target": {
-          "scope": "shadow",
-          "selector": "[part=\"footer\"]"
-        }
-      }
-    ]
-  },
   "dads-table-control": {
     "version": 1,
     "summary": "テーブルコントロール（アクセシビリティ注釈）",
@@ -2915,6 +2877,117 @@
         "target": {
           "scope": "shadow",
           "selector": "[part=\"footer\"]:not([hidden]) [part=\"pagination\"]:not([hidden])"
+        }
+      }
+    ]
+  },
+  "dads-textarea": {
+    "version": 1,
+    "summary": "テキストエリアコンポーネント仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "ネイティブの <textarea> 要素を使用し、複数行テキスト入力のセマンティクスを提供します。",
+        "<label> 要素でラベルとtextareaを関連付けます。",
+        "Form-Associated Custom Elementとしてネイティブフォームに参加します。"
+      ],
+      "keyboard": [
+        "Tabでフォーカス可能です。",
+        "標準のテキスト入力キーボード操作が利用できます。",
+        "複数行入力のため、Enterで改行されます。"
+      ],
+      "zoom": [
+        "サイズバリエーション: sm / md / lg。",
+        "rows属性で行数を指定できます（デフォルト: 3行）。",
+        "テキストは相対単位で定義され、拡大時も操作可能です。"
+      ],
+      "states": [
+        "required属性で「※必須」ラベル表示、aria-required=\"true\"設定。",
+        "readonly属性で「読み取り専用」ラベル表示、編集不可。",
+        "disabled属性で無効状態。",
+        "error属性でエラー状態（aria-invalid=\"true\"、赤枠表示）。",
+        "show-counter属性で文字数カウンター表示。"
+      ],
+      "labels": [
+        "label属性またはスロットでラベルを提供します。",
+        "support-text属性またはスロットで補足説明を提供、aria-describedbyで関連付け。",
+        "error-text属性またはスロットでエラーメッセージを提供、aria-describedbyで関連付け。",
+        "カウンター表示時はaria-describedbyに追加されます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "label",
+        "title": "ラベル要素",
+        "label": "<label>",
+        "description": "ネイティブのlabel要素でtextareaと関連付けます。クリックでフォーカス移動。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "requirement",
+        "title": "要否ラベル",
+        "label": "※必須/読み取り専用",
+        "description": "required/readonly属性に応じて表示されるラベルです。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"requirement\"]"
+        }
+      },
+      {
+        "id": "support-text",
+        "title": "サポートテキスト",
+        "label": "support-text",
+        "description": "入力のヒントや補足説明を提供します。aria-describedbyで関連付け。",
+        "category": "labels",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"support-text\"]"
+        }
+      },
+      {
+        "id": "textarea",
+        "title": "ネイティブテキストエリア要素",
+        "label": "<textarea>",
+        "description": "複数行テキスト入力を受け付けます。rows属性で行数指定。",
+        "category": "keyboard",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"textarea\"]"
+        }
+      },
+      {
+        "id": "counter",
+        "title": "文字数カウンター",
+        "label": "counter",
+        "description": "現在の文字数と上限を「0/100」形式で表示。aria-describedbyで関連付け。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"counter\"]"
+        }
+      },
+      {
+        "id": "error-text",
+        "title": "エラーメッセージ",
+        "label": "error-text",
+        "description": "バリデーションエラー時に表示。aria-describedbyで関連付け（DADSガイドライン準拠）。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"error-text\"]"
         }
       }
     ]
