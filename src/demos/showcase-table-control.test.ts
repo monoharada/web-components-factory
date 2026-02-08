@@ -9,7 +9,7 @@ describe('showcase-table-control demo', () => {
     expect(html).toContain('テーブル操作UIの作例をまとめています。');
     expect(html).not.toContain('Figmaノード');
     expect(html).toContain('申請管理テーブル 連動デモ');
-    expect(html).toContain('class="table-control-demo__scenarios"');
+    expect(html).toContain('class="table-control-demo__scenarios" role="group" aria-label="状態切替"');
     expect(html).toContain('size="x-small"');
     expect(html).toContain('#demo-table-control-header::part(popular)');
     expect(html).toContain('inline-size: 100%');
@@ -61,6 +61,7 @@ describe('showcase-table-control demo', () => {
     expect(html).toContain('data-table-control-municipal-scenario="before-search"');
     expect(html).toContain('data-table-control-municipal-scenario="after-search"');
     expect(html).toContain('data-table-control-municipal-scenario="empty-result"');
+    expect(html).toContain('class="table-control-municipal-demo__scenarios" role="group" aria-label="状態切替"');
     expect(html).toContain('--dads-search-box-control-min-height: calc(30 / 16 * 1rem);');
     expect(html).not.toContain('table-control-municipal-demo__card');
   });

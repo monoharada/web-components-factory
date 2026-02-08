@@ -807,7 +807,7 @@ export const demos = {
           状態ボタンで 4 状態（検索前 / 検索後 / 該当なし / 検索プリセット表示）を即時切替できます。
         </p>
 
-        <div class="table-control-demo__scenarios" aria-label="状態切替">
+        <div class="table-control-demo__scenarios" role="group" aria-label="状態切替">
           <dads-button
             type="button"
             size="x-small"
@@ -953,7 +953,7 @@ export const demos = {
           状態ボタンで 3 状態（検索前 / 検索後 / 該当なし）を即時切替できます。
         </p>
 
-        <div class="table-control-municipal-demo__scenarios" aria-label="状態切替">
+        <div class="table-control-municipal-demo__scenarios" role="group" aria-label="状態切替">
           <dads-button
             type="button"
             size="x-small"

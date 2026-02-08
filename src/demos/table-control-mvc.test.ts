@@ -1,11 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { demos } from './showcase-table-control.js';
 import { mountTableControlDemo } from './table-control-mvc.js';
+import { defineTableControl } from '../../packages/components/table-control/table-control-define.js';
 
 type SearchDetail = Readonly<{ query: string; scope: string }>;
 type PageSizeDetail = Readonly<{ value: string; itemsPerPage: number }>;
 
 function setupDemo(): HTMLElement {
+  defineTableControl();
+
   const host = document.createElement('div');
   host.innerHTML = demos.tableControl();
   document.body.append(host);
@@ -95,6 +99,56 @@ describe('table-control-mvc', () => {
     expect(header?.getAttribute('query')).toBe('補助金');
     expect(presets?.hidden).toBe(true);
     expect(resetVisible()).toBe(true);
+  });
+
+  it('キーボード操作で検索・表示件数切替・ページ送り・リセットができる', async () => {
+    const root = setupDemo();
+    const user = userEvent.setup();
+    const header = root.querySelector<HTMLElement>('#demo-table-control-header');
+    const footer = root.querySelector<HTMLElement>('#demo-table-control-footer');
+    const pagination = root.querySelector<HTMLElement>('#demo-table-control-pagination');
+    const summary = root.querySelector<HTMLElement>('#demo-table-control-summary');
+
+    const searchBox = header?.shadowRoot?.querySelector<HTMLElement>('dads-search-box');
+    const searchInput = searchBox?.shadowRoot?.querySelector<HTMLInputElement>('#input');
+    if (!searchInput) {
+      throw new Error('検索入力が見つかりません。');
+    }
+
+    searchInput.focus();
+    searchInput.value = '補助金';
+    searchInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await user.keyboard('{Enter}');
+    expect(header?.getAttribute('query')).toBe('補助金');
+    expect(summary?.textContent).toContain('検索結果:');
+    expect(header?.hasAttribute('show-reset')).toBe(true);
+
+    const pageSize10 = footer?.shadowRoot?.querySelector<HTMLButtonElement>('button[data-items-value="10"]');
+    if (!pageSize10) {
+      throw new Error('表示件数ボタンが見つかりません。');
+    }
+    pageSize10.focus();
+    await user.keyboard('{Enter}');
+    expect(footer?.getAttribute('items-per-page')).toBe('10');
+    expect(pagination?.getAttribute('total')).toBe('1');
+
+    const nextButton = pagination?.shadowRoot?.querySelector<HTMLButtonElement>('#next-button');
+    if (!nextButton) {
+      throw new Error('ページナビゲーションの次へボタンが見つかりません。');
+    }
+    expect(pagination?.hasAttribute('disabled-next')).toBe(true);
+    nextButton.focus();
+    await user.keyboard('{Enter}');
+    expect(pagination?.getAttribute('current')).toBe('1');
+
+    const resetButton = header?.shadowRoot?.querySelector<HTMLButtonElement>('#reset');
+    if (!resetButton) {
+      throw new Error('リセットボタンが見つかりません。');
+    }
+    resetButton.focus();
+    await user.keyboard('{Enter}');
+    expect(header?.getAttribute('query')).toBe('');
+    expect(header?.hasAttribute('show-reset')).toBe(false);
   });
 
   it('表示件数切替とページ送りが動作する', () => {
