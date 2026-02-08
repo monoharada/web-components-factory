@@ -102,6 +102,7 @@ describe('showcase-components (notificationBanner demo)', () => {
     expect(html).toContain('horizontal（水平）');
     expect(html).toContain('actions-layout="horizontal"');
     expect(html).toContain('data-default="horizontal"');
+    expect(html).not.toContain('<select ');
   });
 
   it('dismiss-mode のAPI説明は保持する', () => {

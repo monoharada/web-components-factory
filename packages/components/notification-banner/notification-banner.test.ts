@@ -177,7 +177,7 @@ describe('DadsNotificationBanner - close', () => {
     expect(detail?.variant).toBe('color-chip');
     expect(detail?.dismissMode).toBe('hide');
     expect(component.hidden).toBe(true);
-    expect(component.hasAttribute('data-dismissed')).toBe(true);
+    expect(component.hasAttribute('data-dismissed')).toBe(false);
   });
 
   it('close イベントが preventDefault されると hidden にならない', async () => {
@@ -219,7 +219,56 @@ describe('DadsNotificationBanner - close', () => {
     close?.click();
 
     expect(component.hidden).toBe(true);
+    expect(component.hasAttribute('data-dismissed')).toBe(false);
+  });
+
+  it('dismiss-mode="hide" は hidden=false に戻すと再表示できる', async () => {
+    const { defineDefaultNotificationBanner } = await import('./notification-banner-define');
+    defineDefaultNotificationBanner();
+
+    const component = renderWebComponent(`
+      <dads-notification-banner dismissible dismiss-mode="hide">
+        <span slot="title">タイトル</span>
+      </dads-notification-banner>
+    `);
+
+    await waitForComponent('dads-notification-banner');
+
+    const close = getShadowElement<HTMLButtonElement>(component, '#close');
+    close?.click();
+
+    expect(component.hidden).toBe(true);
+    expect(component.hasAttribute('data-dismissed')).toBe(false);
+
+    component.hidden = false;
+    await Promise.resolve();
+
+    expect(component.hidden).toBe(false);
+    expect(component.hasAttribute('data-dismissed')).toBe(false);
+  });
+
+  it('dismiss-mode を collapse から hide に変えると data-dismissed が残らない', async () => {
+    const { defineDefaultNotificationBanner } = await import('./notification-banner-define');
+    defineDefaultNotificationBanner();
+
+    const component = renderWebComponent(`
+      <dads-notification-banner dismissible dismiss-mode="collapse">
+        <span slot="title">タイトル</span>
+      </dads-notification-banner>
+    `);
+
+    await waitForComponent('dads-notification-banner');
+
+    const close = getShadowElement<HTMLButtonElement>(component, '#close');
+    close?.click();
+
     expect(component.hasAttribute('data-dismissed')).toBe(true);
+    expect(component.hidden).toBe(false);
+
+    component.setAttribute('dismiss-mode', 'hide');
+    await Promise.resolve();
+
+    expect(component.hasAttribute('data-dismissed')).toBe(false);
   });
 
   it('dismiss-mode="collapse" では閉じる押下で折りたたみになり hidden にならない', async () => {

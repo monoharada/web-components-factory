@@ -356,14 +356,14 @@ export class DadsNotificationBanner extends TypographyWebComponent {
   };
 
   #applyDismissState(): void {
-    this.setAttribute('data-dismissed', '');
-
     if (this.#getDismissMode() === 'collapse') {
+      this.setAttribute('data-dismissed', '');
       this.hidden = false;
       this.#syncAll();
       return;
     }
 
+    this.removeAttribute('data-dismissed');
     this.hidden = true;
   }
 
@@ -443,10 +443,15 @@ export class DadsNotificationBanner extends TypographyWebComponent {
       return;
     }
 
-    const collapsed = this.#isDismissedCollapsed();
+    const dismissMode = this.#getDismissMode();
+    const collapsed = this.hasAttribute('data-dismissed') && dismissMode === 'collapse';
     const restoreLabel = this.getAttribute('restore-label') || '再表示';
     const hasBody = this.hasAttribute('data-has-body');
     const hasActions = this.hasAttribute('data-has-actions');
+
+    if (dismissMode !== 'collapse' && this.hasAttribute('data-dismissed')) {
+      this.removeAttribute('data-dismissed');
+    }
 
     this.#header.toggleAttribute('hidden', collapsed);
     this.#body.toggleAttribute('hidden', collapsed || !hasBody);

@@ -6,9 +6,8 @@ export const notificationBannerStyles = css`
     container-type: inline-size;
   }
 
-  :host([hidden]),
-  :host([data-dismissed]:not([dismiss-mode='collapse'])) {
-    display: none !important;
+  :host([hidden]) {
+    display: none;
   }
 
   [part='base'] {
