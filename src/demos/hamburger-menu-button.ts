@@ -160,40 +160,58 @@ export const demos = {
               (function() {
                 var currentScript = document.currentScript;
                 import('./packages/utils/command-store.js').then(function(mod) {
-                  var root =
+                  var apiPanel =
                     (currentScript && currentScript.closest('.wc-api-panel')) ||
                     (currentScript && currentScript.parentElement);
-                  if (!root || !root.isConnected) return;
+                  if (!apiPanel || !apiPanel.isConnected) return;
                   if (!mod || !mod.defaultCommandStore || !mod.defaultCommandStore.bind) return;
-                  if (!root.hasAttribute('data-hamburger-api-command-store-bound')) {
-                    root.setAttribute('data-hamburger-api-command-store-bound', 'true');
-                    mod.defaultCommandStore.bind(root);
+                  var demoRoot = apiPanel.querySelector('[data-hamburger-demo-root]');
+                  if (!demoRoot) return;
+                  if (!demoRoot.hasAttribute('data-hamburger-api-command-store-bound')) {
+                    demoRoot.setAttribute('data-hamburger-api-command-store-bound', 'true');
+                    mod.defaultCommandStore.bind(demoRoot);
                   }
                 });
 
                 customElements.whenDefined('dads-drawer').then(function() {
-                  var root = currentScript && currentScript.parentElement;
-                  if (!root || !root.isConnected) return;
+                  var apiPanel =
+                    (currentScript && currentScript.closest('.wc-api-panel')) ||
+                    (currentScript && currentScript.parentElement);
+                  if (!apiPanel || !apiPanel.isConnected) return;
+                  var demoRoot = apiPanel.querySelector('[data-hamburger-demo-root]');
+                  if (!demoRoot) return;
+                  if (demoRoot.hasAttribute('data-hamburger-api-events-bound')) return;
+                  demoRoot.setAttribute('data-hamburger-api-events-bound', 'true');
 
-                  var drawer = root.querySelector('#hamburger-demo-drawer');
-                  var target = root.querySelector('#hamburger-api-target');
-                  if (!drawer || !target) return;
+                  var drawer = demoRoot.querySelector('#hamburger-demo-drawer');
+                  var triggers = Array.prototype.slice.call(
+                    demoRoot.querySelectorAll(
+                      'dads-hamburger-menu-button[commandfor="#hamburger-demo-drawer"]',
+                    ),
+                  );
+                  if (!drawer || !triggers.length) return;
 
-                  var syncTarget = function(isOpen) {
-                    target.setAttribute('type', isOpen ? 'close' : 'menu');
-                    target.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                  var setTriggerState = function(trigger, isOpen) {
+                    trigger.setAttribute('type', isOpen ? 'close' : 'menu');
+                    trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
                     queueMicrotask(function() {
-                      target.setAttribute('command', isOpen ? 'close' : 'show-modal');
+                      trigger.setAttribute('command', isOpen ? 'close' : 'show-modal');
+                    });
+                  };
+
+                  var syncTriggers = function(isOpen) {
+                    triggers.forEach(function(trigger) {
+                      setTriggerState(trigger, isOpen);
                     });
                   };
 
                   drawer.addEventListener('dads-drawer-open', function() {
-                    syncTarget(true);
+                    syncTriggers(true);
                   });
                   drawer.addEventListener('dads-drawer-close', function() {
-                    syncTarget(false);
+                    syncTriggers(false);
                   });
-                  syncTarget(drawer.hasAttribute('open'));
+                  syncTriggers(drawer.hasAttribute('open'));
                 });
               })();
             <\/script>

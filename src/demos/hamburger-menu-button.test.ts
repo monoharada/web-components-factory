@@ -31,4 +31,18 @@ describe('hamburger-menu-button demo', () => {
     expect(html).not.toContain('<dads-drawer id="hamburger-live-standard-drawer" data-preview-contained');
     expect(html).not.toContain('<dads-drawer id="hamburger-live-icon-drawer" data-preview-contained');
   });
+
+  it('API / Controls は preview root 単位で command-store を bind する', () => {
+    const html = demos.hamburgerMenuButton();
+    expect(html).toContain("var demoRoot = apiPanel.querySelector('[data-hamburger-demo-root]');");
+    expect(html).toContain('mod.defaultCommandStore.bind(demoRoot);');
+  });
+
+  it('API / Controls の同一 drawer トリガーを全件同期する', () => {
+    const html = demos.hamburgerMenuButton();
+    expect(html).toContain('dads-hamburger-menu-button[commandfor="#hamburger-demo-drawer"]');
+    expect(html).toContain('var syncTriggers = function(isOpen) {');
+    expect(html).toContain('syncTriggers(true);');
+    expect(html).toContain('syncTriggers(false);');
+  });
 });
