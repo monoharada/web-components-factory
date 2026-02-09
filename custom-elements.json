@@ -35997,7 +35997,7 @@
               "name": "lead-icon"
             },
             {
-              "description": "末尾アイコン領域（target=\"_blank\" または download の時に表示）",
+              "description": "末尾アイコン領域（tail-icon slot または target=\"_blank\"/download フォールバックを表示）",
               "name": "tail-icon"
             }
           ],
@@ -36009,6 +36009,10 @@
             {
               "description": "先頭アイコン（任意）",
               "name": "lead-icon"
+            },
+            {
+              "description": "末尾アイコン（任意、指定時は自動末尾アイコンより優先）",
+              "name": "tail-icon"
             }
           ],
           "members": [
@@ -36020,6 +36024,16 @@
                 "text": "HTMLAnchorElement | null"
               },
               "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#computeAutoTailIconKind",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "TailIconKind"
+                }
+              }
             },
             {
               "kind": "field",
@@ -36078,9 +36092,56 @@
               }
             },
             {
+              "kind": "method",
+              "name": "#getAssignedNodesWithoutFallback",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Node[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "#handleLeadIconSlotChange",
               "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleTailIconSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#hasMeaningfulSlottedContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                },
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -36097,15 +36158,6 @@
             },
             {
               "kind": "field",
-              "name": "#leadIconMutationObserver",
-              "privacy": "private",
-              "type": {
-                "text": "MutationObserver | null"
-              },
-              "default": "null"
-            },
-            {
-              "kind": "field",
               "name": "#leadIconSlot",
               "privacy": "private",
               "type": {
@@ -36115,7 +36167,7 @@
             },
             {
               "kind": "method",
-              "name": "#observeLeadIconMutations",
+              "name": "#observeSlotMutations",
               "privacy": "private",
               "return": {
                 "type": {
@@ -36131,6 +36183,15 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "#slotMutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
             },
             {
               "kind": "field",
@@ -36193,6 +36254,24 @@
               ]
             },
             {
+              "kind": "method",
+              "name": "#syncTailIconVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "autoTailIconKind",
+                  "type": {
+                    "text": "TailIconKind"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "#tailIcon",
               "privacy": "private",
@@ -36207,6 +36286,15 @@
               "privacy": "private",
               "type": {
                 "text": "SVGPathElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#tailIconSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
               },
               "default": "null"
             },
@@ -36297,7 +36385,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-utility-link', template: html` <a part=\"base\" id=\"base\"> <span part=\"lead-icon\" id=\"lead-icon\"> <slot name=\"lead-icon\" id=\"lead-icon-slot\"></slot> </span> <span part=\"label\" id=\"label\"> <slot></slot> </span> <span part=\"tail-icon\" id=\"tail-icon\" hidden> <svg id=\"tail-icon-svg\" width=\"16\" height=\"16\" viewBox=\"${NEW_WINDOW_ICON_VIEWBOX}\" fill=\"currentcolor\" role=\"img\" aria-label=\"${NEW_WINDOW_ICON_LABEL}\" > <path id=\"tail-icon-path\" d=\"${NEW_WINDOW_ICON_PATH}\" /> </svg> </span> </a> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), utilityLinkTokens, utilityLinkStyles], 'minimal'), attributes: [ PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download'), ], }",
+              "default": "{ name: 'dads-utility-link', template: html` <a part=\"base\" id=\"base\"> <span part=\"lead-icon\" id=\"lead-icon\"> <slot name=\"lead-icon\" id=\"lead-icon-slot\"></slot> </span> <span part=\"label\" id=\"label\"> <slot></slot> </span> <span part=\"tail-icon\" id=\"tail-icon\" hidden> <slot name=\"tail-icon\" id=\"tail-icon-slot\"></slot> <svg id=\"tail-icon-svg\" width=\"16\" height=\"16\" viewBox=\"${NEW_WINDOW_ICON_VIEWBOX}\" fill=\"currentcolor\" role=\"img\" aria-label=\"${NEW_WINDOW_ICON_LABEL}\" hidden > <path id=\"tail-icon-path\" d=\"${NEW_WINDOW_ICON_PATH}\" /> </svg> </span> </a> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), utilityLinkTokens, utilityLinkStyles], 'minimal'), attributes: [ PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -36493,13 +36581,15 @@
                   "本文16px・line-height 1.3 を基準にし、拡大時も読みやすさを維持します。"
                 ],
                 "states": [
+                  "slot=\"tail-icon\" を指定した場合は末尾に任意アイコンを表示し、自動アイコンより優先します。",
                   "target=\"_blank\" のときは末尾に新規タブアイコンを表示します。",
                   "download 属性があるときは末尾にダウンロードアイコンを表示します（target=\"_blank\" より優先）。",
                   "download 属性があるときは内部リンクの target は無効化されます。"
                 ],
                 "labels": [
                   "リンクラベルはデフォルトスロットのテキストを使用します。",
-                  "末尾アイコンは role=\"img\" で、状態に応じて aria-label が「新規タブで開きます」または「ダウンロードします」になります。"
+                  "自動表示の末尾アイコンは role=\"img\" で、状態に応じて aria-label が「新規タブで開きます」または「ダウンロードします」になります。",
+                  "slot=\"tail-icon\" の任意アイコンを使う場合は、提供側で aria-hidden / aria-label を適切に設定します。"
                 ],
                 "motion": [
                   "アニメーションは前提としません。"
@@ -36533,8 +36623,8 @@
                 {
                   "id": "tail-icon",
                   "title": "末尾アイコン",
-                  "label": "target=\"_blank\" / download",
-                  "description": "新規タブ遷移またはダウンロード時に表示される補助アイコンです。",
+                  "label": "slot=\"tail-icon\" / target=\"_blank\" / download",
+                  "description": "任意指定または新規タブ遷移・ダウンロード時に表示される補助アイコンです。",
                   "category": "states",
                   "placement": "bottom-right",
                   "target": {
@@ -45783,7 +45873,7 @@
         {
           "kind": "variable",
           "name": "utilityLinkStyles",
-          "default": "css` :host { display: block; width: fit-content; } [part='base'] { display: flex; align-items: center; gap: var(--dads-utility-link-item-gap); width: fit-content; font-family: var(--dads-utility-link-font-family); font-size: var(--dads-utility-link-font-size); font-weight: var(--dads-utility-link-font-weight); line-height: var(--dads-utility-link-line-height); letter-spacing: var(--dads-utility-link-letter-spacing); text-decoration: none; text-wrap: pretty; } [part='lead-icon'], [part='tail-icon'] { display: inline-block; width: var(--dads-utility-link-icon-size); height: var(--dads-utility-link-icon-size); color: var(--dads-utility-link-icon-color); vertical-align: var(--dads-utility-link-icon-vertical-align); line-height: 1; flex-shrink: 0; } [part='lead-icon'] { display: none; } :host([data-has-lead-icon]) [part='lead-icon'] { display: inline-block; } [part='lead-icon']::slotted(*) { display: block; width: 100%; height: 100%; color: currentcolor; } [part='tail-icon'] svg { display: block; width: 100%; height: 100%; } [part='tail-icon'][hidden] { display: none; } [part='label'] { color: var(--dads-utility-link-label-color); text-decoration: underline; text-decoration-thickness: var(--dads-utility-link-underline-thickness); text-underline-offset: var(--dads-utility-link-underline-offset); } [part='base']:visited [part='label'] { color: var(--dads-utility-link-label-color); } @media (any-hover: hover) { [part='base']:hover [part='label'] { color: var(--dads-utility-link-label-color-hover); text-decoration-thickness: var(--dads-utility-link-underline-thickness-hover); } } [part='base']:active [part='label'] { color: var(--dads-utility-link-label-color-active); text-decoration-thickness: var(--dads-utility-link-underline-thickness); } [part='base']:focus { outline: none; } [part='base']:focus-visible { outline: var(--dads-utility-link-focus-outline-width) solid var(--dads-utility-link-focus-outline-color); outline-offset: var(--dads-utility-link-focus-outline-offset); border-radius: var(--dads-utility-link-focus-border-radius); background-color: var(--dads-utility-link-focus-background); box-shadow: 0 0 0 var(--dads-utility-link-focus-ring-width) var(--dads-utility-link-focus-ring-color); } @media (forced-colors: active) { [part='base']:focus-visible { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-utility-link-focus-ring-width) ButtonText; } } `"
+          "default": "css` :host { display: block; width: fit-content; } [part='base'] { display: flex; align-items: center; gap: var(--dads-utility-link-item-gap); width: fit-content; font-family: var(--dads-utility-link-font-family); font-size: var(--dads-utility-link-font-size); font-weight: var(--dads-utility-link-font-weight); line-height: var(--dads-utility-link-line-height); letter-spacing: var(--dads-utility-link-letter-spacing); text-decoration: none; text-wrap: pretty; } [part='lead-icon'], [part='tail-icon'] { display: inline-block; width: var(--dads-utility-link-icon-size); height: var(--dads-utility-link-icon-size); color: var(--dads-utility-link-icon-color); vertical-align: var(--dads-utility-link-icon-vertical-align); line-height: 1; flex-shrink: 0; } [part='lead-icon'] { display: none; } :host([data-has-lead-icon]) [part='lead-icon'] { display: inline-block; } [part='lead-icon']::slotted(*) { display: block; width: 100%; height: 100%; color: currentcolor; } [part='lead-icon']::slotted([hidden]) { display: none; } [part='tail-icon']::slotted(*) { display: block; width: 100%; height: 100%; color: currentcolor; } [part='tail-icon']::slotted([hidden]) { display: none; } [part='tail-icon'] slot[hidden] { display: none; } [part='tail-icon'] svg { display: block; width: 100%; height: 100%; } [part='tail-icon'] svg[hidden] { display: none; } [part='tail-icon'][hidden] { display: none; } [part='label'] { color: var(--dads-utility-link-label-color); text-decoration: underline; text-decoration-thickness: var(--dads-utility-link-underline-thickness); text-underline-offset: var(--dads-utility-link-underline-offset); } [part='base']:visited [part='label'] { color: var(--dads-utility-link-label-color); } @media (any-hover: hover) { [part='base']:hover [part='label'] { color: var(--dads-utility-link-label-color-hover); text-decoration-thickness: var(--dads-utility-link-underline-thickness-hover); } } [part='base']:active [part='label'] { color: var(--dads-utility-link-label-color-active); text-decoration-thickness: var(--dads-utility-link-underline-thickness); } [part='base']:focus { outline: none; } [part='base']:focus-visible { outline: var(--dads-utility-link-focus-outline-width) solid var(--dads-utility-link-focus-outline-color); outline-offset: var(--dads-utility-link-focus-outline-offset); border-radius: var(--dads-utility-link-focus-border-radius); background-color: var(--dads-utility-link-focus-background); box-shadow: 0 0 0 var(--dads-utility-link-focus-ring-width) var(--dads-utility-link-focus-ring-color); } @media (forced-colors: active) { [part='base']:focus-visible { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-utility-link-focus-ring-width) ButtonText; } } `"
         }
       ],
       "exports": [

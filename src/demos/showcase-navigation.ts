@@ -2254,7 +2254,7 @@ export const demos = {
     <div style="padding: 40px; max-width: 1120px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ユーティリティリンク</h2>
       <p style="color: #666; margin-bottom: 32px;">
-        DADS準拠の補助リンク。先頭アイコンは任意、末尾アイコンは <code>target=&quot;_blank&quot;</code> または <code>download</code> 時に表示します。
+        DADS準拠の補助リンク。先頭/末尾アイコンは任意で、末尾は <code>slot=&quot;tail-icon&quot;</code> が優先され、未指定時のみ <code>target=&quot;_blank&quot;</code> / <code>download</code> で自動表示します。
       </p>
 
       ${annotationToggleUI()}
@@ -2305,6 +2305,17 @@ export const demos = {
                     <path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" />
                   </svg>
                   リンクテキスト
+                  <svg
+                    data-utility-link-tail-icon
+                    slot="tail-icon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentcolor"
+                    aria-hidden="true"
+                  >
+                    <path d="M13 5 11.6 6.4 16.2 11H4v2h12.2l-4.6 4.6L13 19l7-7-7-7Z" />
+                  </svg>
                 </dads-utility-link>
               </div>
 
@@ -2317,6 +2328,9 @@ export const demos = {
                         <path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" />
                       </svg>
                       リンクテキスト
+                      <svg slot="tail-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true">
+                        <path d="M13 5 11.6 6.4 16.2 11H4v2h12.2l-4.6 4.6L13 19l7-7-7-7Z" />
+                      </svg>
                     </dads-utility-link>
                   </template>
                 </dads-code-block>
@@ -2360,7 +2374,7 @@ export const demos = {
                             </select>
                           </div>
                         </td>
-                        <td><code>download</code> が無い場合に <code>_blank</code> で新規タブアイコンを表示</td>
+                        <td><code>tail-icon</code> 未指定かつ <code>download</code> が無い場合に <code>_blank</code> で新規タブアイコンを表示</td>
                       </tr>
 
                       <tr>
@@ -2392,7 +2406,7 @@ export const demos = {
                             </dads-switch>
                           </div>
                         </td>
-                        <td>download属性の付与（末尾はダウンロードアイコンを表示）</td>
+                        <td><code>tail-icon</code> 未指定時に download属性の付与でダウンロードアイコンを表示</td>
                       </tr>
 
                       <tr>
@@ -2414,6 +2428,27 @@ export const demos = {
                           </div>
                         </td>
                         <td>先頭アイコンの表示/非表示</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>tail-icon</code></th>
+                        <td><code>slot</code></td>
+                        <td><code>tail-icon</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <label
+                              for="utility-link-tail-icon-visibility"
+                              style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"
+                            >
+                              tail-icon
+                            </label>
+                            <select id="utility-link-tail-icon-visibility" aria-label="tail-icon" data-api-target-selector="[data-utility-link-tail-icon]" data-api-attr="hidden" data-default="">
+                              <option value="" selected>show</option>
+                              <option value="true">hide</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>末尾アイコンの表示/非表示（指定時は自動アイコンより優先）</td>
                       </tr>
                     </tbody>
                   </table>

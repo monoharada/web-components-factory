@@ -46,10 +46,33 @@ export const utilityLinkStyles = css`
     color: currentcolor;
   }
 
+  [part='lead-icon']::slotted([hidden]) {
+    display: none;
+  }
+
+  [part='tail-icon']::slotted(*) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: currentcolor;
+  }
+
+  [part='tail-icon']::slotted([hidden]) {
+    display: none;
+  }
+
+  [part='tail-icon'] slot[hidden] {
+    display: none;
+  }
+
   [part='tail-icon'] svg {
     display: block;
     width: 100%;
     height: 100%;
+  }
+
+  [part='tail-icon'] svg[hidden] {
+    display: none;
   }
 
   [part='tail-icon'][hidden] {
