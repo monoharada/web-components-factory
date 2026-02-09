@@ -1468,6 +1468,34 @@ dads-card.card-example-1::part(main) {
 ### 注意点
 - `deepl-input-controller` の解決失敗はリポジトリ内定義がなく、ブラウザ拡張注入などのノイズの可能性が高い。今回の主因とは切り分ける
 
+## [2026-02-09] utility-link の tail-icon: hidden 切替と自動アイコンの二重表示防止
+**タグ**: #webcomponents #a11y #testing #css #debug
+
+### 概要
+`dads-utility-link` に `slot="tail-icon"` を追加した後、デモで `tail-icon` を hide にして `target="_blank"` を維持すると、カスタム末尾アイコンと自動末尾アイコンが同時に見えるケースがあった。`tail-icon` slot と自動SVGを同時表示しない制御に分離することで解消した。
+
+### 詳細
+#### 症状
+- `API / Controls` の `tail-icon` を `hide` にしても、Preview で矢印アイコン由来の見た目が残るケースがある
+- `target="_blank"` 由来の別窓アイコンも同時表示され、末尾アイコンが二重に見える
+
+#### 原因
+- 自動アイコン表示時に `tail-icon` スロット自体を閉じておらず、環境差分やスタイル評価の順序で slotted 表示が残る余地があった
+
+#### 修正
+- `utility-link.ts` の `#syncTailIconVisibility()` で、`hasCustomTailIcon` に応じて `#tail-icon-slot` 自体へ `hidden` を付け外し
+- 自動アイコンSVGは `showAutoTailIcon` で個別に `hidden` 制御
+- `utility-link-styles.ts` に `[part='tail-icon'] slot[hidden] { display: none; }` を追加して描画差分を吸収
+- テストに「custom tail hidden 時に slot は閉じて auto icon のみ表示」を追加
+
+### 再発防止
+- `slot fallback + 自動フォールバック` を混在させる場合は、可視制御を「親コンテナ」「slot」「fallbackノード」の3層で明示する
+- 見た目だけでなく `slot[hidden]` / `svg[hidden]` の属性状態を単体テストで固定する
+
+### 注意点
+- `data-tail-icon-kind` は互換目的で維持しつつ、可視実体は `custom > auto` 優先で判定する
+- デモの `hidden` 制御は属性存在で動くため、`hidden="true"` のような値文字列に依存しない実装を前提にする
+
 ---
 
 *継続的に更新されます*

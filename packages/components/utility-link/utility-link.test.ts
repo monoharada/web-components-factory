@@ -53,6 +53,7 @@ describe('DadsUtilityLink - 基本', () => {
     expect(getShadowContent(element, '#lead-icon-slot')).toBeInstanceOf(HTMLSlotElement);
     expect(getShadowContent(element, '#label')).toBeTruthy();
     expect(getShadowContent(element, '#tail-icon')).toBeTruthy();
+    expect(getShadowContent(element, '#tail-icon-slot')).toBeInstanceOf(HTMLSlotElement);
   });
 
   it('href の安全性チェックで不正URLは # にフォールバックする', async () => {
@@ -190,6 +191,150 @@ describe('DadsUtilityLink - 基本', () => {
     await waitTick();
 
     expect(element.hasAttribute('data-has-lead-icon')).toBe(false);
+  });
+
+  it('tail-icon slot に実コンテンツがある時だけ表示される', async () => {
+    const { defineDefaultUtilityLink } = await import('./utility-link-define');
+    defineDefaultUtilityLink();
+
+    element = renderWebComponent('<dads-utility-link href="#">Link</dads-utility-link>');
+    await waitForCustomElement(element);
+
+    const tailIcon = getShadowContent(element, '#tail-icon') as HTMLElement | null;
+    expect(tailIcon?.hasAttribute('hidden')).toBe(true);
+
+    const icon = document.createElement('span');
+    icon.setAttribute('slot', 'tail-icon');
+    icon.textContent = '↗';
+    element.appendChild(icon);
+    await waitTick();
+
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+    expect(element.hasAttribute('data-show-tail-icon')).toBe(true);
+    expect(element.hasAttribute('data-tail-icon-kind')).toBe(false);
+
+    icon.setAttribute('hidden', '');
+    await waitTick();
+    expect(tailIcon?.hasAttribute('hidden')).toBe(true);
+    expect(element.hasAttribute('data-show-tail-icon')).toBe(false);
+
+    icon.removeAttribute('hidden');
+    await waitTick();
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+
+    icon.remove();
+    await waitTick();
+    expect(tailIcon?.hasAttribute('hidden')).toBe(true);
+    expect(element.hasAttribute('data-show-tail-icon')).toBe(false);
+  });
+
+  it('lead-icon / tail-icon を同時利用できる', async () => {
+    const { defineDefaultUtilityLink } = await import('./utility-link-define');
+    defineDefaultUtilityLink();
+
+    element = renderWebComponent('<dads-utility-link href="#">Link</dads-utility-link>');
+    await waitForCustomElement(element);
+
+    const leadIcon = document.createElement('span');
+    leadIcon.setAttribute('slot', 'lead-icon');
+    leadIcon.textContent = '★';
+    element.appendChild(leadIcon);
+
+    const tailIconNode = document.createElement('span');
+    tailIconNode.setAttribute('slot', 'tail-icon');
+    tailIconNode.textContent = '↗';
+    element.appendChild(tailIconNode);
+    await waitTick();
+
+    const tailIcon = getShadowContent(element, '#tail-icon') as HTMLElement | null;
+    expect(element.hasAttribute('data-has-lead-icon')).toBe(true);
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+  });
+
+  it('tail-icon slot 指定時は表示を優先しつつ data-tail-icon-kind は後方互換で維持する', async () => {
+    const { defineDefaultUtilityLink } = await import('./utility-link-define');
+    defineDefaultUtilityLink();
+
+    element = renderWebComponent('<dads-utility-link href="#" target="_blank">Link</dads-utility-link>');
+    await waitForCustomElement(element);
+
+    const tailIcon = getShadowContent(element, '#tail-icon') as HTMLElement | null;
+    const tailSlot = getShadowContent(element, '#tail-icon-slot') as HTMLSlotElement | null;
+    const tailIconSvg = getShadowContent(element, '#tail-icon-svg') as SVGElement | null;
+
+    const customTail = document.createElement('span');
+    customTail.setAttribute('slot', 'tail-icon');
+    customTail.textContent = '→';
+    element.appendChild(customTail);
+    await waitTick();
+
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+    expect(tailSlot?.hasAttribute('hidden')).toBe(false);
+    expect(element.getAttribute('data-tail-icon-kind')).toBe('new-window');
+    expect(tailSlot?.assignedNodes({ flatten: true }).includes(customTail)).toBe(true);
+    expect(tailIconSvg?.hasAttribute('hidden')).toBe(true);
+
+    element.setAttribute('download', '');
+    await waitTick();
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+    expect(element.getAttribute('data-tail-icon-kind')).toBe('download');
+    expect(tailIconSvg?.hasAttribute('hidden')).toBe(true);
+  });
+
+  it('tail-icon が hidden でも target="_blank" なら自動末尾アイコンを表示する', async () => {
+    const { defineDefaultUtilityLink } = await import('./utility-link-define');
+    defineDefaultUtilityLink();
+
+    element = renderWebComponent('<dads-utility-link href="#" target="_blank">Link</dads-utility-link>');
+    await waitForCustomElement(element);
+
+    const tailIcon = getShadowContent(element, '#tail-icon') as HTMLElement | null;
+    const tailSlot = getShadowContent(element, '#tail-icon-slot') as HTMLSlotElement | null;
+    const tailIconSvg = getShadowContent(element, '#tail-icon-svg') as SVGElement | null;
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+    expect(tailSlot?.hasAttribute('hidden')).toBe(true);
+    expect(tailIconSvg?.hasAttribute('hidden')).toBe(false);
+    expect(tailIconSvg?.getAttribute('aria-label')).toBe('新規タブで開きます');
+
+    const customTail = document.createElement('span');
+    customTail.setAttribute('slot', 'tail-icon');
+    customTail.textContent = '→';
+    element.appendChild(customTail);
+    await waitTick();
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+    expect(tailSlot?.hasAttribute('hidden')).toBe(false);
+    expect(tailIconSvg?.hasAttribute('hidden')).toBe(true);
+
+    customTail.setAttribute('hidden', '');
+    await waitTick();
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+    expect(tailSlot?.hasAttribute('hidden')).toBe(true);
+    expect(element.hasAttribute('data-show-tail-icon')).toBe(true);
+    expect(element.getAttribute('data-tail-icon-kind')).toBe('new-window');
+    expect(tailIconSvg?.hasAttribute('hidden')).toBe(false);
+    expect(tailIconSvg?.getAttribute('aria-label')).toBe('新規タブで開きます');
+  });
+
+  it('tail-icon の slot fallback は slotted として扱わない', async () => {
+    const { defineDefaultUtilityLink } = await import('./utility-link-define');
+    defineDefaultUtilityLink();
+
+    element = createTestElement('dads-utility-link');
+    await waitForCustomElement(element);
+
+    const tailIcon = getShadowContent(element, '#tail-icon') as HTMLElement | null;
+    const tailSlot = getShadowContent(element, '#tail-icon-slot') as HTMLSlotElement | null;
+    expect(tailSlot).toBeTruthy();
+    if (!tailSlot) return;
+
+    const fallbackNodes = Array.from(tailSlot.childNodes);
+    (tailSlot as unknown as { assignedNodes: () => Node[] }).assignedNodes = () => fallbackNodes;
+
+    tailSlot.dispatchEvent(new Event('slotchange'));
+    await waitTick();
+
+    expect(tailIcon?.hasAttribute('hidden')).toBe(true);
+    expect(element.hasAttribute('data-show-tail-icon')).toBe(false);
   });
 
   it('target/rel/download 属性がリンクへ同期される', async () => {

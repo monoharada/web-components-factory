@@ -3357,13 +3357,15 @@
         "本文16px・line-height 1.3 を基準にし、拡大時も読みやすさを維持します。"
       ],
       "states": [
+        "slot=\"tail-icon\" を指定した場合は末尾に任意アイコンを表示し、自動アイコンより優先します。",
         "target=\"_blank\" のときは末尾に新規タブアイコンを表示します。",
         "download 属性があるときは末尾にダウンロードアイコンを表示します（target=\"_blank\" より優先）。",
         "download 属性があるときは内部リンクの target は無効化されます。"
       ],
       "labels": [
         "リンクラベルはデフォルトスロットのテキストを使用します。",
-        "末尾アイコンは role=\"img\" で、状態に応じて aria-label が「新規タブで開きます」または「ダウンロードします」になります。"
+        "自動表示の末尾アイコンは role=\"img\" で、状態に応じて aria-label が「新規タブで開きます」または「ダウンロードします」になります。",
+        "slot=\"tail-icon\" の任意アイコンを使う場合は、提供側で aria-hidden / aria-label を適切に設定します。"
       ],
       "motion": [
         "アニメーションは前提としません。"
@@ -3397,8 +3399,8 @@
       {
         "id": "tail-icon",
         "title": "末尾アイコン",
-        "label": "target=\"_blank\" / download",
-        "description": "新規タブ遷移またはダウンロード時に表示される補助アイコンです。",
+        "label": "slot=\"tail-icon\" / target=\"_blank\" / download",
+        "description": "任意指定または新規タブ遷移・ダウンロード時に表示される補助アイコンです。",
         "category": "states",
         "placement": "bottom-right",
         "target": {

@@ -50,4 +50,11 @@ describe('showcase-navigation (utilityLink demo)', () => {
     expect(html).toContain('data-api-target-selector="[data-utility-link-lead-icon]"');
     expect(html).toContain('data-api-attr="hidden"');
   });
+
+  it('tail-icon の表示切替は hidden 属性で制御する', () => {
+    const html = demos.utilityLink();
+    expect(html).toContain('<code>tail-icon</code>');
+    expect(html).toContain('data-api-target-selector="[data-utility-link-tail-icon]"');
+    expect(html).toContain('aria-label="tail-icon"');
+  });
 });

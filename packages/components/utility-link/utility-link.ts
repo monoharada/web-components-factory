@@ -69,11 +69,12 @@ function isSafeHref(href: string): boolean {
  *
  * @slot default - リンクラベル
  * @slot lead-icon - 先頭アイコン（任意）
+ * @slot tail-icon - 末尾アイコン（任意、指定時は自動末尾アイコンより優先）
  *
  * @csspart base - リンク本体（a要素）
  * @csspart lead-icon - 先頭アイコン領域
  * @csspart label - ラベル領域
- * @csspart tail-icon - 末尾アイコン領域（target="_blank" または download の時に表示）
+ * @csspart tail-icon - 末尾アイコン領域（tail-icon slot または target="_blank"/download フォールバックを表示）
  *
  * @attr {string} href - リンク先URL
  * @attr {string} target - リンクターゲット（download 指定時は内部リンクへは反映しない）
@@ -103,6 +104,7 @@ export class DadsUtilityLink extends TypographyWebComponent {
           <slot></slot>
         </span>
         <span part="tail-icon" id="tail-icon" hidden>
+          <slot name="tail-icon" id="tail-icon-slot"></slot>
           <svg
             id="tail-icon-svg"
             width="16"
@@ -111,6 +113,7 @@ export class DadsUtilityLink extends TypographyWebComponent {
             fill="currentcolor"
             role="img"
             aria-label="${NEW_WINDOW_ICON_LABEL}"
+            hidden
           >
             <path id="tail-icon-path" d="${NEW_WINDOW_ICON_PATH}" />
           </svg>
@@ -128,10 +131,11 @@ export class DadsUtilityLink extends TypographyWebComponent {
 
   #base: HTMLAnchorElement | null = null;
   #leadIconSlot: HTMLSlotElement | null = null;
+  #tailIconSlot: HTMLSlotElement | null = null;
   #tailIcon: HTMLElement | null = null;
   #tailIconSvg: SVGSVGElement | null = null;
   #tailIconPath: SVGPathElement | null = null;
-  #leadIconMutationObserver: MutationObserver | null = null;
+  #slotMutationObserver: MutationObserver | null = null;
 
   declare href: string | null;
   declare target: string | null;
@@ -143,22 +147,26 @@ export class DadsUtilityLink extends TypographyWebComponent {
 
     this.#base = getRef<HTMLAnchorElement>(this, 'base');
     this.#leadIconSlot = getRef<HTMLSlotElement>(this, 'lead-icon-slot');
+    this.#tailIconSlot = getRef<HTMLSlotElement>(this, 'tail-icon-slot');
     this.#tailIcon = getRef<HTMLElement>(this, 'tail-icon');
     this.#tailIconSvg = getRef<SVGSVGElement>(this, 'tail-icon-svg');
     this.#tailIconPath = getRef<SVGPathElement>(this, 'tail-icon-path');
 
     this.#leadIconSlot?.addEventListener('slotchange', this.#handleLeadIconSlotChange);
-    this.#observeLeadIconMutations();
+    this.#tailIconSlot?.addEventListener('slotchange', this.#handleTailIconSlotChange);
+    this.#observeSlotMutations();
 
     this.#syncAll();
   }
 
   disconnectedCallback(): void {
     this.#leadIconSlot?.removeEventListener('slotchange', this.#handleLeadIconSlotChange);
-    this.#leadIconMutationObserver?.disconnect();
-    this.#leadIconMutationObserver = null;
+    this.#tailIconSlot?.removeEventListener('slotchange', this.#handleTailIconSlotChange);
+    this.#slotMutationObserver?.disconnect();
+    this.#slotMutationObserver = null;
     this.#base = null;
     this.#leadIconSlot = null;
+    this.#tailIconSlot = null;
     this.#tailIcon = null;
     this.#tailIconSvg = null;
     this.#tailIconPath = null;
@@ -185,17 +193,22 @@ export class DadsUtilityLink extends TypographyWebComponent {
     this.#syncLeadIconVisibility();
   };
 
+  #handleTailIconSlotChange = (): void => {
+    this.#syncTailIconVisibility(this.#computeAutoTailIconKind());
+  };
+
   #syncAll(): void {
     this.#syncLinkAttributes();
     this.#syncLeadIconVisibility();
   }
 
-  #observeLeadIconMutations(): void {
-    this.#leadIconMutationObserver?.disconnect();
-    this.#leadIconMutationObserver = new MutationObserver(() => {
+  #observeSlotMutations(): void {
+    this.#slotMutationObserver?.disconnect();
+    this.#slotMutationObserver = new MutationObserver(() => {
       this.#syncLeadIconVisibility();
+      this.#syncTailIconVisibility(this.#computeAutoTailIconKind());
     });
-    this.#leadIconMutationObserver.observe(this, {
+    this.#slotMutationObserver.observe(this, {
       subtree: true,
       childList: true,
       attributes: true,
@@ -225,15 +238,13 @@ export class DadsUtilityLink extends TypographyWebComponent {
     else base.removeAttribute('target');
 
     const tailIconKind: TailIconKind = hasDownload ? 'download' : effectiveTarget === '_blank' ? 'new-window' : 'none';
-    const showTailIcon = tailIconKind !== 'none';
-    tailIcon.toggleAttribute('hidden', !showTailIcon);
-    this.toggleAttribute('data-show-tail-icon', showTailIcon);
-    if (!showTailIcon) {
+    if (tailIconKind === 'none') {
       this.removeAttribute('data-tail-icon-kind');
-      return;
+    } else {
+      this.setAttribute('data-tail-icon-kind', tailIconKind);
+      this.#syncTailIconKind(tailIconKind);
     }
-    this.setAttribute('data-tail-icon-kind', tailIconKind);
-    this.#syncTailIconKind(tailIconKind);
+    this.#syncTailIconVisibility(tailIconKind);
   }
 
   #syncTailIconKind(kind: Exclude<TailIconKind, 'none'>): void {
@@ -255,9 +266,43 @@ export class DadsUtilityLink extends TypographyWebComponent {
 
   #syncLeadIconVisibility(): void {
     const slot = this.#leadIconSlot ?? getRef<HTMLSlotElement>(this, 'lead-icon-slot');
-    if (!slot) return;
-
-    const hasLeadIcon = slot.assignedNodes({ flatten: true }).some((node) => isMeaningfulNode(node));
+    const hasLeadIcon = this.#hasMeaningfulSlottedContent(slot, 'lead-icon');
     this.toggleAttribute('data-has-lead-icon', hasLeadIcon);
+  }
+
+  #syncTailIconVisibility(autoTailIconKind: TailIconKind): void {
+    const tailIcon = this.#tailIcon ?? getRef<HTMLElement>(this, 'tail-icon');
+    const tailSlot = this.#tailIconSlot ?? getRef<HTMLSlotElement>(this, 'tail-icon-slot');
+    const tailIconSvg = this.#tailIconSvg ?? getRef<SVGSVGElement>(this, 'tail-icon-svg');
+    if (!tailIcon) return;
+
+    const hasCustomTailIcon = this.#hasMeaningfulSlottedContent(tailSlot, 'tail-icon');
+    tailSlot?.toggleAttribute('hidden', !hasCustomTailIcon);
+
+    const showAutoTailIcon = !hasCustomTailIcon && autoTailIconKind !== 'none';
+    tailIconSvg?.toggleAttribute('hidden', !showAutoTailIcon);
+
+    const showTailIcon = hasCustomTailIcon || showAutoTailIcon;
+    tailIcon.toggleAttribute('hidden', !showTailIcon);
+    this.toggleAttribute('data-show-tail-icon', showTailIcon);
+  }
+
+  #computeAutoTailIconKind(): TailIconKind {
+    if (this.hasAttribute('download')) return 'download';
+    return this.getAttribute('target') === '_blank' ? 'new-window' : 'none';
+  }
+
+  #hasMeaningfulSlottedContent(slot: HTMLSlotElement | null, slotName: string): boolean {
+    for (const node of this.#getAssignedNodesWithoutFallback(slot)) {
+      if (isMeaningfulNode(node)) return true;
+    }
+
+    const slottedElements = Array.from(this.querySelectorAll(`[slot="${slotName}"]`));
+    return slottedElements.some((element) => !element.hasAttribute('hidden'));
+  }
+
+  #getAssignedNodesWithoutFallback(slot: HTMLSlotElement | null): Node[] {
+    if (!slot) return [];
+    return slot.assignedNodes({ flatten: true }).filter((node) => !slot.contains(node));
   }
 }
