@@ -227,6 +227,35 @@ describe('DadsLanguageSelector - 基本', () => {
     expect(selected?.selectedItem).toBe(items[1]);
   });
 
+  it('外部から current を更新した場合も選択状態と getSelectedLanguage が追従する', async () => {
+    const { defineDefaultLanguageSelector } = await import('./language-selector-define.js');
+    defineDefaultLanguageSelector();
+
+    element = renderWebComponent(`
+      <dads-language-selector>
+        <dads-menu-list-item value="ja" current>日本語</dads-menu-list-item>
+        <dads-menu-list-item value="en">English</dads-menu-list-item>
+      </dads-language-selector>
+    `);
+    await waitForCustomElement(element);
+    const items = await waitForItems(element);
+
+    const host = element as LanguageSelectorHost;
+    expect(host.getSelectedLanguage()?.value).toBe('ja');
+
+    items[0].removeAttribute('current');
+    items[1].setAttribute('current', '');
+    await waitForMicrotask();
+    await waitForMicrotask();
+
+    expect(items[0].hasAttribute('current')).toBe(false);
+    expect(items[0].hasAttribute('aria-current')).toBe(false);
+    expect(items[1].hasAttribute('current')).toBe(true);
+    expect(items[1].getAttribute('aria-current')).toBe('true');
+    expect(host.getSelectedLanguage()?.value).toBe('en');
+    expect(host.getSelectedLanguage()?.selectedIndex).toBe(1);
+  });
+
   it('getSelectedLanguage は value 未指定時にテキスト fallback を返す', async () => {
     const { defineDefaultLanguageSelector } = await import('./language-selector-define.js');
     defineDefaultLanguageSelector();

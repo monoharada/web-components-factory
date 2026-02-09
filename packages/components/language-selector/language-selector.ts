@@ -63,8 +63,7 @@ function createSvg(pathData: string): SVGSVGElement {
   return svg;
 }
 
-function isCurrentItem(item: HTMLElement): boolean {
-  if (item.hasAttribute('current')) return true;
+function hasAriaCurrent(item: HTMLElement): boolean {
   const ariaCurrent = item.getAttribute('aria-current');
   return ariaCurrent !== null && ariaCurrent !== 'false';
 }
@@ -86,6 +85,13 @@ function getAutoSlottedElements(host: HTMLElement, slotName: string, autoAttr: s
 function hasCustomSlottedElement(host: HTMLElement, slotName: string, autoAttr: string): boolean {
   return getSlottedElements(host, slotName).some((element) => !element.hasAttribute(autoAttr));
 }
+
+const LANGUAGE_SELECTOR_OBSERVER_OPTIONS: MutationObserverInit = {
+  childList: true,
+  subtree: true,
+  attributes: true,
+  attributeFilter: ['current', 'aria-current', 'slot'],
+};
 
 /**
  * ランゲージセレクターコンポーネント
@@ -146,11 +152,7 @@ export class DadsLanguageSelector extends DadsMenuListBox {
     this.#labelSlot?.addEventListener('slotchange', this.#handleSlotChange);
     this.addEventListener('menuitemselect', this.#handleMenuItemSelect as EventListener);
 
-    this.#itemsObserver = new MutationObserver(() => this.#syncAll());
-    this.#itemsObserver.observe(this, {
-      childList: true,
-      subtree: false,
-    });
+    this.#itemsObserver = new MutationObserver(this.#handleItemsMutation);
 
     this.#syncAll();
   }
@@ -198,7 +200,9 @@ export class DadsLanguageSelector extends DadsMenuListBox {
   }
 
   #findCurrentItemIndex(items: HTMLElement[]): number {
-    return items.findIndex((item) => isCurrentItem(item));
+    const explicitCurrentIndex = items.findIndex((item) => item.hasAttribute('current'));
+    if (explicitCurrentIndex >= 0) return explicitCurrentIndex;
+    return items.findIndex((item) => hasAriaCurrent(item));
   }
 
   #removeElements(elements: Element[]): void {
@@ -301,6 +305,11 @@ export class DadsLanguageSelector extends DadsMenuListBox {
     this.#syncAll();
   };
 
+  #handleItemsMutation = (): void => {
+    if (this.#isSyncing) return;
+    this.#syncAll();
+  };
+
   #handleMenuItemSelect = (event: Event): void => {
     const detail = (event as CustomEvent<MenuItemSelectDetail>).detail;
     if (!detail) return;
@@ -338,6 +347,7 @@ export class DadsLanguageSelector extends DadsMenuListBox {
 
   #syncAll(): void {
     if (this.#isSyncing) return;
+    this.#itemsObserver?.disconnect();
     this.#isSyncing = true;
 
     try {
@@ -347,7 +357,13 @@ export class DadsLanguageSelector extends DadsMenuListBox {
       this.#syncMenuItems();
     } finally {
       this.#isSyncing = false;
+      this.#startObservingItems();
     }
+  }
+
+  #startObservingItems(): void {
+    if (!this.#itemsObserver || !this.isConnected) return;
+    this.#itemsObserver.observe(this, LANGUAGE_SELECTOR_OBSERVER_OPTIONS);
   }
 
   #getNormalizedOpener(): LanguageSelectorOpener {

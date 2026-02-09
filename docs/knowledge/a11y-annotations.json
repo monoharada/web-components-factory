@@ -1734,7 +1734,7 @@
       ],
       "states": [
         "open 属性と opener の aria-expanded で開閉状態を同期します。",
-        "選択中項目にはチェックアイコンが付与され、視覚的に現在言語を示します。"
+        "選択中項目に明示 start-icon がない場合は、チェックアイコンを自動付与して現在言語を示します。"
       ],
       "labels": [
         "label 属性または slot=\"label\" で opener ラベルを提供します。",
@@ -1798,7 +1798,7 @@
         "id": "current-item-check",
         "title": "選択状態アイコン",
         "label": "start-icon",
-        "description": "選択中項目の先頭に表示されるチェックアイコン領域です。",
+        "description": "選択中項目で、明示 start-icon がない場合に自動表示されるチェックアイコン領域です。",
         "category": "states",
         "placement": "bottom-left",
         "target": {
