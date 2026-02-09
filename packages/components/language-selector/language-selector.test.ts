@@ -68,8 +68,11 @@ describe('DadsLanguageSelector - 基本', () => {
     expect(element.getAttribute('opener')).toBe('text');
     expect(element.getAttribute('label')).toBe('Language');
 
-    const autoIcon = element.querySelector('[slot="icon"][data-language-selector-auto-opener-icon]');
+    const autoIcon = element.querySelector(
+      '[slot="icon"][data-language-selector-auto-opener-icon]',
+    ) as SVGElement | null;
     expect(autoIcon).toBeInTheDocument();
+    expect(autoIcon?.getAttribute('viewBox')).toBe('10 3 24 24');
   });
 
   it('opener=icon では label=LANG を補完する', async () => {
@@ -434,6 +437,39 @@ describe('DadsLanguageSelector - 基本', () => {
     expect(items[1].getAttribute('size')).toBe('small');
   });
 
+  it('opener=icon は size に応じて opener の min-height が切り替わる', async () => {
+    const { defineDefaultLanguageSelector } = await import('./language-selector-define.js');
+    defineDefaultLanguageSelector();
+
+    element = renderWebComponent(`
+      <dads-language-selector
+        opener="icon"
+        size="sm"
+        style="
+          --menu-list-box-opener-min-height-sm: 36px;
+          --menu-list-box-opener-min-height-md: 44px;
+        "
+      >
+        <dads-menu-list-item value="ja">日本語</dads-menu-list-item>
+      </dads-language-selector>
+    `);
+    await waitForCustomElement(element);
+    await waitForItems(element);
+
+    const opener = getShadowContent(element, '#opener') as HTMLElement | null;
+    if (!opener) throw new Error('opener not found');
+
+    const smMinHeight = getComputedStyle(opener).minHeight;
+    expect(smMinHeight).toContain('36px');
+
+    element.setAttribute('size', 'md');
+    await waitForMicrotask();
+
+    const mdMinHeight = getComputedStyle(opener).minHeight;
+    expect(mdMinHeight).toContain('44px');
+    expect(mdMinHeight).not.toBe(smMinHeight);
+  });
+
   it('item の明示 size（small）は不必要に上書きしない', async () => {
     const { defineDefaultLanguageSelector } = await import('./language-selector-define.js');
     defineDefaultLanguageSelector();
@@ -473,5 +509,50 @@ describe('DadsLanguageSelector - 基本', () => {
     await waitForCustomElement(element);
 
     expect(element).toBeInTheDocument();
+  });
+});
+
+describe('DadsLanguageSelector - styles', () => {
+  it('opener=icon はアイコン+ラベルの縦積みレイアウトを定義する', async () => {
+    const { languageSelectorStyles } = await import('./language-selector-styles.js');
+
+    const cssText = Array.from(languageSelectorStyles.cssRules ?? [])
+      .map((rule) => rule.cssText)
+      .join('\n');
+
+    expect(cssText).toContain(':host([opener="icon"]) [part="opener"]');
+    expect(cssText).toContain('display: grid');
+    expect(cssText).toContain('grid-template-columns: auto auto');
+    expect(cssText).toContain('grid-template-rows: auto auto');
+    expect(cssText).toContain(':host([opener="icon"]) [part="opener-label"]');
+    expect(cssText).toContain('font-size: calc(11 / 16 * 1rem)');
+  });
+
+  it('opener=icon の opener-icon に中央揃えルールが定義される', async () => {
+    const { languageSelectorStyles } = await import('./language-selector-styles.js');
+
+    const cssText = Array.from(languageSelectorStyles.cssRules ?? [])
+      .map((rule) => rule.cssText)
+      .join('\n');
+
+    expect(cssText).toContain(':host([opener="icon"]) [part="opener-icon"]');
+    expect(cssText).toContain('align-items: center');
+    expect(cssText).toContain('justify-content: center');
+    expect(cssText).toContain('line-height: 0');
+  });
+
+  it('opener=icon の slotted svg 正規化ルールが定義される', async () => {
+    const { languageSelectorStyles } = await import('./language-selector-styles.js');
+
+    const cssText = Array.from(languageSelectorStyles.cssRules ?? [])
+      .map((rule) => rule.cssText)
+      .join('\n');
+
+    expect(cssText).toMatch(
+      /:host\(\[opener="icon"\]\)\s+\[part="opener-icon"\]\s*::slotted\(svg\)/,
+    );
+    expect(cssText).toContain('display: block');
+    expect(cssText).toContain('width: 100%');
+    expect(cssText).toContain('height: 100%');
   });
 });

@@ -88,6 +88,7 @@ export const menuListBoxStyles = css`
 
   :host([data-has-opener-icon]) [part="opener-icon"] {
     display: inline-flex;
+    align-items: center;
   }
 
   [part="opener-arrow"] {

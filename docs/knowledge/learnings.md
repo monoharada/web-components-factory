@@ -29,6 +29,23 @@
 - 「見た目の状態（アイコン）」「リンク実属性（target/download）」は常に同じ優先順位で設計する。
 - slot可視判定テストは、追加/削除だけでなく `hidden` の付け外しまで含める。
 
+## [2026-02-09] Language Selector のアイコン位置ズレは「SVG基準線 + viewBox + slot整列」を同時に揃える
+**タグ**: #language-selector #menu-list-box #css #svg #accessibility #testing
+
+### 概要
+`dads-language-selector` の `opener="icon"` で、地球儀アイコンと `LANG` の位置がずれる問題は、単一要因ではなく、`svg` の基準線余白・アイコン用 viewBox・slot コンテナ整列の3点が重なって発生していた。
+
+### 学び
+1. `slot="icon"` に `svg` を入れる構成では、`::slotted(svg) { display: block; width: 100%; height: 100%; }` を先に入れて基準線余白を消す
+2. アイコンとラベルを縦積みする場合は、`opener-icon` 単体だけでなく、親レイアウト（grid）と矢印配置も同時に固定する
+3. Figma由来のアイコンを使う際は、`path` だけ差し替えると見た目が崩れることがあるため、`viewBox` もセットで合わせる
+4. 共通基盤（`menu-list-box`）側の `:host([data-has-opener-icon]) [part="opener-icon"]` に `align-items: center` を入れると、他コンポーネントでも再発しにくい
+
+### 再発防止
+- スタイル差分は `cssRules/cssText` の回帰テストを必ず追加する
+- CEM更新を伴う変更は `custom-elements.json` を同一PRに含める
+- PR前は `npm run agents:verify` を実行し、ガードレール結果を記録する
+
 ---
 
 ## [2026-02-09] Language Selector 実装での学び（a11y注釈・イベントAPI・テスト網羅）
