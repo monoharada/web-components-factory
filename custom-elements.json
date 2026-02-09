@@ -15761,6 +15761,1420 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/global-menu/global-menu.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "グローバルメニュー（コンテナ）",
+          "name": "DadsGlobalMenu",
+          "cssParts": [
+            {
+              "description": "メニュー一覧",
+              "name": "list"
+            },
+            {
+              "description": "ナビゲーションルート",
+              "name": "nav"
+            }
+          ],
+          "slots": [
+            {
+              "description": "dads-global-menu-item 群",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "#closeItemSubmenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "GlobalMenuItemLike"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#enforceSingleExpanded",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "preferredItem",
+                  "optional": true,
+                  "type": {
+                    "text": "GlobalMenuItemLike"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getItemEntries",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ItemEntry[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getItemFocusTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "GlobalMenuItemLike"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "GlobalMenuItemLike[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleItemMutations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "mutations",
+                  "type": {
+                    "text": "MutationRecord[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#itemObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#resolveCurrentTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "entries",
+                  "type": {
+                    "text": "ItemEntry[]"
+                  }
+                },
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#subscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#syncItems",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "closeAllSubmenus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "description": "すべてのサブメニューを閉じる"
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-global-menu', template: html` <nav part=\"nav\" id=\"nav\"> <ul part=\"list\" id=\"list\" role=\"list\"> <slot id=\"items-slot\"></slot> </ul> </nav> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), globalMenuTokens, globalMenuStyles], 'minimal'), attributes: [ TransferringPropertyAttr('nav', 'ariaLabel', 'aria-label'), TransferringPropertyAttr('nav', 'ariaLabelledby', 'aria-labelledby'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ナビゲーションラベル",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ナビゲーションラベル参照先",
+              "name": "aria-labelledby"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-global-menu",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/global-menu/global-menu.ts",
+          "definitionPath": "./packages/components/global-menu/global-menu.ts",
+          "typeDefinitionPath": "./packages/components/global-menu/global-menu.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "グローバルメニュー仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部に <nav> を持つランドマークとして動作します。",
+                  "トップレベルは role=\"list\" の一覧として構成し、各項目をまとめます。"
+                ],
+                "keyboard": [
+                  "トップレベル項目は ArrowLeft / ArrowRight / Home / End で移動できます。",
+                  "サブメニュー付き項目は Enter / Space / ArrowDown / ArrowUp で開閉・項目移動できます。"
+                ],
+                "zoom": [
+                  "項目高さ・余白・境界線はトークン経由で相対指定し、表示倍率変更時の可読性を維持します。"
+                ],
+                "states": [
+                  "current 属性で現在地を示し、expanded 属性でサブメニュー展開状態を表します。",
+                  "サブメニューは同時に1つのみ展開されます。"
+                ],
+                "labels": [
+                  "複数ナビゲーションがある画面では、aria-label または aria-labelledby によるナビゲーション名の付与が必要です。"
+                ],
+                "motion": [
+                  "アニメーションは前提としません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "nav",
+                  "title": "ナビゲーション領域",
+                  "label": "<nav>",
+                  "description": "ランドマークとして機能するルート要素です。ナビゲーション名（aria-label / aria-labelledby）を付与します。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"nav\"]"
+                  }
+                },
+                {
+                  "id": "list",
+                  "title": "トップレベル項目一覧",
+                  "label": "role=\"list\"",
+                  "description": "グローバルメニュー項目の集合です。左右キーでの移動対象になります。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"list\"]"
+                  }
+                },
+                {
+                  "id": "submenu-trigger",
+                  "title": "サブメニュー付き項目",
+                  "label": "submenu trigger",
+                  "description": "この項目はサブメニューを開閉し、展開時は expanded 状態になります。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "hostSelector": "dads-global-menu-item:nth-of-type(2)",
+                    "scope": "shadow",
+                    "selector": "[part=\"trigger\"]"
+                  }
+                },
+                {
+                  "id": "submenu-popup",
+                  "title": "サブメニュー（menu-list-box）",
+                  "label": "submenu",
+                  "description": "サブメニュー本体です。メニュー項目は矢印キーで移動し、Escape で閉じます。",
+                  "category": "keyboard",
+                  "placement": "bottom-right",
+                  "target": {
+                    "hostSelector": "dads-global-menu-item:nth-of-type(2)",
+                    "selector": "dads-menu-list-box"
+                  }
+                }
+              ]
+            },
+            "componentId": "global-menu",
+            "install": {
+              "id": "global-menu",
+              "define": "defineGlobalMenu",
+              "call": "prefix-registry",
+              "deps": [
+                "menu-list-box"
+              ],
+              "source": {
+                "componentDir": "packages/components/global-menu"
+              },
+              "tags": [
+                "dads-global-menu",
+                "dads-global-menu-item"
+              ]
+            }
+          }
+        },
+        {
+          "kind": "class",
+          "description": "グローバルメニュー項目",
+          "name": "DadsGlobalMenuItem",
+          "cssParts": [
+            {
+              "description": "サブメニュー用矢印",
+              "name": "chevron"
+            },
+            {
+              "description": "ラベル領域",
+              "name": "label"
+            },
+            {
+              "description": "先頭アイコン領域",
+              "name": "start-icon"
+            },
+            {
+              "description": "項目本体（ボタン/リンク）",
+              "name": "trigger"
+            }
+          ],
+          "slots": [
+            {
+              "description": "ラベル",
+              "name": "default"
+            },
+            {
+              "description": "先頭アイコン",
+              "name": "start-icon"
+            },
+            {
+              "description": "サブメニュー（dads-menu-list-box）",
+              "name": "submenu"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#childObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#createTemplate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLTemplateElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isLink",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getSubmenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "MenuListBoxLike | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleTriggerClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleTriggerKeydown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#hasSubmenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#isRenderedAsLink",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#isSyncingExpanded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#isSyncingSubmenuOpen",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#renderTemplate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "isLink",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setSubmenuOpen",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "submenu",
+                  "type": {
+                    "text": "MenuListBoxLike"
+                  }
+                },
+                {
+                  "name": "isOpen",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#shouldRenderAsLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "hasSubmenu",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#startIconSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#submenuOpenObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#submenuSubscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#subscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#syncCurrentState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncExpandedState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLinkAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncStartIconVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncStructure",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSubmenuBridge",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSubmenuSlotting",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#trigger",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "closeSubmenu",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "current",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-global-menu-item', template: html` <button part=\"trigger\" id=\"trigger\" type=\"button\"> ${itemInnerHtml} </button> <slot name=\"submenu\" id=\"submenu-slot\"></slot> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), globalMenuTokens, globalMenuItemStyles], 'minimal', ), attributes: [ BooleanAttr('current'), BooleanAttr('expanded'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getFocusTarget",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "description": "親コンポーネントがフォーカス対象を参照するためのAPI"
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "openSubmenu",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "toggleSubmenu",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "現在地",
+              "name": "current"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "download属性",
+              "name": "download"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "サブメニュー展開状態",
+              "name": "expanded"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンクURL（submenu未指定時のみ）",
+              "name": "href"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンクrel",
+              "name": "rel"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンクターゲット",
+              "name": "target"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-global-menu-item",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/global-menu/global-menu.ts",
+          "definitionPath": "./packages/components/global-menu/global-menu.ts",
+          "typeDefinitionPath": "./packages/components/global-menu/global-menu.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "グローバルメニュー項目仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "submenu が無い場合は <a>、submenu がある場合は <button> として描画されます。"
+                ],
+                "keyboard": [
+                  "submenu 付きの場合、Enter / Space で開閉、ArrowDown / ArrowUp でサブメニューの先頭/末尾へ移動します。"
+                ],
+                "zoom": [
+                  "項目幅は内容に応じて伸縮し、長文は折り返さずにメニューの情報密度を保ちます。"
+                ],
+                "states": [
+                  "current 属性で現在地、expanded 属性でサブメニュー展開状態を示します。"
+                ],
+                "labels": [
+                  "リンク項目はリンク先文言、サブメニュー項目はトリガー文言がアクセシブル名になります。"
+                ],
+                "motion": [
+                  "アニメーションは前提としません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "trigger",
+                  "title": "項目トリガー",
+                  "label": "trigger",
+                  "description": "リンクまたはボタンとして動作する主操作要素です。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"trigger\"]"
+                  }
+                },
+                {
+                  "id": "label",
+                  "title": "項目ラベル",
+                  "label": "label",
+                  "description": "項目の可視ラベルです。ナビゲーション名として読まれます。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "chevron",
+                  "title": "サブメニュー矢印",
+                  "label": "chevron",
+                  "description": "サブメニューを持つ項目で表示され、expanded 状態で向きが変わります。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"chevron\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "global-menu",
+            "install": {
+              "id": "global-menu",
+              "define": "defineGlobalMenu",
+              "call": "prefix-registry",
+              "deps": [
+                "menu-list-box"
+              ],
+              "source": {
+                "componentDir": "packages/components/global-menu"
+              },
+              "tags": [
+                "dads-global-menu",
+                "dads-global-menu-item"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsGlobalMenu",
+          "declaration": {
+            "name": "DadsGlobalMenu",
+            "module": "packages/components/global-menu/global-menu.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsGlobalMenuItem",
+          "declaration": {
+            "name": "DadsGlobalMenuItem",
+            "module": "packages/components/global-menu/global-menu.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/global-menu/global-menu.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/global-menu/global-menu.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-global-menu",
+          "declaration": {
+            "name": "DadsGlobalMenu",
+            "module": "./packages/components/global-menu/global-menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/global-menu/global-menu.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-global-menu-item",
+          "declaration": {
+            "name": "DadsGlobalMenuItem",
+            "module": "./packages/components/global-menu/global-menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts",
       "declarations": [
         {
@@ -19118,6 +20532,13 @@
           ],
           "members": [
             {
+              "kind": "field",
+              "name": "['opener-hidden']",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
               "kind": "method",
               "name": "#currentIndex",
               "privacy": "private",
@@ -19207,6 +20628,15 @@
             },
             {
               "kind": "field",
+              "name": "#focusReturnTarget",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "#fontState",
               "privacy": "private",
               "type": {
@@ -19216,6 +20646,16 @@
               "inheritedFrom": {
                 "name": "TypographyWebComponent",
                 "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getFocusReturnTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
               }
             },
             {
@@ -19379,6 +20819,24 @@
             {
               "kind": "method",
               "name": "#isEventInside",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isEventOnFocusReturnTarget",
               "privacy": "private",
               "return": {
                 "type": {
@@ -19708,7 +21166,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-menu-list-box', template: html` <button part=\"opener\" id=\"opener\" type=\"button\" aria-haspopup=\"menu\" aria-expanded=\"false\" aria-controls=\"menu\" > <span part=\"opener-icon\" id=\"opener-icon\"> <slot name=\"icon\" id=\"icon-slot\"></slot> </span> <span part=\"opener-label\" id=\"opener-label\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <svg part=\"opener-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentcolor\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\"/> </svg> </button> <div part=\"popup\" id=\"popup\" hidden> <div part=\"menu\" id=\"menu\" role=\"menu\" aria-labelledby=\"opener\"> <slot id=\"items-slot\"></slot> </div> </div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), menuListBoxTokens, menuListBoxStyles], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('variant'), BooleanAttr('bold'), PropertyAttr('label'), BooleanAttr('open'), ], }",
+              "default": "{ name: 'dads-menu-list-box', template: html` <button part=\"opener\" id=\"opener\" type=\"button\" aria-haspopup=\"menu\" aria-expanded=\"false\" aria-controls=\"menu\" > <span part=\"opener-icon\" id=\"opener-icon\"> <slot name=\"icon\" id=\"icon-slot\"></slot> </span> <span part=\"opener-label\" id=\"opener-label\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <svg part=\"opener-arrow\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentcolor\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\"/> </svg> </button> <div part=\"popup\" id=\"popup\" hidden> <div part=\"menu\" id=\"menu\" role=\"menu\" aria-labelledby=\"opener\"> <slot id=\"items-slot\"></slot> </div> </div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), menuListBoxTokens, menuListBoxStyles], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('variant'), BooleanAttr('bold'), PropertyAttr('label'), BooleanAttr('open'), BooleanAttr('opener-hidden'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -19829,6 +21287,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "setFocusReturnTarget",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "target",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                }
+              ],
+              "description": "メニューを閉じたあとのフォーカス復帰先を指定する"
+            },
+            {
               "kind": "field",
               "name": "size",
               "type": {
@@ -19895,6 +21371,13 @@
               },
               "description": "開閉状態",
               "name": "open"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "opener を非表示にして外部トリガー連携する",
+              "name": "opener-hidden"
             },
             {
               "type": {
@@ -37303,6 +38786,176 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/global-menu/global-menu-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultGlobalMenu",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineGlobalMenu",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultGlobalMenu",
+          "declaration": {
+            "name": "defineDefaultGlobalMenu",
+            "module": "packages/components/global-menu/global-menu-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineGlobalMenu",
+          "declaration": {
+            "name": "defineGlobalMenu",
+            "module": "packages/components/global-menu/global-menu-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/global-menu/global-menu-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "globalMenuItemStyles",
+          "default": "css` :host { position: relative; display: flex; align-items: stretch; color: inherit; } [part='trigger'], [part='trigger']:any-link { position: relative; display: flex; align-items: center; column-gap: var(--dads-global-menu-item-gap); box-sizing: border-box; min-height: var(--dads-global-menu-item-min-height); border: 0; background-color: transparent; padding: var(--dads-global-menu-item-padding-y) var(--dads-global-menu-item-padding-x); color: inherit; font: inherit; text-decoration: none; text-decoration-thickness: var(--dads-global-menu-item-text-decoration-thickness); text-underline-offset: var(--dads-global-menu-item-underline-offset); } button[part='trigger'] { cursor: pointer; } [part='start-icon'] { display: none; flex-shrink: 0; width: var(--dads-global-menu-item-start-icon-size); height: var(--dads-global-menu-item-start-icon-size); align-items: center; justify-content: center; } :host([data-has-start-icon]) [part='start-icon'] { display: inline-flex; } [part='label'] { display: inline-flex; align-items: center; min-width: 0; } [part='chevron'] { display: none; margin-top: var(--dads-global-menu-item-chevron-margin-top); box-sizing: content-box; flex-shrink: 0; width: var(--dads-global-menu-item-chevron-size); height: var(--dads-global-menu-item-chevron-size); } :host([data-has-submenu]) [part='chevron'] { display: inline-flex; } :host([expanded]) [part='chevron'] { transform: rotate(180deg); } @media (any-hover: hover) { [part='trigger']:hover { background-color: var(--dads-global-menu-item-hover-bg); } [part='trigger']:hover::after { position: absolute; right: 0; bottom: 0; left: 0; border-bottom: var(--dads-global-menu-item-hover-border-width) solid var(--dads-global-menu-item-hover-border-color); content: ''; } :host([current]) [part='trigger']:hover { color: var(--dads-global-menu-item-current-color-hover); text-decoration: underline; } } :host([current]) [part='trigger'] { background-color: var(--dads-global-menu-item-current-bg); color: var(--dads-global-menu-item-current-color); } :host([current]) [part='trigger']::after { position: absolute; right: 0; bottom: 0; left: 0; border-bottom: var(--dads-global-menu-item-current-border-width) solid var(--dads-global-menu-item-current-border-color); content: ''; } [part='trigger']:focus { outline: none; } [part='trigger']:focus-visible { outline: var(--dads-global-menu-item-focus-outline-width) solid var(--dads-global-menu-item-focus-outline-color); outline-offset: var(--dads-global-menu-item-focus-outline-offset); border-radius: var(--dads-global-menu-item-focus-border-radius); background-color: var(--dads-global-menu-item-focus-background); box-shadow: 0 0 0 var(--dads-global-menu-item-focus-ring-width) var(--dads-global-menu-item-focus-ring-color); z-index: 1; } :host([current]) [part='trigger']:focus-visible { background-color: var(--dads-global-menu-item-current-bg); } ::slotted(*[slot='submenu']) { position: absolute; inset-block-start: 100%; inset-inline-start: 0; } @media (forced-colors: active) { [part='trigger'], [part='trigger']:any-link { color: ButtonText; border-color: ButtonText; background-color: Canvas; } [part='trigger']:focus-visible { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-global-menu-item-focus-ring-width) ButtonText; } } `"
+        },
+        {
+          "kind": "variable",
+          "name": "globalMenuStyles",
+          "default": "css` :host { display: block; color: var(--dads-global-menu-color); font-weight: var(--dads-global-menu-font-weight); font-size: var(--dads-global-menu-font-size); line-height: var(--dads-global-menu-line-height); font-family: var(--dads-global-menu-font-family); letter-spacing: var(--dads-global-menu-letter-spacing); } [part='nav'] { display: block; } [part='list'] { margin: 0; display: flex; align-items: stretch; border-bottom: 1px solid var(--dads-global-menu-border-color); padding: 0; list-style-type: none; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "globalMenuItemStyles",
+          "declaration": {
+            "name": "globalMenuItemStyles",
+            "module": "packages/components/global-menu/global-menu-styles.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "globalMenuStyles",
+          "declaration": {
+            "name": "globalMenuStyles",
+            "module": "packages/components/global-menu/global-menu-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/global-menu/global-menu-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "globalMenuLocalTokens",
+          "default": "css`${globalMenuLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "globalMenuSemanticTokens",
+          "default": "css`${globalMenuSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "globalMenuTokens",
+          "default": "css` ${globalMenuSemanticTokensText} ${globalMenuLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "globalMenuLocalTokens",
+          "declaration": {
+            "name": "globalMenuLocalTokens",
+            "module": "packages/components/global-menu/global-menu-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "globalMenuSemanticTokens",
+          "declaration": {
+            "name": "globalMenuSemanticTokens",
+            "module": "packages/components/global-menu/global-menu-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "globalMenuTokens",
+          "declaration": {
+            "name": "globalMenuTokens",
+            "module": "packages/components/global-menu/global-menu-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/global-menu/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/global-menu/global-menu.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultGlobalMenu",
+          "declaration": {
+            "name": "defineDefaultGlobalMenu",
+            "module": "./global-menu-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineGlobalMenu",
+          "declaration": {
+            "name": "defineGlobalMenu",
+            "module": "./global-menu-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/hamburger-menu-button/hamburger-menu-button-define.ts",
       "declarations": [
         {
@@ -37798,6 +39451,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/menu-list-box/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/global-menu/index.js"
           }
         },
         {
@@ -38332,7 +39993,7 @@
         {
           "kind": "variable",
           "name": "menuListBoxStyles",
-          "default": "css` :host { position: relative; display: block; width: fit-content; min-width: var(--dads-menu-list-box-min-width); color: var(--dads-menu-list-box-color); font-weight: var(--font-weight-400, 400); font-size: var(--dads-menu-list-box-font-size); line-height: var(--dads-menu-list-box-line-height); font-family: var(--dads-menu-list-box-font-family); letter-spacing: var(--dads-menu-list-box-letter-spacing); --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width); --_dads-menu-list-box-popup-border-radius: var(--dads-menu-list-box-popup-border-radius); --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color); --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider); } :host([data-has-popup-scrollbar]) { --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width-scroll); --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color-scroll); --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider-scroll); } [part=\"opener\"] { display: flex; align-items: center; width: 100%; box-sizing: border-box; min-height: var(--dads-menu-list-box-opener-min-height); border-radius: var(--dads-menu-list-box-opener-border-radius); border: var(--dads-menu-list-box-opener-border-width) solid var(--dads-menu-list-box-opener-border-color); background-color: var(--dads-menu-list-box-opener-background); padding-top: var(--dads-menu-list-box-opener-padding-y); padding-bottom: var(--dads-menu-list-box-opener-padding-y); padding-right: var(--dads-menu-list-box-opener-padding-x); padding-left: var(--dads-menu-list-box-opener-padding-x); column-gap: var(--dads-menu-list-box-opener-gap); color: inherit; font: inherit; font-weight: var(--dads-menu-list-box-opener-font-weight); letter-spacing: inherit; } [part=\"opener-label\"] { display: inline-flex; flex: 1 1 auto; min-width: 0; align-items: center; } @media (any-hover: hover) { [part=\"opener\"]:hover { --dads-menu-list-box-opener-background: var(--dads-menu-list-box-opener-hover-background); --dads-menu-list-box-opener-border-color: var(--dads-menu-list-box-opener-hover-border-color); cursor: pointer; text-decoration: underline; text-underline-offset: var(--dads-menu-list-box-opener-underline-offset); } } [part=\"opener\"]:focus { outline: none; } [part=\"opener\"]:focus-visible { outline: var(--dads-menu-list-box-opener-focus-outline-width) solid var(--dads-menu-list-box-opener-focus-outline-color); outline-offset: var(--dads-menu-list-box-opener-focus-outline-offset); background-color: var(--dads-menu-list-box-opener-focus-background); box-shadow: 0 0 0 var(--dads-menu-list-box-opener-focus-ring-width) var(--dads-menu-list-box-opener-focus-ring-color); } [part=\"opener-icon\"] { display: none; flex-shrink: 0; width: var(--dads-menu-list-box-opener-icon-size); height: var(--dads-menu-list-box-opener-icon-size); } :host([data-has-opener-icon]) [part=\"opener-icon\"] { display: inline-flex; } [part=\"opener-arrow\"] { margin-top: var(--dads-menu-list-box-opener-arrow-margin-top); margin-left: var(--dads-menu-list-box-opener-arrow-margin-left); flex-shrink: 0; width: var(--dads-menu-list-box-opener-arrow-size); height: var(--dads-menu-list-box-opener-arrow-size); } [part=\"opener\"][aria-expanded=\"true\"] [part=\"opener-arrow\"] { transform: rotate(180deg); } [part=\"popup\"] { position: absolute; top: 100%; left: 0; z-index: var(--dads-menu-list-box-popup-z-index); box-sizing: border-box; width: max-content; max-height: var(--dads-menu-list-box-popup-max-height); min-width: var(--_dads-menu-list-box-popup-min-width); overflow-y: auto; border-radius: var(--_dads-menu-list-box-popup-border-radius); border: 1px solid var(--_dads-menu-list-box-popup-border-color); background-color: var(--dads-menu-list-box-popup-background); padding: var(--dads-menu-list-box-popup-padding-y) var(--dads-menu-list-box-popup-padding-x); box-shadow: var(--dads-menu-list-box-popup-shadow); } /* hidden 属性は minimal reset の display 指定で上書きされるため、明示的に非表示にする */ [part=\"popup\"][hidden] { display: none; } [part=\"menu\"] { display: block; } :host([data-reserve-item-start-icon-space]) ::slotted(dads-menu-list-item) { --dads-menu-list-item-start-icon-display-empty: inline-flex; } ::slotted(dads-menu-list-item) { border-bottom: var(--_dads-menu-list-box-popup-item-divider); } ::slotted(dads-menu-list-item:last-child) { border-bottom: none; } :host ::slotted([data-menu-list-box-divider]), :host ::slotted(hr) { display: block; box-sizing: border-box; height: 0; border: 0; border-top: 1px solid var( --dads-menu-list-box-divider-color, var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42)) ); /* * margin-block は外部のリセット（例: * { margin: 0 }）で潰れることがあるため、 * デフォルト値の適用は menu-list-box 側で inline-style にも反映する。 */ margin-block: var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem)); margin-inline: 0; position: relative; inset-inline-start: var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)); inline-size: calc( 100% - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) ); } /* Forced colors */ @media (forced-colors: active) { [part=\"opener\"] { border: 1px solid ButtonText; color: ButtonText; background-color: Canvas; } [part=\"opener\"]:focus-visible { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-menu-list-box-opener-focus-ring-width) ButtonText; } [part=\"popup\"] { border-color: ButtonText; background-color: Canvas; box-shadow: none; } } `"
+          "default": "css` :host { position: relative; display: block; width: fit-content; min-width: var(--dads-menu-list-box-min-width); color: var(--dads-menu-list-box-color); font-weight: var(--font-weight-400, 400); font-size: var(--dads-menu-list-box-font-size); line-height: var(--dads-menu-list-box-line-height); font-family: var(--dads-menu-list-box-font-family); letter-spacing: var(--dads-menu-list-box-letter-spacing); --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width); --_dads-menu-list-box-popup-border-radius: var(--dads-menu-list-box-popup-border-radius); --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color); --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider); } :host([data-has-popup-scrollbar]) { --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width-scroll); --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color-scroll); --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider-scroll); } [part=\"opener\"] { display: flex; align-items: center; width: 100%; box-sizing: border-box; min-height: var(--dads-menu-list-box-opener-min-height); border-radius: var(--dads-menu-list-box-opener-border-radius); border: var(--dads-menu-list-box-opener-border-width) solid var(--dads-menu-list-box-opener-border-color); background-color: var(--dads-menu-list-box-opener-background); padding-top: var(--dads-menu-list-box-opener-padding-y); padding-bottom: var(--dads-menu-list-box-opener-padding-y); padding-right: var(--dads-menu-list-box-opener-padding-x); padding-left: var(--dads-menu-list-box-opener-padding-x); column-gap: var(--dads-menu-list-box-opener-gap); color: inherit; font: inherit; font-weight: var(--dads-menu-list-box-opener-font-weight); letter-spacing: inherit; } [part=\"opener-label\"] { display: inline-flex; flex: 1 1 auto; min-width: 0; align-items: center; } @media (any-hover: hover) { [part=\"opener\"]:hover { --dads-menu-list-box-opener-background: var(--dads-menu-list-box-opener-hover-background); --dads-menu-list-box-opener-border-color: var(--dads-menu-list-box-opener-hover-border-color); cursor: pointer; text-decoration: underline; text-underline-offset: var(--dads-menu-list-box-opener-underline-offset); } } [part=\"opener\"]:focus { outline: none; } [part=\"opener\"]:focus-visible { outline: var(--dads-menu-list-box-opener-focus-outline-width) solid var(--dads-menu-list-box-opener-focus-outline-color); outline-offset: var(--dads-menu-list-box-opener-focus-outline-offset); background-color: var(--dads-menu-list-box-opener-focus-background); box-shadow: 0 0 0 var(--dads-menu-list-box-opener-focus-ring-width) var(--dads-menu-list-box-opener-focus-ring-color); } [part=\"opener-icon\"] { display: none; flex-shrink: 0; width: var(--dads-menu-list-box-opener-icon-size); height: var(--dads-menu-list-box-opener-icon-size); } :host([data-has-opener-icon]) [part=\"opener-icon\"] { display: inline-flex; } [part=\"opener-arrow\"] { margin-top: var(--dads-menu-list-box-opener-arrow-margin-top); margin-left: var(--dads-menu-list-box-opener-arrow-margin-left); flex-shrink: 0; width: var(--dads-menu-list-box-opener-arrow-size); height: var(--dads-menu-list-box-opener-arrow-size); } [part=\"opener\"][aria-expanded=\"true\"] [part=\"opener-arrow\"] { transform: rotate(180deg); } :host([opener-hidden]) [part=\"opener\"] { display: none; } [part=\"popup\"] { position: absolute; top: 100%; left: 0; z-index: var(--dads-menu-list-box-popup-z-index); box-sizing: border-box; width: max-content; max-height: var(--dads-menu-list-box-popup-max-height); min-width: var(--_dads-menu-list-box-popup-min-width); overflow-y: auto; border-radius: var(--_dads-menu-list-box-popup-border-radius); border: 1px solid var(--_dads-menu-list-box-popup-border-color); background-color: var(--dads-menu-list-box-popup-background); padding: var(--dads-menu-list-box-popup-padding-y) var(--dads-menu-list-box-popup-padding-x); box-shadow: var(--dads-menu-list-box-popup-shadow); } /* hidden 属性は minimal reset の display 指定で上書きされるため、明示的に非表示にする */ [part=\"popup\"][hidden] { display: none; } [part=\"menu\"] { display: block; } :host([data-reserve-item-start-icon-space]) ::slotted(dads-menu-list-item) { --dads-menu-list-item-start-icon-display-empty: inline-flex; } ::slotted(dads-menu-list-item) { border-bottom: var(--_dads-menu-list-box-popup-item-divider); } ::slotted(dads-menu-list-item:last-child) { border-bottom: none; } :host ::slotted([data-menu-list-box-divider]), :host ::slotted(hr) { display: block; box-sizing: border-box; height: 0; border: 0; border-top: 1px solid var( --dads-menu-list-box-divider-color, var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42)) ); /* * margin-block は外部のリセット（例: * { margin: 0 }）で潰れることがあるため、 * デフォルト値の適用は menu-list-box 側で inline-style にも反映する。 */ margin-block: var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem)); margin-inline: 0; position: relative; inset-inline-start: var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)); inline-size: calc( 100% - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) ); } /* Forced colors */ @media (forced-colors: active) { [part=\"opener\"] { border: 1px solid ButtonText; color: ButtonText; background-color: Canvas; } [part=\"opener\"]:focus-visible { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-menu-list-box-opener-focus-ring-width) ButtonText; } [part=\"popup\"] { border-color: ButtonText; background-color: Canvas; box-shadow: none; } } `"
         }
       ],
       "exports": [

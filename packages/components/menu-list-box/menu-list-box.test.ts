@@ -286,4 +286,62 @@ describe('DadsMenuListBox - 基本', () => {
 
     expect(element.hasAttribute('data-has-opener-icon')).toBe(false);
   });
+
+  it('opener-hidden の場合 opener クリックでは開閉しない', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box opener-hidden label="メニュー">
+        <dads-menu-list-item>One</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const opener = getShadowContent(element, '#opener') as HTMLButtonElement | null;
+    const popup = getShadowContent(element, '#popup') as HTMLElement | null;
+    if (!opener || !popup) throw new Error('shadow parts not found');
+
+    expect(popup.hidden).toBe(true);
+
+    opener.click();
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    expect(popup.hidden).toBe(true);
+    expect(element.hasAttribute('open')).toBe(false);
+  });
+
+  it('setFocusReturnTarget で Escape 後のフォーカス復帰先を指定できる', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <div>
+        <button id="return-target" type="button">return target</button>
+        <dads-menu-list-box opener-hidden label="メニュー">
+          <dads-menu-list-item>One</dads-menu-list-item>
+          <dads-menu-list-item>Two</dads-menu-list-item>
+        </dads-menu-list-box>
+      </div>
+    `);
+    await waitForCustomElement(element);
+
+    const box = element.querySelector('dads-menu-list-box') as HTMLElement | null;
+    const returnTarget = element.querySelector('#return-target') as HTMLButtonElement | null;
+    if (!box || !returnTarget) throw new Error('target elements not found');
+
+    await waitForCustomElement(box);
+
+    const maybe = box as unknown as { setFocusReturnTarget?: (target: HTMLElement | null) => void };
+    maybe.setFocusReturnTarget?.(returnTarget);
+    box.setAttribute('open', '');
+
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    expect(box.hasAttribute('open')).toBe(false);
+    expect(document.activeElement).toBe(returnTarget);
+  });
 });

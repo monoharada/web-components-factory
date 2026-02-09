@@ -74,6 +74,9 @@ export * from './menu-list/index.js';
 // メニューリストボックス
 export * from './menu-list-box/index.js';
 
+// グローバルメニュー
+export * from './global-menu/index.js';
+
 // 検索ボックス
 export * from './search-box/index.js';
 
