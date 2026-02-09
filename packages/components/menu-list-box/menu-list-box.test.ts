@@ -345,3 +345,35 @@ describe('DadsMenuListBox - 基本', () => {
     expect(document.activeElement).toBe(returnTarget);
   });
 });
+
+describe('DadsMenuListBox - styles', () => {
+  let element: HTMLElement | null = null;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+    element = null;
+  });
+
+  it('data-has-opener-icon 時の opener-icon は中央揃えされる', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"></svg>
+        <dads-menu-list-item>Item</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    expect(element.hasAttribute('data-has-opener-icon')).toBe(true);
+
+    const openerIcon = getShadowContent(element, '[part="opener-icon"]') as HTMLElement | null;
+    if (!openerIcon) throw new Error('opener icon not found');
+
+    const styles = getComputedStyle(openerIcon);
+    expect(styles.display).toBe('inline-flex');
+    expect(styles.alignItems).toBe('center');
+  });
+});
