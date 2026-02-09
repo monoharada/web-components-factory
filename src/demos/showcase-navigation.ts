@@ -2012,6 +2012,273 @@ export const demos = {
   `,
 
 
+  languageSelector: () => `
+    <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ランゲージセレクター</h2>
+      <p style="color: #666; margin-bottom: 24px;">
+        DADS準拠の言語切替UI。opener（text/icon）、サイズ（regular/small）、キーボード操作、選択状態を提供します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          opener は表示言語に関わらず英語で表示し、項目は各言語表記で示します。
+        </p>
+        <a11y-annotate target-selector="dads-language-selector">
+          <div style="display: grid; place-content: center; padding: 40px 0;">
+            <dads-language-selector size="md" opener="text">
+              <dads-menu-list-item data-value="ja">日本語</dads-menu-list-item>
+              <dads-menu-list-item data-value="en" current>English</dads-menu-list-item>
+              <dads-menu-list-item data-value="zh-cn">简体中文</dads-menu-list-item>
+              <dads-menu-list-item data-value="zh-tw">繁體中文</dads-menu-list-item>
+              <dads-menu-list-item data-value="ko">한국어</dads-menu-list-item>
+              <dads-menu-list-item data-value="es">Español</dads-menu-list-item>
+              <dads-menu-list-item data-value="id">Bahasa Indonesia</dads-menu-list-item>
+              <dads-menu-list-item data-value="vi">Tiếng Việt</dads-menu-list-item>
+            </dads-language-selector>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          Props/Attrs と CSS vars の変更が Preview に即時反映されます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-language-selector',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-language-selector data-api-target size="md" opener="text">
+                  <dads-menu-list-item data-value="ja">日本語</dads-menu-list-item>
+                  <dads-menu-list-item data-value="en" current>English</dads-menu-list-item>
+                  <dads-menu-list-item data-value="zh-cn">简体中文</dads-menu-list-item>
+                  <dads-menu-list-item data-value="zh-tw">繁體中文</dads-menu-list-item>
+                  <dads-menu-list-item data-value="ko">한국어</dads-menu-list-item>
+                  <dads-menu-list-item data-value="es">Español</dads-menu-list-item>
+                  <dads-menu-list-item data-value="id">Bahasa Indonesia</dads-menu-list-item>
+                  <dads-menu-list-item data-value="vi">Tiếng Việt</dads-menu-list-item>
+                </dads-language-selector>
+              </div>
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-language-selector size="md" opener="text">
+                      <dads-menu-list-item data-value="ja">日本語</dads-menu-list-item>
+                      <dads-menu-list-item data-value="en" current>English</dads-menu-list-item>
+                      <dads-menu-list-item data-value="zh-cn">简体中文</dads-menu-list-item>
+                      <dads-menu-list-item data-value="zh-tw">繁體中文</dads-menu-list-item>
+                      <dads-menu-list-item data-value="ko">한국어</dads-menu-list-item>
+                      <dads-menu-list-item data-value="es">Español</dads-menu-list-item>
+                      <dads-menu-list-item data-value="id">Bahasa Indonesia</dads-menu-list-item>
+                      <dads-menu-list-item data-value="vi">Tiếng Việt</dads-menu-list-item>
+                    </dads-language-selector>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>opener</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'text' | 'icon'</code></td>
+                        <td><code>text</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="opener" data-api-attr="opener" data-default="text">
+                              <option value="text" selected>text</option>
+                              <option value="icon">icon</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>opener 表示（Language / LANG）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'sm' | 'md'</code></td>
+                        <td><code>md</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="size" data-api-attr="size" data-default="md">
+                              <option value="md" selected>md</option>
+                              <option value="sm">sm</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>サイズ（md: 44px / sm: 36px）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>bold</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="bold" data-api-attr="bold" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>opener の文字太さ</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>Language</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="label" value="Language" data-api-attr="label" data-default="Language"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ラベル（slot 未使用時）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-menu-list-box-opener-padding-x</code></th>
+                        <td><code>4px / 16px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-menu-list-box-opener-padding-x" value="" data-api-css-var="--dads-menu-list-box-opener-padding-x" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>opener 左右余白</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-menu-list-box-opener-gap</code></th>
+                        <td><code>4px / 8px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-menu-list-box-opener-gap" value="" data-api-css-var="--dads-menu-list-box-opener-gap" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>opener 要素間隔</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>--dads-language-selector-check-color</code></th>
+                        <td><code>--color-primitive-blue-1000</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-language-selector-check-color" value="" data-api-css-var="--dads-language-selector-check-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>選択チェック色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">イベント利用例</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          <code>dads-change</code> を受け取り、<code>getSelectedLanguage()</code> で選択中の言語を取得します。
+        </p>
+        <div style="display: grid; gap: 12px; place-content: start; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px;">
+          <dads-language-selector data-language-selector-events size="md" opener="text">
+            <dads-menu-list-item data-value="ja">日本語</dads-menu-list-item>
+            <dads-menu-list-item data-value="en" current>English</dads-menu-list-item>
+            <dads-menu-list-item data-value="zh-cn">简体中文</dads-menu-list-item>
+            <dads-menu-list-item data-value="zh-tw">繁體中文</dads-menu-list-item>
+            <dads-menu-list-item data-value="ko">한국어</dads-menu-list-item>
+            <dads-menu-list-item data-value="es">Español</dads-menu-list-item>
+            <dads-menu-list-item data-value="id">Bahasa Indonesia</dads-menu-list-item>
+            <dads-menu-list-item data-value="vi">Tiếng Việt</dads-menu-list-item>
+          </dads-language-selector>
+          <div data-language-selector-output style="font-size: 14px; color: #1f2937;">未選択</div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Text Opener（Regular）</h3>
+        <dads-language-selector size="md" opener="text">
+          <dads-menu-list-item data-value="ja" current>日本語</dads-menu-list-item>
+          <dads-menu-list-item data-value="en">English</dads-menu-list-item>
+          <dads-menu-list-item data-value="zh-cn">简体中文</dads-menu-list-item>
+          <dads-menu-list-item data-value="zh-tw">繁體中文</dads-menu-list-item>
+          <dads-menu-list-item data-value="ko">한국어</dads-menu-list-item>
+          <dads-menu-list-item data-value="es">Español</dads-menu-list-item>
+          <dads-menu-list-item data-value="id">Bahasa Indonesia</dads-menu-list-item>
+          <dads-menu-list-item data-value="vi">Tiếng Việt</dads-menu-list-item>
+        </dads-language-selector>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Icon Opener（Small）</h3>
+        <dads-language-selector size="sm" opener="icon">
+          <dads-menu-list-item data-value="ja">日本語</dads-menu-list-item>
+          <dads-menu-list-item data-value="en" current>English</dads-menu-list-item>
+          <dads-menu-list-item data-value="zh-cn">简体中文</dads-menu-list-item>
+          <dads-menu-list-item data-value="zh-tw">繁體中文</dads-menu-list-item>
+          <dads-menu-list-item data-value="ko">한국어</dads-menu-list-item>
+          <dads-menu-list-item data-value="es">Español</dads-menu-list-item>
+          <dads-menu-list-item data-value="id">Bahasa Indonesia</dads-menu-list-item>
+          <dads-menu-list-item data-value="vi">Tiếng Việt</dads-menu-list-item>
+        </dads-language-selector>
+      </section>
+
+      <script>
+        (() => {
+          const host = document.querySelector('[data-language-selector-events]');
+          const output = document.querySelector('[data-language-selector-output]');
+          if (!(host instanceof HTMLElement) || !(output instanceof HTMLElement)) return;
+
+          const update = () => {
+            const canRead = typeof host.getSelectedLanguage === 'function';
+            const selected = canRead ? host.getSelectedLanguage() : null;
+            if (!selected) {
+              output.textContent = '未選択';
+              return;
+            }
+
+            output.textContent = 'selected: ' + selected.value + ' (' + selected.label + ')';
+          };
+
+          host.addEventListener('dads-change', update);
+          update();
+        })();
+      </script>
+    </div>
+  `,
+
   stepNavigation: () => `
     <div class="demo-step-navigation" style="padding: 40px; max-width: 1200px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ステップナビゲーション</h2>

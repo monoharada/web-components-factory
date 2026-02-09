@@ -4,6 +4,38 @@
 
 ---
 
+## [2026-02-09] Language Selector 実装での学び（a11y注釈・イベントAPI・テスト網羅）
+**タグ**: #accessibility #testing #webcomponents #language-selector #a11y-annotate
+
+### 概要
+`dads-language-selector` 実装時に、見た目・挙動が正しくても `a11y-annotate` が期待表示されない事象が起きた。原因はコンポーネント実装ではなく、**注釈メタデータ（CEM注入元）の未定義**だった。
+
+### つまずきと原因
+- 症状: `?a11y=1&component=languageSelector` で注釈パネル/コールアウトが弱い、または出ない
+- 原因: `docs/knowledge/a11y-annotations.json` に `dads-language-selector` エントリが未登録
+- 補足: `a11y-annotate` は `custom-elements.json` の `custom.a11yAnnotations` を読むため、CEM注入元が空だとUI側で頑張っても解決しない
+
+### 学び
+1. **a11y注釈は実装コードではなく CEMメタデータの品質で決まる**
+2. Menu系コンポーネントは、最低でも `opener / popup / current item / selected icon` の4観点を注釈化するとレビュー可能性が上がる
+3. 公開イベント（`dads-change`）と公開取得API（`getSelectedLanguage()`）は、必ず相互整合テストを持つべき
+4. 継承コンポーネントでも、キーボード操作（Arrow/Home/End/Escape）を統合テストで1本確認しておくと回帰検出が速い
+
+### 実施した対策
+- `docs/knowledge/a11y-annotations.json` に `dads-language-selector` 注釈を追加
+- `npm run cem:analyze` で CEMへ反映
+- `language-selector.test.ts` に以下を追加
+  - キーボード操作と `aria-expanded` 同期
+  - `selectedIndex` fallback
+  - `slot="label"` / `slot="icon"` の明示優先
+  - 明示 `start-icon` と自動チェックアイコンの競合防止
+
+### 再発防止
+- 新規コンポーネント追加時は「注釈定義ファイル追加 → CEM再生成 → `validate:wc`」を同一PRで必須化する
+- `agents:verify` 実行前に、生成物差分（`custom-elements.json` / `registry/install-registry.json`）を意図通り含める
+
+---
+
 ## [2026-02-06] MutationObserverの自己再帰でUIが固まる問題と防止ルール
 **タグ**: #webcomponents #mutationobserver #debug #performance #breadcrumb
 

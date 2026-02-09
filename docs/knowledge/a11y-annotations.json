@@ -1714,6 +1714,101 @@
       }
     ]
   },
+  "dads-language-selector": {
+    "version": 1,
+    "summary": "ランゲージセレクター仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "opener は aria-haspopup=\"menu\" を持ち、開閉状態は aria-expanded で表します。",
+        "ポップアップ内のメニューは role=\"menu\"、項目は role=\"menuitem\" として扱われます。",
+        "選択中の言語は current / aria-current=\"true\" の単一選択で表現されます。"
+      ],
+      "keyboard": [
+        "opener で ArrowDown / ArrowUp を押すとメニューを開き、先頭/末尾項目へフォーカス移動します。",
+        "メニュー内は ArrowUp / ArrowDown / Home / End で項目移動できます。",
+        "Escape でメニューを閉じ、opener にフォーカス復帰します。"
+      ],
+      "zoom": [
+        "サイズは md（44px相当）と sm（36px相当）を提供します。",
+        "ポップアップは max-height と overflow-y により、ズーム時もスクロール操作できます。"
+      ],
+      "states": [
+        "open 属性と opener の aria-expanded で開閉状態を同期します。",
+        "選択中項目にはチェックアイコンが付与され、視覚的に現在言語を示します。"
+      ],
+      "labels": [
+        "label 属性または slot=\"label\" で opener ラベルを提供します。",
+        "opener=\"text\" の既定値は \"Language\"、opener=\"icon\" の既定値は \"LANG\" です。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "opener",
+        "title": "opener（開閉トリガー）",
+        "label": "aria-haspopup=\"menu\"",
+        "description": "メニューの開閉を行うボタン。aria-expanded で状態を通知します。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"opener\"]"
+        }
+      },
+      {
+        "id": "opener-label",
+        "title": "opener ラベル",
+        "label": "slot=\"label\" / label attr",
+        "description": "言語選択UIのラベル表示領域。未指定時は Language/LANG を補完します。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"opener-label\"]"
+        }
+      },
+      {
+        "id": "popup-menu",
+        "title": "ポップアップメニュー",
+        "label": "role=\"menu\"",
+        "description": "選択候補を提示するメニュー領域。矢印キー/Home/End で移動できます。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"popup\"]"
+        }
+      },
+      {
+        "id": "current-item",
+        "title": "選択中項目",
+        "label": "current / aria-current",
+        "description": "現在選択されている言語項目。単一選択で同期されます。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "hostSelector": "dads-menu-list-item[current]",
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "current-item-check",
+        "title": "選択状態アイコン",
+        "label": "start-icon",
+        "description": "選択中項目の先頭に表示されるチェックアイコン領域です。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "hostSelector": "dads-menu-list-item[current]",
+          "scope": "shadow",
+          "selector": "[part=\"start-icon\"]"
+        }
+      }
+    ]
+  },
   "dads-list": {
     "version": 1,
     "summary": "箇条書きリスト仕様（アクセシビリティ注釈）",
