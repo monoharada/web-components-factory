@@ -347,15 +347,33 @@ describe('DadsMenuListBox - 基本', () => {
 });
 
 describe('DadsMenuListBox - styles', () => {
+  let element: HTMLElement | null = null;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+    element = null;
+  });
+
   it('data-has-opener-icon 時の opener-icon は中央揃えされる', async () => {
-    const { menuListBoxStyles } = await import('./menu-list-box-styles.js');
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
 
-    const cssText = Array.from(menuListBoxStyles.cssRules ?? [])
-      .map((rule) => rule.cssText)
-      .join('\n');
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"></svg>
+        <dads-menu-list-item>Item</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
 
-    expect(cssText).toContain(':host([data-has-opener-icon]) [part="opener-icon"]');
-    expect(cssText).toContain('display: inline-flex');
-    expect(cssText).toContain('align-items: center');
+    expect(element.hasAttribute('data-has-opener-icon')).toBe(true);
+
+    const openerIcon = getShadowContent(element, '[part="opener-icon"]') as HTMLElement | null;
+    if (!openerIcon) throw new Error('opener icon not found');
+
+    const styles = getComputedStyle(openerIcon);
+    expect(styles.display).toBe('inline-flex');
+    expect(styles.alignItems).toBe('center');
   });
 });

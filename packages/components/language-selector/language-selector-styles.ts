@@ -6,7 +6,7 @@ import { css } from '../../core/web-components.js';
 export const languageSelectorStyles = css`
   :host([opener="icon"]) [part="opener"] {
     min-width: auto;
-    min-height: var(--spacing-11, 2.75rem);
+    min-height: var(--dads-menu-list-box-opener-min-height);
     padding-top: 0;
     padding-bottom: 0;
     display: grid;

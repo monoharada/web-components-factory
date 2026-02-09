@@ -437,6 +437,39 @@ describe('DadsLanguageSelector - 基本', () => {
     expect(items[1].getAttribute('size')).toBe('small');
   });
 
+  it('opener=icon は size に応じて opener の min-height が切り替わる', async () => {
+    const { defineDefaultLanguageSelector } = await import('./language-selector-define.js');
+    defineDefaultLanguageSelector();
+
+    element = renderWebComponent(`
+      <dads-language-selector
+        opener="icon"
+        size="sm"
+        style="
+          --menu-list-box-opener-min-height-sm: 36px;
+          --menu-list-box-opener-min-height-md: 44px;
+        "
+      >
+        <dads-menu-list-item value="ja">日本語</dads-menu-list-item>
+      </dads-language-selector>
+    `);
+    await waitForCustomElement(element);
+    await waitForItems(element);
+
+    const opener = getShadowContent(element, '#opener') as HTMLElement | null;
+    if (!opener) throw new Error('opener not found');
+
+    const smMinHeight = getComputedStyle(opener).minHeight;
+    expect(smMinHeight).toContain('36px');
+
+    element.setAttribute('size', 'md');
+    await waitForMicrotask();
+
+    const mdMinHeight = getComputedStyle(opener).minHeight;
+    expect(mdMinHeight).toContain('44px');
+    expect(mdMinHeight).not.toBe(smMinHeight);
+  });
+
   it('item の明示 size（small）は不必要に上書きしない', async () => {
     const { defineDefaultLanguageSelector } = await import('./language-selector-define.js');
     defineDefaultLanguageSelector();
