@@ -106,6 +106,7 @@ npm run ci              # CI pipeline
 - [ ] `docs/knowledge/a11y-annotations.json` に注釈（categories / callouts）を記載
 - [ ] unit test で ARIA 状態変化、キーボード操作、イベント発火を確認
 - [ ] E2E / Fidelity テストを `e2e-evidence/` に追加
+- [ ] Menu系セレクター実装時は `docs/rules/language-selector-implementation-rules.md` の互換・注釈・テスト要件を満たす
 
 ---
 

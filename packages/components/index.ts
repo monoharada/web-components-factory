@@ -74,6 +74,9 @@ export * from './menu-list/index.js';
 // メニューリストボックス
 export * from './menu-list-box/index.js';
 
+// ランゲージセレクター
+export * from './language-selector/index.js';
+
 // 検索ボックス
 export * from './search-box/index.js';
 
