@@ -337,6 +337,26 @@ describe('DadsUtilityLink - 基本', () => {
     expect(element.hasAttribute('data-show-tail-icon')).toBe(false);
   });
 
+  it('ネストされた slot="tail-icon" 要素は custom tail-icon として扱わない', async () => {
+    const { defineDefaultUtilityLink } = await import('./utility-link-define');
+    defineDefaultUtilityLink();
+
+    element = renderWebComponent(
+      '<dads-utility-link href="#" target="_blank"><span><svg slot="tail-icon" aria-hidden="true"></svg></span>Link</dads-utility-link>',
+    );
+    await waitForCustomElement(element);
+
+    const tailIcon = getShadowContent(element, '#tail-icon') as HTMLElement | null;
+    const tailSlot = getShadowContent(element, '#tail-icon-slot') as HTMLSlotElement | null;
+    const tailIconSvg = getShadowContent(element, '#tail-icon-svg') as SVGElement | null;
+
+    expect(tailIcon?.hasAttribute('hidden')).toBe(false);
+    expect(tailSlot?.hasAttribute('hidden')).toBe(true);
+    expect(tailIconSvg?.hasAttribute('hidden')).toBe(false);
+    expect(element.getAttribute('data-tail-icon-kind')).toBe('new-window');
+    expect(element.hasAttribute('data-show-tail-icon')).toBe(true);
+  });
+
   it('target/rel/download 属性がリンクへ同期される', async () => {
     const { defineDefaultUtilityLink } = await import('./utility-link-define');
     defineDefaultUtilityLink();

@@ -297,8 +297,10 @@ export class DadsUtilityLink extends TypographyWebComponent {
       if (isMeaningfulNode(node)) return true;
     }
 
-    const slottedElements = Array.from(this.querySelectorAll(`[slot="${slotName}"]`));
-    return slottedElements.some((element) => !element.hasAttribute('hidden'));
+    const directSlottedElements = Array.from(this.children).filter(
+      (element) => element.getAttribute('slot') === slotName
+    );
+    return directSlottedElements.some((element) => !element.hasAttribute('hidden'));
   }
 
   #getAssignedNodesWithoutFallback(slot: HTMLSlotElement | null): Node[] {
