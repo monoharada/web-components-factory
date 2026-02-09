@@ -11,7 +11,7 @@ import {
 export const demos = {
   dialog: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Dialog（Modal）</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">モーダルダイアログ</h2>
       <p style="color: #666; margin-bottom: 32px;">
         commandfor / command で宣言的に開閉できるモーダルダイアログです。light dismiss は行わず、Esc と明示操作で閉じます。
       </p>
