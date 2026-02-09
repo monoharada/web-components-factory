@@ -76,10 +76,6 @@ describe('DadsUtilityLink - 基本', () => {
       'https://example.com',
       'http://example.com',
       '/path/to/page',
-      'docs/page',
-      'page.html',
-      '?q=1',
-      '?q=1#section',
       './relative',
       '../parent',
       '#anchor',
@@ -102,7 +98,15 @@ describe('DadsUtilityLink - 基本', () => {
     const { defineDefaultUtilityLink } = await import('./utility-link-define');
     defineDefaultUtilityLink();
 
-    const invalidUrls = ['javascript:alert(1)', 'data:text/html;base64,PHNjcmlwdA==', 'ftp://example.com'];
+    const invalidUrls = [
+      'javascript:alert(1)',
+      'data:text/html;base64,PHNjcmlwdA==',
+      'ftp://example.com',
+      '?q=1',
+      '?q=1#section',
+      'docs/page',
+      'page.html',
+    ];
 
     for (const url of invalidUrls) {
       const testEl = renderWebComponent(`<dads-utility-link href="${url}">Link</dads-utility-link>`);

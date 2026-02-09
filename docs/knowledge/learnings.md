@@ -4,6 +4,30 @@
 
 ---
 
+## [2026-02-09] `href` 安全化ロジック共通化での学び（Issue #74）
+**タグ**: #security #utility-link #global-menu #testing #refactor
+
+### 概要
+`global-menu` と `utility-link` がそれぞれ持っていた `href` 安全化判定を `packages/utils/safe-href.ts` に集約した。許可ルールを明文化して1箇所で管理し、コンポーネント間の仕様差分を解消した。
+
+### つまずきと原因
+- `utility-link` は `docs/page` や `?q=1` を許可していた一方、`global-menu` とは許可集合が一致していなかった。
+- それぞれにローカル関数があるため、ルール変更時に片側だけ更新されるリスクがあった。
+
+### 学び
+1. `href` の安全化判定は「許可リストを固定した共通関数」に寄せると、仕様逸脱と回帰を抑えやすい。
+2. `javascript:` / `data:` の拒否だけでなく、`docs/page` や `?q=1` のような曖昧な相対入力を明示的に拒否する境界テストが重要。
+3. コンポーネント側テストだけでなく、共通ユーティリティ単体テストを持つと修正影響を局所化できる。
+
+### 実施した対策
+- `packages/utils/safe-href.ts` に `isSafeHref(href: string)` を新規追加。
+- `global-menu` / `utility-link` からローカル実装を削除し、共通関数へ置換。
+- `utility-link` の許可/拒否テスト期待値を Issue #74 方針に揃え、`global-menu` 側にも `?q=1` 拒否ケースを追加。
+
+### 再発防止
+- 許可ルール変更は必ず `safe-href.ts` と `safe-href.test.ts` を同時更新する。
+- 仕様にないスキーム・パス形式を追加許可する場合は、Issue で明示合意してから反映する。
+
 ## [2026-02-09] Utility Link 実装での学び（download優先・slot可視判定・APIデモ）
 **タグ**: #utility-link #webcomponents #a11y #testing #dads
 

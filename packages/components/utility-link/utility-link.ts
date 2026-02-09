@@ -10,6 +10,7 @@ import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { withReset } from '../../styles/reset-css.js';
 import { iconPaths } from '../../utils/icons.js';
+import { isSafeHref } from '../../utils/safe-href.js';
 import { utilityLinkTokens } from './utility-link-tokens.js';
 import { utilityLinkStyles } from './utility-link-styles.js';
 
@@ -37,28 +38,6 @@ function isMeaningfulNode(node: Node): boolean {
   }
   if (node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim() !== '') return true;
   return false;
-}
-
-function isSafeHref(href: string): boolean {
-  const value = href.trim();
-  if (value === '') return false;
-
-  if (
-    value === '#' ||
-    value.startsWith('/') ||
-    value.startsWith('#') ||
-    value.startsWith('./') ||
-    value.startsWith('../') ||
-    value.startsWith('?')
-  ) {
-    return true;
-  }
-
-  const match = value.match(/^([a-zA-Z][a-zA-Z\d+.-]*):/);
-  if (!match) return true;
-
-  const scheme = match[1].toLowerCase();
-  return scheme === 'http' || scheme === 'https' || scheme === 'mailto' || scheme === 'tel';
 }
 
 /**
