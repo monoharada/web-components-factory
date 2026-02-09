@@ -316,6 +316,7 @@ describe('DadsGlobalMenu - 基本', () => {
     element = renderWebComponent(`
       <dads-global-menu>
         <dads-global-menu-item href="javascript:alert(1)">Unsafe</dads-global-menu-item>
+        <dads-global-menu-item href="?q=1">Query</dads-global-menu-item>
         <dads-global-menu-item href="./guide">Relative</dads-global-menu-item>
         <dads-global-menu-item href="../guide">Parent</dads-global-menu-item>
         <dads-global-menu-item href="https://example.com">External</dads-global-menu-item>
@@ -332,11 +333,12 @@ describe('DadsGlobalMenu - 基本', () => {
     const hrefs = items.map((item) => (getShadowContent(item, '#trigger') as HTMLAnchorElement | null)?.getAttribute('href'));
 
     expect(hrefs[0]).toBe('#');
-    expect(hrefs[1]).toBe('./guide');
-    expect(hrefs[2]).toBe('../guide');
-    expect(hrefs[3]).toBe('https://example.com');
-    expect(hrefs[4]).toBe('mailto:test@example.com');
-    expect(hrefs[5]).toBe('tel:+81000000000');
+    expect(hrefs[1]).toBe('#');
+    expect(hrefs[2]).toBe('./guide');
+    expect(hrefs[3]).toBe('../guide');
+    expect(hrefs[4]).toBe('https://example.com');
+    expect(hrefs[5]).toBe('mailto:test@example.com');
+    expect(hrefs[6]).toBe('tel:+81000000000');
   });
 
   it('リンク属性（target/rel/download）が trigger に同期される', async () => {

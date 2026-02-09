@@ -16,6 +16,7 @@ import { TypographyWebComponent } from '../../core/typography/typography-web-com
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { applySpacingTokens } from '../../styles/spacing-tokens.js';
 import { withReset } from '../../styles/reset-css.js';
+import { isSafeHref } from '../../utils/safe-href.js';
 import { globalMenuTokens } from './global-menu-tokens.js';
 import { globalMenuStyles, globalMenuItemStyles } from './global-menu-styles.js';
 
@@ -56,19 +57,6 @@ function isMeaningfulNode(node: Node): boolean {
   if (node.nodeType === Node.ELEMENT_NODE) return true;
   if (node.nodeType === Node.TEXT_NODE && (node.textContent ?? '').trim() !== '') return true;
   return false;
-}
-
-function isSafeHref(href: string): boolean {
-  return (
-    href === '#' ||
-    href.startsWith('/') ||
-    href.startsWith('#') ||
-    href.startsWith('./') ||
-    href.startsWith('../') ||
-    /^https?:\/\//i.test(href) ||
-    /^mailto:/i.test(href) ||
-    /^tel:/i.test(href)
-  );
 }
 
 /**

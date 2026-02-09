@@ -49494,6 +49494,40 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/utils/safe-href.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isSafeHref",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "parameters": [
+            {
+              "name": "href",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "href の安全性チェック\n\n許可:\n- #\n- / で始まる絶対パス\n- # で始まるフラグメント\n- ./ または ../ で始まる相対パス\n- http/https\n- mailto\n- tel"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isSafeHref",
+          "declaration": {
+            "name": "isSafeHref",
+            "module": "packages/utils/safe-href.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/utils/validation.ts",
       "declarations": [
         {
