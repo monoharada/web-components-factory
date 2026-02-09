@@ -182,6 +182,35 @@ const HEADER_CONTAINER_LANGUAGE_SELECTOR_ICON = `
   </dads-language-selector>
 `;
 
+const renderDrawerMenuItem = (item: HeaderMenuItemSpec): string => {
+  if (typeof item === 'string') {
+    return `<li><a href="#">${item}</a></li>`;
+  }
+
+  const submenu = Array.isArray(item.submenu) && item.submenu.length > 0
+    ? `
+      <ul class="header-container-demo__mobile-drawer-submenu">
+        ${item.submenu.map((subItem) => `<li><a href="#">${subItem}</a></li>`).join('\n')}
+      </ul>
+    `
+    : '';
+
+  return `
+    <li>
+      <a href="#">${item.label}</a>
+      ${submenu}
+    </li>
+  `;
+};
+
+const renderDrawerMenuContent = (ariaLabel: string, items: HeaderMenuItemSpec[]): string => `
+  <nav aria-label="${ariaLabel}">
+    <ul class="header-container-demo__mobile-drawer-menu">
+      ${items.map((item) => renderDrawerMenuItem(item)).join('\n')}
+    </ul>
+  </nav>
+`;
+
 const HEADER_CONTAINER_MOBILE_MENU_ITEMS = Array.from(
   { length: 7 },
   (_, index) => `<li><a href="#">モバイルメニュー ${index + 1}</a></li>`,
@@ -194,6 +223,14 @@ const HEADER_CONTAINER_MOBILE_DRAWER_CONTENT = `
     </ul>
   </nav>
 `;
+
+const HEADER_CONTAINER_TABLET_DRAWER_CONTENT = renderDrawerMenuContent('タブレットメニュー', [
+  ...HEADER_CONTAINER_MENU_THEME_PORTAL,
+  {
+    label: '通知一覧',
+    submenu: ['お知らせ', '審査状況', '未対応一覧'],
+  },
+]);
 
 export const demos = {
   headerContainer: () => `
@@ -380,6 +417,39 @@ export const demos = {
           --dads-drawer-content-padding-block: 16px;
         }
 
+        .header-container-demo__tablet-drawer {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+          --dads-drawer-width: 74%;
+          --dads-drawer-max-width: 74%;
+          --dads-drawer-border-width: 1px;
+          --dads-drawer-backdrop-background: rgba(0, 0, 0, 0.14);
+        }
+
+        .header-container-demo__tablet-drawer[open] {
+          pointer-events: auto;
+        }
+
+        .header-container-demo__tablet-root {
+          position: relative;
+          block-size: 100%;
+          min-block-size: 100%;
+        }
+
+        .header-container-demo__tablet-header-layer {
+          position: relative;
+          z-index: 1;
+        }
+
+        .header-container-demo__tablet-safe-area {
+          position: relative;
+          min-block-size: 100%;
+          block-size: 100%;
+          background: #f8fafc;
+        }
+
         .header-container-demo__mobile-drawer--fullscreen {
           --dads-drawer-width: 100%;
           --dads-drawer-max-width: 100%;
@@ -419,6 +489,14 @@ export const demos = {
           background: #e2e8f0;
           text-decoration: underline;
           text-underline-offset: 3px;
+        }
+
+        .header-container-demo__mobile-drawer-submenu {
+          margin: 8px 0 0;
+          padding: 0 0 0 16px;
+          list-style: none;
+          display: grid;
+          gap: 6px;
         }
 
         .header-container-demo__theme-grid {
@@ -771,18 +849,43 @@ export const demos = {
           <article class="header-container-demo__layout-card">
             <h4 class="header-container-demo__layout-title">Tablet / Medium</h4>
             <p class="header-container-demo__layout-note">logo + utility + hamburger（global-menuはdrawerへ）</p>
-            <dads-device-mock class="header-container-demo__layout-device" device="tablet" visible-height="170px">
-              <div class="header-container-demo__surface">
-                <dads-header-container mode="medium" aria-label="タブレットヘッダー">
-                  <a slot="logo" class="header-container-demo__logo-link" href="#">
-                    <span class="header-container-demo__logo-mark" aria-hidden="true"></span>
-                    手続きポータル
-                  </a>
-                  <div slot="utility" class="header-container-demo__utility-links">
-                    ${renderUtilityLinks(HEADER_CONTAINER_UTILITY_LINKS_TABLET)}
+            <dads-device-mock class="header-container-demo__layout-device" device="tablet" visible-height="520px">
+              <div id="header-container-tablet-root" class="header-container-demo__surface header-container-demo__tablet-root">
+                <div class="header-container-demo__tablet-safe-area">
+                  <div id="header-container-tablet-header-layer" class="header-container-demo__tablet-header-layer">
+                    <dads-header-container mode="medium" aria-label="タブレットヘッダー">
+                      <a slot="logo" class="header-container-demo__logo-link" href="#">
+                        <span class="header-container-demo__logo-mark" aria-hidden="true"></span>
+                        手続きポータル
+                      </a>
+                      <div slot="utility" class="header-container-demo__utility-links">
+                        ${renderUtilityLinks(HEADER_CONTAINER_UTILITY_LINKS_TABLET)}
+                      </div>
+                      <dads-hamburger-menu-button
+                        id="header-container-tablet-trigger"
+                        slot="hamburger-menu"
+                        variant="standard"
+                        type="menu"
+                        lang="ja"
+                        command="show-modal"
+                        commandfor="#header-container-tablet-drawer"
+                        aria-controls="header-container-tablet-drawer"
+                        aria-expanded="false"
+                      ></dads-hamburger-menu-button>
+                    </dads-header-container>
                   </div>
-                  <dads-hamburger-menu-button slot="hamburger-menu" variant="standard" type="menu" lang="ja"></dads-hamburger-menu-button>
-                </dads-header-container>
+
+                  <dads-drawer
+                    id="header-container-tablet-drawer"
+                    class="header-container-demo__tablet-drawer"
+                    data-preview-contained
+                    placement="right"
+                    close-label="閉じる"
+                  >
+                    <span slot="title">メニュー</span>
+                    ${HEADER_CONTAINER_TABLET_DRAWER_CONTENT}
+                  </dads-drawer>
+                </div>
               </div>
             </dads-device-mock>
           </article>
@@ -910,17 +1013,27 @@ export const demos = {
             if (!hostRoot || !hostRoot.isConnected) return;
             if (!mod || !mod.defaultCommandStore || !mod.defaultCommandStore.bind) return;
 
+            var tabletRoot = hostRoot.querySelector('#header-container-tablet-root');
+            if (tabletRoot && !tabletRoot.hasAttribute('data-header-container-tablet-command-store-bound')) {
+              tabletRoot.setAttribute('data-header-container-tablet-command-store-bound', 'true');
+              mod.defaultCommandStore.bind(tabletRoot);
+            }
+
             var mobileRoot = hostRoot.querySelector('#header-container-mobile-root');
             if (mobileRoot && !mobileRoot.hasAttribute('data-header-container-mobile-command-store-bound')) {
               mobileRoot.setAttribute('data-header-container-mobile-command-store-bound', 'true');
               mod.defaultCommandStore.bind(mobileRoot);
             }
 
-            var bindDrawerPair = function(drawerId, triggerId, triggerLayerId) {
-              var drawer = mobileRoot.querySelector('#' + drawerId);
-              var trigger = mobileRoot.querySelector('#' + triggerId);
-              var triggerLayer = mobileRoot.querySelector('#' + triggerLayerId);
+            var bindDrawerPair = function(root, drawerId, triggerId, triggerLayerId) {
+              if (!root) return;
+
+              var drawer = root.querySelector('#' + drawerId);
+              var trigger = root.querySelector('#' + triggerId);
+              var triggerLayer = triggerLayerId ? root.querySelector('#' + triggerLayerId) : null;
               if (!drawer || !trigger) return;
+              if (drawer.hasAttribute('data-header-container-drawer-bound')) return;
+              drawer.setAttribute('data-header-container-drawer-bound', 'true');
 
               var syncTrigger = function(isOpen) {
                 trigger.setAttribute('type', isOpen ? 'close' : 'menu');
@@ -933,6 +1046,18 @@ export const demos = {
                 }
               };
 
+              var syncFromDrawerState = function() {
+                syncTrigger(drawer.hasAttribute('open'));
+              };
+
+              var observer = new MutationObserver(function() {
+                syncFromDrawerState();
+              });
+              observer.observe(drawer, {
+                attributes: true,
+                attributeFilter: ['open'],
+              });
+
               drawer.addEventListener('dads-drawer-open', function() {
                 syncTrigger(true);
               });
@@ -941,10 +1066,18 @@ export const demos = {
                 syncTrigger(false);
               });
 
-              syncTrigger(drawer.hasAttribute('open'));
+              syncFromDrawerState();
             };
 
             bindDrawerPair(
+              tabletRoot,
+              'header-container-tablet-drawer',
+              'header-container-tablet-trigger',
+              'header-container-tablet-header-layer'
+            );
+
+            bindDrawerPair(
+              mobileRoot,
               'header-container-mobile-drawer',
               'header-container-mobile-trigger',
               'header-container-mobile-trigger-layer'

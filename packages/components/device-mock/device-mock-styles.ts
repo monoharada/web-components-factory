@@ -25,7 +25,10 @@ export const deviceMockStyles = css`
 
   :host([data-frame-clipped]) [part='base'] {
     block-size: var(--dads-device-mock-visible-height);
+    /* Prevent focus/anchor scroll from drifting the clipped viewport. */
     overflow: hidden;
+    overflow: clip;
+    overscroll-behavior: none;
   }
 
   [part='frame'] {

@@ -4,6 +4,33 @@
 
 ---
 
+## [2026-02-09] `data-preview-contained` ドロワーは「focus + scroll保持」を同時に設計する
+**タグ**: #drawer #header-container #device-mock #accessibility #scroll
+
+### 概要
+ヘッダーのタブレット作例でドロワー開閉を入れた際、開いた直後にプレビューが上方向へずれる事象が発生した。  
+原因は、`visible-height` で切り取り済みのモック内でフォーカス遷移が走り、ブラウザの自動スクロールと競合したこと。
+
+### 根本原因
+- `dads-drawer` の open 適用後に初期フォーカスが入り、`data-preview-contained` 環境でも viewport scroll が変化した
+- `device-mock` 側がクリップ表示（`visible-height`）のため、わずかな scroll 変化でも見た目の「上欠け」が目立った
+
+### 再発防止ルール
+1. `data-preview-contained` で開く overlay は、開閉前後の viewport scroll を保存・復元する
+2. 初期フォーカス/復帰フォーカスは `focus({ preventScroll: true })` を優先する
+3. クリップ表示コンテナには `overscroll-behavior: none` を付与し、視覚ドリフトを抑制する
+
+### 適用例（今回）
+- `packages/components/drawer/drawer.ts`
+  - `focusWithoutScroll()` を追加して初期フォーカス/復帰フォーカスを統一
+  - `#captureViewportScroll()` / `#restoreViewportScroll()` を追加し、`#applyOpenState()` で復元
+- `packages/components/device-mock/device-mock-styles.ts`
+  - `[data-frame-clipped]` の `part="base"` に `overflow: clip` と `overscroll-behavior: none` を追加
+
+### 対象実装
+- `/packages/components/drawer/drawer.ts`
+- `/packages/components/device-mock/device-mock-styles.ts`
+
 ## [2026-02-09] デモ追加時は「未参照レンダラ関数」のcoverage低下を先に潰す
 **タグ**: #testing #coverage #demos #vitest #quality-gate
 
