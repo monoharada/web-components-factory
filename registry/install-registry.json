@@ -150,6 +150,18 @@
         "componentDir": "packages/components/description-list"
       }
     },
+    "device-mock": {
+      "id": "device-mock",
+      "tags": [
+        "dads-device-mock"
+      ],
+      "define": "defineDeviceMock",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/device-mock"
+      }
+    },
     "dialog": {
       "id": "dialog",
       "tags": [
@@ -213,6 +225,21 @@
         "componentDir": "packages/components/file-upload"
       }
     },
+    "global-menu": {
+      "id": "global-menu",
+      "tags": [
+        "dads-global-menu",
+        "dads-global-menu-item"
+      ],
+      "define": "defineGlobalMenu",
+      "call": "prefix-registry",
+      "deps": [
+        "menu-list-box"
+      ],
+      "source": {
+        "componentDir": "packages/components/global-menu"
+      }
+    },
     "hamburger-menu-button": {
       "id": "hamburger-menu-button",
       "tags": [
@@ -223,6 +250,18 @@
       "deps": [],
       "source": {
         "componentDir": "packages/components/hamburger-menu-button"
+      }
+    },
+    "header-container": {
+      "id": "header-container",
+      "tags": [
+        "dads-header-container"
+      ],
+      "define": "defineHeaderContainer",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/header-container"
       }
     },
     "heading": {
@@ -247,6 +286,20 @@
       "deps": [],
       "source": {
         "componentDir": "packages/components/input-text"
+      }
+    },
+    "language-selector": {
+      "id": "language-selector",
+      "tags": [
+        "dads-language-selector"
+      ],
+      "define": "defineLanguageSelector",
+      "call": "prefix-registry",
+      "deps": [
+        "menu-list-box"
+      ],
+      "source": {
+        "componentDir": "packages/components/language-selector"
       }
     },
     "list": {
@@ -440,6 +493,18 @@
       "source": {
         "componentDir": "packages/components/typography"
       }
+    },
+    "utility-link": {
+      "id": "utility-link",
+      "tags": [
+        "dads-utility-link"
+      ],
+      "define": "defineUtilityLink",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/utility-link"
+      }
     }
   },
   "tags": {
@@ -457,14 +522,19 @@
     "dads-code-block": "code-block",
     "dads-date-picker": "date-picker",
     "dads-description-list": "description-list",
+    "dads-device-mock": "device-mock",
     "dads-dialog": "dialog",
     "dads-disclosure": "disclosure",
     "dads-drawer": "drawer",
     "dads-fieldset": "fieldset",
     "dads-file-upload": "file-upload",
+    "dads-global-menu": "global-menu",
+    "dads-global-menu-item": "global-menu",
     "dads-hamburger-menu-button": "hamburger-menu-button",
+    "dads-header-container": "header-container",
     "dads-heading": "heading",
     "dads-input-text": "input-text",
+    "dads-language-selector": "language-selector",
     "dads-list": "list",
     "dads-list-item": "list",
     "dads-menu-list": "menu-list",
@@ -482,6 +552,7 @@
     "dads-table": "table",
     "dads-table-control": "table-control",
     "dads-text": "typography",
-    "dads-textarea": "textarea"
+    "dads-textarea": "textarea",
+    "dads-utility-link": "utility-link"
   }
 }

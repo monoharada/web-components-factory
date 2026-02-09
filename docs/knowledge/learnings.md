@@ -4,6 +4,28 @@
 
 ---
 
+## [2026-02-09] デモ追加時は「未参照レンダラ関数」のcoverage低下を先に潰す
+**タグ**: #testing #coverage #demos #vitest #quality-gate
+
+### 概要
+`frontend-postflight` の base 比較で `functions` が低下した主因は、`src/demos/*.ts` に追加されたレンダラ関数がテストから一度も呼ばれていなかったことだった。  
+機能不具合ではなくても、未参照関数が増えると全体coverageが落ちて品質ゲートで失敗する。
+
+### 根本原因
+- `src/demos/extra.ts` / `src/demos/showcase-form.ts` / `src/demos/showcase-date.ts` / `src/demos/dialog.ts` にレンダラが追加された
+- 既存テストがこれら4ファイルを import しておらず、関数カバレッジが 0% のまま積み上がった
+
+### 再発防止ルール
+1. 新しい demo ファイルを追加・拡張したら、最低1本のスモークテストで `demos` の全レンダラ関数を実行する
+2. `frontend-postflight` では base 比較を早めに実行し、`functions` 低下を先に検知する
+3. 挙動に影響しない coverage 補完は、UI仕様テストとは分離してスモークテストとして管理する
+
+### 適用例（今回）
+- `src/demos/legacy-demos-smoke.test.ts` を追加し、対象4ファイルの全 `demos.*()` を実行して非空HTMLを検証
+
+### 対象実装
+- `/src/demos/legacy-demos-smoke.test.ts`
+
 ## [2026-02-06] MutationObserverの自己再帰でUIが固まる問題と防止ルール
 **タグ**: #webcomponents #mutationobserver #debug #performance #breadcrumb
 

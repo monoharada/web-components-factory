@@ -11,6 +11,7 @@ knowledge/
 ├── patterns.md                  # 発見したパターン
 ├── skill-map.md                 # vendor install + AI理解のスキル図
 ├── performance-average-case.md  # averageCase の計測/運用ルール
+├── device-mock.md               # dads-device-mock の実装/運用ガイド（AI向け）
 ├── improvements.md              # 改善提案
 ├── decisions.md                 # 技術的決定事項
 └── accessibility-guidelines.md  # アクセシビリティガイドライン (DADS準拠)

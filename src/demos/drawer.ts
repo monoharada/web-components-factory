@@ -124,8 +124,8 @@ export const demos = {
         .drawer-demo__mobile-mock {
           display: block;
           inline-size: 100%;
-          --dads-mobile-mock-frame-width: calc(402 / 16 * 1rem);
-          --dads-mobile-mock-screen-background: #f5f5f5;
+          --dads-device-mock-frame-width: calc(405 / 16 * 1rem);
+          --dads-device-mock-screen-background: #f5f5f5;
           margin: 0 auto;
         }
         .drawer-demo__mobile-safe-area {
@@ -557,7 +557,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">モバイル全面展開作例（Figma: 8268:36014 / 8268:36020）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">モバイル全面展開作例</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           左は全面タイプ、右は右タイプ（light dismiss）です。提供いただいたスマホモック SVG に合わせて再現しています。
         </p>
@@ -565,7 +565,7 @@ export const demos = {
         <div class="drawer-demo__mobile-grid" id="drawer-mobile-root">
           <article class="drawer-demo__mobile-card">
             <h4 class="drawer-demo__mobile-card-title">Mobile: Right Menu</h4>
-            <dads-mobile-mock class="drawer-demo__mobile-mock">
+            <dads-device-mock class="drawer-demo__mobile-mock" device="mobile">
               <div class="drawer-demo__mobile-safe-area">
                 <div class="drawer-demo__mobile-trigger-layer" id="drawer-mobile-trigger-layer">
                   <header class="drawer-demo__mobile-header">
@@ -591,12 +591,12 @@ export const demos = {
                   ${DRAWER_MOBILE_CONTENT}
                 </dads-drawer>
               </div>
-            </dads-mobile-mock>
+            </dads-device-mock>
           </article>
 
           <article class="drawer-demo__mobile-card">
             <h4 class="drawer-demo__mobile-card-title">右タイプ（light-dismiss）</h4>
-            <dads-mobile-mock class="drawer-demo__mobile-mock">
+            <dads-device-mock class="drawer-demo__mobile-mock" device="mobile">
               <div class="drawer-demo__mobile-safe-area">
                 <div
                   class="drawer-demo__mobile-trigger-layer drawer-demo__mobile-trigger-layer--right"
@@ -625,7 +625,7 @@ export const demos = {
                   ${DRAWER_MOBILE_CONTENT}
                 </dads-drawer>
               </div>
-            </dads-mobile-mock>
+            </dads-device-mock>
           </article>
         </div>
       </section>
@@ -775,7 +775,7 @@ export const demos = {
         })();
       <\/script>
 
-      ${modulePreloadScript(['dads-drawer', 'dads-hamburger-menu-button', 'dads-mobile-mock', 'dads-switch', 'a11y-annotate'])}
+      ${modulePreloadScript(['dads-drawer', 'dads-hamburger-menu-button', 'dads-device-mock', 'dads-switch', 'a11y-annotate'])}
     </div>
   `,
 };
