@@ -469,6 +469,18 @@
       "source": {
         "componentDir": "packages/components/typography"
       }
+    },
+    "utility-link": {
+      "id": "utility-link",
+      "tags": [
+        "dads-utility-link"
+      ],
+      "define": "defineUtilityLink",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/utility-link"
+      }
     }
   },
   "tags": {
@@ -514,6 +526,7 @@
     "dads-table": "table",
     "dads-table-control": "table-control",
     "dads-text": "typography",
-    "dads-textarea": "textarea"
+    "dads-textarea": "textarea",
+    "dads-utility-link": "utility-link"
   }
 }

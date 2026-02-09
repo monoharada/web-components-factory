@@ -2250,6 +2250,291 @@ export const demos = {
   `,
 
 
+  utilityLink: () => `
+    <div style="padding: 40px; max-width: 1120px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ユーティリティリンク</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        DADS準拠の補助リンク。先頭アイコンは任意、末尾アイコンは <code>target=&quot;_blank&quot;</code> または <code>download</code> 時に表示します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-utility-link">
+          <div style="display: grid; place-content: center; padding: 48px 0;">
+            <dads-utility-link href="#" target="_blank">
+              <svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true">
+                <path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" />
+              </svg>
+              リンクテキスト
+            </dads-utility-link>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 32px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          属性とCSS varsの変更が Preview に即時反映されます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-utility-link',
+            'a11y-annotate',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-utility-link data-api-target href="#" target="_blank">
+                  <svg
+                    data-utility-link-lead-icon
+                    slot="lead-icon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentcolor"
+                    aria-hidden="true"
+                  >
+                    <path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" />
+                  </svg>
+                  リンクテキスト
+                </dads-utility-link>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-utility-link href="#" target="_blank">
+                      <svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true">
+                        <path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" />
+                      </svg>
+                      リンクテキスト
+                    </dads-utility-link>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>href</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>#</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="href"
+                              value="#"
+                              data-api-attr="href"
+                              data-default="#"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>リンク先URL</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>target</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>_blank</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="target" data-api-attr="target" data-default="_blank">
+                              <option value="_blank" selected>_blank</option>
+                              <option value="_self">_self</option>
+                              <option value="">(unset)</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td><code>download</code> が無い場合に <code>_blank</code> で新規タブアイコンを表示</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>rel</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>(empty)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="rel"
+                              value=""
+                              data-api-attr="rel"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>リンクrel（自動補完なし）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>download</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="download" data-api-attr="download" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>download属性の付与（末尾はダウンロードアイコンを表示）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>lead-icon</code></th>
+                        <td><code>slot</code></td>
+                        <td><code>lead-icon</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <label
+                              for="utility-link-lead-icon-visibility"
+                              style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"
+                            >
+                              lead-icon
+                            </label>
+                            <select id="utility-link-lead-icon-visibility" aria-label="lead-icon" data-api-target-selector="[data-utility-link-lead-icon]" data-api-attr="hidden" data-default="">
+                              <option value="" selected>show</option>
+                              <option value="true">hide</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>先頭アイコンの表示/非表示</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-utility-link-label-color</code></th>
+                        <td><code>--color-neutral-solid-gray-800</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-utility-link-label-color" value="" data-api-css-var="--dads-utility-link-label-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ラベル文字色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-utility-link-icon-color</code></th>
+                        <td><code>--color-neutral-solid-gray-900</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-utility-link-icon-color" value="" data-api-css-var="--dads-utility-link-icon-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アイコン色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-utility-link-underline-thickness</code></th>
+                        <td><code>1px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-utility-link-underline-thickness" value="" data-api-css-var="--dads-utility-link-underline-thickness" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>通常時の下線太さ</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-utility-link-underline-thickness-hover</code></th>
+                        <td><code>3px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-utility-link-underline-thickness-hover" value="" data-api-css-var="--dads-utility-link-underline-thickness-hover" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ホバー時の下線太さ</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-utility-link-focus-outline-color</code></th>
+                        <td><code>--color-neutral-black</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-utility-link-focus-outline-color" value="" data-api-css-var="--dads-utility-link-focus-outline-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカスのアウトライン色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-utility-link-focus-background</code></th>
+                        <td><code>--color-primitive-yellow-300</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-utility-link-focus-background" value="" data-api-css-var="--dads-utility-link-focus-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>フォーカス時背景色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Examples（Figma Link Units）</h3>
+        <div style="display: grid; gap: 20px; max-width: 820px;">
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Units = 2</p>
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 1rem;">
+              <dads-utility-link href="#" target="_blank">
+                <svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" /></svg>
+                リンクテキスト
+              </dads-utility-link>
+              <dads-utility-link href="#" target="_blank">
+                <svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" /></svg>
+                リンクテキスト
+              </dads-utility-link>
+            </div>
+          </div>
+
+          <div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 8px;">Units = 3 / 4 / 5</p>
+            <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 1rem;">
+              <dads-utility-link href="#" target="_blank"><svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" /></svg>リンクテキスト</dads-utility-link>
+              <dads-utility-link href="#" target="_blank"><svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" /></svg>リンクテキスト</dads-utility-link>
+              <dads-utility-link href="#" target="_blank"><svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" /></svg>リンクテキスト</dads-utility-link>
+              <dads-utility-link href="#" target="_blank"><svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" /></svg>リンクテキスト</dads-utility-link>
+              <dads-utility-link href="#" target="_blank"><svg slot="lead-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z" /></svg>リンクテキスト</dads-utility-link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <script type="module">
+        await import('dads-utility-link');
+        await import('dads-switch');
+        await import('a11y-annotate');
+      </script>
+    </div>
+  `,
+
+
   languageSelector: () => `
     <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ランゲージセレクター</h2>

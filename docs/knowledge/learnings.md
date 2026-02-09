@@ -4,6 +4,33 @@
 
 ---
 
+## [2026-02-09] Utility Link 実装での学び（download優先・slot可視判定・APIデモ）
+**タグ**: #utility-link #webcomponents #a11y #testing #dads
+
+### 概要
+`dads-utility-link` 実装では、`target="_blank"` と `download` の同時指定時のふるまい、および `slot="lead-icon"` の可視判定が落とし穴になった。結果として、**download時は新規タブ挙動よりダウンロード挙動を優先**し、slot内容の `hidden` 変更にも追従する設計に整理した。
+
+### つまずきと原因
+- `lead-icon` の表示切替で、要素を残したまま `hidden` を付けると見た目が更新されないケースがあった。
+- `target="_blank"` と `download` が同居すると、UI（末尾アイコン）と実際のリンク属性の意図が曖昧になりやすい。
+- APIデモの `<select>` は `aria-label` を持っていても、差分lintのヒューリスティックで警告される場合がある。
+
+### 学び
+1. `download` を持つリンクは、コンポーネント内部では `target` を反映しないほうが挙動が明確。
+2. slotの有無判定は `slotchange` だけでなく、`hidden` など属性変更の監視も必要。
+3. デモUIは `aria-label` に加えて `label` 関連付けを入れておくと監査耐性が上がる。
+
+### 実施した対策
+- `download` 属性がある場合、内部 `<a>` の `target` を無効化し、末尾アイコンはダウンロードアイコンを優先表示。
+- `lead-icon` は `MutationObserver` で `slot` / `hidden` の変更を監視し、`data-has-lead-icon` を再評価。
+- APIデモの `lead-icon` 制御 `<select>` に `label` + `id` を付与。
+
+### 再発防止
+- 「見た目の状態（アイコン）」「リンク実属性（target/download）」は常に同じ優先順位で設計する。
+- slot可視判定テストは、追加/削除だけでなく `hidden` の付け外しまで含める。
+
+---
+
 ## [2026-02-09] Language Selector 実装での学び（a11y注釈・イベントAPI・テスト網羅）
 **タグ**: #accessibility #testing #webcomponents #language-selector #a11y-annotate
 

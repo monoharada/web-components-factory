@@ -59,6 +59,9 @@ export * from './page-navigation/index.js';
 // パンくずリスト
 export * from './breadcrumb/index.js';
 
+// ユーティリティリンク
+export * from './utility-link/index.js';
+
 // テーブル
 export * from './table/index.js';
 
