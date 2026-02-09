@@ -11,6 +11,7 @@ import { demos as showcaseTableControl } from './demos/showcase-table-control.js
 import { demos as extra } from './demos/extra.js';
 import { demos as dialog } from './demos/dialog.js';
 import { demos as drawer } from './demos/drawer.js';
+import { demos as headerContainer } from './demos/header-container.js';
 import { demos as hamburgerMenuButton } from './demos/hamburger-menu-button.js';
 
 export const demos = {
@@ -22,6 +23,7 @@ export const demos = {
   ...extra,
   ...dialog,
   ...drawer,
+  ...headerContainer,
   ...hamburgerMenuButton,
 } as const;
 

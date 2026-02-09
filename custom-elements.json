@@ -10645,6 +10645,434 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/device-mock/device-mock.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "デバイスモック\n\ndesktop / tablet / mobile の端末フレームと safe-area コンテナを提供します。",
+          "name": "DadsDeviceMock",
+          "cssProperties": [
+            {
+              "description": "フレーム幅",
+              "name": "--dads-device-mock-frame-width"
+            },
+            {
+              "description": "フレーム比率",
+              "name": "--dads-device-mock-aspect-ratio"
+            },
+            {
+              "description": "画面領域の内側余白",
+              "name": "--dads-device-mock-screen-inset"
+            },
+            {
+              "description": "画面領域の角丸",
+              "name": "--dads-device-mock-screen-radius"
+            },
+            {
+              "description": "上部safe-area",
+              "name": "--dads-device-mock-safe-area-top"
+            },
+            {
+              "description": "画面背景色",
+              "name": "--dads-device-mock-screen-background"
+            },
+            {
+              "description": "フレーム線幅",
+              "name": "--dads-device-mock-frame-stroke-width"
+            },
+            {
+              "description": "フレーム線色",
+              "name": "--dads-device-mock-frame-stroke-color"
+            },
+            {
+              "description": "モック全体の可視高さ（未指定時は全高）",
+              "name": "--dads-device-mock-visible-height"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "外側ラッパー",
+              "name": "base"
+            },
+            {
+              "description": "端末フレーム SVG",
+              "name": "frame"
+            },
+            {
+              "description": "端末枠線の矩形",
+              "name": "frame-shape"
+            },
+            {
+              "description": "safe-area コンテンツ領域",
+              "name": "safe-area"
+            },
+            {
+              "description": "画面領域",
+              "name": "screen"
+            }
+          ],
+          "slots": [
+            {
+              "description": "safe-area 内に配置するコンテンツ",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#frame",
+              "privacy": "private",
+              "type": {
+                "text": "SVGSVGElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#frameShape",
+              "privacy": "private",
+              "type": {
+                "text": "SVGRectElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncDeviceState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncFrameGeometry",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "device",
+                  "type": {
+                    "text": "DadsDeviceMockDevice"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncVisibleHeight",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-device-mock', template: html` <div part=\"base\"> <div id=\"canvas\"> <svg part=\"frame\" viewBox=\"0 0 405 864\" aria-hidden=\"true\" focusable=\"false\"> <rect part=\"frame-shape\" x=\"3\" y=\"3\" width=\"399\" height=\"858\" rx=\"27\" stroke-width=\"6\"></rect> </svg> <div part=\"screen\"> <div part=\"safe-area\"> <slot></slot> </div> </div> </div> </div> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), deviceMockTokens, deviceMockStyles, ], 'minimal', ), attributes: [PropertyAttr('device'), PropertyAttr('visible-height')], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "device",
+              "type": {
+                "text": "DadsDeviceMockDevice"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'desktop'|'tablet'|'mobile'"
+              },
+              "description": "デバイス種別",
+              "name": "device"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "モック全体の可視高さ（例: 220px, 16rem）",
+              "name": "visible-height"
+            }
+          ],
+          "superclass": {
+            "name": "WebComponent",
+            "module": "/packages/core/web-components.js"
+          },
+          "tagName": "dads-device-mock",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/device-mock/device-mock.ts",
+          "definitionPath": "./packages/components/device-mock/device-mock.ts",
+          "typeDefinitionPath": "./packages/components/device-mock/device-mock.ts",
+          "cssStates": [],
+          "custom": {
+            "componentId": "device-mock",
+            "install": {
+              "id": "device-mock",
+              "define": "defineDeviceMock",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/device-mock"
+              },
+              "tags": [
+                "dads-device-mock"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDeviceMock",
+          "declaration": {
+            "name": "DadsDeviceMock",
+            "module": "packages/components/device-mock/device-mock.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/device-mock/device-mock.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/device-mock/device-mock.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-device-mock",
+          "declaration": {
+            "name": "DadsDeviceMock",
+            "module": "./packages/components/device-mock/device-mock.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/dialog/dialog.ts",
       "declarations": [
         {
@@ -12367,6 +12795,16 @@
               "default": "null"
             },
             {
+              "kind": "method",
+              "name": "#captureViewportScroll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Readonly<{ x: number; y: number }> | null"
+                }
+              }
+            },
+            {
               "kind": "field",
               "name": "#closeButton",
               "privacy": "private",
@@ -12753,6 +13191,24 @@
                   "text": "void"
                 }
               }
+            },
+            {
+              "kind": "method",
+              "name": "#restoreViewportScroll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "position",
+                  "type": {
+                    "text": "Readonly<{ x: number; y: number }> | null"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -17718,6 +18174,658 @@
           "declaration": {
             "name": "DadsHamburgerMenuButton",
             "module": "./packages/components/hamburger-menu-button/hamburger-menu-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/header-container/header-container.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "ヘッダーコンテナコンポーネント",
+          "name": "DadsHeaderContainer",
+          "cssProperties": [
+            {
+              "description": "インライン余白",
+              "name": "--dads-header-container-inline-padding"
+            },
+            {
+              "description": "1段目の最小高さ",
+              "name": "--dads-header-container-primary-min-block-size"
+            },
+            {
+              "description": "メニュー段の最小高さ",
+              "name": "--dads-header-container-global-menu-min-block-size"
+            },
+            {
+              "description": "境界線色",
+              "name": "--dads-header-container-border-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルート領域",
+              "name": "base"
+            },
+            {
+              "description": "グローバルメニュー領域",
+              "name": "global-menu"
+            },
+            {
+              "description": "ハンバーガーメニュー領域",
+              "name": "hamburger-menu"
+            },
+            {
+              "description": "ロゴ領域",
+              "name": "logo"
+            },
+            {
+              "description": "1段目レイアウト領域",
+              "name": "primary-row"
+            },
+            {
+              "description": "補助リンク領域",
+              "name": "utility"
+            }
+          ],
+          "slots": [
+            {
+              "description": "グローバルメニュー領域",
+              "name": "global-menu"
+            },
+            {
+              "description": "ハンバーガーメニュー領域",
+              "name": "hamburger-menu"
+            },
+            {
+              "description": "ロゴ領域",
+              "name": "logo"
+            },
+            {
+              "description": "補助リンク/ユーティリティ領域",
+              "name": "utility"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#globalMenuPart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#globalMenuSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#hamburgerMenuPart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#hamburgerMenuSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#lightDomObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#onViewportResize",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#resolveEffectiveMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Exclude<DadsHeaderContainerMode, 'auto'>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupLightDomObserver",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupSlotListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#subscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAccessibleName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLayoutState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncModeAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSlotFlags",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#utilityPart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#utilitySlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-header-container', template: html` <header part=\"base\" id=\"base\"> <div part=\"primary-row\" id=\"primary-row\"> <div part=\"logo\" id=\"logo\"> <slot name=\"logo\" id=\"logo-slot\"></slot> </div> <div part=\"utility\" id=\"utility\"> <slot name=\"utility\" id=\"utility-slot\"></slot> </div> <div part=\"hamburger-menu\" id=\"hamburger-menu\"> <slot name=\"hamburger-menu\" id=\"hamburger-menu-slot\"></slot> </div> </div> <div part=\"global-menu\" id=\"global-menu\"> <slot name=\"global-menu\" id=\"global-menu-slot\"></slot> </div> </header> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), headerContainerTokens, headerContainerStyles, ], 'minimal', ), attributes: [PropertyAttr('mode'), PropertyAttr('aria-label')], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "type": {
+                "text": "DadsHeaderContainerMode"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ヘッダー領域のアクセシブル名",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "'auto' | 'wide-full' | 'wide-slim' | 'medium' | 'compact'"
+              },
+              "description": "レイアウトモード",
+              "name": "mode"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-header-container",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/header-container/header-container.ts",
+          "definitionPath": "./packages/components/header-container/header-container.ts",
+          "typeDefinitionPath": "./packages/components/header-container/header-container.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ヘッダーコンテナ仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ルートは header 要素で、logo / utility / global-menu / hamburger-menu の領域を提供します。",
+                  "mode に応じて 1段構成・2段構成を切り替えます。"
+                ],
+                "keyboard": [
+                  "logo・utility・global-menu 内のリンクは Tab でフォーカスして操作できます。",
+                  "hamburger-menu スロットに配置したボタンでモバイルメニューを開閉します。"
+                ],
+                "zoom": [
+                  "高さ・余白・境界線はトークンで管理し、拡大表示時も判読性を維持します。"
+                ],
+                "states": [
+                  "mode=\"auto\" の場合は viewport 幅に応じて data-effective-mode が変化します。",
+                  "slot の有無に応じて utility / global-menu / hamburger-menu を表示・非表示に切り替えます。"
+                ],
+                "labels": [
+                  "aria-label を指定すると、ヘッダー領域のアクセシブル名として使用します。",
+                  "logo スロットの要素はサービス識別情報として機能します。"
+                ],
+                "motion": [
+                  "アニメーションは前提としません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "logo",
+                  "title": "ロゴ領域",
+                  "label": "logo",
+                  "description": "サービス名やロゴを配置する領域です。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"logo\"]"
+                  }
+                },
+                {
+                  "id": "utility",
+                  "title": "ユーティリティ領域",
+                  "label": "utility",
+                  "description": "補助リンク（ヘルプ・言語切替など）を配置する領域です。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"utility\"]"
+                  }
+                },
+                {
+                  "id": "global-menu",
+                  "title": "グローバルメニュー領域",
+                  "label": "global-menu",
+                  "description": "wide-full / wide-slim で表示される主要ナビゲーション領域です。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"global-menu\"]"
+                  }
+                },
+                {
+                  "id": "hamburger-menu",
+                  "title": "ハンバーガーメニュー領域",
+                  "label": "hamburger-menu",
+                  "description": "medium / compact で表示されるモバイルナビゲーションの操作領域です。",
+                  "category": "keyboard",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"hamburger-menu\"]"
+                  }
+                },
+                {
+                  "id": "base",
+                  "title": "ヘッダー領域",
+                  "label": "header",
+                  "description": "ヘッダー全体のルート領域です。",
+                  "category": "semantics",
+                  "mode": "panel",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "primary-row",
+                  "title": "主段レイアウト",
+                  "label": "primary-row",
+                  "description": "logo / utility / hamburger を配置する1段目のレイアウト領域です。",
+                  "category": "semantics",
+                  "mode": "panel",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"primary-row\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "header-container",
+            "install": {
+              "id": "header-container",
+              "define": "defineHeaderContainer",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/header-container"
+              },
+              "tags": [
+                "dads-header-container"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsHeaderContainer",
+          "declaration": {
+            "name": "DadsHeaderContainer",
+            "module": "packages/components/header-container/header-container.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/header-container/header-container.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/header-container/header-container.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-header-container",
+          "declaration": {
+            "name": "DadsHeaderContainer",
+            "module": "./packages/components/header-container/header-container.ts"
           }
         }
       ]
@@ -40464,6 +41572,176 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/device-mock/device-mock-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultDeviceMock",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDeviceMock",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-device-mock`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultDeviceMock",
+          "declaration": {
+            "name": "defineDefaultDeviceMock",
+            "module": "packages/components/device-mock/device-mock-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDeviceMock",
+          "declaration": {
+            "name": "defineDeviceMock",
+            "module": "packages/components/device-mock/device-mock-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/device-mock/device-mock-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "deviceMockStyles",
+          "default": "css` :host { display: block; inline-size: 100%; min-inline-size: 0; } [part='base'] { position: relative; inline-size: min(100%, var(--dads-device-mock-frame-width)); margin-inline: auto; } #canvas { position: relative; inline-size: 100%; aspect-ratio: var(--dads-device-mock-aspect-ratio); } :host([data-frame-clipped]) [part='base'] { block-size: var(--dads-device-mock-visible-height); /* Prevent focus/anchor scroll from drifting the clipped viewport. */ overflow: hidden; overflow: clip; overscroll-behavior: none; } [part='frame'] { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; pointer-events: none; z-index: 5; } [part='frame-shape'] { fill: none; stroke: var(--dads-device-mock-frame-stroke-color); stroke-width: var(--dads-device-mock-frame-stroke-width); } [part='screen'] { position: absolute; inset: var(--dads-device-mock-screen-inset); border-radius: var(--dads-device-mock-screen-radius); background: var(--dads-device-mock-screen-background); overflow: hidden; } [part='safe-area'] { position: absolute; inset: var(--dads-device-mock-safe-area-top) 0 0; background: var(--dads-device-mock-screen-background); overflow: hidden; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "deviceMockStyles",
+          "declaration": {
+            "name": "deviceMockStyles",
+            "module": "packages/components/device-mock/device-mock-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/device-mock/device-mock-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "deviceMockLocalTokens",
+          "default": "css`${deviceMockLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "deviceMockSemanticTokens",
+          "default": "css`${deviceMockSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "deviceMockTokens",
+          "default": "css` ${deviceMockSemanticTokensText} ${deviceMockLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "deviceMockLocalTokens",
+          "declaration": {
+            "name": "deviceMockLocalTokens",
+            "module": "packages/components/device-mock/device-mock-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "deviceMockSemanticTokens",
+          "declaration": {
+            "name": "deviceMockSemanticTokens",
+            "module": "packages/components/device-mock/device-mock-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "deviceMockTokens",
+          "declaration": {
+            "name": "deviceMockTokens",
+            "module": "packages/components/device-mock/device-mock-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/device-mock/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDeviceMock",
+          "declaration": {
+            "name": "DadsDeviceMock",
+            "module": "./device-mock.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultDeviceMock",
+          "declaration": {
+            "name": "defineDefaultDeviceMock",
+            "module": "./device-mock-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDeviceMock",
+          "declaration": {
+            "name": "defineDeviceMock",
+            "module": "./device-mock-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "deviceMockStyles",
+          "declaration": {
+            "name": "deviceMockStyles",
+            "module": "./device-mock-styles.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/dialog/dialog-define.ts",
       "declarations": [
         {
@@ -41575,6 +42853,168 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/header-container/header-container-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultHeaderContainer",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineHeaderContainer",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-header-container`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultHeaderContainer",
+          "declaration": {
+            "name": "defineDefaultHeaderContainer",
+            "module": "packages/components/header-container/header-container-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineHeaderContainer",
+          "declaration": {
+            "name": "defineHeaderContainer",
+            "module": "packages/components/header-container/header-container-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/header-container/header-container-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "headerContainerStyles",
+          "default": "css` :host { display: block; color: var(--dads-header-container-color); font-family: var(--font-family-sans); } [part='base'] { display: grid; grid-template-rows: auto auto; background-color: var(--dads-header-container-background); color: inherit; border-block-end: var(--dads-header-container-border-width) solid var(--dads-header-container-border-color); } [part='primary-row'] { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, 1fr) max-content; align-items: center; column-gap: var(--dads-header-container-primary-gap); min-block-size: var(--dads-header-container-primary-min-block-size); padding-inline: var(--dads-header-container-inline-padding); padding-block: var(--dads-header-container-primary-padding-block); } [part='logo'], [part='utility'], [part='global-menu'], [part='hamburger-menu'] { min-inline-size: 0; } [part='logo'] { grid-column: 1; justify-self: start; } [part='utility'] { grid-column: 2; justify-self: end; display: inline-flex; align-items: center; gap: var(--spacing-2, 0.5rem); } [part='hamburger-menu'] { grid-column: 3; justify-self: end; display: inline-flex; align-items: center; } [part='global-menu'] { display: flex; align-items: center; min-block-size: var(--dads-header-container-global-menu-min-block-size); padding-inline: var(--dads-header-container-inline-padding); padding-block: var(--dads-header-container-global-menu-padding-block); border-block-start: var(--dads-header-container-border-width) solid var(--dads-header-container-border-color); } :host([data-effective-mode='wide-full']) [part='utility'] { grid-column: 3; } :host([data-effective-mode='wide-slim']) [part='base'] { display: flex; align-items: center; gap: var(--dads-header-container-wide-slim-gap); min-block-size: var(--dads-header-container-primary-min-block-size); padding-inline: var(--dads-header-container-inline-padding); } :host([data-effective-mode='wide-slim']) [part='primary-row'] { display: contents; } :host([data-effective-mode='wide-slim']) [part='logo'] { order: 1; } :host([data-effective-mode='wide-slim']) [part='global-menu'] { order: 2; flex: 1 1 auto; min-block-size: auto; padding: 0; border-block-start: 0; } :host([data-effective-mode='wide-slim']) [part='utility'] { order: 3; grid-column: auto; margin-inline-start: auto; } :host([data-effective-mode='wide-slim']) [part='hamburger-menu'] { order: 4; grid-column: auto; } [part='utility'][hidden], [part='global-menu'][hidden], [part='hamburger-menu'][hidden] { display: none; } #logo-slot::slotted(*) { display: block; } #utility-slot::slotted(*) { display: inline-flex; align-items: center; gap: var(--spacing-2, 0.5rem); } #global-menu-slot::slotted(*) { display: block; } #hamburger-menu-slot::slotted(*) { display: inline-flex; align-items: center; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "headerContainerStyles",
+          "declaration": {
+            "name": "headerContainerStyles",
+            "module": "packages/components/header-container/header-container-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/header-container/header-container-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "headerContainerLocalTokens",
+          "default": "css`${headerContainerLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "headerContainerSemanticTokens",
+          "default": "css`${headerContainerSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "headerContainerTokens",
+          "default": "css` ${headerContainerSemanticTokensText} ${headerContainerLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "headerContainerLocalTokens",
+          "declaration": {
+            "name": "headerContainerLocalTokens",
+            "module": "packages/components/header-container/header-container-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "headerContainerSemanticTokens",
+          "declaration": {
+            "name": "headerContainerSemanticTokens",
+            "module": "packages/components/header-container/header-container-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "headerContainerTokens",
+          "declaration": {
+            "name": "headerContainerTokens",
+            "module": "packages/components/header-container/header-container-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/header-container/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/header-container/header-container.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultHeaderContainer",
+          "declaration": {
+            "name": "defineDefaultHeaderContainer",
+            "module": "./header-container-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineHeaderContainer",
+          "declaration": {
+            "name": "defineHeaderContainer",
+            "module": "./header-container-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/heading/heading-define.ts",
       "declarations": [
         {
@@ -42003,6 +43443,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/header-container/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/hamburger-menu-button/index.js"
           }
         },
@@ -42012,6 +43460,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/mobile-mock/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/device-mock/index.js"
           }
         }
       ]
@@ -49479,9 +50935,9 @@
           "kind": "variable",
           "name": "iconPaths",
           "type": {
-            "text": "{\n  /**\n   * DADSダミーアイコン（斜線パターン）\n   * 作例やプレースホルダーに使用\n   */\n  dummy:\n    'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z',\n\n  /**\n   * チェックマーク\n   * 選択状態、完了状態の表示に使用\n   */\n  checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /**\n   * 編集（鉛筆）アイコン\n   */\n  edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z',\n\n  /**\n   * ダウンロードアイコン\n   */\n  download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z',\n\n  /**\n   * 複製（コピー）アイコン\n   */\n  duplicate:\n    'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z',\n\n  /**\n   * 削除（ゴミ箱）アイコン\n   */\n  delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z',\n\n  /**\n   * 開閉矢印（キャレット）アイコン\n   * ドロップダウン、アコーディオンに使用\n   */\n  caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z',\n\n  /**\n   * 新規タブで開くアイコン\n   * 外部リンクの表示に使用\n   * Note: 24x24 viewBox用パス\n   */\n  externalLink:\n    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',\n\n  /**\n   * 検索（虫眼鏡）アイコン\n   */\n  search:\n    'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z',\n}"
+            "text": "{\n  /**\n   * DADSダミーアイコン（斜線パターン）\n   * 作例やプレースホルダーに使用\n   */\n  dummy:\n    'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z',\n\n  /**\n   * チェックマーク\n   * 選択状態、完了状態の表示に使用\n   */\n  checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /**\n   * 編集（鉛筆）アイコン\n   */\n  edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z',\n\n  /**\n   * ダウンロードアイコン\n   */\n  download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z',\n\n  /**\n   * 複製（コピー）アイコン\n   */\n  duplicate:\n    'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z',\n\n  /**\n   * 削除（ゴミ箱）アイコン\n   */\n  delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z',\n\n  /**\n   * 開閉矢印（キャレット）アイコン\n   * ドロップダウン、アコーディオンに使用\n   */\n  caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z',\n\n  /**\n   * 新規タブで開くアイコン\n   * 外部リンクの表示に使用\n   * Note: 24x24 viewBox用パス\n   */\n  externalLink:\n    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',\n\n  /**\n   * ログインアイコン（Material Symbols）\n   */\n  login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z',\n\n  /**\n   * ログアウトアイコン（Material Symbols）\n   */\n  logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z',\n\n  /**\n   * 検索（虫眼鏡）アイコン\n   */\n  search:\n    'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z',\n}"
           },
-          "default": "{ /** * DADSダミーアイコン（斜線パターン） * 作例やプレースホルダーに使用 */ dummy: 'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z', /** * チェックマーク * 選択状態、完了状態の表示に使用 */ checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** * 編集（鉛筆）アイコン */ edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z', /** * ダウンロードアイコン */ download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z', /** * 複製（コピー）アイコン */ duplicate: 'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z', /** * 削除（ゴミ箱）アイコン */ delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z', /** * 開閉矢印（キャレット）アイコン * ドロップダウン、アコーディオンに使用 */ caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z', /** * 新規タブで開くアイコン * 外部リンクの表示に使用 * Note: 24x24 viewBox用パス */ externalLink: 'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z', /** * 検索（虫眼鏡）アイコン */ search: 'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z', }",
+          "default": "{ /** * DADSダミーアイコン（斜線パターン） * 作例やプレースホルダーに使用 */ dummy: 'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z', /** * チェックマーク * 選択状態、完了状態の表示に使用 */ checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** * 編集（鉛筆）アイコン */ edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z', /** * ダウンロードアイコン */ download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z', /** * 複製（コピー）アイコン */ duplicate: 'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z', /** * 削除（ゴミ箱）アイコン */ delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z', /** * 開閉矢印（キャレット）アイコン * ドロップダウン、アコーディオンに使用 */ caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z', /** * 新規タブで開くアイコン * 外部リンクの表示に使用 * Note: 24x24 viewBox用パス */ externalLink: 'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z', /** * ログインアイコン（Material Symbols） */ login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z', /** * ログアウトアイコン（Material Symbols） */ logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z', /** * 検索（虫眼鏡）アイコン */ search: 'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z', }",
           "description": "アイコンのSVGパス定義"
         }
       ],

@@ -26,10 +26,10 @@ describe('drawer demo', () => {
 
   it('モバイル全面展開作例セクションを含む', () => {
     const html = demos.drawer();
-    expect(html).toContain('モバイル全面展開作例（Figma: 8268:36014 / 8268:36020）');
+    expect(html).toContain('モバイル全面展開作例');
     expect(html).toContain('Mobile: Right Menu');
     expect(html).toContain('右タイプ（light-dismiss）');
-    expect(html).toContain('<dads-mobile-mock class="drawer-demo__mobile-mock">');
+    expect(html).toContain('<dads-device-mock class="drawer-demo__mobile-mock" device="mobile">');
     expect(html).toContain('id="drawer-mobile-trigger"');
     expect(html).toContain('id="drawer-mobile-target"');
     expect(html).toContain('commandfor="#drawer-mobile-target"');
@@ -67,7 +67,7 @@ describe('drawer demo', () => {
     expect(html).toContain("'drawer-mobile-right-target'");
     expect(html).toContain("'drawer-mobile-right-trigger'");
     expect(html).toContain("'drawer-mobile-right-trigger-layer'");
-    expect(html).toContain("import('dads-mobile-mock')");
+    expect(html).toContain("import('dads-device-mock')");
   });
 
   it('実画面作例の drawer には data-preview-contained を付与しない', () => {

@@ -88,6 +88,15 @@ function isTabbable(el: Element): el is HTMLElement {
   return isNativeFocusable;
 }
 
+function focusWithoutScroll(target: HTMLElement | null): void {
+  if (!target) return;
+  try {
+    target.focus({ preventScroll: true });
+  } catch {
+    target.focus();
+  }
+}
+
 /**
  * Drawer（ドロワー）コンポーネント
  *
@@ -419,6 +428,7 @@ export class DadsDrawer extends TypographyWebComponent {
   #applyOpenState(): void {
     const base = this.#base;
     if (!base) return;
+    const preservedScroll = this.#captureViewportScroll();
 
     this.#syncDocumentListeners(true);
 
@@ -437,9 +447,15 @@ export class DadsDrawer extends TypographyWebComponent {
     } else {
       base.setAttribute('open', '');
     }
+    this.#restoreViewportScroll(preservedScroll);
 
     this.#openState = true;
-    queueMicrotask(() => this.#focusInitialElement());
+    queueMicrotask(() => {
+      this.#restoreViewportScroll(preservedScroll);
+      this.#focusInitialElement();
+      this.#restoreViewportScroll(preservedScroll);
+      requestAnimationFrame(() => this.#restoreViewportScroll(preservedScroll));
+    });
   }
 
   #applyClosedState(options: Readonly<{ restoreFocus: boolean }>): void {
@@ -567,7 +583,7 @@ export class DadsDrawer extends TypographyWebComponent {
   #focusInitialElement(): void {
     const explicit = this.#findInitialFocusElement();
     if (explicit) {
-      explicit.focus();
+      focusWithoutScroll(explicit);
       return;
     }
 
@@ -575,7 +591,7 @@ export class DadsDrawer extends TypographyWebComponent {
     const preferred = focusables.find((el) => el.hasAttribute('autofocus'));
 
     const target = preferred ?? focusables[0] ?? this.#panel;
-    target?.focus();
+    focusWithoutScroll(target ?? null);
   }
 
   #findInitialFocusElement(): HTMLElement | null {
@@ -624,7 +640,21 @@ export class DadsDrawer extends TypographyWebComponent {
   #restoreFocusToInvoker(): void {
     const invoker = this.#lastInvoker;
     if (!invoker || !invoker.isConnected) return;
-    invoker.focus();
+    focusWithoutScroll(invoker);
+  }
+
+  #captureViewportScroll(): Readonly<{ x: number; y: number }> | null {
+    if (!this.#isPreviewContained()) return null;
+    return {
+      x: window.scrollX,
+      y: window.scrollY,
+    };
+  }
+
+  #restoreViewportScroll(position: Readonly<{ x: number; y: number }> | null): void {
+    if (!position) return;
+    if (window.scrollX === position.x && window.scrollY === position.y) return;
+    window.scrollTo(position.x, position.y);
   }
 
   #setOpenAttribute(isOpen: boolean): void {

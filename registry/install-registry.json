@@ -150,6 +150,18 @@
         "componentDir": "packages/components/description-list"
       }
     },
+    "device-mock": {
+      "id": "device-mock",
+      "tags": [
+        "dads-device-mock"
+      ],
+      "define": "defineDeviceMock",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/device-mock"
+      }
+    },
     "dialog": {
       "id": "dialog",
       "tags": [
@@ -238,6 +250,18 @@
       "deps": [],
       "source": {
         "componentDir": "packages/components/hamburger-menu-button"
+      }
+    },
+    "header-container": {
+      "id": "header-container",
+      "tags": [
+        "dads-header-container"
+      ],
+      "define": "defineHeaderContainer",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/header-container"
       }
     },
     "heading": {
@@ -498,6 +522,7 @@
     "dads-code-block": "code-block",
     "dads-date-picker": "date-picker",
     "dads-description-list": "description-list",
+    "dads-device-mock": "device-mock",
     "dads-dialog": "dialog",
     "dads-disclosure": "disclosure",
     "dads-drawer": "drawer",
@@ -506,6 +531,7 @@
     "dads-global-menu": "global-menu",
     "dads-global-menu-item": "global-menu",
     "dads-hamburger-menu-button": "hamburger-menu-button",
+    "dads-header-container": "header-container",
     "dads-heading": "heading",
     "dads-input-text": "input-text",
     "dads-language-selector": "language-selector",

@@ -3473,5 +3473,249 @@
         }
       }
     ]
+  },
+  "dads-header-container": {
+    "version": 1,
+    "summary": "ヘッダーコンテナ仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "ルートは header 要素で、logo / utility / global-menu / hamburger-menu の領域を提供します。",
+        "mode に応じて 1段構成・2段構成を切り替えます。"
+      ],
+      "keyboard": [
+        "logo・utility・global-menu 内のリンクは Tab でフォーカスして操作できます。",
+        "hamburger-menu スロットに配置したボタンでモバイルメニューを開閉します。"
+      ],
+      "zoom": [
+        "高さ・余白・境界線はトークンで管理し、拡大表示時も判読性を維持します。"
+      ],
+      "states": [
+        "mode=\"auto\" の場合は viewport 幅に応じて data-effective-mode が変化します。",
+        "slot の有無に応じて utility / global-menu / hamburger-menu を表示・非表示に切り替えます。"
+      ],
+      "labels": [
+        "aria-label を指定すると、ヘッダー領域のアクセシブル名として使用します。",
+        "logo スロットの要素はサービス識別情報として機能します。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "logo",
+        "title": "ロゴ領域",
+        "label": "logo",
+        "description": "サービス名やロゴを配置する領域です。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"logo\"]"
+        }
+      },
+      {
+        "id": "utility",
+        "title": "ユーティリティ領域",
+        "label": "utility",
+        "description": "補助リンク（ヘルプ・言語切替など）を配置する領域です。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"utility\"]"
+        }
+      },
+      {
+        "id": "global-menu",
+        "title": "グローバルメニュー領域",
+        "label": "global-menu",
+        "description": "wide-full / wide-slim で表示される主要ナビゲーション領域です。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"global-menu\"]"
+        }
+      },
+      {
+        "id": "hamburger-menu",
+        "title": "ハンバーガーメニュー領域",
+        "label": "hamburger-menu",
+        "description": "medium / compact で表示されるモバイルナビゲーションの操作領域です。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"hamburger-menu\"]"
+        }
+      },
+      {
+        "id": "base",
+        "title": "ヘッダー領域",
+        "label": "header",
+        "description": "ヘッダー全体のルート領域です。",
+        "category": "semantics",
+        "mode": "panel",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "primary-row",
+        "title": "主段レイアウト",
+        "label": "primary-row",
+        "description": "logo / utility / hamburger を配置する1段目のレイアウト領域です。",
+        "category": "semantics",
+        "mode": "panel",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"primary-row\"]"
+        }
+      }
+    ]
+  },
+  "dads-global-menu": {
+    "version": 1,
+    "summary": "グローバルメニュー仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部に <nav> を持つランドマークとして動作します。",
+        "トップレベルは role=\"list\" の一覧として構成し、各項目をまとめます。"
+      ],
+      "keyboard": [
+        "トップレベル項目は ArrowLeft / ArrowRight / Home / End で移動できます。",
+        "サブメニュー付き項目は Enter / Space / ArrowDown / ArrowUp で開閉・項目移動できます。"
+      ],
+      "zoom": [
+        "項目高さ・余白・境界線はトークン経由で相対指定し、表示倍率変更時の可読性を維持します。"
+      ],
+      "states": [
+        "current 属性で現在地を示し、expanded 属性でサブメニュー展開状態を表します。",
+        "サブメニューは同時に1つのみ展開されます。"
+      ],
+      "labels": [
+        "複数ナビゲーションがある画面では、aria-label または aria-labelledby によるナビゲーション名の付与が必要です。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "nav",
+        "title": "ナビゲーション領域",
+        "label": "<nav>",
+        "description": "ランドマークとして機能するルート要素です。ナビゲーション名（aria-label / aria-labelledby）を付与します。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"nav\"]"
+        }
+      },
+      {
+        "id": "list",
+        "title": "トップレベル項目一覧",
+        "label": "role=\"list\"",
+        "description": "グローバルメニュー項目の集合です。左右キーでの移動対象になります。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"list\"]"
+        }
+      },
+      {
+        "id": "submenu-trigger",
+        "title": "サブメニュー付き項目",
+        "label": "submenu trigger",
+        "description": "この項目はサブメニューを開閉し、展開時は expanded 状態になります。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "hostSelector": "dads-global-menu-item:nth-of-type(2)",
+          "scope": "shadow",
+          "selector": "[part=\"trigger\"]"
+        }
+      },
+      {
+        "id": "submenu-popup",
+        "title": "サブメニュー（menu-list-box）",
+        "label": "submenu",
+        "description": "サブメニュー本体です。メニュー項目は矢印キーで移動し、Escape で閉じます。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "hostSelector": "dads-global-menu-item:nth-of-type(2)",
+          "selector": "dads-menu-list-box"
+        }
+      }
+    ]
+  },
+  "dads-global-menu-item": {
+    "version": 1,
+    "summary": "グローバルメニュー項目仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "submenu が無い場合は <a>、submenu がある場合は <button> として描画されます。"
+      ],
+      "keyboard": [
+        "submenu 付きの場合、Enter / Space で開閉、ArrowDown / ArrowUp でサブメニューの先頭/末尾へ移動します。"
+      ],
+      "zoom": [
+        "項目幅は内容に応じて伸縮し、長文は折り返さずにメニューの情報密度を保ちます。"
+      ],
+      "states": [
+        "current 属性で現在地、expanded 属性でサブメニュー展開状態を示します。"
+      ],
+      "labels": [
+        "リンク項目はリンク先文言、サブメニュー項目はトリガー文言がアクセシブル名になります。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "trigger",
+        "title": "項目トリガー",
+        "label": "trigger",
+        "description": "リンクまたはボタンとして動作する主操作要素です。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"trigger\"]"
+        }
+      },
+      {
+        "id": "label",
+        "title": "項目ラベル",
+        "label": "label",
+        "description": "項目の可視ラベルです。ナビゲーション名として読まれます。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "chevron",
+        "title": "サブメニュー矢印",
+        "label": "chevron",
+        "description": "サブメニューを持つ項目で表示され、expanded 状態で向きが変わります。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"chevron\"]"
+        }
+      }
+    ]
   }
 }

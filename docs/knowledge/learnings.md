@@ -4,6 +4,55 @@
 
 ---
 
+## [2026-02-09] `data-preview-contained` ドロワーは「focus + scroll保持」を同時に設計する
+**タグ**: #drawer #header-container #device-mock #accessibility #scroll
+
+### 概要
+ヘッダーのタブレット作例でドロワー開閉を入れた際、開いた直後にプレビューが上方向へずれる事象が発生した。  
+原因は、`visible-height` で切り取り済みのモック内でフォーカス遷移が走り、ブラウザの自動スクロールと競合したこと。
+
+### 根本原因
+- `dads-drawer` の open 適用後に初期フォーカスが入り、`data-preview-contained` 環境でも viewport scroll が変化した
+- `device-mock` 側がクリップ表示（`visible-height`）のため、わずかな scroll 変化でも見た目の「上欠け」が目立った
+
+### 再発防止ルール
+1. `data-preview-contained` で開く overlay は、開閉前後の viewport scroll を保存・復元する
+2. 初期フォーカス/復帰フォーカスは `focus({ preventScroll: true })` を優先する
+3. クリップ表示コンテナには `overscroll-behavior: none` を付与し、視覚ドリフトを抑制する
+
+### 適用例（今回）
+- `packages/components/drawer/drawer.ts`
+  - `focusWithoutScroll()` を追加して初期フォーカス/復帰フォーカスを統一
+  - `#captureViewportScroll()` / `#restoreViewportScroll()` を追加し、`#applyOpenState()` で復元
+- `packages/components/device-mock/device-mock-styles.ts`
+  - `[data-frame-clipped]` の `part="base"` に `overflow: clip` と `overscroll-behavior: none` を追加
+
+### 対象実装
+- `/packages/components/drawer/drawer.ts`
+- `/packages/components/device-mock/device-mock-styles.ts`
+
+## [2026-02-09] デモ追加時は「未参照レンダラ関数」のcoverage低下を先に潰す
+**タグ**: #testing #coverage #demos #vitest #quality-gate
+
+### 概要
+`frontend-postflight` の base 比較で `functions` が低下した主因は、`src/demos/*.ts` に追加されたレンダラ関数がテストから一度も呼ばれていなかったことだった。  
+機能不具合ではなくても、未参照関数が増えると全体coverageが落ちて品質ゲートで失敗する。
+
+### 根本原因
+- `src/demos/extra.ts` / `src/demos/showcase-form.ts` / `src/demos/showcase-date.ts` / `src/demos/dialog.ts` にレンダラが追加された
+- 既存テストがこれら4ファイルを import しておらず、関数カバレッジが 0% のまま積み上がった
+
+### 再発防止ルール
+1. 新しい demo ファイルを追加・拡張したら、最低1本のスモークテストで `demos` の全レンダラ関数を実行する
+2. `frontend-postflight` では base 比較を早めに実行し、`functions` 低下を先に検知する
+3. 挙動に影響しない coverage 補完は、UI仕様テストとは分離してスモークテストとして管理する
+
+### 適用例（今回）
+- `src/demos/legacy-demos-smoke.test.ts` を追加し、対象4ファイルの全 `demos.*()` を実行して非空HTMLを検証
+
+### 対象実装
+- `/src/demos/legacy-demos-smoke.test.ts`
+
 ## [2026-02-09] `href` 安全化ロジック共通化での学び（Issue #74）
 **タグ**: #security #utility-link #global-menu #testing #refactor
 

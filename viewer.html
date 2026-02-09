@@ -46,8 +46,10 @@
       "dads-date-picker": "/@components/dads/date-picker.js",
       "dads-dialog": "/@components/dads/dialog.js",
       "dads-drawer": "/@components/dads/drawer.js",
+      "dads-header-container": "/@components/dads/header-container.js",
       "dads-hamburger-menu-button": "/@components/dads/hamburger-menu-button.js",
       "dads-mobile-mock": "/@components/dads/mobile-mock.js",
+      "dads-device-mock": "/@components/dads/device-mock.js",
       "dads-calendar": "/@components/dads/calendar.js",
       "dads-switch": "/@components/dads/switch.js",
       "dads-checkbox": "/@components/dads/checkbox.js",
@@ -186,6 +188,15 @@
     }
 
     body[data-component="tableControl"] #component-container {
+      padding: 24px;
+    }
+
+    body[data-component="headerContainer"] main {
+      max-width: 1560px;
+      padding: 0 16px;
+    }
+
+    body[data-component="headerContainer"] #component-container {
       padding: 24px;
     }
 
@@ -423,6 +434,7 @@
             <option value="datePicker">日付ピッカー</option>
             <option value="dialog">モーダルダイアログ</option>
             <option value="drawer">ドロワー</option>
+            <option value="headerContainer">ヘッダーコンテナ</option>
             <option value="hamburgerMenuButton">ハンバーガーメニューボタン</option>
             <option value="inputText">インプットテキスト</option>
             <option value="inputTextValidation">インプットテキスト（バリデーション検証）</option>
@@ -636,7 +648,9 @@
       '/@components/dads/date-picker.js',
       '/@components/dads/dialog.js',
       '/@components/dads/drawer.js',
+      '/@components/dads/header-container.js',
       '/@components/dads/hamburger-menu-button.js',
+      '/@components/dads/device-mock.js',
       '/@components/dads/checkbox.js',
       '/@components/dads/radio.js',
       '/@components/dads/chip-label.js',
