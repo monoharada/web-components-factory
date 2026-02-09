@@ -287,3 +287,17 @@ describe('DadsMenuListBox - 基本', () => {
     expect(element.hasAttribute('data-has-opener-icon')).toBe(false);
   });
 });
+
+describe('DadsMenuListBox - styles', () => {
+  it('data-has-opener-icon 時の opener-icon は中央揃えされる', async () => {
+    const { menuListBoxStyles } = await import('./menu-list-box-styles.js');
+
+    const cssText = Array.from(menuListBoxStyles.cssRules ?? [])
+      .map((rule) => rule.cssText)
+      .join('\n');
+
+    expect(cssText).toContain(':host([data-has-opener-icon]) [part="opener-icon"]');
+    expect(cssText).toContain('display: inline-flex');
+    expect(cssText).toContain('align-items: center');
+  });
+});

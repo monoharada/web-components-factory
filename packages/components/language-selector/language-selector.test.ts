@@ -68,8 +68,11 @@ describe('DadsLanguageSelector - 基本', () => {
     expect(element.getAttribute('opener')).toBe('text');
     expect(element.getAttribute('label')).toBe('Language');
 
-    const autoIcon = element.querySelector('[slot="icon"][data-language-selector-auto-opener-icon]');
+    const autoIcon = element.querySelector(
+      '[slot="icon"][data-language-selector-auto-opener-icon]',
+    ) as SVGElement | null;
     expect(autoIcon).toBeInTheDocument();
+    expect(autoIcon?.getAttribute('viewBox')).toBe('10 3 24 24');
   });
 
   it('opener=icon では label=LANG を補完する', async () => {
@@ -473,5 +476,50 @@ describe('DadsLanguageSelector - 基本', () => {
     await waitForCustomElement(element);
 
     expect(element).toBeInTheDocument();
+  });
+});
+
+describe('DadsLanguageSelector - styles', () => {
+  it('opener=icon はアイコン+ラベルの縦積みレイアウトを定義する', async () => {
+    const { languageSelectorStyles } = await import('./language-selector-styles.js');
+
+    const cssText = Array.from(languageSelectorStyles.cssRules ?? [])
+      .map((rule) => rule.cssText)
+      .join('\n');
+
+    expect(cssText).toContain(':host([opener="icon"]) [part="opener"]');
+    expect(cssText).toContain('display: grid');
+    expect(cssText).toContain('grid-template-columns: auto auto');
+    expect(cssText).toContain('grid-template-rows: auto auto');
+    expect(cssText).toContain(':host([opener="icon"]) [part="opener-label"]');
+    expect(cssText).toContain('font-size: calc(11 / 16 * 1rem)');
+  });
+
+  it('opener=icon の opener-icon に中央揃えルールが定義される', async () => {
+    const { languageSelectorStyles } = await import('./language-selector-styles.js');
+
+    const cssText = Array.from(languageSelectorStyles.cssRules ?? [])
+      .map((rule) => rule.cssText)
+      .join('\n');
+
+    expect(cssText).toContain(':host([opener="icon"]) [part="opener-icon"]');
+    expect(cssText).toContain('align-items: center');
+    expect(cssText).toContain('justify-content: center');
+    expect(cssText).toContain('line-height: 0');
+  });
+
+  it('opener=icon の slotted svg 正規化ルールが定義される', async () => {
+    const { languageSelectorStyles } = await import('./language-selector-styles.js');
+
+    const cssText = Array.from(languageSelectorStyles.cssRules ?? [])
+      .map((rule) => rule.cssText)
+      .join('\n');
+
+    expect(cssText).toMatch(
+      /:host\(\[opener="icon"\]\)\s+\[part="opener-icon"\]\s*::slotted\(svg\)/,
+    );
+    expect(cssText).toContain('display: block');
+    expect(cssText).toContain('width: 100%');
+    expect(cssText).toContain('height: 100%');
   });
 });
