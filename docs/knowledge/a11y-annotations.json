@@ -3341,6 +3341,73 @@
       }
     ]
   },
+  "dads-utility-link": {
+    "version": 1,
+    "summary": "ユーティリティリンク仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部は <a> 要素で実装し、補助的な遷移リンクとして利用します。",
+        "先頭アイコンは slot=\"lead-icon\" が指定された場合のみ表示されます。"
+      ],
+      "keyboard": [
+        "Tab でフォーカスし、Enter でリンク遷移できます（ネイティブ挙動）。",
+        "フォーカス時はアウトラインと背景色で可視化します。"
+      ],
+      "zoom": [
+        "本文16px・line-height 1.3 を基準にし、拡大時も読みやすさを維持します。"
+      ],
+      "states": [
+        "target=\"_blank\" のときは末尾に新規タブアイコンを表示します。",
+        "download 属性があるときは末尾にダウンロードアイコンを表示します（target=\"_blank\" より優先）。",
+        "download 属性があるときは内部リンクの target は無効化されます。"
+      ],
+      "labels": [
+        "リンクラベルはデフォルトスロットのテキストを使用します。",
+        "末尾アイコンは role=\"img\" で、状態に応じて aria-label が「新規タブで開きます」または「ダウンロードします」になります。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "base",
+        "title": "リンク本体",
+        "label": "<a>",
+        "description": "ユーティリティリンクの主操作要素です。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "label",
+        "title": "リンクラベル",
+        "label": "slot",
+        "description": "リンクのアクセシブルネームになる可視テキストです。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "tail-icon",
+        "title": "末尾アイコン",
+        "label": "target=\"_blank\" / download",
+        "description": "新規タブ遷移またはダウンロード時に表示される補助アイコンです。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"tail-icon\"]"
+        }
+      }
+    ]
+  },
   "dads-hamburger-menu-button": {
     "version": 1,
     "summary": "ハンバーガーメニューボタン仕様（アクセシビリティ注釈）",

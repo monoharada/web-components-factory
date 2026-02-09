@@ -35935,6 +35935,661 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/utility-link/utility-link.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Utility Link コンポーネント",
+          "name": "DadsUtilityLink",
+          "cssProperties": [
+            {
+              "description": "ラベル色",
+              "name": "--dads-utility-link-label-color"
+            },
+            {
+              "description": "ホバー時ラベル色",
+              "name": "--dads-utility-link-label-color-hover"
+            },
+            {
+              "description": "アクティブ時ラベル色",
+              "name": "--dads-utility-link-label-color-active"
+            },
+            {
+              "description": "アイコン色",
+              "name": "--dads-utility-link-icon-color"
+            },
+            {
+              "description": "下線太さ",
+              "name": "--dads-utility-link-underline-thickness"
+            },
+            {
+              "description": "ホバー時下線太さ",
+              "name": "--dads-utility-link-underline-thickness-hover"
+            },
+            {
+              "description": "下線オフセット",
+              "name": "--dads-utility-link-underline-offset"
+            },
+            {
+              "description": "フォーカス時アウトライン色",
+              "name": "--dads-utility-link-focus-outline-color"
+            },
+            {
+              "description": "フォーカス時リング色",
+              "name": "--dads-utility-link-focus-ring-color"
+            },
+            {
+              "description": "フォーカス時背景色",
+              "name": "--dads-utility-link-focus-background"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "リンク本体（a要素）",
+              "name": "base"
+            },
+            {
+              "description": "ラベル領域",
+              "name": "label"
+            },
+            {
+              "description": "先頭アイコン領域",
+              "name": "lead-icon"
+            },
+            {
+              "description": "末尾アイコン領域（target=\"_blank\" または download の時に表示）",
+              "name": "tail-icon"
+            }
+          ],
+          "slots": [
+            {
+              "description": "リンクラベル",
+              "name": "default"
+            },
+            {
+              "description": "先頭アイコン（任意）",
+              "name": "lead-icon"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLAnchorElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleLeadIconSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#leadIconMutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#leadIconSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#observeLeadIconMutations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLeadIconVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLinkAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncTailIconKind",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "kind",
+                  "type": {
+                    "text": "Exclude<TailIconKind, 'none'>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#tailIcon",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#tailIconPath",
+              "privacy": "private",
+              "type": {
+                "text": "SVGPathElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#tailIconSvg",
+              "privacy": "private",
+              "type": {
+                "text": "SVGSVGElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-utility-link', template: html` <a part=\"base\" id=\"base\"> <span part=\"lead-icon\" id=\"lead-icon\"> <slot name=\"lead-icon\" id=\"lead-icon-slot\"></slot> </span> <span part=\"label\" id=\"label\"> <slot></slot> </span> <span part=\"tail-icon\" id=\"tail-icon\" hidden> <svg id=\"tail-icon-svg\" width=\"16\" height=\"16\" viewBox=\"${NEW_WINDOW_ICON_VIEWBOX}\" fill=\"currentcolor\" role=\"img\" aria-label=\"${NEW_WINDOW_ICON_LABEL}\" > <path id=\"tail-icon-path\" d=\"${NEW_WINDOW_ICON_PATH}\" /> </svg> </span> </a> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), utilityLinkTokens, utilityLinkStyles], 'minimal'), attributes: [ PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "downloadChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hrefChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "relChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "targetChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "download属性",
+              "name": "download"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンク先URL",
+              "name": "href"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンクrel",
+              "name": "rel"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "リンクターゲット（download 指定時は内部リンクへは反映しない）",
+              "name": "target"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-utility-link",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/utility-link/utility-link.ts",
+          "definitionPath": "./packages/components/utility-link/utility-link.ts",
+          "typeDefinitionPath": "./packages/components/utility-link/utility-link.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "ユーティリティリンク仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部は <a> 要素で実装し、補助的な遷移リンクとして利用します。",
+                  "先頭アイコンは slot=\"lead-icon\" が指定された場合のみ表示されます。"
+                ],
+                "keyboard": [
+                  "Tab でフォーカスし、Enter でリンク遷移できます（ネイティブ挙動）。",
+                  "フォーカス時はアウトラインと背景色で可視化します。"
+                ],
+                "zoom": [
+                  "本文16px・line-height 1.3 を基準にし、拡大時も読みやすさを維持します。"
+                ],
+                "states": [
+                  "target=\"_blank\" のときは末尾に新規タブアイコンを表示します。",
+                  "download 属性があるときは末尾にダウンロードアイコンを表示します（target=\"_blank\" より優先）。",
+                  "download 属性があるときは内部リンクの target は無効化されます。"
+                ],
+                "labels": [
+                  "リンクラベルはデフォルトスロットのテキストを使用します。",
+                  "末尾アイコンは role=\"img\" で、状態に応じて aria-label が「新規タブで開きます」または「ダウンロードします」になります。"
+                ],
+                "motion": [
+                  "アニメーションは前提としません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "base",
+                  "title": "リンク本体",
+                  "label": "<a>",
+                  "description": "ユーティリティリンクの主操作要素です。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "label",
+                  "title": "リンクラベル",
+                  "label": "slot",
+                  "description": "リンクのアクセシブルネームになる可視テキストです。",
+                  "category": "labels",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "tail-icon",
+                  "title": "末尾アイコン",
+                  "label": "target=\"_blank\" / download",
+                  "description": "新規タブ遷移またはダウンロード時に表示される補助アイコンです。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"tail-icon\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "utility-link",
+            "install": {
+              "id": "utility-link",
+              "define": "defineUtilityLink",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/utility-link"
+              },
+              "tags": [
+                "dads-utility-link"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsUtilityLink",
+          "declaration": {
+            "name": "DadsUtilityLink",
+            "module": "packages/components/utility-link/utility-link.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/utility-link/utility-link.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/utility-link/utility-link.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-utility-link",
+          "declaration": {
+            "name": "DadsUtilityLink",
+            "module": "./packages/components/utility-link/utility-link.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/core/web-components.ts",
       "declarations": [
         {
@@ -41130,6 +41785,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/utility-link/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/table/index.js"
           }
         },
@@ -45015,6 +45678,168 @@
           "declaration": {
             "name": "defineText",
             "module": "packages/components/typography/typography-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/utility-link/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/utility-link/utility-link.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultUtilityLink",
+          "declaration": {
+            "name": "defineDefaultUtilityLink",
+            "module": "./utility-link-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineUtilityLink",
+          "declaration": {
+            "name": "defineUtilityLink",
+            "module": "./utility-link-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/utility-link/utility-link-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultUtilityLink",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineUtilityLink",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-utility-link`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultUtilityLink",
+          "declaration": {
+            "name": "defineDefaultUtilityLink",
+            "module": "packages/components/utility-link/utility-link-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineUtilityLink",
+          "declaration": {
+            "name": "defineUtilityLink",
+            "module": "packages/components/utility-link/utility-link-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/utility-link/utility-link-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "utilityLinkStyles",
+          "default": "css` :host { display: block; width: fit-content; } [part='base'] { display: flex; align-items: center; gap: var(--dads-utility-link-item-gap); width: fit-content; font-family: var(--dads-utility-link-font-family); font-size: var(--dads-utility-link-font-size); font-weight: var(--dads-utility-link-font-weight); line-height: var(--dads-utility-link-line-height); letter-spacing: var(--dads-utility-link-letter-spacing); text-decoration: none; text-wrap: pretty; } [part='lead-icon'], [part='tail-icon'] { display: inline-block; width: var(--dads-utility-link-icon-size); height: var(--dads-utility-link-icon-size); color: var(--dads-utility-link-icon-color); vertical-align: var(--dads-utility-link-icon-vertical-align); line-height: 1; flex-shrink: 0; } [part='lead-icon'] { display: none; } :host([data-has-lead-icon]) [part='lead-icon'] { display: inline-block; } [part='lead-icon']::slotted(*) { display: block; width: 100%; height: 100%; color: currentcolor; } [part='tail-icon'] svg { display: block; width: 100%; height: 100%; } [part='tail-icon'][hidden] { display: none; } [part='label'] { color: var(--dads-utility-link-label-color); text-decoration: underline; text-decoration-thickness: var(--dads-utility-link-underline-thickness); text-underline-offset: var(--dads-utility-link-underline-offset); } [part='base']:visited [part='label'] { color: var(--dads-utility-link-label-color); } @media (any-hover: hover) { [part='base']:hover [part='label'] { color: var(--dads-utility-link-label-color-hover); text-decoration-thickness: var(--dads-utility-link-underline-thickness-hover); } } [part='base']:active [part='label'] { color: var(--dads-utility-link-label-color-active); text-decoration-thickness: var(--dads-utility-link-underline-thickness); } [part='base']:focus { outline: none; } [part='base']:focus-visible { outline: var(--dads-utility-link-focus-outline-width) solid var(--dads-utility-link-focus-outline-color); outline-offset: var(--dads-utility-link-focus-outline-offset); border-radius: var(--dads-utility-link-focus-border-radius); background-color: var(--dads-utility-link-focus-background); box-shadow: 0 0 0 var(--dads-utility-link-focus-ring-width) var(--dads-utility-link-focus-ring-color); } @media (forced-colors: active) { [part='base']:focus-visible { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-utility-link-focus-ring-width) ButtonText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "utilityLinkStyles",
+          "declaration": {
+            "name": "utilityLinkStyles",
+            "module": "packages/components/utility-link/utility-link-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/utility-link/utility-link-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "utilityLinkLocalTokens",
+          "default": "css`${utilityLinkLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "utilityLinkSemanticTokens",
+          "default": "css`${utilityLinkSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "utilityLinkTokens",
+          "default": "css` ${utilityLinkSemanticTokensText} ${utilityLinkLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "utilityLinkLocalTokens",
+          "declaration": {
+            "name": "utilityLinkLocalTokens",
+            "module": "packages/components/utility-link/utility-link-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "utilityLinkSemanticTokens",
+          "declaration": {
+            "name": "utilityLinkSemanticTokens",
+            "module": "packages/components/utility-link/utility-link-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "utilityLinkTokens",
+          "declaration": {
+            "name": "utilityLinkTokens",
+            "module": "packages/components/utility-link/utility-link-tokens.ts"
           }
         }
       ]
