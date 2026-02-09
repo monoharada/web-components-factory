@@ -26,6 +26,106 @@
 ### 対象実装
 - `/src/demos/legacy-demos-smoke.test.ts`
 
+## [2026-02-09] `href` 安全化ロジック共通化での学び（Issue #74）
+**タグ**: #security #utility-link #global-menu #testing #refactor
+
+### 概要
+`global-menu` と `utility-link` がそれぞれ持っていた `href` 安全化判定を `packages/utils/safe-href.ts` に集約した。許可ルールを明文化して1箇所で管理し、コンポーネント間の仕様差分を解消した。
+
+### つまずきと原因
+- `utility-link` は `docs/page` や `?q=1` を許可していた一方、`global-menu` とは許可集合が一致していなかった。
+- それぞれにローカル関数があるため、ルール変更時に片側だけ更新されるリスクがあった。
+
+### 学び
+1. `href` の安全化判定は「許可リストを固定した共通関数」に寄せると、仕様逸脱と回帰を抑えやすい。
+2. `javascript:` / `data:` の拒否だけでなく、`docs/page` や `?q=1` のような曖昧な相対入力を明示的に拒否する境界テストが重要。
+3. コンポーネント側テストだけでなく、共通ユーティリティ単体テストを持つと修正影響を局所化できる。
+
+### 実施した対策
+- `packages/utils/safe-href.ts` に `isSafeHref(href: string)` を新規追加。
+- `global-menu` / `utility-link` からローカル実装を削除し、共通関数へ置換。
+- `utility-link` の許可/拒否テスト期待値を Issue #74 方針に揃え、`global-menu` 側にも `?q=1` 拒否ケースを追加。
+
+### 再発防止
+- 許可ルール変更は必ず `safe-href.ts` と `safe-href.test.ts` を同時更新する。
+- 仕様にないスキーム・パス形式を追加許可する場合は、Issue で明示合意してから反映する。
+
+## [2026-02-09] Utility Link 実装での学び（download優先・slot可視判定・APIデモ）
+**タグ**: #utility-link #webcomponents #a11y #testing #dads
+
+### 概要
+`dads-utility-link` 実装では、`target="_blank"` と `download` の同時指定時のふるまい、および `slot="lead-icon"` の可視判定が落とし穴になった。結果として、**download時は新規タブ挙動よりダウンロード挙動を優先**し、slot内容の `hidden` 変更にも追従する設計に整理した。
+
+### つまずきと原因
+- `lead-icon` の表示切替で、要素を残したまま `hidden` を付けると見た目が更新されないケースがあった。
+- `target="_blank"` と `download` が同居すると、UI（末尾アイコン）と実際のリンク属性の意図が曖昧になりやすい。
+- APIデモの `<select>` は `aria-label` を持っていても、差分lintのヒューリスティックで警告される場合がある。
+
+### 学び
+1. `download` を持つリンクは、コンポーネント内部では `target` を反映しないほうが挙動が明確。
+2. slotの有無判定は `slotchange` だけでなく、`hidden` など属性変更の監視も必要。
+3. デモUIは `aria-label` に加えて `label` 関連付けを入れておくと監査耐性が上がる。
+
+### 実施した対策
+- `download` 属性がある場合、内部 `<a>` の `target` を無効化し、末尾アイコンはダウンロードアイコンを優先表示。
+- `lead-icon` は `MutationObserver` で `slot` / `hidden` の変更を監視し、`data-has-lead-icon` を再評価。
+- APIデモの `lead-icon` 制御 `<select>` に `label` + `id` を付与。
+
+### 再発防止
+- 「見た目の状態（アイコン）」「リンク実属性（target/download）」は常に同じ優先順位で設計する。
+- slot可視判定テストは、追加/削除だけでなく `hidden` の付け外しまで含める。
+
+## [2026-02-09] Language Selector のアイコン位置ズレは「SVG基準線 + viewBox + slot整列」を同時に揃える
+**タグ**: #language-selector #menu-list-box #css #svg #accessibility #testing
+
+### 概要
+`dads-language-selector` の `opener="icon"` で、地球儀アイコンと `LANG` の位置がずれる問題は、単一要因ではなく、`svg` の基準線余白・アイコン用 viewBox・slot コンテナ整列の3点が重なって発生していた。
+
+### 学び
+1. `slot="icon"` に `svg` を入れる構成では、`::slotted(svg) { display: block; width: 100%; height: 100%; }` を先に入れて基準線余白を消す
+2. アイコンとラベルを縦積みする場合は、`opener-icon` 単体だけでなく、親レイアウト（grid）と矢印配置も同時に固定する
+3. Figma由来のアイコンを使う際は、`path` だけ差し替えると見た目が崩れることがあるため、`viewBox` もセットで合わせる
+4. 共通基盤（`menu-list-box`）側の `:host([data-has-opener-icon]) [part="opener-icon"]` に `align-items: center` を入れると、他コンポーネントでも再発しにくい
+
+### 再発防止
+- スタイル差分は `cssRules/cssText` の回帰テストを必ず追加する
+- CEM更新を伴う変更は `custom-elements.json` を同一PRに含める
+- PR前は `npm run agents:verify` を実行し、ガードレール結果を記録する
+
+---
+
+## [2026-02-09] Language Selector 実装での学び（a11y注釈・イベントAPI・テスト網羅）
+**タグ**: #accessibility #testing #webcomponents #language-selector #a11y-annotate
+
+### 概要
+`dads-language-selector` 実装時に、見た目・挙動が正しくても `a11y-annotate` が期待表示されない事象が起きた。原因はコンポーネント実装ではなく、**注釈メタデータ（CEM注入元）の未定義**だった。
+
+### つまずきと原因
+- 症状: `?a11y=1&component=languageSelector` で注釈パネル/コールアウトが弱い、または出ない
+- 原因: `docs/knowledge/a11y-annotations.json` に `dads-language-selector` エントリが未登録
+- 補足: `a11y-annotate` は `custom-elements.json` の `custom.a11yAnnotations` を読むため、CEM注入元が空だとUI側で頑張っても解決しない
+
+### 学び
+1. **a11y注釈は実装コードではなく CEMメタデータの品質で決まる**
+2. Menu系コンポーネントは、最低でも `opener / popup / current item / selected icon` の4観点を注釈化するとレビュー可能性が上がる
+3. 公開イベント（`dads-change`）と公開取得API（`getSelectedLanguage()`）は、必ず相互整合テストを持つべき
+4. 継承コンポーネントでも、キーボード操作（Arrow/Home/End/Escape）を統合テストで1本確認しておくと回帰検出が速い
+
+### 実施した対策
+- `docs/knowledge/a11y-annotations.json` に `dads-language-selector` 注釈を追加
+- `npm run cem:analyze` で CEMへ反映
+- `language-selector.test.ts` に以下を追加
+  - キーボード操作と `aria-expanded` 同期
+  - `selectedIndex` fallback
+  - `slot="label"` / `slot="icon"` の明示優先
+  - 明示 `start-icon` と自動チェックアイコンの競合防止
+
+### 再発防止
+- 新規コンポーネント追加時は「注釈定義ファイル追加 → CEM再生成 → `validate:wc`」を同一PRで必須化する
+- `agents:verify` 実行前に、生成物差分（`custom-elements.json` / `registry/install-registry.json`）を意図通り含める
+
+---
+
 ## [2026-02-06] MutationObserverの自己再帰でUIが固まる問題と防止ルール
 **タグ**: #webcomponents #mutationobserver #debug #performance #breadcrumb
 
@@ -1358,6 +1458,61 @@ dads-card.card-example-1::part(main) {
 - 必要なカードインスタンスのみ選択的にオーバーライド
 - focus ringが必要な場合は必ず対処を実施
 - JSDocとREADMEに対処法を明記
+
+---
+
+## [2026-02-09] グローバルメニュー: a11y-annotate の配置調整と nav 命名
+**タグ**: #a11y #annotation #navigation #webcomponents #dads
+
+### 概要
+グローバルメニューの注釈で `callout-lane="top"` を固定すると、`<nav>` / `role="list"` / サブメニュートリガーのコールアウトが重なりやすい。広い横並びナビゲーションでは既定配置を優先した方が可読性が安定した。
+
+### 詳細
+- 横幅の広い target（`dads-global-menu`）に対してレーン固定をすると、複数コールアウトが同一帯に集まり、線が交差しやすい。
+- `a11y-annotate` は既定配置（callout-lane未指定）に戻し、周辺余白だけ最小限確保する方が他コンポーネントと同じ見え方になる。
+- `dads-global-menu` は内部に `<nav>` を持つため、`aria-label` / `aria-labelledby` でナビゲーション名を必ず付与できるAPIと作例を揃える。
+
+### 適用例
+```html
+<a11y-annotate target-selector="dads-global-menu">
+  <div style="padding: 60px 0;">
+    <dads-global-menu aria-label="主要メニュー">
+      ...
+    </dads-global-menu>
+  </div>
+</a11y-annotate>
+```
+
+### 注意点
+- 同一ページに複数のナビゲーションランドマークがある場合は、`aria-label` か `aria-labelledby` のどちらかで必ず命名する。
+- 注釈の見切れや重なり対策は、まず `callout-lane` ではなく target 周辺の余白調整で解決する。
+
+## [2026-02-09] Project Pagesで `src/demos` 絶対パスが404になる問題と予防策
+**タグ**: #webcomponents #workflow #debug #architecture
+
+### 概要
+`tableControl` デモ内の dynamic import が `import('/src/demos/...')` になっていたため、GitHub Pages（Project Pages: `/<repo>/`）で `https://<user>.github.io/src/demos/...` に解決されて 404 になり、MVC デモの初期化が失敗した。
+
+### 詳細
+#### 症状
+- `table-control-mvc.js` / `table-control-municipal-mvc.js` / `table-control-preset-mvc.js` の取得が 404
+- `dads-table-control` は読み込まれるが、データ連動デモが表示されない
+
+#### 原因
+- 埋め込み `script type="module"` の dynamic import が先頭 `/` の絶対パスだった
+- Project Pages はルート配信ではなく `/<repo>/` 配下のため、`/src/...` はリポジトリ外を指してしまう
+
+#### 修正
+- `src/demos/showcase-table-control.ts` の import を `./src/demos/...` に変更
+- `src/demos/showcase-table-control.test.ts` で相対パス期待値へ更新し、`import('/src/demos/` を含まないことを検証
+- `tests/pages-build-viewer.test.ts` で `dist-pages/src/demos/showcase-table-control.js` に絶対パスが残っていないことを検証
+
+### 再発防止
+- レビュー観点: viewer埋め込み script の dynamic import は先頭 `/` を禁止し、`./` など `document.baseURI` 基準の相対パスを使う
+- テスト観点: Pages ビルド後の `dist-pages/src/demos/*.js` に対して絶対パス混入を検知する
+
+### 注意点
+- `deepl-input-controller` の解決失敗はリポジトリ内定義がなく、ブラウザ拡張注入などのノイズの可能性が高い。今回の主因とは切り分ける
 
 ---
 

@@ -25,7 +25,7 @@ const DRAWER_MOBILE_CONTENT = `
 export const demos = {
   drawer: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Drawer</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ドロワー</h2>
       <p style="color: #666; margin-bottom: 32px;">
         <code>commandfor</code> / <code>command</code> で宣言的に開閉できるドロワーです。
         <code>dads-drawer-before-open/open/before-close/close</code> を発火し、

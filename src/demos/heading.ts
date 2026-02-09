@@ -11,7 +11,7 @@ import {
 
 export const headingDemo = () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">見出しコンポーネント</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">見出し</h2>
       <p style="color: #666; margin-bottom: 32px;">
         デジタル庁デザインシステム準拠の見出しコンポーネントです。見出しレベルとサイズ、マージンの自動設定に対応します。
       </p>

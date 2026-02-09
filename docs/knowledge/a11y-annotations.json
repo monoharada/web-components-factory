@@ -1714,6 +1714,101 @@
       }
     ]
   },
+  "dads-language-selector": {
+    "version": 1,
+    "summary": "ランゲージセレクター仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "opener は aria-haspopup=\"menu\" を持ち、開閉状態は aria-expanded で表します。",
+        "ポップアップ内のメニューは role=\"menu\"、項目は role=\"menuitem\" として扱われます。",
+        "選択中の言語は current / aria-current=\"true\" の単一選択で表現されます。"
+      ],
+      "keyboard": [
+        "opener で ArrowDown / ArrowUp を押すとメニューを開き、先頭/末尾項目へフォーカス移動します。",
+        "メニュー内は ArrowUp / ArrowDown / Home / End で項目移動できます。",
+        "Escape でメニューを閉じ、opener にフォーカス復帰します。"
+      ],
+      "zoom": [
+        "サイズは md（44px相当）と sm（36px相当）を提供します。",
+        "ポップアップは max-height と overflow-y により、ズーム時もスクロール操作できます。"
+      ],
+      "states": [
+        "open 属性と opener の aria-expanded で開閉状態を同期します。",
+        "選択中項目に明示 start-icon がない場合は、チェックアイコンを自動付与して現在言語を示します。"
+      ],
+      "labels": [
+        "label 属性または slot=\"label\" で opener ラベルを提供します。",
+        "opener=\"text\" の既定値は \"Language\"、opener=\"icon\" の既定値は \"LANG\" です。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "opener",
+        "title": "opener（開閉トリガー）",
+        "label": "aria-haspopup=\"menu\"",
+        "description": "メニューの開閉を行うボタン。aria-expanded で状態を通知します。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"opener\"]"
+        }
+      },
+      {
+        "id": "opener-label",
+        "title": "opener ラベル",
+        "label": "slot=\"label\" / label attr",
+        "description": "言語選択UIのラベル表示領域。未指定時は Language/LANG を補完します。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"opener-label\"]"
+        }
+      },
+      {
+        "id": "popup-menu",
+        "title": "ポップアップメニュー",
+        "label": "role=\"menu\"",
+        "description": "選択候補を提示するメニュー領域。矢印キー/Home/End で移動できます。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"popup\"]"
+        }
+      },
+      {
+        "id": "current-item",
+        "title": "選択中項目",
+        "label": "current / aria-current",
+        "description": "現在選択されている言語項目。単一選択で同期されます。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "hostSelector": "dads-menu-list-item[current]",
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "current-item-check",
+        "title": "選択状態アイコン",
+        "label": "start-icon",
+        "description": "選択中項目で、明示 start-icon がない場合に自動表示されるチェックアイコン領域です。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "hostSelector": "dads-menu-list-item[current]",
+          "scope": "shadow",
+          "selector": "[part=\"start-icon\"]"
+        }
+      }
+    ]
+  },
   "dads-list": {
     "version": 1,
     "summary": "箇条書きリスト仕様（アクセシビリティ注釈）",
@@ -3102,6 +3197,213 @@
         "target": {
           "scope": "shadow",
           "selector": "[part=\"content\"]"
+        }
+      }
+    ]
+  },
+  "dads-global-menu": {
+    "version": 1,
+    "summary": "グローバルメニュー仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部に <nav> を持つランドマークとして動作します。",
+        "トップレベルは role=\"list\" の一覧として構成し、各項目をまとめます。"
+      ],
+      "keyboard": [
+        "トップレベル項目は ArrowLeft / ArrowRight / Home / End で移動できます。",
+        "サブメニュー付き項目は Enter / Space / ArrowDown / ArrowUp で開閉・項目移動できます。"
+      ],
+      "zoom": [
+        "項目高さ・余白・境界線はトークン経由で相対指定し、表示倍率変更時の可読性を維持します。"
+      ],
+      "states": [
+        "current 属性で現在地を示し、expanded 属性でサブメニュー展開状態を表します。",
+        "サブメニューは同時に1つのみ展開されます。"
+      ],
+      "labels": [
+        "複数ナビゲーションがある画面では、aria-label または aria-labelledby によるナビゲーション名の付与が必要です。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "nav",
+        "title": "ナビゲーション領域",
+        "label": "<nav>",
+        "description": "ランドマークとして機能するルート要素です。ナビゲーション名（aria-label / aria-labelledby）を付与します。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"nav\"]"
+        }
+      },
+      {
+        "id": "list",
+        "title": "トップレベル項目一覧",
+        "label": "role=\"list\"",
+        "description": "グローバルメニュー項目の集合です。左右キーでの移動対象になります。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"list\"]"
+        }
+      },
+      {
+        "id": "submenu-trigger",
+        "title": "サブメニュー付き項目",
+        "label": "submenu trigger",
+        "description": "この項目はサブメニューを開閉し、展開時は expanded 状態になります。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "hostSelector": "dads-global-menu-item:nth-of-type(2)",
+          "scope": "shadow",
+          "selector": "[part=\"trigger\"]"
+        }
+      },
+      {
+        "id": "submenu-popup",
+        "title": "サブメニュー（menu-list-box）",
+        "label": "submenu",
+        "description": "サブメニュー本体です。メニュー項目は矢印キーで移動し、Escape で閉じます。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "hostSelector": "dads-global-menu-item:nth-of-type(2)",
+          "selector": "dads-menu-list-box"
+        }
+      }
+    ]
+  },
+  "dads-global-menu-item": {
+    "version": 1,
+    "summary": "グローバルメニュー項目仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "submenu が無い場合は <a>、submenu がある場合は <button> として描画されます。"
+      ],
+      "keyboard": [
+        "submenu 付きの場合、Enter / Space で開閉、ArrowDown / ArrowUp でサブメニューの先頭/末尾へ移動します。"
+      ],
+      "zoom": [
+        "項目幅は内容に応じて伸縮し、長文は折り返さずにメニューの情報密度を保ちます。"
+      ],
+      "states": [
+        "current 属性で現在地、expanded 属性でサブメニュー展開状態を示します。"
+      ],
+      "labels": [
+        "リンク項目はリンク先文言、サブメニュー項目はトリガー文言がアクセシブル名になります。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "trigger",
+        "title": "項目トリガー",
+        "label": "trigger",
+        "description": "リンクまたはボタンとして動作する主操作要素です。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"trigger\"]"
+        }
+      },
+      {
+        "id": "label",
+        "title": "項目ラベル",
+        "label": "label",
+        "description": "項目の可視ラベルです。ナビゲーション名として読まれます。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "chevron",
+        "title": "サブメニュー矢印",
+        "label": "chevron",
+        "description": "サブメニューを持つ項目で表示され、expanded 状態で向きが変わります。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"chevron\"]"
+        }
+      }
+    ]
+  },
+  "dads-utility-link": {
+    "version": 1,
+    "summary": "ユーティリティリンク仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部は <a> 要素で実装し、補助的な遷移リンクとして利用します。",
+        "先頭アイコンは slot=\"lead-icon\" が指定された場合のみ表示されます。"
+      ],
+      "keyboard": [
+        "Tab でフォーカスし、Enter でリンク遷移できます（ネイティブ挙動）。",
+        "フォーカス時はアウトラインと背景色で可視化します。"
+      ],
+      "zoom": [
+        "本文16px・line-height 1.3 を基準にし、拡大時も読みやすさを維持します。"
+      ],
+      "states": [
+        "target=\"_blank\" のときは末尾に新規タブアイコンを表示します。",
+        "download 属性があるときは末尾にダウンロードアイコンを表示します（target=\"_blank\" より優先）。",
+        "download 属性があるときは内部リンクの target は無効化されます。"
+      ],
+      "labels": [
+        "リンクラベルはデフォルトスロットのテキストを使用します。",
+        "末尾アイコンは role=\"img\" で、状態に応じて aria-label が「新規タブで開きます」または「ダウンロードします」になります。"
+      ],
+      "motion": [
+        "アニメーションは前提としません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "base",
+        "title": "リンク本体",
+        "label": "<a>",
+        "description": "ユーティリティリンクの主操作要素です。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "label",
+        "title": "リンクラベル",
+        "label": "slot",
+        "description": "リンクのアクセシブルネームになる可視テキストです。",
+        "category": "labels",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "tail-icon",
+        "title": "末尾アイコン",
+        "label": "target=\"_blank\" / download",
+        "description": "新規タブ遷移またはダウンロード時に表示される補助アイコンです。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"tail-icon\"]"
         }
       }
     ]
