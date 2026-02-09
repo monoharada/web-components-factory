@@ -15965,6 +15965,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "#isEventFromSubmenu",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "#itemObserver",
               "privacy": "private",

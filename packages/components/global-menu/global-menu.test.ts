@@ -210,6 +210,59 @@ describe('DadsGlobalMenu - 基本', () => {
     expect(document.activeElement).toBe(trigger);
   });
 
+  it('サブメニュー内の Home/End はトップレベル移動に伝播しない', async () => {
+    const { defineDefaultGlobalMenu } = await import('./global-menu-define');
+    defineDefaultGlobalMenu();
+
+    element = renderWebComponent(`
+      <dads-global-menu>
+        <dads-global-menu-item href="/top">Top</dads-global-menu-item>
+        <dads-global-menu-item>
+          Menu
+          <dads-menu-list-box label="submenu">
+            <dads-menu-list-item>One</dads-menu-list-item>
+            <dads-menu-list-item>Two</dads-menu-list-item>
+          </dads-menu-list-box>
+        </dads-global-menu-item>
+      </dads-global-menu>
+    `);
+
+    await waitForCustomElement(element);
+
+    const items = Array.from(element.querySelectorAll('dads-global-menu-item')) as HTMLElement[];
+    for (const item of items) await waitForCustomElement(item);
+    await waitTick();
+
+    const firstTrigger = getShadowContent(items[0], '#trigger') as HTMLElement | null;
+    const submenu = items[1].querySelector('dads-menu-list-box') as HTMLElement | null;
+    if (!firstTrigger || !submenu) throw new Error('first trigger or submenu not found');
+
+    await waitForCustomElement(submenu);
+    items[1].setAttribute('expanded', '');
+    await waitTick();
+    await waitTick();
+
+    const menuItems = Array.from(submenu.querySelectorAll('dads-menu-list-item')) as HTMLElement[];
+    for (const menuItem of menuItems) await waitForCustomElement(menuItem);
+    const menu = getShadowContent(submenu, '#menu') as HTMLElement | null;
+    const firstBase = getShadowContent(menuItems[0], '#base') as HTMLElement | null;
+    const secondBase = getShadowContent(menuItems[1], '#base') as HTMLElement | null;
+    if (!menu || !firstBase || !secondBase) throw new Error('submenu menu/base not found');
+
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true, composed: true, cancelable: true }));
+    await waitTick();
+    expect(document.activeElement).toBe(secondBase);
+    expect(items[1].hasAttribute('expanded')).toBe(true);
+    expect(submenu.hasAttribute('open')).toBe(true);
+    expect(document.activeElement).not.toBe(firstTrigger);
+
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true, composed: true, cancelable: true }));
+    await waitTick();
+    expect(document.activeElement).toBe(firstBase);
+    expect(items[1].hasAttribute('expanded')).toBe(true);
+    expect(submenu.hasAttribute('open')).toBe(true);
+  });
+
   it('menuitemselect でサブメニューが閉じる', async () => {
     const { defineDefaultGlobalMenu } = await import('./global-menu-define');
     defineDefaultGlobalMenu();
@@ -319,6 +372,36 @@ describe('DadsGlobalMenu - 基本', () => {
     expect(trigger.hasAttribute('target')).toBe(false);
     expect(trigger.hasAttribute('rel')).toBe(false);
     expect(trigger.hasAttribute('download')).toBe(false);
+  });
+
+  it('href の動的更新が trigger に同期される', async () => {
+    const { defineDefaultGlobalMenu } = await import('./global-menu-define');
+    defineDefaultGlobalMenu();
+
+    element = renderWebComponent(`
+      <dads-global-menu>
+        <dads-global-menu-item href="/one">One</dads-global-menu-item>
+      </dads-global-menu>
+    `);
+
+    await waitForCustomElement(element);
+    const item = element.querySelector('dads-global-menu-item') as HTMLElement | null;
+    if (!item) throw new Error('item not found');
+    await waitForCustomElement(item);
+    await waitTick();
+
+    const trigger = getShadowContent(item, '#trigger') as HTMLAnchorElement | null;
+    if (!trigger) throw new Error('trigger not found');
+
+    expect(trigger.getAttribute('href')).toBe('/one');
+
+    item.setAttribute('href', '/two');
+    await waitTick();
+    expect(trigger.getAttribute('href')).toBe('/two');
+
+    item.setAttribute('href', 'javascript:alert(1)');
+    await waitTick();
+    expect(trigger.getAttribute('href')).toBe('#');
   });
 
   it('start-icon と submenu の動的変更に追従する', async () => {

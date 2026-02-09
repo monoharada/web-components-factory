@@ -161,6 +161,10 @@ export class DadsGlobalMenu extends TypographyWebComponent {
   }
 
   #handleKeydown(event: KeyboardEvent): void {
+    // サブメニュー側（menu-list-box）がすでに処理したキー操作は再処理しない。
+    if (event.defaultPrevented) return;
+    if (this.#isEventFromSubmenu(event)) return;
+
     if (
       event.key !== Keys.arrowLeft &&
       event.key !== Keys.arrowRight &&
@@ -193,6 +197,16 @@ export class DadsGlobalMenu extends TypographyWebComponent {
         preventDefaultHomeEnd: true,
       },
     );
+  }
+
+  #isEventFromSubmenu(event: KeyboardEvent): boolean {
+    const path = event.composedPath();
+    for (const node of path) {
+      if (node === this) break;
+      if (!(node instanceof HTMLElement)) continue;
+      if (node.localName.endsWith('-menu-list-box')) return true;
+    }
+    return false;
   }
 
   #resolveCurrentTarget(entries: ItemEntry[], event: KeyboardEvent): HTMLElement | null {
@@ -607,6 +621,9 @@ export class DadsGlobalMenuItem extends TypographyWebComponent {
   #syncLinkAttributes(): void {
     const trigger = this.#trigger;
     if (!(trigger instanceof HTMLAnchorElement)) return;
+
+    const href = this.getAttribute('href');
+    trigger.setAttribute('href', href && isSafeHref(href) ? href : '#');
 
     const target = this.getAttribute('target');
     const rel = this.getAttribute('rel');
