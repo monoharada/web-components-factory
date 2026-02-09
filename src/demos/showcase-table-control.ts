@@ -1293,9 +1293,9 @@ export const demos = {
       ]);
 
       const [{ mountTableControlDemo }, { mountTableControlMunicipalDemo }, { mountTableControlPresetDemo }] = await Promise.all([
-        import('/src/demos/table-control-mvc.js'),
-        import('/src/demos/table-control-municipal-mvc.js'),
-        import('/src/demos/table-control-preset-mvc.js'),
+        import('./src/demos/table-control-mvc.js'),
+        import('./src/demos/table-control-municipal-mvc.js'),
+        import('./src/demos/table-control-preset-mvc.js'),
       ]);
 
       const root = document.querySelector('#demo-table-control-root');

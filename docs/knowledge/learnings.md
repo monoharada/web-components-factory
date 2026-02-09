@@ -1339,4 +1339,33 @@ dads-card.card-example-1::part(main) {
 
 ---
 
+## [2026-02-09] Project Pagesで `src/demos` 絶対パスが404になる問題と予防策
+**タグ**: #webcomponents #workflow #debug #architecture
+
+### 概要
+`tableControl` デモ内の dynamic import が `import('/src/demos/...')` になっていたため、GitHub Pages（Project Pages: `/<repo>/`）で `https://<user>.github.io/src/demos/...` に解決されて 404 になり、MVC デモの初期化が失敗した。
+
+### 詳細
+#### 症状
+- `table-control-mvc.js` / `table-control-municipal-mvc.js` / `table-control-preset-mvc.js` の取得が 404
+- `dads-table-control` は読み込まれるが、データ連動デモが表示されない
+
+#### 原因
+- 埋め込み `script type="module"` の dynamic import が先頭 `/` の絶対パスだった
+- Project Pages はルート配信ではなく `/<repo>/` 配下のため、`/src/...` はリポジトリ外を指してしまう
+
+#### 修正
+- `src/demos/showcase-table-control.ts` の import を `./src/demos/...` に変更
+- `src/demos/showcase-table-control.test.ts` で相対パス期待値へ更新し、`import('/src/demos/` を含まないことを検証
+- `tests/pages-build-viewer.test.ts` で `dist-pages/src/demos/showcase-table-control.js` に絶対パスが残っていないことを検証
+
+### 再発防止
+- レビュー観点: viewer埋め込み script の dynamic import は先頭 `/` を禁止し、`./` など `document.baseURI` 基準の相対パスを使う
+- テスト観点: Pages ビルド後の `dist-pages/src/demos/*.js` に対して絶対パス混入を検知する
+
+### 注意点
+- `deepl-input-controller` の解決失敗はリポジトリ内定義がなく、ブラウザ拡張注入などのノイズの可能性が高い。今回の主因とは切り分ける
+
+---
+
 *継続的に更新されます*

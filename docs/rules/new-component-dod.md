@@ -72,6 +72,7 @@ export default DadsMyComponent;
 - [ ] `viewer.html` にセレクタオプション追加
 - [ ] **操作可能な API / Controls テーブル**を追加（`docs/knowledge/viewer-api-controls-table.md` を参照）
 - [ ] **新規HTMLファイルは作成禁止**
+- [ ] 埋め込み `script type="module"` の dynamic import で先頭 `/` の絶対パスを使わない（`./` など `document.baseURI` 基準の相対パスを使う）
 - [ ] `placeholder` 属性は使用禁止（ネイティブ `<input>` 含む）。ヒントは `support-text` / `aria-describedby` などで提供する
 
 **参照**: [コンポーネント雛形](../knowledge/component-skeleton.md)
@@ -209,6 +210,7 @@ PRコメントや自己レビュー用：
 - [ ] `src/demos.ts` にデモ追加
 - [ ] `src/demos.ts` の説明ページに **Usage（HTML）コードブロック（`<dads-code-block>`）** を追加
 - [ ] `src/demos.ts` に **操作可能な API / Controls テーブル**を追加（`docs/knowledge/viewer-api-controls-table.md` を参照）
+- [ ] 埋め込み `script type="module"` の dynamic import で先頭 `/` の絶対パスを使わない（`./` など `document.baseURI` 基準の相対パスを使う）
 - [ ] `placeholder` 属性は使用禁止（ネイティブ `<input>` 含む）。ヒントは `support-text` / `aria-describedby` などで提供する
 - [ ] `viewer.html` にセレクタ追加
 - [ ] `packages/components/<componentId>/<componentId>-define.ts` を用意（例外は `registry/overrides.json` に理由つきで明記）
