@@ -198,7 +198,7 @@ export const demos = {
 
   blockquote: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">引用ブロックコンポーネント</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">引用ブロック</h2>
       <p style="color: #666; margin-bottom: 32px;">
         デジタル庁デザインシステム準拠の引用ブロックコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
@@ -522,7 +522,7 @@ export const demos = {
 
   button: () => `
     <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ボタンコンポーネント</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ボタン</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステムv2.7.0準拠のボタンコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
@@ -852,7 +852,7 @@ export const demos = {
   card: () => `
     <div class="card-page">
       <header class="card-page__header">
-        <h2 class="card-page__title">カードコンポーネント</h2>
+        <h2 class="card-page__title">カード</h2>
         <p class="card-page__lead">
           デジタル庁デザインシステム（DADS）準拠のカードコンポーネント。カードの構成ルール（コンテナ/メイン/イメージ/サブ）をWeb Componentsとして提供します。
         </p>
@@ -5650,7 +5650,7 @@ ${dadsDataRows(6, 6)}
 
   switch: () => `
     <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">スイッチコンポーネント</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">スイッチ</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステム準拠のスイッチ（トグル）コンポーネント。TDD（テスト駆動開発）で実装。
       </p>

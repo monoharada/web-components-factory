@@ -13,11 +13,13 @@ import {
   renderApiPanelWrapper,
 } from './shared.js';
 
+const DEMO_H2_STYLE = 'font-size: 28px; margin-bottom: 20px; color: #333;';
+
 export const demos = {
 
   resetCss: () => `
     <div style="padding: 20px;">
-      <h2 style="margin-bottom: 30px; color: #333;">リセットCSS比較デモ</h2>
+      <h2 style="margin-bottom: 30px; color: #333;">リセットCSS比較デモ（独自）</h2>
 
       <div style="display: grid; gap: 30px; max-width: 1280px;">
         <!-- 既存サイトのスタイル影響テスト -->
@@ -92,7 +94,7 @@ export const demos = {
 
   textareaValidation: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Textarea（Validation）</h2>
+      <h2 style="${DEMO_H2_STYLE}">テキストエリア（バリデーション検証）</h2>
       <p style="color: #666; margin-bottom: 32px;">
         auto-validate 属性による自動バリデーションの作例です。
       </p>
@@ -415,7 +417,7 @@ export const demos = {
 
   inputTextValidation: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Input Text（Validation）</h2>
+      <h2 style="${DEMO_H2_STYLE}">インプットテキスト（バリデーション検証）</h2>
       <p style="color: #666; margin-bottom: 32px;">
         auto-validate 属性による必須バリデーションと、Emailフォーマット検証の作例です。
       </p>
@@ -733,7 +735,7 @@ export const demos = {
 
   selectValidation: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Select（Validation）</h2>
+      <h2 style="${DEMO_H2_STYLE}">セレクトボックス（バリデーション検証）</h2>
       <p style="color: #666; margin-bottom: 32px;">
         auto-validate 属性による必須バリデーションの作例です。
       </p>
@@ -1009,7 +1011,7 @@ export const demos = {
 
   menuListBoxFidelity: () => `
     <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Menu List Box - Fidelity Tests</h2>
+      <h2 style="${DEMO_H2_STYLE}">メニューリストボックス（忠実度検証）</h2>
       <p style="color: #666; margin-bottom: 24px;">
         E2E・Figma検証用デモ（ID安定性優先）。人間向けショーケースは <code>menuListBox</code> を参照してください。
       </p>
@@ -1327,7 +1329,7 @@ export const demos = {
 
   listFidelity: () => `
     <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">List - Fidelity (Figma structures)</h2>
+      <h2 style="${DEMO_H2_STYLE}">箇条書きリスト（忠実度検証）</h2>
       <p style="color: #666; margin-bottom: 24px;">
         E2E・VRT検証用デモ（ID安定性優先）。人間向けショーケースは <code>list</code> を参照してください。
       </p>
@@ -1527,7 +1529,7 @@ export const demos = {
 
   descriptionListFidelity: () => `
     <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">Description List - Fidelity (Storybook Playground)</h2>
+      <h2 style="${DEMO_H2_STYLE}">説明リスト（忠実度検証）</h2>
       <p style="color: #666; margin-bottom: 24px;">
         E2E・VRT検証用デモ（ID安定性優先）。人間向けショーケースは <code>descriptionList</code> を参照してください。
       </p>

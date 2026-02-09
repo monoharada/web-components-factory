@@ -1108,7 +1108,7 @@ export const demos = {
 
   inputText: () => `
     <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">インプットテキストコンポーネント</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">インプットテキスト</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステム準拠のインプットテキストコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
@@ -1668,7 +1668,7 @@ export const demos = {
 
   textarea: () => `
     <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">テキストエリアコンポーネント</h2>
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">テキストエリア</h2>
       <p style="color: #666; margin-bottom: 40px;">
         デジタル庁デザインシステム準拠のテキストエリアコンポーネント。TDD（テスト駆動開発）で実装。
       </p>

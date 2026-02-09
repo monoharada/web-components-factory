@@ -264,6 +264,20 @@
         "componentDir": "packages/components/input-text"
       }
     },
+    "language-selector": {
+      "id": "language-selector",
+      "tags": [
+        "dads-language-selector"
+      ],
+      "define": "defineLanguageSelector",
+      "call": "prefix-registry",
+      "deps": [
+        "menu-list-box"
+      ],
+      "source": {
+        "componentDir": "packages/components/language-selector"
+      }
+    },
     "list": {
       "id": "list",
       "tags": [
@@ -482,6 +496,7 @@
     "dads-hamburger-menu-button": "hamburger-menu-button",
     "dads-heading": "heading",
     "dads-input-text": "input-text",
+    "dads-language-selector": "language-selector",
     "dads-list": "list",
     "dads-list-item": "list",
     "dads-menu-list": "menu-list",
