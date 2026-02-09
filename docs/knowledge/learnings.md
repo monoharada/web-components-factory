@@ -1371,6 +1371,32 @@ dads-card.card-example-1::part(main) {
 
 ---
 
+## [2026-02-09] グローバルメニュー: a11y-annotate の配置調整と nav 命名
+**タグ**: #a11y #annotation #navigation #webcomponents #dads
+
+### 概要
+グローバルメニューの注釈で `callout-lane="top"` を固定すると、`<nav>` / `role="list"` / サブメニュートリガーのコールアウトが重なりやすい。広い横並びナビゲーションでは既定配置を優先した方が可読性が安定した。
+
+### 詳細
+- 横幅の広い target（`dads-global-menu`）に対してレーン固定をすると、複数コールアウトが同一帯に集まり、線が交差しやすい。
+- `a11y-annotate` は既定配置（callout-lane未指定）に戻し、周辺余白だけ最小限確保する方が他コンポーネントと同じ見え方になる。
+- `dads-global-menu` は内部に `<nav>` を持つため、`aria-label` / `aria-labelledby` でナビゲーション名を必ず付与できるAPIと作例を揃える。
+
+### 適用例
+```html
+<a11y-annotate target-selector="dads-global-menu">
+  <div style="padding: 60px 0;">
+    <dads-global-menu aria-label="主要メニュー">
+      ...
+    </dads-global-menu>
+  </div>
+</a11y-annotate>
+```
+
+### 注意点
+- 同一ページに複数のナビゲーションランドマークがある場合は、`aria-label` か `aria-labelledby` のどちらかで必ず命名する。
+- 注釈の見切れや重なり対策は、まず `callout-lane` ではなく target 周辺の余白調整で解決する。
+
 ## [2026-02-09] Project Pagesで `src/demos` 絶対パスが404になる問題と予防策
 **タグ**: #webcomponents #workflow #debug #architecture
 

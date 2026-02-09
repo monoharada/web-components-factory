@@ -102,6 +102,10 @@ export const menuListBoxStyles = css`
     transform: rotate(180deg);
   }
 
+  :host([opener-hidden]) [part="opener"] {
+    display: none;
+  }
+
   [part="popup"] {
     position: absolute;
     top: 100%;

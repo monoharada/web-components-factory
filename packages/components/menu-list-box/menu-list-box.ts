@@ -63,6 +63,7 @@ function unsubscribeAll(subscriptions: Array<() => void>): void {
  * @attr {boolean} bold - 太字表示
  * @attr {string} label - ラベル（slot未使用時のフォールバック）
  * @attr {boolean} open - 開閉状態
+ * @attr {boolean} opener-hidden - opener を非表示にして外部トリガー連携する
  *
  * @fires menuitemselect - 項目選択時に発火（detail: { selectedItem, selectedValue, selectedIndex }）
  */
@@ -76,6 +77,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
   #subscriptions: Array<() => void> = [];
   #documentSubscriptions: Array<() => void> = [];
   #menuItemSubscriptions: Array<() => void> = [];
+  #focusReturnTarget: HTMLElement | null = null;
 
   static definition = {
     name: 'dads-menu-list-box',
@@ -112,6 +114,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
       BooleanAttr('bold'),
       PropertyAttr('label'),
       BooleanAttr('open'),
+      BooleanAttr('opener-hidden'),
     ],
   };
 
@@ -121,6 +124,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
   declare bold: boolean;
   declare label: string | null;
   declare open: boolean;
+  declare ['opener-hidden']: boolean;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -164,6 +168,11 @@ export class DadsMenuListBox extends TypographyWebComponent {
       this.#syncOpenState(newValue !== null);
       return;
     }
+
+    if (name === 'opener-hidden') {
+      this.#setupEventListeners();
+      return;
+    }
   }
 
   toggleMenu(): void {
@@ -177,6 +186,13 @@ export class DadsMenuListBox extends TypographyWebComponent {
 
   closeMenu(): void {
     this.removeAttribute('open');
+  }
+
+  /**
+   * メニューを閉じたあとのフォーカス復帰先を指定する
+   */
+  setFocusReturnTarget(target: HTMLElement | null): void {
+    this.#focusReturnTarget = target;
   }
 
   focusFirstMenuItem(): void {
@@ -212,13 +228,19 @@ export class DadsMenuListBox extends TypographyWebComponent {
     const menu = this.#menu;
     const iconSlot = this.#iconSlot;
     const itemsSlot = this.#itemsSlot;
+    const isOpenerHidden = this.hasAttribute('opener-hidden');
 
     unsubscribeAll(this.#subscriptions);
-    if (!opener || !menu) return;
+    if (!menu) return;
+
+    if (opener && !isOpenerHidden) {
+      this.#subscriptions.push(
+        subscribe(opener, 'click', (e) => this.#handleOpenerClick(e)),
+        subscribe(opener, 'keydown', (e) => this.#handleOpenerKeydown(e as KeyboardEvent)),
+      );
+    }
 
     this.#subscriptions.push(
-      subscribe(opener, 'click', (e) => this.#handleOpenerClick(e)),
-      subscribe(opener, 'keydown', (e) => this.#handleOpenerKeydown(e as KeyboardEvent)),
       subscribe(menu, 'keydown', (e) => this.#handleMenuKeydown(e as KeyboardEvent)),
     );
 
@@ -247,6 +269,12 @@ export class DadsMenuListBox extends TypographyWebComponent {
   #isEventInside(event: Event): boolean {
     const path = event.composedPath();
     return path.includes(this);
+  }
+
+  #isEventOnFocusReturnTarget(event: Event): boolean {
+    const focusReturnTarget = this.#getFocusReturnTarget();
+    if (!focusReturnTarget) return false;
+    return event.composedPath().includes(focusReturnTarget);
   }
 
   #handleOpenerClick(event: Event): void {
@@ -302,12 +330,14 @@ export class DadsMenuListBox extends TypographyWebComponent {
   #handleClickOutside(event: MouseEvent): void {
     if (!this.#isOpen()) return;
     if (this.#isEventInside(event)) return;
+    if (this.#isEventOnFocusReturnTarget(event)) return;
     this.closeMenu();
   }
 
   #handleFocusIn(event: FocusEvent): void {
     if (!this.#isOpen()) return;
     if (this.#isEventInside(event)) return;
+    if (this.#isEventOnFocusReturnTarget(event)) return;
     this.closeMenu();
   }
 
@@ -317,7 +347,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
 
     event.preventDefault();
     this.closeMenu();
-    this.#opener?.focus();
+    this.#getFocusReturnTarget()?.focus();
   }
 
   #syncLabel(): void {
@@ -347,10 +377,10 @@ export class DadsMenuListBox extends TypographyWebComponent {
   #syncOpenState(isOpen: boolean): void {
     const opener = this.#opener;
     const popup = this.#popup;
-    if (!opener || !popup) return;
+    if (!popup) return;
 
     popup.hidden = !isOpen;
-    opener.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    opener?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     this.#syncDocumentListeners(isOpen);
     if (!isOpen) {
       this.removeAttribute('data-has-popup-scrollbar');
@@ -497,10 +527,16 @@ export class DadsMenuListBox extends TypographyWebComponent {
     );
 
     this.closeMenu();
-    this.#opener?.focus();
+    this.#getFocusReturnTarget()?.focus();
   }
 
   #isOpen(): boolean {
-    return this.#opener?.getAttribute('aria-expanded') === 'true';
+    return this.hasAttribute('open');
+  }
+
+  #getFocusReturnTarget(): HTMLElement | null {
+    if (this.#focusReturnTarget) return this.#focusReturnTarget;
+    if (this.hasAttribute('opener-hidden')) return null;
+    return this.#opener;
   }
 }

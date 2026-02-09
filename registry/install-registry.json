@@ -213,6 +213,21 @@
         "componentDir": "packages/components/file-upload"
       }
     },
+    "global-menu": {
+      "id": "global-menu",
+      "tags": [
+        "dads-global-menu",
+        "dads-global-menu-item"
+      ],
+      "define": "defineGlobalMenu",
+      "call": "prefix-registry",
+      "deps": [
+        "menu-list-box"
+      ],
+      "source": {
+        "componentDir": "packages/components/global-menu"
+      }
+    },
     "hamburger-menu-button": {
       "id": "hamburger-menu-button",
       "tags": [
@@ -476,6 +491,8 @@
     "dads-drawer": "drawer",
     "dads-fieldset": "fieldset",
     "dads-file-upload": "file-upload",
+    "dads-global-menu": "global-menu",
+    "dads-global-menu-item": "global-menu",
     "dads-hamburger-menu-button": "hamburger-menu-button",
     "dads-heading": "heading",
     "dads-input-text": "input-text",
