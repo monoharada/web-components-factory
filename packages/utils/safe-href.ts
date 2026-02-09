@@ -11,14 +11,17 @@
  * - tel
  */
 export function isSafeHref(href: string): boolean {
+  const value = href.trim();
+  if (value === '') return false;
+
   return (
-    href === '#' ||
-    href.startsWith('/') ||
-    href.startsWith('#') ||
-    href.startsWith('./') ||
-    href.startsWith('../') ||
-    /^https?:\/\//i.test(href) ||
-    /^mailto:/i.test(href) ||
-    /^tel:/i.test(href)
+    value === '#' ||
+    value.startsWith('/') ||
+    value.startsWith('#') ||
+    value.startsWith('./') ||
+    value.startsWith('../') ||
+    /^https?:\/\//i.test(value) ||
+    /^mailto:/i.test(value) ||
+    /^tel:/i.test(value)
   );
 }

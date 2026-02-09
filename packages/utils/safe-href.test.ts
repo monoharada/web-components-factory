@@ -9,6 +9,7 @@ describe('safe-href', () => {
       './relative',
       '../parent',
       'https://example.com',
+      ' https://example.com ',
       'http://example.com',
       'mailto:hello@example.com',
       'tel:+81-90-0000-0000',
