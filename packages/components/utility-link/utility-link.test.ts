@@ -76,6 +76,10 @@ describe('DadsUtilityLink - 基本', () => {
       'https://example.com',
       'http://example.com',
       '/path/to/page',
+      'docs/page',
+      'page.html',
+      '?q=1',
+      '?q=1#section',
       './relative',
       '../parent',
       '#anchor',
@@ -89,6 +93,23 @@ describe('DadsUtilityLink - 基本', () => {
 
       const base = getShadowContent(testEl, '#base') as HTMLAnchorElement | null;
       expect(base?.getAttribute('href')).toBe(url);
+
+      cleanupTestElement(testEl);
+    }
+  });
+
+  it('不正スキームの URL は # にフォールバックする', async () => {
+    const { defineDefaultUtilityLink } = await import('./utility-link-define');
+    defineDefaultUtilityLink();
+
+    const invalidUrls = ['javascript:alert(1)', 'data:text/html;base64,PHNjcmlwdA==', 'ftp://example.com'];
+
+    for (const url of invalidUrls) {
+      const testEl = renderWebComponent(`<dads-utility-link href="${url}">Link</dads-utility-link>`);
+      await waitForCustomElement(testEl);
+
+      const base = getShadowContent(testEl, '#base') as HTMLAnchorElement | null;
+      expect(base?.getAttribute('href')).toBe('#');
 
       cleanupTestElement(testEl);
     }

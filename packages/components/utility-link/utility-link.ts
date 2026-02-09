@@ -40,16 +40,25 @@ function isMeaningfulNode(node: Node): boolean {
 }
 
 function isSafeHref(href: string): boolean {
-  return (
-    href === '#' ||
-    href.startsWith('/') ||
-    href.startsWith('#') ||
-    href.startsWith('./') ||
-    href.startsWith('../') ||
-    /^https?:\/\//i.test(href) ||
-    /^mailto:/i.test(href) ||
-    /^tel:/i.test(href)
-  );
+  const value = href.trim();
+  if (value === '') return false;
+
+  if (
+    value === '#' ||
+    value.startsWith('/') ||
+    value.startsWith('#') ||
+    value.startsWith('./') ||
+    value.startsWith('../') ||
+    value.startsWith('?')
+  ) {
+    return true;
+  }
+
+  const match = value.match(/^([a-zA-Z][a-zA-Z\d+.-]*):/);
+  if (!match) return true;
+
+  const scheme = match[1].toLowerCase();
+  return scheme === 'http' || scheme === 'https' || scheme === 'mailto' || scheme === 'tel';
 }
 
 /**
