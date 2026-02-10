@@ -53,6 +53,18 @@ describe('DadsHamburgerMenuButton - 基本', () => {
     expect(element.getAttribute('type')).toBe('close');
     expect(element.getAttribute('lang')).toBe('en');
   });
+
+  it('hidden 属性で非表示になる', async () => {
+    const element = renderWebComponent('<dads-hamburger-menu-button></dads-hamburger-menu-button>');
+    await waitForComponent('dads-hamburger-menu-button');
+
+    expect(getComputedStyle(element).display).not.toBe('none');
+
+    element.setAttribute('hidden', '');
+    await flushMicrotask();
+
+    expect(getComputedStyle(element).display).toBe('none');
+  });
 });
 
 describe('DadsHamburgerMenuButton - アイコン/ラベル切替', () => {

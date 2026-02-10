@@ -107,7 +107,7 @@ export const demos = {
                   ></dads-hamburger-menu-button>
 
                   <dads-hamburger-menu-button
-                    variant="icon"
+                    variant="standard"
                     type="menu"
                     lang="ja"
                     command="show-modal"
@@ -117,7 +117,7 @@ export const demos = {
                   ></dads-hamburger-menu-button>
 
                   <dads-hamburger-menu-button
-                    variant="icon"
+                    variant="standard"
                     type="menu"
                     lang="en"
                     command="show-modal"
@@ -374,7 +374,7 @@ export const demos = {
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">実画面作例（showModal）</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
-          標準バリアントとアイコンバリアントを、それぞれ実画面で開閉します。
+          標準バリアントで統一し、日本語/英語の2パターンを実画面で開閉します。
         </p>
 
         <div id="hamburger-live-root" class="hamburger-demo__live-layout">
@@ -394,15 +394,15 @@ export const demos = {
             </div>
 
             <div class="hamburger-demo__surface hamburger-demo__surface--compact">
-              <h4 style="font-size: 16px; margin: 0 0 8px; color: #333;">icon</h4>
+              <h4 style="font-size: 16px; margin: 0 0 8px; color: #333;">standard (en)</h4>
               <dads-hamburger-menu-button
-                id="hamburger-live-icon-trigger"
-                variant="icon"
+                id="hamburger-live-standard-en-trigger"
+                variant="standard"
                 type="menu"
-                lang="ja"
+                lang="en"
                 command="show-modal"
-                commandfor="#hamburger-live-icon-drawer"
-                aria-controls="hamburger-live-icon-drawer"
+                commandfor="#hamburger-live-standard-en-drawer"
+                aria-controls="hamburger-live-standard-en-drawer"
                 aria-expanded="false"
               ></dads-hamburger-menu-button>
             </div>
@@ -421,9 +421,9 @@ export const demos = {
           標準バリアントから開く実画面作例です。
         </dads-drawer>
 
-        <dads-drawer id="hamburger-live-icon-drawer" placement="right" close-label="閉じる">
-          <span slot="title">アイコンメニュードロワー</span>
-          アイコンバリアントから開く実画面作例です。
+        <dads-drawer id="hamburger-live-standard-en-drawer" placement="right" close-label="閉じる">
+          <span slot="title">標準メニュードロワー（英語）</span>
+          標準バリアント（英語ラベル）から開く実画面作例です。
         </dads-drawer>
       </section>
 
@@ -491,8 +491,12 @@ export const demos = {
               syncTrigger(drawer.hasAttribute('open'));
             };
 
-            bindPair('standard', '#hamburger-live-standard-trigger', '#hamburger-live-standard-drawer');
-            bindPair('icon', '#hamburger-live-icon-trigger', '#hamburger-live-icon-drawer');
+            bindPair('standard-ja', '#hamburger-live-standard-trigger', '#hamburger-live-standard-drawer');
+            bindPair(
+              'standard-en',
+              '#hamburger-live-standard-en-trigger',
+              '#hamburger-live-standard-en-drawer'
+            );
           });
         })();
       <\/script>

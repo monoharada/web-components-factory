@@ -26045,6 +26045,676 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/mobile-menu/mobile-menu.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "controlId"
+        },
+        {
+          "kind": "class",
+          "description": "モバイルメニューコンポーネント",
+          "name": "DadsMobileMenu",
+          "cssProperties": [
+            {
+              "description": "メニュー幅",
+              "name": "--dads-mobile-menu-width"
+            },
+            {
+              "description": "背景色",
+              "name": "--dads-mobile-menu-background"
+            },
+            {
+              "description": "ルート上下余白",
+              "name": "--dads-mobile-menu-padding-block"
+            },
+            {
+              "description": "ルート左右余白",
+              "name": "--dads-mobile-menu-padding-inline"
+            },
+            {
+              "description": "枠線色",
+              "name": "--dads-mobile-menu-border-color"
+            },
+            {
+              "description": "枠線幅",
+              "name": "--dads-mobile-menu-border-width"
+            },
+            {
+              "description": "区切り線の左右余白（標準）",
+              "name": "--dads-mobile-menu-divider-margin-inline"
+            },
+            {
+              "description": "区切り線の左右余白（ワイド）",
+              "name": "--dads-mobile-menu-divider-margin-inline-wide"
+            },
+            {
+              "description": "戻る行左右余白",
+              "name": "--dads-mobile-menu-back-padding-inline"
+            },
+            {
+              "description": "戻る行上余白",
+              "name": "--dads-mobile-menu-back-padding-block-start"
+            },
+            {
+              "description": "戻る行下余白",
+              "name": "--dads-mobile-menu-back-padding-block-end"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "戻る行コンテナ",
+              "name": "back"
+            },
+            {
+              "description": "ルートの nav 要素",
+              "name": "base"
+            },
+            {
+              "description": "メニュー本文",
+              "name": "content"
+            }
+          ],
+          "slots": [
+            {
+              "description": "戻るリンク行（L2用途）",
+              "name": "back"
+            },
+            {
+              "description": "メニュー本体",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "#applyExpandedState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "trigger",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "panel",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "expanded",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#back",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#backSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#contentSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#findToggleTrigger",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getToggleTriggers",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#handleClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "MouseEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#observeMutations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolvePanel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "controlId",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#subscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#syncBackVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncControlledPanels",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-mobile-menu', template: html` <nav part=\"base\" id=\"base\"> <div part=\"back\" id=\"back\" hidden> <slot name=\"back\" id=\"back-slot\"></slot> </div> <div part=\"content\" id=\"content\"> <slot id=\"content-slot\"></slot> </div> </nav> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), mobileMenuTokens, mobileMenuStyles], 'minimal'), attributes: [ TransferringPropertyAttr('base', 'ariaLabel', 'aria-label'), TransferringPropertyAttr('base', 'ariaLabelledby', 'aria-labelledby'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "dads-mobile-menu-toggle",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "セクション開閉時に発火"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ナビゲーションラベル",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ナビゲーションラベル参照先",
+              "name": "aria-labelledby"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-mobile-menu",
+          "customElement": true,
+          "modulePath": "./packages/components/mobile-menu/mobile-menu.ts",
+          "definitionPath": "./packages/components/mobile-menu/mobile-menu.ts",
+          "typeDefinitionPath": "./packages/components/mobile-menu/mobile-menu.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "モバイルメニュー仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "内部は <nav> 要素で実装し、aria-label / aria-labelledby を nav へ転送します。",
+                  "メニュー項目は主に dads-menu-list / dads-menu-list-item と組み合わせて利用します。"
+                ],
+                "keyboard": [
+                  "各メニュー項目は Tab でフォーカスできます。",
+                  "aria-controls と aria-expanded を持つ項目は Enter/Space で開閉できるよう、トリガー側（例: dads-menu-list-item）で操作を提供します。"
+                ],
+                "zoom": [
+                  "幅・余白・戻る行余白は CSS 変数で調整でき、拡大時にもレイアウトが破綻しないことを想定します。"
+                ],
+                "states": [
+                  "aria-controls + aria-expanded を持つ項目クリックで、対象パネルの hidden を切り替えます。",
+                  "開閉状態は aria-expanded と expanded 属性を同期します。",
+                  "slot=\"back\" が空の場合は戻る行を表示しません。"
+                ],
+                "labels": [
+                  "モバイルメニュー自体のラベルは aria-label または aria-labelledby で指定します。",
+                  "戻る行は slot=\"back\" で提供します。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "mobile-menu-base",
+                  "title": "モバイルメニュー本体",
+                  "label": "<nav>",
+                  "description": "メニュー全体を保持するナビゲーションルートです。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "mobile-menu-back",
+                  "title": "戻る行（任意）",
+                  "label": "slot=\"back\"",
+                  "description": "L2 などで戻る操作を提示する行です。未指定時は非表示です。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"back\"]"
+                  }
+                },
+                {
+                  "id": "mobile-menu-content",
+                  "title": "メニュー本文",
+                  "label": "content",
+                  "description": "通常項目・現在地・外部リンク・セクションを配置する領域です。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"content\"]"
+                  }
+                },
+                {
+                  "id": "mobile-menu-toggle-trigger",
+                  "title": "セクショントリガー",
+                  "label": "aria-controls + aria-expanded",
+                  "description": "クリックで対象セクションの hidden と expanded を同期する項目です。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "selector": "[aria-controls][aria-expanded]"
+                  }
+                }
+              ]
+            },
+            "componentId": "mobile-menu",
+            "install": {
+              "id": "mobile-menu",
+              "define": "defineMobileMenu",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/mobile-menu"
+              },
+              "tags": [
+                "dads-mobile-menu"
+              ]
+            }
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "panel"
+        },
+        {
+          "kind": "variable",
+          "name": "trigger"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsMobileMenu",
+          "declaration": {
+            "name": "DadsMobileMenu",
+            "module": "packages/components/mobile-menu/mobile-menu.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/mobile-menu/mobile-menu.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/mobile-menu/mobile-menu.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-mobile-menu",
+          "declaration": {
+            "name": "DadsMobileMenu",
+            "module": "./packages/components/mobile-menu/mobile-menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/mobile-mock/mobile-mock.ts",
       "declarations": [
         {
@@ -43557,7 +44227,7 @@
         {
           "kind": "variable",
           "name": "hamburgerMenuButtonStyles",
-          "default": "css` :host { display: inline-block; } [part='base'] { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--dads-hamburger-menu-button-gap); min-block-size: var(--dads-hamburger-menu-button-min-height); padding: var(--dads-hamburger-menu-button-padding-block) var(--dads-hamburger-menu-button-padding-inline); border: 0; border-radius: var(--dads-hamburger-menu-button-radius); background-color: var(--dads-hamburger-menu-button-background); color: var(--dads-hamburger-menu-button-color); cursor: pointer; touch-action: manipulation; text-decoration: none; font-size: var(--dads-hamburger-menu-button-label-size); line-height: var(--dads-hamburger-menu-button-label-line-height); font-weight: var(--font-weight-400, 400); } [part='icon'] { display: inline-flex; flex: 0 0 auto; inline-size: var(--dads-hamburger-menu-button-icon-size); block-size: var(--dads-hamburger-menu-button-icon-size); } [part='icon'] > svg { display: block; inline-size: 100%; block-size: 100%; } [part='label'] { display: inline-block; text-decoration: inherit; white-space: nowrap; } :host([variant='standard']) [part='base']:active { background-color: var(--dads-hamburger-menu-button-background-active); } :host([variant='standard']) [part='base']:focus-visible { background-color: var(--dads-focus-text-element-bg); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); text-decoration: underline; text-underline-offset: var(--dads-hamburger-menu-button-underline-offset); } @media (any-hover: hover) { :host([variant='standard']) [part='base']:hover { background-color: var(--dads-hamburger-menu-button-background-hover); text-decoration: underline; text-underline-offset: var(--dads-hamburger-menu-button-underline-offset); } } :host([variant='icon']) [part='base'] { inline-size: var(--dads-hamburger-menu-button-icon-only-size); block-size: var(--dads-hamburger-menu-button-icon-only-size); min-inline-size: var(--dads-hamburger-menu-button-icon-only-size); min-block-size: var(--dads-hamburger-menu-button-icon-only-size); padding: 0; border-radius: var(--dads-hamburger-menu-button-icon-only-radius); } :host([variant='icon']) [part='icon'] { inline-size: var(--dads-hamburger-menu-button-icon-only-size); block-size: var(--dads-hamburger-menu-button-icon-only-size); } :host([variant='icon']) [part='label'] { position: absolute; inline-size: 1px; block-size: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; white-space: nowrap; clip: rect(0 0 0 0); clip-path: inset(50%); } :host([variant='icon']) [part='base']:active { background-color: var(--dads-hamburger-menu-button-background-active); } @media (any-hover: hover) { :host([variant='icon']) [part='base']:hover { background-color: var(--dads-hamburger-menu-button-background-hover); outline: var(--dads-hamburger-menu-button-icon-only-hover-outline-width) solid var(--dads-hamburger-menu-button-icon-only-hover-outline-color); outline-offset: -1px; text-decoration: none; } } `"
+          "default": "css` :host { display: inline-block; } :host([hidden]) { display: none; } [part='base'] { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--dads-hamburger-menu-button-gap); min-block-size: var(--dads-hamburger-menu-button-min-height); padding: var(--dads-hamburger-menu-button-padding-block) var(--dads-hamburger-menu-button-padding-inline); border: 0; border-radius: var(--dads-hamburger-menu-button-radius); background-color: var(--dads-hamburger-menu-button-background); color: var(--dads-hamburger-menu-button-color); cursor: pointer; touch-action: manipulation; text-decoration: none; font-size: var(--dads-hamburger-menu-button-label-size); line-height: var(--dads-hamburger-menu-button-label-line-height); font-weight: var(--font-weight-400, 400); } [part='icon'] { display: inline-flex; flex: 0 0 auto; inline-size: var(--dads-hamburger-menu-button-icon-size); block-size: var(--dads-hamburger-menu-button-icon-size); } [part='icon'] > svg { display: block; inline-size: 100%; block-size: 100%; } [part='label'] { display: inline-block; text-decoration: inherit; white-space: nowrap; } :host([variant='standard']) [part='base']:active { background-color: var(--dads-hamburger-menu-button-background-active); } :host([variant='standard']) [part='base']:focus-visible { background-color: var(--dads-focus-text-element-bg); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); text-decoration: underline; text-underline-offset: var(--dads-hamburger-menu-button-underline-offset); } @media (any-hover: hover) { :host([variant='standard']) [part='base']:hover { background-color: var(--dads-hamburger-menu-button-background-hover); text-decoration: underline; text-underline-offset: var(--dads-hamburger-menu-button-underline-offset); } } :host([variant='icon']) [part='base'] { inline-size: var(--dads-hamburger-menu-button-icon-only-size); block-size: var(--dads-hamburger-menu-button-icon-only-size); min-inline-size: var(--dads-hamburger-menu-button-icon-only-size); min-block-size: var(--dads-hamburger-menu-button-icon-only-size); padding: 0; border-radius: var(--dads-hamburger-menu-button-icon-only-radius); } :host([variant='icon']) [part='icon'] { inline-size: var(--dads-hamburger-menu-button-icon-only-size); block-size: var(--dads-hamburger-menu-button-icon-only-size); } :host([variant='icon']) [part='label'] { position: absolute; inline-size: 1px; block-size: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; white-space: nowrap; clip: rect(0 0 0 0); clip-path: inset(50%); } :host([variant='icon']) [part='base']:active { background-color: var(--dads-hamburger-menu-button-background-active); } @media (any-hover: hover) { :host([variant='icon']) [part='base']:hover { background-color: var(--dads-hamburger-menu-button-background-hover); outline: var(--dads-hamburger-menu-button-icon-only-hover-outline-width) solid var(--dads-hamburger-menu-button-icon-only-hover-outline-color); outline-offset: -1px; text-decoration: none; } } `"
         }
       ],
       "exports": [
@@ -44097,6 +44767,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/divider/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/page-navigation/index.js"
           }
         },
@@ -44266,6 +44944,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/mobile-mock/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/mobile-menu/index.js"
           }
         },
         {
@@ -45052,7 +45738,7 @@
         {
           "kind": "variable",
           "name": "menuListStyles",
-          "default": "css` :host { position: relative; z-index: 0; display: block; font-family: var(--dads-menu-list-font-family); font-size: var(--dads-menu-list-font-size); letter-spacing: var(--dads-menu-list-letter-spacing); color: var(--dads-menu-list-color); font-weight: var(--font-weight-400, 400); line-height: var(--line-height-130, 1.3); } [part=\"base\"] { display: block; } `"
+          "default": "css` :host { position: relative; z-index: 0; display: block; font-family: var(--dads-menu-list-font-family); font-size: var(--dads-menu-list-font-size); letter-spacing: var(--dads-menu-list-letter-spacing); color: var(--dads-menu-list-color); font-weight: var(--font-weight-400, 400); line-height: var(--line-height-130, 1.3); } :host([hidden]) { display: none; } ::slotted(dads-divider) { --dads-divider-color: var(--dads-mobile-menu-border-color, var(--color-neutral-solid-gray-420, #949494)); --dads-divider-margin-block: var(--spacing-4, 1rem); --dads-divider-margin-inline: var(--dads-mobile-menu-divider-margin-inline, var(--spacing-4, 1rem)); } ::slotted(hr) { margin-block: var(--spacing-4, 1rem); margin-inline: var(--dads-mobile-menu-divider-margin-inline, var(--spacing-4, 1rem)); border: 0; border-top: 1px solid var(--dads-mobile-menu-border-color, var(--color-neutral-solid-gray-420, #949494)); } ::slotted(hr[data-divider='wide']) { margin-inline: var(--dads-mobile-menu-divider-margin-inline-wide, var(--spacing-8, 2rem)); } [part=\"base\"] { display: block; } `"
         }
       ],
       "exports": [
@@ -45117,6 +45803,168 @@
           "declaration": {
             "name": "menuListTokens",
             "module": "packages/components/menu-list/menu-list-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/mobile-menu/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/mobile-menu/mobile-menu.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultMobileMenu",
+          "declaration": {
+            "name": "defineDefaultMobileMenu",
+            "module": "./mobile-menu-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineMobileMenu",
+          "declaration": {
+            "name": "defineMobileMenu",
+            "module": "./mobile-menu-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/mobile-menu/mobile-menu-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultMobileMenu",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineMobileMenu",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-mobile-menu`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultMobileMenu",
+          "declaration": {
+            "name": "defineDefaultMobileMenu",
+            "module": "packages/components/mobile-menu/mobile-menu-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineMobileMenu",
+          "declaration": {
+            "name": "defineMobileMenu",
+            "module": "packages/components/mobile-menu/mobile-menu-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/mobile-menu/mobile-menu-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "mobileMenuStyles",
+          "default": "css` :host { display: block; font-family: var(--dads-mobile-menu-font-family); font-size: var(--dads-mobile-menu-font-size); line-height: var(--dads-mobile-menu-line-height); letter-spacing: var(--dads-mobile-menu-letter-spacing); color: var(--dads-mobile-menu-color); } [part='base'] { display: flex; flex-direction: column; box-sizing: border-box; inline-size: var(--dads-mobile-menu-width); max-inline-size: 100%; border: 0; border-block-end: var(--dads-mobile-menu-border-width) solid var(--dads-mobile-menu-border-color); background-color: var(--dads-mobile-menu-background); color: inherit; padding-block: var(--dads-mobile-menu-padding-block); padding-inline: var(--dads-mobile-menu-padding-inline); } [part='back'] { padding-inline: var(--dads-mobile-menu-back-padding-inline); padding-block-start: var(--dads-mobile-menu-back-padding-block-start); padding-block-end: var(--dads-mobile-menu-back-padding-block-end); } [part='back'][hidden] { display: none; } #back-slot::slotted(*) { margin: 0; } [part='content'] { display: grid; gap: var(--dads-mobile-menu-content-gap); min-inline-size: 0; } #content-slot::slotted(*) { box-sizing: border-box; } #content-slot::slotted(dads-menu-list) { display: block; inline-size: 100%; } #content-slot::slotted(dads-divider) { --dads-divider-color: var(--dads-mobile-menu-border-color); --dads-divider-margin-block: var(--spacing-4, 1rem); --dads-divider-margin-inline: var(--dads-mobile-menu-divider-margin-inline); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "mobileMenuStyles",
+          "declaration": {
+            "name": "mobileMenuStyles",
+            "module": "packages/components/mobile-menu/mobile-menu-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/mobile-menu/mobile-menu-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "mobileMenuLocalTokens",
+          "default": "css`${mobileMenuLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "mobileMenuSemanticTokens",
+          "default": "css`${mobileMenuSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "mobileMenuTokens",
+          "default": "css` ${mobileMenuSemanticTokensText} ${mobileMenuLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "mobileMenuLocalTokens",
+          "declaration": {
+            "name": "mobileMenuLocalTokens",
+            "module": "packages/components/mobile-menu/mobile-menu-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mobileMenuSemanticTokens",
+          "declaration": {
+            "name": "mobileMenuSemanticTokens",
+            "module": "packages/components/mobile-menu/mobile-menu-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mobileMenuTokens",
+          "declaration": {
+            "name": "mobileMenuTokens",
+            "module": "packages/components/mobile-menu/mobile-menu-tokens.ts"
           }
         }
       ]
