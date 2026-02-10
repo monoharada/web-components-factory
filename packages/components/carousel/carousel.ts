@@ -22,11 +22,14 @@ export type DadsCarouselType = 'container' | 'key-visual';
 export type DadsCarouselChangeSource =
   | 'prev'
   | 'next'
-  | 'indicator'
-  | 'all-slides'
-  | 'api';
+  | 'indicator';
 
-export type DadsCarouselEventSource = DadsCarouselChangeSource | 'attribute' | 'sync';
+export type DadsCarouselEventSource =
+  | DadsCarouselChangeSource
+  | 'all-slides'
+  | 'api'
+  | 'attribute'
+  | 'sync';
 
 export type DadsCarouselSlidesChangeReason = 'items' | 'slotchange' | 'mutation' | 'sync';
 
@@ -263,6 +266,10 @@ function resolveRel(target: string | undefined, rel: string | undefined): string
   if (rel) return rel;
   if (target === '_blank') return 'noopener noreferrer';
   return undefined;
+}
+
+function isLegacyChangeSource(source: DadsCarouselEventSource): source is DadsCarouselChangeSource {
+  return source === 'prev' || source === 'next' || source === 'indicator';
 }
 
 function queryMediaNode(
@@ -563,6 +570,7 @@ export class DadsCarousel extends TypographyWebComponent {
     this.#headingSlot = this.shadowRoot?.querySelector('#heading-slot') as HTMLSlotElement | null;
     this.#slidesSlot = this.shadowRoot?.querySelector('#slides-slot') as HTMLSlotElement | null;
     this.#mainPanel = this.shadowRoot?.querySelector('#main-panel') as HTMLElement | null;
+    if (this.#mainPanel) this.#mainPanel.id = this.#mainPanelId();
     this.#mainLink = this.shadowRoot?.querySelector('#main-link') as HTMLAnchorElement | null;
     this.#mainLabel = this.shadowRoot?.querySelector('#main-label') as HTMLElement | null;
     this.#mainImages = this.shadowRoot?.querySelector('#main-images') as HTMLElement | null;
@@ -912,15 +920,14 @@ export class DadsCarousel extends TypographyWebComponent {
 
   #syncTypeAttribute(): void {
     const imageSliderMode = this.#isImageSliderMode();
-    const normalized = imageSliderMode
-      ? 'container'
-      : normalizeType(this.getAttribute('type'));
-    if (this.getAttribute('type') !== normalized) {
-      this.setAttribute('type', normalized);
+    const normalizedType = normalizeType(this.getAttribute('type'));
+    if (this.getAttribute('type') !== normalizedType) {
+      this.setAttribute('type', normalizedType);
       return;
     }
 
-    this.setAttribute('data-carousel-type', normalized);
+    const effectiveType = imageSliderMode ? 'container' : normalizedType;
+    this.setAttribute('data-carousel-type', effectiveType);
     this.setAttribute('data-image-slider', imageSliderMode ? 'true' : 'false');
   }
 
@@ -1124,11 +1131,12 @@ export class DadsCarousel extends TypographyWebComponent {
     });
 
     if (!emitLegacyChangeEvent) return true;
+    if (!isLegacyChangeSource(source)) return true;
     const detail: DadsCarouselChangeDetail = {
       currentIndex: nextIndex,
       previousIndex,
       total,
-      source: source as DadsCarouselChangeSource,
+      source,
     };
     this.emitEvent<DadsCarouselChangeDetail>('dads-carousel-change', detail);
     return true;
@@ -1389,7 +1397,7 @@ export class DadsCarousel extends TypographyWebComponent {
       button.setAttribute('role', 'tab');
       button.setAttribute('id', this.#indicatorId(index));
       button.setAttribute('data-index', String(index));
-      button.setAttribute('aria-controls', this.#mainPanelId(index));
+      button.setAttribute('aria-controls', this.#mainPanelId());
       button.setAttribute('aria-label', `${this.#unitText()}${index + 1}`);
 
       const unit = document.createElement('span');
@@ -1750,7 +1758,7 @@ export class DadsCarousel extends TypographyWebComponent {
 
     this.#mainPanel.setAttribute('role', 'tabpanel');
     this.#mainPanel.setAttribute('aria-label', `${this.#unitText()}${this.#currentIndex + 1}`);
-    this.#mainPanel.id = this.#mainPanelId(this.#currentIndex);
+    this.#mainPanel.id = this.#mainPanelId();
   }
 
   #syncStatus(): void {
@@ -1764,8 +1772,8 @@ export class DadsCarousel extends TypographyWebComponent {
     this.#status.textContent = `全${this.#slideCount}枚中${this.#currentIndex + 1}枚目`;
   }
 
-  #mainPanelId(index: number): string {
-    return `${this.localName}-panel-${this.#instanceId}-${index + 1}`;
+  #mainPanelId(): string {
+    return `${this.localName}-panel-${this.#instanceId}`;
   }
 
   #indicatorId(index: number): string {

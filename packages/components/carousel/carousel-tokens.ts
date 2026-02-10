@@ -140,7 +140,7 @@ const carouselLocalTokensText = `
     --dads-carousel-radius-lg: var(--carousel-radius-lg);
   }
 
-  :host([type="key-visual"]) {
+  :host([type="key-visual"]:not([image-slider])) {
     --dads-carousel-max-width: var(--dads-carousel-max-width-key-visual);
     --dads-carousel-main-ratio: var(--dads-carousel-main-ratio-key-visual);
   }

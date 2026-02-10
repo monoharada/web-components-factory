@@ -542,6 +542,15 @@ describe('DadsCarousel', () => {
     expect(tabs.length).toBe(3);
     expect(tabs[0]?.getAttribute('role')).toBe('tab');
     expect(tabs[0]?.getAttribute('aria-current')).toBe('true');
+    const controlledPanelId = tabs[0]?.getAttribute('aria-controls');
+    expect(controlledPanelId).toBeTruthy();
+    if (controlledPanelId) {
+      const panel = getShadowElement<HTMLElement>(carousel, `#${controlledPanelId}`);
+      expect(panel).not.toBeNull();
+      tabs.forEach((tab) => {
+        expect(tab.getAttribute('aria-controls')).toBe(controlledPanelId);
+      });
+    }
     expect(status?.getAttribute('aria-live')).toBe('polite');
     expect(status?.textContent).toContain('全3枚中1枚目');
   });
@@ -645,13 +654,14 @@ describe('DadsCarousel', () => {
     carousel.setAttribute('type', 'key-visual');
     carousel.setAttribute('image-slider', '');
     await waitTick();
-    expect(carousel.getAttribute('type')).toBe('container');
+    expect(carousel.getAttribute('type')).toBe('key-visual');
     expect(carousel.getAttribute('data-carousel-type')).toBe('container');
     expect(carousel.getAttribute('data-image-slider')).toBe('true');
 
     carousel.removeAttribute('image-slider');
     await waitTick();
     expect(carousel.getAttribute('data-image-slider')).toBe('false');
+    expect(carousel.getAttribute('data-carousel-type')).toBe('key-visual');
   });
 
   it('data-wide に応じて desktop/mobile の制御要素表示が切り替わる', async () => {

@@ -7025,15 +7025,7 @@
                 "type": {
                   "text": "string"
                 }
-              },
-              "parameters": [
-                {
-                  "name": "index",
-                  "type": {
-                    "text": "number"
-                  }
-                }
-              ]
+              }
             },
             {
               "kind": "field",
