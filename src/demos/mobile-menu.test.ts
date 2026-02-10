@@ -49,7 +49,9 @@ function executeMobileMenuScript(host: HTMLElement): void {
   const original = Object.getOwnPropertyDescriptor(document, 'currentScript');
   Object.defineProperty(document, 'currentScript', {
     configurable: true,
-    get: () => targetScript,
+    get() {
+      return targetScript;
+    },
   });
 
   try {
