@@ -4,6 +4,30 @@
 
 ---
 
+## [2026-02-10] Divider余白は「内部解決したshorthand変数」を1回だけmargin適用する
+**タグ**: #divider #css-variables #webcomponents #a11y #coverage
+
+### 概要
+`dads-divider` の余白が効かない問題は、`margin` に複雑な `var()` fallback を直接書いたことで宣言ごと無効化されるケースが原因だった。  
+`horizontal` / `vertical` それぞれの既定余白を内部変数で先に解決し、最終的に `margin: var(--_resolved-*)` を1回だけ適用する構成にすると安定した。
+
+### 学び
+1. shorthand の fallback はプロパティ側で入れ子にせず、`--_resolved-*` へ段階的に分解してから適用する。
+2. `orientation='vertical'` では `--dads-divider-margin` を共通入口にしつつ、必要時のみ `--dads-divider-margin-vertical` で上書きできると運用しやすい。
+3. `:focus { outline: none; }` は監査で高優先度検出されやすいため、`focus-visible` がある場合でも不要なら削除する。
+
+### 適用例（今回）
+- `packages/components/divider/divider-styles.ts`
+  - `--_dads-divider-margin-horizontal` / `--_dads-divider-margin-vertical` を追加し、`margin` 適用を単純化
+- `packages/components/menu-list-box/menu-list-box-styles.ts`
+  - `[part="opener"]:focus { outline: none; }` を削除
+- `src/demos/showcase-components.ts`
+  - vertical preview の手動余白指定を外し、デフォルト余白で確認可能に変更
+
+### 再発防止
+- `margin/padding` の複合fallbackは、プロパティへ直接書かず内部変数で解決してから使う。
+- postflight の coverage 比較は `git worktree` で base を切り出し、base/HEAD を同一コマンドで計測する。
+
 ## [2026-02-09] `data-preview-contained` ドロワーは「focus + scroll保持」を同時に設計する
 **タグ**: #drawer #header-container #device-mock #accessibility #scroll
 

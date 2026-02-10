@@ -425,26 +425,10 @@ export class DadsMenuListBox extends TypographyWebComponent {
 
     for (const el of children) {
       if (el.getAttribute('slot')) continue;
-      if (!el.matches('[data-menu-list-box-divider], hr, [role="separator"]')) continue;
+      if (!el.matches('dads-divider')) continue;
 
-      // Prefer native <hr> for dividers (DADS).
-      if (el.tagName !== 'HR' && !el.hasAttribute('role')) {
-        el.setAttribute('role', 'separator');
-      }
-
-      // External CSS resets (e.g., `* { margin: 0 }`) may override our CSS variables.
-      // Setting inline styles ensures correct spacing even in reset-heavy environments.
-      // The CSS already defines these margins (menu-list-box-styles.ts:157-158), but
-      // inline styles take precedence and guarantee the divider spacing is preserved.
-      const marginValue = 'var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem))';
-      if (!el.style.getPropertyValue('margin-block')) {
-        el.style.setProperty('margin-block', marginValue);
-      }
-      if (!el.style.getPropertyValue('margin-top')) {
-        el.style.setProperty('margin-top', marginValue);
-      }
-      if (!el.style.getPropertyValue('margin-bottom')) {
-        el.style.setProperty('margin-bottom', marginValue);
+      if (!el.hasAttribute('orientation')) {
+        el.setAttribute('orientation', 'horizontal');
       }
     }
   }
@@ -473,7 +457,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
     for (const host of children) {
       if (host.getAttribute('slot')) continue;
       // Allow non-interactive content (e.g. dividers) inside the menu slot.
-      if (host.matches('[data-menu-list-box-divider], hr, [role="separator"]')) continue;
+      if (host.matches('dads-divider')) continue;
       const target = this.#getMenuItemTarget(host);
       if (!target) continue;
       entries.push({ host, target });

@@ -30,6 +30,30 @@ describe('showcase-components (chipTag demo)', () => {
   });
 });
 
+describe('showcase-components (divider demo)', () => {
+  it('vertical 用のプレビュー文脈切替フックを含む', () => {
+    const html = demos.divider();
+    expect(html).toContain('data-divider-api-panel');
+    expect(html).toContain('data-divider-preview');
+    expect(html).toContain('data-divider-before');
+    expect(html).toContain('data-divider-after');
+    expect(html).toContain('左コンテンツ');
+    expect(html).toContain('右コンテンツ');
+    expect(html).toContain("divider.getAttribute('orientation') === 'vertical'");
+  });
+
+  it('divider の CSS vars に margin-inline を含む', () => {
+    const html = demos.divider();
+    expect(html).toContain('data-api-css-var="--dads-divider-margin"');
+    expect(html).toContain('区切り余白（shorthand・推奨）');
+    expect(html).toContain('data-api-css-var="--dads-divider-margin-vertical"');
+    expect(html).toContain('vertical 専用上書き（必要時のみ）');
+    expect(html).toContain('data-api-css-var="--dads-divider-margin-inline"');
+    expect(html).toContain('左右余白（主に vertical）');
+    expect(html).toContain('上下余白（主に horizontal）');
+  });
+});
+
 describe('showcase-components (descriptionList demo)', () => {
   it('説明リストデモに marker 切り替え UI が含まれる', () => {
     const html = demos.descriptionList();

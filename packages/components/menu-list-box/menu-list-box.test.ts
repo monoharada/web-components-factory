@@ -141,7 +141,7 @@ describe('DadsMenuListBox - 基本', () => {
     element = renderWebComponent(`
       <dads-menu-list-box label="メニュー">
         <dads-menu-list-item>One</dads-menu-list-item>
-        <hr />
+        <dads-divider></dads-divider>
         <dads-menu-list-item>Two</dads-menu-list-item>
       </dads-menu-list-box>
     `);

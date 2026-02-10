@@ -1405,28 +1405,28 @@ export const demos = {
                     </thead>
                     <tbody>
                       <tr>
-                        <td><code>--dads-menu-list-box-divider-color</code></td>
+                        <td><code>--dads-divider-color</code></td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="divider-color" value="" data-api-css-var="--dads-menu-list-box-divider-color" data-default=""></dads-input-text>
+                            <dads-input-text label="divider-color" value="" data-api-css-var="--dads-divider-color" data-default=""></dads-input-text>
                           </div>
                         </td>
                         <td>区切り線色（gray-420 42%）</td>
                       </tr>
                       <tr>
-                        <td><code>--dads-menu-list-box-divider-margin-block</code></td>
+                        <td><code>--dads-divider-margin-block</code></td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="divider-margin-block" value="" data-api-css-var="--dads-menu-list-box-divider-margin-block" data-default=""></dads-input-text>
+                            <dads-input-text label="divider-margin-block" value="" data-api-css-var="--dads-divider-margin-block" data-default=""></dads-input-text>
                           </div>
                         </td>
-                        <td>区切り線上下余白（16px）</td>
+                        <td>区切り線上下余白（既定 8px）</td>
                       </tr>
                       <tr>
-                        <td><code>--dads-menu-list-box-divider-margin-inline</code></td>
+                        <td><code>--dads-divider-margin-inline</code></td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="divider-margin-inline" value="" data-api-css-var="--dads-menu-list-box-divider-margin-inline" data-default=""></dads-input-text>
+                            <dads-input-text label="divider-margin-inline" value="" data-api-css-var="--dads-divider-margin-inline" data-default=""></dads-input-text>
                           </div>
                         </td>
                         <td>区切り線左右余白（16px）</td>
@@ -1599,7 +1599,7 @@ export const demos = {
               </dads-menu-list-item>
               <dads-menu-list-item current data-value="proj-a">プロジェクトA</dads-menu-list-item>
               <dads-menu-list-item data-value="proj-b">プロジェクトB</dads-menu-list-item>
-              <hr />
+              <dads-divider></dads-divider>
               <dads-menu-list-item style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);">
                 ${MENU_LIST_BOX_DUMMY_START_ICON_SVG}
                 アーカイブ
@@ -1701,6 +1701,7 @@ export const demos = {
         // dads-menu-list-box を先に import してから a11y-annotate を import する。
         await import('dads-menu-list-box');
         await Promise.all([
+          import('dads-divider'),
           import('dads-switch'),
           import('dads-button'),
           import('dads-input-text'),
@@ -1900,7 +1901,7 @@ export const demos = {
                 <dads-menu-list-box label="申請手続き サブメニュー">
                   <dads-menu-list-item>オンライン申請を開始する</dads-menu-list-item>
                   <dads-menu-list-item>申請状況を確認する</dads-menu-list-item>
-                  <hr />
+                  <dads-divider></dads-divider>
                   <dads-menu-list-item>必要書類・記入例</dads-menu-list-item>
                   <dads-menu-list-item>審査期間と手数料</dads-menu-list-item>
                 </dads-menu-list-box>
@@ -1940,6 +1941,7 @@ export const demos = {
         await import('dads-global-menu');
         await Promise.all([
           import('dads-menu-list-box'),
+          import('dads-divider'),
           import('dads-switch'),
           import('dads-input-text'),
           import('dads-table'),

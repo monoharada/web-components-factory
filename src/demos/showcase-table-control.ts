@@ -109,10 +109,9 @@ export const demos = {
         }
 
         .table-control-municipal-demo__title-divider {
-          block-size: 4px;
-          background: #0017c1;
-          margin: calc(32 / 16 * 1rem) 0;
-          border: none;
+          --dads-divider-color: var(--color-primitive-blue-900, #0017c1);
+          --dads-divider-width: 4px;
+          --dads-divider-margin-block: calc(32 / 16 * 1rem);
         }
 
         .table-control-municipal-demo__controls {
@@ -237,9 +236,11 @@ export const demos = {
         }
 
         .table-control-municipal-demo__action-divider {
-          inline-size: 1px;
-          block-size: 30px;
-          background: #949494;
+          --dads-divider-color: var(--color-neutral-solid-gray-420, #949494);
+          --dads-divider-width: 1px;
+          --dads-divider-margin-block: 0;
+          --dads-divider-margin-inline: 0;
+          --dads-divider-vertical-length: calc(30 / 16 * 1rem);
           flex-shrink: 0;
         }
 
@@ -358,10 +359,11 @@ export const demos = {
         }
 
         .table-control-preset-demo__title-divider {
-          block-size: 4px;
-          background: #0017c1;
-          margin: calc(16 / 16 * 1rem) 0 calc(32 / 16 * 1rem);
-          border: none;
+          --dads-divider-color: var(--color-primitive-blue-900, #0017c1);
+          --dads-divider-width: 4px;
+          --dads-divider-margin-block: 0;
+          --dads-divider-margin-block-start: calc(16 / 16 * 1rem);
+          --dads-divider-margin-block-end: calc(32 / 16 * 1rem);
         }
 
         .table-control-preset-demo__controls {
@@ -677,10 +679,11 @@ export const demos = {
         }
 
         .table-control-annotate-demo__action-divider {
-          inline-size: 1px;
-          block-size: calc(30 / 16 * 1rem);
-          background: #949494;
-          margin-inline: calc(8 / 16 * 1rem);
+          --dads-divider-color: var(--color-neutral-solid-gray-420, #949494);
+          --dads-divider-width: 1px;
+          --dads-divider-margin-block: 0;
+          --dads-divider-margin-inline: calc(8 / 16 * 1rem);
+          --dads-divider-vertical-length: calc(30 / 16 * 1rem);
           flex: 0 0 auto;
         }
 
@@ -768,7 +771,7 @@ export const demos = {
                 <div slot="actions" class="table-control-demo__actions">
                   <dads-button type="button" size="small" variant="outlined">印刷</dads-button>
                   <dads-button type="button" size="small" variant="outlined">CSVダウンロード</dads-button>
-                  <span class="table-control-annotate-demo__action-divider" aria-hidden="true"></span>
+                  <dads-divider class="table-control-annotate-demo__action-divider" orientation="vertical"></dads-divider>
                   <dads-button type="button" size="small" variant="outlined">新規追加</dads-button>
                 </div>
               </dads-table-control>
@@ -976,7 +979,7 @@ export const demos = {
 
         <div id="demo-table-control-municipal-root" class="table-control-municipal-demo__root">
               <p class="table-control-municipal-demo__title">自治体届出者</p>
-              <hr class="table-control-municipal-demo__title-divider">
+              <dads-divider class="table-control-municipal-demo__title-divider"></dads-divider>
 
               <div class="table-control-municipal-demo__controls">
                 <div class="table-control-municipal-demo__search-group">
@@ -998,7 +1001,7 @@ export const demos = {
                     印刷
                   </dads-button>
                   <dads-button id="demo-municipal-csv" type="button" size="small" variant="outlined">CSVダウンロード</dads-button>
-                  <span class="table-control-municipal-demo__action-divider" aria-hidden="true"></span>
+                  <dads-divider class="table-control-municipal-demo__action-divider" orientation="vertical"></dads-divider>
                   <dads-button id="demo-municipal-create" type="button" size="small" variant="outlined">
                     <svg slot="icon-start" class="table-control-municipal-demo__icon" viewBox="0 0 24 24" aria-hidden="true">
                       <path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7V4Z"></path>
@@ -1100,7 +1103,7 @@ export const demos = {
 
         <div id="demo-table-control-preset-root" class="table-control-preset-demo__root table-control-municipal-demo__root">
               <p class="table-control-preset-demo__title">申請者一覧</p>
-              <hr class="table-control-preset-demo__title-divider">
+              <dads-divider class="table-control-preset-demo__title-divider"></dads-divider>
 
               <div class="table-control-preset-demo__controls">
                 <div class="table-control-preset-demo__search-group">
@@ -1288,6 +1291,7 @@ export const demos = {
         import('dads-switch'),
         import('dads-chip-label'),
         import('dads-menu-list-box'),
+        import('dads-divider'),
         import('dads-code-block'),
         import('a11y-annotate'),
       ]);

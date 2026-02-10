@@ -20,6 +20,10 @@ export const menuListBoxStyles = css`
     --_dads-menu-list-box-popup-border-radius: var(--dads-menu-list-box-popup-border-radius);
     --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color);
     --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider);
+    --_dads-menu-list-box-divider-color:
+      var(--dads-divider-color, var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42)));
+    --_dads-menu-list-box-divider-margin-block: var(--dads-divider-margin-block, var(--spacing-2, 0.5rem));
+    --_dads-menu-list-box-divider-inline-offset: var(--dads-divider-margin-inline, var(--spacing-4, 1rem));
   }
 
   :host([data-has-popup-scrollbar]) {
@@ -64,10 +68,6 @@ export const menuListBoxStyles = css`
       text-decoration: underline;
       text-underline-offset: var(--dads-menu-list-box-opener-underline-offset);
     }
-  }
-
-  [part="opener"]:focus {
-    outline: none;
   }
 
   [part="opener"]:focus-visible {
@@ -145,29 +145,21 @@ export const menuListBoxStyles = css`
     border-bottom: none;
   }
 
-  :host ::slotted([data-menu-list-box-divider]),
-  :host ::slotted(hr) {
+  :host ::slotted(dads-divider) {
     display: block;
     box-sizing: border-box;
-    height: 0;
-    border: 0;
-    border-top: 1px solid
-      var(
-        --dads-menu-list-box-divider-color,
-        var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42))
-      );
-    /*
-     * margin-block は外部のリセット（例: * { margin: 0 }）で潰れることがあるため、
-     * デフォルト値の適用は menu-list-box 側で inline-style にも反映する。
-     */
-    margin-block: var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem));
-    margin-inline: 0;
+    --dads-divider-color: var(--_dads-menu-list-box-divider-color);
+    --dads-divider-margin-block: var(--_dads-menu-list-box-divider-margin-block);
+  }
 
+  :host ::slotted(dads-divider[orientation='horizontal']),
+  :host ::slotted(dads-divider:not([orientation])) {
+    --dads-divider-margin-inline: 0;
     position: relative;
-    inset-inline-start: var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem));
+    inset-inline-start: var(--_dads-menu-list-box-divider-inline-offset);
     inline-size: calc(
-      100% - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) -
-        var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem))
+      100% - var(--_dads-menu-list-box-divider-inline-offset) -
+        var(--_dads-menu-list-box-divider-inline-offset)
     );
   }
 
