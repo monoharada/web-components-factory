@@ -53,6 +53,9 @@ export * from './chip-label/index.js';
 // チップタグ
 export * from './chip-tag/index.js';
 
+// ディバイダー
+export * from './divider/index.js';
+
 // ページナビゲーション
 export * from './page-navigation/index.js';
 
@@ -118,6 +121,9 @@ export * from './hamburger-menu-button/index.js';
 
 // モバイルモック
 export * from './mobile-mock/index.js';
+
+// モバイルメニュー
+export * from './mobile-menu/index.js';
 
 // デバイスモック
 export * from './device-mock/index.js';

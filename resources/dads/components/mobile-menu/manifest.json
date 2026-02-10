@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-02-10T00:00:55.569Z",
+  "component": {
+    "slug": "mobile-menu"
+  },
+  "sources": {
+    "dadsDocs": {
+      "baseUrl": "https://design.digital.go.jp/dads/components/mobile-menu/",
+      "overviewUrl": "https://design.digital.go.jp/dads/components/mobile-menu/",
+      "usageUrl": "https://design.digital.go.jp/dads/components/mobile-menu/usage/",
+      "accessibilityUrl": "https://design.digital.go.jp/dads/components/mobile-menu/accessibility/"
+    },
+    "dadsHtmlStorybook": {
+      "baseUrl": "https://design.digital.go.jp/dads/html/",
+      "indexUrl": "https://design.digital.go.jp/dads/html/index.json"
+    },
+    "upstreamHtmlRepo": {
+      "repoUrl": "https://github.com/digital-go-jp/design-system-example-components-html.git",
+      "ref": "main"
+    }
+  },
+  "docs": {
+    "overview": {
+      "status": "ok",
+      "url": "https://design.digital.go.jp/dads/components/mobile-menu/",
+      "httpStatus": 200,
+      "files": {
+        "html": "docs/overview/page.html",
+        "text": "docs/overview/page.txt",
+        "screenshot": "docs/overview/screenshot.png"
+      },
+      "images": [
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_overview.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_overview.png",
+          "file": "docs/overview/images/mobile_menu_overview.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_type_1.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_type_1.png",
+          "file": "docs/overview/images/mobile_menu_type_1.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_type_3.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_type_3.png",
+          "file": "docs/overview/images/mobile_menu_type_3.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_usability_1.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_usability_1.png",
+          "file": "docs/overview/images/mobile_menu_usability_1.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_usability_3.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_usability_3.png",
+          "file": "docs/overview/images/mobile_menu_usability_3.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_usability_4.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_usability_4.png",
+          "file": "docs/overview/images/mobile_menu_usability_4.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_usability_6.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_usability_6.png",
+          "file": "docs/overview/images/mobile_menu_usability_6.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_link.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_link.png",
+          "file": "docs/overview/images/mobile_menu_link.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_cta_1.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_cta_1.png",
+          "file": "docs/overview/images/mobile_menu_cta_1.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_cta_2.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_cta_2.png",
+          "file": "docs/overview/images/mobile_menu_cta_2.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_sectioning_1.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_sectioning_1.png",
+          "file": "docs/overview/images/mobile_menu_sectioning_1.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_sectioning_2.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_sectioning_2.png",
+          "file": "docs/overview/images/mobile_menu_sectioning_2.png",
+          "status": "ok",
+          "error": null
+        },
+        {
+          "src": "/dads/images/components/mobile-menu/overview/mobile_menu_sectioning_3.png",
+          "url": "https://design.digital.go.jp/dads/images/components/mobile-menu/overview/mobile_menu_sectioning_3.png",
+          "file": "docs/overview/images/mobile_menu_sectioning_3.png",
+          "status": "ok",
+          "error": null
+        }
+      ]
+    },
+    "usage": {
+      "status": "missing",
+      "url": "https://design.digital.go.jp/dads/components/mobile-menu/usage/",
+      "httpStatus": 404
+    },
+    "accessibility": {
+      "status": "missing",
+      "url": "https://design.digital.go.jp/dads/components/mobile-menu/accessibility/",
+      "httpStatus": 404
+    }
+  },
+  "storybook": {
+    "status": "not_found",
+    "reason": "No storybook entries found for ./src/components/mobile-menu/",
+    "entries": [],
+    "files": {
+      "entries": "storybook/entries.json"
+    }
+  },
+  "upstream": {
+    "status": "missing",
+    "reason": "No upstream path: src/components/mobile-menu",
+    "commit": "fd97fd253b45064d50d9788eda28bfdc2f76badd",
+    "files": {
+      "meta": "upstream/design-system-example-components-html/META.json",
+      "license": "upstream/design-system-example-components-html/LICENSE"
+    }
+  },
+  "notes": [
+    "agent-browser set media failed (ignored): Validation error: agent-browser action unsupported in this environment"
+  ],
+  "figma": {
+    "status": "unconfigured",
+    "reason": "missing_config",
+    "hint": "Provide Figma URLs and run: npm run dads:figma:add -- --component mobile-menu --url \"<figma-url>\""
+  }
+}

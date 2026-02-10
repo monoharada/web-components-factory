@@ -9,6 +9,10 @@ export const hamburgerMenuButtonStyles = css`
     display: inline-block;
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
   [part='base'] {
     position: relative;
     display: inline-flex;
