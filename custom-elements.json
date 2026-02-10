@@ -12696,6 +12696,569 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/divider/divider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "ディバイダーコンポーネント",
+          "name": "DadsDivider",
+          "cssProperties": [
+            {
+              "description": "区切り線の色",
+              "name": "--dads-divider-color"
+            },
+            {
+              "description": "区切り線の線種",
+              "name": "--dads-divider-style"
+            },
+            {
+              "description": "区切り線の太さ",
+              "name": "--dads-divider-width"
+            },
+            {
+              "description": "区切り余白（shorthand）。例: `8px 0`",
+              "name": "--dads-divider-margin"
+            },
+            {
+              "description": "垂直方向時の区切り余白（shorthand）。未指定時は block/inline から自動生成",
+              "name": "--dads-divider-margin-vertical"
+            },
+            {
+              "description": "上下余白",
+              "name": "--dads-divider-margin-block"
+            },
+            {
+              "description": "左右余白",
+              "name": "--dads-divider-margin-inline"
+            },
+            {
+              "description": "上側余白",
+              "name": "--dads-divider-margin-block-start"
+            },
+            {
+              "description": "下側余白",
+              "name": "--dads-divider-margin-block-end"
+            },
+            {
+              "description": "左側余白",
+              "name": "--dads-divider-margin-inline-start"
+            },
+            {
+              "description": "右側余白",
+              "name": "--dads-divider-margin-inline-end"
+            },
+            {
+              "description": "垂直方向時の線長",
+              "name": "--dads-divider-vertical-length"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "区切り線",
+              "name": "line"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAccessibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncEnumAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "'data-color' | 'data-style' | 'data-width'"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "normalizer",
+                  "type": {
+                    "text": "(v: string | null) => string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dataColor",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dataColorChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "dataStyle",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dataStyleChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "dataWidth",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dataWidthChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-divider', template: html` <hr part=\"line\" id=\"line\" aria-hidden=\"true\"> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), dividerTokens, dividerStyles, ], 'minimal'), attributes: [ PropertyAttr('orientation'), PropertyAttr('dataColor', 'data-color'), PropertyAttr('dataStyle', 'data-style'), PropertyAttr('dataWidth', 'data-width'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "orientationChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'solid-gray-420' | 'solid-gray-536' | 'black'"
+              },
+              "description": "区切り線の色（DADS互換）",
+              "name": "data-color"
+            },
+            {
+              "type": {
+                "text": "'solid' | 'dashed'"
+              },
+              "description": "区切り線の線種（DADS互換）",
+              "name": "data-style"
+            },
+            {
+              "type": {
+                "text": "'1' | '2' | '3' | '4'"
+              },
+              "description": "区切り線の太さ（DADS互換）",
+              "name": "data-width"
+            },
+            {
+              "type": {
+                "text": "'horizontal' | 'vertical'"
+              },
+              "description": "区切り方向",
+              "name": "orientation"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-divider",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/divider/divider.ts",
+          "definitionPath": "./packages/components/divider/divider.ts",
+          "typeDefinitionPath": "./packages/components/divider/divider.ts",
+          "custom": {
+            "componentId": "divider",
+            "install": {
+              "id": "divider",
+              "define": "defineDivider",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/divider"
+              },
+              "tags": [
+                "dads-divider"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDivider",
+          "declaration": {
+            "name": "DadsDivider",
+            "module": "packages/components/divider/divider.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/divider/divider.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/divider/divider.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-divider",
+          "declaration": {
+            "name": "DadsDivider",
+            "module": "./packages/components/divider/divider.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/drawer/drawer.ts",
       "declarations": [
         {
@@ -21181,6 +21744,28 @@
             },
             {
               "kind": "method",
+              "name": "#isDividerElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "DadsMenuListBox",
+                "module": "packages/components/menu-list-box/menu-list-box.ts"
+              }
+            },
+            {
+              "kind": "method",
               "name": "#isEventInside",
               "privacy": "private",
               "return": {
@@ -23638,6 +24223,24 @@
             },
             {
               "kind": "method",
+              "name": "#isDividerElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "el",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#isEventInside",
               "privacy": "private",
               "return": {
@@ -24280,6 +24883,7 @@
               "define": "defineMenuListBox",
               "call": "prefix-registry",
               "deps": [
+                "divider",
                 "menu-list"
               ],
               "source": {
@@ -42070,6 +42674,200 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/divider/divider-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultDivider",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDivider",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-divider`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultDivider",
+          "declaration": {
+            "name": "defineDefaultDivider",
+            "module": "packages/components/divider/divider-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDivider",
+          "declaration": {
+            "name": "defineDivider",
+            "module": "packages/components/divider/divider-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/divider/divider-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dividerStyles",
+          "default": "css` :host { display: block; box-sizing: border-box; --_dads-divider-margin-block-start: var(--dads-divider-margin-block-start, var(--dads-divider-margin-block)); --_dads-divider-margin-block-end: var(--dads-divider-margin-block-end, var(--dads-divider-margin-block)); --_dads-divider-margin-inline-start: var(--dads-divider-margin-inline-start, var(--dads-divider-margin-inline)); --_dads-divider-margin-inline-end: var(--dads-divider-margin-inline-end, var(--dads-divider-margin-inline)); --_dads-divider-margin-horizontal-default: var(--_dads-divider-margin-block-start) var(--_dads-divider-margin-inline-end) var(--_dads-divider-margin-block-end) var(--_dads-divider-margin-inline-start); --_dads-divider-margin-vertical-default: var(--_dads-divider-margin-inline-start) var(--_dads-divider-margin-block-end) var(--_dads-divider-margin-inline-end) var(--_dads-divider-margin-block-start); --_dads-divider-margin-horizontal: var(--dads-divider-margin, var(--_dads-divider-margin-horizontal-default)); --_dads-divider-margin-vertical: var( --dads-divider-margin-vertical, var(--dads-divider-margin, var(--_dads-divider-margin-vertical-default)) ); } [part='line'] { display: block; box-sizing: border-box; margin: var(--_dads-divider-margin-horizontal); inline-size: 100%; block-size: 0; border: 0; border-block-start-width: var(--dads-divider-width); border-block-start-style: var(--dads-divider-style); border-block-start-color: var(--dads-divider-color); } :host([orientation='vertical']) [part='line'] { margin: var(--_dads-divider-margin-vertical); inline-size: 0; block-size: var(--dads-divider-vertical-length); border-block-start: 0; border-inline-start-width: var(--dads-divider-width); border-inline-start-style: var(--dads-divider-style); border-inline-start-color: var(--dads-divider-color); } @media (forced-colors: active) { [part='line'] { border-block-start-color: CanvasText; } :host([orientation='vertical']) [part='line'] { border-inline-start-color: CanvasText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dividerStyles",
+          "declaration": {
+            "name": "dividerStyles",
+            "module": "packages/components/divider/divider-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/divider/divider-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dividerLocalTokens",
+          "default": "css`${dividerLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "dividerSemanticTokens",
+          "default": "css`${dividerSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "dividerTokens",
+          "default": "css` ${dividerSemanticTokensText} ${dividerLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dividerLocalTokens",
+          "declaration": {
+            "name": "dividerLocalTokens",
+            "module": "packages/components/divider/divider-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dividerSemanticTokens",
+          "declaration": {
+            "name": "dividerSemanticTokens",
+            "module": "packages/components/divider/divider-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dividerTokens",
+          "declaration": {
+            "name": "dividerTokens",
+            "module": "packages/components/divider/divider-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/divider/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsDivider",
+          "declaration": {
+            "name": "DadsDivider",
+            "module": "./divider.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultDivider",
+          "declaration": {
+            "name": "defineDefaultDivider",
+            "module": "./divider-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDivider",
+          "declaration": {
+            "name": "defineDivider",
+            "module": "./divider-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dividerLocalTokens",
+          "declaration": {
+            "name": "dividerLocalTokens",
+            "module": "./divider-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dividerSemanticTokens",
+          "declaration": {
+            "name": "dividerSemanticTokens",
+            "module": "./divider-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dividerStyles",
+          "declaration": {
+            "name": "dividerStyles",
+            "module": "./divider-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dividerTokens",
+          "declaration": {
+            "name": "dividerTokens",
+            "module": "./divider-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/drawer/drawer-define.ts",
       "declarations": [
         {
@@ -43419,6 +44217,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/divider/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/disclosure/index.js"
           }
         },
@@ -44084,7 +44890,7 @@
         {
           "kind": "variable",
           "name": "menuListBoxStyles",
-          "default": "css` :host { position: relative; display: block; width: fit-content; min-width: var(--dads-menu-list-box-min-width); color: var(--dads-menu-list-box-color); font-weight: var(--font-weight-400, 400); font-size: var(--dads-menu-list-box-font-size); line-height: var(--dads-menu-list-box-line-height); font-family: var(--dads-menu-list-box-font-family); letter-spacing: var(--dads-menu-list-box-letter-spacing); --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width); --_dads-menu-list-box-popup-border-radius: var(--dads-menu-list-box-popup-border-radius); --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color); --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider); } :host([data-has-popup-scrollbar]) { --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width-scroll); --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color-scroll); --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider-scroll); } [part=\"opener\"] { display: flex; align-items: center; width: 100%; box-sizing: border-box; min-height: var(--dads-menu-list-box-opener-min-height); border-radius: var(--dads-menu-list-box-opener-border-radius); border: var(--dads-menu-list-box-opener-border-width) solid var(--dads-menu-list-box-opener-border-color); background-color: var(--dads-menu-list-box-opener-background); padding-top: var(--dads-menu-list-box-opener-padding-y); padding-bottom: var(--dads-menu-list-box-opener-padding-y); padding-right: var(--dads-menu-list-box-opener-padding-x); padding-left: var(--dads-menu-list-box-opener-padding-x); column-gap: var(--dads-menu-list-box-opener-gap); color: inherit; font: inherit; font-weight: var(--dads-menu-list-box-opener-font-weight); letter-spacing: inherit; } [part=\"opener-label\"] { display: inline-flex; flex: 1 1 auto; min-width: 0; align-items: center; } @media (any-hover: hover) { [part=\"opener\"]:hover { --dads-menu-list-box-opener-background: var(--dads-menu-list-box-opener-hover-background); --dads-menu-list-box-opener-border-color: var(--dads-menu-list-box-opener-hover-border-color); cursor: pointer; text-decoration: underline; text-underline-offset: var(--dads-menu-list-box-opener-underline-offset); } } [part=\"opener\"]:focus { outline: none; } [part=\"opener\"]:focus-visible { outline: var(--dads-menu-list-box-opener-focus-outline-width) solid var(--dads-menu-list-box-opener-focus-outline-color); outline-offset: var(--dads-menu-list-box-opener-focus-outline-offset); background-color: var(--dads-menu-list-box-opener-focus-background); box-shadow: 0 0 0 var(--dads-menu-list-box-opener-focus-ring-width) var(--dads-menu-list-box-opener-focus-ring-color); } [part=\"opener-icon\"] { display: none; flex-shrink: 0; width: var(--dads-menu-list-box-opener-icon-size); height: var(--dads-menu-list-box-opener-icon-size); } :host([data-has-opener-icon]) [part=\"opener-icon\"] { display: inline-flex; align-items: center; } [part=\"opener-arrow\"] { margin-top: var(--dads-menu-list-box-opener-arrow-margin-top); margin-left: var(--dads-menu-list-box-opener-arrow-margin-left); flex-shrink: 0; width: var(--dads-menu-list-box-opener-arrow-size); height: var(--dads-menu-list-box-opener-arrow-size); } [part=\"opener\"][aria-expanded=\"true\"] [part=\"opener-arrow\"] { transform: rotate(180deg); } :host([opener-hidden]) [part=\"opener\"] { display: none; } [part=\"popup\"] { position: absolute; top: 100%; left: 0; z-index: var(--dads-menu-list-box-popup-z-index); box-sizing: border-box; width: max-content; max-height: var(--dads-menu-list-box-popup-max-height); min-width: var(--_dads-menu-list-box-popup-min-width); overflow-y: auto; border-radius: var(--_dads-menu-list-box-popup-border-radius); border: 1px solid var(--_dads-menu-list-box-popup-border-color); background-color: var(--dads-menu-list-box-popup-background); padding: var(--dads-menu-list-box-popup-padding-y) var(--dads-menu-list-box-popup-padding-x); box-shadow: var(--dads-menu-list-box-popup-shadow); } /* hidden 属性は minimal reset の display 指定で上書きされるため、明示的に非表示にする */ [part=\"popup\"][hidden] { display: none; } [part=\"menu\"] { display: block; } :host([data-reserve-item-start-icon-space]) ::slotted(dads-menu-list-item) { --dads-menu-list-item-start-icon-display-empty: inline-flex; } ::slotted(dads-menu-list-item) { border-bottom: var(--_dads-menu-list-box-popup-item-divider); } ::slotted(dads-menu-list-item:last-child) { border-bottom: none; } :host ::slotted([data-menu-list-box-divider]), :host ::slotted(hr) { display: block; box-sizing: border-box; height: 0; border: 0; border-top: 1px solid var( --dads-menu-list-box-divider-color, var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42)) ); /* * margin-block は外部のリセット（例: * { margin: 0 }）で潰れることがあるため、 * デフォルト値の適用は menu-list-box 側で inline-style にも反映する。 */ margin-block: var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem)); margin-inline: 0; position: relative; inset-inline-start: var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)); inline-size: calc( 100% - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) ); } /* Forced colors */ @media (forced-colors: active) { [part=\"opener\"] { border: 1px solid ButtonText; color: ButtonText; background-color: Canvas; } [part=\"opener\"]:focus-visible { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-menu-list-box-opener-focus-ring-width) ButtonText; } [part=\"popup\"] { border-color: ButtonText; background-color: Canvas; box-shadow: none; } } `"
+          "default": "css` :host { position: relative; display: block; width: fit-content; min-width: var(--dads-menu-list-box-min-width); color: var(--dads-menu-list-box-color); font-weight: var(--font-weight-400, 400); font-size: var(--dads-menu-list-box-font-size); line-height: var(--dads-menu-list-box-line-height); font-family: var(--dads-menu-list-box-font-family); letter-spacing: var(--dads-menu-list-box-letter-spacing); --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width); --_dads-menu-list-box-popup-border-radius: var(--dads-menu-list-box-popup-border-radius); --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color); --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider); --_dads-menu-list-box-divider-color: var(--dads-divider-color, var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42))); --_dads-menu-list-box-divider-margin-block: var(--dads-divider-margin-block, var(--spacing-4, 1rem)); --_dads-menu-list-box-divider-inline-offset: var(--dads-divider-margin-inline, var(--spacing-4, 1rem)); } :host([data-has-popup-scrollbar]) { --_dads-menu-list-box-popup-min-width: var(--dads-menu-list-box-popup-min-width-scroll); --_dads-menu-list-box-popup-border-color: var(--dads-menu-list-box-popup-border-color-scroll); --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider-scroll); } [part=\"opener\"] { display: flex; align-items: center; width: 100%; box-sizing: border-box; min-height: var(--dads-menu-list-box-opener-min-height); border-radius: var(--dads-menu-list-box-opener-border-radius); border: var(--dads-menu-list-box-opener-border-width) solid var(--dads-menu-list-box-opener-border-color); background-color: var(--dads-menu-list-box-opener-background); padding-top: var(--dads-menu-list-box-opener-padding-y); padding-bottom: var(--dads-menu-list-box-opener-padding-y); padding-right: var(--dads-menu-list-box-opener-padding-x); padding-left: var(--dads-menu-list-box-opener-padding-x); column-gap: var(--dads-menu-list-box-opener-gap); color: inherit; font: inherit; font-weight: var(--dads-menu-list-box-opener-font-weight); letter-spacing: inherit; } [part=\"opener-label\"] { display: inline-flex; flex: 1 1 auto; min-width: 0; align-items: center; } @media (any-hover: hover) { [part=\"opener\"]:hover { --dads-menu-list-box-opener-background: var(--dads-menu-list-box-opener-hover-background); --dads-menu-list-box-opener-border-color: var(--dads-menu-list-box-opener-hover-border-color); cursor: pointer; text-decoration: underline; text-underline-offset: var(--dads-menu-list-box-opener-underline-offset); } } [part=\"opener\"]:focus-visible { outline: var(--dads-menu-list-box-opener-focus-outline-width) solid var(--dads-menu-list-box-opener-focus-outline-color); outline-offset: var(--dads-menu-list-box-opener-focus-outline-offset); background-color: var(--dads-menu-list-box-opener-focus-background); box-shadow: 0 0 0 var(--dads-menu-list-box-opener-focus-ring-width) var(--dads-menu-list-box-opener-focus-ring-color); } [part=\"opener-icon\"] { display: none; flex-shrink: 0; width: var(--dads-menu-list-box-opener-icon-size); height: var(--dads-menu-list-box-opener-icon-size); } :host([data-has-opener-icon]) [part=\"opener-icon\"] { display: inline-flex; align-items: center; } [part=\"opener-arrow\"] { margin-top: var(--dads-menu-list-box-opener-arrow-margin-top); margin-left: var(--dads-menu-list-box-opener-arrow-margin-left); flex-shrink: 0; width: var(--dads-menu-list-box-opener-arrow-size); height: var(--dads-menu-list-box-opener-arrow-size); } [part=\"opener\"][aria-expanded=\"true\"] [part=\"opener-arrow\"] { transform: rotate(180deg); } :host([opener-hidden]) [part=\"opener\"] { display: none; } [part=\"popup\"] { position: absolute; top: 100%; left: 0; z-index: var(--dads-menu-list-box-popup-z-index); box-sizing: border-box; width: max-content; max-height: var(--dads-menu-list-box-popup-max-height); min-width: var(--_dads-menu-list-box-popup-min-width); overflow-y: auto; border-radius: var(--_dads-menu-list-box-popup-border-radius); border: 1px solid var(--_dads-menu-list-box-popup-border-color); background-color: var(--dads-menu-list-box-popup-background); padding: var(--dads-menu-list-box-popup-padding-y) var(--dads-menu-list-box-popup-padding-x); box-shadow: var(--dads-menu-list-box-popup-shadow); } /* hidden 属性は minimal reset の display 指定で上書きされるため、明示的に非表示にする */ [part=\"popup\"][hidden] { display: none; } [part=\"menu\"] { display: block; } :host([data-reserve-item-start-icon-space]) ::slotted(dads-menu-list-item) { --dads-menu-list-item-start-icon-display-empty: inline-flex; } ::slotted(dads-menu-list-item) { border-bottom: var(--_dads-menu-list-box-popup-item-divider); } ::slotted(dads-menu-list-item:last-child) { border-bottom: none; } :host ::slotted(dads-divider) { display: block; box-sizing: border-box; --dads-divider-color: var(--_dads-menu-list-box-divider-color); --dads-divider-margin-block: var(--_dads-menu-list-box-divider-margin-block); } :host ::slotted(dads-divider[orientation='horizontal']), :host ::slotted(dads-divider:not([orientation])) { --dads-divider-margin-inline: 0; position: relative; inset-inline-start: var(--_dads-menu-list-box-divider-inline-offset); inline-size: calc( 100% - var(--_dads-menu-list-box-divider-inline-offset) - var(--_dads-menu-list-box-divider-inline-offset) ); } :host ::slotted([data-menu-list-box-divider]), :host ::slotted(hr), :host ::slotted([role='separator']) { display: block; box-sizing: border-box; height: 0; border: 0; border-top: 1px solid var( --dads-menu-list-box-divider-color, var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42)) ); margin-block: var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem)); margin-inline: 0; position: relative; inset-inline-start: var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)); inline-size: calc( 100% - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) ); } /* Forced colors */ @media (forced-colors: active) { [part=\"opener\"] { border: 1px solid ButtonText; color: ButtonText; background-color: Canvas; } [part=\"opener\"]:focus-visible { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-menu-list-box-opener-focus-ring-width) ButtonText; } [part=\"popup\"] { border-color: ButtonText; background-color: Canvas; box-shadow: none; } } `"
         }
       ],
       "exports": [

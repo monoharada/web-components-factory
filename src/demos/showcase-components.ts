@@ -196,6 +196,263 @@ export const demos = {
 
   heading: headingDemo,
 
+  divider: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ディバイダー</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        DADS互換の <code>data-color</code> / <code>data-style</code> / <code>data-width</code> を持つ区切り線コンポーネントです。
+        既定で上下余白（8px）を持ち、<code>orientation=&quot;vertical&quot;</code> は左右区切り線として利用できます。
+      </p>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Preview</h3>
+        <div style="display: grid; gap: 24px;">
+          <div style="padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <p style="margin: 0;">セクション A</p>
+            <dads-divider></dads-divider>
+            <p style="margin: 0;">セクション B</p>
+          </div>
+
+          <div style="padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>印刷</span>
+              <dads-divider orientation="vertical" style="--dads-divider-vertical-length: 1.25rem;"></dads-divider>
+              <span>CSVダウンロード</span>
+              <dads-divider orientation="vertical" data-style="dashed" style="--dads-divider-vertical-length: 1.25rem;"></dads-divider>
+              <span>新規追加</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          属性とCSS変数を操作して表示を確認できます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-divider',
+            'dads-table',
+            'dads-input-text',
+          ],
+          rootAttrs: 'data-divider-api-panel',
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <div data-divider-preview style="display: grid; gap: 0;">
+                  <p data-divider-before style="margin: 0;">上段コンテンツ</p>
+                  <dads-divider data-api-target></dads-divider>
+                  <p data-divider-after style="margin: 0;">下段コンテンツ</p>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-divider
+                      data-color="solid-gray-420"
+                      data-style="solid"
+                      data-width="1"
+                      orientation="horizontal"
+                    ></dads-divider>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>orientation</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'horizontal' | 'vertical'</code></td>
+                        <td><code>horizontal</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="orientation" data-api-attr="orientation" data-default="horizontal">
+                              <option value="horizontal" selected>horizontal</option>
+                              <option value="vertical">vertical</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>区切り方向</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>data-color</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'solid-gray-420' | 'solid-gray-536' | 'black'</code></td>
+                        <td><code>solid-gray-420</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="data-color" data-api-attr="data-color" data-default="solid-gray-420">
+                              <option value="solid-gray-420" selected>solid-gray-420</option>
+                              <option value="solid-gray-536">solid-gray-536</option>
+                              <option value="black">black</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>線色（DADS互換）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>data-style</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'solid' | 'dashed'</code></td>
+                        <td><code>solid</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="data-style" data-api-attr="data-style" data-default="solid">
+                              <option value="solid" selected>solid</option>
+                              <option value="dashed">dashed</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>線種（DADS互換）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>data-width</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'1' | '2' | '3' | '4'</code></td>
+                        <td><code>1</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="data-width" data-api-attr="data-width" data-default="1">
+                              <option value="1" selected>1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>線幅（DADS互換）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-divider-color</code></th>
+                        <td><code>--color-neutral-solid-gray-420</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-divider-color" value="" data-api-css-var="--dads-divider-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>線色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-divider-margin</code></th>
+                        <td><code>8px 0</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-divider-margin" value="" data-api-css-var="--dads-divider-margin" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>区切り余白（shorthand・推奨）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-divider-margin-vertical</code></th>
+                        <td><code>(empty)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-divider-margin-vertical" value="" data-api-css-var="--dads-divider-margin-vertical" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>vertical 専用上書き（必要時のみ）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-divider-margin-block</code></th>
+                        <td><code>--spacing-2</code>（8px）</td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-divider-margin-block" value="" data-api-css-var="--dads-divider-margin-block" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>上下余白（主に horizontal）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-divider-margin-inline</code></th>
+                        <td><code>0</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-divider-margin-inline" value="" data-api-css-var="--dads-divider-margin-inline" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>左右余白（主に vertical）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-divider-vertical-length</code></th>
+                        <td><code>30px</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-divider-vertical-length" value="" data-api-css-var="--dads-divider-vertical-length" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>垂直方向時の線長</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <script type="module">
+        await Promise.all([
+          import('dads-divider'),
+          import('dads-table'),
+          import('dads-input-text'),
+          import('dads-code-block'),
+        ]);
+
+        const panel = document.querySelector('[data-divider-api-panel]');
+        const preview = panel?.querySelector('[data-divider-preview]');
+        const divider = panel?.querySelector('dads-divider[data-api-target]');
+        const before = panel?.querySelector('[data-divider-before]');
+        const after = panel?.querySelector('[data-divider-after]');
+
+        const updatePreviewLayout = () => {
+          if (!preview || !divider || !before || !after) return;
+
+          const isVertical = divider.getAttribute('orientation') === 'vertical';
+          preview.style.display = isVertical ? 'flex' : 'grid';
+          preview.style.alignItems = isVertical ? 'center' : '';
+          preview.style.gap = '0';
+          before.textContent = isVertical ? '左コンテンツ' : '上段コンテンツ';
+          after.textContent = isVertical ? '右コンテンツ' : '下段コンテンツ';
+        };
+
+        if (divider) {
+          const observer = new MutationObserver(updatePreviewLayout);
+          observer.observe(divider, { attributes: true, attributeFilter: ['orientation'] });
+        }
+
+        const orientationControl = panel?.querySelector('[data-api-attr="orientation"]');
+        orientationControl?.addEventListener('change', updatePreviewLayout);
+        orientationControl?.addEventListener('dads-change', updatePreviewLayout);
+        updatePreviewLayout();
+      </script>
+    </div>
+  `,
+
   blockquote: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">引用ブロック</h2>

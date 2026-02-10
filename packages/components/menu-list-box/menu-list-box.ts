@@ -425,26 +425,24 @@ export class DadsMenuListBox extends TypographyWebComponent {
 
     for (const el of children) {
       if (el.getAttribute('slot')) continue;
-      if (!el.matches('[data-menu-list-box-divider], hr, [role="separator"]')) continue;
+      if (!this.#isDividerElement(el)) continue;
 
-      // Prefer native <hr> for dividers (DADS).
-      if (el.tagName !== 'HR' && !el.hasAttribute('role')) {
-        el.setAttribute('role', 'separator');
+      if (el.matches('dads-divider') && !el.hasAttribute('orientation')) {
+        el.setAttribute('orientation', 'horizontal');
       }
 
-      // External CSS resets (e.g., `* { margin: 0 }`) may override our CSS variables.
-      // Setting inline styles ensures correct spacing even in reset-heavy environments.
-      // The CSS already defines these margins (menu-list-box-styles.ts:157-158), but
-      // inline styles take precedence and guarantee the divider spacing is preserved.
-      const marginValue = 'var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem))';
-      if (!el.style.getPropertyValue('margin-block')) {
-        el.style.setProperty('margin-block', marginValue);
-      }
-      if (!el.style.getPropertyValue('margin-top')) {
-        el.style.setProperty('margin-top', marginValue);
-      }
-      if (!el.style.getPropertyValue('margin-bottom')) {
-        el.style.setProperty('margin-bottom', marginValue);
+      if (!el.matches('dads-divider')) {
+        // Keep legacy divider markup resilient against global CSS resets.
+        const marginValue = 'var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem))';
+        if (!el.style.getPropertyValue('margin-block')) {
+          el.style.setProperty('margin-block', marginValue);
+        }
+        if (!el.style.getPropertyValue('margin-top')) {
+          el.style.setProperty('margin-top', marginValue);
+        }
+        if (!el.style.getPropertyValue('margin-bottom')) {
+          el.style.setProperty('margin-bottom', marginValue);
+        }
       }
     }
   }
@@ -473,13 +471,17 @@ export class DadsMenuListBox extends TypographyWebComponent {
     for (const host of children) {
       if (host.getAttribute('slot')) continue;
       // Allow non-interactive content (e.g. dividers) inside the menu slot.
-      if (host.matches('[data-menu-list-box-divider], hr, [role="separator"]')) continue;
+      if (this.#isDividerElement(host)) continue;
       const target = this.#getMenuItemTarget(host);
       if (!target) continue;
       entries.push({ host, target });
     }
 
     return entries;
+  }
+
+  #isDividerElement(el: HTMLElement): boolean {
+    return el.matches('dads-divider, [data-menu-list-box-divider], hr, [role="separator"]');
   }
 
   #getMenuItemTarget(host: HTMLElement): HTMLElement | null {

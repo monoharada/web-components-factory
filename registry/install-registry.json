@@ -186,6 +186,18 @@
         "componentDir": "packages/components/disclosure"
       }
     },
+    "divider": {
+      "id": "divider",
+      "tags": [
+        "dads-divider"
+      ],
+      "define": "defineDivider",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/divider"
+      }
+    },
     "drawer": {
       "id": "drawer",
       "tags": [
@@ -336,6 +348,7 @@
       "define": "defineMenuListBox",
       "call": "prefix-registry",
       "deps": [
+        "divider",
         "menu-list"
       ],
       "source": {
@@ -525,6 +538,7 @@
     "dads-device-mock": "device-mock",
     "dads-dialog": "dialog",
     "dads-disclosure": "disclosure",
+    "dads-divider": "divider",
     "dads-drawer": "drawer",
     "dads-fieldset": "fieldset",
     "dads-file-upload": "file-upload",

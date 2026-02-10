@@ -1106,7 +1106,7 @@ export const demos = {
             <dads-menu-list-item data-value="item-1">リストアイテム</dads-menu-list-item>
             <dads-menu-list-item data-value="item-2">リストアイテム</dads-menu-list-item>
 
-            <hr />
+            <dads-divider></dads-divider>
 
             <dads-menu-list-item
               data-value="category-2"
@@ -1119,7 +1119,7 @@ export const demos = {
             <dads-menu-list-item data-value="item-3">リストアイテム</dads-menu-list-item>
             <dads-menu-list-item current data-value="checked">${menuListItemStartIcon('checkmark')}リストアイテム</dads-menu-list-item>
 
-            <hr />
+            <dads-divider></dads-divider>
 
             <dads-menu-list-item
               data-value="category-3"
@@ -1233,7 +1233,7 @@ export const demos = {
             </dads-menu-list-item>
             <dads-menu-list-item>リストアイテム</dads-menu-list-item>
             <dads-menu-list-item>リストアイテム</dads-menu-list-item>
-            <hr />
+            <dads-divider></dads-divider>
             <dads-menu-list-item
               style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);"
             >
@@ -1242,7 +1242,7 @@ export const demos = {
             </dads-menu-list-item>
             <dads-menu-list-item>リストアイテム</dads-menu-list-item>
             <dads-menu-list-item>リストアイテム</dads-menu-list-item>
-            <hr />
+            <dads-divider></dads-divider>
             <dads-menu-list-item
               style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);"
             >
@@ -1272,7 +1272,7 @@ export const demos = {
             </dads-menu-list-item>
             <dads-menu-list-item>リストアイテム</dads-menu-list-item>
             <dads-menu-list-item>リストアイテム</dads-menu-list-item>
-            <hr />
+            <dads-divider></dads-divider>
             <dads-menu-list-item
               style="--dads-menu-list-item-font-weight: var(--font-weight-700, 700);"
             >
@@ -1323,7 +1323,7 @@ export const demos = {
         });
       </script>
 
-      ${modulePreloadScript(['dads-menu-list-box'])}
+      ${modulePreloadScript(['dads-menu-list-box', 'dads-divider'])}
     </div>
   `,
 

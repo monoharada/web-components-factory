@@ -98,6 +98,9 @@ export * from './list/index.js';
 // 説明リスト
 export * from './description-list/index.js';
 
+// ディバイダー
+export * from './divider/index.js';
+
 // ディスクロージャー
 export * from './disclosure/index.js';
 

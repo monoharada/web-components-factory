@@ -141,6 +141,7 @@ describe('showcase-table-control demo', () => {
     expect(html).toContain("import('dads-switch')");
     expect(html).toContain("import('dads-chip-label')");
     expect(html).toContain("import('dads-menu-list-box')");
+    expect(html).toContain("import('dads-divider')");
     expect(html).toContain("import('dads-code-block')");
     expect(html).toContain('./src/demos/table-control-municipal-mvc.js');
     expect(html).toContain('mountTableControlMunicipalDemo');

@@ -141,7 +141,7 @@ describe('DadsMenuListBox - 基本', () => {
     element = renderWebComponent(`
       <dads-menu-list-box label="メニュー">
         <dads-menu-list-item>One</dads-menu-list-item>
-        <hr />
+        <dads-divider></dads-divider>
         <dads-menu-list-item>Two</dads-menu-list-item>
       </dads-menu-list-box>
     `);
@@ -182,6 +182,45 @@ describe('DadsMenuListBox - 基本', () => {
 
     expect(popup.hidden).toBe(true);
     expect(document.activeElement).toBe(opener);
+  });
+
+  it('legacy divider (hr) を含む場合でも focus/選択対象から除外される', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <dads-menu-list-item>One</dads-menu-list-item>
+        <hr>
+        <dads-menu-list-item>Two</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+
+    const items = Array.from(element.querySelectorAll('dads-menu-list-item')) as HTMLElement[];
+    for (const item of items) await waitForCustomElement(item);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const opener = getShadowContent(element, '#opener') as HTMLButtonElement | null;
+    const menu = getShadowContent(element, '#menu') as HTMLElement | null;
+    const legacyDivider = element.querySelector('hr') as HTMLHRElement | null;
+    if (!opener || !menu || !legacyDivider) throw new Error('required elements not found');
+
+    opener.click();
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const firstBase = getShadowContent(items[0], '#base') as HTMLElement | null;
+    const secondBase = getShadowContent(items[1], '#base') as HTMLElement | null;
+    if (!firstBase || !secondBase) throw new Error('menu item base not found');
+    expect(document.activeElement).toBe(firstBase);
+
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+    expect(document.activeElement).toBe(secondBase);
+
+    expect(legacyDivider.style.getPropertyValue('margin-block')).toContain(
+      '--dads-menu-list-box-divider-margin-block',
+    );
   });
 
   it('Home/End キーで先頭・末尾に移動する', async () => {
