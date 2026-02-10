@@ -76,6 +76,18 @@
         "componentDir": "packages/components/card"
       }
     },
+    "carousel": {
+      "id": "carousel",
+      "tags": [
+        "dads-carousel"
+      ],
+      "define": "defineCarousel",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/carousel"
+      }
+    },
     "checkbox": {
       "id": "checkbox",
       "tags": [
@@ -541,6 +553,7 @@
     "dads-button": "button",
     "dads-calendar": "calendar",
     "dads-card": "card",
+    "dads-carousel": "carousel",
     "dads-checkbox": "checkbox",
     "dads-chip-label": "chip-label",
     "dads-chip-tag": "chip-tag",

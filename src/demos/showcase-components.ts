@@ -6147,21 +6147,6 @@ ${dadsDataRows(6, 6)}
         })}
       </section>
 
-      <!-- 基本（状態比較） -->
-      <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">基本（状態比較）</h3>
-        <div style="display: flex; gap: 24px; flex-wrap: wrap; align-items: center;">
-          <dads-switch>
-            <span slot="label-left">OFF</span>
-            <span slot="label-right">ON</span>
-          </dads-switch>
-          <dads-switch checked>
-            <span slot="label-left">OFF</span>
-            <span slot="label-right">ON</span>
-          </dads-switch>
-        </div>
-      </section>
-
       <!-- 日本語ラベル -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">日本語ラベル</h3>
