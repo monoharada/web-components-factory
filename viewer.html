@@ -65,6 +65,7 @@
       "dads-global-menu-item": "/@components/dads/global-menu.js",
       "dads-language-selector": "/@components/dads/language-selector.js",
       "dads-page-navigation": "/@components/dads/page-navigation.js",
+      "dads-carousel": "/@components/dads/carousel.js",
       "dads-breadcrumb": "/@components/dads/breadcrumb.js",
       "dads-breadcrumb-item": "/@components/dads/breadcrumb-item.js",
       "dads-utility-link": "/@components/dads/utility-link.js",
@@ -198,6 +199,15 @@
     }
 
     body[data-component="headerContainer"] #component-container {
+      padding: 24px;
+    }
+
+    body[data-component="carousel"] main {
+      max-width: 1560px;
+      padding: 0 16px;
+    }
+
+    body[data-component="carousel"] #component-container {
       padding: 24px;
     }
 
@@ -453,6 +463,7 @@
             <option value="languageSelector">ランゲージセレクター</option>
             <option value="menuListBoxFidelity">メニューリストボックス（忠実度検証）</option>
             <option value="switch">スイッチ</option>
+            <option value="carousel">カルーセル</option>
             <option value="stepNavigation">ステップナビゲーション</option>
             <option value="resetCss">リセットCSS比較デモ（独自）</option>
           </select>
@@ -669,7 +680,8 @@
       '/@components/dads/global-menu.js',
       '/@components/dads/utility-link.js',
       '/@components/dads/language-selector.js',
-      '/@components/dads/notification-banner.js'
+      '/@components/dads/notification-banner.js',
+      '/@components/dads/carousel.js'
     ];
 
     // クリティカルコンポーネントを即座にロード

@@ -56,6 +56,9 @@ export * from './chip-tag/index.js';
 // ページナビゲーション
 export * from './page-navigation/index.js';
 
+// カルーセル
+export * from './carousel/index.js';
+
 // パンくずリスト
 export * from './breadcrumb/index.js';
 

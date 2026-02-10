@@ -6197,6 +6197,2287 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/carousel/carousel.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "カルーセル",
+          "name": "DadsCarousel",
+          "cssParts": [
+            {
+              "description": "すべてのスライド領域",
+              "name": "all-slides"
+            },
+            {
+              "description": "すべてのスライド切替ボタン",
+              "name": "all-slides-button"
+            },
+            {
+              "description": "すべてのスライド内容",
+              "name": "all-slides-content"
+            },
+            {
+              "description": "すべてのスライド項目",
+              "name": "all-slides-item"
+            },
+            {
+              "description": "コントロール領域",
+              "name": "controls"
+            },
+            {
+              "description": "画像コンテナ",
+              "name": "image-container"
+            },
+            {
+              "description": "ステップボタン",
+              "name": "indicator-button"
+            },
+            {
+              "description": "ステップナビゲーション",
+              "name": "indicators"
+            },
+            {
+              "description": "内部レイアウト",
+              "name": "inner"
+            },
+            {
+              "description": "メインパネル領域",
+              "name": "main"
+            },
+            {
+              "description": "メイン背景",
+              "name": "main-bg"
+            },
+            {
+              "description": "メイン画像コンテナ",
+              "name": "main-images"
+            },
+            {
+              "description": "メインラベル（スクリーンリーダー向け）",
+              "name": "main-label"
+            },
+            {
+              "description": "メインリンク",
+              "name": "main-link"
+            },
+            {
+              "description": "メインパネル",
+              "name": "main-panel"
+            },
+            {
+              "description": "次スライド領域",
+              "name": "next"
+            },
+            {
+              "description": "次スライド背景",
+              "name": "next-bg"
+            },
+            {
+              "description": "次ボタン",
+              "name": "next-button"
+            },
+            {
+              "description": "次スライド画像コンテナ",
+              "name": "next-image-container"
+            },
+            {
+              "description": "次スライドラベル",
+              "name": "next-image-label"
+            },
+            {
+              "description": "次スライドプレビューボタン",
+              "name": "next-preview-button"
+            },
+            {
+              "description": "番号表示",
+              "name": "number"
+            },
+            {
+              "description": "ページナビゲーション",
+              "name": "page-nav"
+            },
+            {
+              "description": "パネル番号（一覧展開時）",
+              "name": "panel-number"
+            },
+            {
+              "description": "パネルセット",
+              "name": "panel-set"
+            },
+            {
+              "description": "パネル領域",
+              "name": "panels"
+            },
+            {
+              "description": "前ボタン",
+              "name": "prev-button"
+            },
+            {
+              "description": "ルート領域",
+              "name": "root"
+            },
+            {
+              "description": "ステータス（aria-live）",
+              "name": "status"
+            }
+          ],
+          "slots": [
+            {
+              "description": "スライド要素（items 未指定時に利用）",
+              "name": "default"
+            },
+            {
+              "description": "見出し（container タイプ向け）",
+              "name": "heading"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#allSlides",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDetailsElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#allSlidesList",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#allSlidesSummaryLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#collectItemSlides",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CarouselSlide[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#collectSlides",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "reason",
+                  "type": {
+                    "text": "DadsCarouselSlidesChangeReason"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#collectSlotSlides",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CarouselSlide[]"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#controls",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#createSlideMedia",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slide",
+                  "type": {
+                    "text": "CarouselSlide"
+                  }
+                },
+                {
+                  "name": "noAlt",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "loading",
+                  "type": {
+                    "text": "'eager' | 'lazy'"
+                  }
+                },
+                {
+                  "name": "decoding",
+                  "type": {
+                    "text": "DadsCarouselItem['decoding']"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#currentContainerWidthPx",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#currentIndex",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#currentNumber",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#emitBeforeChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "DadsCarouselBeforeChangeDetail"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitControlsUpdate",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "DadsCarouselControlsUpdateDetail"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitIndexChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "DadsCarouselIndexChangeDetail"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitLayoutChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "DadsCarouselLayoutChangeDetail"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitMediaError",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "media",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CarouselMediaContext"
+                  }
+                },
+                {
+                  "name": "error",
+                  "type": {
+                    "text": "'decode-error' | 'load-error'"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitMediaLoaded",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "media",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CarouselMediaContext"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitMediaResult",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "result",
+                  "type": {
+                    "text": "CarouselMediaReadyResult"
+                  }
+                },
+                {
+                  "name": "media",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "context",
+                  "type": {
+                    "text": "CarouselMediaContext"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitSlideActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "DadsCarouselSlideStateDetail"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitSlideInactive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "DadsCarouselSlideStateDetail"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#emitSlidesChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "DadsCarouselSlidesChangeDetail"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#expanded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getSlideImageSource",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CarouselSlideImageSource | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slide",
+                  "type": {
+                    "text": "CarouselSlide"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getSlotSlides",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleAllSlidesToggle",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleHostMutations",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleIndicatorsClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleIndicatorsKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleNextClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handlePrevClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleRootKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#headingSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#hostObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#indicatorId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#indicators",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#instanceId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "++carouselIdSeed"
+            },
+            {
+              "kind": "method",
+              "name": "#isImageSliderMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isMediaReady",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "media",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isUserInitiatedSource",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "DadsCarouselEventSource"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#isWide",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#items",
+              "privacy": "private",
+              "type": {
+                "text": "DadsCarouselItem[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#lastControlsUpdateKey",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "method",
+              "name": "#lockMainPanelHeight",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "() => void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mainBgContent",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#mainHeightLockSeq",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#mainImages",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#mainLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#mainLink",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLAnchorElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#mainPanel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#mainPanelId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#measuredWide",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "method",
+              "name": "#measureWideFromCurrentWidth",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#mediaSrc",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "media",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#nextBg",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#nextBgContent",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#nextButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#nextImageContainer",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#nextImageLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#nextWrap",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeSlotSlide",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "CarouselSlide | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "node",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#pageNav",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pageNextButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pageNextLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pagePrevButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pagePrevLabel",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#pageStatus",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#preloadCache",
+              "privacy": "private",
+              "default": "new Map<string, Promise<void>>()"
+            },
+            {
+              "kind": "method",
+              "name": "#preloadSlide",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slide",
+                  "type": {
+                    "text": "CarouselSlide | undefined"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#primeSlidePreload",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#reflectCurrentIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderAllSlidesList",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderCurrentState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "DadsCarouselEventSource"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderEmptyState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderIndicators",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderMainSlide",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slide",
+                  "type": {
+                    "text": "CarouselSlide"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "renderSeq",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "DadsCarouselEventSource"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderNextSlide",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slide",
+                  "type": {
+                    "text": "CarouselSlide"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "renderSeq",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "DadsCarouselEventSource"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#renderSeq",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "#replaceMediaWhenReady",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "container",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "media",
+                  "type": {
+                    "text": "HTMLElement | null"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "{\n      renderSeq: number;\n      lockMainHeight: boolean;\n      context: CarouselMediaContext;\n    }"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#resizeObserver",
+              "privacy": "private",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setCurrentIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "source",
+                  "type": {
+                    "text": "DadsCarouselEventSource"
+                  }
+                },
+                {
+                  "name": "emitLegacyChangeEvent",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "loop",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setExpanded",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "emitEvent",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "syncDetails",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupResizeObserver",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "reason",
+                  "default": "'sync'",
+                  "type": {
+                    "text": "DadsCarouselLayoutChangeReason"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#slideCount",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#slides",
+              "privacy": "private",
+              "type": {
+                "text": "CarouselSlide[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#slidesSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#source",
+              "privacy": "private",
+              "type": {
+                "text": "CarouselSource"
+              },
+              "default": "'slot'"
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#status",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slidesReason",
+                  "default": "'sync'",
+                  "type": {
+                    "text": "DadsCarouselSlidesChangeReason"
+                  }
+                },
+                {
+                  "name": "layoutReason",
+                  "default": "'sync'",
+                  "type": {
+                    "text": "DadsCarouselLayoutChangeReason"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncControlText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncCurrentIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#syncingCurrentIndexAttr",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#syncingExpandedState",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#syncLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "link",
+                  "type": {
+                    "text": "HTMLAnchorElement"
+                  }
+                },
+                {
+                  "name": "slide",
+                  "type": {
+                    "text": "CarouselSlide"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncMainPanelSemantics",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncResponsiveVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "hasMultiple",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncRootSemantics",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncStatus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncTypeAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncWideState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "reason",
+                  "default": "'sync'",
+                  "type": {
+                    "text": "DadsCarouselLayoutChangeReason"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#unitText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#waitForMediaReady",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Promise<CarouselMediaReadyResult>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "media",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "allSlidesLabel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "allSlidesLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "ariaLabel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "ariaLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "breakpointRem",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "breakpointRemChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "currentIndex",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "currentIndexChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-carousel', template: html` <section part=\"root\" id=\"root\"> <div part=\"inner\" id=\"inner\"> <slot id=\"heading-slot\" name=\"heading\"></slot> <div part=\"panels\" id=\"panels\"> <div part=\"panel-set active-panel\" id=\"active-panel\"> <p part=\"number panel-number\" id=\"current-number\" aria-current=\"true\" aria-hidden=\"true\" ></p> <div part=\"main\" id=\"main\" aria-live=\"polite\" aria-atomic=\"true\"> <div part=\"main-panel\" id=\"main-panel\"> <a part=\"main-link\" id=\"main-link\"> <span part=\"visually-hidden main-label\" id=\"main-label\"></span> <div part=\"image-container main-images\" id=\"main-images\"></div> </a> </div> </div> <p part=\"next\" id=\"next\"> <button part=\"next-preview-button\" id=\"next-preview-button\" type=\"button\"> <span part=\"next-image-container\" id=\"next-image-container\"></span> <span part=\"next-image-label\" id=\"next-image-label\"></span> </button> </p> <div part=\"main-bg\" id=\"main-bg\"><div id=\"main-bg-content\"></div></div> <div part=\"next-bg\" id=\"next-bg\"><div id=\"next-bg-content\"></div></div> </div> </div> <div part=\"controls\" id=\"controls\"> <ul part=\"step-nav indicators\" id=\"indicators\" role=\"tablist\"></ul> <p part=\"page-nav\" id=\"page-nav\"> <button part=\"page-nav-button prev-button\" id=\"page-prev-button\" type=\"button\"> <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"> <path d=\"m5.27 8 5.33-5.33-.93-.94L3.4 8l6.27 6.27.93-.94L5.27 8Z\" fill=\"currentColor\" ></path> </svg> <span part=\"visually-hidden\" id=\"page-prev-label\"></span> </button> <span part=\"page-status\" id=\"page-status\"></span> <button part=\"page-nav-button next-button\" id=\"page-next-button\" type=\"button\"> <svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"> <path d=\"m6 1.73-.93.94L10.4 8l-5.33 5.33.93.94L12.27 8 6 1.73Z\" fill=\"currentColor\" ></path> </svg> <span part=\"visually-hidden\" id=\"page-next-label\"></span> </button> </p> <details part=\"all-slides all-slides-details\" id=\"all-slides\"> <summary part=\"all-slides-button\" id=\"all-slides-summary\"> <svg part=\"all-slides-icon\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"> <circle cx=\"12\" cy=\"12\" r=\"11\" fill=\"currentColor\"></circle> <circle part=\"all-slides-icon-circle\" cx=\"12\" cy=\"12\" r=\"8\" fill=\"currentColor\"></circle> <path part=\"all-slides-icon-triangle\" d=\"M17 10H7L12 15L17 10Z\" fill=\"Canvas\"></path> </svg> <span id=\"all-slides-summary-label\"></span> </summary> <div part=\"all-slides-content\" id=\"all-slides-content\"> <ul part=\"slides\" id=\"all-slides-list\"></ul> </div> </details> </div> <p part=\"visually-hidden status\" id=\"status\" aria-live=\"polite\" aria-atomic=\"true\"></p> <slot id=\"slides-slot\" hidden></slot> </div> </section> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), carouselTokens, carouselStyles, ], 'minimal', ), attributes: [ PropertyAttr('type'), createCurrentIndexAttrBehavior(), PropertyAttr('ariaLabel', 'aria-label'), PropertyAttr('prevLabel', 'prev-label'), PropertyAttr('nextLabel', 'next-label'), PropertyAttr('allSlidesLabel', 'all-slides-label'), BooleanAttr('imageSlider', 'image-slider'), PropertyAttr('breakpointRem', 'breakpoint-rem'), PropertyAttr('unit'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "goTo",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "imageSlider",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "imageSliderChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "DadsCarouselItem[]"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "next",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "nextLabel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "nextLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "prev",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "prevLabel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "prevLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "slideCount",
+              "type": {
+                "text": "number"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "toggleAllSlides",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "force",
+                  "optional": true,
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "type": {
+                "text": "DadsCarouselType | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "typeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "unit",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "unitChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'0.2.0'"
+            }
+          ],
+          "events": [
+            {
+              "description": "スライド変更直前（cancelable）",
+              "name": "dads-carousel-before-change"
+            },
+            {
+              "description": "現在スライド変更時（ユーザー操作のみ）",
+              "name": "dads-carousel-change"
+            },
+            {
+              "description": "controls 表示モードや状態が更新された時",
+              "name": "dads-carousel-controls-update"
+            },
+            {
+              "description": "スライド変更完了後（API/属性変更含む）",
+              "name": "dads-carousel-index-change"
+            },
+            {
+              "description": "data-wide などレイアウト状態が変わった時",
+              "name": "dads-carousel-layout-change"
+            },
+            {
+              "description": "描画対象メディアの読み込み失敗時",
+              "name": "dads-carousel-media-error"
+            },
+            {
+              "description": "描画対象メディアの準備完了時",
+              "name": "dads-carousel-media-loaded"
+            },
+            {
+              "description": "新しいスライドがアクティブ化された時",
+              "name": "dads-carousel-slide-active"
+            },
+            {
+              "description": "直前スライドが非アクティブ化された時",
+              "name": "dads-carousel-slide-inactive"
+            },
+            {
+              "description": "slides 構成（枚数/source）が変わった時",
+              "name": "dads-carousel-slides-change"
+            },
+            {
+              "description": "一覧展開状態の変更時",
+              "name": "dads-carousel-toggle-all"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "一覧展開ボタンのラベル",
+              "name": "all-slides-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "カルーセルの aria-label",
+              "name": "aria-label"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "desktop 判定のブレークポイント（rem）",
+              "name": "breakpoint-rem"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "現在スライドの 0 始まり index",
+              "name": "current-index"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "イメージスライダー（幅狭コンテナ）モードを強制",
+              "name": "image-slider"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "次ボタンのラベル",
+              "name": "next-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "前ボタンのラベル",
+              "name": "prev-label"
+            },
+            {
+              "type": {
+                "text": "'container'|'key-visual'"
+              },
+              "description": "表示タイプ",
+              "name": "type"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "スライドの単位（例: スライド）",
+              "name": "unit"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-carousel",
+          "customElement": true,
+          "modulePath": "./packages/components/carousel/carousel.ts",
+          "definitionPath": "./packages/components/carousel/carousel.ts",
+          "typeDefinitionPath": "./packages/components/carousel/carousel.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "カルーセルコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "ルートは role=\"region\" と aria-roledescription=\"carousel\" を持ち、カルーセル領域として識別されます。",
+                  "メインスライド・次スライドプレビュー・コントロール（ステップ/ページナビ）で構成されます。"
+                ],
+                "keyboard": [
+                  "Tab で前後移動ボタン、ステップボタン、「すべてのスライド」ボタンへフォーカスできます。",
+                  "ステップボタンは ArrowLeft/ArrowRight/Home/End、Enter/Space で操作できます。",
+                  "一覧展開中は Escape で閉じる操作をサポートします。"
+                ],
+                "zoom": [
+                  "breakpoint-rem を境に data-wide が切り替わり、desktop はステップナビ、mobile はページナビを表示します。",
+                  "レイアウトは相対単位（rem）とトークンで構成され、拡大表示時の可読性を維持します。"
+                ],
+                "states": [
+                  "current-index で現在スライドを制御し、現在項目には aria-current/aria-selected を反映します。",
+                  "一覧展開時は data-expanded=\"true\" となり、コントロール表示を切り替えます。"
+                ],
+                "labels": [
+                  "aria-label / prev-label / next-label / all-slides-label / unit で読み上げラベルを調整できます。",
+                  "現在位置は aria-live=\"polite\" のステータス領域で通知されます。"
+                ],
+                "motion": [
+                  "自動再生やアニメーションは前提にしていません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "root",
+                  "title": "カルーセル領域",
+                  "label": "role=\"region\"",
+                  "description": "カルーセル全体のランドマークです。aria-label で領域名を付与します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#root"
+                  }
+                },
+                {
+                  "id": "main-panel",
+                  "title": "メインスライド",
+                  "label": "main panel",
+                  "description": "現在のスライドを表示する主領域です。リンク付きスライドではクリック遷移できます。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#main-panel"
+                  }
+                },
+                {
+                  "id": "next-preview",
+                  "title": "次スライドプレビュー",
+                  "label": "next preview",
+                  "description": "desktop 表示時に次スライドをプレビューし、操作ボタンとして機能します。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#next-preview-button"
+                  }
+                },
+                {
+                  "id": "indicators",
+                  "title": "ステップナビゲーション",
+                  "label": "role=\"tablist\"",
+                  "description": "desktop 表示時のステップ移動領域です。現在項目は aria-current=\"true\" になります。",
+                  "category": "keyboard",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#indicators"
+                  }
+                },
+                {
+                  "id": "page-nav",
+                  "title": "ページナビゲーション",
+                  "label": "mobile controls",
+                  "description": "mobile 表示時の前後移動ボタンとページ状態表示です。",
+                  "category": "keyboard",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#page-nav"
+                  }
+                },
+                {
+                  "id": "all-slides-summary",
+                  "title": "すべてのスライド",
+                  "label": "summary",
+                  "description": "スライド一覧の開閉トリガーです。開閉状態は data-expanded に同期されます。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#all-slides-summary"
+                  }
+                },
+                {
+                  "id": "all-slides-list",
+                  "title": "スライド一覧",
+                  "label": "slides list",
+                  "description": "「すべてのスライド」展開時に、現在以外のスライド一覧を表示します。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#all-slides-list"
+                  }
+                },
+                {
+                  "id": "status-live",
+                  "title": "読み上げステータス",
+                  "label": "aria-live",
+                  "description": "現在位置（例: 全6枚中1枚目）を aria-live=\"polite\" で通知します。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "#status"
+                  }
+                }
+              ]
+            },
+            "componentId": "carousel",
+            "install": {
+              "id": "carousel",
+              "define": "defineCarousel",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/carousel"
+              },
+              "tags": [
+                "dads-carousel"
+              ]
+            }
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "nextIndex"
+        },
+        {
+          "kind": "variable",
+          "name": "previousIndex"
+        },
+        {
+          "kind": "variable",
+          "name": "source",
+          "type": {
+            "text": "CarouselSlideImageSource"
+          },
+          "default": "{ src: image.src }"
+        },
+        {
+          "kind": "variable",
+          "name": "src"
+        },
+        {
+          "kind": "variable",
+          "name": "total"
+        },
+        {
+          "kind": "variable",
+          "name": "userInitiated"
+        },
+        {
+          "kind": "variable",
+          "name": "wrapped"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsCarousel",
+          "declaration": {
+            "name": "DadsCarousel",
+            "module": "packages/components/carousel/carousel.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/carousel/carousel.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/carousel/carousel.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-carousel",
+          "declaration": {
+            "name": "DadsCarousel",
+            "module": "./packages/components/carousel/carousel.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/checkbox/checkbox.ts",
       "declarations": [
         {
@@ -41190,6 +43471,312 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/carousel/carousel-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineCarousel",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultCarousel",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-carousel`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineCarousel",
+          "declaration": {
+            "name": "defineCarousel",
+            "module": "packages/components/carousel/carousel-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCarousel",
+          "declaration": {
+            "name": "defineDefaultCarousel",
+            "module": "packages/components/carousel/carousel-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/carousel/carousel-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "carouselStyles",
+          "default": "css` :host { display: block; container-type: inline-size; color: var(--dads-carousel-text-color); font-family: var(--dads-carousel-font-family); font-size: var(--dads-carousel-font-size); font-weight: var(--dads-carousel-font-weight-normal); line-height: 1.7; letter-spacing: var(--dads-carousel-letter-spacing); } :host([hidden]) { display: none; } [part~='inner'] { position: relative; z-index: 0; box-sizing: border-box; max-width: var(--dads-carousel-max-width); } #heading-slot::slotted(*) { margin-top: 0; margin-bottom: 1rem; font-size: var(--dads-carousel-font-size-heading-default); line-height: 1.5; font-weight: var(--dads-carousel-font-weight-bold); letter-spacing: var(--dads-carousel-letter-spacing); } @media (min-width: 30rem) { #heading-slot::slotted(*) { font-size: var(--dads-carousel-font-size-heading-sm); } } @media (min-width: 64rem) { #heading-slot::slotted(*) { font-size: var(--dads-carousel-font-size-heading-lg); letter-spacing: 0.01em; } } :host([data-wide='true']) [part~='inner'] { padding-inline: var(--dads-carousel-side-padding); } [part~='number'] { margin: 0; display: flex; justify-content: center; align-items: center; box-sizing: border-box; inline-size: var(--dads-carousel-number-size); block-size: var(--dads-carousel-number-size); border: var(--dads-carousel-border-width) solid var(--dads-carousel-line-color); border-radius: 50%; background-color: var(--dads-carousel-surface-color); padding: 0 0 calc(2 / 16 * 1rem); color: var(--dads-carousel-text-color); font: inherit; font-size: var(--dads-carousel-number-font-size); font-weight: var(--dads-carousel-font-weight-bold); line-height: 1; letter-spacing: var(--dads-carousel-letter-spacing); } [part~='number'][aria-current='true'], [part~='number'][aria-selected='true'] { background-color: var(--dads-carousel-text-color); color: var(--dads-carousel-surface-color); box-shadow: 0 0 0 var(--dads-carousel-focus-ring-width) var(--dads-carousel-surface-color); outline: var(--dads-carousel-border-width) solid var(--dads-carousel-line-color); outline-offset: var(--dads-carousel-focus-outline-offset-outer); } [part~='panel-set'] { display: grid; grid-template: 'main' auto / auto; } :host([data-wide='true']) [part~='panel-set'] { margin-inline: calc(-1 * var(--dads-carousel-side-padding)); grid-template: 'number main next .' auto / var(--dads-carousel-panel-grid-side) 3fr 1fr var(--dads-carousel-panel-grid-side); } [part~='panel-set']::before { grid-area: number; justify-self: center; display: none; border-inline-end: var(--dads-carousel-border-width) solid var(--dads-carousel-line-color); block-size: 100%; content: ''; } [part~='panel-number'] { grid-area: number; justify-self: center; display: none; } [part~='main'] { grid-area: main; position: relative; min-inline-size: 0; } [part~='main-link'] { position: relative; display: block; inline-size: 100%; } @media (hover: hover) { [part~='main-link'][href]:hover:not(:focus-visible) { outline: var(--dads-carousel-focus-outline-width) solid var(--dads-carousel-link-hover-color); outline-offset: var(--dads-carousel-focus-outline-offset-inner); } [part~='main-link'][href]:hover:not(:focus-visible)::after { position: absolute; inset: var(--dads-carousel-focus-ring-width); box-shadow: inset 0 0 0 var(--dads-carousel-focus-ring-width) var(--dads-carousel-surface-color); pointer-events: none; border-radius: var(--dads-carousel-radius-md); content: ''; } } [part~='main-link']:focus-visible { overflow: hidden; outline: var(--dads-carousel-focus-outline-width) solid var(--dads-carousel-focus-outline-color); outline-offset: var(--dads-carousel-focus-outline-offset-inner); border-radius: var(--dads-carousel-radius-lg); } [part~='main-link']:focus-visible::after { position: absolute; inset: var(--dads-carousel-focus-ring-width); box-shadow: inset 0 0 0 var(--dads-carousel-focus-ring-width) var(--dads-carousel-focus-ring-color); border-radius: var(--dads-carousel-radius-md); pointer-events: none; content: ''; } [part~='image-container'] { display: grid; place-content: center; block-size: 100%; border-radius: inherit; outline: var(--dads-carousel-image-outline-width) solid var(--dads-carousel-line-color); outline-offset: calc(-1 * var(--dads-carousel-image-outline-width)); overflow: clip; } [part~='image-container'] > img, [part~='image-container'] > picture { display: block; inline-size: auto; max-inline-size: 100%; block-size: auto; } [part~='image-container'] > picture > img { display: block; inline-size: auto; max-inline-size: 100%; block-size: auto; } [part~='main-bg'] { position: relative; z-index: -1; grid-area: main; overflow: clip; } [part~='main-bg'] > div { position: absolute; inset: -50% 0; display: flex; flex-direction: column; align-items: center; filter: blur(var(--dads-carousel-bg-blur-size)); transform: translate3d(0, 0, 0); } [part~='main-bg'] > div > img, [part~='main-bg'] > div > picture { inline-size: auto; block-size: 200%; } [part~='main-bg'] > div > picture > img { inline-size: auto; block-size: 200%; } [part~='main-bg'] > div::after { position: absolute; inset: 0; background-color: var(--dads-carousel-bg-soft-light-color); mix-blend-mode: soft-light; content: ''; } [part~='next-bg'] { position: relative; z-index: -1; display: none; grid-area: next; overflow: clip; } [part~='next-bg'] > div { position: absolute; inset: -50% 0; display: flex; flex-direction: column; align-items: center; filter: blur(var(--dads-carousel-bg-blur-size)); transform: translate3d(0, 0, 0); } [part~='next-bg'] > div > img, [part~='next-bg'] > div > picture { inline-size: auto; block-size: 200%; } [part~='next-bg'] > div > picture > img { inline-size: auto; block-size: 200%; } [part~='next-bg'] > div::after { position: absolute; inset: 0; background-color: var(--dads-carousel-bg-soft-light-color); mix-blend-mode: soft-light; content: ''; } :host([data-wide='true']) [part~='next-bg'] { display: block; } [part~='next'] { grid-area: next; margin: 0; display: none; min-inline-size: 0; border: var(--dads-carousel-border-width) solid var(--dads-carousel-border-color); border-inline-start-width: 0; padding: var(--dads-carousel-next-padding); } :host([data-wide='true']) [part~='next'] { display: block; } [part~='next-preview-button'] { position: relative; border: var(--dads-carousel-border-width) solid var(--dads-carousel-border-color); background-color: var(--dads-carousel-surface-color); padding: 0; font: inherit; color: inherit; text-align: left; text-decoration: underline; text-decoration-thickness: calc(1 / 16 * 1rem); text-underline-offset: calc(3 / 16 * 1rem); cursor: pointer; touch-action: manipulation; } [part~='next-image-container'] { display: block; overflow: clip; } [part~='next-image-container'] > img, [part~='next-image-container'] > picture { display: block; inline-size: auto; max-inline-size: 100%; block-size: auto; } [part~='next-image-container'] > picture > img { display: block; inline-size: auto; max-inline-size: 100%; block-size: auto; } [part~='next-image-label'] { display: block; border-block-start: var(--dads-carousel-border-width) solid var(--dads-carousel-border-color); padding: var(--dads-carousel-next-label-padding); font-size: var(--dads-carousel-next-label-font-size); font-weight: var(--dads-carousel-font-weight-bold); line-height: 1.7; letter-spacing: var(--dads-carousel-letter-spacing); text-decoration-thickness: inherit; } @media (hover: hover) { [part~='next-preview-button']:hover { outline: var(--dads-carousel-focus-outline-width) solid var(--dads-carousel-link-hover-color); outline-offset: calc(-1 * var(--dads-carousel-border-width)); text-decoration-thickness: calc(3 / 16 * 1rem); } [part~='next-preview-button']:hover:not(:focus-visible)::after { position: absolute; inset: 0; box-shadow: inset 0 0 0 var(--dads-carousel-focus-ring-width) var(--dads-carousel-surface-color); pointer-events: none; content: ''; } } [part~='next-preview-button']:focus-visible { outline: var(--dads-carousel-focus-outline-width) solid var(--dads-carousel-focus-outline-color); outline-offset: var(--dads-carousel-focus-outline-offset-outer); border-radius: var(--dads-carousel-radius-sm); box-shadow: 0 0 0 var(--dads-carousel-focus-ring-width) var(--dads-carousel-focus-ring-color); } [part='controls'] { display: flex; align-items: center; column-gap: var(--dads-carousel-control-gap-mobile); padding-block: var(--dads-carousel-control-padding-block); } :host([data-wide='true']) [part='controls'] { column-gap: var(--dads-carousel-control-gap-desktop); } [part~='indicators'] { position: relative; margin: 0; display: none; justify-content: end; column-gap: var(--dads-carousel-step-gap); padding: 0; list-style-type: none; } :host([data-wide='true']) [part~='indicators'] { display: flex; } [part~='step-item'] { position: relative; flex-shrink: 0; } [part~='step-item']:not(:last-child)::before { position: absolute; inset-block-start: 50%; inset-inline-start: 100%; inline-size: var(--dads-carousel-step-gap); border-block-end: var(--dads-carousel-border-width) solid var(--dads-carousel-line-color); content: ''; } [part~='indicator-button'] { position: relative; border: var(--dads-carousel-border-width) solid var(--dads-carousel-line-color); background-color: var(--dads-carousel-surface-color); font: inherit; } [part~='indicator-button']:not([aria-selected='true']) { text-decoration: underline; text-decoration-thickness: calc(1 / 16 * 1rem); text-underline-offset: calc(3 / 16 * 1rem); cursor: pointer; } [part~='indicator-button']::after { position: absolute; inset: calc(-7 / 16 * 1rem); content: ''; } @media (hover: hover) { [part~='indicator-button']:not([aria-selected='true']):hover { text-decoration-thickness: calc(3 / 16 * 1rem); } } [part~='indicator-button']:focus-visible { outline: var(--dads-carousel-focus-outline-width) solid var(--dads-carousel-focus-outline-color); outline-offset: var(--dads-carousel-focus-outline-offset-outer); box-shadow: 0 0 0 var(--dads-carousel-focus-ring-width) var(--dads-carousel-focus-ring-color); } [part~='page-nav'] { flex-shrink: 0; margin: 0; display: flex; justify-content: end; align-items: center; column-gap: var(--dads-carousel-page-nav-gap); padding: 0; } :host([data-wide='true']) [part~='page-nav'] { display: none; } [part~='page-nav-button'] { position: relative; display: flex; justify-content: center; align-items: center; inline-size: var(--dads-carousel-page-button-size); block-size: var(--dads-carousel-page-button-size); border: var(--dads-carousel-border-width) solid var(--dads-carousel-link-color); border-radius: 50%; background-color: var(--dads-carousel-surface-color); color: var(--dads-carousel-link-color); padding: 0; cursor: pointer; } [part~='page-nav-button']::after { position: absolute; inset: -100%; margin: auto; inline-size: var(--dads-carousel-hit-area); block-size: var(--dads-carousel-hit-area); content: ''; } [part~='page-nav-button']:focus-visible { outline: var(--dads-carousel-focus-outline-width) solid var(--dads-carousel-focus-outline-color); outline-offset: var(--dads-carousel-focus-outline-offset-outer); box-shadow: 0 0 0 var(--dads-carousel-focus-ring-width) var(--dads-carousel-focus-ring-color); } [part~='all-slides'] { order: -1; } [part~='all-slides'][open] { flex: 1; } [part~='all-slides-button'] { list-style: none; display: inline-flex; align-items: center; gap: calc(8 / 16 * 1rem); border-radius: var(--dads-carousel-radius-lg); border: var(--dads-carousel-border-width) solid var(--color-neutral-solid-gray-600); background-color: var(--dads-carousel-surface-color); padding: var(--dads-carousel-summary-padding-block) var(--dads-carousel-summary-padding-inline); cursor: pointer; text-decoration: underline; text-underline-offset: calc(3 / 16 * 1rem); } @media (hover: hover) { [part~='all-slides-button']:hover { text-decoration-thickness: calc(3 / 16 * 1rem); } } [part~='all-slides-button']:focus-visible { outline: var(--dads-carousel-focus-outline-width) solid var(--dads-carousel-focus-outline-color); outline-offset: var(--dads-carousel-focus-outline-offset-outer); border-radius: var(--dads-carousel-radius-sm); background-color: var(--dads-carousel-focus-ring-color); box-shadow: 0 0 0 var(--dads-carousel-focus-ring-width) var(--dads-carousel-focus-ring-color); } [part~='all-slides-icon'] { color: var(--dads-carousel-all-slides-icon-color); } [part~='all-slides-button']::-webkit-details-marker { display: none; } [part~='all-slides-content'] { margin-block-start: var(--dads-carousel-all-slides-content-margin-top); padding-inline-start: 0; } [part~='slides'] { display: grid; row-gap: var(--dads-carousel-all-slides-row-gap); margin: 0; padding: 0; list-style-type: none; } :host([data-expanded='true']) [part='controls'] { padding-block-end: var(--dads-carousel-control-padding-bottom-expanded); } :host([data-expanded='true']) [part~='page-nav'] { display: none; } :host([data-expanded='true']) [part~='indicators'] { display: none; } :host([data-expanded='true']) [part~='next-bg'] { display: none; } :host([data-expanded='true']) [part~='next'] { display: none; } :host([data-expanded='true'][data-wide='true']) [part~='panel-set']::before { display: block; } :host([data-expanded='true'][data-wide='true']) [part~='panel-number'] { display: flex; } [part~='all-slides-item'] { margin-block-start: var(--dads-carousel-all-slides-extra-gap); } [part~='visually-hidden'] { position: absolute; clip: rect(0 0 0 0); inline-size: 1px; block-size: 1px; margin: -1px; overflow: hidden; white-space: nowrap; border: 0; padding: 0; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "carouselStyles",
+          "declaration": {
+            "name": "carouselStyles",
+            "module": "packages/components/carousel/carousel-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/carousel/carousel-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "carouselLocalTokens",
+          "default": "css`${carouselLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "carouselSemanticTokens",
+          "default": "css`${carouselSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "carouselTokens",
+          "default": "css` ${carouselSemanticTokensText} ${carouselLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "carouselLocalTokens",
+          "declaration": {
+            "name": "carouselLocalTokens",
+            "module": "packages/components/carousel/carousel-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "carouselSemanticTokens",
+          "declaration": {
+            "name": "carouselSemanticTokens",
+            "module": "packages/components/carousel/carousel-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "carouselTokens",
+          "declaration": {
+            "name": "carouselTokens",
+            "module": "packages/components/carousel/carousel-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/carousel/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "carouselStyles",
+          "declaration": {
+            "name": "carouselStyles",
+            "module": "./carousel-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "carouselTokens",
+          "declaration": {
+            "name": "carouselTokens",
+            "module": "./carousel-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarousel",
+          "declaration": {
+            "name": "DadsCarousel",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselBeforeChangeDetail",
+          "declaration": {
+            "name": "DadsCarouselBeforeChangeDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselChangeDetail",
+          "declaration": {
+            "name": "DadsCarouselChangeDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselChangeSource",
+          "declaration": {
+            "name": "DadsCarouselChangeSource",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselControlsUpdateDetail",
+          "declaration": {
+            "name": "DadsCarouselControlsUpdateDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselEventSource",
+          "declaration": {
+            "name": "DadsCarouselEventSource",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselIndexChangeDetail",
+          "declaration": {
+            "name": "DadsCarouselIndexChangeDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselItem",
+          "declaration": {
+            "name": "DadsCarouselItem",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselLayoutChangeDetail",
+          "declaration": {
+            "name": "DadsCarouselLayoutChangeDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselLayoutChangeReason",
+          "declaration": {
+            "name": "DadsCarouselLayoutChangeReason",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselMediaDetail",
+          "declaration": {
+            "name": "DadsCarouselMediaDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselMediaRole",
+          "declaration": {
+            "name": "DadsCarouselMediaRole",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselSlidesChangeDetail",
+          "declaration": {
+            "name": "DadsCarouselSlidesChangeDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselSlidesChangeReason",
+          "declaration": {
+            "name": "DadsCarouselSlidesChangeReason",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselSlideStateDetail",
+          "declaration": {
+            "name": "DadsCarouselSlideStateDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselToggleAllDetail",
+          "declaration": {
+            "name": "DadsCarouselToggleAllDetail",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsCarouselType",
+          "declaration": {
+            "name": "DadsCarouselType",
+            "module": "./carousel.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineCarousel",
+          "declaration": {
+            "name": "defineCarousel",
+            "module": "./carousel-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCarousel",
+          "declaration": {
+            "name": "defineDefaultCarousel",
+            "module": "./carousel-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/checkbox/checkbox-define.ts",
       "declarations": [
         {
@@ -44098,6 +46685,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/page-navigation/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/carousel/index.js"
           }
         },
         {

@@ -705,6 +705,134 @@
       }
     ]
   },
+  "dads-carousel": {
+    "version": 1,
+    "summary": "カルーセルコンポーネント仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "ルートは role=\"region\" と aria-roledescription=\"carousel\" を持ち、カルーセル領域として識別されます。",
+        "メインスライド・次スライドプレビュー・コントロール（ステップ/ページナビ）で構成されます。"
+      ],
+      "keyboard": [
+        "Tab で前後移動ボタン、ステップボタン、「すべてのスライド」ボタンへフォーカスできます。",
+        "ステップボタンは ArrowLeft/ArrowRight/Home/End、Enter/Space で操作できます。",
+        "一覧展開中は Escape で閉じる操作をサポートします。"
+      ],
+      "zoom": [
+        "breakpoint-rem を境に data-wide が切り替わり、desktop はステップナビ、mobile はページナビを表示します。",
+        "レイアウトは相対単位（rem）とトークンで構成され、拡大表示時の可読性を維持します。"
+      ],
+      "states": [
+        "current-index で現在スライドを制御し、現在項目には aria-current/aria-selected を反映します。",
+        "一覧展開時は data-expanded=\"true\" となり、コントロール表示を切り替えます。"
+      ],
+      "labels": [
+        "aria-label / prev-label / next-label / all-slides-label / unit で読み上げラベルを調整できます。",
+        "現在位置は aria-live=\"polite\" のステータス領域で通知されます。"
+      ],
+      "motion": [
+        "自動再生やアニメーションは前提にしていません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "root",
+        "title": "カルーセル領域",
+        "label": "role=\"region\"",
+        "description": "カルーセル全体のランドマークです。aria-label で領域名を付与します。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#root"
+        }
+      },
+      {
+        "id": "main-panel",
+        "title": "メインスライド",
+        "label": "main panel",
+        "description": "現在のスライドを表示する主領域です。リンク付きスライドではクリック遷移できます。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#main-panel"
+        }
+      },
+      {
+        "id": "next-preview",
+        "title": "次スライドプレビュー",
+        "label": "next preview",
+        "description": "desktop 表示時に次スライドをプレビューし、操作ボタンとして機能します。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "#next-preview-button"
+        }
+      },
+      {
+        "id": "indicators",
+        "title": "ステップナビゲーション",
+        "label": "role=\"tablist\"",
+        "description": "desktop 表示時のステップ移動領域です。現在項目は aria-current=\"true\" になります。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "#indicators"
+        }
+      },
+      {
+        "id": "page-nav",
+        "title": "ページナビゲーション",
+        "label": "mobile controls",
+        "description": "mobile 表示時の前後移動ボタンとページ状態表示です。",
+        "category": "keyboard",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#page-nav"
+        }
+      },
+      {
+        "id": "all-slides-summary",
+        "title": "すべてのスライド",
+        "label": "summary",
+        "description": "スライド一覧の開閉トリガーです。開閉状態は data-expanded に同期されます。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#all-slides-summary"
+        }
+      },
+      {
+        "id": "all-slides-list",
+        "title": "スライド一覧",
+        "label": "slides list",
+        "description": "「すべてのスライド」展開時に、現在以外のスライド一覧を表示します。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#all-slides-list"
+        }
+      },
+      {
+        "id": "status-live",
+        "title": "読み上げステータス",
+        "label": "aria-live",
+        "description": "現在位置（例: 全6枚中1枚目）を aria-live=\"polite\" で通知します。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "#status"
+        }
+      }
+    ]
+  },
   "dads-checkbox": {
     "version": 1,
     "summary": "コンポーネント仕様（アクセシビリティ注釈）",
