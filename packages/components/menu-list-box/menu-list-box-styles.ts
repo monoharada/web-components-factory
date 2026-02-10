@@ -22,7 +22,7 @@ export const menuListBoxStyles = css`
     --_dads-menu-list-box-popup-item-divider: var(--dads-menu-list-box-popup-item-divider);
     --_dads-menu-list-box-divider-color:
       var(--dads-divider-color, var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42)));
-    --_dads-menu-list-box-divider-margin-block: var(--dads-divider-margin-block, var(--spacing-2, 0.5rem));
+    --_dads-menu-list-box-divider-margin-block: var(--dads-divider-margin-block, var(--spacing-4, 1rem));
     --_dads-menu-list-box-divider-inline-offset: var(--dads-divider-margin-inline, var(--spacing-4, 1rem));
   }
 
@@ -160,6 +160,28 @@ export const menuListBoxStyles = css`
     inline-size: calc(
       100% - var(--_dads-menu-list-box-divider-inline-offset) -
         var(--_dads-menu-list-box-divider-inline-offset)
+    );
+  }
+
+  :host ::slotted([data-menu-list-box-divider]),
+  :host ::slotted(hr),
+  :host ::slotted([role='separator']) {
+    display: block;
+    box-sizing: border-box;
+    height: 0;
+    border: 0;
+    border-top: 1px solid
+      var(
+        --dads-menu-list-box-divider-color,
+        var(--color-neutral-opacity-gray-420, rgba(0, 0, 0, 0.42))
+      );
+    margin-block: var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem));
+    margin-inline: 0;
+    position: relative;
+    inset-inline-start: var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem));
+    inline-size: calc(
+      100% - var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem)) -
+        var(--dads-menu-list-box-divider-margin-inline, var(--spacing-4, 1rem))
     );
   }
 

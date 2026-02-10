@@ -466,7 +466,7 @@ test.describe('Menu List Box — fidelity (geometry + diagnostics)', () => {
     expect(metrics.overflowY, 'popup overflow-y should be auto').toBe('auto');
   });
 
-  test('Divider: margin-block=16px, inset=16px, reset-safe inline margin', async ({ page }, testInfo) => {
+  test('Divider: margin-block=16px, inset=16px, reset-safe margin propagation', async ({ page }, testInfo) => {
     await waitForComponentReady(page);
 
     const selector = '#demo-menu-list-box-category';
@@ -481,20 +481,33 @@ test.describe('Menu List Box — fidelity (geometry + diagnostics)', () => {
       const popup = root.querySelector('[part="popup"]');
       if (!(popup instanceof HTMLElement)) throw new Error(`Missing popup: ${sel}`);
 
-      const divider = host.querySelector('hr');
-      if (!(divider instanceof HTMLElement)) throw new Error(`Missing <hr>: ${sel}`);
+      const divider = host.querySelector('dads-divider, hr, [data-menu-list-box-divider], [role="separator"]');
+      if (!(divider instanceof HTMLElement)) {
+        throw new Error(`Missing divider element: ${sel}`);
+      }
+
+      const dividerLine = divider.localName === 'dads-divider'
+        ? divider.shadowRoot?.querySelector('[part="line"]')
+        : divider;
+      if (!(dividerLine instanceof HTMLElement)) {
+        throw new Error(`Missing divider line part: ${sel}`);
+      }
 
       const popupRect = popup.getBoundingClientRect();
-      const hrRect = divider.getBoundingClientRect();
-      const style = getComputedStyle(divider);
+      const dividerRect = divider.getBoundingClientRect();
+      const style = getComputedStyle(dividerLine);
+      const dividerStyle = getComputedStyle(divider);
+      const inlineMarginBlock = divider.style.getPropertyValue('margin-block') || null;
+      const cssVarMarginBlock = dividerStyle.getPropertyValue('--dads-divider-margin-block') || null;
 
       return {
-        leftInset: hrRect.left - popupRect.left,
-        rightInset: popupRect.right - hrRect.right,
+        leftInset: dividerRect.left - popupRect.left,
+        rightInset: popupRect.right - dividerRect.right,
         marginTop: style.marginTop,
         marginBottom: style.marginBottom,
         borderTopWidth: style.borderTopWidth,
-        inlineMarginBlock: divider.style.getPropertyValue('margin-block') || null,
+        inlineMarginBlock,
+        cssVarMarginBlock,
       };
     }, selector);
 
@@ -511,9 +524,13 @@ test.describe('Menu List Box — fidelity (geometry + diagnostics)', () => {
     const marginBottom = px(metrics.marginBottom);
     const borderTopWidth = px(metrics.borderTopWidth);
 
-    expect(metrics.inlineMarginBlock, 'Expected divider to have inline margin-block for reset resilience').toContain(
-      '--dads-menu-list-box-divider-margin-block',
-    );
+    const hasInlineMarginBlockToken = metrics.inlineMarginBlock?.includes('--dads-menu-list-box-divider-margin-block');
+    const hasDividerMarginBlockVar = (metrics.cssVarMarginBlock?.trim().length ?? 0) > 0;
+
+    expect(
+      hasInlineMarginBlockToken || hasDividerMarginBlockVar,
+      'Expected divider margin-block to propagate via inline style or CSS custom property',
+    ).toBe(true);
 
     expect(marginTop, `divider margin-top mismatch. diagnostics=${JSON.stringify(diag.body)}`).toBeGreaterThanOrEqual(15);
     expect(marginTop, `divider margin-top mismatch. diagnostics=${JSON.stringify(diag.body)}`).toBeLessThanOrEqual(17);
