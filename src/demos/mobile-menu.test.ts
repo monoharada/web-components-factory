@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { demos } from './mobile-menu.js';
 
 function extractSampleMenu(html: string, sampleName: string): string {
@@ -15,6 +15,61 @@ function countCurrentAttributes(markup: string): number {
 function countAttribute(markup: string, attributeText: string): number {
   return (markup.match(new RegExp(attributeText, 'g')) ?? []).length;
 }
+
+function getInteractiveScriptContent(html: string): string {
+  const scripts = [...html.matchAll(/<script(?:[^>]*)>([\s\S]*?)<\/script>/g)];
+  const interactive = scripts
+    .map((match) => match[1] ?? '')
+    .find((content) => content.includes('data-mobile-menu-live-events-bound'));
+  return interactive ?? '';
+}
+
+function patchScriptImportForTest(scriptContent: string): string {
+  return scriptContent.replace(
+    "import('./packages/utils/command-store.js')",
+    'Promise.resolve({ defaultCommandStore: { bind: function() {} } })',
+  );
+}
+
+async function flushTasks(): Promise<void> {
+  await Promise.resolve();
+  await Promise.resolve();
+}
+
+function executeMobileMenuScript(host: HTMLElement): void {
+  const scriptEl = host.querySelectorAll('script');
+  const targetScript = [...scriptEl].find((node) =>
+    (node.textContent ?? '').includes('data-mobile-menu-live-events-bound'),
+  );
+  if (!(targetScript instanceof HTMLScriptElement)) return;
+
+  const content = patchScriptImportForTest(targetScript.textContent ?? '');
+  if (!content) return;
+
+  const original = Object.getOwnPropertyDescriptor(document, 'currentScript');
+  Object.defineProperty(document, 'currentScript', {
+    configurable: true,
+    get: () => targetScript,
+  });
+
+  try {
+    // eslint-disable-next-line no-new-func
+    new Function(content)();
+  } finally {
+    if (original) Object.defineProperty(document, 'currentScript', original);
+    else delete (document as Document & { currentScript?: unknown }).currentScript;
+  }
+}
+
+beforeAll(() => {
+  if (!customElements.get('dads-drawer')) {
+    customElements.define('dads-drawer', class extends HTMLElement {});
+  }
+});
+
+afterEach(() => {
+  document.body.innerHTML = '';
+});
 
 describe('mobile-menu demo', () => {
   it('アクセシビリティ注釈は dads-mobile-menu 本体をターゲットにする', () => {
@@ -195,6 +250,75 @@ describe('mobile-menu demo', () => {
     expect(html).toContain("data-mobile-menu-drilldown-back");
     expect(html).toContain("backLabel.textContent = title || '戻る';");
     expect(html).toContain("targetPanelId = trigger.getAttribute('data-drill-target');");
+  });
+
+  it('single-toggle は drawer open/close で外側トリガーを実際に hidden 切替する', async () => {
+    const host = document.createElement('div');
+    host.innerHTML = demos.mobileMenu();
+    document.body.appendChild(host);
+
+    executeMobileMenuScript(host);
+    await flushTasks();
+
+    const liveRoot = host.querySelector('#mobile-menu-live-right-root');
+    const drawer = liveRoot?.querySelector('[data-mobile-menu-live-drawer]');
+    const trigger = liveRoot?.querySelector<HTMLElement>('[data-mobile-menu-live-trigger]');
+    const closeTrigger = liveRoot?.querySelector<HTMLElement>('[data-mobile-menu-live-close-trigger]');
+
+    expect(drawer).toBeTruthy();
+    expect(trigger).toBeTruthy();
+    expect(closeTrigger).toBeTruthy();
+    expect(trigger?.hasAttribute('hidden')).toBe(false);
+
+    drawer?.dispatchEvent(new CustomEvent('dads-drawer-open', { bubbles: true, composed: true }));
+    await flushTasks();
+    expect(trigger?.hasAttribute('hidden')).toBe(true);
+    expect(trigger?.getAttribute('aria-expanded')).toBe('true');
+    expect(closeTrigger?.getAttribute('aria-expanded')).toBe('true');
+
+    drawer?.dispatchEvent(new CustomEvent('dads-drawer-close', { bubbles: true, composed: true }));
+    await flushTasks();
+    expect(trigger?.hasAttribute('hidden')).toBe(false);
+    expect(trigger?.getAttribute('aria-expanded')).toBe('false');
+    expect(closeTrigger?.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('ドリルダウンはクリックで panel 切替し、back ラベルと戻り導線を更新する', async () => {
+    const host = document.createElement('div');
+    host.innerHTML = demos.mobileMenu();
+    document.body.appendChild(host);
+
+    executeMobileMenuScript(host);
+    await flushTasks();
+
+    const menuRoot = host.querySelector<HTMLElement>('[data-mobile-menu-sample="drilldown-preview"]');
+    const rootPanel = menuRoot?.querySelector<HTMLElement>('[data-mobile-menu-drilldown-panel="root"]');
+    const reportsPanel = menuRoot?.querySelector<HTMLElement>('[data-mobile-menu-drilldown-panel="drill-reports"]');
+    const reportsTrigger = menuRoot?.querySelector<HTMLElement>('[data-drill-target="drill-reports"]');
+    const backLink = menuRoot?.querySelector<HTMLElement>('[data-mobile-menu-drilldown-back]');
+    const backLabel = menuRoot?.querySelector<HTMLElement>('[data-mobile-menu-drilldown-back-label]');
+
+    expect(menuRoot).toBeTruthy();
+    expect(rootPanel?.hasAttribute('hidden')).toBe(false);
+    expect(reportsPanel?.hasAttribute('hidden')).toBe(true);
+    expect(backLink?.hasAttribute('hidden')).toBe(true);
+
+    reportsTrigger?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await flushTasks();
+
+    expect(rootPanel?.hasAttribute('hidden')).toBe(true);
+    expect(reportsPanel?.hasAttribute('hidden')).toBe(false);
+    expect(backLink?.hasAttribute('hidden')).toBe(false);
+    expect(backLabel?.textContent).toBe('白書・統計・資料');
+    expect(menuRoot?.getAttribute('data-mobile-menu-drilldown-active')).toBe('drill-reports');
+
+    backLink?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await flushTasks();
+
+    expect(rootPanel?.hasAttribute('hidden')).toBe(false);
+    expect(reportsPanel?.hasAttribute('hidden')).toBe(true);
+    expect(backLink?.hasAttribute('hidden')).toBe(true);
+    expect(menuRoot?.getAttribute('data-mobile-menu-drilldown-active')).toBe('root');
   });
 
   it('Figma要件の主要状態（戻る・現在地・外部リンク・区切り線・開閉）を含む', () => {
