@@ -5904,6 +5904,382 @@ ${dadsDataRows(6, 6)}
     </script>
   `,
 
+  emergencyBanner: () => `
+    <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">緊急時バナー</h2>
+      <p style="color: var(--color-neutral-solid-gray-700, #4d4d4d); margin-bottom: 32px;">
+        DADSの緊急時バナーをWeb Components化した実装です。接頭辞切替、更新日時、本文、CTAを提供します。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">アクセシビリティ注釈（a11y-annotate）</h3>
+        <a11y-annotate
+          target-selector="dads-emergency-banner"
+          callout-lane="top"
+          style="
+            --a11y-annotate-callout-gutter: clamp(8rem, 22vw, 20rem);
+            --a11y-annotate-callout-lane-offset: 168px;
+            --a11y-annotate-callout-lane-gap: 12px;
+          "
+        >
+          <div style="padding: 96px 160px;">
+            <div style="max-width: 1240px; margin: 0 auto;">
+              <dads-emergency-banner href="https://example.com/evacuation" target="_blank">
+                <span slot="heading">〇〇地区に避難準備情報が発令されました</span>
+                <time slot="timestamp" datetime="2024-01-01T06:00:00+09:00">2024年1月1日 06:00更新</time>
+                <p>1時23分に〇〇地区に対して避難準備情報が発令されました。指定避難所への避難を開始してください。</p>
+                <span slot="action">指定避難所を確認する</span>
+              </dads-emergency-banner>
+            </div>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 48px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">API / Controls（Storybook風）</h3>
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-emergency-banner',
+            'dads-select',
+            'dads-input-text',
+            'dads-table',
+            'dads-code-block',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed var(--color-neutral-solid-gray-200, #cccccc); border-radius: 12px;">
+                <dads-emergency-banner
+                  data-api-target
+                  heading-level="2"
+                  prefix-mode="auto"
+                  prefix-label="【緊急】"
+                  href="https://example.com/evacuation"
+                  target="_blank"
+                >
+                  <span slot="heading">〇〇地区に避難準備情報が発令されました</span>
+                  <time slot="timestamp" datetime="2024-01-01T06:00:00+09:00">2024年1月1日 06:00更新</time>
+                  <p>1時23分に〇〇地区に対して避難準備情報が発令されました。指定避難所への避難を開始してください。</p>
+                  <span slot="action">指定避難所を確認する</span>
+                </dads-emergency-banner>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-emergency-banner href="https://example.com/evacuation" target="_blank">
+                      <span slot="heading">〇〇地区に避難準備情報が発令されました</span>
+                      <time slot="timestamp" datetime="2024-01-01T06:00:00+09:00">2024年1月1日 06:00更新</time>
+                      <p>1時23分に〇〇地区に対して避難準備情報が発令されました。指定避難所への避難を開始してください。</p>
+                      <span slot="action">指定避難所を確認する</span>
+                    </dads-emergency-banner>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>heading-level</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'2' | '3' | '4' | '5' | '6'</code></td>
+                        <td><code>2</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="heading-level" size="md 240" value="2" data-api-attr="heading-level" data-default="2">
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                              <option value="5">5</option>
+                              <option value="6">6</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>見出しレベル</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>prefix-mode</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'auto' | 'manual'</code></td>
+                        <td><code>auto</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="prefix-mode" size="md 240" value="auto" data-api-attr="prefix-mode" data-default="auto">
+                              <option value="auto">auto</option>
+                              <option value="manual">manual</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>接頭辞表示モード</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>prefix-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>【緊急】</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="prefix-label" value="【緊急】" data-api-attr="prefix-label" data-default="【緊急】"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>接頭辞テキスト</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>href</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>https://example.com/evacuation</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="href" value="https://example.com/evacuation" data-api-attr="href" data-default="https://example.com/evacuation"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>CTAリンク先（未指定時はCTA非表示）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>target</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'_self' | '_blank'</code></td>
+                        <td><code>_self</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="target" size="md 240" value="_blank" data-api-attr="target" data-default="_self">
+                              <option value="_self">_self</option>
+                              <option value="_blank">_blank</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>CTAリンクターゲット</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>rel</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>''（空）</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="rel" value="" data-api-attr="rel" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>CTAリンクrel（_blank時に未指定なら自動補完）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">Slots</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>slot="heading"</code></th>
+                        <td><code>named</code></td>
+                        <td>見出し本文（接頭辞は <code>prefix-mode</code> / <code>prefix-label</code> で制御）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>slot="timestamp"</code></th>
+                        <td><code>named</code></td>
+                        <td>更新日時</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>default slot</code></th>
+                        <td><code>default</code></td>
+                        <td>本文</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>slot="action"</code></th>
+                        <td><code>named</code></td>
+                        <td>CTAラベル（<code>href</code> 未指定または空の場合は非表示）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS Parts</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><th scope="row"><code>base</code></th><td>ルート</td></tr>
+                      <tr><th scope="row"><code>header</code></th><td>ヘッダー領域</td></tr>
+                      <tr><th scope="row"><code>heading</code></th><td>見出し領域</td></tr>
+                      <tr><th scope="row"><code>prefix</code></th><td>接頭辞</td></tr>
+                      <tr><th scope="row"><code>timestamp</code></th><td>更新日時領域</td></tr>
+                      <tr><th scope="row"><code>body</code></th><td>本文領域</td></tr>
+                      <tr><th scope="row"><code>action</code></th><td>CTAコンテナ</td></tr>
+                      <tr><th scope="row"><code>action-link</code></th><td>CTAリンク</td></tr>
+                      <tr><th scope="row"><code>action-label</code></th><td>CTAラベル</td></tr>
+                      <tr><th scope="row"><code>action-icon</code></th><td>新規タブアイコン</td></tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">Events</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">When</th>
+                        <th scope="col">Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>なし（独自イベントなし）</code></th>
+                        <td>CTAリンク押下時</td>
+                        <td>ネイティブのリンク遷移（<code>click</code> / <code>keydown Enter</code>）を利用</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-emergency-banner-border-color</code></th>
+                        <td><code>var(--color-semantic-warning-orange-1)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-emergency-banner-border-color" value="" data-api-css-var="--dads-emergency-banner-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>外枠色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-emergency-banner-background</code></th>
+                        <td><code>#fff</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-emergency-banner-background" value="" data-api-css-var="--dads-emergency-banner-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>背景色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-emergency-banner-color</code></th>
+                        <td><code>#333</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-emergency-banner-color" value="" data-api-css-var="--dads-emergency-banner-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>本文文字色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-emergency-banner-heading-color</code></th>
+                        <td><code>#1a1a1a</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-emergency-banner-heading-color" value="" data-api-css-var="--dads-emergency-banner-heading-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>見出し文字色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-emergency-banner-action-background</code></th>
+                        <td><code>var(--color-semantic-error-1)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-emergency-banner-action-background" value="" data-api-css-var="--dads-emergency-banner-action-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>CTA背景色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-emergency-banner-action-background-hover</code></th>
+                        <td><code>var(--color-semantic-error-2)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-emergency-banner-action-background-hover" value="" data-api-css-var="--dads-emergency-banner-action-background-hover" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>CTAホバー背景色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-emergency-banner-action-color</code></th>
+                        <td><code>#fff</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-emergency-banner-action-color" value="" data-api-css-var="--dads-emergency-banner-action-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>CTA文字色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-emergency-banner-action-border-radius</code></th>
+                        <td><code>0.75rem</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-emergency-banner-action-border-radius" value="" data-api-css-var="--dads-emergency-banner-action-border-radius" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>CTA角丸</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">プレビュー</h3>
+        <div style="display: grid; gap: 24px;">
+          <dads-emergency-banner href="https://example.com/evacuation" target="_blank">
+            <span slot="heading">〇〇地区に避難準備情報が発令されました</span>
+            <time slot="timestamp" datetime="2024-01-01T06:00:00+09:00">2024年1月1日 06:00更新</time>
+            <p>1時23分に〇〇地区に対して避難準備情報が発令されました。お年寄りの方等避難に時間がかかる方は、直ちに指定避難所へ避難してください。</p>
+            <span slot="action">指定避難所を確認する</span>
+          </dads-emergency-banner>
+
+          <dads-emergency-banner prefix-mode="manual" href="https://example.com/evacuation">
+            <span slot="heading">【緊急】河川水位の上昇に伴う避難情報</span>
+            <time slot="timestamp" datetime="2024-01-01T08:30:00+09:00">2024年1月1日 08:30更新</time>
+            <p>洪水の危険性が高まっています。対象地域の方は避難行動を開始してください。</p>
+            <span slot="action">避難行動判定フローを見る</span>
+          </dads-emergency-banner>
+        </div>
+      </section>
+    </div>
+  `,
+
 
   switch: () => `
     <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">

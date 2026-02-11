@@ -161,3 +161,60 @@ describe('showcase-components (notificationBanner demo)', () => {
     expect(html).toContain("'hide' | 'collapse'");
   });
 });
+
+describe('showcase-components (emergencyBanner demo)', () => {
+  it('アクセシビリティ注釈セクションを含む', () => {
+    const html = demos.emergencyBanner();
+    expect(html).toContain('アクセシビリティ注釈（a11y-annotate）');
+    expect(html).toContain('target-selector="dads-emergency-banner"');
+    expect(html).toContain('callout-lane="top"');
+    expect(html).toContain('--a11y-annotate-callout-gutter: clamp(8rem, 22vw, 20rem);');
+    expect(html).toContain('--a11y-annotate-callout-lane-offset: 168px;');
+    expect(html).toContain('padding: 96px 160px;');
+    expect(html).toContain('max-width: 1240px;');
+  });
+
+  it('UsageコードとAPI属性コントロールを含む', () => {
+    const html = demos.emergencyBanner();
+    expect(html).toContain('<dads-code-block data-api-code>');
+    expect(html).toContain('<dads-emergency-banner href="https://example.com/evacuation" target="_blank">');
+    expect(html).toContain('data-api-attr="heading-level"');
+    expect(html).toContain('data-api-attr="prefix-mode"');
+    expect(html).toContain('data-api-attr="prefix-label"');
+    expect(html).toContain('data-api-attr="href"');
+    expect(html).toContain('data-api-attr="target"');
+    expect(html).toContain('data-api-attr="rel"');
+  });
+
+  it('APIテーブルは属性デフォルト値を正しく示す', () => {
+    const html = demos.emergencyBanner();
+    expect(html).toContain("<td><code>_self</code></td>");
+    expect(html).toContain('data-api-attr="target" data-default="_self"');
+    expect(html).toContain("<td><code>''（空）</code></td>");
+    expect(html).toContain('data-api-attr="rel" data-default=""');
+  });
+
+  it('Slots / CSS Parts / Events テーブルを含む', () => {
+    const html = demos.emergencyBanner();
+    expect(html).toContain('<h4 class="wc-api-panel__section-title">Slots</h4>');
+    expect(html).toContain('<code>slot="heading"</code>');
+    expect(html).toContain('<code>slot="action"</code>');
+    expect(html).toContain('<h4 class="wc-api-panel__section-title">CSS Parts</h4>');
+    expect(html).toContain('<code>action-link</code>');
+    expect(html).toContain('<code>action-icon</code>');
+    expect(html).toContain('<h4 class="wc-api-panel__section-title">Events</h4>');
+    expect(html).toContain('なし（独自イベントなし）');
+  });
+
+  it('主要CSS変数コントロールを含む', () => {
+    const html = demos.emergencyBanner();
+    expect(html).toContain('--dads-emergency-banner-border-color');
+    expect(html).toContain('--dads-emergency-banner-background');
+    expect(html).toContain('--dads-emergency-banner-color');
+    expect(html).toContain('--dads-emergency-banner-heading-color');
+    expect(html).toContain('--dads-emergency-banner-action-background');
+    expect(html).toContain('--dads-emergency-banner-action-background-hover');
+    expect(html).toContain('--dads-emergency-banner-action-color');
+    expect(html).toContain('--dads-emergency-banner-action-border-radius');
+  });
+});

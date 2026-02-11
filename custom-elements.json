@@ -16578,6 +16578,912 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/emergency-banner/emergency-banner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "緊急時バナーコンポーネント",
+          "name": "DadsEmergencyBanner",
+          "cssProperties": [
+            {
+              "description": "外枠色",
+              "name": "--dads-emergency-banner-border-color"
+            },
+            {
+              "description": "背景色",
+              "name": "--dads-emergency-banner-background"
+            },
+            {
+              "description": "本文文字色",
+              "name": "--dads-emergency-banner-color"
+            },
+            {
+              "description": "見出し色",
+              "name": "--dads-emergency-banner-heading-color"
+            },
+            {
+              "description": "CTA背景色",
+              "name": "--dads-emergency-banner-action-background"
+            },
+            {
+              "description": "CTAホバー背景色",
+              "name": "--dads-emergency-banner-action-background-hover"
+            },
+            {
+              "description": "CTA文字色",
+              "name": "--dads-emergency-banner-action-color"
+            },
+            {
+              "description": "CTA角丸",
+              "name": "--dads-emergency-banner-action-border-radius"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "CTAコンテナ",
+              "name": "action"
+            },
+            {
+              "description": "新規タブアイコン",
+              "name": "action-icon"
+            },
+            {
+              "description": "CTAラベル",
+              "name": "action-label"
+            },
+            {
+              "description": "CTAリンク",
+              "name": "action-link"
+            },
+            {
+              "description": "ルート要素",
+              "name": "base"
+            },
+            {
+              "description": "本文領域",
+              "name": "body"
+            },
+            {
+              "description": "ヘッダー領域",
+              "name": "header"
+            },
+            {
+              "description": "見出し領域",
+              "name": "heading"
+            },
+            {
+              "description": "見出し接頭辞",
+              "name": "prefix"
+            },
+            {
+              "description": "更新日時領域",
+              "name": "timestamp"
+            }
+          ],
+          "slots": [
+            {
+              "description": "CTAラベル",
+              "name": "action"
+            },
+            {
+              "description": "本文",
+              "name": "default"
+            },
+            {
+              "description": "見出し本文",
+              "name": "heading"
+            },
+            {
+              "description": "更新日時",
+              "name": "timestamp"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#action",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#actionIcon",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#actionLink",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLAnchorElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#actionSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#bindEvents",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#body",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#bodySlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureDefaultAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#hasMeaningfulSlotContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#heading",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeHeadingLevel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HeadingLevel"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#normalizePrefixLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#normalizePrefixMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "PrefixMode"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "LinkTarget"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#observer",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#onSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#prefix",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#readActionLabelText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncBody",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncHeading",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPrefix",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncTargetAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncTimestamp",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#timestamp",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#timestampSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-emergency-banner', template: html` <div part=\"base\" id=\"base\" role=\"region\" aria-labelledby=\"heading\"> <div part=\"header\" id=\"header\"> <div part=\"heading\" id=\"heading\" role=\"heading\" aria-level=\"2\"> <span part=\"prefix\" id=\"prefix\">【緊急】</span> <slot name=\"heading\" id=\"heading-slot\">緊急情報</slot> </div> <div part=\"timestamp\" id=\"timestamp\" hidden> <slot name=\"timestamp\" id=\"timestamp-slot\"></slot> </div> </div> <div part=\"body\" id=\"body\" hidden> <slot id=\"body-slot\"></slot> </div> <div part=\"action\" id=\"action\" hidden> <a part=\"action-link\" id=\"action-link\"> <span part=\"action-label\" id=\"action-label\"> <slot name=\"action\" id=\"action-slot\"></slot> </span> <span part=\"action-icon\" id=\"action-icon\" hidden> <svg width=\"16\" height=\"16\" viewBox=\"0 0 48 48\" aria-hidden=\"true\" focusable=\"false\"> <path d=\"M22 6V9H9V39H39V26H42V42H6V6H22ZM42 6V20H39V11.2L21 29L19 27L36.8 9H28V6H42Z\" fill=\"currentcolor\"></path> </svg> </span> </a> </div> </div> `, styles: withReset([applyDADSTokens(), applySpacingTokens(), emergencyBannerTokens, emergencyBannerStyles], 'minimal'), attributes: [ PropertyAttr('headingLevel', 'heading-level'), PropertyAttr('prefixMode', 'prefix-mode'), PropertyAttr('prefixLabel', 'prefix-label'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "headingLevel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "headingLevelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hrefChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "prefixLabel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "prefixLabelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "prefixMode",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "prefixModeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "relChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "targetChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'2' | '3' | '4' | '5' | '6'"
+              },
+              "description": "見出しレベル",
+              "name": "heading-level"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "CTAリンク先",
+              "name": "href"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "接頭辞テキスト",
+              "name": "prefix-label"
+            },
+            {
+              "type": {
+                "text": "'auto' | 'manual'"
+              },
+              "description": "接頭辞表示モード",
+              "name": "prefix-mode"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "CTAリンクrel",
+              "name": "rel"
+            },
+            {
+              "type": {
+                "text": "'_self' | '_blank'"
+              },
+              "description": "CTAリンクターゲット",
+              "name": "target"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-emergency-banner",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/emergency-banner/emergency-banner.ts",
+          "definitionPath": "./packages/components/emergency-banner/emergency-banner.ts",
+          "typeDefinitionPath": "./packages/components/emergency-banner/emergency-banner.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "緊急時バナーのパーツ構成（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "緊急時バナーは、見出し・更新日時・本文・CTAをまとめて提示する情報コンテナです。",
+                  "接頭辞（既定: 【緊急】）は prefix-mode で自動表示と手動表示を切り替えられます。",
+                  "バナー本体は region として公開され、見出しと関連づけられます。"
+                ],
+                "keyboard": [
+                  "CTAリンクはTabでフォーカスでき、Enterで遷移できます。",
+                  "target=\"_blank\" の場合も通常リンクとしてキーボード操作できます。",
+                  "target=\"_blank\" のときはリンク名に新規タブ遷移の補助情報を付与します。"
+                ],
+                "zoom": [
+                  "本文は折り返しを前提とし、拡大時も情報欠落を防ぎます。",
+                  "CTAは狭幅では全幅、広幅では中央配置で可読性と操作性を維持します。"
+                ],
+                "states": [
+                  "prefix-mode=\"auto\" では接頭辞を表示し、prefix-mode=\"manual\" では接頭辞表示を抑制します。",
+                  "href と slot=\"action\" の両方がある場合のみCTAを表示します。"
+                ],
+                "labels": [
+                  "headingスロットの文言が通知の主要ラベルです。",
+                  "prefix-label で接頭辞文字列を上書きできます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "emergency-region",
+                  "title": "情報リージョン",
+                  "label": "region",
+                  "description": "見出しをラベル参照する情報コンテナです。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "emergency-heading",
+                  "title": "見出し",
+                  "label": "slot=\"heading\"",
+                  "description": "緊急情報の主題を示す見出しテキストです。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "selector": "[slot=\"heading\"]"
+                  }
+                },
+                {
+                  "id": "emergency-prefix",
+                  "title": "接頭辞",
+                  "label": "prefix",
+                  "description": "prefix-mode=\"auto\" のときに表示される接頭辞です。",
+                  "category": "states",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"prefix\"]"
+                  }
+                },
+                {
+                  "id": "emergency-timestamp",
+                  "title": "更新日時",
+                  "label": "slot=\"timestamp\"",
+                  "description": "通知の更新日時を示す補助情報です。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "selector": "[slot=\"timestamp\"]"
+                  }
+                },
+                {
+                  "id": "emergency-body",
+                  "title": "本文",
+                  "label": "default slot",
+                  "description": "通知内容の説明本文です。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"body\"]"
+                  }
+                },
+                {
+                  "id": "emergency-action",
+                  "title": "CTAリンク",
+                  "label": "action-link",
+                  "description": "避難所確認などの緊急導線を提供するリンクです。",
+                  "category": "keyboard",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"action-link\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "emergency-banner",
+            "install": {
+              "id": "emergency-banner",
+              "define": "defineEmergencyBanner",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/emergency-banner"
+              },
+              "tags": [
+                "dads-emergency-banner"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsEmergencyBanner",
+          "declaration": {
+            "name": "DadsEmergencyBanner",
+            "module": "packages/components/emergency-banner/emergency-banner.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/emergency-banner/emergency-banner.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/emergency-banner/emergency-banner.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-emergency-banner",
+          "declaration": {
+            "name": "DadsEmergencyBanner",
+            "module": "./packages/components/emergency-banner/emergency-banner.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/fieldset/fieldset.ts",
       "declarations": [
         {
@@ -46279,6 +47185,142 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/emergency-banner/emergency-banner-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultEmergencyBanner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineEmergencyBanner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-emergency-banner`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultEmergencyBanner",
+          "declaration": {
+            "name": "defineDefaultEmergencyBanner",
+            "module": "packages/components/emergency-banner/emergency-banner-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineEmergencyBanner",
+          "declaration": {
+            "name": "defineEmergencyBanner",
+            "module": "packages/components/emergency-banner/emergency-banner-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/emergency-banner/emergency-banner-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "emergencyBannerStyles",
+          "default": "css` :host { display: block; } [part='base'] { display: grid; row-gap: var(--dads-emergency-banner-row-gap); border: var(--dads-emergency-banner-border-width) solid var(--dads-emergency-banner-border-color); background-color: var(--dads-emergency-banner-background); padding: var(--dads-emergency-banner-padding-block) var(--dads-emergency-banner-padding-inline); color: var(--dads-emergency-banner-color); font-family: var(--font-family-sans); font-weight: var(--font-weight-400, 400); font-size: var(--dads-emergency-banner-font-size); line-height: var(--dads-emergency-banner-line-height); letter-spacing: var(--dads-emergency-banner-letter-spacing); } [part='header'] { display: grid; row-gap: var(--dads-emergency-banner-header-gap); } [part='heading'] { margin: 0; color: var(--dads-emergency-banner-heading-color); font-weight: var(--dads-emergency-banner-heading-font-weight); font-size: var(--dads-emergency-banner-heading-font-size); line-height: var(--dads-emergency-banner-heading-line-height); letter-spacing: var(--dads-emergency-banner-letter-spacing); text-spacing-trim: trim-start; } [part='prefix'] { margin-right: 0.2em; } [part='prefix'][hidden] { display: none; } #heading-slot::slotted(*) { margin: 0; color: inherit; font-weight: inherit; font-size: inherit; line-height: inherit; letter-spacing: inherit; } [part='timestamp'] { display: block; } #timestamp-slot::slotted(*) { margin: 0; color: inherit; font: inherit; line-height: inherit; letter-spacing: inherit; } [part='timestamp'][hidden], [part='body'][hidden], [part='action'][hidden], [part='action-icon'][hidden] { display: none; } [part='body'] { display: grid; row-gap: var(--dads-emergency-banner-body-row-gap); } #body-slot::slotted(*) { margin: 0; } [part='action'] { padding-top: var(--dads-emergency-banner-action-padding-top); padding-bottom: var(--dads-emergency-banner-action-padding-bottom); } [part='action-link'], [part='action-link']:any-link { position: relative; display: block; box-sizing: border-box; width: 100%; min-width: var(--dads-emergency-banner-action-min-width); border: var(--dads-emergency-banner-action-border-width) solid transparent; border-radius: var(--dads-emergency-banner-action-border-radius); background-color: var(--dads-emergency-banner-action-background); padding: var(--dads-emergency-banner-action-padding); color: var(--dads-emergency-banner-action-color); text-align: center; font-weight: var(--dads-emergency-banner-action-font-weight); font-size: var(--dads-emergency-banner-action-font-size); line-height: var(--dads-emergency-banner-action-line-height); letter-spacing: var(--dads-emergency-banner-action-letter-spacing); text-decoration: none; } [part='action-link']::after { position: absolute; inset: 0; border: var(--dads-emergency-banner-action-inner-border-width) solid var(--dads-emergency-banner-action-color); border-radius: var(--dads-emergency-banner-action-inner-border-radius); content: ''; pointer-events: none; } #action-slot::slotted(*) { color: inherit; font: inherit; line-height: inherit; letter-spacing: inherit; text-decoration: none; } [part='action-icon'] { display: inline-block; vertical-align: -0.15em; margin-left: 0.25em; } [part='action-icon']::before { content: ' '; } [part='action-icon'] svg { display: block; width: var(--dads-emergency-banner-action-icon-size); height: var(--dads-emergency-banner-action-icon-size); fill: currentcolor; } @media (any-hover: hover) { [part='action-link']:hover { background-color: var(--dads-emergency-banner-action-background-hover); text-decoration: underline; text-decoration-thickness: calc(1 / 16 * 1rem); text-underline-offset: calc(3 / 16 * 1rem); } } [part='action-link']:focus { outline: var(--dads-emergency-banner-focus-outline-width) solid var(--dads-emergency-banner-focus-outline-color); outline-offset: var(--dads-emergency-banner-focus-outline-offset); box-shadow: 0 0 0 var(--dads-emergency-banner-focus-ring-width) var(--dads-emergency-banner-focus-ring-color); } [part='action-link']:focus:not(:focus-visible) { outline-color: transparent; box-shadow: none; } @media (forced-colors: active) { [part='action-link']::after { inset: calc(4 / 16 * 1rem); border-width: calc(2 / 16 * 1rem); border-radius: calc(8 / 16 * 1rem); } } @media (min-width: 48rem) { [part='body'] { font-size: var(--font-size-20, 1.25rem); line-height: var(--line-height-150, 1.5); } [part='action'] { display: flex; justify-content: center; } [part='action-link'], [part='action-link']:any-link { width: fit-content; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "emergencyBannerStyles",
+          "declaration": {
+            "name": "emergencyBannerStyles",
+            "module": "packages/components/emergency-banner/emergency-banner-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/emergency-banner/emergency-banner-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "emergencyBannerTokens",
+          "default": "css` ${emergencyBannerSemanticTokensText} ${emergencyBannerLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "emergencyBannerTokens",
+          "declaration": {
+            "name": "emergencyBannerTokens",
+            "module": "packages/components/emergency-banner/emergency-banner-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/emergency-banner/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/emergency-banner/emergency-banner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultEmergencyBanner",
+          "declaration": {
+            "name": "defineDefaultEmergencyBanner",
+            "module": "./emergency-banner-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineEmergencyBanner",
+          "declaration": {
+            "name": "defineEmergencyBanner",
+            "module": "./emergency-banner-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/fieldset/fieldset-define.ts",
       "declarations": [
         {
@@ -47451,6 +48493,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/notification-banner/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/emergency-banner/index.js"
           }
         },
         {

@@ -95,6 +95,9 @@ export * from './search-box/index.js';
 // ノティフィケーションバナー
 export * from './notification-banner/index.js';
 
+// 緊急時バナー
+export * from './emergency-banner/index.js';
+
 // 見出し
 export * from './heading/index.js';
 
