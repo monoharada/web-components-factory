@@ -48,7 +48,7 @@ export const checkboxStyles = css`
 
   /* ========== チェックボックス枠 ========== */
   [part="checkbox"] {
-    --_checkbox-hover-bg: transparent;
+    --_checkbox-hover-bg: var(--dads-checkbox-force-hover-bg, transparent);
 
     display: flex;
     justify-content: center;
@@ -62,7 +62,10 @@ export const checkboxStyles = css`
 
   @media (any-hover: hover) {
     [part="checkbox"]:has(:not(:focus, :disabled, [aria-disabled="true"]):hover) {
-      --_checkbox-hover-bg: var(--color-neutral-solid-gray-420);
+      --_checkbox-hover-bg: var(
+        --dads-checkbox-force-hover-bg,
+        var(--color-neutral-solid-gray-420)
+      );
     }
   }
 
@@ -74,8 +77,8 @@ export const checkboxStyles = css`
     --_border-color: var(--color-neutral-solid-gray-600);
     --_border-hover-color: var(--color-neutral-black);
     --_check-color: var(--color-neutral-white);
-    --_border-color-current: var(--_border-color);
-    --_fill-color-current: var(--_base-color);
+    --_border-color-current: var(--dads-checkbox-force-border-color, var(--_border-color));
+    --_fill-color-current: var(--dads-checkbox-force-fill-color, var(--_base-color));
 
     margin: 0;
     -webkit-appearance: none;
@@ -104,8 +107,8 @@ export const checkboxStyles = css`
   }
 
   [part="input"]:is(:checked, :indeterminate) {
-    --_border-color-current: var(--_accent-color);
-    --_fill-color-current: var(--_accent-color);
+    --_border-color-current: var(--dads-checkbox-force-border-color, var(--_accent-color));
+    --_fill-color-current: var(--dads-checkbox-force-fill-color, var(--_accent-color));
   }
 
   @media (any-hover: hover) {
@@ -183,6 +186,12 @@ export const checkboxStyles = css`
     line-height: var(--line-height-130, 1.3);
     font-family: var(--font-family-sans);
     letter-spacing: 0;
+  }
+
+  /* ラベル未指定時は行ボックス由来の高さを持たせない */
+  [part="label"]:empty {
+    display: none;
+    padding-block-start: 0;
   }
 
   /* ========== 要否ラベル ========== */

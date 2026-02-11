@@ -395,12 +395,21 @@ export class DadsRadio extends TypographyFormComponent {
   }
 
   #setCheckedFromGroup(v: boolean): void {
+    const wasChecked = this.checked;
+
     if (!this.#input) {
       this.toggleAttribute('checked', v);
       return;
     }
+
     this.#input.checked = v;
     this.#syncFormValue();
+
+    if (wasChecked === v) return;
+    this.emitEvent('dads-change', {
+      checked: this.checked,
+      value: this.value,
+    });
   }
 
   #enforceSingleSelection(): void {

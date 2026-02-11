@@ -1527,6 +1527,281 @@ export const demos = {
     </div>
   `,
 
+  resourceListFidelity: () => `
+    <div style="padding: 40px; max-width: 1160px; margin: 0 auto;">
+      <h2 style="${DEMO_H2_STYLE}">リソースリスト（忠実度検証）</h2>
+      <p style="color: #666; margin-bottom: 24px;">
+        E2E・VRT検証用デモ（ID安定性優先）。人間向けショーケースは <code>resourceList</code> を参照してください。
+      </p>
+
+      <style>
+        .resource-list-fidelity-caption {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 12px;
+          color: #666;
+          margin-bottom: 8px;
+        }
+
+        .resource-list-fidelity-section {
+          margin-bottom: 32px;
+        }
+
+        .resource-list-fidelity-stack {
+          display: grid;
+          gap: 16px;
+        }
+
+        .resource-list-fidelity-row {
+          --dads-resource-list-action-width: calc(44 / 16 * 1rem);
+          --dads-resource-list-padding-block: calc(16 / 16 * 1rem);
+          --dads-resource-list-padding-inline: calc(16 / 16 * 1rem);
+          --dads-resource-list-gap: calc(16 / 16 * 1rem);
+        }
+
+        .resource-list-fidelity-row::part(action) {
+          overflow: visible;
+          z-index: 2;
+        }
+
+        .resource-list-fidelity-row::part(base) {
+          overflow: visible;
+        }
+
+        .resource-list-fidelity-row [slot='title'] {
+          margin: 0;
+        }
+
+        .resource-list-fidelity-menu {
+          position: relative;
+          display: block;
+          inline-size: var(--dads-resource-list-action-width);
+          min-inline-size: var(--dads-resource-list-action-width);
+          block-size: 100%;
+          border-start-end-radius: inherit;
+          border-end-end-radius: inherit;
+        }
+
+        .resource-list-fidelity-menu > summary {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          inline-size: 100%;
+          block-size: 100%;
+          list-style: none;
+          cursor: pointer;
+          background: transparent;
+          color: inherit;
+          border: 0;
+          border-start-start-radius: 0;
+          border-end-start-radius: 0;
+          border-start-end-radius: var(--dads-resource-list-border-radius, calc(16 / 16 * 1rem));
+          border-end-end-radius: var(--dads-resource-list-border-radius, calc(16 / 16 * 1rem));
+        }
+
+        .resource-list-fidelity-menu > summary::-webkit-details-marker {
+          display: none;
+        }
+
+        .resource-list-fidelity-menu > summary:focus-visible {
+          outline: var(--dads-resource-list-focus-outline-width, calc(4 / 16 * 1rem))
+            solid var(--dads-resource-list-focus-outline-color, var(--color-neutral-black, #000000));
+          outline-offset: calc(-3 / 16 * 1rem);
+          background: var(--dads-resource-list-focus-ring-color, var(--color-primitive-yellow-300, #ffd43d));
+          box-shadow: none;
+          border-start-start-radius: 0;
+          border-end-start-radius: 0;
+          border-start-end-radius: var(--dads-resource-list-border-radius, calc(16 / 16 * 1rem));
+          border-end-end-radius: var(--dads-resource-list-border-radius, calc(16 / 16 * 1rem));
+        }
+
+        .resource-list-fidelity-menu > [role='menu'] {
+          position: absolute;
+          inset-inline-start: calc(100% + 4px);
+          inset-block-start: 0;
+          display: none;
+          margin: 0;
+          padding: 4px 0;
+          min-inline-size: 12rem;
+          list-style: none;
+          border: 1px solid var(--color-neutral-solid-gray-420, #949494);
+          border-radius: var(--border-radius-8, 0.5rem);
+          background: var(--color-neutral-white, #fff);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+          z-index: 3;
+        }
+
+        .resource-list-fidelity-menu[open] > [role='menu'] {
+          display: grid;
+        }
+
+        .resource-list-fidelity-menu [role='menuitem'] {
+          display: block;
+          inline-size: 100%;
+          margin: 0;
+          border: 0;
+          padding: 10px 12px;
+          background: transparent;
+          font: inherit;
+          line-height: 1.4;
+          text-align: start;
+          cursor: pointer;
+        }
+
+        @media (any-hover: hover) {
+          .resource-list-fidelity-menu [role='menuitem']:hover {
+            background: var(--color-neutral-solid-gray-50, #f2f2f2);
+          }
+        }
+      </style>
+
+      <section class="resource-list-fidelity-section">
+        <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">whole + action（hover / focus / menu）</h3>
+        <div class="resource-list-fidelity-stack">
+          <div>
+            <div class="resource-list-fidelity-caption">whole-link focus</div>
+            <dads-resource-list
+              id="demo-resource-list-whole-link-action"
+              class="resource-list-fidelity-row"
+              data-style="frame"
+              data-interaction="whole"
+            >
+              <a slot="title" id="demo-resource-list-whole-link-title" href="#resource-list-fidelity-focus">リストタイトル</a>
+              <span slot="label">ラベル</span>
+              <span slot="support">サポートテキスト</span>
+              <span slot="sub">サブラベル</span>
+              <button slot="action" type="button" aria-label="メニュー">⋮</button>
+            </dads-resource-list>
+          </div>
+
+          <div>
+            <div class="resource-list-fidelity-caption">inline-link focus</div>
+            <dads-resource-list
+              id="demo-resource-list-inline-link-focus"
+              class="resource-list-fidelity-row"
+              data-style="frame"
+              data-interaction="inline"
+            >
+              <a slot="title" id="demo-resource-list-inline-link-title" href="#resource-list-fidelity-inline-focus">リストタイトル</a>
+              <span slot="label">ラベル</span>
+              <span slot="support">サポートテキスト</span>
+              <span slot="sub">サブラベル</span>
+              <button slot="action" type="button" aria-label="メニュー">⋮</button>
+            </dads-resource-list>
+          </div>
+
+          <div>
+            <div class="resource-list-fidelity-caption">default</div>
+            <dads-resource-list
+              id="demo-resource-list-whole-action-default"
+              class="resource-list-fidelity-row"
+              data-style="frame"
+              data-interaction="whole"
+            >
+              <dads-radio slot="control" name="resource-list-fidelity-room" size="md"></dads-radio>
+              <span slot="title">会議室A</span>
+              <span slot="support">25階North</span>
+              <span slot="sub">空き</span>
+              <details slot="action" class="resource-list-fidelity-menu">
+                <summary aria-label="会議室Aのサブアクション">⋮</summary>
+                <ul role="menu" aria-label="会議室Aのサブアクション">
+                  <li><button type="button" role="menuitem">空き状況を確認</button></li>
+                  <li><button type="button" role="menuitem">予約を依頼</button></li>
+                  <li><button type="button" role="menuitem">設備を表示</button></li>
+                </ul>
+              </details>
+            </dads-resource-list>
+          </div>
+
+          <div>
+            <div class="resource-list-fidelity-caption">checked</div>
+            <dads-resource-list
+              id="demo-resource-list-whole-action-checked"
+              class="resource-list-fidelity-row"
+              data-style="frame"
+              data-interaction="whole"
+            >
+              <dads-radio slot="control" name="resource-list-fidelity-room" checked size="md"></dads-radio>
+              <span slot="title">会議室B</span>
+              <span slot="support">25階West</span>
+              <span slot="sub">利用中</span>
+              <details slot="action" class="resource-list-fidelity-menu">
+                <summary aria-label="会議室Bのサブアクション">⋮</summary>
+                <ul role="menu" aria-label="会議室Bのサブアクション">
+                  <li><button type="button" role="menuitem">利用状況を見る</button></li>
+                  <li><button type="button" role="menuitem">予約を依頼</button></li>
+                  <li><button type="button" role="menuitem">設備を表示</button></li>
+                </ul>
+              </details>
+            </dads-resource-list>
+          </div>
+        </div>
+      </section>
+
+      <section class="resource-list-fidelity-section">
+        <h3 style="font-size: 18px; margin-bottom: 12px; color: #333;">inline + checkbox（label click / selected）</h3>
+        <div class="resource-list-fidelity-stack">
+          <dads-resource-list
+            id="demo-resource-list-inline-user-1"
+            class="resource-list-fidelity-row"
+            data-style="list"
+            data-interaction="inline"
+          >
+            <dads-checkbox slot="control" size="md" aria-labelledby="demo-resource-list-inline-user-1-title demo-resource-list-inline-user-1-support"></dads-checkbox>
+            <span slot="title" id="demo-resource-list-inline-user-1-title">電磁 多留子</span>
+            <span slot="support" id="demo-resource-list-inline-user-1-support">開発部</span>
+            <span slot="sub">管理者</span>
+          </dads-resource-list>
+
+          <dads-resource-list
+            id="demo-resource-list-inline-user-2"
+            class="resource-list-fidelity-row"
+            data-style="list"
+            data-interaction="inline"
+          >
+            <dads-checkbox slot="control" checked size="md" aria-labelledby="demo-resource-list-inline-user-2-title demo-resource-list-inline-user-2-support"></dads-checkbox>
+            <span slot="title" id="demo-resource-list-inline-user-2-title">デジ田 太郎</span>
+            <span slot="support" id="demo-resource-list-inline-user-2-support">マーケティング部</span>
+            <span slot="sub">メンバー</span>
+          </dads-resource-list>
+        </div>
+      </section>
+
+      <script>
+        (function() {
+          var root = document.currentScript && document.currentScript.parentElement;
+          if (!root || !root.isConnected) return;
+
+          var menus = Array.from(root.querySelectorAll('.resource-list-fidelity-menu'));
+          root.addEventListener(
+            'toggle',
+            function(event) {
+              var target = event.target;
+              if (!(target instanceof HTMLDetailsElement)) return;
+              if (!target.classList.contains('resource-list-fidelity-menu')) return;
+              if (!target.open) return;
+              for (const menu of menus) {
+                if (menu === target) continue;
+                menu.removeAttribute('open');
+              }
+            },
+            true
+          );
+
+          root.addEventListener('click', function(event) {
+            var target = event.target;
+            if (!(target instanceof Node)) return;
+            for (const menu of menus) {
+              if (menu.contains(target)) continue;
+              menu.removeAttribute('open');
+            }
+          });
+        })();
+      </script>
+
+      ${modulePreloadScript(['dads-resource-list', 'dads-checkbox', 'dads-radio'])}
+    </div>
+  `,
+
   descriptionListFidelity: () => `
     <div style="padding: 40px; max-width: 960px; margin: 0 auto;">
       <h2 style="${DEMO_H2_STYLE}">説明リスト（忠実度検証）</h2>

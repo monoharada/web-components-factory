@@ -80,6 +80,119 @@ describe('showcase-components (descriptionList demo)', () => {
   });
 });
 
+describe('showcase-components (resourceList demo)', () => {
+  it('冒頭にアクセシビリティ注釈セクションを含み、リンク版とフォームコントロール版を表示する', () => {
+    const html = demos.resourceList();
+    expect(html).toContain('アクセシビリティ注釈（a11y-annotate）');
+    const annotateCount = html.match(/target-selector="dads-resource-list"/g)?.length ?? 0;
+    expect(annotateCount).toBeGreaterThanOrEqual(2);
+    expect(html).toContain('リンク版');
+    expect(html).toContain('フォームコントロール版');
+    expect(html).toContain('aria-labelledby="resource-list-annotate-control-title resource-list-annotate-control-support"');
+    expect(html.indexOf('アクセシビリティ注釈（a11y-annotate）')).toBeLessThan(
+      html.indexOf('API / Controls（Storybook風）')
+    );
+    expect(html.indexOf('API / Controls（Storybook風）')).toBeLessThan(
+      html.indexOf('Figma作例（12692:1434）')
+    );
+  });
+
+  it('Props / Attrs に主要属性のコントロールを含む', () => {
+    const html = demos.resourceList();
+    expect(html).toContain('data-api-attr="data-style"');
+    expect(html).toContain('data-api-attr="data-interaction"');
+    expect(html).toContain('data-resource-list-control-kind');
+    expect(html).toContain('data-resource-list-control-checked');
+    expect(html).toContain('data-resource-list-control-disabled');
+    expect(html).toContain('data-api-attr="href"');
+    expect(html).toContain('data-api-attr="target"');
+    expect(html).toContain('data-api-attr="rel"');
+    expect(html).toContain('data-api-attr="download"');
+  });
+
+  it('Figma作例8カテゴリを含む', () => {
+    const html = demos.resourceList();
+    const exampleTitles = [
+      '受診記録一覧',
+      '給与明細一覧',
+      'アカウント一覧',
+      '支払い方法選択',
+      '会議室選択',
+      'ユーザー選択',
+      '検索結果一覧',
+      'お知らせ一覧',
+    ];
+    for (const title of exampleTitles) {
+      expect(html).toContain(title);
+    }
+  });
+
+  it('Figma作例レイアウトは1カラムで表示される', () => {
+    const html = demos.resourceList();
+    expect(html).toContain('grid-template-columns: minmax(0, 1fr);');
+    expect(html).not.toContain('repeat(auto-fit, minmax(min(100%, 30rem), 1fr))');
+    expect(html).not.toContain('repeat(auto-fit, minmax(min(100%, 48rem), 1fr))');
+  });
+
+  it('作例間に余白なしの dashed divider が挿入される', () => {
+    const html = demos.resourceList();
+    expect(html).toContain('resource-list-example-divider');
+    expect(html).toContain('data-style="dashed"');
+    expect(html).toContain('--dads-divider-margin: 0;');
+    expect(html).toContain('--dads-divider-margin-inline: 0;');
+    expect(html).toContain('--dads-divider-margin-block: 0;');
+    const dividerCount = html.match(/resource-list-example-divider/g)?.length ?? 0;
+    expect(dividerCount).toBeGreaterThanOrEqual(7);
+  });
+
+  it('給与明細は角丸なし、アカウント一覧は三点メニューを表示する', () => {
+    const html = demos.resourceList();
+    expect(html).toContain('resource-list-figma-item--payroll');
+    expect(html).toContain('--dads-resource-list-border-radius: 0;');
+    expect(html).toContain('resource-list-account-menu');
+    expect(html).toContain('resource-list-room-menu-1');
+    expect(html).toContain('会議室Aのサブアクション');
+    expect(html).toContain(".resource-list-figma-item--account::part(base)");
+    expect(html).toContain('inline-size: var(--dads-resource-list-action-width);');
+    expect(html).toContain('aria-haspopup="menu"');
+    expect(html).toContain('role="menuitem"');
+  });
+
+  it('Usage と CSS vars の主要項目を含む', () => {
+    const html = demos.resourceList();
+    expect(html).toContain('<dads-resource-list data-style="list" data-interaction="whole" href="/example">');
+    expect(html).toContain('<dads-resource-list data-style="frame" data-interaction="whole">');
+    expect(html).toContain('<dads-checkbox slot="control" checked aria-labelledby="resource-list-user-title resource-list-user-support"></dads-checkbox>');
+    expect(html).toContain('<dads-radio slot="control" name="payment-method" checked aria-labelledby="resource-list-payment-title resource-list-payment-support"></dads-radio>');
+    expect(html).toContain('data-api-css-var="--dads-resource-list-background"');
+    expect(html).toContain('data-api-css-var="--dads-resource-list-border-color"');
+    expect(html).toContain('data-api-css-var="--dads-resource-list-title-link-color"');
+    expect(html).toContain('data-api-css-var="--dads-resource-list-action-width"');
+  });
+
+  it('作例の checkbox/radio は見出し領域を aria-labelledby で関連付ける', () => {
+    const html = demos.resourceList();
+    expect(html).toContain('aria-labelledby="resource-list-section-4-row-1-title resource-list-section-4-row-1-support"');
+    expect(html).toContain('aria-labelledby="resource-list-section-6-row-1-title resource-list-section-6-row-1-support"');
+  });
+
+  it('API パネルに control slot 切り替え同期スクリプトを含む', () => {
+    const html = demos.resourceList();
+    expect(html).toContain('data-resource-list-api-preview');
+    expect(html).toContain('data-resource-list-demo-control');
+    expect(html).toContain('createDemoControl');
+    expect(html).toContain('applyDefaults');
+    expect(html).toContain("'dads-switch'");
+  });
+
+  it('旧比較系セクションを含まない', () => {
+    const html = demos.resourceList();
+    expect(html).not.toContain('Figma再現（状態比較）');
+    expect(html).not.toContain('三点リーダー（action）状態比較');
+    expect(html).not.toContain('data-demo-action-state=');
+  });
+});
+
 describe('showcase-components (notificationBanner demo)', () => {
   it('冒頭にアクセシビリティ注釈セクションを含む', () => {
     const html = demos.notificationBanner();

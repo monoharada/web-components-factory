@@ -95,6 +95,9 @@ export * from './heading/index.js';
 // 箇条書きリスト
 export * from './list/index.js';
 
+// リソースリスト
+export * from './resource-list/index.js';
+
 // 説明リスト
 export * from './description-list/index.js';
 

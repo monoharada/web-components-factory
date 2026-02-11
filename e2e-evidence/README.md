@@ -7,6 +7,7 @@ Menu List / Menu List Box / Description List の「DADS/Figma準拠度」を **�
 - すべて実行: `npm run test:e2e`
 - Menu List Box だけ: `npm run test:e2e:menu-list-box`
 - List（Fidelity/VRT）だけ: `npm run test:e2e:list-fidelity`
+- Resource List（Fidelity/VRT）だけ: `npm run test:e2e:resource-list-fidelity`
 - Description List（Storybook Fidelity）だけ: `npm run test:e2e:description-list-fidelity`
 
 Playwright の `webServer` 設定で `bun server.ts` を起動し、`http://localhost:3000` へアクセスします。
@@ -20,6 +21,7 @@ E2E テストは **Fidelity用デモページ** を参照します。人間向�
 | menuListBox | `/?component=menuListBox` | 人間向けショーケース（API/CSS Variables/実務例） |
 | menuListBoxFidelity | `/?component=menuListBoxFidelity` | E2E/Figma検証用（ID安定性優先） |
 | listFidelity | `/?component=listFidelity` | E2E/VRT検証用（ID安定性優先） |
+| resourceListFidelity | `/?component=resourceListFidelity` | E2E/VRT検証用（hover/focus/checked/action menu） |
 | descriptionListFidelity | `/?component=descriptionListFidelity` | Storybook PlaygroundとのVRT比較検証用（`maxDiffPixelRatio: 0.01`） |
 
 **重要**: E2E テストは `menuListBoxFidelity` を参照するため、ショーケース整理時にE2Eが壊れることはありません。
