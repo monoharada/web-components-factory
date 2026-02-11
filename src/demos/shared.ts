@@ -45,14 +45,56 @@ function annotationToggleScript(): string {
  */
 function annotationToggleUI(): string {
   return `
-    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-      <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
+    <div class="wc-a11y-toggle">
+      <span class="wc-a11y-toggle__label">アクセシビリティ注釈:</span>
       <dads-switch data-annotation-toggle checked>
         <span slot="label-left">非表示</span>
         <span slot="label-right">表示</span>
       </dads-switch>
     </div>
   `;
+}
+
+function renderAnnotationToggleBlock(): string {
+  return `
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+  `;
+}
+
+type A11ySectionHeaderOptions = Readonly<{
+  title?: string;
+  note?: string;
+  titleClassName?: string;
+  noteClassName?: string;
+}>;
+
+function renderA11ySectionHeader(options?: A11ySectionHeaderOptions): string {
+  const title = options?.title ?? 'アクセシビリティ注釈（a11y-annotate）';
+  const note = options?.note ?? '※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。';
+  const titleClassName = options?.titleClassName ?? 'wc-a11y-section__title';
+  const noteClassName = options?.noteClassName ?? 'wc-a11y-section__note';
+
+  return `
+        <h3 class="${titleClassName}">${title}</h3>
+        <p class="${noteClassName}">
+          ${note}
+        </p>
+  `;
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderApiTableMeta(text: string): string {
+  if (text === '') return '';
+  return `<small class="wc-api-table__meta">${escapeHtml(text)}</small>`;
 }
 
 function apiPanelInitScript(imports: readonly string[]): string {
@@ -427,6 +469,9 @@ function renderStepNavigationItems(options: StepNavigationItemRenderOptions): st
 export {
   annotationToggleScript,
   annotationToggleUI,
+  renderAnnotationToggleBlock,
+  renderA11ySectionHeader,
+  renderApiTableMeta,
   modulePreloadScript,
   renderApiPanelWrapper,
   API_TABLE_PROPS_HEADER,

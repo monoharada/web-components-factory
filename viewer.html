@@ -274,9 +274,9 @@
        ===================================== */
     .wc-api-panel {
       margin-top: 40px;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      background: #fff;
+      border: 1px solid var(--color-neutral-solid-gray-100, #e5e7eb);
+      border-radius: var(--border-radius-12, 12px);
+      background: var(--color-neutral-white, #fff);
       overflow: hidden;
     }
 
@@ -287,14 +287,14 @@
       gap: 12px;
       flex-wrap: wrap;
       padding: 16px 20px;
-      background: #f8fafc;
-      border-bottom: 1px solid #e5e7eb;
+      background: var(--color-neutral-solid-gray-50, #f8fafc);
+      border-bottom: 1px solid var(--color-neutral-solid-gray-100, #e5e7eb);
     }
 
     .wc-api-panel__title {
       font-size: 16px;
       font-weight: 600;
-      color: #111827;
+      color: var(--color-neutral-solid-gray-900, #111827);
     }
 
     .wc-api-panel__body {
@@ -315,13 +315,13 @@
     .wc-api-panel__section-title {
       font-size: 14px;
       font-weight: 600;
-      color: #111827;
+      color: var(--color-neutral-solid-gray-900, #111827);
       margin: 0 0 8px;
     }
 
     .wc-api-panel__section-note {
       font-size: 12px;
-      color: #6b7280;
+      color: var(--color-neutral-solid-gray-600, #6b7280);
       margin: 6px 0 0;
       line-height: 1.5;
     }
@@ -333,6 +333,9 @@
 
     .wc-api-table {
       width: 100%;
+      --dads-table-border-color: var(--color-neutral-solid-gray-100, #e5e7eb);
+      --dads-table-header-background: var(--color-neutral-solid-gray-50, #f8fafc);
+      --dads-table-body-background: var(--color-neutral-white, #fff);
     }
 
     .wc-api-table :is(th, td) {
@@ -342,6 +345,12 @@
     .wc-api-table code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 12px;
+    }
+
+    .wc-api-table__meta {
+      color: var(--color-neutral-solid-gray-600, #666);
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     .wc-api-control {
@@ -355,9 +364,9 @@
       min-width: 180px;
       padding: 8px 10px;
       border: 1px solid #d1d5db;
-      border-radius: 8px;
+      border-radius: var(--border-radius-8, 8px);
       font-size: 14px;
-      background: #fff;
+      background: var(--color-neutral-white, #fff);
     }
 
     .wc-api-control dads-input-text {
@@ -379,9 +388,9 @@
     }
 
     .wc-api-code {
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      background: #f9fafb;
+      border: 1px solid var(--color-neutral-solid-gray-100, #e5e7eb);
+      border-radius: var(--border-radius-12, 12px);
+      background: var(--color-neutral-solid-gray-50, #f8fafc);
       padding: 14px;
       overflow-x: auto;
     }
@@ -392,7 +401,34 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 12px;
       line-height: 1.6;
-      color: #111827;
+      color: var(--color-neutral-solid-gray-900, #111827);
+    }
+
+    .wc-a11y-toggle {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding: 16px;
+      background: var(--color-neutral-solid-gray-50, #f0f4f8);
+      border-radius: var(--border-radius-8, 8px);
+    }
+
+    .wc-a11y-toggle__label {
+      font-weight: 600;
+      color: var(--color-neutral-solid-gray-800, #333);
+    }
+
+    .wc-a11y-section__title {
+      margin: 0 0 16px;
+      font-size: 20px;
+      color: var(--color-neutral-solid-gray-800, #333);
+    }
+
+    .wc-a11y-section__note {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: var(--color-neutral-solid-gray-600, #666);
     }
 
     /* FOUC防止: 未定義のカスタム要素にスケルトン表示 */
@@ -562,6 +598,7 @@
   <script type="module">
     import { demos } from '@demos';
     import { Autoloader } from '@core/autoloader';
+    import { installContentTypesetStyle } from '/styles/tokens.js';
 
     // =====================================
     // Viewer 初期化
@@ -604,6 +641,7 @@
 
     let currentAutoloader = null;
     const loadedComponents = new Set();
+    installContentTypesetStyle(document);
 
     function onComponentLoad(tagName) {
       loadedComponents.add(tagName);
@@ -627,9 +665,19 @@
       document.body.dataset.component = name;
       syncViewerFrameWidth(widestDemoWidthPx);
       container.innerHTML = demoFn();
+      applyTypesetToDemoRoot(container);
       applyAnnotationVisibilityOverrides(name, container);
       normalizeViewWidth(container, widestDemoWidthPx);
       activateEmbeddedScripts(container);
+    }
+
+    function applyTypesetToDemoRoot(root) {
+      if (!(root instanceof HTMLElement)) return;
+      if (root.querySelector('[data-dads-typeset]')) return;
+      const firstElement = root.firstElementChild;
+      if (firstElement instanceof HTMLElement) {
+        firstElement.setAttribute('data-dads-typeset', '');
+      }
     }
 
     function detectWidestDemoWidthPx() {

@@ -13,7 +13,7 @@
 ```html
 <td>
   <code>--token-name</code><br>
-  <small style="color:#666">(実値)</small>
+  <small class="wc-api-table__meta">(実値)</small>
 </td>
 ```
 
@@ -44,7 +44,7 @@
 ```html
 <td>
   <code>1.5rem</code><br>
-  <small style="color:#666">(24px)</small>
+  <small class="wc-api-table__meta">(24px)</small>
 </td>
 ```
 
@@ -73,7 +73,7 @@
 ```html
 <td>
   <code>8rem</code><br>
-  <small style="color:#666">(128px)</small>
+  <small class="wc-api-table__meta">(128px)</small>
 </td>
 ```
 
@@ -95,7 +95,7 @@
 // demos.ts 内の CSS vars テーブル行
 <tr>
   <th scope="row"><code>--dads-search-box-gap</code></th>
-  <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+  <td><code>--spacing-4</code><br><small class="wc-api-table__meta">(16px)</small></td>
   <td>
     <div class="wc-api-control">
       <dads-input-text
@@ -109,6 +109,13 @@
   <td>fields と button の間隔</td>
 </tr>
 ```
+
+## `renderApiTableMeta(text)` の利用ルール
+
+- `src/demos/shared.ts` の `renderApiTableMeta(text)` を使用する。
+- 引数はプレーンテキストのみ（HTMLタグ挿入不可）。
+- 文字列は内部で HTML エスケープされる。
+- `text === ''` の場合は `''` を返し、空の `<small>` は出力しない。
 
 ## トークン値の調査方法
 
