@@ -47,7 +47,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -301,7 +301,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 0;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           テーブル内の操作が Preview のターゲット要素へ即時反映されます。
         </p>
@@ -576,7 +576,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -879,7 +879,7 @@ export const demos = {
 
   /**
    * Menu List Box - 人間向けショーケース
-   * API / Controls + 実務的な作例（2〜3件）
+   * API / 操作 + 実務的な作例（2〜3件）
    * E2E/Figma検証用デモは menuListBoxFidelity に分離
    */
 
@@ -921,11 +921,11 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- 3. API / Controls -->
+      <!-- 3. API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          Storybook風のインタラクティブAPIパネルです。各プロパティを変更するとプレビューに即時反映されます。
+          インタラクティブなAPIパネルです。各プロパティを変更するとプレビューに即時反映されます。
         </p>
 
         ${renderApiPanelWrapper({
@@ -1749,7 +1749,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
           ナビゲーション名（<code>aria-label</code>）とトップレベル項目/サブメニュー項目の属性を変更できます。
         </p>
@@ -1988,7 +1988,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           構造化データ（Microdata）は <code>structured-data="microdata"</code> で有効化できます（Light DOMにミラーを生成）。
         </p>
@@ -2280,7 +2280,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           属性とCSS varsの変更が Preview に即時反映されます。
         </p>
@@ -2604,7 +2604,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -2919,7 +2919,7 @@ if (carousel) carousel.items = items;</code></pre>
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           <code>breakpoint-rem</code> と Preview 幅を調整して、desktop 時の <code>data-wide="true"</code> 切替を確認できます。
         </p>
@@ -3361,7 +3361,7 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
       </section>
 
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -4361,9 +4361,9 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風・サンプル）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
           テーブル内の操作が、同じパネル内のターゲット要素へ即時反映されます。
           ステータスは <code>slot="status"</code> / <code>status</code> / <code>current+total</code> から選べます（優先順: slot → status → current/total）。

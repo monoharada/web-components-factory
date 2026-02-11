@@ -12,7 +12,7 @@ describe('drawer demo', () => {
     expect(html).toContain('--a11y-annotate-callout-lane-gap: 16px');
     expect(html).toContain('dads-drawer::part(base)');
     expect(html.indexOf('アクセシビリティ注釈（a11y-annotate）')).toBeLessThan(
-      html.indexOf('API / Controls（Storybook風）'),
+      html.indexOf('API / 操作'),
     );
   });
 

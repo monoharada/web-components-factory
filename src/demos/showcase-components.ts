@@ -409,7 +409,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           属性とCSS変数を操作して表示を確認できます。
         </p>
@@ -663,9 +663,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -983,9 +983,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風・サンプル）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
           テーブル内の操作が、同じパネル内のターゲット要素へ即時反映されます。
           以降のコンポーネントデモへ横展開するための作例です。
@@ -1427,9 +1427,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section class="card-demo-section">
-        <h3 class="card-section__title">API / Controls（Storybook風）</h3>
+        <h3 class="card-section__title">API / 操作</h3>
         <p class="card-section__note">
           <code>layout</code> と CSS vars を変更し、見た目のカスタマイズを確認できます。
           "カード面クリック"は主リンク要素に <code>data-dads-card-delegate</code> を付けることで有効化します。
@@ -3318,9 +3318,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -3583,9 +3583,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -4332,9 +4332,9 @@ export const demos = {
         })();
       </script>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -4790,9 +4790,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -5020,9 +5020,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -5524,9 +5524,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -6548,7 +6548,7 @@ ${dadsDataRows(6, 6)}
       </section>
 
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">API / 操作</h3>
         ${renderApiPanelWrapper({
           imports: [
             'dads-notification-banner',
@@ -7115,7 +7115,7 @@ ${dadsDataRows(6, 6)}
       </section>
 
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">API / 操作</h3>
         ${renderApiPanelWrapper({
           imports: [
             'dads-emergency-banner',
@@ -7504,9 +7504,9 @@ ${dadsDataRows(6, 6)}
         </div>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>

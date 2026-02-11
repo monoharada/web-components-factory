@@ -7,7 +7,7 @@ describe('hamburger-menu-button demo', () => {
     expect(html).toContain('アクセシビリティ注釈（a11y-annotate）');
     expect(html).toContain('target-selector="dads-hamburger-menu-button"');
     expect(html.indexOf('アクセシビリティ注釈（a11y-annotate）')).toBeLessThan(
-      html.indexOf('API / Controls（Storybook風）'),
+      html.indexOf('API / 操作'),
     );
   });
 

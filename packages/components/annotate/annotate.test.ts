@@ -40,6 +40,34 @@ function waitForDoubleRaf(): Promise<void> {
 }
 
 describe('DadsAnnotate', () => {
+  function setA11yDebugFlag() {
+    const storage = window.localStorage as Partial<Storage> | undefined;
+    if (storage && typeof storage.setItem === 'function') {
+      storage.setItem('dads:a11y', '1');
+      return;
+    }
+
+    const memoryStore = new Map<string, string>();
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => memoryStore.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        memoryStore.set(key, String(value));
+      },
+      removeItem: (key: string) => {
+        memoryStore.delete(key);
+      },
+      clear: () => {
+        memoryStore.clear();
+      },
+      key: (index: number) => Array.from(memoryStore.keys())[index] ?? null,
+      get length() {
+        return memoryStore.size;
+      },
+    } as Storage);
+
+    window.localStorage.setItem('dads:a11y', '1');
+  }
+
   afterEach(() => {
     cleanup();
     try {
@@ -55,7 +83,7 @@ describe('DadsAnnotate', () => {
     const { defineDefaultAnnotate } = await import('./annotate-define');
     defineDefaultAnnotate();
 
-    window.localStorage.setItem('dads:a11y', '1');
+    setA11yDebugFlag();
 
     let microtaskCalls = 0;
     const origQueueMicrotask = globalThis.queueMicrotask;
