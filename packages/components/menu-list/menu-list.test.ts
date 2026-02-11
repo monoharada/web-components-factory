@@ -44,6 +44,22 @@ describe('DadsMenuList - 基本', () => {
 
     expect(element.style.getPropertyValue('--menu-list-indentation')).toBe('');
   });
+
+  it('hidden 属性で非表示になる', async () => {
+    const { defineDefaultMenuList } = await import('./menu-list-define');
+    defineDefaultMenuList();
+
+    element = createTestElement('dads-menu-list');
+    await waitForCustomElement(element);
+
+    expect(getComputedStyle(element).display).not.toBe('none');
+
+    element.setAttribute('hidden', '');
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    expect(getComputedStyle(element).display).toBe('none');
+  });
+
 });
 
 describe('DadsMenuListItem - 基本', () => {

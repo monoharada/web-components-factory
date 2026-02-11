@@ -705,6 +705,134 @@
       }
     ]
   },
+  "dads-carousel": {
+    "version": 1,
+    "summary": "カルーセルコンポーネント仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "ルートは role=\"region\" と aria-roledescription=\"carousel\" を持ち、カルーセル領域として識別されます。",
+        "メインスライド・次スライドプレビュー・コントロール（ステップ/ページナビ）で構成されます。"
+      ],
+      "keyboard": [
+        "Tab で前後移動ボタン、ステップボタン、「すべてのスライド」ボタンへフォーカスできます。",
+        "ステップボタンは ArrowLeft/ArrowRight/Home/End、Enter/Space で操作できます。",
+        "一覧展開中は Escape で閉じる操作をサポートします。"
+      ],
+      "zoom": [
+        "breakpoint-rem を境に data-wide が切り替わり、desktop はステップナビ、mobile はページナビを表示します。",
+        "レイアウトは相対単位（rem）とトークンで構成され、拡大表示時の可読性を維持します。"
+      ],
+      "states": [
+        "current-index で現在スライドを制御し、現在項目には aria-current/aria-selected を反映します。",
+        "一覧展開時は data-expanded=\"true\" となり、コントロール表示を切り替えます。"
+      ],
+      "labels": [
+        "aria-label / prev-label / next-label / all-slides-label / unit で読み上げラベルを調整できます。",
+        "現在位置は aria-live=\"polite\" のステータス領域で通知されます。"
+      ],
+      "motion": [
+        "自動再生やアニメーションは前提にしていません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "root",
+        "title": "カルーセル領域",
+        "label": "role=\"region\"",
+        "description": "カルーセル全体のランドマークです。aria-label で領域名を付与します。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#root"
+        }
+      },
+      {
+        "id": "main-panel",
+        "title": "メインスライド",
+        "label": "main panel",
+        "description": "現在のスライドを表示する主領域です。リンク付きスライドではクリック遷移できます。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#main-panel"
+        }
+      },
+      {
+        "id": "next-preview",
+        "title": "次スライドプレビュー",
+        "label": "next preview",
+        "description": "desktop 表示時に次スライドをプレビューし、操作ボタンとして機能します。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "#next-preview-button"
+        }
+      },
+      {
+        "id": "indicators",
+        "title": "ステップナビゲーション",
+        "label": "role=\"tablist\"",
+        "description": "desktop 表示時のステップ移動領域です。現在項目は aria-current=\"true\" になります。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "#indicators"
+        }
+      },
+      {
+        "id": "page-nav",
+        "title": "ページナビゲーション",
+        "label": "mobile controls",
+        "description": "mobile 表示時の前後移動ボタンとページ状態表示です。",
+        "category": "keyboard",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#page-nav"
+        }
+      },
+      {
+        "id": "all-slides-summary",
+        "title": "すべてのスライド",
+        "label": "summary",
+        "description": "スライド一覧の開閉トリガーです。開閉状態は data-expanded に同期されます。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#all-slides-summary"
+        }
+      },
+      {
+        "id": "all-slides-list",
+        "title": "スライド一覧",
+        "label": "slides list",
+        "description": "「すべてのスライド」展開時に、現在以外のスライド一覧を表示します。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "#all-slides-list"
+        }
+      },
+      {
+        "id": "status-live",
+        "title": "読み上げステータス",
+        "label": "aria-live",
+        "description": "現在位置（例: 全6枚中1枚目）を aria-live=\"polite\" で通知します。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "#status"
+        }
+      }
+    ]
+  },
   "dads-checkbox": {
     "version": 1,
     "summary": "コンポーネント仕様（アクセシビリティ注釈）",
@@ -1992,6 +2120,84 @@
       ]
     },
     "callouts": []
+  },
+  "dads-mobile-menu": {
+    "version": 1,
+    "summary": "モバイルメニュー仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "内部は <nav> 要素で実装し、aria-label / aria-labelledby を nav へ転送します。",
+        "メニュー項目は主に dads-menu-list / dads-menu-list-item と組み合わせて利用します。"
+      ],
+      "keyboard": [
+        "各メニュー項目は Tab でフォーカスできます。",
+        "aria-controls と aria-expanded を持つ項目は Enter/Space で開閉できるよう、トリガー側（例: dads-menu-list-item）で操作を提供します。"
+      ],
+      "zoom": [
+        "幅・余白・戻る行余白は CSS 変数で調整でき、拡大時にもレイアウトが破綻しないことを想定します。"
+      ],
+      "states": [
+        "aria-controls + aria-expanded を持つ項目クリックで、対象パネルの hidden を切り替えます。",
+        "開閉状態は aria-expanded と expanded 属性を同期します。",
+        "slot=\"back\" が空の場合は戻る行を表示しません。"
+      ],
+      "labels": [
+        "モバイルメニュー自体のラベルは aria-label または aria-labelledby で指定します。",
+        "戻る行は slot=\"back\" で提供します。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "mobile-menu-base",
+        "title": "モバイルメニュー本体",
+        "label": "<nav>",
+        "description": "メニュー全体を保持するナビゲーションルートです。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "mobile-menu-back",
+        "title": "戻る行（任意）",
+        "label": "slot=\"back\"",
+        "description": "L2 などで戻る操作を提示する行です。未指定時は非表示です。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"back\"]"
+        }
+      },
+      {
+        "id": "mobile-menu-content",
+        "title": "メニュー本文",
+        "label": "content",
+        "description": "通常項目・現在地・外部リンク・セクションを配置する領域です。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"content\"]"
+        }
+      },
+      {
+        "id": "mobile-menu-toggle-trigger",
+        "title": "セクショントリガー",
+        "label": "aria-controls + aria-expanded",
+        "description": "クリックで対象セクションの hidden と expanded を同期する項目です。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "selector": "[aria-controls][aria-expanded]"
+        }
+      }
+    ]
   },
   "dads-notification-banner": {
     "version": 1,

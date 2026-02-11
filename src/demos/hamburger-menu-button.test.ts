@@ -15,9 +15,9 @@ describe('hamburger-menu-button demo', () => {
     const html = demos.hamburgerMenuButton();
     expect(html).toContain('実画面作例（showModal）');
     expect(html).toContain('id="hamburger-live-standard-trigger"');
-    expect(html).toContain('id="hamburger-live-icon-trigger"');
+    expect(html).toContain('id="hamburger-live-standard-en-trigger"');
     expect(html).toContain('id="hamburger-live-standard-drawer"');
-    expect(html).toContain('id="hamburger-live-icon-drawer"');
+    expect(html).toContain('id="hamburger-live-standard-en-drawer"');
   });
 
   it('実画面作例の drawer には data-preview-contained を付与しない', () => {
@@ -26,10 +26,10 @@ describe('hamburger-menu-button demo', () => {
       '<dads-drawer id="hamburger-live-standard-drawer" placement="left" close-label="閉じる">',
     );
     expect(html).toContain(
-      '<dads-drawer id="hamburger-live-icon-drawer" placement="right" close-label="閉じる">',
+      '<dads-drawer id="hamburger-live-standard-en-drawer" placement="right" close-label="閉じる">',
     );
     expect(html).not.toContain('<dads-drawer id="hamburger-live-standard-drawer" data-preview-contained');
-    expect(html).not.toContain('<dads-drawer id="hamburger-live-icon-drawer" data-preview-contained');
+    expect(html).not.toContain('<dads-drawer id="hamburger-live-standard-en-drawer" data-preview-contained');
   });
 
   it('API / Controls は preview root 単位で command-store を bind する', () => {

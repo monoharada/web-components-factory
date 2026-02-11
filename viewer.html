@@ -26,6 +26,7 @@
       "@demos": "/src/demos.js",
       "dads-button": "/@components/dads/button.js",
       "dads-card": "/@components/dads/card.js",
+      "dads-divider": "/@components/dads/divider.js",
       "dads-table": "/@components/dads/table.js",
       "dads-table-control": "/@components/dads/table-control.js",
       "dads-textarea": "/@components/dads/textarea.js",
@@ -51,6 +52,7 @@
       "dads-header-container": "/@components/dads/header-container.js",
       "dads-hamburger-menu-button": "/@components/dads/hamburger-menu-button.js",
       "dads-mobile-mock": "/@components/dads/mobile-mock.js",
+      "dads-mobile-menu": "/@components/dads/mobile-menu.js",
       "dads-device-mock": "/@components/dads/device-mock.js",
       "dads-calendar": "/@components/dads/calendar.js",
       "dads-switch": "/@components/dads/switch.js",
@@ -66,6 +68,7 @@
       "dads-global-menu-item": "/@components/dads/global-menu.js",
       "dads-language-selector": "/@components/dads/language-selector.js",
       "dads-page-navigation": "/@components/dads/page-navigation.js",
+      "dads-carousel": "/@components/dads/carousel.js",
       "dads-breadcrumb": "/@components/dads/breadcrumb.js",
       "dads-breadcrumb-item": "/@components/dads/breadcrumb-item.js",
       "dads-utility-link": "/@components/dads/utility-link.js",
@@ -199,6 +202,15 @@
     }
 
     body[data-component="headerContainer"] #component-container {
+      padding: 24px;
+    }
+
+    body[data-component="carousel"] main {
+      max-width: 1560px;
+      padding: 0 16px;
+    }
+
+    body[data-component="carousel"] #component-container {
       padding: 24px;
     }
 
@@ -439,6 +451,7 @@
             <option value="drawer">ドロワー</option>
             <option value="headerContainer">ヘッダーコンテナ</option>
             <option value="hamburgerMenuButton">ハンバーガーメニューボタン</option>
+            <option value="mobileMenu">モバイルメニュー</option>
             <option value="inputText">インプットテキスト</option>
             <option value="inputTextValidation">インプットテキスト（バリデーション検証）</option>
             <option value="fileUpload">ファイルアップロード／ドロップエリア</option>
@@ -455,6 +468,7 @@
             <option value="languageSelector">ランゲージセレクター</option>
             <option value="menuListBoxFidelity">メニューリストボックス（忠実度検証）</option>
             <option value="switch">スイッチ</option>
+            <option value="carousel">カルーセル</option>
             <option value="stepNavigation">ステップナビゲーション</option>
             <option value="resetCss">リセットCSS比較デモ（独自）</option>
           </select>
@@ -654,6 +668,7 @@
       '/@components/dads/drawer.js',
       '/@components/dads/header-container.js',
       '/@components/dads/hamburger-menu-button.js',
+      '/@components/dads/mobile-menu.js',
       '/@components/dads/device-mock.js',
       '/@components/dads/checkbox.js',
       '/@components/dads/radio.js',
@@ -672,7 +687,8 @@
       '/@components/dads/utility-link.js',
       '/@components/dads/language-selector.js',
       '/@components/dads/notification-banner.js',
-      '/@components/dads/emergency-banner.js'
+      '/@components/dads/emergency-banner.js',
+      '/@components/dads/carousel.js'
     ];
 
     // クリティカルコンポーネントを即座にロード

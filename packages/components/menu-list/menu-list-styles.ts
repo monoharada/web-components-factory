@@ -16,6 +16,27 @@ export const menuListStyles = css`
     line-height: var(--line-height-130, 1.3);
   }
 
+  :host([hidden]) {
+    display: none;
+  }
+
+  ::slotted(dads-divider) {
+    --dads-divider-color: var(--dads-mobile-menu-border-color, var(--color-neutral-solid-gray-420, #949494));
+    --dads-divider-margin-block: var(--spacing-4, 1rem);
+    --dads-divider-margin-inline: var(--dads-mobile-menu-divider-margin-inline, var(--spacing-4, 1rem));
+  }
+
+  ::slotted(hr) {
+    margin-block: var(--spacing-4, 1rem);
+    margin-inline: var(--dads-mobile-menu-divider-margin-inline, var(--spacing-4, 1rem));
+    border: 0;
+    border-top: 1px solid var(--dads-mobile-menu-border-color, var(--color-neutral-solid-gray-420, #949494));
+  }
+
+  ::slotted(hr[data-divider='wide']) {
+    margin-inline: var(--dads-mobile-menu-divider-margin-inline-wide, var(--spacing-8, 2rem));
+  }
+
   [part="base"] {
     display: block;
   }

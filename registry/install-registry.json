@@ -76,6 +76,18 @@
         "componentDir": "packages/components/card"
       }
     },
+    "carousel": {
+      "id": "carousel",
+      "tags": [
+        "dads-carousel"
+      ],
+      "define": "defineCarousel",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/carousel"
+      }
+    },
     "checkbox": {
       "id": "checkbox",
       "tags": [
@@ -367,6 +379,18 @@
         "componentDir": "packages/components/menu-list-box"
       }
     },
+    "mobile-menu": {
+      "id": "mobile-menu",
+      "tags": [
+        "dads-mobile-menu"
+      ],
+      "define": "defineMobileMenu",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/mobile-menu"
+      }
+    },
     "mobile-mock": {
       "id": "mobile-mock",
       "tags": [
@@ -541,6 +565,7 @@
     "dads-button": "button",
     "dads-calendar": "calendar",
     "dads-card": "card",
+    "dads-carousel": "carousel",
     "dads-checkbox": "checkbox",
     "dads-chip-label": "chip-label",
     "dads-chip-tag": "chip-tag",
@@ -567,6 +592,7 @@
     "dads-menu-list": "menu-list",
     "dads-menu-list-box": "menu-list-box",
     "dads-menu-list-item": "menu-list",
+    "dads-mobile-menu": "mobile-menu",
     "dads-mobile-mock": "mobile-mock",
     "dads-notification-banner": "notification-banner",
     "dads-page-navigation": "page-navigation",

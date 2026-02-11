@@ -2839,6 +2839,486 @@ export const demos = {
     </div>
   `,
 
+  carousel: () => `
+    <div class="demo-carousel" style="padding: 40px; max-width: 1240px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">カルーセル</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        DADS カルーセル仕様に準拠しつつ、<code>items</code>（配列データ入力）と slot 入力の両方に対応し、<code>image-slider</code> で幅狭モードを明示指定できます。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">使い方（写真データの準備）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          実運用では <code>items</code> で渡すのが最も扱いやすいです。最低限 <code>src</code> と <code>alt</code> を用意し、表示安定のために
+          <code>width</code> / <code>height</code> / <code>srcset</code> も付与してください。
+        </p>
+
+        <ul style="margin: 0 0 16px 20px; color: #374151; font-size: 14px; line-height: 1.8;">
+          <li><code>src</code>（必須）: 1x画像URL</li>
+          <li><code>alt</code>（必須）: 画像の代替テキスト</li>
+          <li><code>href</code>（任意）: スライド遷移先URL（未指定なら非リンク）</li>
+          <li><code>srcset</code>（推奨）: 2x画像（例: <code>image-1@2x.webp 2x</code>）</li>
+          <li><code>width</code> / <code>height</code>（推奨）: 画像の元サイズ（レイアウト安定化）</li>
+        </ul>
+
+        <div style="display: grid; gap: 16px;">
+          <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; background: #fff;">
+            <h4 style="font-size: 15px; margin: 0 0 8px; color: #111827;">基本例（items を直接渡す）</h4>
+            <pre style="margin: 0; font-size: 12px; line-height: 1.6; overflow-x: auto; color: #111827;"><code>const items = [
+  {
+    src: '/images/event-1.webp',
+    srcset: '/images/event-1@2x.webp 2x',
+    alt: '学ぼうSDGs 偶数月の第3土曜日',
+    href: '/events/1',
+    width: 696,
+    height: 392,
+    title: '開催中のイベント 1'
+  },
+  {
+    src: '/images/event-2.webp',
+    srcset: '/images/event-2@2x.webp 2x',
+    alt: '地産地消キャンペーン',
+    href: '/events/2',
+    width: 696,
+    height: 392
+  }
+];
+
+const carousel = document.querySelector('dads-carousel');
+if (carousel) carousel.items = items;</code></pre>
+          </div>
+
+          <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; background: #fff;">
+            <h4 style="font-size: 15px; margin: 0 0 8px; color: #111827;">CMSレスポンスから変換する例</h4>
+            <pre style="margin: 0; font-size: 12px; line-height: 1.6; overflow-x: auto; color: #111827;"><code>const items = cmsResponse.banners.map((banner, index) => ({
+  src: banner.image.url,
+  srcset: banner.image.url2x ? banner.image.url2x + ' 2x' : undefined,
+  alt: banner.image.alt || 'バナー画像 ' + (index + 1),
+  href: banner.link?.url,
+  width: banner.image.width || 696,
+  height: banner.image.height || 392,
+  title: banner.title
+}));</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <a11y-annotate target-selector="dads-carousel">
+          <div style="padding: 24px 0;">
+            <dads-carousel data-carousel-items aria-label="注目トピック"></dads-carousel>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          <code>breakpoint-rem</code> と Preview 幅を調整して、desktop 時の <code>data-wide="true"</code> 切替を確認できます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-carousel',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <div style="display: grid; gap: 12px;">
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #374151;">
+                    <span>Preview width</span>
+                    <input type="range" min="480" max="1320" step="10" value="1024" aria-label="Preview width" data-carousel-api-width />
+                    <span data-carousel-api-width-value>1024px</span>
+                  </label>
+
+                  <div data-carousel-api-frame style="width: 1024px; max-width: 100%;">
+                    <dads-carousel data-api-target data-carousel-api-target aria-label="カルーセル（API Preview）"></dads-carousel>
+                  </div>
+
+                  <p data-carousel-api-state style="margin: 0; font-size: 13px; color: #4b5563;">
+                    state: data-image-slider=-, data-wide=-, data-expanded=-
+                  </p>
+                </div>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-carousel aria-label="カルーセル"></dads-carousel>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>type</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>container</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="type" data-api-attr="type" data-default="container">
+                              <option value="container" selected>container</option>
+                              <option value="key-visual">key-visual</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>レイアウト種別</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>current-index</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>0</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="current-index" value="0" data-api-attr="current-index" data-default="0"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>現在スライド（0始まり）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>breakpoint-rem</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>64</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="breakpoint-rem" value="64" data-api-attr="breakpoint-rem" data-default="64"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>desktop 判定幅（rem）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>aria-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>カルーセル</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="aria-label" value="カルーセル（API Preview）" data-api-attr="aria-label" data-default="カルーセル（API Preview）"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>ランドマーク名</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>prev-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>前のスライド</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="prev-label" value="前のスライド" data-api-attr="prev-label" data-default="前のスライド"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>前ボタンラベル</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>next-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>次のスライド</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="next-label" value="次のスライド" data-api-attr="next-label" data-default="次のスライド"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>次ボタンラベル</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>all-slides-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>すべてのスライド</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="all-slides-label" value="すべてのスライド" data-api-attr="all-slides-label" data-default="すべてのスライド"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>一覧トグルのラベル</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>image-slider</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="image-slider" data-api-attr="image-slider" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>幅狭コンテナ（イメージスライダー）表示を強制</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>unit</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>スライド</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="unit" value="スライド" data-api-attr="unit" data-default="スライド"></dads-input-text>
+                          </div>
+                        </td>
+                        <td>読み上げ単位</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>data-wide</code></th>
+                        <td><code>state</code></td>
+                        <td><code>false | true</code></td>
+                        <td>Preview width + breakpoint-rem で自動切替</td>
+                        <td>desktop レイアウト判定結果</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>data-image-slider</code></th>
+                        <td><code>state</code></td>
+                        <td><code>false | true</code></td>
+                        <td><code>image-slider</code> 属性で切替</td>
+                        <td>イメージスライダー（幅狭固定）モードの状態</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Events API</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          Splide 互換方針の拡張イベントを利用して、遷移前キャンセル・遷移後同期・レイアウト変化監視を行えます。
+        </p>
+        <ul style="margin: 0 0 16px 20px; color: #374151; font-size: 14px; line-height: 1.8;">
+          <li><code>dads-carousel-before-change</code>（cancelable）</li>
+          <li><code>dads-carousel-index-change</code></li>
+          <li><code>dads-carousel-layout-change</code></li>
+          <li><code>dads-carousel-controls-update</code></li>
+          <li><code>dads-carousel-media-loaded</code> / <code>dads-carousel-media-error</code></li>
+        </ul>
+        <div style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; background: #fff;">
+          <pre style="margin: 0; font-size: 12px; line-height: 1.6; overflow-x: auto; color: #111827;"><code>const carousel = document.querySelector('dads-carousel');
+
+carousel?.addEventListener('dads-carousel-before-change', (event) => {
+  // 例: 3枚目への遷移を抑止
+  if (event.detail.nextIndex === 2) event.preventDefault();
+});
+
+carousel?.addEventListener('dads-carousel-index-change', (event) => {
+  console.log('index changed', event.detail.currentIndex, event.detail.source);
+});
+
+carousel?.addEventListener('dads-carousel-layout-change', (event) => {
+  console.log('layout', event.detail.wide ? 'desktop' : 'mobile', event.detail.reason);
+});</code></pre>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">items API（推奨）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          画像データを配列で渡せるため、CMS/JSON 連携時に実装しやすくなります。
+        </p>
+        <dads-carousel data-carousel-items-api aria-label="カルーセル（items API）"></dads-carousel>
+        <div data-carousel-event-output style="margin-top: 12px; font-size: 14px; color: #1f2937;">event: 未発火</div>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">image-slider API（幅狭固定）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 12px;">
+          <code>image-slider</code> 属性を付与すると、プレビュー幅に関係なくページナビゲーション主体の幅狭レイアウトになります。
+        </p>
+        <dads-carousel data-carousel-image-slider image-slider aria-label="イメージスライダー"></dads-carousel>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">type=\"key-visual\"</h3>
+        <dads-carousel data-carousel-key-visual type="key-visual" current-index="1" aria-label="キービジュアル"></dads-carousel>
+      </section>
+
+      <section style="margin-bottom: 0;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">slot 入力（互換モード）</h3>
+        <dads-carousel aria-label="slot 入力のカルーセル">
+          <a href="#slot-1">
+            <img src="/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp" alt="slot スライド1" />
+          </a>
+          <a href="#slot-2">
+            <img src="/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2.webp" alt="slot スライド2" />
+          </a>
+          <img src="/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3.webp" alt="slot スライド3" />
+        </dads-carousel>
+      </section>
+
+      <script type="module">
+        await import('dads-carousel');
+        await import('a11y-annotate');
+
+        (() => {
+          const baseItems = [
+            {
+              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp',
+              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1@2x.webp 2x',
+              alt: '学ぼうSDGs 偶数月の第3土曜日 環境保全の「自分事化」で学べるワークショップ開催',
+              href: '#news-1',
+              title: '開催中のイベント 1',
+              width: 696,
+              height: 392,
+            },
+            {
+              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2.webp',
+              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2@2x.webp 2x',
+              alt: '地産地消キャンペーン 県の名産品や体験イベントを楽しもう 期間：4月から7月までの毎週末開催！',
+              href: '#news-2',
+              title: '開催中のイベント 2',
+              width: 696,
+              height: 392,
+            },
+            {
+              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3.webp',
+              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3@2x.webp 2x',
+              alt: '令和 国立公園・歴史名所スタンプラリー',
+              href: '#news-3',
+              title: '開催中のイベント 3',
+              width: 696,
+              height: 392,
+            },
+            {
+              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-4.webp',
+              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-4@2x.webp 2x',
+              alt: '合同健康診断のお知らせ ご自身とご家族の健康維持のため、定期的な健康診断の受診を。',
+              href: '#news-4',
+              title: '開催中のイベント 4',
+              width: 696,
+              height: 392,
+            },
+            {
+              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-5.webp',
+              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-5@2x.webp 2x',
+              alt: '夏の体験学習プログラム 参加者募集',
+              href: '#news-5',
+              title: '開催中のイベント 5',
+              width: 696,
+              height: 392,
+            },
+            {
+              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-6.webp',
+              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-6@2x.webp 2x',
+              alt: '地域防災フェアのお知らせ',
+              href: '#news-6',
+              title: '開催中のイベント 6',
+              width: 696,
+              height: 392,
+            },
+          ];
+
+          const carousel = document.querySelector('[data-carousel-items]');
+          const carouselApi = document.querySelector('[data-carousel-items-api]');
+          const carouselImageSlider = document.querySelector('[data-carousel-image-slider]');
+          const carouselApiPreview = document.querySelector('[data-carousel-api-target]');
+          const keyVisual = document.querySelector('[data-carousel-key-visual]');
+          const output = document.querySelector('[data-carousel-event-output]');
+          const apiFrame = document.querySelector('[data-carousel-api-frame]');
+          const apiWidth = document.querySelector('[data-carousel-api-width]');
+          const apiWidthValue = document.querySelector('[data-carousel-api-width-value]');
+          const apiState = document.querySelector('[data-carousel-api-state]');
+
+          if (carousel) carousel.items = baseItems;
+          if (carouselApi) carouselApi.items = baseItems;
+          if (carouselImageSlider) carouselImageSlider.items = baseItems;
+          if (carouselApiPreview) carouselApiPreview.items = baseItems;
+          if (keyVisual) {
+            keyVisual.items = baseItems.map((item) => ({
+              ...item,
+              description: undefined,
+            }));
+          }
+
+          if (carouselApi && output) {
+            carouselApi.addEventListener('dads-carousel-change', (event) => {
+              const detail = event && event.detail ? event.detail : {};
+              output.textContent =
+                'event: index=' +
+                String(detail.currentIndex ?? '-') +
+                ', previous=' +
+                String(detail.previousIndex ?? '-') +
+                ', source=' +
+                String(detail.source ?? '-');
+            });
+          }
+
+          const updateApiState = () => {
+            if (!carouselApiPreview || !apiState) return;
+            const imageSlider = carouselApiPreview.getAttribute('data-image-slider') ?? '-';
+            const wide = carouselApiPreview.getAttribute('data-wide') ?? '-';
+            const expanded = carouselApiPreview.getAttribute('data-expanded') ?? '-';
+            const breakpointRem = carouselApiPreview.getAttribute('breakpoint-rem') ?? '-';
+            const frameWidth =
+              apiFrame instanceof HTMLElement
+                ? Math.round(apiFrame.getBoundingClientRect().width)
+                : 0;
+
+            apiState.textContent =
+              'state: data-image-slider=' +
+              String(imageSlider) +
+              ', data-wide=' +
+              String(wide) +
+              ', data-expanded=' +
+              String(expanded) +
+              ', breakpoint-rem=' +
+              String(breakpointRem) +
+              ', frame=' +
+              String(frameWidth) +
+              'px';
+          };
+
+          if (carouselApiPreview && apiState) {
+            const observer = new MutationObserver(updateApiState);
+            observer.observe(carouselApiPreview, {
+              attributes: true,
+              attributeFilter: ['data-image-slider', 'data-wide', 'data-expanded', 'breakpoint-rem'],
+            });
+            updateApiState();
+          }
+
+          if (apiWidth instanceof HTMLInputElement && apiFrame instanceof HTMLElement) {
+            const updatePreviewWidth = () => {
+              const value = Number.parseInt(apiWidth.value, 10);
+              const width = Number.isFinite(value) ? value : 1024;
+              apiFrame.style.width = String(width) + 'px';
+              if (apiWidthValue instanceof HTMLElement) {
+                apiWidthValue.textContent = String(width) + 'px';
+              }
+              updateApiState();
+            };
+
+            apiWidth.addEventListener('input', updatePreviewWidth);
+            updatePreviewWidth();
+          }
+        })();
+      </script>
+    </div>
+  `,
+
   stepNavigation: () => `
     <div class="demo-step-navigation" style="padding: 40px; max-width: 1200px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">ステップナビゲーション</h2>
