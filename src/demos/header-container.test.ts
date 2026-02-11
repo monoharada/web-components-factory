@@ -19,7 +19,7 @@ describe('header-container demo', () => {
     expect(html).toContain('.header-container-demo__utility-links dads-utility-link {');
     expect(html).not.toContain('.header-container-demo__utility-links a {');
     expect(html.indexOf('アクセシビリティ注釈（a11y-annotate）')).toBeLessThan(
-      html.indexOf('API / Controls（Storybook風）'),
+      html.indexOf('API / 操作'),
     );
   });
 

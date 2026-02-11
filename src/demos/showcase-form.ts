@@ -62,7 +62,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -471,7 +471,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -855,7 +855,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -1134,9 +1134,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -1697,9 +1697,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>
@@ -2192,7 +2192,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           属性変更が Preview に即時反映されます。<code>requestUpload()</code> で外部処理開始イベントを発火できます。
         </p>
@@ -2608,7 +2608,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 0;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           テーブル内の操作が Preview のターゲット要素へ即時反映されます。
           検索対象（scope）は <code>&lt;dads-search-box&gt;</code> の子要素として <code>&lt;option&gt;</code>/<code>&lt;optgroup&gt;</code> を指定します。
@@ -3102,9 +3102,9 @@ export const demos = {
         </a11y-annotate>
       </section>
 
-      <!-- API / Controls（Storybook風） -->
+      <!-- API / 操作 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Props/Attrs と CSS vars の変更が Preview に即時反映されます。
         </p>

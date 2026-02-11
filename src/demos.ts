@@ -15,13 +15,21 @@ import { demos as headerContainer } from './demos/header-container.js';
 import { demos as hamburgerMenuButton } from './demos/hamburger-menu-button.js';
 import { demos as mobileMenu } from './demos/mobile-menu.js';
 
+const {
+  descriptionListFidelity: _descriptionListFidelity,
+  listFidelity: _listFidelity,
+  menuListBoxFidelity: _menuListBoxFidelity,
+  resourceListFidelity: _resourceListFidelity,
+  ...extraWithoutFidelity
+} = extra;
+
 export const demos = {
   ...showcaseForm,
   ...showcaseDate,
   ...showcaseComponents,
   ...showcaseNavigation,
   ...showcaseTableControl,
-  ...extra,
+  ...extraWithoutFidelity,
   ...dialog,
   ...drawer,
   ...headerContainer,

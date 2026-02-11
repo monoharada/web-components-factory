@@ -647,7 +647,7 @@ export const demos = {
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
         <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
           Preview は <code>dads-mobile-menu</code> 本体を直接ターゲットにしています。
         </p>

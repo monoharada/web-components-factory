@@ -90,9 +90,9 @@ describe('showcase-components (resourceList demo)', () => {
     expect(html).toContain('フォームコントロール版');
     expect(html).toContain('aria-labelledby="resource-list-annotate-control-title resource-list-annotate-control-support"');
     expect(html.indexOf('アクセシビリティ注釈（a11y-annotate）')).toBeLessThan(
-      html.indexOf('API / Controls（Storybook風）')
+      html.indexOf('API / 操作')
     );
-    expect(html.indexOf('API / Controls（Storybook風）')).toBeLessThan(
+    expect(html.indexOf('API / 操作')).toBeLessThan(
       html.indexOf('Figma作例（12692:1434）')
     );
   });
@@ -201,7 +201,7 @@ describe('showcase-components (notificationBanner demo)', () => {
     expect(html).toContain('アクセシビリティ注釈（a11y-annotate）');
     expect(html).toContain('target-selector="dads-notification-banner"');
     expect(html.indexOf('アクセシビリティ注釈（a11y-annotate）')).toBeLessThan(
-      html.indexOf('API / Controls（Storybook風）')
+      html.indexOf('API / 操作')
     );
   });
 

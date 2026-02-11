@@ -8,7 +8,7 @@ describe('showcase-navigation (globalMenu demo)', () => {
     expect(html).toContain('target-selector="dads-global-menu"');
     expect(html).not.toContain('callout-lane="top"');
     expect(html.indexOf('アクセシビリティ注釈（a11y-annotate）')).toBeLessThan(
-      html.indexOf('API / Controls'),
+      html.indexOf('API / 操作'),
     );
   });
 
@@ -71,9 +71,9 @@ describe('showcase-navigation (carousel demo)', () => {
     expect(html).toContain('cmsResponse.banners.map');
   });
 
-  it('API / Controls セクションを含み、dads-carousel を data-api-target として操作できる', () => {
+  it('API / 操作 セクションを含み、dads-carousel を data-api-target として操作できる', () => {
     const html = demos.carousel();
-    expect(html).toContain('API / Controls（Storybook風）');
+    expect(html).toContain('API / 操作');
     expect(html).toContain('data-carousel-api-target');
     expect(html).toContain('data-api-target');
     expect(html).toContain('<code>breakpoint-rem</code>');

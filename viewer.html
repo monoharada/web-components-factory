@@ -431,8 +431,6 @@
             <option value="list">箇条書きリスト</option>
             <option value="descriptionList">説明リスト</option>
             <option value="resourceList">リソースリスト</option>
-            <option value="resourceListFidelity">リソースリスト（忠実度検証）</option>
-            <option value="descriptionListFidelity">説明リスト（忠実度検証）</option>
             <option value="divider">ディバイダー</option>
             <option value="heading">見出し</option>
             <option value="checkbox">チェックボックス</option>
@@ -468,7 +466,6 @@
             <option value="menuListBox">メニューリストボックス</option>
             <option value="globalMenu">グローバルメニュー</option>
             <option value="languageSelector">ランゲージセレクター</option>
-            <option value="menuListBoxFidelity">メニューリストボックス（忠実度検証）</option>
             <option value="switch">スイッチ</option>
             <option value="carousel">カルーセル</option>
             <option value="stepNavigation">ステップナビゲーション</option>
@@ -560,6 +557,37 @@
     const componentSelector = document.getElementById('component');
     const loadedLog = document.getElementById('loaded-log');
     const loadedList = document.getElementById('loaded-list');
+    const japaneseSort = new Intl.Collator('ja');
+    const demoMaxWidthPattern = /max-width:\s*([0-9]+)px/gi;
+    const kanaSortOverrides = {
+      '引用ブロック': 'いんようぶろっく',
+      '箇条書きリスト': 'かじょうがきりすと',
+      '説明リスト': 'せつめいりすと',
+      '見出し': 'みだし',
+      'テーブル／データテーブル': 'てーぶるでーたてーぶる',
+      'テーブルコントロール（独自）': 'てーぶるこんとろーる（どくじ）',
+      'ページナビゲーション': 'ぺーじなびげーしょん',
+      'パンくずリスト': 'ぱんくずりすと',
+      '日付ピッカー': 'ひづけぴっかー',
+      'ファイルアップロード／ドロップエリア': 'ふぁいるあっぷろーどどろっぷえりあ',
+      '検索ボックス': 'けんさくぼっくす',
+      '緊急時バナー': 'きんきゅうじばなー',
+      'リソースリスト': 'りそーすりすと',
+      'リセットCSS比較デモ（独自）': 'りせっとしーえすえすひかくでも（どくじ）',
+    };
+    const annotationVisibilityOverrides = {
+      accordion: { lane: 'top' },
+      blockquote: { lane: 'top' },
+      carousel: { lane: 'top' },
+      checkbox: { lane: 'top' },
+      disclosure: { lane: 'top' },
+      drawer: { lane: 'top' },
+      fieldset: { lane: 'top' },
+      globalMenu: { lane: 'top' },
+      pageNavigation: { lane: 'top' },
+      stepNavigation: { lane: 'top' },
+      tableControl: { lane: 'top' },
+    };
 
     let currentAutoloader = null;
     const loadedComponents = new Set();
@@ -584,8 +612,103 @@
     function showComponent(name) {
       const demoFn = demos[name] || demos.empty;
       document.body.dataset.component = name;
+      syncViewerFrameWidth(widestDemoWidthPx);
       container.innerHTML = demoFn();
+      applyAnnotationVisibilityOverrides(name, container);
+      normalizeViewWidth(container, widestDemoWidthPx);
       activateEmbeddedScripts(container);
+    }
+
+    function detectWidestDemoWidthPx() {
+      let widest = 0;
+      const demoFns = Object.values(demos);
+
+      for (const demoFn of demoFns) {
+        if (typeof demoFn !== 'function') continue;
+        const html = String(demoFn() ?? '');
+        demoMaxWidthPattern.lastIndex = 0;
+
+        let match = demoMaxWidthPattern.exec(html);
+        while (match) {
+          const width = Number.parseInt(match[1], 10);
+          if (Number.isFinite(width) && width > widest) widest = width;
+          match = demoMaxWidthPattern.exec(html);
+        }
+      }
+
+      return widest > 0 ? widest : 1600;
+    }
+
+    function normalizeViewWidth(root, maxWidthPx) {
+      const viewRoot =
+        Array.from(root.children).find((element) =>
+          element instanceof HTMLElement &&
+          ((element.getAttribute('style') ?? '').includes('max-width:') || element.style.maxWidth)
+        ) ?? root.firstElementChild;
+
+      if (!(viewRoot instanceof HTMLElement)) return;
+      viewRoot.style.maxWidth = `${maxWidthPx}px`;
+    }
+
+    function applyAnnotationVisibilityOverrides(componentName, root) {
+      const override = annotationVisibilityOverrides[componentName];
+      if (!override) return;
+
+      const annotations = root.querySelectorAll('a11y-annotate');
+      for (const annotation of annotations) {
+        if (!(annotation instanceof HTMLElement)) continue;
+        if (override.lane) annotation.setAttribute('callout-lane', override.lane);
+      }
+    }
+
+    function syncViewerFrameWidth(maxWidthPx) {
+      const main = document.querySelector('main');
+      if (!(main instanceof HTMLElement)) return;
+
+      const mainStyles = getComputedStyle(main);
+      const containerStyles = getComputedStyle(container);
+      const mainHorizontalPadding =
+        Number.parseFloat(mainStyles.paddingLeft) + Number.parseFloat(mainStyles.paddingRight);
+      const containerHorizontalPadding =
+        Number.parseFloat(containerStyles.paddingLeft) + Number.parseFloat(containerStyles.paddingRight);
+
+      const frameWidth = Math.ceil(maxWidthPx + mainHorizontalPadding + containerHorizontalPadding);
+      main.style.maxWidth = `${frameWidth}px`;
+    }
+
+    const widestDemoWidthPx = detectWidestDemoWidthPx();
+
+    function toHiragana(text) {
+      return text
+        .normalize('NFKC')
+        .replace(/[\u30a1-\u30f6]/g, (char) =>
+          String.fromCharCode(char.charCodeAt(0) - 0x60)
+        );
+    }
+
+    function optionSortKey(option) {
+      const label = option.textContent?.trim() ?? '';
+      return kanaSortOverrides[label] ?? toHiragana(label);
+    }
+
+    function sortComponentOptionsByKana(selectElement) {
+      const placeholder = selectElement.querySelector('option[value=""]');
+      const sortable = Array.from(selectElement.options).filter(
+        (option) => option.value !== ''
+      );
+      sortable.sort((a, b) => {
+        const byReading = japaneseSort.compare(optionSortKey(a), optionSortKey(b));
+        if (byReading !== 0) return byReading;
+        return japaneseSort.compare(a.textContent?.trim() ?? '', b.textContent?.trim() ?? '');
+      });
+
+      selectElement.innerHTML = '';
+      if (placeholder) {
+        selectElement.appendChild(placeholder);
+      }
+      for (const option of sortable) {
+        selectElement.appendChild(option);
+      }
     }
 
     // innerHTMLで挿入したscriptは実行されないため、必要に応じて再評価する
@@ -628,6 +751,7 @@
     });
 
     // 初期化
+    sortComponentOptionsByKana(componentSelector);
     const params = new URLSearchParams(window.location.search);
     const initialComponent = params.get('component');
 
