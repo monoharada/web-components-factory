@@ -2177,7 +2177,8 @@
         "category": "semantics",
         "placement": "bottom-left",
         "target": {
-          "selector": ":scope > p:not([slot])"
+          "scope": "shadow",
+          "selector": "[part=\"body\"]"
         }
       },
       {

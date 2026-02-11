@@ -304,6 +304,26 @@ describe('DadsEmergencyBanner - CTA', () => {
     expect(action?.hidden).toBe(false);
     expect(actionLink?.getAttribute('aria-label')).toContain('新規タブで開きます');
   });
+
+  it('action slot が aria-labelledby のみでも CTA を表示し新規タブ補助ラベルを付与する', async () => {
+    const { defineDefaultEmergencyBanner } = await import('./emergency-banner-define');
+    defineDefaultEmergencyBanner();
+
+    const component = renderWebComponent(`
+      <dads-emergency-banner href="https://example.com" target="_blank">
+        <span slot="heading" id="action-label-source">指定避難所を確認する</span>
+        <span slot="action" aria-labelledby="action-label-source"></span>
+      </dads-emergency-banner>
+    `);
+
+    await waitForComponent('dads-emergency-banner');
+
+    const action = getShadowElement<HTMLElement>(component, '#action');
+    const actionLink = getShadowElement<HTMLAnchorElement>(component, '#action-link');
+
+    expect(action?.hidden).toBe(false);
+    expect(actionLink?.getAttribute('aria-label')).toBe('指定避難所を確認する（新規タブで開きます）');
+  });
 });
 
 describe('DadsEmergencyBanner - スロット同期', () => {
@@ -370,5 +390,14 @@ describe('DadsEmergencyBanner - a11yAnnotations', () => {
         'emergency-action',
       ]),
     );
+  });
+
+  it('本文 callout は body part を参照する', async () => {
+    const { getCemA11yAnnotations } = await import('../../../tests/utils/cem-annotations.js');
+    const annotations = getCemA11yAnnotations('dads-emergency-banner');
+    const bodyCallout = annotations?.callouts?.find((callout) => callout.id === 'emergency-body');
+
+    expect(bodyCallout?.target?.scope).toBe('shadow');
+    expect(bodyCallout?.target?.selector).toBe('[part="body"]');
   });
 });

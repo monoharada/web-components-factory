@@ -29,37 +29,77 @@ const DEFAULT_ATTRIBUTE_VALUES = [
   ['target', '_self'],
 ] as const;
 
-function isMeaningfulNode(node: Node): boolean {
-  if (node.nodeType === Node.ELEMENT_NODE) {
-    const element = node as Element;
-    if (element.hasAttribute('hidden')) return false;
-
-    const text = element.textContent?.trim() ?? '';
-    if (text.length > 0) return true;
-
-    const ariaLabel = element.getAttribute('aria-label')?.trim() ?? '';
-    const ariaLabelledby = element.getAttribute('aria-labelledby')?.trim() ?? '';
-    return ariaLabel.length > 0 || ariaLabelledby.length > 0;
-  }
-  if (node.nodeType === Node.TEXT_NODE) {
-    return (node.textContent ?? '').trim().length > 0;
-  }
-  return false;
+function normalizeText(value: string | null | undefined): string {
+  return (value ?? '').replace(/\s+/g, ' ').trim();
 }
 
-function getNodeAccessibleText(node: Node): string {
+function parseIdRefs(value: string | null): string[] {
+  const normalized = normalizeText(value);
+  if (!normalized) return [];
+  return normalized.split(' ').filter((id) => id.length > 0);
+}
+
+function escapeAttributeValue(value: string): string {
+  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
+function findElementById(source: Element, id: string): Element | null {
+  if (!id) return null;
+
+  const selector = `[id="${escapeAttributeValue(id)}"]`;
+  const root = source.getRootNode();
+  if (root instanceof Document || root instanceof ShadowRoot) {
+    const inRoot = root.querySelector(selector);
+    if (inRoot) return inRoot;
+  }
+
+  const ownerDocument = source.ownerDocument;
+  if (!ownerDocument) return null;
+
+  const byId = ownerDocument.getElementById(id);
+  if (byId) return byId;
+
+  return ownerDocument.querySelector(selector);
+}
+
+function getAriaLabelledbyText(element: Element, visited: Set<Element>): string {
+  const ids = parseIdRefs(element.getAttribute('aria-labelledby'));
+  if (ids.length === 0) return '';
+
+  const label = ids
+    .map((id) => {
+      const labelledElement = findElementById(element, id);
+      if (!labelledElement || labelledElement === element) return '';
+      return getNodeAccessibleText(labelledElement, visited, true);
+    })
+    .filter((segment) => segment.length > 0)
+    .join(' ');
+
+  return normalizeText(label);
+}
+
+function isMeaningfulNode(node: Node): boolean {
+  return getNodeAccessibleText(node).length > 0;
+}
+
+function getNodeAccessibleText(node: Node, visited = new Set<Element>(), includeHidden = false): string {
   if (node.nodeType === Node.TEXT_NODE) {
-    return (node.textContent ?? '').trim();
+    return normalizeText(node.textContent);
   }
 
   if (node.nodeType !== Node.ELEMENT_NODE) return '';
   const element = node as Element;
-  if (element.hasAttribute('hidden')) return '';
+  if (!includeHidden && element.hasAttribute('hidden')) return '';
+  if (visited.has(element)) return '';
+  visited.add(element);
 
-  const ariaLabel = element.getAttribute('aria-label')?.trim();
+  const ariaLabel = normalizeText(element.getAttribute('aria-label'));
   if (ariaLabel) return ariaLabel;
 
-  return (element.textContent ?? '').trim();
+  const ariaLabelledbyText = getAriaLabelledbyText(element, visited);
+  if (ariaLabelledbyText) return ariaLabelledbyText;
+
+  return normalizeText(element.textContent);
 }
 
 /**
@@ -260,7 +300,7 @@ export class DadsEmergencyBanner extends TypographyWebComponent {
       subtree: true,
       childList: true,
       attributes: true,
-      attributeFilter: ['slot', 'hidden'],
+      attributeFilter: ['slot', 'hidden', 'aria-label', 'aria-labelledby', 'id'],
     });
   }
 
