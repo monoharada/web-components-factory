@@ -31509,6 +31509,1066 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/progress/progress.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Progress コンポーネント",
+          "name": "DadsProgress",
+          "cssProperties": [
+            {
+              "description": "トラック色",
+              "name": "--dads-progress-track-color"
+            },
+            {
+              "description": "フィル色",
+              "name": "--dads-progress-fill-color"
+            },
+            {
+              "description": "linear/segmented 高さ",
+              "name": "--dads-progress-height"
+            },
+            {
+              "description": "角丸",
+              "name": "--dads-progress-radius"
+            },
+            {
+              "description": "circular 直径",
+              "name": "--dads-progress-size"
+            },
+            {
+              "description": "circular 線幅",
+              "name": "--dads-progress-stroke-width"
+            },
+            {
+              "description": "segmented の間隔",
+              "name": "--dads-progress-segment-gap"
+            },
+            {
+              "description": "アニメーション時間",
+              "name": "--dads-progress-animation-duration"
+            },
+            {
+              "description": "ラベル色",
+              "name": "--dads-progress-label-color"
+            },
+            {
+              "description": "値色",
+              "name": "--dads-progress-value-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "進捗本体（progressbar）",
+              "name": "bar"
+            },
+            {
+              "description": "circular フィル",
+              "name": "circular-fill"
+            },
+            {
+              "description": "circular SVG",
+              "name": "circular-svg"
+            },
+            {
+              "description": "circular トラック",
+              "name": "circular-track"
+            },
+            {
+              "description": "linear のフィル",
+              "name": "fill"
+            },
+            {
+              "description": "ラベル領域",
+              "name": "label"
+            },
+            {
+              "description": "ルート",
+              "name": "root"
+            },
+            {
+              "description": "segmented の1区画",
+              "name": "segment"
+            },
+            {
+              "description": "segmented の塗り",
+              "name": "segment-fill"
+            },
+            {
+              "description": "segmented ラッパー",
+              "name": "segments"
+            },
+            {
+              "description": "live領域（visually-hidden）",
+              "name": "status"
+            },
+            {
+              "description": "linear のトラック",
+              "name": "track"
+            },
+            {
+              "description": "可視値テキスト領域",
+              "name": "value-text"
+            }
+          ],
+          "slots": [
+            {
+              "description": "可視ラベル",
+              "name": "label"
+            },
+            {
+              "description": "可視値テキスト",
+              "name": "value-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureSegmentNodes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "container",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "count",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#lastStatusKey",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#lastStatusMessage",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#ready",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#reflectNormalizedAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "ProgressState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#requestRender",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ProgressState"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setIfDifferent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "next",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAria",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "ProgressState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncCircular",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "ProgressState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncLabelVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLinear",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "ProgressState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncSegments",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "ProgressState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncStatus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "ProgressState"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncVisibleValueText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#valueTextSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "currentStep",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "currentStepChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-progress', template: html` <div part=\"root\" id=\"root\"> <div part=\"label\" id=\"label\" hidden> <slot name=\"label\" id=\"label-slot\"></slot> </div> <div part=\"bar\" id=\"bar\" role=\"progressbar\"> <div part=\"track\" id=\"track\" aria-hidden=\"true\"> <span part=\"fill\" id=\"fill\"></span> </div> <svg part=\"circular-svg\" id=\"circular-svg\" viewBox=\"0 0 100 100\" aria-hidden=\"true\" focusable=\"false\"> <circle part=\"circular-track\" id=\"circular-track\" cx=\"50\" cy=\"50\" r=\"45\"></circle> <circle part=\"circular-fill\" id=\"circular-fill\" cx=\"50\" cy=\"50\" r=\"45\"></circle> </svg> <div part=\"segments\" id=\"segments\" aria-hidden=\"true\"></div> </div> <div part=\"value-text\" id=\"value-text\" hidden> <slot name=\"value-text\" id=\"value-text-slot\"></slot> <span id=\"value-text-attr\"></span> </div> <p part=\"visually-hidden status\" id=\"status\"></p> </div> `, styles: withReset([ applyDADSTokens(), progressTokens, progressStyles, ], 'minimal'), attributes: [ PropertyAttr('shape'), PropertyAttr('size'), PropertyAttr('min'), PropertyAttr('max'), PropertyAttr('value'), BooleanAttr('indeterminate'), PropertyAttr('statusLive', 'status-live'), PropertyAttr('valueText', 'value-text'), PropertyAttr('segmentMode', 'segment-mode'), PropertyAttr('segments'), PropertyAttr('currentStep', 'current-step'), PropertyAttr('totalSteps', 'total-steps'), TransferringPropertyAttr('bar', 'ariaLabel', 'aria-label'), TransferringPropertyAttr('bar', 'ariaLabelledby', 'aria-labelledby'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "indeterminate",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "indeterminateChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "maxChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "minChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "segmentMode",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "segmentModeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "segments",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "segmentsChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shape",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "shapeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "sizeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "statusLive",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "statusLiveChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "totalSteps",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "totalStepsChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "valueChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "valueText",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "valueTextChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'0.1.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "stepsモード時の現在ステップ",
+              "name": "current-step"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "不確定状態",
+              "name": "indeterminate"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "最大値",
+              "name": "max"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "最小値",
+              "name": "min"
+            },
+            {
+              "type": {
+                "text": "'ratio' | 'steps'"
+              },
+              "description": "segmented 用モード",
+              "name": "segment-mode"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ratioモード時の分割数",
+              "name": "segments"
+            },
+            {
+              "type": {
+                "text": "'linear' | 'circular' | 'segmented'"
+              },
+              "description": "表示形状",
+              "name": "shape"
+            },
+            {
+              "type": {
+                "text": "'sm' | 'md' | 'lg'"
+              },
+              "description": "サイズ",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "'off' | 'polite' | 'assertive'"
+              },
+              "description": "live通知レベル",
+              "name": "status-live"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "stepsモード時の総ステップ",
+              "name": "total-steps"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "現在値",
+              "name": "value"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "aria-valuetext / 可視値の明示上書き",
+              "name": "value-text"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-progress",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/progress/progress.ts",
+          "definitionPath": "./packages/components/progress/progress.ts",
+          "typeDefinitionPath": "./packages/components/progress/progress.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "線形・円形・分割表示を切り替えられる進捗表示コンポーネント",
+              "categories": {
+                "semantics": [
+                  "role=\"progressbar\" を内部 bar に設定",
+                  "determinate 時は aria-valuemin / aria-valuemax / aria-valuenow を同期",
+                  "indeterminate 時は aria-valuenow を外し aria-valuetext で状態を通知"
+                ],
+                "states": [
+                  "shape=\"linear | circular | segmented\" で表示を切替",
+                  "segment-mode=\"ratio | steps\" で segmented の算出ロジックを切替",
+                  "status-live=\"off | polite | assertive\" で live通知方針を切替"
+                ],
+                "labels": [
+                  "slot=\"label\" で可視ラベルを提供",
+                  "slot=\"value-text\" または value-text 属性で可視値テキストを提供",
+                  "aria-label / aria-labelledby は内部 progressbar へ転送"
+                ],
+                "motion": [
+                  "indeterminate 時は形状ごとのアニメーションで進行中を表現",
+                  "prefers-reduced-motion: reduce でアニメーションを停止"
+                ],
+                "contrast": [
+                  "forced-colors: active でトラック/フィルをシステム色に置換",
+                  "高コントラスト環境でも進捗差分が識別可能"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "progress-bar",
+                  "title": "進捗本体（progressbar）",
+                  "label": "part=\"bar\"",
+                  "description": "スクリーンリーダーが参照する aria-* 値を保持する中核要素です。",
+                  "category": "semantics",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"bar\"]"
+                  },
+                  "placement": "top-left"
+                },
+                {
+                  "id": "progress-track",
+                  "title": "線形トラック",
+                  "label": "part=\"track\"",
+                  "description": "linear 形状時のトラック。fill が現在値に応じて伸縮します。",
+                  "category": "states",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"track\"]"
+                  },
+                  "placement": "top-right"
+                },
+                {
+                  "id": "progress-fill",
+                  "title": "線形フィル",
+                  "label": "part=\"fill\"",
+                  "description": "determinate では割合に応じて幅が更新され、indeterminate では進行中アニメーションを表示します。",
+                  "category": "states",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"fill\"]"
+                  },
+                  "placement": "bottom-right"
+                },
+                {
+                  "id": "progress-circular",
+                  "title": "円形表示",
+                  "label": "part=\"circular-svg\"",
+                  "description": "circular 形状時に stroke-dashoffset で進捗を表現します。",
+                  "category": "states",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"circular-svg\"]"
+                  },
+                  "placement": "top-left"
+                },
+                {
+                  "id": "progress-segments",
+                  "title": "分割表示",
+                  "label": "part=\"segments\"",
+                  "description": "segmented 形状時に ratio/steps モードで塗り区画数を制御します。",
+                  "category": "states",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"segments\"]"
+                  },
+                  "placement": "bottom-left"
+                },
+                {
+                  "id": "progress-status",
+                  "title": "ライブ通知領域",
+                  "label": "part=\"status\"",
+                  "description": "status-live が polite/assertive の場合のみ aria-live を有効化し、値変化時に通知します。",
+                  "category": "semantics",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part~=\"status\"]"
+                  },
+                  "placement": "bottom-right"
+                }
+              ]
+            },
+            "componentId": "progress",
+            "install": {
+              "id": "progress",
+              "define": "defineProgress",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/progress"
+              },
+              "tags": [
+                "dads-progress"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsProgress",
+          "declaration": {
+            "name": "DadsProgress",
+            "module": "packages/components/progress/progress.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/progress/progress.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/progress/progress.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-progress",
+          "declaration": {
+            "name": "DadsProgress",
+            "module": "./packages/components/progress/progress.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/radio/radio.ts",
       "declarations": [
         {
@@ -47330,6 +48390,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/progress/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/chip-label/index.js"
           }
         },
@@ -49042,6 +50110,226 @@
           "declaration": {
             "name": "pageNavigationTokens",
             "module": "packages/components/page-navigation/page-navigation-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/progress/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/progress/progress.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "autoDefineProgress",
+          "declaration": {
+            "name": "autoDefineProgress",
+            "module": "./progress-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultProgress",
+          "declaration": {
+            "name": "defineDefaultProgress",
+            "module": "./progress-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineProgress",
+          "declaration": {
+            "name": "defineProgress",
+            "module": "./progress-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "progressLocalTokens",
+          "declaration": {
+            "name": "progressLocalTokens",
+            "module": "./progress-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "progressSemanticTokens",
+          "declaration": {
+            "name": "progressSemanticTokens",
+            "module": "./progress-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "progressStyles",
+          "declaration": {
+            "name": "progressStyles",
+            "module": "./progress-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "progressTokens",
+          "declaration": {
+            "name": "progressTokens",
+            "module": "./progress-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/progress/progress-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "autoDefineProgress",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultProgress",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineProgress",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ],
+          "description": "Progress コンポーネントを登録"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-progress`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "autoDefineProgress",
+          "declaration": {
+            "name": "autoDefineProgress",
+            "module": "packages/components/progress/progress-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultProgress",
+          "declaration": {
+            "name": "defineDefaultProgress",
+            "module": "packages/components/progress/progress-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineProgress",
+          "declaration": {
+            "name": "defineProgress",
+            "module": "packages/components/progress/progress-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/progress/progress-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "progressStyles",
+          "default": "css` :host { display: block; min-width: 0; font-family: var(--font-family-sans); color: var(--dads-progress-label-color); } [part=\"root\"] { display: grid; gap: var(--progress-label-gap); } [part=\"label\"] { color: var(--dads-progress-label-color); font-size: var(--font-size-14, 0.875rem); line-height: 1.5; } [part=\"value-text\"] { color: var(--dads-progress-value-color); font-size: var(--font-size-14, 0.875rem); line-height: 1.5; } [part=\"bar\"] { display: grid; place-items: center; } [part=\"track\"], [part=\"circular-svg\"], [part=\"segments\"] { display: none; } :host([shape=\"linear\"]) [part=\"track\"] { position: relative; display: block; width: 100%; min-width: 0; height: var(--dads-progress-height); border-radius: var(--dads-progress-radius); overflow: hidden; background-color: var(--dads-progress-track-color); } :host([shape=\"linear\"]) [part=\"fill\"] { display: block; width: var(--_dads-progress-ratio-percent, 0%); height: 100%; border-radius: inherit; background-color: var(--dads-progress-fill-color); transition: width var(--dads-progress-animation-duration) ease; } :host([shape=\"linear\"][indeterminate]) [part=\"fill\"] { width: 36%; animation: dads-progress-linear-indeterminate var(--dads-progress-animation-duration) ease-in-out infinite; } :host([shape=\"circular\"]) [part=\"circular-svg\"] { display: block; width: var(--dads-progress-size); height: var(--dads-progress-size); transform: rotate(-90deg); } [part=\"circular-track\"], [part=\"circular-fill\"] { fill: none; stroke-width: var(--dads-progress-stroke-width); } [part=\"circular-track\"] { stroke: var(--dads-progress-track-color); } [part=\"circular-fill\"] { stroke: var(--dads-progress-fill-color); stroke-linecap: round; transition: stroke-dashoffset var(--dads-progress-animation-duration) ease; } :host([shape=\"circular\"][indeterminate]) [part=\"circular-svg\"] { animation: dads-progress-spin calc(var(--dads-progress-animation-duration) * 1.5) linear infinite; } :host([shape=\"circular\"][indeterminate]) [part=\"circular-fill\"] { stroke-dasharray: calc(var(--_dads-progress-circumference, 282.743) * 0.35) calc(var(--_dads-progress-circumference, 282.743) * 0.65); animation: dads-progress-circular-indeterminate var(--dads-progress-animation-duration) ease-in-out infinite; } :host([shape=\"segmented\"]) [part=\"segments\"] { display: grid; width: 100%; min-width: 0; gap: var(--dads-progress-segment-gap); } [part=\"segment\"] { position: relative; display: block; height: var(--dads-progress-height); border-radius: var(--dads-progress-radius); overflow: hidden; background-color: var(--dads-progress-track-color); } [part=\"segment-fill\"] { display: block; width: 100%; height: 100%; background-color: var(--dads-progress-fill-color); transform: scaleX(0); transform-origin: left center; transition: transform var(--dads-progress-animation-duration) ease; } [part=\"segment\"][data-filled=\"true\"] [part=\"segment-fill\"] { transform: scaleX(1); } :host([shape=\"segmented\"][indeterminate]) [part=\"segment-fill\"] { transform: scaleX(1); opacity: 0.45; animation: dads-progress-segment-indeterminate var(--dads-progress-animation-duration) ease-in-out infinite; } ${visuallyHiddenPartStyles} @keyframes dads-progress-linear-indeterminate { 0% { transform: translateX(-130%); } 100% { transform: translateX(310%); } } @keyframes dads-progress-spin { from { transform: rotate(-90deg); } to { transform: rotate(270deg); } } @keyframes dads-progress-circular-indeterminate { 0% { stroke-dashoffset: calc(var(--_dads-progress-circumference, 282.743) * 0.95); } 50% { stroke-dashoffset: calc(var(--_dads-progress-circumference, 282.743) * 0.35); } 100% { stroke-dashoffset: calc(var(--_dads-progress-circumference, 282.743) * 0.95); } } @keyframes dads-progress-segment-indeterminate { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.85; } } @media (forced-colors: active) { [part=\"track\"], [part=\"segment\"] { background-color: Canvas; border: 1px solid CanvasText; forced-color-adjust: none; } [part=\"fill\"], [part=\"segment-fill\"] { background-color: Highlight; forced-color-adjust: none; } [part=\"circular-track\"] { stroke: CanvasText; forced-color-adjust: none; } [part=\"circular-fill\"] { stroke: Highlight; forced-color-adjust: none; } } @media (prefers-reduced-motion: reduce) { [part=\"fill\"], [part=\"circular-fill\"], [part=\"segment-fill\"], [part=\"circular-svg\"] { transition: none; animation: none; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "progressStyles",
+          "declaration": {
+            "name": "progressStyles",
+            "module": "packages/components/progress/progress-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/progress/progress-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "progressLocalTokens",
+          "default": "css`${progressLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "progressSemanticTokens",
+          "default": "css`${progressSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "progressTokens",
+          "default": "css` ${progressSemanticTokensText} ${progressLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "progressLocalTokens",
+          "declaration": {
+            "name": "progressLocalTokens",
+            "module": "packages/components/progress/progress-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "progressSemanticTokens",
+          "declaration": {
+            "name": "progressSemanticTokens",
+            "module": "packages/components/progress/progress-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "progressTokens",
+          "declaration": {
+            "name": "progressTokens",
+            "module": "packages/components/progress/progress-tokens.ts"
           }
         }
       ]

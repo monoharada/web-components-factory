@@ -2853,6 +2853,109 @@
       }
     ]
   },
+  "dads-progress": {
+    "version": 1,
+    "summary": "線形・円形・分割表示を切り替えられる進捗表示コンポーネント",
+    "categories": {
+      "semantics": [
+        "role=\"progressbar\" を内部 bar に設定",
+        "determinate 時は aria-valuemin / aria-valuemax / aria-valuenow を同期",
+        "indeterminate 時は aria-valuenow を外し aria-valuetext で状態を通知"
+      ],
+      "states": [
+        "shape=\"linear | circular | segmented\" で表示を切替",
+        "segment-mode=\"ratio | steps\" で segmented の算出ロジックを切替",
+        "status-live=\"off | polite | assertive\" で live通知方針を切替"
+      ],
+      "labels": [
+        "slot=\"label\" で可視ラベルを提供",
+        "slot=\"value-text\" または value-text 属性で可視値テキストを提供",
+        "aria-label / aria-labelledby は内部 progressbar へ転送"
+      ],
+      "motion": [
+        "indeterminate 時は形状ごとのアニメーションで進行中を表現",
+        "prefers-reduced-motion: reduce でアニメーションを停止"
+      ],
+      "contrast": [
+        "forced-colors: active でトラック/フィルをシステム色に置換",
+        "高コントラスト環境でも進捗差分が識別可能"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "progress-bar",
+        "title": "進捗本体（progressbar）",
+        "label": "part=\"bar\"",
+        "description": "スクリーンリーダーが参照する aria-* 値を保持する中核要素です。",
+        "category": "semantics",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"bar\"]"
+        },
+        "placement": "top-left"
+      },
+      {
+        "id": "progress-track",
+        "title": "線形トラック",
+        "label": "part=\"track\"",
+        "description": "linear 形状時のトラック。fill が現在値に応じて伸縮します。",
+        "category": "states",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"track\"]"
+        },
+        "placement": "top-right"
+      },
+      {
+        "id": "progress-fill",
+        "title": "線形フィル",
+        "label": "part=\"fill\"",
+        "description": "determinate では割合に応じて幅が更新され、indeterminate では進行中アニメーションを表示します。",
+        "category": "states",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"fill\"]"
+        },
+        "placement": "bottom-right"
+      },
+      {
+        "id": "progress-circular",
+        "title": "円形表示",
+        "label": "part=\"circular-svg\"",
+        "description": "circular 形状時に stroke-dashoffset で進捗を表現します。",
+        "category": "states",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"circular-svg\"]"
+        },
+        "placement": "top-left"
+      },
+      {
+        "id": "progress-segments",
+        "title": "分割表示",
+        "label": "part=\"segments\"",
+        "description": "segmented 形状時に ratio/steps モードで塗り区画数を制御します。",
+        "category": "states",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"segments\"]"
+        },
+        "placement": "bottom-left"
+      },
+      {
+        "id": "progress-status",
+        "title": "ライブ通知領域",
+        "label": "part=\"status\"",
+        "description": "status-live が polite/assertive の場合のみ aria-live を有効化し、値変化時に通知します。",
+        "category": "semantics",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part~=\"status\"]"
+        },
+        "placement": "bottom-right"
+      }
+    ]
+  },
   "dads-switch": {
     "version": 1,
     "summary": "トグルスイッチ（ON/OFF切り替え）",

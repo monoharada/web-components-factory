@@ -47,6 +47,9 @@ export * from './reset-card-demo.js';
 // スイッチ
 export * from './switch/index.js';
 
+// プログレス
+export * from './progress/index.js';
+
 // チップラベル
 export * from './chip-label/index.js';
 

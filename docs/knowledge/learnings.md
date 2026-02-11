@@ -4,6 +4,29 @@
 
 ---
 
+## [2026-02-11] postflight の base coverage は「比較対象ブランチのテスト健全性」に依存する
+**タグ**: #frontend-postflight #coverage #vitest #git-worktree #quality-gate
+
+### 概要
+`frontend-postflight` の base 比較で、HEAD 側は通るのに base 側だけ coverage 取得が失敗するケースが発生した。  
+今回の失敗は新規実装ではなく、base 側テスト（`packages/components/annotate/annotate.test.ts`）が `window.localStorage.setItem` を呼び出した際に `TypeError` となる既知不安定条件だった。
+
+### 学び
+1. postflight の coverage gate は「差分品質」だけでなく「base のテスト実行性」も前提条件になる。
+2. base 側が 1 件でも fail すると delta は算出不能になり、仕様通り `BLOCKER` 扱いにするのが正しい。
+3. 失敗時は「HEAD の品質ゲート（`npm run ci` など）」と「base 失敗ログ」を分離して記録すると、差分起因か基盤起因かを切り分けやすい。
+
+### 今回の観測
+- base 実行コマンド: `npm run test:coverage -- --run --coverage.reporter=json-summary --coverage.reporter=text-summary --coverage.reportsDirectory=coverage-postflight-base`
+- base 結果: `packages/components/annotate/annotate.test.ts` の `CEMロード失敗時でも無限refreshしない` が fail
+- エラー: `TypeError: window.localStorage.setItem is not a function`（`annotate.test.ts:58`）
+- HEAD 側は `npm run ci` が通過し、実装側の回帰は未検出
+
+### 再発防止
+- postflight 実行時は、coverage 比較の前提として「base 側テストが全件通るか」を先に確認する。
+- base 側 fail 時は無理に delta を推定せず、`BLOCKER` を明示して PR へ切り分けメモを残す。
+- 可能なら base worktree の配置・実行環境を固定し、テスト環境差（localStorage 等）の再現性を下げる。
+
 ## [2026-02-10] Divider余白は「内部解決したshorthand変数」を1回だけmargin適用する
 **タグ**: #divider #css-variables #webcomponents #a11y #coverage
 

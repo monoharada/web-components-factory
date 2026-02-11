@@ -5904,6 +5904,238 @@ ${dadsDataRows(6, 6)}
     </script>
   `,
 
+  progress: () => `
+    <div style="padding: 40px; max-width: 1120px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">プログレス</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        <code>linear / circular / segmented</code> を1コンポーネントで切り替える進捗表示です。
+        既定の <code>status-live</code> は <code>off</code> で、必要時のみ通知できます。
+      </p>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Preview</h3>
+        <div style="display: grid; gap: 20px;">
+          <div style="padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <dads-progress shape="linear" value="68" aria-label="申請手続きの進捗">
+              <span slot="label">申請手続き</span>
+            </dads-progress>
+          </div>
+          <div style="padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <dads-progress shape="circular" size="lg" value="42" aria-label="書類確認の進捗"></dads-progress>
+          </div>
+          <div style="padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px;">
+            <dads-progress
+              shape="segmented"
+              segment-mode="steps"
+              current-step="4"
+              total-steps="7"
+              aria-label="審査工程の進捗"
+            >
+              <span slot="label">審査工程</span>
+              <span slot="value-text">4 / 7</span>
+            </dads-progress>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          shapeや値を操作して、ARIA値・見た目・通知設定を確認できます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-progress',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-progress
+                  data-api-target
+                  shape="linear"
+                  size="md"
+                  min="0"
+                  max="100"
+                  value="68"
+                  segment-mode="ratio"
+                  segments="10"
+                  current-step="0"
+                  total-steps="1"
+                  status-live="off"
+                  aria-label="進捗"
+                >
+                  <span slot="label">進捗</span>
+                </dads-progress>
+              </div>
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <dads-progress
+                      shape="linear"
+                      size="md"
+                      min="0"
+                      max="100"
+                      value="68"
+                      segment-mode="ratio"
+                      segments="10"
+                      current-step="0"
+                      total-steps="1"
+                      status-live="off"
+                      aria-label="進捗"
+                    >
+                      <span slot="label">進捗</span>
+                    </dads-progress>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>shape</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'linear' | 'circular' | 'segmented'</code></td>
+                        <td><code>linear</code></td>
+                        <td><div class="wc-api-control"><select aria-label="shape" data-api-attr="shape" data-default="linear"><option value="linear" selected>linear</option><option value="circular">circular</option><option value="segmented">segmented</option></select></div></td>
+                        <td>表示形状</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'sm' | 'md' | 'lg'</code></td>
+                        <td><code>md</code></td>
+                        <td><div class="wc-api-control"><select aria-label="size" data-api-attr="size" data-default="md"><option value="sm">sm</option><option value="md" selected>md</option><option value="lg">lg</option></select></div></td>
+                        <td>サイズ</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>min</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>number</code></td>
+                        <td><code>0</code></td>
+                        <td><div class="wc-api-control"><dads-input-text label="min" value="0" data-api-attr="min" data-default="0"></dads-input-text></div></td>
+                        <td>最小値</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>max</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>number</code></td>
+                        <td><code>100</code></td>
+                        <td><div class="wc-api-control"><dads-input-text label="max" value="100" data-api-attr="max" data-default="100"></dads-input-text></div></td>
+                        <td>最大値</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>value</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>number</code></td>
+                        <td><code>68</code></td>
+                        <td><div class="wc-api-control"><dads-input-text label="value" value="68" data-api-attr="value" data-default="68"></dads-input-text></div></td>
+                        <td>現在値（determinate時）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>indeterminate</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td><div class="wc-api-control"><dads-switch aria-label="indeterminate" data-api-attr="indeterminate" data-default="false"><span slot="label-left">Off</span><span slot="label-right">On</span></dads-switch></div></td>
+                        <td>不確定状態（aria-valuenowを外す）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>status-live</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'off' | 'polite' | 'assertive'</code></td>
+                        <td><code>off</code></td>
+                        <td><div class="wc-api-control"><select aria-label="status-live" data-api-attr="status-live" data-default="off"><option value="off" selected>off</option><option value="polite">polite</option><option value="assertive">assertive</option></select></div></td>
+                        <td>live通知レベル</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>value-text</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>(unset)</code></td>
+                        <td><div class="wc-api-control"><dads-input-text label="value-text" value="" data-api-attr="value-text" data-default=""></dads-input-text></div></td>
+                        <td>aria-valuetext / 可視値の明示上書き</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>segment-mode</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>'ratio' | 'steps'</code></td>
+                        <td><code>ratio</code></td>
+                        <td><div class="wc-api-control"><select aria-label="segment-mode" data-api-attr="segment-mode" data-default="ratio"><option value="ratio" selected>ratio</option><option value="steps">steps</option></select></div></td>
+                        <td>segmented の表示モード</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>segments</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>integer</code></td>
+                        <td><code>10</code></td>
+                        <td><div class="wc-api-control"><dads-input-text label="segments" value="10" data-api-attr="segments" data-default="10"></dads-input-text></div></td>
+                        <td>ratioモード時の分割数（2..100）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>current-step</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>integer</code></td>
+                        <td><code>0</code></td>
+                        <td><div class="wc-api-control"><dads-input-text label="current-step" value="0" data-api-attr="current-step" data-default="0"></dads-input-text></div></td>
+                        <td>stepsモード時の現在ステップ</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>total-steps</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>integer</code></td>
+                        <td><code>1</code></td>
+                        <td><div class="wc-api-control"><dads-input-text label="total-steps" value="1" data-api-attr="total-steps" data-default="1"></dads-input-text></div></td>
+                        <td>stepsモード時の総ステップ（1..100）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>aria-label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>進捗</code></td>
+                        <td><div class="wc-api-control"><dads-input-text label="aria-label" value="進捗" data-api-attr="aria-label" data-default="進捗"></dads-input-text></div></td>
+                        <td>内部 progressbar の名称</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr><th scope="row"><code>--dads-progress-track-color</code></th><td><code>--color-neutral-solid-gray-100</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-track-color" value="" data-api-css-var="--dads-progress-track-color" data-default=""></dads-input-text></div></td><td>トラック色</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-fill-color</code></th><td><code>--color-primary</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-fill-color" value="" data-api-css-var="--dads-progress-fill-color" data-default=""></dads-input-text></div></td><td>進捗色</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-height</code></th><td><code>(size token)</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-height" value="" data-api-css-var="--dads-progress-height" data-default=""></dads-input-text></div></td><td>linear / segmented 高さ</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-radius</code></th><td><code>9999px</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-radius" value="" data-api-css-var="--dads-progress-radius" data-default=""></dads-input-text></div></td><td>角丸</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-size</code></th><td><code>(size token)</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-size" value="" data-api-css-var="--dads-progress-size" data-default=""></dads-input-text></div></td><td>circular 直径</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-stroke-width</code></th><td><code>(size token)</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-stroke-width" value="" data-api-css-var="--dads-progress-stroke-width" data-default=""></dads-input-text></div></td><td>circular 線幅</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-segment-gap</code></th><td><code>4px</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-segment-gap" value="" data-api-css-var="--dads-progress-segment-gap" data-default=""></dads-input-text></div></td><td>segmented 区画間隔</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-animation-duration</code></th><td><code>1.2s</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-animation-duration" value="" data-api-css-var="--dads-progress-animation-duration" data-default=""></dads-input-text></div></td><td>アニメーション時間</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-label-color</code></th><td><code>--color-neutral-solid-gray-800</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-label-color" value="" data-api-css-var="--dads-progress-label-color" data-default=""></dads-input-text></div></td><td>ラベル色</td></tr>
+                      <tr><th scope="row"><code>--dads-progress-value-color</code></th><td><code>--color-neutral-solid-gray-700</code></td><td><div class="wc-api-control"><dads-input-text label="--dads-progress-value-color" value="" data-api-css-var="--dads-progress-value-color" data-default=""></dads-input-text></div></td><td>値テキスト色</td></tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+    </div>
+  `,
 
   switch: () => `
     <div style="padding: 40px; max-width: 1280px; margin: 0 auto;">

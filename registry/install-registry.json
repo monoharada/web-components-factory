@@ -415,6 +415,18 @@
         "componentDir": "packages/components/page-navigation"
       }
     },
+    "progress": {
+      "id": "progress",
+      "tags": [
+        "dads-progress"
+      ],
+      "define": "defineProgress",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/progress"
+      }
+    },
     "radio": {
       "id": "radio",
       "tags": [
@@ -583,6 +595,7 @@
     "dads-mobile-mock": "mobile-mock",
     "dads-notification-banner": "notification-banner",
     "dads-page-navigation": "page-navigation",
+    "dads-progress": "progress",
     "dads-radio": "radio",
     "dads-search-box": "search-box",
     "dads-select": "select",
