@@ -35,6 +35,24 @@
       "defineModule": "src/components/input-text/input-text-define.js",
       "defineFn": "defineInputText"
     },
+    "layout-aside": {
+      "tagBase": "layout-aside",
+      "elementEntry": "components/layout-aside.js",
+      "defineModule": "src/components/layout-aside/layout-aside-define.js",
+      "defineFn": "defineLayoutAside"
+    },
+    "layout-shell": {
+      "tagBase": "layout-shell",
+      "elementEntry": "components/layout-shell.js",
+      "defineModule": "src/components/layout-shell/layout-shell-define.js",
+      "defineFn": "defineLayoutShell"
+    },
+    "layout-sidebar": {
+      "tagBase": "layout-sidebar",
+      "elementEntry": "components/layout-sidebar.js",
+      "defineModule": "src/components/layout-sidebar/layout-sidebar-define.js",
+      "defineFn": "defineLayoutSidebar"
+    },
     "page-navigation": {
       "tagBase": "page-navigation",
       "elementEntry": "components/page-navigation.js",
@@ -146,6 +164,78 @@
         "index"
       ],
       "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">お知らせ</dads-heading>\n  <section>\n    <dads-card>\n      <h2>カード1</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n    <dads-card>\n      <h2>カード2</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n  </section>\n</main>"
+    },
+    "layout-app-shell": {
+      "id": "layout-app-shell",
+      "title": "レイアウト（App/SaaS: Header + Sidebar + Main）",
+      "description": "業務アプリ向けの標準App Shellレイアウト。",
+      "components": [
+        "layout-shell",
+        "layout-sidebar",
+        "heading",
+        "card"
+      ],
+      "requiredComponents": [
+        "layout-shell",
+        "layout-sidebar",
+        "heading"
+      ],
+      "stability": "stable",
+      "contractVersion": "1.0",
+      "entryHints": [
+        "boot",
+        "@wcf",
+        "index"
+      ],
+      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"app-shell\" mode=\"auto\">\n  <div slot=\"header\">\n    <dads-heading level=\"2\">業務ダッシュボード</dads-heading>\n  </div>\n  <dads-layout-sidebar slot=\"sidebar\">\n    <ul>\n      <li>案件一覧</li>\n      <li>承認待ち</li>\n      <li>設定</li>\n    </ul>\n  </dads-layout-sidebar>\n  <section>\n    <dads-card>\n      <dads-heading level=\"3\">進捗サマリー</dads-heading>\n      <p>主要KPIを表示します。</p>\n    </dads-card>\n  </section>\n</dads-layout-shell>"
+    },
+    "layout-master-detail": {
+      "id": "layout-master-detail",
+      "title": "レイアウト（Master-Detail: Main + Aside）",
+      "description": "一覧 + 詳細を同時表示する2カラムレイアウト。",
+      "components": [
+        "layout-shell",
+        "layout-aside",
+        "heading",
+        "table"
+      ],
+      "requiredComponents": [
+        "layout-shell",
+        "layout-aside",
+        "table"
+      ],
+      "stability": "stable",
+      "contractVersion": "1.0",
+      "entryHints": [
+        "boot",
+        "@wcf",
+        "index"
+      ],
+      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"master-detail\" mode=\"auto\">\n  <section>\n    <dads-heading level=\"2\">申請一覧</dads-heading>\n    <dads-table>\n      <table>\n        <thead>\n          <tr><th scope=\"col\">申請ID</th><th scope=\"col\">状態</th></tr>\n        </thead>\n        <tbody>\n          <tr><td>A-1001</td><td>審査中</td></tr>\n          <tr><td>A-1002</td><td>差戻し</td></tr>\n        </tbody>\n      </table>\n    </dads-table>\n  </section>\n  <dads-layout-aside slot=\"aside\">\n    <dads-heading level=\"3\">詳細情報</dads-heading>\n    <p>選択中レコードの詳細を表示します。</p>\n  </dads-layout-aside>\n</dads-layout-shell>"
+    },
+    "layout-website-hero-section-footer": {
+      "id": "layout-website-hero-section-footer",
+      "title": "レイアウト（Website: Hero + Section + Footer）",
+      "description": "コンテンツ主導の1カラムサイト向けレイアウト。",
+      "components": [
+        "layout-shell",
+        "heading",
+        "card",
+        "button"
+      ],
+      "requiredComponents": [
+        "layout-shell",
+        "heading",
+        "card"
+      ],
+      "stability": "stable",
+      "contractVersion": "1.0",
+      "entryHints": [
+        "boot",
+        "@wcf",
+        "index"
+      ],
+      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"website\" mode=\"auto\">\n  <header slot=\"header\">\n    <dads-heading level=\"1\">くらしの手続きポータル</dads-heading>\n    <p>必要な手続きを1つの画面で確認できます。</p>\n  </header>\n  <section>\n    <dads-card>\n      <dads-heading level=\"2\">はじめての方へ</dads-heading>\n      <p>制度の概要と申請までの流れを案内します。</p>\n      <dads-button variant=\"outlined\">詳しく見る</dads-button>\n    </dads-card>\n  </section>\n  <footer slot=\"footer\">© Digital Service</footer>\n</dads-layout-shell>"
     },
     "search-form": {
       "id": "search-form",

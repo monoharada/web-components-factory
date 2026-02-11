@@ -10,6 +10,8 @@
 ## 使われるBlocks
 
 - [`card-grid`](../blocks/card-grid.md)
+- [`layout-app-shell`](../blocks/layout-app-shell.md)
+- [`layout-website-hero-section-footer`](../blocks/layout-website-hero-section-footer.md)
 - [`search-results`](../blocks/search-results.md)
 
 ## 導入コマンド

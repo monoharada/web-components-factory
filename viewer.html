@@ -51,6 +51,9 @@
       "dads-dialog": "/@components/dads/dialog.js",
       "dads-drawer": "/@components/dads/drawer.js",
       "dads-header-container": "/@components/dads/header-container.js",
+      "dads-layout-shell": "/@components/dads/layout-shell.js",
+      "dads-layout-sidebar": "/@components/dads/layout-sidebar.js",
+      "dads-layout-aside": "/@components/dads/layout-aside.js",
       "dads-hamburger-menu-button": "/@components/dads/hamburger-menu-button.js",
       "dads-mobile-mock": "/@components/dads/mobile-mock.js",
       "dads-mobile-menu": "/@components/dads/mobile-menu.js",
@@ -213,6 +216,15 @@
 
     body[data-component="carousel"] #component-container {
       padding: 24px;
+    }
+
+    body[data-component="layoutShell"] main {
+      max-width: 1880px;
+      padding: 0 12px;
+    }
+
+    body[data-component="layoutShell"] #component-container {
+      padding: 16px;
     }
 
     .loaded-log {
@@ -452,6 +464,7 @@
             <option value="dialog">モーダルダイアログ</option>
             <option value="drawer">ドロワー</option>
             <option value="headerContainer">ヘッダーコンテナ</option>
+            <option value="layoutShell">レイアウトシェル</option>
             <option value="hamburgerMenuButton">ハンバーガーメニューボタン</option>
             <option value="mobileMenu">モバイルメニュー</option>
             <option value="inputText">インプットテキスト</option>

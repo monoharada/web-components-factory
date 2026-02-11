@@ -12,6 +12,7 @@
 - [`application-form-single-validation`](../blocks/application-form-single-validation.md)
 - [`application-form-step-validation`](../blocks/application-form-step-validation.md)
 - [`card-grid`](../blocks/card-grid.md)
+- [`layout-website-hero-section-footer`](../blocks/layout-website-hero-section-footer.md)
 - [`search-form`](../blocks/search-form.md)
 
 ## 導入コマンド

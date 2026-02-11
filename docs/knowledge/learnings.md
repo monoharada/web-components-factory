@@ -4,6 +4,31 @@
 
 ---
 
+## [2026-02-11] Layout Shell は「基本3値 + mobile倍率 + 詳細上書き」で運用すると破綻しにくい
+**タグ**: #layout-shell #responsive #css-vars #design-tokens #postflight
+
+### 概要
+`dads-layout-shell` のサイズ調整を個別変数で都度いじると、desktop/tablet/mobile で設定が分岐して崩れやすい。  
+`space` / `pane-width` / `main-max-width` を基本値にし、mobile は `space × mobile-space-scale` の1段だけで連動させる構成にすると、調整点を最小化しつつ後方互換も維持できた。
+
+### 学び
+1. 公開CSS変数は「基本調整」と「詳細上書き」を分離すると、初見ユーザーの操作コストを下げつつ既存互換を残せる。
+2. `sidebar-rail-width` や `aside-width` は `pane-width` から派生させると、レスポンシブ全体の比率が一貫しやすい。
+3. デモのレスポンシブ確認は `device-mock` の見た目だけでなく、`dads-layout-shell[mode]` 同期まで同時に更新しないと誤解を生む。
+
+### 適用例（今回）
+- `packages/components/layout-shell/layout-shell-tokens.ts`
+  - `--dads-layout-shell-space` / `--dads-layout-shell-pane-width` / `--dads-layout-shell-mobile-space-scale` を基準に派生変数を定義
+- `packages/components/layout-shell/layout-shell-styles.ts`
+  - `data-effective-mode='mobile'` で `inline-padding` / `block-gap` を `mobile-space-scale` 連動
+- `src/demos/layout-shell.ts`
+  - API表を「基本値 + 詳細上書き」に整理
+  - プレビュー幅UIで `device-mock` と `dads-layout-shell mode` を同時同期
+
+### 再発防止
+- 新しいレイアウト系コンポーネントでは、まず「基本2〜3値で全モードを動かす」設計を先に決めてから個別上書きを追加する。
+- デモのデバイス切替UIは、見た目切替と属性切替の双方を必ずテストで担保する。
+
 ## [2026-02-11] 緊急時バナーは「API表・注釈レイアウト・フォーカス可視性」を同時に閉じる
 **タグ**: #emergency-banner #a11y #api-table #focus-visible #testing #postflight
 

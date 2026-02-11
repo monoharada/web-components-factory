@@ -338,6 +338,42 @@
         "componentDir": "packages/components/language-selector"
       }
     },
+    "layout-aside": {
+      "id": "layout-aside",
+      "tags": [
+        "dads-layout-aside"
+      ],
+      "define": "defineLayoutAside",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/layout-aside"
+      }
+    },
+    "layout-shell": {
+      "id": "layout-shell",
+      "tags": [
+        "dads-layout-shell"
+      ],
+      "define": "defineLayoutShell",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/layout-shell"
+      }
+    },
+    "layout-sidebar": {
+      "id": "layout-sidebar",
+      "tags": [
+        "dads-layout-sidebar"
+      ],
+      "define": "defineLayoutSidebar",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/layout-sidebar"
+      }
+    },
     "list": {
       "id": "list",
       "tags": [
@@ -599,6 +635,9 @@
     "dads-heading": "heading",
     "dads-input-text": "input-text",
     "dads-language-selector": "language-selector",
+    "dads-layout-aside": "layout-aside",
+    "dads-layout-shell": "layout-shell",
+    "dads-layout-sidebar": "layout-sidebar",
     "dads-list": "list",
     "dads-list-item": "list",
     "dads-menu-list": "menu-list",
