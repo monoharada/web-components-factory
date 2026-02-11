@@ -18,14 +18,44 @@
 node scripts/wcf/cli.js blocks list
 node scripts/wcf/cli.js blocks show search-results
 
-# vendor 資材導入
+# 初期導入（vendor install + page create）
+node scripts/wcf/cli.js init --prefix myui --dir . --pattern search-results --entry boot
+
+# vendor 資材導入（空ディレクトリ向け）
 node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myui --pattern search-results
+
+# 既存 vendor への段階追加（merge再生成）
+node scripts/wcf/cli.js vendor add --prefix myui --dir vendor/components/myui --component card
 
 # importmap出力
 node scripts/wcf/cli.js vendor print-importmap --prefix myui --dir vendor/components/myui --pattern search-results --format html
 
 # ページ生成
 node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir . --entry boot
+```
+
+## `vendor install --force`
+
+- 既定では出力先が non-empty の場合は失敗（従来仕様）
+- `--force` 指定時のみ再生成を許可
+- 危険パス（空/無効、project root、project 外）は拒否
+
+```bash
+node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myui --pattern search-results --force
+```
+
+## `vendor add` の差分保護
+
+- `components/*.js` から既存導入コンポーネントを推定し、`--pattern`/`--component` と union して再生成
+- target に既存ファイルがあり、再生成結果との差分がある場合は `E_VENDOR_DRIFT` で停止
+- `--force` 指定時のみ drift ファイルを上書き
+
+```bash
+# drift があると E_VENDOR_DRIFT
+node scripts/wcf/cli.js vendor add --prefix myui --dir vendor/components/myui --component card
+
+# 上書き許可
+node scripts/wcf/cli.js vendor add --prefix myui --dir vendor/components/myui --component card --force
 ```
 
 ## エントリモード（`page create --entry`）

@@ -2,7 +2,8 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-import { initAgentKit, printImportMap, vendorInstall } from '../scripts/wcf/core.js';
+import { initAgentKit, printImportMap, vendorAdd, vendorInstall } from '../scripts/wcf/core.js';
+import { withCwd } from './utils/with-cwd';
 
 async function mkdtemp() {
   return await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-vendor-'));
@@ -41,13 +42,16 @@ async function listFilesRecursive(root: string): Promise<string[]> {
 describe('wcf vendor install', () => {
   it('installs search-results pattern into vendor directory without hashed filenames', async () => {
     const tmp = await mkdtemp();
-    const outDir = path.join(tmp, 'vendor', 'components', 'myui');
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
 
     try {
-      await vendorInstall({
-        prefix: 'myui',
-        outDir,
-        pattern: 'search-results',
+      await withCwd(tmp, async () => {
+        await vendorInstall({
+          prefix: 'myui',
+          outDir: outDirRel,
+          pattern: 'search-results',
+        });
       });
 
       expect(await exists(path.join(outDir, 'boot.js'))).toBe(true);
@@ -76,6 +80,39 @@ describe('wcf vendor install', () => {
     }
   });
 
+  it('keeps non-empty outDir protected unless --force is set', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      await fs.mkdir(outDir, { recursive: true });
+      await fs.writeFile(path.join(outDir, 'keep.txt'), 'manual', 'utf8');
+
+      await expect(
+        withCwd(tmp, async () => {
+          await vendorInstall({
+            prefix: 'myui',
+            outDir: outDirRel,
+            pattern: 'search-results',
+          });
+        }),
+      ).rejects.toThrow('Output directory is not empty');
+
+      await withCwd(tmp, async () => {
+        await vendorInstall({
+          prefix: 'myui',
+          outDir: outDirRel,
+          pattern: 'search-results',
+          force: true,
+        });
+      });
+      expect(await exists(path.join(outDir, 'keep.txt'))).toBe(false);
+      expect(await exists(path.join(outDir, 'boot.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  });
+
   it('prints importmap with stable component paths', async () => {
     const text = await printImportMap({
       prefix: 'myui',
@@ -87,6 +124,120 @@ describe('wcf vendor install', () => {
     expect(text).toContain('<script type="importmap">');
     expect(text).toContain('"myui-search-box": "./vendor/components/myui/components/search-box.js"');
     expect(text).toContain('"myui-page-navigation": "./vendor/components/myui/components/page-navigation.js"');
+  });
+});
+
+describe('wcf vendor add', () => {
+  it('merges existing and newly requested components', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      await withCwd(tmp, async () => {
+        await vendorInstall({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['button'],
+        });
+      });
+
+      const res = await withCwd(tmp, async () => {
+        return await vendorAdd({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['card'],
+        });
+      });
+
+      expect(res.addedComponents).toEqual(['card']);
+      expect(res.totalComponents).toBe(2);
+      expect(await exists(path.join(outDir, 'components', 'button.js'))).toBe(true);
+      expect(await exists(path.join(outDir, 'components', 'card.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it('detects drift and allows overwrite only with --force', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      await withCwd(tmp, async () => {
+        await vendorInstall({
+          prefix: 'myui',
+          outDir: outDirRel,
+          pattern: 'search-form',
+        });
+      });
+
+      const buttonEntry = path.join(outDir, 'components', 'button.js');
+      const marker = '\n// local drift\n';
+      await fs.writeFile(buttonEntry, (await fs.readFile(buttonEntry, 'utf8')) + marker, 'utf8');
+
+      await expect(
+        withCwd(tmp, async () => {
+          await vendorAdd({
+            prefix: 'myui',
+            outDir: outDirRel,
+            components: ['card'],
+          });
+        }),
+      ).rejects.toThrow(/E_VENDOR_DRIFT/);
+      expect(await exists(path.join(outDir, 'components', 'card.js'))).toBe(false);
+      expect(await fs.readFile(buttonEntry, 'utf8')).toContain(marker.trim());
+
+      await withCwd(tmp, async () => {
+        await vendorAdd({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['card'],
+          force: true,
+        });
+      });
+
+      expect(await exists(path.join(outDir, 'components', 'card.js'))).toBe(true);
+      expect(await fs.readFile(buttonEntry, 'utf8')).not.toContain(marker.trim());
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it('detects drift even when no managed components are discovered', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      await fs.mkdir(outDir, { recursive: true });
+      const bootFile = path.join(outDir, 'boot.js');
+      const marker = '// manual drift';
+      await fs.writeFile(bootFile, `${marker}\n`, 'utf8');
+
+      await expect(
+        withCwd(tmp, async () => {
+          await vendorAdd({
+            prefix: 'myui',
+            outDir: outDirRel,
+            components: ['card'],
+          });
+        }),
+      ).rejects.toThrow(/E_VENDOR_DRIFT/);
+      expect(await fs.readFile(bootFile, 'utf8')).toContain(marker);
+
+      await withCwd(tmp, async () => {
+        await vendorAdd({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['card'],
+          force: true,
+        });
+      });
+
+      expect(await fs.readFile(bootFile, 'utf8')).not.toContain(marker);
+      expect(await exists(path.join(outDir, 'components', 'card.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
   });
 });
 

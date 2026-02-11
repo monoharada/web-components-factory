@@ -15,12 +15,23 @@ function toPosixPath(p) {
   return String(p).replace(/\\/g, '/');
 }
 
+function sortStrings(values) {
+  return [...values].sort((a, b) => a.localeCompare(b));
+}
+
 function normalizePrefix(prefix) {
   const value = String(prefix ?? '').trim().toLowerCase();
   if (!/^[a-z][a-z0-9-]*$/.test(value)) {
     throw new Error(`Invalid --prefix: ${prefix}`);
   }
   return value;
+}
+
+function isSubPath(childAbs, parentAbs) {
+  const rel = path.relative(parentAbs, childAbs);
+  if (rel === '' || rel === '.') return false;
+  if (rel.startsWith('..') || path.isAbsolute(rel)) return false;
+  return true;
 }
 
 async function pathExists(target) {
@@ -34,6 +45,40 @@ async function pathExists(target) {
 
 async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
+}
+
+function resolveVendorOutDir(outDir) {
+  const raw = String(outDir ?? '').trim();
+  if (!raw) {
+    throw new Error('Invalid --dir (empty)');
+  }
+
+  const cwdAbs = path.resolve(process.cwd());
+  const outAbs = path.resolve(cwdAbs, raw);
+  if (outAbs === cwdAbs) {
+    throw new Error(`Refusing --dir pointing to project root: ${raw}`);
+  }
+  if (!isSubPath(outAbs, cwdAbs)) {
+    throw new Error(`Refusing --dir outside the project: ${raw}`);
+  }
+  return outAbs;
+}
+
+async function prepareVendorOutDir(outAbs, { force = false } = {}) {
+  if (!(await pathExists(outAbs))) {
+    await ensureDir(outAbs);
+    return;
+  }
+
+  const entries = await fs.readdir(outAbs);
+  if (entries.length === 0) return;
+
+  if (!force) {
+    throw new Error(`Output directory is not empty: ${outAbs}`);
+  }
+
+  await fs.rm(outAbs, { recursive: true, force: true });
+  await ensureDir(outAbs);
 }
 
 async function readJson(filePath) {
@@ -118,7 +163,7 @@ async function collectReachableRuntimeFiles({ runtimeRoot, entryFiles }) {
     }
   }
 
-  return [...visited].sort((a, b) => a.localeCompare(b));
+  return sortStrings(visited);
 }
 
 function createReadme({ prefix, selectedSuffixes }) {
@@ -240,7 +285,7 @@ function resolveSelectedSuffixes({ registry, pattern, components = [] }) {
   }
 
   return {
-    selected: [...selected].sort((a, b) => a.localeCompare(b)),
+    selected: sortStrings(selected),
     warnings,
     selectedPattern,
   };
@@ -265,12 +310,90 @@ async function copyFileEnsured(from, to) {
   await fs.copyFile(from, to);
 }
 
+async function listFilesRecursive(root) {
+  if (!(await pathExists(root))) return [];
+  const out = [];
+  const stack = [root];
+
+  while (stack.length > 0) {
+    const dir = stack.pop();
+    if (!dir) continue;
+    // eslint-disable-next-line no-await-in-loop
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const abs = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(abs);
+        continue;
+      }
+      if (entry.isFile()) out.push(abs);
+    }
+  }
+
+  return sortStrings(out);
+}
+
+async function readFileIfExists(filePath) {
+  try {
+    return await fs.readFile(filePath);
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  }
+}
+
+async function collectExistingManagedComponents({ outAbs, registry }) {
+  const known = registry?.components ?? {};
+  const componentsDir = path.join(outAbs, 'components');
+  if (!(await pathExists(componentsDir))) return [];
+
+  const entries = await fs.readdir(componentsDir, { withFileTypes: true });
+  const selected = new Set();
+
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.endsWith('.js')) continue;
+    const suffix = path.basename(entry.name, '.js');
+    if (known[suffix]) selected.add(suffix);
+  }
+
+  return sortStrings(selected);
+}
+
+async function detectVendorDrift({ stageDir, targetDir }) {
+  const stageFiles = await listFilesRecursive(stageDir);
+  const drift = [];
+
+  for (const stageFile of stageFiles) {
+    const rel = toPosixPath(path.relative(stageDir, stageFile));
+    const targetFile = path.join(targetDir, rel);
+    // eslint-disable-next-line no-await-in-loop
+    const targetBuf = await readFileIfExists(targetFile);
+    if (!targetBuf) continue;
+    // eslint-disable-next-line no-await-in-loop
+    const stageBuf = await fs.readFile(stageFile);
+    if (!stageBuf.equals(targetBuf)) drift.push(rel);
+  }
+
+  return sortStrings(drift);
+}
+
+async function copyTree({ fromDir, toDir }) {
+  const files = await listFilesRecursive(fromDir);
+  for (const filePath of files) {
+    const rel = path.relative(fromDir, filePath);
+    const to = path.join(toDir, rel);
+    // eslint-disable-next-line no-await-in-loop
+    await copyFileEnsured(filePath, to);
+  }
+}
+
 export async function listPatterns() {
   const pkgRoot = findPackageRoot();
   const { registry } = await loadRegistry(pkgRoot);
   const patterns = registry?.patterns ?? {};
-  return Object.keys(patterns)
-    .sort((a, b) => a.localeCompare(b))
+  return sortStrings(Object.keys(patterns))
     .map((name) => ({
       name,
       title: patterns[name]?.title ?? name,
@@ -334,7 +457,7 @@ export async function printImportMap({ prefix, dir, pattern = null, components =
   throw new Error(`Invalid --format: ${format}`);
 }
 
-export async function vendorInstall({ prefix, outDir, pattern = null, components = [] }) {
+export async function vendorInstall({ prefix, outDir, pattern = null, components = [], force = false }) {
   const p = normalizePrefix(prefix);
   const pkgRoot = findPackageRoot();
   const runtimeRoot = path.join(pkgRoot, 'vendor-runtime');
@@ -347,13 +470,8 @@ export async function vendorInstall({ prefix, outDir, pattern = null, components
   const { registry } = await loadRegistry(pkgRoot);
   const { selected, warnings } = resolveSelectedSuffixes({ registry, pattern, components });
 
-  const outAbs = path.resolve(process.cwd(), outDir);
-  await ensureDir(outAbs);
-
-  const existing = await fs.readdir(outAbs);
-  if (existing.length > 0) {
-    throw new Error(`Output directory is not empty: ${outAbs}`);
-  }
+  const outAbs = resolveVendorOutDir(outDir);
+  await prepareVendorOutDir(outAbs, { force });
 
   const outComponents = path.join(outAbs, 'components');
   const outAutoload = path.join(outAbs, 'autoload');
@@ -437,6 +555,132 @@ export async function vendorInstall({ prefix, outDir, pattern = null, components
     components: selected,
     warnings,
     copiedElements: copiedComponentEntries.map((x) => toPosixPath(path.relative(outAbs, x))),
+  };
+}
+
+export async function vendorAdd({ prefix, outDir, pattern = null, components = [], force = false }) {
+  const p = normalizePrefix(prefix);
+  const pkgRoot = findPackageRoot();
+  const { registry } = await loadRegistry(pkgRoot);
+  const outAbs = resolveVendorOutDir(outDir);
+  const existing = await collectExistingManagedComponents({ outAbs, registry });
+  const { selected: requested, warnings } = resolveSelectedSuffixes({ registry, pattern, components });
+
+  const merged = sortStrings(new Set([...existing, ...requested]));
+  const existingSet = new Set(existing);
+  const addedComponents = sortStrings(requested.filter((name) => !existingSet.has(name)));
+  const stageRoot = await fs.mkdtemp(path.join(process.cwd(), '.wcf-vendor-stage-'));
+  const stageCurrent = path.join(stageRoot, 'current');
+  const stageMerged = path.join(stageRoot, 'merged');
+
+  try {
+    if (existing.length > 0) {
+      await vendorInstall({
+        prefix: p,
+        outDir: stageCurrent,
+        components: existing,
+        force: true,
+      });
+
+      const driftFiles = await detectVendorDrift({
+        stageDir: stageCurrent,
+        targetDir: outAbs,
+      });
+      if (driftFiles.length > 0 && !force) {
+        throw createCliError(
+          'E_VENDOR_DRIFT',
+          `Detected locally modified vendor files. Pass --force to overwrite.\n- ${driftFiles.join('\n- ')}`,
+        );
+      }
+    }
+
+    await vendorInstall({
+      prefix: p,
+      outDir: stageMerged,
+      components: merged,
+      force: true,
+    });
+
+    if (existing.length === 0) {
+      const driftFiles = await detectVendorDrift({
+        stageDir: stageMerged,
+        targetDir: outAbs,
+      });
+      if (driftFiles.length > 0 && !force) {
+        throw createCliError(
+          'E_VENDOR_DRIFT',
+          `Detected locally modified vendor files. Pass --force to overwrite.\n- ${driftFiles.join('\n- ')}`,
+        );
+      }
+    }
+
+    await ensureDir(outAbs);
+    await copyTree({ fromDir: stageMerged, toDir: outAbs });
+  } finally {
+    await fs.rm(stageRoot, { recursive: true, force: true });
+  }
+
+  return {
+    outDir: outAbs,
+    prefix: p,
+    components: merged,
+    addedComponents,
+    totalComponents: merged.length,
+    warnings,
+  };
+}
+
+export async function initProject({
+  prefix,
+  dir = '.',
+  pattern,
+  entry = 'boot',
+  vendorDir = null,
+  file = 'index.html',
+  force = false,
+}) {
+  const p = normalizePrefix(prefix);
+  const patternName = String(pattern ?? '').trim();
+  if (!patternName) {
+    throw new Error('Missing required option: --pattern');
+  }
+
+  const outputDir = path.resolve(process.cwd(), dir);
+  const pageFile = path.join(outputDir, file);
+  if (!force && (await pathExists(pageFile))) {
+    throw createCliError('E_PAGE_EXISTS', `File already exists: ${pageFile}. Pass --force to overwrite.`);
+  }
+
+  const vendorDirInput = vendorDir ?? path.join('vendor', 'components', p);
+  const vendorOutAbs = path.isAbsolute(vendorDirInput)
+    ? vendorDirInput
+    : path.resolve(outputDir, vendorDirInput);
+
+  const vendorResult = await vendorInstall({
+    prefix: p,
+    outDir: vendorOutAbs,
+    pattern: patternName,
+    force,
+  });
+  const pageResult = await createPage({
+    prefix: p,
+    pattern: patternName,
+    dir: outputDir,
+    entry,
+    vendorDir: vendorOutAbs,
+    file,
+    force,
+  });
+
+  return {
+    dir: outputDir,
+    file: pageResult.file,
+    pattern: pageResult.pattern,
+    entry: pageResult.entry,
+    prefix: p,
+    vendorDir: vendorResult.outDir,
+    components: vendorResult.components,
+    warnings: [...vendorResult.warnings, ...pageResult.warnings],
   };
 }
 

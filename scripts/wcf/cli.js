@@ -6,9 +6,11 @@ import {
   buildImportMap,
   createPage,
   getPattern,
+  initProject,
   initAgentKit,
   listPatterns,
   printImportMap,
+  vendorAdd,
   vendorInstall,
 } from './core.js';
 
@@ -19,7 +21,9 @@ function printHelp() {
       'wcf',
       '',
       'Usage:',
-      '  wcf vendor install --prefix myui --dir vendor/components/myui [--pattern search-results] [--component heading ...]',
+      '  wcf init --prefix myui --dir . --pattern search-results [--entry @wcf|index|boot] [--file index.html] [--vendor-dir vendor/components/myui] [--force]',
+      '  wcf vendor install --prefix myui --dir vendor/components/myui [--pattern search-results] [--component heading ...] [--force]',
+      '  wcf vendor add --prefix myui --dir vendor/components/myui [--pattern search-results] [--component heading ...] [--force]',
       '  wcf vendor print-importmap --prefix myui --dir vendor/components/myui [--pattern search-results] [--format json|html] [--component ...]',
       '  wcf page create --pattern search-results --prefix myui --dir . [--entry @wcf|index|boot] [--vendor-dir vendor/components/myui]',
       '  wcf agent init --prefix myui --dir . [--pattern search-results]',
@@ -182,6 +186,7 @@ async function runVendor(cmd, args) {
       outDir: dir,
       pattern: args.pattern,
       components: args.components,
+      force: args.force,
     });
     printWarnings(res.warnings);
 
@@ -191,6 +196,29 @@ async function runVendor(cmd, args) {
         `Installed to: ${res.outDir}`,
         `prefix: ${res.prefix}`,
         `components: ${res.components.join(', ')}`,
+      ].join('\n'),
+    );
+    return;
+  }
+
+  if (sub === 'add') {
+    const prefix = requireValue(args.prefix, '--prefix');
+    const dir = requireValue(args.dir, '--dir');
+    const res = await vendorAdd({
+      prefix,
+      outDir: dir,
+      pattern: args.pattern,
+      components: args.components,
+      force: args.force,
+    });
+    printWarnings(res.warnings);
+    // eslint-disable-next-line no-console
+    console.log(
+      [
+        `Updated vendor: ${res.outDir}`,
+        `prefix: ${res.prefix}`,
+        `addedComponents: ${res.addedComponents.join(', ')}`,
+        `totalComponents: ${res.totalComponents}`,
       ].join('\n'),
     );
     return;
@@ -211,7 +239,7 @@ async function runVendor(cmd, args) {
     return;
   }
 
-  throw new Error('Usage: wcf vendor <install|print-importmap> ...');
+  throw new Error('Usage: wcf vendor <install|add|print-importmap> ...');
 }
 
 async function runAgent(cmd, args) {
@@ -269,6 +297,33 @@ async function runPage(cmd, args) {
   );
 }
 
+async function runInit(args) {
+  const prefix = requireValue(args.prefix, '--prefix');
+  const dir = args.dir ?? '.';
+  const pattern = requireValue(args.pattern, '--pattern');
+  const res = await initProject({
+    prefix,
+    dir,
+    pattern,
+    entry: args.entry,
+    vendorDir: args.vendorDir,
+    file: args.file,
+    force: args.force,
+  });
+  printWarnings(res.warnings);
+  // eslint-disable-next-line no-console
+  console.log(
+    [
+      `Project initialized: ${res.dir}`,
+      `file: ${res.file}`,
+      `pattern: ${res.pattern}`,
+      `entry: ${res.entry}`,
+      `vendorDir: ${res.vendorDir}`,
+      `components: ${res.components.join(', ')}`,
+    ].join('\n'),
+  );
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help || args.command.length === 0) {
@@ -288,6 +343,11 @@ async function main() {
 
   if (args.command[0] === 'vendor') {
     await runVendor(args.command, args);
+    process.exit(0);
+  }
+
+  if (args.command[0] === 'init') {
+    await runInit(args);
     process.exit(0);
   }
 
