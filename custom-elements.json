@@ -33555,6 +33555,1535 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/resource-list/resource-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "リソースリストコンポーネント\n\nDADS の Resource List を Web Components として提供します。",
+          "name": "DadsResourceList",
+          "cssProperties": [
+            {
+              "description": "背景色",
+              "name": "--dads-resource-list-background"
+            },
+            {
+              "description": "選択時背景色",
+              "name": "--dads-resource-list-background-selected"
+            },
+            {
+              "description": "無効時背景色",
+              "name": "--dads-resource-list-background-disabled"
+            },
+            {
+              "description": "文字色",
+              "name": "--dads-resource-list-color"
+            },
+            {
+              "description": "無効時文字色",
+              "name": "--dads-resource-list-color-disabled"
+            },
+            {
+              "description": "罫線色",
+              "name": "--dads-resource-list-border-color"
+            },
+            {
+              "description": "選択時罫線色",
+              "name": "--dads-resource-list-border-color-selected"
+            },
+            {
+              "description": "無効時罫線色",
+              "name": "--dads-resource-list-border-color-disabled"
+            },
+            {
+              "description": "上下余白",
+              "name": "--dads-resource-list-padding-block"
+            },
+            {
+              "description": "左右余白",
+              "name": "--dads-resource-list-padding-inline"
+            },
+            {
+              "description": "body 内要素間隔",
+              "name": "--dads-resource-list-gap"
+            },
+            {
+              "description": "contents 内行間",
+              "name": "--dads-resource-list-content-gap"
+            },
+            {
+              "description": "control 領域の最小ヒットサイズ",
+              "name": "--dads-resource-list-control-hit-area"
+            },
+            {
+              "description": "action 幅",
+              "name": "--dads-resource-list-action-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "右端アクション領域",
+              "name": "action"
+            },
+            {
+              "description": "ルート領域",
+              "name": "base"
+            },
+            {
+              "description": "本体領域（全体リンク時は <a>）",
+              "name": "body"
+            },
+            {
+              "description": "タイトル/ラベル/サポートテキスト領域",
+              "name": "contents"
+            },
+            {
+              "description": "選択コントロール領域",
+              "name": "control"
+            },
+            {
+              "description": "先頭アイコン領域",
+              "name": "icon"
+            },
+            {
+              "description": "ラベル領域",
+              "name": "label"
+            },
+            {
+              "description": "サブラベル領域",
+              "name": "sub"
+            },
+            {
+              "description": "サポートテキスト領域",
+              "name": "support"
+            },
+            {
+              "description": "タイトル領域",
+              "name": "title"
+            }
+          ],
+          "slots": [
+            {
+              "description": "右端アクション",
+              "name": "action"
+            },
+            {
+              "description": "チェックボックス/ラジオ等の選択コントロール",
+              "name": "control"
+            },
+            {
+              "description": "先頭アイコン",
+              "name": "icon"
+            },
+            {
+              "description": "ラベル",
+              "name": "label"
+            },
+            {
+              "description": "サブラベル",
+              "name": "sub"
+            },
+            {
+              "description": "サポートテキスト",
+              "name": "support"
+            },
+            {
+              "description": "タイトル",
+              "name": "title"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#actionSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#activateControl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#activatePrimaryTitleLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#bindSlotListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#body",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#boundControlHost",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#boundControlInput",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#clearAutoControlLabelledby",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "except",
+                  "default": "null",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#clearAutoControlLabelledbyFrom",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "candidate",
+                  "type": {
+                    "text": "Element | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#contentsPart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#controlPart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#controlSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureLabelSourceElementId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getHostHref",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleBodyClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleControlStateChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleFocusStateChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleHostClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#hasMeaningfulSlotContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#iconSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#instanceId",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "++resourceListInstanceCounter"
+            },
+            {
+              "kind": "method",
+              "name": "#isActionDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "action",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isContentsRegionClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": {
+                    "text": "readonly EventTarget[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isControlChecked",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isControlDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isControlRegionClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": {
+                    "text": "readonly EventTarget[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isInlineControlInteraction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isLabelSourceElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isSameRadioControlGroup",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "RadioControlGroup"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isSlottedContentsClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": {
+                    "text": "readonly EventTarget[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isUsablePrimaryTitleLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "link",
+                  "type": {
+                    "text": "HTMLAnchorElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isWholeControlInteraction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isWholeDelegatedLinkInteraction",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#observeSlotMutations",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pendingControlUpgradeTags",
+              "privacy": "private",
+              "default": "new Set<string>()"
+            },
+            {
+              "kind": "field",
+              "name": "#primaryTitleLink",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLAnchorElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#queueControlStateSync",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#queueControlUpgradeSync",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tagName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resolveControlAccessibleNameTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | HTMLInputElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveControlLabelReferenceIds",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveControlTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ControlTarget"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveControlTargetFromElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ControlTarget"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resolveControlTargetFromSlot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ControlTarget"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveLabelSourceElements",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resolvePrimaryActionElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolvePrimaryActionElementFromSlot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolvePrimaryTitleLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLAnchorElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolvePrimaryTitleLinkFromElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLAnchorElement | null"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "element",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resolvePrimaryTitleLinkFromSlot",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLAnchorElement | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveRadioControlGroup",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "RadioControlGroup | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#resolveRadioControlName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#slotMutationObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#slots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Array<HTMLSlotElement | null>"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#subSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#supportSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncActionStateFlags",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAll",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncBodyLinkAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncBodyMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncControlAccessibleName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncControlComponentSize",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncControlStateFlags",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncControlTarget",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncInteractionFlags",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPresenceFlags",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPrimaryFocusFlag",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPrimaryTitleLink",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncRelatedRadioRows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#titleSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#unbindControlListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#unbindSlotListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "dataInteraction",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dataInteractionChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "dataStyle",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "dataStyleChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "_oldValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                },
+                {
+                  "name": "newValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-resource-list', template: html` <div part=\"base\" id=\"base\"> <div part=\"body\" id=\"body\"> <span part=\"control\" id=\"control\"> <slot name=\"control\" id=\"control-slot\"></slot> </span> <span part=\"icon\" id=\"icon\"> <slot name=\"icon\" id=\"icon-slot\"></slot> </span> <div part=\"contents\" id=\"contents\"> <div part=\"title\" id=\"title\"> <slot name=\"title\" id=\"title-slot\"></slot> </div> <div part=\"label\" id=\"label\"> <slot name=\"label\" id=\"label-slot\"></slot> </div> <div part=\"support\" id=\"support\"> <slot name=\"support\" id=\"support-slot\"></slot> </div> </div> <div part=\"sub\" id=\"sub\"> <slot name=\"sub\" id=\"sub-slot\"></slot> </div> </div> <div part=\"action\" id=\"action\"> <slot name=\"action\" id=\"action-slot\"></slot> </div> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), resourceListTokens, resourceListStyles], 'minimal' ), attributes: [ PropertyAttr('dataStyle', 'data-style'), PropertyAttr('dataInteraction', 'data-interaction'), PropertyAttr('href'), PropertyAttr('target'), PropertyAttr('rel'), BooleanAttr('download'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "download",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "downloadChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "href",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "hrefChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "rel",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "relChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "target",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "targetChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'inline' | 'whole'"
+              },
+              "description": "操作方式（DADS互換）",
+              "name": "data-interaction"
+            },
+            {
+              "type": {
+                "text": "'list' | 'frame'"
+              },
+              "description": "スタイル種別（DADS互換）",
+              "name": "data-style"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "全体リンク時のdownload属性",
+              "name": "download"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "全体リンク時の遷移先URL",
+              "name": "href"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "全体リンク時のrel属性",
+              "name": "rel"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "全体リンク時のtarget属性",
+              "name": "target"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-resource-list",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/resource-list/resource-list.ts",
+          "definitionPath": "./packages/components/resource-list/resource-list.ts",
+          "typeDefinitionPath": "./packages/components/resource-list/resource-list.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "リソースリストコンポーネント仕様（アクセシビリティ注釈：リンク版 / フォームコントロール版）",
+              "categories": {
+                "semantics": [
+                  "項目全体は body（[part=\"body\"]）を主領域として構成し、title/label/support/sub/action を組み合わせて情報を提示します。",
+                  "リンク版（control なし）は data-interaction=\"whole\" かつ href 指定時に内部 body を <a> として扱い、項目全体をリンク化できます。",
+                  "フォームコントロール版（control あり）は選択コンポーネント（checkbox/radio）を受け取り、行選択UIとして利用できます。"
+                ],
+                "keyboard": [
+                  "リンク版では inline モード時に title 内リンクと action ボタンへ Tab で到達でき、whole モード時は body 全体リンクとして Enter で操作できます。",
+                  "フォームコントロール版では whole + control 構成時に body のクリック操作を control に委譲し、キーボード利用時は control 自体へフォーカスして Space で操作できます。",
+                  "action スロットがボタン/リンクの場合、独立した操作対象としてTab順に含まれます。"
+                ],
+                "zoom": [
+                  "title/label/support/sub は折り返しを前提としており、拡大時も情報が欠けない構造を想定します。",
+                  "action 幅は --dads-resource-list-action-width で調整でき、ズーム時の操作領域確保に対応します。"
+                ],
+                "states": [
+                  "control の checked/disabled 状態に応じて data-selected / data-disabled が反映され、視覚状態が同期します。",
+                  "data-style=\"list\" と data-style=\"frame\" で境界線と角丸の表示状態を切り替えます。",
+                  "whole モード時は body / action にフォーカス・ホバー表示を適用し、操作可能状態を明示します。"
+                ],
+                "labels": [
+                  "title スロットのテキストまたはリンクが主ラベルとして機能します。",
+                  "control をラベル非表示で使う場合は aria-label または aria-labelledby で操作名を補完します。",
+                  "support/sub を使って補足情報を視覚的に追加できます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "body",
+                  "title": "本体領域",
+                  "label": "[part=\"body\"]",
+                  "description": "リンク版の主要操作領域です。wholeリンク時は内部で <a> として扱われ、行全体のナビゲーション対象になります。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"body\"]"
+                  }
+                },
+                {
+                  "id": "title",
+                  "title": "タイトル領域",
+                  "label": "slot=\"title\"",
+                  "description": "項目名を提示する主ラベル領域です。リンクを配置する場合は文言が分かる表現にします。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"title\"]"
+                  }
+                },
+                {
+                  "id": "control",
+                  "title": "選択コントロール",
+                  "label": "slot=\"control\"",
+                  "description": "フォームコントロール版の主要操作領域です。checkbox/radio と行選択状態（selected/disabled）が連携します。",
+                  "category": "keyboard",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"control\"]"
+                  }
+                },
+                {
+                  "id": "action",
+                  "title": "右端アクション",
+                  "label": "slot=\"action\"",
+                  "description": "補助操作（メニュー等）の操作領域です。フォーカス時に視覚的強調が適用されます。",
+                  "category": "states",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"action\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "resource-list",
+            "install": {
+              "id": "resource-list",
+              "define": "defineResourceList",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/resource-list"
+              },
+              "tags": [
+                "dads-resource-list"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsResourceList",
+          "declaration": {
+            "name": "DadsResourceList",
+            "module": "packages/components/resource-list/resource-list.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/resource-list/resource-list.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/resource-list/resource-list.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-resource-list",
+          "declaration": {
+            "name": "DadsResourceList",
+            "module": "./packages/components/resource-list/resource-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/search-box/search-box.ts",
       "declarations": [
         {
@@ -45417,7 +46946,7 @@
         {
           "kind": "variable",
           "name": "checkboxStyles",
-          "default": "css` :host { display: inline-block; --_gap: var(--spacing-1, 4px); --_checkbox-size: var(--spacing-6, 24px); --_checkbox-border-width: var(--spacing-0-5, 2px); --_checkbox-scale: 1; --_label-padding-top: calc(var(--spacing-0-5, 2px) / 2); --_label-font-size: var(--font-size-16, 1rem); } :host([size=\"md\"]) { --_gap: var(--spacing-2, 8px); --_checkbox-size: var(--spacing-8, 32px); --_checkbox-border-width: var(--spacing-0-5, 2px); --_checkbox-scale: calc(20 / 14); --_label-padding-top: var(--spacing-1, 4px); --_label-font-size: var(--font-size-16, 1rem); } :host([size=\"lg\"]) { --_gap: var(--spacing-2, 8px); --_checkbox-size: var(--spacing-11, 44px); --_checkbox-border-width: calc(var(--spacing-0-5, 2px) + (var(--spacing-0-5, 2px) / 2)); --_checkbox-scale: calc(27 / 14); --_label-padding-top: var(--spacing-2-5, 10px); --_label-font-size: var(--font-size-17, 1.0625rem); } /* ========== ベース（label相当） ========== */ [part=\"base\"] { display: flex; align-items: start; gap: var(--_gap); width: fit-content; } /* ラベルがある場合のみ上下paddingを付与（DADS準拠） */ [part=\"base\"]:has([part=\"label\"]:not(:empty)) { padding-block: var(--spacing-2, 8px); } /* ========== チェックボックス枠 ========== */ [part=\"checkbox\"] { --_checkbox-hover-bg: transparent; display: flex; justify-content: center; align-items: center; flex-shrink: 0; width: var(--_checkbox-size); height: var(--_checkbox-size); border-radius: 12.5%; background-color: var(--_checkbox-hover-bg); } @media (any-hover: hover) { [part=\"checkbox\"]:has(:not(:focus, :disabled, [aria-disabled=\"true\"]):hover) { --_checkbox-hover-bg: var(--color-neutral-solid-gray-420); } } /* ========== ネイティブ input ========== */ [part=\"input\"] { --_base-color: var(--color-neutral-white); --_accent-color: var(--color-primitive-blue-900); --_accent-hover-color: var(--color-primitive-blue-1100); --_border-color: var(--color-neutral-solid-gray-600); --_border-hover-color: var(--color-neutral-black); --_check-color: var(--color-neutral-white); --_border-color-current: var(--_border-color); --_fill-color-current: var(--_base-color); margin: 0; -webkit-appearance: none; -moz-appearance: none; appearance: none; width: 75%; height: 75%; border-radius: calc(2 / 18 * 100%); background-color: var(--_fill-color-current); background-clip: padding-box; border: var(--_checkbox-border-width) solid var(--_border-color-current); } /* DADS HTML版は :focus で適用（クリック時も表示） */ [part=\"input\"]:focus { outline: var(--spacing-1, 4px) solid var(--color-neutral-black); outline-offset: var(--spacing-0-5, 2px); box-shadow: 0 0 0 var(--spacing-0-5, 2px) var(--color-primitive-yellow-300); } @media (any-hover: hover) { [part=\"input\"]:not(:disabled, [aria-disabled=\"true\"]):hover { --_border-color-current: var(--_border-hover-color); } } [part=\"input\"]:is(:checked, :indeterminate) { --_border-color-current: var(--_accent-color); --_fill-color-current: var(--_accent-color); } @media (any-hover: hover) { [part=\"input\"]:is(:checked, :indeterminate):not(:disabled, [aria-disabled=\"true\"]):hover { --_border-color-current: var(--_accent-hover-color); --_fill-color-current: var(--_accent-hover-color); } } [part=\"input\"]::before { display: none; width: var(--spacing-3-5, 14px); height: var(--spacing-3-5, 14px); background-color: var(--_check-color); transform-origin: left top; transform: scale(var(--_checkbox-scale, 1)); content: ''; } [part=\"input\"]:checked::before { display: block; clip-path: path( 'M5.6,11.2L12.65,4.15L11.25,2.75L5.6,8.4L2.75,5.55L1.35,6.95L5.6,11.2Z' ); } [part=\"input\"]:indeterminate::before { display: block; clip-path: path('M2,6h10v2H2Z'); } /* エラー状態（aria-invalid=true） */ [part=\"input\"][aria-invalid=\"true\"] { --_accent-color: var(--color-semantic-error-1); --_accent-hover-color: var(--color-primitive-red-1000); --_border-color: var(--color-semantic-error-1); --_border-hover-color: var(--color-primitive-red-1000); } /* 無効状態 */ [part=\"input\"]:is(:disabled, [aria-disabled=\"true\"]) { --_base-color: var(--color-neutral-solid-gray-50); --_accent-color: var(--color-neutral-solid-gray-300); --_accent-hover-color: var(--color-neutral-solid-gray-300); --_border-color: var(--color-neutral-solid-gray-300); --_border-hover-color: var(--color-neutral-solid-gray-300); } /* 強制カラーモード対応 */ @media (forced-colors: active) { [part=\"input\"], [part=\"input\"][aria-invalid=\"true\"] { --_accent-color: Highlight; --_accent-hover-color: Highlight; --_border-color: ButtonText; --_border-hover-color: ButtonText; --_check-color: HighlightText; } [part=\"input\"]:is(:disabled, [aria-disabled=\"true\"]) { --_accent-color: GrayText; --_accent-hover-color: GrayText; --_border-color: GrayText; --_border-hover-color: GrayText; --_check-color: Canvas; } } /* ========== ラベルテキスト ========== */ [part=\"label\"] { padding-block-start: var(--_label-padding-top); color: var(--color-neutral-solid-gray-800); font-weight: var(--font-weight-400, 400); font-size: var(--_label-font-size); line-height: var(--line-height-130, 1.3); font-family: var(--font-family-sans); letter-spacing: 0; } /* ========== 要否ラベル ========== */ [part=\"requirement\"] { padding-block-start: var(--_label-padding-top); margin-inline-start: var(--spacing-1, 4px); font-weight: var(--font-weight-400, 400); font-size: var(--_label-font-size); line-height: var(--line-height-130, 1.3); font-family: var(--font-family-sans); color: var(--color-semantic-error-1, #ec0000); } /* 要否ラベルが空の場合は非表示 */ [part=\"requirement\"]:empty { display: none; } /* ========== エラーテキスト ========== */ [part=\"error-text\"] { display: block; margin-block-start: var(--spacing-1, 4px); /* サイズに応じて動的に計算（checkbox + gap） */ padding-inline-start: calc(var(--_checkbox-size) + var(--_gap)); font-weight: var(--font-weight-400, 400); font-size: var(--font-size-16, 1rem); line-height: var(--line-height-150, 1.5); font-family: var(--font-family-sans); color: var(--color-semantic-error-1, #ec0000); } /* エラーテキストが空の場合は非表示 */ [part=\"error-text\"]:empty { display: none; } `"
+          "default": "css` :host { display: inline-block; --_gap: var(--spacing-1, 4px); --_checkbox-size: var(--spacing-6, 24px); --_checkbox-border-width: var(--spacing-0-5, 2px); --_checkbox-scale: 1; --_label-padding-top: calc(var(--spacing-0-5, 2px) / 2); --_label-font-size: var(--font-size-16, 1rem); } :host([size=\"md\"]) { --_gap: var(--spacing-2, 8px); --_checkbox-size: var(--spacing-8, 32px); --_checkbox-border-width: var(--spacing-0-5, 2px); --_checkbox-scale: calc(20 / 14); --_label-padding-top: var(--spacing-1, 4px); --_label-font-size: var(--font-size-16, 1rem); } :host([size=\"lg\"]) { --_gap: var(--spacing-2, 8px); --_checkbox-size: var(--spacing-11, 44px); --_checkbox-border-width: calc(var(--spacing-0-5, 2px) + (var(--spacing-0-5, 2px) / 2)); --_checkbox-scale: calc(27 / 14); --_label-padding-top: var(--spacing-2-5, 10px); --_label-font-size: var(--font-size-17, 1.0625rem); } /* ========== ベース（label相当） ========== */ [part=\"base\"] { display: flex; align-items: start; gap: var(--_gap); width: fit-content; } /* ラベルがある場合のみ上下paddingを付与（DADS準拠） */ [part=\"base\"]:has([part=\"label\"]:not(:empty)) { padding-block: var(--spacing-2, 8px); } /* ========== チェックボックス枠 ========== */ [part=\"checkbox\"] { --_checkbox-hover-bg: var(--dads-checkbox-force-hover-bg, transparent); display: flex; justify-content: center; align-items: center; flex-shrink: 0; width: var(--_checkbox-size); height: var(--_checkbox-size); border-radius: 12.5%; background-color: var(--_checkbox-hover-bg); } @media (any-hover: hover) { [part=\"checkbox\"]:has(:not(:focus, :disabled, [aria-disabled=\"true\"]):hover) { --_checkbox-hover-bg: var( --dads-checkbox-force-hover-bg, var(--color-neutral-solid-gray-420) ); } } /* ========== ネイティブ input ========== */ [part=\"input\"] { --_base-color: var(--color-neutral-white); --_accent-color: var(--color-primitive-blue-900); --_accent-hover-color: var(--color-primitive-blue-1100); --_border-color: var(--color-neutral-solid-gray-600); --_border-hover-color: var(--color-neutral-black); --_check-color: var(--color-neutral-white); --_border-color-current: var(--dads-checkbox-force-border-color, var(--_border-color)); --_fill-color-current: var(--dads-checkbox-force-fill-color, var(--_base-color)); margin: 0; -webkit-appearance: none; -moz-appearance: none; appearance: none; width: 75%; height: 75%; border-radius: calc(2 / 18 * 100%); background-color: var(--_fill-color-current); background-clip: padding-box; border: var(--_checkbox-border-width) solid var(--_border-color-current); } /* DADS HTML版は :focus で適用（クリック時も表示） */ [part=\"input\"]:focus { outline: var(--spacing-1, 4px) solid var(--color-neutral-black); outline-offset: var(--spacing-0-5, 2px); box-shadow: 0 0 0 var(--spacing-0-5, 2px) var(--color-primitive-yellow-300); } @media (any-hover: hover) { [part=\"input\"]:not(:disabled, [aria-disabled=\"true\"]):hover { --_border-color-current: var(--_border-hover-color); } } [part=\"input\"]:is(:checked, :indeterminate) { --_border-color-current: var(--dads-checkbox-force-border-color, var(--_accent-color)); --_fill-color-current: var(--dads-checkbox-force-fill-color, var(--_accent-color)); } @media (any-hover: hover) { [part=\"input\"]:is(:checked, :indeterminate):not(:disabled, [aria-disabled=\"true\"]):hover { --_border-color-current: var(--_accent-hover-color); --_fill-color-current: var(--_accent-hover-color); } } [part=\"input\"]::before { display: none; width: var(--spacing-3-5, 14px); height: var(--spacing-3-5, 14px); background-color: var(--_check-color); transform-origin: left top; transform: scale(var(--_checkbox-scale, 1)); content: ''; } [part=\"input\"]:checked::before { display: block; clip-path: path( 'M5.6,11.2L12.65,4.15L11.25,2.75L5.6,8.4L2.75,5.55L1.35,6.95L5.6,11.2Z' ); } [part=\"input\"]:indeterminate::before { display: block; clip-path: path('M2,6h10v2H2Z'); } /* エラー状態（aria-invalid=true） */ [part=\"input\"][aria-invalid=\"true\"] { --_accent-color: var(--color-semantic-error-1); --_accent-hover-color: var(--color-primitive-red-1000); --_border-color: var(--color-semantic-error-1); --_border-hover-color: var(--color-primitive-red-1000); } /* 無効状態 */ [part=\"input\"]:is(:disabled, [aria-disabled=\"true\"]) { --_base-color: var(--color-neutral-solid-gray-50); --_accent-color: var(--color-neutral-solid-gray-300); --_accent-hover-color: var(--color-neutral-solid-gray-300); --_border-color: var(--color-neutral-solid-gray-300); --_border-hover-color: var(--color-neutral-solid-gray-300); } /* 強制カラーモード対応 */ @media (forced-colors: active) { [part=\"input\"], [part=\"input\"][aria-invalid=\"true\"] { --_accent-color: Highlight; --_accent-hover-color: Highlight; --_border-color: ButtonText; --_border-hover-color: ButtonText; --_check-color: HighlightText; } [part=\"input\"]:is(:disabled, [aria-disabled=\"true\"]) { --_accent-color: GrayText; --_accent-hover-color: GrayText; --_border-color: GrayText; --_border-hover-color: GrayText; --_check-color: Canvas; } } /* ========== ラベルテキスト ========== */ [part=\"label\"] { padding-block-start: var(--_label-padding-top); color: var(--color-neutral-solid-gray-800); font-weight: var(--font-weight-400, 400); font-size: var(--_label-font-size); line-height: var(--line-height-130, 1.3); font-family: var(--font-family-sans); letter-spacing: 0; } /* ラベル未指定時は行ボックス由来の高さを持たせない */ [part=\"label\"]:empty { display: none; padding-block-start: 0; } /* ========== 要否ラベル ========== */ [part=\"requirement\"] { padding-block-start: var(--_label-padding-top); margin-inline-start: var(--spacing-1, 4px); font-weight: var(--font-weight-400, 400); font-size: var(--_label-font-size); line-height: var(--line-height-130, 1.3); font-family: var(--font-family-sans); color: var(--color-semantic-error-1, #ec0000); } /* 要否ラベルが空の場合は非表示 */ [part=\"requirement\"]:empty { display: none; } /* ========== エラーテキスト ========== */ [part=\"error-text\"] { display: block; margin-block-start: var(--spacing-1, 4px); /* サイズに応じて動的に計算（checkbox + gap） */ padding-inline-start: calc(var(--_checkbox-size) + var(--_gap)); font-weight: var(--font-weight-400, 400); font-size: var(--font-size-16, 1rem); line-height: var(--line-height-150, 1.5); font-family: var(--font-family-sans); color: var(--color-semantic-error-1, #ec0000); } /* エラーテキストが空の場合は非表示 */ [part=\"error-text\"]:empty { display: none; } `"
         }
       ],
       "exports": [
@@ -48524,6 +50053,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/resource-list/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/description-list/index.js"
           }
         },
@@ -50209,7 +51746,7 @@
         {
           "kind": "variable",
           "name": "radioStyles",
-          "default": "css` :host { display: inline-block; } /* ========== ベース（label相当） ========== */ [part=\"base\"] { display: flex; align-items: start; gap: var(--dads-radio-gap); width: fit-content; } /* ラベルがある場合のみ上下paddingを付与（DADS準拠） */ [part=\"base\"]:has([part=\"label\"]:not(:empty)) { padding-block: var(--dads-radio-base-padding-block); } /* ========== ラジオ外枠 ========== */ [part=\"radio\"] { --_radio-hover-bg: var(--dads-radio-hover-bg); display: flex; justify-content: center; align-items: center; flex-shrink: 0; width: var(--dads-radio-target-size); height: var(--dads-radio-target-size); border-radius: 50%; background-color: var(--_radio-hover-bg); } @media (any-hover: hover) { [part=\"radio\"]:has(:not(:focus, :disabled, [aria-disabled=\"true\"]):hover) { --_radio-hover-bg: var(--dads-radio-hover-bg-hover); } } /* ========== ネイティブ input[type=radio] ========== */ [part=\"input\"] { --_base-color: var(--dads-radio-input-base-color); --_accent-color: var(--dads-radio-input-accent-color); --_accent-hover-color: var(--dads-radio-input-accent-hover-color); --_border-color: var(--dads-radio-input-border-color); --_border-hover-color: var(--dads-radio-input-border-hover-color); --_border-color-current: var(--_border-color); --_dot-color: var(--_accent-color); position: relative; margin: 0; -webkit-appearance: none; -moz-appearance: none; appearance: none; width: var(--dads-radio-outer-size); height: var(--dads-radio-outer-size); border-radius: 51%; background-color: var(--_base-color); border: var(--dads-radio-border-width) solid var(--_border-color-current); } /* DADS HTML版は :focus で適用（クリック時も表示） */ [part=\"input\"]:focus { outline: var(--dads-radio-focus-outline-width) solid var(--dads-radio-focus-outline-color); outline-offset: var(--dads-radio-focus-outline-offset); box-shadow: 0 0 0 var(--dads-radio-focus-ring-width) var(--dads-radio-focus-ring-color); } @media (any-hover: hover) { [part=\"input\"]:not(:disabled, [aria-disabled=\"true\"]):hover { --_border-color-current: var(--_border-hover-color); } } [part=\"input\"]:checked { --_border-color-current: var(--_accent-color); } @media (any-hover: hover) { [part=\"input\"]:checked:not(:disabled, [aria-disabled=\"true\"]):hover { --_border-color-current: var(--_accent-hover-color); --_dot-color: var(--_accent-hover-color); } } [part=\"input\"]:checked::before { position: absolute; inset: 0; margin: auto; width: var(--dads-radio-inner-size); height: var(--dads-radio-inner-size); border-radius: 51%; background-color: var(--_dot-color); content: ''; } /* エラー状態（aria-invalid=true） */ [part=\"input\"][aria-invalid=\"true\"] { --_accent-color: var(--dads-radio-input-error-accent-color); --_accent-hover-color: var(--dads-radio-input-error-accent-hover-color); --_border-color: var(--dads-radio-input-error-border-color); --_border-hover-color: var(--dads-radio-input-error-border-hover-color); } /* 無効状態 */ [part=\"input\"]:is(:disabled, [aria-disabled=\"true\"]) { --_base-color: var(--dads-radio-input-disabled-base-color); --_accent-color: var(--dads-radio-input-disabled-accent-color); --_accent-hover-color: var(--dads-radio-input-disabled-accent-hover-color); --_border-color: var(--dads-radio-input-disabled-border-color); --_border-hover-color: var(--dads-radio-input-disabled-border-hover-color); } /* 強制カラーモード対応 */ @media (forced-colors: active) { [part=\"input\"], [part=\"input\"][aria-invalid=\"true\"] { --_accent-color: Highlight; --_accent-hover-color: Highlight; --_border-color: ButtonText; --_border-hover-color: ButtonText; } [part=\"input\"]:is(:disabled, [aria-disabled=\"true\"]) { --_accent-color: GrayText; --_accent-hover-color: GrayText; --_border-color: GrayText; --_border-hover-color: GrayText; } } /* ========== ラベルテキスト ========== */ [part=\"label\"] { padding-block-start: var(--dads-radio-label-padding-top); color: var(--dads-radio-label-color); font-weight: var(--dads-radio-font-weight); font-size: var(--dads-radio-label-font-size); line-height: var(--dads-radio-label-line-height); font-family: var(--dads-radio-font-family); letter-spacing: 0; } /* ========== 要否ラベル ========== */ [part=\"requirement\"] { padding-block-start: var(--dads-radio-label-padding-top); margin-inline-start: var(--dads-radio-requirement-margin); font-weight: var(--dads-radio-font-weight); font-size: var(--dads-radio-label-font-size); line-height: var(--dads-radio-label-line-height); font-family: var(--dads-radio-font-family); color: var(--dads-radio-requirement-color); } /* 要否ラベルが空の場合は非表示 */ [part=\"requirement\"]:empty { display: none; } /* ========== エラーテキスト ========== */ [part=\"error-text\"] { display: block; margin-block-start: var(--dads-radio-error-text-margin-block-start); /* サイズに応じて動的に計算（radio + gap） */ padding-inline-start: calc(var(--dads-radio-target-size) + var(--dads-radio-gap)); font-weight: var(--dads-radio-font-weight); font-size: var(--dads-radio-error-text-font-size); line-height: var(--dads-radio-error-text-line-height); font-family: var(--dads-radio-font-family); color: var(--dads-radio-error-text-color); } /* エラーテキストが空の場合は非表示 */ [part=\"error-text\"]:empty { display: none; } `"
+          "default": "css` :host { display: inline-block; } /* ========== ベース（label相当） ========== */ [part=\"base\"] { display: flex; align-items: start; gap: var(--dads-radio-gap); width: fit-content; } /* ラベルがある場合のみ上下paddingを付与（DADS準拠） */ [part=\"base\"]:has([part=\"label\"]:not(:empty)) { padding-block: var(--dads-radio-base-padding-block); } /* ========== ラジオ外枠 ========== */ [part=\"radio\"] { --_radio-hover-bg: var(--dads-radio-force-hover-bg, var(--dads-radio-hover-bg)); display: flex; justify-content: center; align-items: center; flex-shrink: 0; width: var(--dads-radio-target-size); height: var(--dads-radio-target-size); border-radius: 50%; background-color: var(--_radio-hover-bg); } @media (any-hover: hover) { [part=\"radio\"]:has(:not(:focus, :disabled, [aria-disabled=\"true\"]):hover) { --_radio-hover-bg: var(--dads-radio-force-hover-bg, var(--dads-radio-hover-bg-hover)); } } /* ========== ネイティブ input[type=radio] ========== */ [part=\"input\"] { --_base-color: var(--dads-radio-input-base-color); --_accent-color: var(--dads-radio-input-accent-color); --_accent-hover-color: var(--dads-radio-input-accent-hover-color); --_border-color: var(--dads-radio-input-border-color); --_border-hover-color: var(--dads-radio-input-border-hover-color); --_border-color-current: var(--dads-radio-force-border-color, var(--_border-color)); --_dot-color: var(--dads-radio-force-dot-color, var(--_accent-color)); position: relative; margin: 0; -webkit-appearance: none; -moz-appearance: none; appearance: none; width: var(--dads-radio-outer-size); height: var(--dads-radio-outer-size); border-radius: 51%; background-color: var(--_base-color); border: var(--dads-radio-border-width) solid var(--_border-color-current); } /* DADS HTML版は :focus で適用（クリック時も表示） */ [part=\"input\"]:focus { outline: var(--dads-radio-focus-outline-width) solid var(--dads-radio-focus-outline-color); outline-offset: var(--dads-radio-focus-outline-offset); box-shadow: 0 0 0 var(--dads-radio-focus-ring-width) var(--dads-radio-focus-ring-color); } @media (any-hover: hover) { [part=\"input\"]:not(:disabled, [aria-disabled=\"true\"]):hover { --_border-color-current: var(--_border-hover-color); } } [part=\"input\"]:checked { --_border-color-current: var(--dads-radio-force-border-color, var(--_accent-color)); } @media (any-hover: hover) { [part=\"input\"]:checked:not(:disabled, [aria-disabled=\"true\"]):hover { --_border-color-current: var(--dads-radio-force-border-color, var(--_accent-hover-color)); --_dot-color: var(--dads-radio-force-dot-color, var(--_accent-hover-color)); } } [part=\"input\"]:checked::before { position: absolute; inset: 0; margin: auto; width: var(--dads-radio-inner-size); height: var(--dads-radio-inner-size); border-radius: 51%; background-color: var(--_dot-color); content: ''; } /* エラー状態（aria-invalid=true） */ [part=\"input\"][aria-invalid=\"true\"] { --_accent-color: var(--dads-radio-input-error-accent-color); --_accent-hover-color: var(--dads-radio-input-error-accent-hover-color); --_border-color: var(--dads-radio-input-error-border-color); --_border-hover-color: var(--dads-radio-input-error-border-hover-color); } /* 無効状態 */ [part=\"input\"]:is(:disabled, [aria-disabled=\"true\"]) { --_base-color: var(--dads-radio-input-disabled-base-color); --_accent-color: var(--dads-radio-input-disabled-accent-color); --_accent-hover-color: var(--dads-radio-input-disabled-accent-hover-color); --_border-color: var(--dads-radio-input-disabled-border-color); --_border-hover-color: var(--dads-radio-input-disabled-border-hover-color); } /* 強制カラーモード対応 */ @media (forced-colors: active) { [part=\"input\"], [part=\"input\"][aria-invalid=\"true\"] { --_accent-color: Highlight; --_accent-hover-color: Highlight; --_border-color: ButtonText; --_border-hover-color: ButtonText; } [part=\"input\"]:is(:disabled, [aria-disabled=\"true\"]) { --_accent-color: GrayText; --_accent-hover-color: GrayText; --_border-color: GrayText; --_border-hover-color: GrayText; } } /* ========== ラベルテキスト ========== */ [part=\"label\"] { padding-block-start: var(--dads-radio-label-padding-top); color: var(--dads-radio-label-color); font-weight: var(--dads-radio-font-weight); font-size: var(--dads-radio-label-font-size); line-height: var(--dads-radio-label-line-height); font-family: var(--dads-radio-font-family); letter-spacing: 0; } /* ラベル未指定時は行ボックス由来の高さを持たせない */ [part=\"label\"]:empty { display: none; padding-block-start: 0; } /* ========== 要否ラベル ========== */ [part=\"requirement\"] { padding-block-start: var(--dads-radio-label-padding-top); margin-inline-start: var(--dads-radio-requirement-margin); font-weight: var(--dads-radio-font-weight); font-size: var(--dads-radio-label-font-size); line-height: var(--dads-radio-label-line-height); font-family: var(--dads-radio-font-family); color: var(--dads-radio-requirement-color); } /* 要否ラベルが空の場合は非表示 */ [part=\"requirement\"]:empty { display: none; } /* ========== エラーテキスト ========== */ [part=\"error-text\"] { display: block; margin-block-start: var(--dads-radio-error-text-margin-block-start); /* サイズに応じて動的に計算（radio + gap） */ padding-inline-start: calc(var(--dads-radio-target-size) + var(--dads-radio-gap)); font-weight: var(--dads-radio-font-weight); font-size: var(--dads-radio-error-text-font-size); line-height: var(--dads-radio-error-text-line-height); font-family: var(--dads-radio-font-family); color: var(--dads-radio-error-text-color); } /* エラーテキストが空の場合は非表示 */ [part=\"error-text\"]:empty { display: none; } `"
         }
       ],
       "exports": [
@@ -50987,6 +52524,168 @@
           "declaration": {
             "name": "ResetCard",
             "module": "packages/components/reset-card-demo.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/resource-list/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/resource-list/resource-list.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultResourceList",
+          "declaration": {
+            "name": "defineDefaultResourceList",
+            "module": "./resource-list-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineResourceList",
+          "declaration": {
+            "name": "defineResourceList",
+            "module": "./resource-list-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/resource-list/resource-list-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultResourceList",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineResourceList",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-resource-list`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultResourceList",
+          "declaration": {
+            "name": "defineDefaultResourceList",
+            "module": "packages/components/resource-list/resource-list-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineResourceList",
+          "declaration": {
+            "name": "defineResourceList",
+            "module": "packages/components/resource-list/resource-list-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/resource-list/resource-list-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "resourceListStyles",
+          "default": "css` :host { display: block; --_dads-resource-list-body-background: var(--dads-resource-list-background); --_dads-resource-list-action-background: var(--dads-resource-list-background); --_dads-resource-list-color: var(--dads-resource-list-color); --_dads-resource-list-border-color: var(--dads-resource-list-border-color); --_dads-resource-list-title-color: var(--dads-resource-list-title-color); --_dads-resource-list-whole-outline-width: var(--dads-resource-list-focus-outline-width); --_dads-resource-list-outline-offset: calc(-1 / 16 * 1rem); --_dads-resource-list-action-end-radius: 0; } :host([data-style='frame']) { --_dads-resource-list-action-end-radius: var(--dads-resource-list-border-radius); } :host([data-has-action]) { --_dads-resource-list-whole-outline-width: var(--dads-resource-list-whole-focus-outline-width); } :host([data-selected]) { --_dads-resource-list-body-background: var(--dads-resource-list-background-selected); --_dads-resource-list-action-background: var(--dads-resource-list-background-selected); --_dads-resource-list-border-color: var(--dads-resource-list-border-color-selected); } :host([data-disabled]) { --_dads-resource-list-body-background: var(--dads-resource-list-background-disabled); --_dads-resource-list-action-background: var(--dads-resource-list-background-disabled); --_dads-resource-list-color: var(--dads-resource-list-color-disabled); --_dads-resource-list-border-color: var(--dads-resource-list-border-color-disabled); --_dads-resource-list-title-color: var(--dads-resource-list-color-disabled); } [part='base'] { position: relative; display: flex; align-items: stretch; font-family: var(--dads-resource-list-font-family); font-size: var(--dads-resource-list-font-size); line-height: var(--dads-resource-list-line-height); letter-spacing: var(--dads-resource-list-letter-spacing); color: var(--_dads-resource-list-color); overflow-wrap: anywhere; border: 1px solid transparent; border-block-end-color: var(--_dads-resource-list-border-color); } :host([data-style='frame']) [part='base'] { border-color: var(--_dads-resource-list-border-color); border-radius: var(--dads-resource-list-border-radius); } [part='body'] { position: relative; z-index: 0; display: flex; flex: 1 1 auto; align-items: center; min-inline-size: 0; gap: var(--dads-resource-list-gap); color: inherit; text-decoration: none; border-radius: inherit; background: var(--_dads-resource-list-body-background); padding: var(--dads-resource-list-padding-block) var(--dads-resource-list-padding-inline); outline: 0 solid transparent; outline-offset: var(--_dads-resource-list-outline-offset); } :host([data-has-action]) [part='body'] { border-start-end-radius: 0; border-end-end-radius: 0; } [part='body']:focus { outline: var(--dads-resource-list-focus-outline-width) solid transparent; outline-offset: 0; } :host([data-interactive-whole]) [part='body']:focus-visible, :host([data-whole-link][data-primary-focus]) [part='body'] { z-index: 2; outline: var(--_dads-resource-list-whole-outline-width) solid var(--dads-resource-list-focus-outline-color); outline-offset: var(--_dads-resource-list-outline-offset); box-shadow: inset 0 0 0 var(--dads-resource-list-focus-ring-width) var(--dads-resource-list-focus-ring-color); } @media (any-hover: hover) { :host([data-interactive-whole]:not([data-primary-focus]):not([data-disabled])) [part='body']:hover:not(:focus-visible) { background: var(--dads-resource-list-hover-background); outline: var(--dads-resource-list-hover-outline-width) solid var(--dads-resource-list-focus-outline-color); outline-offset: var(--_dads-resource-list-outline-offset); } :host([data-has-control][data-interaction='inline']:not([data-disabled]):not([data-selected])) [part='body']:hover [part='control'] slot::slotted(dads-checkbox) { --dads-checkbox-force-hover-bg: var(--color-neutral-solid-gray-420, #949494); --dads-checkbox-force-border-color: var(--color-neutral-black, #000000); } :host([data-has-control][data-interaction='inline'][data-selected]:not([data-disabled])) [part='body']:hover [part='control'] slot::slotted(dads-checkbox) { --dads-checkbox-force-hover-bg: var(--color-neutral-solid-gray-420, #949494); --dads-checkbox-force-border-color: var(--color-primitive-blue-1100, #000f6b); --dads-checkbox-force-fill-color: var(--color-primitive-blue-1100, #000f6b); } :host([data-has-control][data-interaction='inline']:not([data-disabled]):not([data-selected])) [part='body']:hover [part='control'] slot::slotted(dads-radio) { --dads-radio-force-hover-bg: var(--dads-radio-hover-bg-hover, var(--color-neutral-solid-gray-420, #949494)); --dads-radio-force-border-color: var(--color-neutral-black, #000000); } :host([data-has-control][data-interaction='inline'][data-selected]:not([data-disabled])) [part='body']:hover [part='control'] slot::slotted(dads-radio) { --dads-radio-force-hover-bg: var(--dads-radio-hover-bg-hover, var(--color-neutral-solid-gray-420, #949494)); --dads-radio-force-border-color: var(--color-primitive-blue-1100, #000f6b); --dads-radio-force-dot-color: var(--color-primitive-blue-1100, #000f6b); } } [part='control'], [part='icon'], [part='label'], [part='support'], [part='sub'], [part='action'] { display: none; flex-shrink: 0; } :host([data-has-control]) [part='control'], :host([data-has-icon]) [part='icon'], :host([data-has-label]) [part='label'], :host([data-has-support]) [part='support'], :host([data-has-sub]) [part='sub'], :host([data-has-action]) [part='action'] { display: block; } :host([data-has-action]) [part='action'] { display: flex; } :host([data-has-control]) [part='control'] { align-self: stretch; display: flex; align-items: center; justify-content: center; min-inline-size: var(--dads-resource-list-control-hit-area); margin-block: calc(-1 * var(--dads-resource-list-padding-block)); margin-inline-start: calc(-1 * var(--dads-resource-list-padding-inline)); margin-inline-end: 0; padding-block: var(--dads-resource-list-padding-block); padding-inline: var(--dads-resource-list-padding-inline) 0; } :host([data-has-control][data-interaction='inline']:not([data-disabled])) [part='control'] { cursor: auto; } [part='control'] slot { display: contents; } [part='control'] slot::slotted(dads-checkbox), [part='control'] slot::slotted(dads-radio) { align-self: stretch; display: flex; align-items: center; margin: calc(-1 * var(--dads-resource-list-padding-block)) calc(-1 * var(--dads-resource-list-padding-block)); margin-inline-end: 0; padding: var(--dads-resource-list-padding-block) var(--dads-resource-list-padding-inline); padding-inline-end: 0; } :host([data-has-icon]) [part='icon'] { align-self: center; display: flex; align-items: center; justify-content: center; line-height: 0; } [part='icon'] slot { display: block; line-height: 0; } [part='icon'] slot::slotted(svg), [part='icon'] slot::slotted(img) { display: block; } [part='contents'] { display: none; width: 0; min-inline-size: 0; flex: 1 1 auto; flex-direction: column; gap: var(--dads-resource-list-content-gap); font-size: var(--dads-resource-list-font-size); font-weight: 400; line-height: var(--dads-resource-list-line-height); letter-spacing: var(--dads-resource-list-letter-spacing); } :host([data-has-contents]) [part='contents'] { display: flex; justify-content: center; } [part='title'] { margin: 0; color: var(--_dads-resource-list-title-color); font-size: var(--dads-resource-list-title-font-size); font-weight: var(--dads-resource-list-title-font-weight); line-height: var(--dads-resource-list-title-line-height); letter-spacing: var(--dads-resource-list-title-letter-spacing); } [part='title'] slot::slotted(*) { margin: 0; max-inline-size: 100%; } [part='title'] slot::slotted(a) { color: var(--dads-resource-list-title-link-color); text-decoration: underline; text-decoration-thickness: var(--dads-resource-list-title-underline-thickness); text-underline-offset: var(--dads-resource-list-title-underline-offset); } [part='title'] slot::slotted(a), [part='title'] slot::slotted(label) { display: block; isolation: isolate; margin-block: calc(-8 / 16 * 1rem); padding-block: calc(8 / 16 * 1rem); } [part='title'] slot::slotted(a:focus) { outline: var(--dads-resource-list-focus-outline-width) solid transparent; outline-offset: 0; } :host(:not([data-whole-link])) [part='title'] slot::slotted(a:focus-visible) { display: block; margin-block: 0; padding-block: 0; border-radius: var(--border-radius-4, 0.25rem); outline: var(--dads-resource-list-focus-outline-width) solid var(--dads-resource-list-focus-outline-color); outline-offset: var(--dads-resource-list-focus-outline-offset); background: var(--dads-resource-list-focus-ring-color); box-shadow: 0 0 0 var(--dads-resource-list-focus-ring-width) var(--dads-resource-list-focus-ring-color); } :host([data-whole-link]) [part='title'] { color: var(--dads-resource-list-title-link-color); text-decoration: underline; text-decoration-thickness: var(--dads-resource-list-title-underline-thickness); text-underline-offset: var(--dads-resource-list-title-underline-offset); } @media (any-hover: hover) { [part='title'] slot::slotted(a:hover) { color: var(--dads-resource-list-title-link-color-hover); text-decoration-thickness: var(--dads-resource-list-title-underline-thickness-hover); } :host([data-whole-link]) [part='body']:hover:not(:focus-visible) [part='title'] { color: var(--dads-resource-list-title-link-color-hover); text-decoration-thickness: var(--dads-resource-list-title-underline-thickness-hover); } } [part='title'] slot::slotted(a:active) { color: var(--dads-resource-list-title-link-color-active); text-decoration-thickness: var(--dads-resource-list-title-underline-thickness); } :host([data-whole-link]) [part='body']:active [part='title'] { color: var(--dads-resource-list-title-link-color-active); text-decoration-thickness: var(--dads-resource-list-title-underline-thickness); } [part='label'] slot::slotted(*), [part='support'] slot::slotted(*), [part='sub'] slot::slotted(*) { margin: 0; max-inline-size: 100%; } [part='label'] { order: -1; } [part='sub'] { display: flex; align-items: center; white-space: nowrap; font-size: var(--dads-resource-list-font-size); line-height: var(--dads-resource-list-line-height); letter-spacing: var(--dads-resource-list-letter-spacing); } [part='action'] { position: relative; align-self: stretch; align-items: stretch; overflow: hidden; border-start-end-radius: var(--_dads-resource-list-action-end-radius); border-end-end-radius: var(--_dads-resource-list-action-end-radius); background: var(--_dads-resource-list-action-background); color: inherit; } :host([data-action-disabled]) [part='action'] { background: var( --dads-resource-list-background-disabled, var(--color-neutral-solid-gray-50, #f2f2f2) ); color: var(--dads-resource-list-color-disabled, var(--color-neutral-solid-gray-420, #949494)); pointer-events: none; } [part='action'] slot::slotted(button), [part='action'] slot::slotted(a) { box-sizing: border-box; display: flex; align-items: center; justify-content: center; inline-size: var(--dads-resource-list-action-width); min-inline-size: var(--dads-resource-list-action-width); block-size: 100%; border: 0; border-start-start-radius: 0; border-end-start-radius: 0; border-start-end-radius: var(--_dads-resource-list-action-end-radius); border-end-end-radius: var(--_dads-resource-list-action-end-radius); background: transparent; color: inherit; line-height: 1; text-decoration: none; padding: 0; } [part='action'] slot::slotted(button:focus), [part='action'] slot::slotted(a:focus) { outline: var(--dads-resource-list-focus-outline-width) solid transparent; outline-offset: 0; } [part='action'] slot::slotted(button:focus-visible), [part='action'] slot::slotted(a:focus-visible) { outline: var(--dads-resource-list-focus-outline-width) solid var(--dads-resource-list-focus-outline-color); outline-offset: calc(-3 / 16 * 1rem); background: var(--dads-resource-list-focus-ring-color); box-shadow: none; } [part='action'] slot::slotted(button:disabled), [part='action'] slot::slotted([aria-disabled='true']) { background: transparent; color: inherit; cursor: default; pointer-events: none; } @media (any-hover: hover) { :host(:not([data-action-disabled])) [part='action']:hover { z-index: 2; background: var(--dads-resource-list-hover-background, var(--color-neutral-solid-gray-50, #f2f2f2)); outline: var(--dads-resource-list-hover-outline-width) solid var(--dads-resource-list-focus-outline-color); outline-offset: var(--_dads-resource-list-outline-offset); } } @media (forced-colors: active) { :host([data-interactive-whole]) [part='body']:focus-visible, :host([data-whole-link][data-primary-focus]) [part='body'] { outline-color: ButtonText; box-shadow: inset 0 0 0 var(--dads-resource-list-focus-ring-width) CanvasText; } :host(:not([data-whole-link])) [part='title'] slot::slotted(a:focus-visible) { outline-color: ButtonText; box-shadow: 0 0 0 var(--dads-resource-list-focus-ring-width) ButtonText; } [part='action'] slot::slotted(button:focus-visible), [part='action'] slot::slotted(a:focus-visible) { outline-color: ButtonText; background: Canvas; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "resourceListStyles",
+          "declaration": {
+            "name": "resourceListStyles",
+            "module": "packages/components/resource-list/resource-list-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/resource-list/resource-list-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "resourceListLocalTokens",
+          "default": "css`${resourceListLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "resourceListSemanticTokens",
+          "default": "css`${resourceListSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "resourceListTokens",
+          "default": "css` ${resourceListSemanticTokensText} ${resourceListLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "resourceListLocalTokens",
+          "declaration": {
+            "name": "resourceListLocalTokens",
+            "module": "packages/components/resource-list/resource-list-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resourceListSemanticTokens",
+          "declaration": {
+            "name": "resourceListSemanticTokens",
+            "module": "packages/components/resource-list/resource-list-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resourceListTokens",
+          "declaration": {
+            "name": "resourceListTokens",
+            "module": "packages/components/resource-list/resource-list-tokens.ts"
           }
         }
       ]

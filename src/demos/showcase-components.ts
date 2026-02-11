@@ -69,6 +69,189 @@ const renderChipTagPersonChip = (label: string) => `
   </dads-chip-tag>
 `;
 
+const RESOURCE_LIST_DEMO_ICON_SVG = `
+  <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true">
+    <path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z"/>
+  </svg>
+`;
+
+const RESOURCE_LIST_ACTION_ICON_SVG = `
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true">
+    <circle cx="12" cy="4.5" r="1.5"/>
+    <circle cx="12" cy="12" r="1.5"/>
+    <circle cx="12" cy="19.5" r="1.5"/>
+  </svg>
+`;
+
+const RESOURCE_LIST_ACTION_DOWNLOAD_ICON_SVG = `
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true">
+    <path d="M12 3a1 1 0 0 1 1 1v8.58l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.42L11 12.58V4a1 1 0 0 1 1-1Zm-6 14a1 1 0 0 1 1 1v2h10v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"/>
+  </svg>
+`;
+
+const RESOURCE_LIST_AVATAR_ICON_SVG = `
+  <svg slot="icon" width="40" height="40" viewBox="0 0 40 40" fill="currentcolor" aria-hidden="true">
+    <path d="M27 14C27 17.866 23.866 21 20 21C16.134 21 13 17.866 13 14C13 10.134 16.134 7 20 7C23.866 7 27 10.134 27 14Z"/>
+    <path d="M4.26562 32.3465C7.68269 27.3096 13.4549 24 20.0001 24C26.5458 24 32.3184 27.31 35.7353 32.3475C32.0736 37.0071 26.3868 40 20.0009 40C13.6145 40 7.92729 37.0067 4.26562 32.3465Z"/>
+    <path d="M39 20C39 9.50659 30.4934 1 20 1C9.50659 1 1 9.50659 1 20C1 30.4934 9.50659 39 20 39L20.0009 40C8.95518 40 0 31.0457 0 20C0 8.9543 8.9543 0 20 0C31.0457 0 40 8.9543 40 20C40 31.0457 31.0466 40 20.0009 40L20 39C30.4934 39 39 30.4934 39 20Z"/>
+  </svg>
+`;
+
+type ResourceListControlKind = 'checkbox' | 'radio';
+type ResourceListActionKind = 'menu' | 'download';
+
+type ResourceListDemoRow = Readonly<{
+  style?: 'list' | 'frame';
+  interaction?: 'inline' | 'whole';
+  className?: string;
+  href?: string;
+  title: string;
+  titleHref?: string;
+  label?: string;
+  labelHtml?: string;
+  support?: string;
+  supportHtml?: string;
+  sub?: string;
+  subHtml?: string;
+  iconHtml?: string;
+  control?: ResourceListControlKind;
+  controlChecked?: boolean;
+  controlDisabled?: boolean;
+  controlName?: string;
+  controlAriaLabel?: string;
+  controlAriaLabelledby?: string;
+  action?: ResourceListActionKind;
+  actionHtml?: string;
+  actionAriaLabel?: string;
+  componentAttrs?: string;
+}>;
+
+type ResourceListControlRenderOptions = Readonly<{
+  ariaLabelledby?: string;
+}>;
+
+function injectSlotIdIfMissing(markup: string, slotName: string, id: string): string {
+  if (!markup.includes(`slot="${slotName}"`)) return markup;
+  if (/\sid=/.test(markup)) return markup;
+  return markup.replace(`slot="${slotName}"`, `slot="${slotName}" id="${id}"`);
+}
+
+function renderResourceListControl(
+  row: ResourceListDemoRow,
+  options: ResourceListControlRenderOptions = {}
+): string {
+  if (row.control === 'checkbox') {
+    const checked = row.controlChecked ? ' checked' : '';
+    const disabled = row.controlDisabled ? ' disabled' : '';
+    const ariaLabel = row.controlAriaLabel?.trim();
+    const ariaLabelledby = (row.controlAriaLabelledby ?? options.ariaLabelledby)?.trim();
+    const ariaLabelAttr = ariaLabel ? ` aria-label="${ariaLabel}"` : '';
+    const ariaLabelledbyAttr = !ariaLabel && ariaLabelledby ? ` aria-labelledby="${ariaLabelledby}"` : '';
+    return `<dads-checkbox slot="control"${checked}${disabled}${ariaLabelAttr}${ariaLabelledbyAttr}></dads-checkbox>`;
+  }
+  if (row.control === 'radio') {
+    const checked = row.controlChecked ? ' checked' : '';
+    const disabled = row.controlDisabled ? ' disabled' : '';
+    const name = row.controlName ?? 'resource-list-demo-radio';
+    const ariaLabel = row.controlAriaLabel?.trim();
+    const ariaLabelledby = (row.controlAriaLabelledby ?? options.ariaLabelledby)?.trim();
+    const ariaLabelAttr = ariaLabel ? ` aria-label="${ariaLabel}"` : '';
+    const ariaLabelledbyAttr = !ariaLabel && ariaLabelledby ? ` aria-labelledby="${ariaLabelledby}"` : '';
+    return `<dads-radio slot="control" name="${name}"${checked}${disabled}${ariaLabelAttr}${ariaLabelledbyAttr}></dads-radio>`;
+  }
+  return '';
+}
+
+function renderResourceListAction(row: ResourceListDemoRow): string {
+  if (row.actionHtml) return row.actionHtml;
+
+  if (row.action === 'menu') {
+    const ariaLabel = row.actionAriaLabel ?? 'メニュー';
+    return `<button slot="action" type="button" aria-label="${ariaLabel}">${RESOURCE_LIST_ACTION_ICON_SVG}</button>`;
+  }
+  if (row.action === 'download') {
+    const ariaLabel = row.actionAriaLabel ?? 'ダウンロード';
+    return `<button slot="action" type="button" aria-label="${ariaLabel}">${RESOURCE_LIST_ACTION_DOWNLOAD_ICON_SVG}</button>`;
+  }
+  return '';
+}
+
+function renderResourceListActionMenu(
+  menuId: string,
+  menuLabel: string,
+  menuItems: readonly string[],
+  triggerLabel = `${menuLabel}を開く`,
+): string {
+  const summaryLabel = triggerLabel.trim() || 'メニューを開く';
+  return `
+    <details slot="action" class="resource-list-account-menu">
+      <summary aria-label="${summaryLabel}" aria-haspopup="menu" aria-controls="${menuId}">
+        ${RESOURCE_LIST_ACTION_ICON_SVG}
+      </summary>
+      <ul id="${menuId}" role="menu" aria-label="${menuLabel}">
+        ${menuItems.map((item) => `<li role="none"><button type="button" role="menuitem">${item}</button></li>`).join('')}
+      </ul>
+    </details>
+  `;
+}
+
+function renderResourceListAccountActionMenu(menuId: string, accountName: string): string {
+  const contextualLabel = `${accountName}のアカウント操作`;
+  return renderResourceListActionMenu(menuId, contextualLabel, [
+    'プロフィールを見る',
+    '権限を変更',
+    '招待を再送',
+  ], `${contextualLabel}を開く`);
+}
+
+function renderResourceListDemoRow(row: ResourceListDemoRow, rowKey = 'resource-list-row'): string {
+  const attrs = [
+    `data-style="${row.style ?? 'list'}"`,
+    `data-interaction="${row.interaction ?? 'inline'}"`,
+  ];
+
+  if (row.className) attrs.push(`class="${row.className}"`);
+  if (row.href) attrs.push(`href="${row.href}"`);
+  if (row.componentAttrs) attrs.push(row.componentAttrs.trim());
+
+  const titleId = `${rowKey}-title`;
+  const supportId = `${rowKey}-support`;
+  const controlAriaLabelledby =
+    row.control && (row.support || row.supportHtml)
+      ? `${titleId} ${supportId}`
+      : row.control
+        ? titleId
+        : undefined;
+
+  const titleMarkup = row.titleHref
+    ? `<a slot="title" id="${titleId}" href="${row.titleHref}">${row.title}</a>`
+    : `<span slot="title" id="${titleId}">${row.title}</span>`;
+
+  const labelMarkup = row.labelHtml
+    ? row.labelHtml
+    : (row.label ? `<span slot="label">${row.label}</span>` : '');
+
+  const supportMarkup = row.supportHtml
+    ? injectSlotIdIfMissing(row.supportHtml, 'support', supportId)
+    : (row.support ? `<span slot="support" id="${supportId}">${row.support}</span>` : '');
+
+  const subMarkup = row.subHtml
+    ? row.subHtml
+    : (row.sub ? `<span slot="sub">${row.sub}</span>` : '');
+
+  return `
+    <dads-resource-list ${attrs.join(' ')}>
+      ${renderResourceListControl(row, { ariaLabelledby: controlAriaLabelledby })}
+      ${row.iconHtml ?? ''}
+      ${titleMarkup}
+      ${labelMarkup}
+      ${supportMarkup}
+      ${subMarkup}
+      ${renderResourceListAction(row)}
+    </dads-resource-list>
+  `;
+}
+
 const NOTIFICATION_BANNER_TYPES = ['success', 'error', 'warning', 'info-1', 'info-2'] as const;
 type NotificationBannerDemoType = (typeof NOTIFICATION_BANNER_TYPES)[number];
 
@@ -3587,6 +3770,999 @@ export const demos = {
       </section>
     </div>
   `,
+
+  resourceList: () => {
+    const annotateLinkRow = renderResourceListDemoRow({
+      style: 'frame',
+      interaction: 'whole',
+      className: 'resource-list-figma-item',
+      href: '/resource-list-demo',
+      iconHtml: RESOURCE_LIST_DEMO_ICON_SVG,
+      title: 'リストタイトル',
+      label: 'ラベル',
+      support: 'サポートテキスト',
+      sub: 'サブラベル',
+      action: 'menu',
+      actionAriaLabel: 'メニュー',
+    }, 'resource-list-annotate-link');
+
+    const annotateControlRow = renderResourceListDemoRow({
+      style: 'frame',
+      interaction: 'whole',
+      className: 'resource-list-figma-item',
+      control: 'checkbox',
+      controlChecked: true,
+      iconHtml: RESOURCE_LIST_DEMO_ICON_SVG,
+      title: 'リストタイトル',
+      label: 'ラベル',
+      support: 'サポートテキスト',
+      sub: 'サブラベル',
+      action: 'menu',
+      actionAriaLabel: 'メニュー',
+    }, 'resource-list-annotate-control');
+
+    const examRows: ResourceListDemoRow[] = [
+      { style: 'frame', className: 'resource-list-figma-item', title: '健康診断', support: '2025年度', sub: '受診日：2025/04/30' },
+      { style: 'frame', className: 'resource-list-figma-item', title: '健康診断', support: '2024年度', sub: '受診日：2024/11/24' },
+      { style: 'frame', className: 'resource-list-figma-item', title: '健康診断', support: '2023年度', sub: '受診日：2023/10/13' },
+    ];
+
+    const payrollRows: ResourceListDemoRow[] = [
+      { style: 'frame', className: 'resource-list-figma-item resource-list-figma-item--payroll', title: '給与明細', support: '2025年10月分', sub: '支給日：2025/11/14', action: 'download' },
+      { style: 'frame', className: 'resource-list-figma-item resource-list-figma-item--payroll', title: '給与明細', support: '2025年9月分', sub: '支給日：2025/10/15', action: 'download' },
+      { style: 'frame', className: 'resource-list-figma-item resource-list-figma-item--payroll', title: '給与明細', support: '2025年8月分', sub: '支給日：2025/9/15', action: 'download' },
+    ];
+
+    const accountRows: ResourceListDemoRow[] = [
+      {
+        style: 'list',
+        className: 'resource-list-figma-item resource-list-figma-item--account',
+        title: 'デジ田 太郎',
+        titleHref: '#',
+        support: 'taro-dejita@example.com',
+        sub: '招待中',
+        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-1', 'デジ田 太郎'),
+      },
+      {
+        style: 'list',
+        className: 'resource-list-figma-item resource-list-figma-item--account',
+        title: 'デジ山 ひかり',
+        titleHref: '#',
+        support: 'hikari-dejiyama@example.com',
+        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-2', 'デジ山 ひかり'),
+      },
+      {
+        style: 'list',
+        className: 'resource-list-figma-item resource-list-figma-item--account',
+        title: '出而足 長一郎',
+        titleHref: '#',
+        support: 'choichiro-dejitaru@example.com',
+        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-3', '出而足 長一郎'),
+      },
+    ];
+
+    const paymentRows: ResourceListDemoRow[] = [
+      {
+        style: 'frame',
+        interaction: 'whole',
+        className: 'resource-list-figma-item',
+        control: 'radio',
+        controlName: 'resource-list-payment',
+        controlChecked: true,
+        title: 'クレジットカード払い',
+        label: 'おすすめ',
+        support: 'VISA, Master、JCB対応',
+      },
+      {
+        style: 'frame',
+        interaction: 'whole',
+        className: 'resource-list-figma-item',
+        control: 'radio',
+        controlName: 'resource-list-payment',
+        title: '銀行振込',
+        supportHtml: '<span slot="support">入金確認後の商品発送となります。<br>振り込み手数料はお客様負担となります。</span>',
+      },
+      {
+        style: 'frame',
+        interaction: 'whole',
+        className: 'resource-list-figma-item',
+        control: 'radio',
+        controlName: 'resource-list-payment',
+        title: 'コンビニ決済',
+        supportHtml: '<span slot="support">入金確認後の商品発送となります。<br>全国のコンビニで利用可能です。</span>',
+      },
+    ];
+
+    const roomRows: ResourceListDemoRow[] = [
+      {
+        style: 'frame',
+        interaction: 'whole',
+        className: 'resource-list-figma-item resource-list-figma-item--room-menu',
+        control: 'radio',
+        controlName: 'resource-list-room',
+        controlChecked: true,
+        title: '会議室A',
+        support: '25階North',
+        actionHtml: renderResourceListActionMenu('resource-list-room-menu-1', '会議室Aのサブアクション', [
+          '空き状況を確認',
+          '予約を変更',
+          '設備を表示',
+        ]),
+      },
+      {
+        style: 'frame',
+        interaction: 'whole',
+        className: 'resource-list-figma-item resource-list-figma-item--room-menu',
+        control: 'radio',
+        controlName: 'resource-list-room',
+        title: '会議室B',
+        support: '25階West',
+        sub: '利用中',
+        actionHtml: renderResourceListActionMenu('resource-list-room-menu-2', '会議室Bのサブアクション', [
+          '利用状況を見る',
+          '予約を依頼',
+          '設備を表示',
+        ]),
+      },
+      {
+        style: 'frame',
+        interaction: 'whole',
+        className: 'resource-list-figma-item resource-list-figma-item--room-menu',
+        control: 'radio',
+        controlName: 'resource-list-room',
+        title: '会議室C',
+        support: '27階East',
+        actionHtml: renderResourceListActionMenu('resource-list-room-menu-3', '会議室Cのサブアクション', [
+          '空き状況を確認',
+          '予約を依頼',
+          '設備を表示',
+        ]),
+      },
+    ];
+
+    const userRows: ResourceListDemoRow[] = [
+      {
+        style: 'list',
+        interaction: 'inline',
+        className: 'resource-list-figma-item',
+        control: 'checkbox',
+        iconHtml: RESOURCE_LIST_AVATAR_ICON_SVG,
+        title: '電磁 多留子',
+        support: '開発部',
+        sub: '管理者',
+      },
+      {
+        style: 'list',
+        interaction: 'inline',
+        className: 'resource-list-figma-item',
+        control: 'checkbox',
+        controlChecked: true,
+        iconHtml: RESOURCE_LIST_AVATAR_ICON_SVG,
+        title: 'デジ田 太郎',
+        support: 'マーケティング部',
+        sub: 'メンバー',
+      },
+      {
+        style: 'list',
+        interaction: 'inline',
+        className: 'resource-list-figma-item',
+        control: 'checkbox',
+        iconHtml: RESOURCE_LIST_AVATAR_ICON_SVG,
+        title: 'デジ山 ひかり',
+        support: 'CEO',
+        sub: 'オーナー',
+      },
+    ];
+
+    const searchRows: ResourceListDemoRow[] = [
+      {
+        style: 'list',
+        className: 'resource-list-figma-item resource-list-figma-item--search',
+        title: 'エンタメ領域におけるマイナンバーカードの利用シーン拡大を目指し、不正転売防止等に関する実証実験を実施します',
+        titleHref: '#',
+        supportHtml: '<span slot="support">エンタメ領域におけるマイナンバーカードの利用シーン拡大を目指し、不正転売防止等に関する実証実験を実施します エンタメ領域におけるマイナンバーカードの利用シーン拡大を目指し、不正転売防止等に関する実証実験を実施します...</span>',
+      },
+      {
+        style: 'list',
+        className: 'resource-list-figma-item resource-list-figma-item--search',
+        title: '民間事業者に対してマイナンバーカード（ICチップ）の空き領域の利用に関する告示を行いました',
+        titleHref: '#',
+        supportHtml: '<span slot="support">民間事業者に対してマイナンバーカード（ICチップ）の空き領域の利用に関する告示を行いました 民間事業者に対してマイナンバーカード（ICチップ）の空...項第4号の規定に基づきモバイルクリエイト株式会社がマイナンバーカード（ICチップ...</span>',
+      },
+      {
+        style: 'list',
+        className: 'resource-list-figma-item resource-list-figma-item--search',
+        title: 'マイナンバー（個人番号）制度・マイナンバーカード',
+        titleHref: '#',
+        supportHtml: '<span slot="support">...手続等における特定の個人を識別するための制度です。行政機関等の間での情報連携により、各種の行政手続における添付書類の省略などが可能となります。また、マイナンバーカードは、民間サービスでの本人確認等にも利用できます...</span>',
+      },
+    ];
+
+    const noticeRows: ResourceListDemoRow[] = [
+      {
+        style: 'frame',
+        className: 'resource-list-figma-item resource-list-figma-item--notice',
+        componentAttrs: 'style="--dads-resource-list-border-color: var(--color-neutral-opacity-gray-420, rgba(0,0,0,0.42));"',
+        title: '【注意喚起】年金事務所を騙り、マイナポータルの偽サイト・偽アプリへ誘導される事案について',
+        titleHref: '#',
+        labelHtml: '<dads-chip-label slot="label" variant="filled-outline" color="red">重要</dads-chip-label>',
+        support: '2024年3月26日',
+      },
+      {
+        style: 'frame',
+        className: 'resource-list-figma-item',
+        title: 'アプリの画面デザインとアプリアイコンを刷新しました',
+        support: '2023年8月23日',
+      },
+      {
+        style: 'frame',
+        className: 'resource-list-figma-item',
+        title: '本ページを公開しました',
+        support: '2023年8月23日',
+      },
+    ];
+
+    const renderRows = (rows: readonly ResourceListDemoRow[], sectionKey: string) =>
+      rows.map((row, index) => renderResourceListDemoRow(row, `${sectionKey}-row-${index + 1}`)).join('');
+
+    const exampleSections = [
+      { title: '受診記録一覧', stackClass: 'resource-list-stack--frame', rows: examRows },
+      { title: '給与明細一覧', stackClass: 'resource-list-stack--frame', rows: payrollRows },
+      { title: 'アカウント一覧', stackClass: 'resource-list-stack--list', rows: accountRows },
+      { title: '支払い方法選択', stackClass: 'resource-list-stack--frame', rows: paymentRows },
+      { title: '会議室選択', stackClass: 'resource-list-stack--frame', rows: roomRows },
+      { title: 'ユーザー選択', stackClass: 'resource-list-stack--list', rows: userRows },
+      { title: '検索結果一覧', stackClass: 'resource-list-stack--list', rows: searchRows },
+      { title: 'お知らせ一覧', stackClass: 'resource-list-stack--frame', rows: noticeRows },
+    ] as const;
+
+    const renderExampleSections = (): string => {
+      const rendered: string[] = [];
+      for (const [index, section] of exampleSections.entries()) {
+        rendered.push(`
+          <article class="resource-list-example-card">
+            <h4 class="resource-list-example-title">${section.title}</h4>
+            <div class="${section.stackClass}">${renderRows(section.rows, `resource-list-section-${index + 1}`)}</div>
+          </article>
+        `);
+
+        if (index < exampleSections.length - 1) {
+          rendered.push(
+            '<dads-divider class="resource-list-example-divider" data-color="solid-gray-420" data-style="dashed" data-width="1"></dads-divider>'
+          );
+        }
+      }
+      return rendered.join('');
+    };
+
+    return `
+    <div data-dads-typeset style="padding: 40px; max-width: 1600px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">リソースリスト</h2>
+      <p style="color: #666; margin-bottom: 32px;">
+        DADS準拠のリソースリスト。カード状の1行要素として、リンク・選択コントロール・補足ラベル・アクションを組み合わせられます。
+      </p>
+
+      ${annotationToggleUI()}
+      ${annotationToggleScript()}
+
+      <style>
+        .resource-list-figma-item {
+          --dads-resource-list-padding-block: calc(16 / 16 * 1rem);
+          --dads-resource-list-padding-inline: calc(16 / 16 * 1rem);
+          --dads-resource-list-gap: calc(16 / 16 * 1rem);
+          --dads-resource-list-action-width: calc(44 / 16 * 1rem);
+        }
+
+        .resource-list-figma-item [slot='title'] {
+          margin: 0;
+        }
+
+        .resource-list-figma-item--search {
+          --dads-resource-list-padding-block: calc(24 / 16 * 1rem);
+          --dads-resource-list-padding-inline: 0;
+          --dads-resource-list-content-gap: calc(16 / 16 * 1rem);
+        }
+
+        .resource-list-figma-item--search [slot='support'] {
+          line-height: 1.7;
+          letter-spacing: 0.02em;
+        }
+
+        .resource-list-figma-item--notice [slot='label'] {
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .resource-list-figma-item--payroll {
+          --dads-resource-list-border-radius: 0;
+        }
+
+        .resource-list-figma-item--account::part(action) {
+          overflow: visible;
+          z-index: 2;
+        }
+
+        .resource-list-figma-item--account::part(base) {
+          overflow: visible;
+        }
+
+        .resource-list-figma-item--account {
+          position: relative;
+          z-index: 0;
+        }
+
+        .resource-list-figma-item--account:has(.resource-list-account-menu[open]) {
+          z-index: 4;
+        }
+
+        .resource-list-figma-item--room-menu::part(action) {
+          overflow: visible;
+          z-index: 2;
+        }
+
+        .resource-list-figma-item--room-menu::part(base) {
+          overflow: visible;
+        }
+
+        .resource-list-figma-item--room-menu {
+          position: relative;
+          z-index: 0;
+        }
+
+        .resource-list-figma-item--room-menu:has(.resource-list-account-menu[open]) {
+          z-index: 4;
+        }
+
+        .resource-list-account-menu {
+          position: relative;
+          display: block;
+          inline-size: var(--dads-resource-list-action-width);
+          min-inline-size: var(--dads-resource-list-action-width);
+          block-size: 100%;
+          border-start-end-radius: inherit;
+          border-end-end-radius: inherit;
+        }
+
+        .resource-list-account-menu > summary {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          inline-size: 100%;
+          block-size: 100%;
+          list-style: none;
+          cursor: pointer;
+          color: inherit;
+          background: transparent;
+          border: 0;
+          border-start-start-radius: 0;
+          border-end-start-radius: 0;
+          border-start-end-radius: var(--dads-resource-list-border-radius, calc(16 / 16 * 1rem));
+          border-end-end-radius: var(--dads-resource-list-border-radius, calc(16 / 16 * 1rem));
+        }
+
+        .resource-list-account-menu > summary::-webkit-details-marker {
+          display: none;
+        }
+
+        .resource-list-account-menu > summary:focus-visible {
+          outline: var(--dads-resource-list-focus-outline-width, calc(4 / 16 * 1rem))
+            solid var(--dads-resource-list-focus-outline-color, var(--color-neutral-black, #000000));
+          outline-offset: calc(-3 / 16 * 1rem);
+          background: var(--dads-resource-list-focus-ring-color, var(--color-primitive-yellow-300, #ffd43d));
+          box-shadow: none;
+          border-start-start-radius: 0;
+          border-end-start-radius: 0;
+          border-start-end-radius: var(--dads-resource-list-border-radius, calc(16 / 16 * 1rem));
+          border-end-end-radius: var(--dads-resource-list-border-radius, calc(16 / 16 * 1rem));
+        }
+
+        .resource-list-account-menu > [role='menu'] {
+          position: absolute;
+          inset-inline-start: calc(100% + 4px);
+          inset-inline-end: auto;
+          inset-block-start: 0;
+          display: none;
+          margin: 0;
+          padding: 4px 0;
+          min-inline-size: 11.5rem;
+          list-style: none;
+          border: 1px solid var(--color-neutral-solid-gray-420, #949494);
+          border-radius: var(--border-radius-8, 0.5rem);
+          background: var(--color-neutral-white, #ffffff);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+          z-index: 3;
+        }
+
+        .resource-list-account-menu[open] > [role='menu'] {
+          display: grid;
+        }
+
+        .resource-list-account-menu [role='menuitem'] {
+          display: block;
+          inline-size: 100%;
+          margin: 0;
+          padding: 10px 12px;
+          border: 0;
+          background: transparent;
+          color: var(--color-neutral-solid-gray-800, #333333);
+          font: inherit;
+          line-height: 1.4;
+          text-align: start;
+          cursor: pointer;
+        }
+
+        @media (any-hover: hover) {
+          .resource-list-account-menu [role='menuitem']:hover {
+            background: var(--color-neutral-solid-gray-50, #f2f2f2);
+          }
+        }
+
+        .resource-list-account-menu [role='menuitem']:focus-visible {
+          outline: 2px solid var(--color-neutral-black, #000000);
+          outline-offset: -2px;
+          background: var(--color-primitive-yellow-300, #ffd43d);
+        }
+
+        .resource-list-annotate-stack {
+          display: grid;
+          gap: 24px;
+        }
+
+        .resource-list-annotate-variant-title,
+        .resource-list-example-title {
+          margin: 0 0 12px;
+          color: #333;
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 1.5;
+        }
+
+        .resource-list-example-grid {
+          display: grid;
+          gap: 0;
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .resource-list-example-card {
+          display: grid;
+          gap: 16px;
+          align-content: start;
+          padding-block: 24px;
+        }
+
+        .resource-list-example-divider {
+          --dads-divider-margin: 0;
+          --dads-divider-margin-block: 0;
+          --dads-divider-margin-inline: 0;
+        }
+
+        .resource-list-stack--frame {
+          display: grid;
+          gap: 16px;
+        }
+
+        .resource-list-stack--list {
+          display: grid;
+          gap: 0;
+        }
+      </style>
+
+      <!-- アクセシビリティ注釈（a11y-annotate） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
+          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
+        </p>
+        <div class="resource-list-annotate-stack">
+          <div>
+            <p class="resource-list-annotate-variant-title">リンク版</p>
+            <a11y-annotate
+              target-selector="dads-resource-list"
+              style="
+                --a11y-annotate-callout-lane-offset: 48px;
+                --a11y-annotate-callout-gutter: clamp(4rem, 10vw, 8rem);
+              "
+            >
+              <div style="padding: 60px 24px;">
+                <div style="max-width: 840px; margin-inline: auto;">
+                  ${annotateLinkRow}
+                </div>
+              </div>
+            </a11y-annotate>
+          </div>
+
+          <div>
+            <p class="resource-list-annotate-variant-title">フォームコントロール版</p>
+            <a11y-annotate
+              target-selector="dads-resource-list"
+              style="
+                --a11y-annotate-callout-lane-offset: 48px;
+                --a11y-annotate-callout-gutter: clamp(4rem, 10vw, 8rem);
+              "
+            >
+              <div style="padding: 60px 24px;">
+                <div style="max-width: 840px; margin-inline: auto;">
+                  ${annotateControlRow}
+                </div>
+              </div>
+            </a11y-annotate>
+          </div>
+        </div>
+      </section>
+
+      <script>
+        (function() {
+          var root = document.currentScript?.parentElement;
+          if (!root || !root.isConnected) return;
+
+          var getMenus = function() {
+            return Array.from(root.querySelectorAll('.resource-list-account-menu'));
+          };
+
+          root.addEventListener(
+            'toggle',
+            function(event) {
+              var target = event.target;
+              if (!(target instanceof HTMLDetailsElement)) return;
+              if (!target.classList.contains('resource-list-account-menu')) return;
+              if (!target.open) return;
+              for (const menu of getMenus()) {
+                if (menu === target) continue;
+                menu.removeAttribute('open');
+              }
+            },
+            true
+          );
+
+          root.addEventListener('click', function(event) {
+            var target = event.target;
+            if (!(target instanceof Node)) return;
+            for (const menu of getMenus()) {
+              if (menu.contains(target)) continue;
+              menu.removeAttribute('open');
+            }
+          });
+
+          root.addEventListener('keydown', function(event) {
+            if (event.key !== 'Escape') return;
+            for (const menu of getMenus()) {
+              menu.removeAttribute('open');
+            }
+          });
+        })();
+      </script>
+
+      <!-- API / Controls（Storybook風） -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / Controls（Storybook風）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          Props/Attrs と CSS vars の変更が Preview に即時反映されます。
+        </p>
+
+        ${renderApiPanelWrapper({
+          imports: [
+            'dads-resource-list',
+            'dads-divider',
+            'dads-select',
+            'dads-switch',
+            'dads-checkbox',
+            'dads-radio',
+            'dads-chip-label',
+            'a11y-annotate',
+          ],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-resource-list
+                  data-api-target
+                  data-resource-list-api-preview
+                  data-style="list"
+                  data-interaction="inline"
+                >
+                  ${RESOURCE_LIST_DEMO_ICON_SVG}
+                  <a slot="title" href="#">デジ田 太郎</a>
+                  <span slot="label">管理者</span>
+                  <span slot="support">taro-dejita@example.com</span>
+                  <span slot="sub">招待中</span>
+                  <button slot="action" type="button" aria-label="メニュー">
+                    ${RESOURCE_LIST_ACTION_ICON_SVG}
+                  </button>
+                </dads-resource-list>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code>
+                  <template>
+                    <!-- リンク型 -->
+                    <dads-resource-list data-style="list" data-interaction="whole" href="/example">
+                      ${RESOURCE_LIST_DEMO_ICON_SVG}
+                      <span slot="title">リストタイトル</span>
+                      <span slot="label">ラベル</span>
+                      <span slot="support">サポートテキスト</span>
+                      <span slot="sub">サブラベル</span>
+                    </dads-resource-list>
+
+                    <!-- コントロール型 -->
+                    <dads-resource-list data-style="frame" data-interaction="whole">
+                      <dads-checkbox slot="control" checked aria-labelledby="resource-list-user-title resource-list-user-support"></dads-checkbox>
+                      <span id="resource-list-user-title" slot="title">デジ田 太郎</span>
+                      <span slot="label">管理者</span>
+                      <span id="resource-list-user-support" slot="support">taro-dejita@example.com</span>
+                    </dads-resource-list>
+
+                    <!-- コントロール型（radio） -->
+                    <dads-resource-list data-style="frame" data-interaction="whole">
+                      <dads-radio slot="control" name="payment-method" checked aria-labelledby="resource-list-payment-title resource-list-payment-support"></dads-radio>
+                      <span id="resource-list-payment-title" slot="title">クレジットカード払い</span>
+                      <span id="resource-list-payment-support" slot="support">Visa、Master、JCB対応</span>
+                    </dads-resource-list>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>data-style</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>"list" | "frame"</code></td>
+                        <td><code>list</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="data-style" size="md 240" value="list" data-api-attr="data-style" data-default="list">
+                              <option value="list">list</option>
+                              <option value="frame">frame</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>リスト表示スタイル</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>data-interaction</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>"inline" | "whole"</code></td>
+                        <td><code>inline</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="data-interaction" size="md 240" value="inline" data-api-attr="data-interaction" data-default="inline">
+                              <option value="inline">inline</option>
+                              <option value="whole">whole</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>インタラクション方式</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>slot="control"</code></th>
+                        <td><code>slot</code></td>
+                        <td><code>"none" | "checkbox" | "radio"</code></td>
+                        <td><code>none</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="control type" size="md 240" value="none" data-resource-list-control-kind data-default="none">
+                              <option value="none">none</option>
+                              <option value="checkbox">checkbox</option>
+                              <option value="radio">radio</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>Preview の control slot にフォームコントロールを挿入（デモ専用）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>control.checked</code></th>
+                        <td><code>demo</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="control checked" data-resource-list-control-checked data-default="false">
+                              <span slot="label-left">false</span>
+                              <span slot="label-right">true</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>挿入した checkbox/radio の選択状態を切り替え</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>control.disabled</code></th>
+                        <td><code>demo</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="control disabled" data-resource-list-control-disabled data-default="false">
+                              <span slot="label-left">false</span>
+                              <span slot="label-right">true</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>挿入した checkbox/radio の無効状態を切り替え</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>href</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>(empty)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="href" value="" data-api-attr="href" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>wholeリンク時の遷移先</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>target</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>(empty)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="target" size="md 240" value="" data-api-attr="target" data-default="">
+                              <option value="">(empty)</option>
+                              <option value="_self">_self</option>
+                              <option value="_blank">_blank</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>wholeリンク時のターゲット</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>rel</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>(empty)</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="rel" value="" data-api-attr="rel" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>wholeリンク時のrel属性</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>download</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>boolean</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-select label="download" size="md 240" value="" data-api-attr="download" data-default="">
+                              <option value="">false</option>
+                              <option value="download">true</option>
+                            </dads-select>
+                          </div>
+                        </td>
+                        <td>wholeリンク時にdownload属性を付与</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-resource-list-background</code></th>
+                        <td><code>--color-neutral-white</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-resource-list-background" value="" data-api-css-var="--dads-resource-list-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>背景色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-resource-list-border-color</code></th>
+                        <td><code>--color-neutral-solid-gray-420</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-resource-list-border-color" value="" data-api-css-var="--dads-resource-list-border-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>境界線色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-resource-list-title-color</code></th>
+                        <td><code>--color-neutral-solid-gray-900</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-resource-list-title-color" value="" data-api-css-var="--dads-resource-list-title-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>タイトル色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-resource-list-title-link-color</code></th>
+                        <td><code>--color-primitive-blue-1000</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-resource-list-title-link-color" value="" data-api-css-var="--dads-resource-list-title-link-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>タイトルリンク色</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-resource-list-padding-inline</code></th>
+                        <td><code>1rem</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-resource-list-padding-inline" value="" data-api-css-var="--dads-resource-list-padding-inline" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>左右余白</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-resource-list-action-width</code></th>
+                        <td><code>2.75rem</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-resource-list-action-width" value="" data-api-css-var="--dads-resource-list-action-width" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>右端アクション幅</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+            </div>
+          `,
+        })}
+
+        <script>
+          (function() {
+            var currentScript = document.currentScript;
+            Promise.all([
+              customElements.whenDefined('dads-resource-list'),
+              customElements.whenDefined('dads-select'),
+              customElements.whenDefined('dads-switch'),
+              customElements.whenDefined('dads-checkbox'),
+              customElements.whenDefined('dads-radio'),
+            ]).then(function() {
+              var root = currentScript?.parentElement;
+              if (!root || !root.isConnected) return;
+
+              var panel = root.querySelector('.wc-api-panel');
+              if (!panel) return;
+
+              var preview = panel.querySelector('dads-resource-list[data-resource-list-api-preview]');
+              var kindControl = panel.querySelector('[data-resource-list-control-kind]');
+              var checkedControl = panel.querySelector('[data-resource-list-control-checked]');
+              var disabledControl = panel.querySelector('[data-resource-list-control-disabled]');
+              var resetButton = panel.querySelector('[data-api-reset]');
+              if (!preview || !kindControl || !checkedControl || !disabledControl) return;
+
+              var syncLock = false;
+
+              var readControlValue = function(control) {
+                if (!control) return '';
+                if (typeof control.value === 'string' && control.value.length > 0) {
+                  return control.value;
+                }
+                return control.getAttribute('value') || '';
+              };
+
+              var readControlChecked = function(control) {
+                if (!control) return false;
+                if (typeof control.checked === 'boolean') return control.checked;
+                return control.hasAttribute('checked');
+              };
+
+              var setSelectValue = function(control, value) {
+                if (!control) return;
+                if (typeof control.value === 'string') control.value = value;
+                control.setAttribute('value', value);
+              };
+
+              var setSwitchState = function(control, checked, disabled) {
+                if (!control) return;
+                if (typeof control.checked === 'boolean') control.checked = checked;
+                if (typeof control.disabled === 'boolean') control.disabled = disabled;
+                control.toggleAttribute('checked', checked);
+                control.toggleAttribute('disabled', disabled);
+              };
+
+              var removeDemoControl = function() {
+                preview
+                  .querySelectorAll('[slot="control"][data-resource-list-demo-control]')
+                  .forEach(function(node) {
+                    node.remove();
+                  });
+              };
+
+              var createDemoControl = function(kind, checked, disabled) {
+                var control = null;
+                if (kind === 'checkbox') {
+                  control = document.createElement('dads-checkbox');
+                } else if (kind === 'radio') {
+                  control = document.createElement('dads-radio');
+                  control.setAttribute('name', 'resource-list-api-control');
+                }
+                if (!control) return null;
+
+                control.setAttribute('slot', 'control');
+                control.setAttribute('data-resource-list-demo-control', '');
+                control.toggleAttribute('checked', checked);
+                control.toggleAttribute('disabled', disabled);
+                if (disabled) control.setAttribute('aria-disabled', 'true');
+                else control.removeAttribute('aria-disabled');
+                return control;
+              };
+
+              var syncDemoControl = function() {
+                if (syncLock) return;
+                syncLock = true;
+
+                var kind = readControlValue(kindControl) || 'none';
+                var hasControl = kind === 'checkbox' || kind === 'radio';
+                var checked = readControlChecked(checkedControl);
+                var disabled = readControlChecked(disabledControl);
+
+                removeDemoControl();
+                if (hasControl) {
+                  var control = createDemoControl(kind, checked, disabled);
+                  if (control) preview.insertBefore(control, preview.firstChild);
+                }
+
+                setSwitchState(checkedControl, hasControl && checked, !hasControl);
+                setSwitchState(disabledControl, hasControl && disabled, !hasControl);
+                syncLock = false;
+              };
+
+              var applyDefaults = function() {
+                var defaultKind = kindControl.getAttribute('data-default') || 'none';
+                var defaultChecked = checkedControl.getAttribute('data-default') === 'true';
+                var defaultDisabled = disabledControl.getAttribute('data-default') === 'true';
+                setSelectValue(kindControl, defaultKind);
+                setSwitchState(checkedControl, defaultChecked, defaultKind === 'none');
+                setSwitchState(disabledControl, defaultDisabled, defaultKind === 'none');
+                syncDemoControl();
+              };
+
+              var syncLater = function() {
+                queueMicrotask(syncDemoControl);
+              };
+
+              kindControl.addEventListener('dads-change', syncLater);
+              kindControl.addEventListener('change', syncLater);
+              checkedControl.addEventListener('dads-change', syncLater);
+              checkedControl.addEventListener('change', syncLater);
+              disabledControl.addEventListener('dads-change', syncLater);
+              disabledControl.addEventListener('change', syncLater);
+              if (resetButton) resetButton.addEventListener('click', function() { queueMicrotask(applyDefaults); });
+
+              applyDefaults();
+            });
+          })();
+        </script>
+      </section>
+
+      <!-- Figma作例 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">Figma作例（12692:1434）</h3>
+        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
+          公式作例の文言・組み合わせ（frame/list・control・action・selected）を同構成で再現しています。
+        </p>
+
+        <div class="resource-list-example-grid">
+          ${renderExampleSections()}
+        </div>
+      </section>
+    </div>
+  `;
+  },
 
   chipLabel: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">

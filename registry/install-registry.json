@@ -439,6 +439,18 @@
         "componentDir": "packages/components/radio"
       }
     },
+    "resource-list": {
+      "id": "resource-list",
+      "tags": [
+        "dads-resource-list"
+      ],
+      "define": "defineResourceList",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/resource-list"
+      }
+    },
     "search-box": {
       "id": "search-box",
       "tags": [
@@ -597,6 +609,7 @@
     "dads-notification-banner": "notification-banner",
     "dads-page-navigation": "page-navigation",
     "dads-radio": "radio",
+    "dads-resource-list": "resource-list",
     "dads-search-box": "search-box",
     "dads-select": "select",
     "dads-step-navigation": "step-navigation",

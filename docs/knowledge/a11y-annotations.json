@@ -2561,6 +2561,89 @@
       }
     ]
   },
+  "dads-resource-list": {
+    "version": 1,
+    "summary": "リソースリストコンポーネント仕様（アクセシビリティ注釈：リンク版 / フォームコントロール版）",
+    "categories": {
+      "semantics": [
+        "項目全体は body（[part=\"body\"]）を主領域として構成し、title/label/support/sub/action を組み合わせて情報を提示します。",
+        "リンク版（control なし）は data-interaction=\"whole\" かつ href 指定時に内部 body を <a> として扱い、項目全体をリンク化できます。",
+        "フォームコントロール版（control あり）は選択コンポーネント（checkbox/radio）を受け取り、行選択UIとして利用できます。"
+      ],
+      "keyboard": [
+        "リンク版では inline モード時に title 内リンクと action ボタンへ Tab で到達でき、whole モード時は body 全体リンクとして Enter で操作できます。",
+        "フォームコントロール版では whole + control 構成時に body のクリック操作を control に委譲し、キーボード利用時は control 自体へフォーカスして Space で操作できます。",
+        "action スロットがボタン/リンクの場合、独立した操作対象としてTab順に含まれます。"
+      ],
+      "zoom": [
+        "title/label/support/sub は折り返しを前提としており、拡大時も情報が欠けない構造を想定します。",
+        "action 幅は --dads-resource-list-action-width で調整でき、ズーム時の操作領域確保に対応します。"
+      ],
+      "states": [
+        "control の checked/disabled 状態に応じて data-selected / data-disabled が反映され、視覚状態が同期します。",
+        "data-style=\"list\" と data-style=\"frame\" で境界線と角丸の表示状態を切り替えます。",
+        "whole モード時は body / action にフォーカス・ホバー表示を適用し、操作可能状態を明示します。"
+      ],
+      "labels": [
+        "title スロットのテキストまたはリンクが主ラベルとして機能します。",
+        "control をラベル非表示で使う場合は aria-label または aria-labelledby で操作名を補完します。",
+        "support/sub を使って補足情報を視覚的に追加できます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "body",
+        "title": "本体領域",
+        "label": "[part=\"body\"]",
+        "description": "リンク版の主要操作領域です。wholeリンク時は内部で <a> として扱われ、行全体のナビゲーション対象になります。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"body\"]"
+        }
+      },
+      {
+        "id": "title",
+        "title": "タイトル領域",
+        "label": "slot=\"title\"",
+        "description": "項目名を提示する主ラベル領域です。リンクを配置する場合は文言が分かる表現にします。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"title\"]"
+        }
+      },
+      {
+        "id": "control",
+        "title": "選択コントロール",
+        "label": "slot=\"control\"",
+        "description": "フォームコントロール版の主要操作領域です。checkbox/radio と行選択状態（selected/disabled）が連携します。",
+        "category": "keyboard",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"control\"]"
+        }
+      },
+      {
+        "id": "action",
+        "title": "右端アクション",
+        "label": "slot=\"action\"",
+        "description": "補助操作（メニュー等）の操作領域です。フォーカス時に視覚的強調が適用されます。",
+        "category": "states",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"action\"]"
+        }
+      }
+    ]
+  },
   "dads-search-box": {
     "version": 1,
     "summary": "検索ボックスコンポーネント仕様（アクセシビリティ注釈）",

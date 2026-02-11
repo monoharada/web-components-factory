@@ -39,6 +39,7 @@
       "dads-list": "/@components/dads/list.js",
       "dads-list-item": "/@components/dads/list.js",
       "dads-description-list": "/@components/dads/description-list.js",
+      "dads-resource-list": "/@components/dads/resource-list.js",
       "dads-divider": "/@components/dads/divider.js",
       "dads-input-text": "/@components/dads/input-text.js",
       "dads-file-upload": "/@components/dads/file-upload.js",
@@ -408,7 +409,6 @@
     :defined {
       opacity: 1;
       animation: none;
-      background: none;
       transition: opacity 0.1s ease-out;
     }
   </style>
@@ -430,6 +430,8 @@
             <option value="blockquote">引用ブロック</option>
             <option value="list">箇条書きリスト</option>
             <option value="descriptionList">説明リスト</option>
+            <option value="resourceList">リソースリスト</option>
+            <option value="resourceListFidelity">リソースリスト（忠実度検証）</option>
             <option value="descriptionListFidelity">説明リスト（忠実度検証）</option>
             <option value="divider">ディバイダー</option>
             <option value="heading">見出し</option>
@@ -681,6 +683,7 @@
       '/@components/dads/heading.js',
       '/@components/dads/text.js',
       '/@components/dads/switch.js',
+      '/@components/dads/resource-list.js',
       '/@components/dads/menu-list.js',
       '/@components/dads/menu-list-box.js',
       '/@components/dads/global-menu.js',
