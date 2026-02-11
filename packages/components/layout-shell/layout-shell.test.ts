@@ -137,6 +137,27 @@ describe('DadsLayoutShell', () => {
     expect(sidebar?.hasAttribute('hidden')).toBe(true);
   });
 
+  it('直下ではない slot 属性はスロット存在として扱わない', async () => {
+    const el = renderWebComponent(`
+      <dads-layout-shell pattern="app-shell" mode="desktop">
+        <div>
+          <div slot="sidebar">not-assigned</div>
+        </div>
+        <section>main</section>
+      </dads-layout-shell>
+    `);
+
+    await waitForComponent('dads-layout-shell');
+    await flushMicrotask();
+
+    const sidebar = getShadowElement<HTMLElement>(el, '[part="sidebar"]');
+
+    expect(el.hasAttribute('data-has-sidebar')).toBe(false);
+    expect(el.getAttribute('data-sidebar-state')).toBe('hidden');
+    expect(el.getAttribute('data-body-layout')).toBe('single');
+    expect(sidebar?.hasAttribute('hidden')).toBe(true);
+  });
+
   it('master-detail は aside を表示する', async () => {
     const el = renderWebComponent(`
       <dads-layout-shell pattern="master-detail" mode="desktop">

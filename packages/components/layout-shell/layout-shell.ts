@@ -344,11 +344,19 @@ export class DadsLayoutShell extends TypographyWebComponent {
     return resolveAutoMode();
   }
 
+  #hasDirectSlotElement(slotName: string): boolean {
+    const children = this.children;
+    for (let i = 0; i < children.length; i++) {
+      if (children[i].getAttribute('slot') === slotName) return true;
+    }
+    return false;
+  }
+
   #syncSlotFlags(): void {
-    const hasHeader = hasSlotContent(this.#headerSlot) || this.querySelector('[slot="header"]') !== null;
-    const hasSidebar = hasSlotContent(this.#sidebarSlot) || this.querySelector('[slot="sidebar"]') !== null;
-    const hasAside = hasSlotContent(this.#asideSlot) || this.querySelector('[slot="aside"]') !== null;
-    const hasFooter = hasSlotContent(this.#footerSlot) || this.querySelector('[slot="footer"]') !== null;
+    const hasHeader = hasSlotContent(this.#headerSlot) || this.#hasDirectSlotElement('header');
+    const hasSidebar = hasSlotContent(this.#sidebarSlot) || this.#hasDirectSlotElement('sidebar');
+    const hasAside = hasSlotContent(this.#asideSlot) || this.#hasDirectSlotElement('aside');
+    const hasFooter = hasSlotContent(this.#footerSlot) || this.#hasDirectSlotElement('footer');
 
     this.toggleAttribute('data-has-header', hasHeader);
     this.toggleAttribute('data-has-sidebar', hasSidebar);

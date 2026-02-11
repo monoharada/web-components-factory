@@ -1,5 +1,45 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { demos } from './layout-shell.js';
+
+function executePreviewScript(host: HTMLElement): void {
+  const scripts = host.querySelectorAll('script');
+  const targetScript = [...scripts].find((node) =>
+    (node.textContent ?? '').includes('window.__dadsLayoutShellInitPreviewControls'),
+  );
+  if (!(targetScript instanceof HTMLScriptElement)) return;
+
+  const content = targetScript.textContent ?? '';
+  if (!content) return;
+
+  const original = Object.getOwnPropertyDescriptor(document, 'currentScript');
+  Object.defineProperty(document, 'currentScript', {
+    configurable: true,
+    get() {
+      return targetScript;
+    },
+  });
+
+  try {
+    // eslint-disable-next-line no-new-func
+    new Function(content)();
+  } finally {
+    if (original) Object.defineProperty(document, 'currentScript', original);
+    else delete (document as Document & { currentScript?: unknown }).currentScript;
+  }
+}
+
+async function flushTasks(): Promise<void> {
+  await Promise.resolve();
+  await Promise.resolve();
+}
+
+afterEach(() => {
+  document.body.innerHTML = '';
+  const runtimeWindow = window as Window & {
+    __dadsLayoutShellInitPreviewControls?: (root: ParentNode) => void;
+  };
+  delete runtimeWindow.__dadsLayoutShellInitPreviewControls;
+});
 
 describe('layout-shell demo', () => {
   it('レイアウトシェル見出しと6パターン作例を含む', () => {
@@ -108,5 +148,42 @@ describe('layout-shell demo', () => {
 
     expect(html).not.toContain('data-api-attr="mode"');
     expect(html).toContain("shells[k].setAttribute('mode', device)");
+  });
+
+  it('プレビュー幅変更とデバイスボタン操作で device / mode が同期する', async () => {
+    const host = document.createElement('div');
+    host.innerHTML = demos.layoutShell();
+    document.body.appendChild(host);
+
+    executePreviewScript(host);
+    await flushTasks();
+
+    const preview = host.querySelector<HTMLElement>('[data-layout-shell-preview]');
+    const range = preview?.querySelector<HTMLInputElement>('[data-layout-shell-preview-range]');
+    const mock = preview?.querySelector<HTMLElement>('dads-device-mock.layout-shell-device');
+    const shell = preview?.querySelector<HTMLElement>('dads-layout-shell');
+    const mobileButton = preview?.querySelector<HTMLButtonElement>('[data-layout-shell-preview-device="mobile"]');
+    const tabletButton = preview?.querySelector<HTMLButtonElement>('[data-layout-shell-preview-device="tablet"]');
+
+    expect(preview).toBeTruthy();
+    expect(range?.value).toBe('1454');
+    expect(mock?.getAttribute('device')).toBe('desktop');
+    expect(shell?.getAttribute('mode')).toBe('desktop');
+
+    range!.value = '405';
+    range!.dispatchEvent(new Event('input', { bubbles: true }));
+    await flushTasks();
+
+    expect(mock?.getAttribute('device')).toBe('mobile');
+    expect(shell?.getAttribute('mode')).toBe('mobile');
+    expect(mobileButton?.getAttribute('aria-pressed')).toBe('true');
+
+    tabletButton?.click();
+    await flushTasks();
+
+    expect(range?.value).toBe('782');
+    expect(mock?.getAttribute('device')).toBe('tablet');
+    expect(shell?.getAttribute('mode')).toBe('tablet');
+    expect(tabletButton?.getAttribute('aria-pressed')).toBe('true');
   });
 });
