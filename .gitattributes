@@ -1,0 +1,3 @@
+# CEM is generated and can produce very large textual diffs.
+# Treat it as binary for diff output to reduce tooling overhead.
+custom-elements.json -diff
