@@ -26600,6 +26600,24 @@
               "default": "null"
             },
             {
+              "kind": "method",
+              "name": "#hasDirectSlotElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "#headerPart",
               "privacy": "private",
