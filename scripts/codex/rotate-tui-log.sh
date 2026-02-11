@@ -12,6 +12,24 @@ die() {
   exit 1
 }
 
+get_file_size_bytes() {
+  local path="$1"
+  local size
+  size="$(stat -f%z "$path" 2>/dev/null || true)"
+  if [[ "$size" =~ ^[0-9]+$ ]]; then
+    echo "$size"
+    return 0
+  fi
+
+  size="$(stat -c%s "$path" 2>/dev/null || true)"
+  if [[ "$size" =~ ^[0-9]+$ ]]; then
+    echo "$size"
+    return 0
+  fi
+
+  return 1
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --threshold-mb)
@@ -39,7 +57,7 @@ if [[ ! -f "$log_path" ]]; then
   exit 0
 fi
 
-size_bytes="$(stat -f%z "$log_path")"
+size_bytes="$(get_file_size_bytes "$log_path")" || die "failed to get file size: $log_path"
 threshold_bytes=$((threshold_mb * 1024 * 1024))
 
 echo "log_path=$log_path"
@@ -60,4 +78,5 @@ mv "$log_path" "$backup_path"
 chmod 600 "$log_path" || true
 
 echo "rotated_to=$backup_path"
-echo "new_bytes=$(stat -f%z "$log_path")"
+new_bytes="$(get_file_size_bytes "$log_path")" || die "failed to get file size: $log_path"
+echo "new_bytes=$new_bytes"

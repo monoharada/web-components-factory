@@ -39,6 +39,14 @@ npm run codex:perf:rotate-log
 - 巨大JSONが変更状態でも `git diff` の出力量を抑制
 - Codex が差分を読むコストを低減
 
+レビュー時に CEM 差分本文を確認したい場合:
+
+```bash
+git diff --text -- custom-elements.json
+```
+
+`--text` を付けると `.gitattributes` の `-diff` 設定を一時的に上書きして表示できます。
+
 ## 4. Codex ランタイム生成物の untracked 爆発を防ぐ
 
 `.codex/cache` / `.codex/log` / `.codex/sessions` などは `.gitignore` で除外済みです。  

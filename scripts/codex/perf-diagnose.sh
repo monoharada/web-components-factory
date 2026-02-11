@@ -3,6 +3,20 @@ set -euo pipefail
 
 runs="${1:-5}"
 
+usage() {
+  echo "usage: $0 [runs]" >&2
+}
+
+die() {
+  echo "$1" >&2
+  exit 1
+}
+
+if ! [[ "$runs" =~ ^[1-9][0-9]*$ ]]; then
+  usage
+  die "runs must be a positive integer"
+fi
+
 if ! command -v git >/dev/null 2>&1; then
   echo "git が見つかりません" >&2
   exit 1
@@ -37,7 +51,15 @@ measure_avg_sec() {
   for i in $(seq 1 "$runs"); do
     /usr/bin/time -p sh -c "$cmd" >/dev/null 2>"$tmp_dir/$i"
     awk '/^real /{print $2}' "$tmp_dir/$i"
-  done | awk '{sum+=$1; if(NR==1||$1<min)min=$1; if($1>max)max=$1} END{printf "runs=%d avg=%.4fs min=%.4fs max=%.4fs\n", NR, sum/NR, min, max}'
+  done | awk '
+    {sum+=$1; if(NR==1||$1<min)min=$1; if($1>max)max=$1}
+    END{
+      if (NR==0) {
+        print "runs=0 avg=n/a min=n/a max=n/a"
+        exit 1
+      }
+      printf "runs=%d avg=%.4fs min=%.4fs max=%.4fs\n", NR, sum/NR, min, max
+    }'
   rm -rf "$tmp_dir"
 }
 
