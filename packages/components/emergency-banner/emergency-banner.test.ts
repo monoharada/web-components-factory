@@ -324,6 +324,76 @@ describe('DadsEmergencyBanner - CTA', () => {
     expect(action?.hidden).toBe(false);
     expect(actionLink?.getAttribute('aria-label')).toBe('指定避難所を確認する（新規タブで開きます）');
   });
+
+  it('action slot が aria-labelledby の複数IDを参照している場合も補助ラベルを構成できる', async () => {
+    const { defineDefaultEmergencyBanner } = await import('./emergency-banner-define');
+    defineDefaultEmergencyBanner();
+
+    const component = renderWebComponent(`
+      <dads-emergency-banner href="https://example.com" target="_blank">
+        <span slot="heading">見出し</span>
+        <span id="action-label-main">指定避難所を確認する</span>
+        <span id="action-label-extra">（重要）</span>
+        <span slot="action" aria-labelledby="action-label-main action-label-extra"></span>
+      </dads-emergency-banner>
+    `);
+
+    await waitForComponent('dads-emergency-banner');
+
+    const action = getShadowElement<HTMLElement>(component, '#action');
+    const actionLink = getShadowElement<HTMLAnchorElement>(component, '#action-link');
+
+    expect(action?.hidden).toBe(false);
+    expect(actionLink?.getAttribute('aria-label')).toBe('指定避難所を確認する （重要）（新規タブで開きます）');
+  });
+
+  it('action slot が循環参照する aria-labelledby でも無限ループせず補助ラベルを構成できる', async () => {
+    const { defineDefaultEmergencyBanner } = await import('./emergency-banner-define');
+    defineDefaultEmergencyBanner();
+
+    const component = renderWebComponent(`
+      <dads-emergency-banner href="https://example.com" target="_blank">
+        <span slot="heading">見出し</span>
+        <span slot="action" id="action-label-self" aria-labelledby="action-label-helper"></span>
+        <span id="action-label-helper" aria-labelledby="action-label-self">循環ラベル</span>
+      </dads-emergency-banner>
+    `);
+
+    await waitForComponent('dads-emergency-banner');
+
+    const action = getShadowElement<HTMLElement>(component, '#action');
+    const actionLink = getShadowElement<HTMLAnchorElement>(component, '#action-link');
+
+    expect(action?.hidden).toBe(false);
+    expect(actionLink?.getAttribute('aria-label')).toBe('循環ラベル（新規タブで開きます）');
+  });
+
+  it('aria-labelledby の参照先要素が削除されたら CTA 表示を再同期して非表示にする', async () => {
+    const { defineDefaultEmergencyBanner } = await import('./emergency-banner-define');
+    defineDefaultEmergencyBanner();
+
+    const component = renderWebComponent(`
+      <dads-emergency-banner href="https://example.com" target="_blank">
+        <span slot="heading">見出し</span>
+        <span id="action-label-source">指定避難所を確認する</span>
+        <span slot="action" aria-labelledby="action-label-source"></span>
+      </dads-emergency-banner>
+    `);
+
+    await waitForComponent('dads-emergency-banner');
+
+    const action = getShadowElement<HTMLElement>(component, '#action');
+    const actionLink = getShadowElement<HTMLAnchorElement>(component, '#action-link');
+    expect(action?.hidden).toBe(false);
+    expect(actionLink?.getAttribute('aria-label')).toBe('指定避難所を確認する（新規タブで開きます）');
+
+    const source = component.querySelector('#action-label-source');
+    source?.remove();
+    await waitTick();
+
+    expect(action?.hidden).toBe(true);
+    expect(actionLink?.hasAttribute('aria-label')).toBe(false);
+  });
 });
 
 describe('DadsEmergencyBanner - スロット同期', () => {
