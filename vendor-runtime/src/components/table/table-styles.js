@@ -211,11 +211,12 @@ export function createTableStyles(tagName) {
       box-sizing: border-box;
       position: relative;
       padding: 0;
+      vertical-align: middle;
     }
 
     ${tagName} [data-selection-cell] > * {
       margin-inline: auto;
-      margin-block-start: calc(10 / 16 * 1rem);
+      margin-block: 0;
     }
 
     @supports (selector(:has(.x))) {
@@ -232,9 +233,9 @@ export function createTableStyles(tagName) {
         position: absolute;
         inset: 0;
         display: grid;
-        justify-content: center;
+        place-items: center;
         inline-size: auto;
-        padding-block-start: calc(10 / 16 * 1rem);
+        padding-block-start: 0;
       }
     }
 

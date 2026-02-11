@@ -25,6 +25,21 @@ const COMPONENTS = {
     defineModule: 'src/components/heading/heading-define.js',
     defineFn: 'defineHeading',
   },
+  'layout-shell': {
+    tagBase: 'layout-shell',
+    defineModule: 'src/components/layout-shell/layout-shell-define.js',
+    defineFn: 'defineLayoutShell',
+  },
+  'layout-sidebar': {
+    tagBase: 'layout-sidebar',
+    defineModule: 'src/components/layout-sidebar/layout-sidebar-define.js',
+    defineFn: 'defineLayoutSidebar',
+  },
+  'layout-aside': {
+    tagBase: 'layout-aside',
+    defineModule: 'src/components/layout-aside/layout-aside-define.js',
+    defineFn: 'defineLayoutAside',
+  },
   'input-text': {
     tagBase: 'input-text',
     defineModule: 'src/components/input-text/input-text-define.js',
@@ -144,6 +159,85 @@ const PATTERNS = {
     </dads-card>
   </section>
 </main>`,
+  },
+  'layout-website-hero-section-footer': {
+    title: 'レイアウト（Website: Hero + Section + Footer）',
+    description: 'コンテンツ主導の1カラムサイト向けレイアウト。',
+    components: ['layout-shell', 'heading', 'card', 'button'],
+    requiredComponents: ['layout-shell', 'heading', 'card'],
+    stability: 'stable',
+    contractVersion: '1.0',
+    entryHints: ['boot', '@wcf', 'index'],
+    sampleHtml: `<dads-layout-shell data-dads-typeset pattern="website" mode="auto">
+  <header slot="header">
+    <dads-heading level="1">くらしの手続きポータル</dads-heading>
+    <p>必要な手続きを1つの画面で確認できます。</p>
+  </header>
+  <section>
+    <dads-card>
+      <dads-heading level="2">はじめての方へ</dads-heading>
+      <p>制度の概要と申請までの流れを案内します。</p>
+      <dads-button variant="outlined">詳しく見る</dads-button>
+    </dads-card>
+  </section>
+  <footer slot="footer">© Digital Service</footer>
+</dads-layout-shell>`,
+  },
+  'layout-app-shell': {
+    title: 'レイアウト（App/SaaS: Header + Sidebar + Main）',
+    description: '業務アプリ向けの標準App Shellレイアウト。',
+    components: ['layout-shell', 'layout-sidebar', 'heading', 'card'],
+    requiredComponents: ['layout-shell', 'layout-sidebar', 'heading'],
+    stability: 'stable',
+    contractVersion: '1.0',
+    entryHints: ['boot', '@wcf', 'index'],
+    sampleHtml: `<dads-layout-shell data-dads-typeset pattern="app-shell" mode="auto">
+  <div slot="header">
+    <dads-heading level="2">業務ダッシュボード</dads-heading>
+  </div>
+  <dads-layout-sidebar slot="sidebar">
+    <ul>
+      <li>案件一覧</li>
+      <li>承認待ち</li>
+      <li>設定</li>
+    </ul>
+  </dads-layout-sidebar>
+  <section>
+    <dads-card>
+      <dads-heading level="3">進捗サマリー</dads-heading>
+      <p>主要KPIを表示します。</p>
+    </dads-card>
+  </section>
+</dads-layout-shell>`,
+  },
+  'layout-master-detail': {
+    title: 'レイアウト（Master-Detail: Main + Aside）',
+    description: '一覧 + 詳細を同時表示する2カラムレイアウト。',
+    components: ['layout-shell', 'layout-aside', 'heading', 'table'],
+    requiredComponents: ['layout-shell', 'layout-aside', 'table'],
+    stability: 'stable',
+    contractVersion: '1.0',
+    entryHints: ['boot', '@wcf', 'index'],
+    sampleHtml: `<dads-layout-shell data-dads-typeset pattern="master-detail" mode="auto">
+  <section>
+    <dads-heading level="2">申請一覧</dads-heading>
+    <dads-table>
+      <table>
+        <thead>
+          <tr><th scope="col">申請ID</th><th scope="col">状態</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A-1001</td><td>審査中</td></tr>
+          <tr><td>A-1002</td><td>差戻し</td></tr>
+        </tbody>
+      </table>
+    </dads-table>
+  </section>
+  <dads-layout-aside slot="aside">
+    <dads-heading level="3">詳細情報</dads-heading>
+    <p>選択中レコードの詳細を表示します。</p>
+  </dads-layout-aside>
+</dads-layout-shell>`,
   },
   'application-form-single-validation': {
     title: '申請フォーム（1ページ・検証エラー）',

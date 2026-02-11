@@ -125,6 +125,15 @@ export * from './drawer/index.js';
 // ヘッダーコンテナ
 export * from './header-container/index.js';
 
+// レイアウトシェル
+export * from './layout-shell/index.js';
+
+// レイアウトサイドバー
+export * from './layout-sidebar/index.js';
+
+// レイアウト補助領域
+export * from './layout-aside/index.js';
+
 // ハンバーガーメニューボタン
 export * from './hamburger-menu-button/index.js';
 

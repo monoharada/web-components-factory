@@ -13,7 +13,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsMenuListBox_instances, _DadsMenuListBox_opener, _DadsMenuListBox_popup, _DadsMenuListBox_menu, _DadsMenuListBox_iconSlot, _DadsMenuListBox_itemsSlot, _DadsMenuListBox_labelFallback, _DadsMenuListBox_subscriptions, _DadsMenuListBox_documentSubscriptions, _DadsMenuListBox_menuItemSubscriptions, _DadsMenuListBox_setupEventListeners, _DadsMenuListBox_syncDocumentListeners, _DadsMenuListBox_isEventInside, _DadsMenuListBox_handleOpenerClick, _DadsMenuListBox_handleOpenerKeydown, _DadsMenuListBox_handleMenuKeydown, _DadsMenuListBox_handleClickOutside, _DadsMenuListBox_handleFocusIn, _DadsMenuListBox_handleEscape, _DadsMenuListBox_syncLabel, _DadsMenuListBox_syncOpenerIconVisibility, _DadsMenuListBox_syncOpenState, _DadsMenuListBox_syncMenuItems, _DadsMenuListBox_syncDividers, _DadsMenuListBox_syncPopupScrollState, _DadsMenuListBox_getMenuItemEntries, _DadsMenuListBox_getMenuItemTarget, _DadsMenuListBox_currentIndex, _DadsMenuListBox_focusItem, _DadsMenuListBox_selectMenuItem, _DadsMenuListBox_isOpen;
+var _DadsMenuListBox_instances, _DadsMenuListBox_opener, _DadsMenuListBox_popup, _DadsMenuListBox_menu, _DadsMenuListBox_iconSlot, _DadsMenuListBox_itemsSlot, _DadsMenuListBox_labelFallback, _DadsMenuListBox_subscriptions, _DadsMenuListBox_documentSubscriptions, _DadsMenuListBox_menuItemSubscriptions, _DadsMenuListBox_focusReturnTarget, _DadsMenuListBox_setupEventListeners, _DadsMenuListBox_syncDocumentListeners, _DadsMenuListBox_isEventInside, _DadsMenuListBox_isEventOnFocusReturnTarget, _DadsMenuListBox_handleOpenerClick, _DadsMenuListBox_handleOpenerKeydown, _DadsMenuListBox_handleMenuKeydown, _DadsMenuListBox_handleClickOutside, _DadsMenuListBox_handleFocusIn, _DadsMenuListBox_handleEscape, _DadsMenuListBox_syncLabel, _DadsMenuListBox_syncOpenerIconVisibility, _DadsMenuListBox_syncOpenState, _DadsMenuListBox_syncMenuItems, _DadsMenuListBox_syncDividers, _DadsMenuListBox_syncPopupScrollState, _DadsMenuListBox_getMenuItemEntries, _DadsMenuListBox_isDividerElement, _DadsMenuListBox_getMenuItemTarget, _DadsMenuListBox_currentIndex, _DadsMenuListBox_focusItem, _DadsMenuListBox_selectMenuItem, _DadsMenuListBox_isOpen, _DadsMenuListBox_getFocusReturnTarget;
 import { html, PropertyAttr, BooleanAttr, ElementSelection } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -53,6 +53,7 @@ function unsubscribeAll(subscriptions) {
  * @attr {boolean} bold - 太字表示
  * @attr {string} label - ラベル（slot未使用時のフォールバック）
  * @attr {boolean} open - 開閉状態
+ * @attr {boolean} opener-hidden - opener を非表示にして外部トリガー連携する
  *
  * @fires menuitemselect - 項目選択時に発火（detail: { selectedItem, selectedValue, selectedIndex }）
  */
@@ -69,6 +70,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
         _DadsMenuListBox_subscriptions.set(this, []);
         _DadsMenuListBox_documentSubscriptions.set(this, []);
         _DadsMenuListBox_menuItemSubscriptions.set(this, []);
+        _DadsMenuListBox_focusReturnTarget.set(this, null);
     }
     connectedCallback() {
         super.connectedCallback();
@@ -105,6 +107,10 @@ export class DadsMenuListBox extends TypographyWebComponent {
             __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_syncOpenState).call(this, newValue !== null);
             return;
         }
+        if (name === 'opener-hidden') {
+            __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_setupEventListeners).call(this);
+            return;
+        }
     }
     toggleMenu() {
         if (__classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_isOpen).call(this))
@@ -117,6 +123,12 @@ export class DadsMenuListBox extends TypographyWebComponent {
     }
     closeMenu() {
         this.removeAttribute('open');
+    }
+    /**
+     * メニューを閉じたあとのフォーカス復帰先を指定する
+     */
+    setFocusReturnTarget(target) {
+        __classPrivateFieldSet(this, _DadsMenuListBox_focusReturnTarget, target, "f");
     }
     focusFirstMenuItem() {
         __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_focusItem).call(this, 0);
@@ -148,15 +160,19 @@ export class DadsMenuListBox extends TypographyWebComponent {
             __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_focusItem).call(this, current - 1);
     }
 }
-_DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(), _DadsMenuListBox_menu = new WeakMap(), _DadsMenuListBox_iconSlot = new WeakMap(), _DadsMenuListBox_itemsSlot = new WeakMap(), _DadsMenuListBox_labelFallback = new WeakMap(), _DadsMenuListBox_subscriptions = new WeakMap(), _DadsMenuListBox_documentSubscriptions = new WeakMap(), _DadsMenuListBox_menuItemSubscriptions = new WeakMap(), _DadsMenuListBox_instances = new WeakSet(), _DadsMenuListBox_setupEventListeners = function _DadsMenuListBox_setupEventListeners() {
+_DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(), _DadsMenuListBox_menu = new WeakMap(), _DadsMenuListBox_iconSlot = new WeakMap(), _DadsMenuListBox_itemsSlot = new WeakMap(), _DadsMenuListBox_labelFallback = new WeakMap(), _DadsMenuListBox_subscriptions = new WeakMap(), _DadsMenuListBox_documentSubscriptions = new WeakMap(), _DadsMenuListBox_menuItemSubscriptions = new WeakMap(), _DadsMenuListBox_focusReturnTarget = new WeakMap(), _DadsMenuListBox_instances = new WeakSet(), _DadsMenuListBox_setupEventListeners = function _DadsMenuListBox_setupEventListeners() {
     const opener = __classPrivateFieldGet(this, _DadsMenuListBox_opener, "f");
     const menu = __classPrivateFieldGet(this, _DadsMenuListBox_menu, "f");
     const iconSlot = __classPrivateFieldGet(this, _DadsMenuListBox_iconSlot, "f");
     const itemsSlot = __classPrivateFieldGet(this, _DadsMenuListBox_itemsSlot, "f");
+    const isOpenerHidden = this.hasAttribute('opener-hidden');
     unsubscribeAll(__classPrivateFieldGet(this, _DadsMenuListBox_subscriptions, "f"));
-    if (!opener || !menu)
+    if (!menu)
         return;
-    __classPrivateFieldGet(this, _DadsMenuListBox_subscriptions, "f").push(subscribe(opener, 'click', (e) => __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_handleOpenerClick).call(this, e)), subscribe(opener, 'keydown', (e) => __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_handleOpenerKeydown).call(this, e)), subscribe(menu, 'keydown', (e) => __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_handleMenuKeydown).call(this, e)));
+    if (opener && !isOpenerHidden) {
+        __classPrivateFieldGet(this, _DadsMenuListBox_subscriptions, "f").push(subscribe(opener, 'click', (e) => __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_handleOpenerClick).call(this, e)), subscribe(opener, 'keydown', (e) => __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_handleOpenerKeydown).call(this, e)));
+    }
+    __classPrivateFieldGet(this, _DadsMenuListBox_subscriptions, "f").push(subscribe(menu, 'keydown', (e) => __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_handleMenuKeydown).call(this, e)));
     if (iconSlot) {
         __classPrivateFieldGet(this, _DadsMenuListBox_subscriptions, "f").push(subscribe(iconSlot, 'slotchange', () => __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_syncOpenerIconVisibility).call(this)));
     }
@@ -172,6 +188,11 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
 }, _DadsMenuListBox_isEventInside = function _DadsMenuListBox_isEventInside(event) {
     const path = event.composedPath();
     return path.includes(this);
+}, _DadsMenuListBox_isEventOnFocusReturnTarget = function _DadsMenuListBox_isEventOnFocusReturnTarget(event) {
+    const focusReturnTarget = __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_getFocusReturnTarget).call(this);
+    if (!focusReturnTarget)
+        return false;
+    return event.composedPath().includes(focusReturnTarget);
 }, _DadsMenuListBox_handleOpenerClick = function _DadsMenuListBox_handleOpenerClick(event) {
     event.preventDefault();
     this.toggleMenu();
@@ -218,11 +239,15 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
         return;
     if (__classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_isEventInside).call(this, event))
         return;
+    if (__classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_isEventOnFocusReturnTarget).call(this, event))
+        return;
     this.closeMenu();
 }, _DadsMenuListBox_handleFocusIn = function _DadsMenuListBox_handleFocusIn(event) {
     if (!__classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_isOpen).call(this))
         return;
     if (__classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_isEventInside).call(this, event))
+        return;
+    if (__classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_isEventOnFocusReturnTarget).call(this, event))
         return;
     this.closeMenu();
 }, _DadsMenuListBox_handleEscape = function _DadsMenuListBox_handleEscape(event) {
@@ -232,7 +257,7 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
         return;
     event.preventDefault();
     this.closeMenu();
-    __classPrivateFieldGet(this, _DadsMenuListBox_opener, "f")?.focus();
+    __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_getFocusReturnTarget).call(this)?.focus();
 }, _DadsMenuListBox_syncLabel = function _DadsMenuListBox_syncLabel() {
     if (!__classPrivateFieldGet(this, _DadsMenuListBox_labelFallback, "f"))
         return;
@@ -257,10 +282,10 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
 }, _DadsMenuListBox_syncOpenState = function _DadsMenuListBox_syncOpenState(isOpen) {
     const opener = __classPrivateFieldGet(this, _DadsMenuListBox_opener, "f");
     const popup = __classPrivateFieldGet(this, _DadsMenuListBox_popup, "f");
-    if (!opener || !popup)
+    if (!popup)
         return;
     popup.hidden = !isOpen;
-    opener.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    opener?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_syncDocumentListeners).call(this, isOpen);
     if (!isOpen) {
         this.removeAttribute('data-has-popup-scrollbar');
@@ -293,25 +318,23 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
     for (const el of children) {
         if (el.getAttribute('slot'))
             continue;
-        if (!el.matches('[data-menu-list-box-divider], hr, [role="separator"]'))
+        if (!__classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_isDividerElement).call(this, el))
             continue;
-        // Prefer native <hr> for dividers (DADS).
-        if (el.tagName !== 'HR' && !el.hasAttribute('role')) {
-            el.setAttribute('role', 'separator');
+        if (el.matches('dads-divider') && !el.hasAttribute('orientation')) {
+            el.setAttribute('orientation', 'horizontal');
         }
-        // External CSS resets (e.g., `* { margin: 0 }`) may override our CSS variables.
-        // Setting inline styles ensures correct spacing even in reset-heavy environments.
-        // The CSS already defines these margins (menu-list-box-styles.ts:157-158), but
-        // inline styles take precedence and guarantee the divider spacing is preserved.
-        const marginValue = 'var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem))';
-        if (!el.style.getPropertyValue('margin-block')) {
-            el.style.setProperty('margin-block', marginValue);
-        }
-        if (!el.style.getPropertyValue('margin-top')) {
-            el.style.setProperty('margin-top', marginValue);
-        }
-        if (!el.style.getPropertyValue('margin-bottom')) {
-            el.style.setProperty('margin-bottom', marginValue);
+        if (!el.matches('dads-divider')) {
+            // Keep legacy divider markup resilient against global CSS resets.
+            const marginValue = 'var(--dads-menu-list-box-divider-margin-block, var(--spacing-4, 1rem))';
+            if (!el.style.getPropertyValue('margin-block')) {
+                el.style.setProperty('margin-block', marginValue);
+            }
+            if (!el.style.getPropertyValue('margin-top')) {
+                el.style.setProperty('margin-top', marginValue);
+            }
+            if (!el.style.getPropertyValue('margin-bottom')) {
+                el.style.setProperty('margin-bottom', marginValue);
+            }
         }
     }
 }, _DadsMenuListBox_syncPopupScrollState = function _DadsMenuListBox_syncPopupScrollState() {
@@ -336,7 +359,7 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
         if (host.getAttribute('slot'))
             continue;
         // Allow non-interactive content (e.g. dividers) inside the menu slot.
-        if (host.matches('[data-menu-list-box-divider], hr, [role="separator"]'))
+        if (__classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_isDividerElement).call(this, host))
             continue;
         const target = __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_getMenuItemTarget).call(this, host);
         if (!target)
@@ -344,6 +367,8 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
         entries.push({ host, target });
     }
     return entries;
+}, _DadsMenuListBox_isDividerElement = function _DadsMenuListBox_isDividerElement(el) {
+    return el.matches('dads-divider, [data-menu-list-box-divider], hr, [role="separator"]');
 }, _DadsMenuListBox_getMenuItemTarget = function _DadsMenuListBox_getMenuItemTarget(host) {
     const maybe = host;
     if (typeof maybe.getFocusTarget === 'function') {
@@ -379,9 +404,15 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
         },
     }));
     this.closeMenu();
-    __classPrivateFieldGet(this, _DadsMenuListBox_opener, "f")?.focus();
+    __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_getFocusReturnTarget).call(this)?.focus();
 }, _DadsMenuListBox_isOpen = function _DadsMenuListBox_isOpen() {
-    return __classPrivateFieldGet(this, _DadsMenuListBox_opener, "f")?.getAttribute('aria-expanded') === 'true';
+    return this.hasAttribute('open');
+}, _DadsMenuListBox_getFocusReturnTarget = function _DadsMenuListBox_getFocusReturnTarget() {
+    if (__classPrivateFieldGet(this, _DadsMenuListBox_focusReturnTarget, "f"))
+        return __classPrivateFieldGet(this, _DadsMenuListBox_focusReturnTarget, "f");
+    if (this.hasAttribute('opener-hidden'))
+        return null;
+    return __classPrivateFieldGet(this, _DadsMenuListBox_opener, "f");
 };
 DadsMenuListBox.definition = {
     name: 'dads-menu-list-box',
@@ -418,5 +449,6 @@ DadsMenuListBox.definition = {
         BooleanAttr('bold'),
         PropertyAttr('label'),
         BooleanAttr('open'),
+        BooleanAttr('opener-hidden'),
     ],
 };

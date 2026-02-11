@@ -14,7 +14,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsAnnotate_instances, _a, _DadsAnnotate_targetRoot, _DadsAnnotate_panelBody, _DadsAnnotate_panelSubtitle, _DadsAnnotate_panelBadges, _DadsAnnotate_calloutLayer, _DadsAnnotate_calloutSvg, _DadsAnnotate_previewInner, _DadsAnnotate_refreshQueued, _DadsAnnotate_target, _DadsAnnotate_callouts, _DadsAnnotate_observers, _DadsAnnotate_resizeObserver, _DadsAnnotate_raf, _DadsAnnotate_supportsAnchors, _DadsAnnotate_readCssPx, _DadsAnnotate_instanceCounter, _DadsAnnotate_instanceId, _DadsAnnotate_moveInitialContentIntoTargetRoot, _DadsAnnotate_setupResizeObserver, _DadsAnnotate_scheduleLayout, _DadsAnnotate_scheduleRefresh, _DadsAnnotate_refresh, _DadsAnnotate_resolveTarget, _DadsAnnotate_render, _DadsAnnotate_formatCalloutTag, _DadsAnnotate_renderSnapshot, _DadsAnnotate_normalizeCallouts, _DadsAnnotate_applyCalloutBoxHints, _DadsAnnotate_resolveElementRef, _DadsAnnotate_hasRenderableBox, _DadsAnnotate_isEmptyOrHidden, _DadsAnnotate_layoutCallouts, _DadsAnnotate_setupLiveObservers, _DadsAnnotate_windowCleanup, _DadsAnnotate_teardownObservers, _DadsAnnotate_refreshSnapshotsOnly;
+var _DadsAnnotate_instances, _a, _DadsAnnotate_targetRoot, _DadsAnnotate_panelBody, _DadsAnnotate_panelSubtitle, _DadsAnnotate_panelBadges, _DadsAnnotate_calloutLayer, _DadsAnnotate_calloutSvg, _DadsAnnotate_previewInner, _DadsAnnotate_refreshQueued, _DadsAnnotate_target, _DadsAnnotate_callouts, _DadsAnnotate_observers, _DadsAnnotate_resizeObserver, _DadsAnnotate_raf, _DadsAnnotate_supportsAnchors, _DadsAnnotate_readCssPx, _DadsAnnotate_resolveCalloutLane, _DadsAnnotate_instanceCounter, _DadsAnnotate_instanceId, _DadsAnnotate_moveInitialContentIntoTargetRoot, _DadsAnnotate_setupResizeObserver, _DadsAnnotate_scheduleLayout, _DadsAnnotate_scheduleRefresh, _DadsAnnotate_refresh, _DadsAnnotate_resolveTarget, _DadsAnnotate_render, _DadsAnnotate_formatCalloutTag, _DadsAnnotate_renderSnapshot, _DadsAnnotate_normalizeCallouts, _DadsAnnotate_applyCalloutBoxHints, _DadsAnnotate_resolveElementRef, _DadsAnnotate_hasRenderableBox, _DadsAnnotate_isEmptyOrHidden, _DadsAnnotate_layoutCallouts, _DadsAnnotate_setupLiveObservers, _DadsAnnotate_windowCleanup, _DadsAnnotate_teardownObservers, _DadsAnnotate_refreshSnapshotsOnly;
 import { css, html, BooleanAttr, PropertyAttr } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { buildAutoPath, clampBoundaryPointAwayFromCorners, computeInsetPx, insetPointTowards, pickRectBoundaryPoint, rectCenter, } from './annotate-geometry.js';
@@ -180,6 +180,7 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
  *
  * @attr {string} target-selector - 対象要素セレクタ
  * @attr {string} mode - 表示モード
+ * @attr {'side' | 'top'} callout-lane - コールアウト配置レーン（既定: side）
  * @attr {boolean} no-live - aria-live を無効化
  */
 export class DadsAnnotate extends TypographyWebComponent {
@@ -228,7 +229,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         super.attributeChangedCallback(name, oldValue, newValue);
         if (oldValue === newValue)
             return;
-        if (name === 'target-selector' || name === 'mode' || name === 'no-live') {
+        if (name === 'target-selector' || name === 'mode' || name === 'callout-lane' || name === 'no-live') {
             __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_refresh).call(this);
         }
     }
@@ -239,6 +240,9 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
     const value = getComputedStyle(this).getPropertyValue(varName).trim();
     const parsed = Number.parseFloat(value);
     return Number.isFinite(parsed) ? parsed : fallback;
+}, _DadsAnnotate_resolveCalloutLane = function _DadsAnnotate_resolveCalloutLane() {
+    const lane = this.getAttribute('callout-lane')?.trim().toLowerCase();
+    return lane === 'top' ? 'top' : 'side';
 }, _DadsAnnotate_moveInitialContentIntoTargetRoot = function _DadsAnnotate_moveInitialContentIntoTargetRoot() {
     if (!__classPrivateFieldGet(this, _DadsAnnotate_targetRoot, "f"))
         return;
@@ -671,7 +675,7 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
     const ratioRaw = getComputedStyle(this).getPropertyValue('--a11y-annotate-callout-line-inset-ratio').trim();
     const ratio = Number.parseFloat(ratioRaw);
     const clampMargin = 10;
-    const laneGap = 8;
+    const laneGap = __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_readCssPx).call(this, '--a11y-annotate-callout-lane-gap', 8);
     const laneOffset = __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_readCssPx).call(this, '--a11y-annotate-callout-lane-offset', 24);
     const targetInfo = new Map();
     let focusRectLocal = null;
@@ -780,6 +784,92 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
     }
     if (!laneFocusRectLocal)
         laneFocusRectLocal = focusRectLocal;
+    const calloutLane = __classPrivateFieldGet(this, _DadsAnnotate_instances, "m", _DadsAnnotate_resolveCalloutLane).call(this);
+    const viewportMargin = clampMargin;
+    const viewportMinXLocal = viewportMargin - containerRect.left;
+    const viewportMaxXLocal = window.innerWidth - viewportMargin - containerRect.left;
+    const minXLocal = Math.max(clampMargin, viewportMinXLocal);
+    const maxXLocal = Math.min(containerRect.width - clampMargin, viewportMaxXLocal);
+    if (calloutLane === 'top') {
+        const topLaneItems = [];
+        const laneBottomYBase = laneFocusRectLocal.top - laneOffset;
+        const clampCenterX = (x, width) => {
+            const minCenterX = Math.min(maxXLocal, minXLocal + width / 2);
+            const maxCenterX = Math.max(minXLocal, maxXLocal - width / 2);
+            return clamp(x, minCenterX, maxCenterX);
+        };
+        const clampBottomY = (y, height) => {
+            const minBottomY = Math.min(containerRect.height - clampMargin, clampMargin + height);
+            const maxBottomY = Math.max(minBottomY, containerRect.height - clampMargin);
+            return clamp(y, minBottomY, maxBottomY);
+        };
+        for (const item of __classPrivateFieldGet(this, _DadsAnnotate_callouts, "f")) {
+            const info = targetInfo.get(item);
+            if (!info)
+                continue;
+            const { targetCenter } = info;
+            item.tagEl.style.transform = 'translate(-50%, -100%)';
+            item.tagEl.style.left = `${targetCenter.x}px`;
+            item.tagEl.style.top = `${laneBottomYBase}px`;
+            const measured = item.tagEl.getBoundingClientRect();
+            const width = measured.width || 0;
+            const height = measured.height || 0;
+            const centerX = clampCenterX(targetCenter.x, width);
+            const bottomY = clampBottomY(laneBottomYBase, height);
+            item.tagEl.style.left = `${centerX}px`;
+            item.tagEl.style.top = `${bottomY}px`;
+            topLaneItems.push({
+                item,
+                desiredX: targetCenter.x,
+                centerX,
+                width,
+                height,
+            });
+        }
+        const sorted = topLaneItems.sort((a, b) => a.desiredX - b.desiredX);
+        for (let i = 1; i < sorted.length; i += 1) {
+            const prev = sorted[i - 1];
+            const cur = sorted[i];
+            const minCenterX = prev.centerX + prev.width / 2 + laneGap + cur.width / 2;
+            cur.centerX = Math.max(cur.centerX, minCenterX);
+            cur.centerX = clampCenterX(cur.centerX, cur.width);
+        }
+        for (let i = sorted.length - 2; i >= 0; i -= 1) {
+            const next = sorted[i + 1];
+            const cur = sorted[i];
+            const maxCenterX = next.centerX - next.width / 2 - laneGap - cur.width / 2;
+            cur.centerX = Math.min(cur.centerX, maxCenterX);
+            cur.centerX = clampCenterX(cur.centerX, cur.width);
+        }
+        for (const entry of sorted) {
+            entry.item.tagEl.style.left = `${entry.centerX}px`;
+        }
+        for (const { item } of sorted) {
+            const info = targetInfo.get(item);
+            if (!info)
+                continue;
+            const { targetRectLocal, targetCenter } = info;
+            const tagRect = item.tagEl.getBoundingClientRect();
+            const tagRectLocal = {
+                left: tagRect.left - containerRect.left,
+                top: tagRect.top - containerRect.top,
+                width: tagRect.width,
+                height: tagRect.height,
+            };
+            const tagCenter = rectCenter(tagRectLocal);
+            const start = pickRectBoundaryPoint(tagCenter, targetCenter, tagRectLocal) ??
+                // fallback (should be rare)
+                { x: tagCenter.x, y: tagCenter.y };
+            const hit = pickRectBoundaryPoint(tagCenter, targetCenter, targetRectLocal) ??
+                { x: targetCenter.x, y: targetCenter.y };
+            const dir = { x: targetCenter.x - tagCenter.x, y: targetCenter.y - tagCenter.y };
+            const safeHit = clampBoundaryPointAwayFromCorners(hit, targetRectLocal, cornerMargin, dir);
+            const insetPx = computeInsetPx(targetRectLocal, lineInsetMin, Number.isFinite(ratio) ? ratio : 0.35);
+            const end = insetPointTowards(safeHit, targetCenter, insetPx);
+            item.lineEl.setAttribute('d', buildAutoPath(start, end, targetRectLocal));
+        }
+        return;
+    }
     const focusCenterXLocal = (laneFocusRectLocal.left + laneFocusRectLocal.right) / 2;
     // レーン固定（left-only/right-only）の判定には、コールアウト対象の union ではなく
     // 「プレビュー内でのコンポーネント自体の寄せ」を優先して使う。
@@ -859,11 +949,6 @@ _a = DadsAnnotate, _DadsAnnotate_targetRoot = new WeakMap(), _DadsAnnotate_panel
             return 'right';
         return targetCenterX < focusCenterXLocal ? 'left' : 'right';
     };
-    const viewportMargin = clampMargin;
-    const viewportMinXLocal = viewportMargin - containerRect.left;
-    const viewportMaxXLocal = window.innerWidth - viewportMargin - containerRect.left;
-    const minXLocal = Math.max(clampMargin, viewportMinXLocal);
-    const maxXLocal = Math.min(containerRect.width - clampMargin, viewportMaxXLocal);
     const dockToSide = (item, side, y) => {
         const laneXBase = side === 'left' ? laneFocusRectLocal.left - laneOffset : laneFocusRectLocal.right + laneOffset;
         const transform = side === 'left' ? 'translate(-100%, -50%)' : 'translate(0, -50%)';
@@ -1061,6 +1146,8 @@ DadsAnnotate.definition = {
         --a11y-annotate-callout-gutter: clamp(var(--spacing-12, 3rem), 8vw, var(--spacing-24, 6rem));
         /* レーン（ラベル位置）のターゲット範囲からの距離 */
         --a11y-annotate-callout-lane-offset: var(--spacing-14, 56px);
+        /* レーン上のタグ同士の最小間隔 */
+        --a11y-annotate-callout-lane-gap: var(--spacing-2, 8px);
 
         /* Typography */
         --a11y-annotate-font-size: var(--font-size-16, 1rem);
@@ -1377,6 +1464,7 @@ DadsAnnotate.definition = {
     attributes: [
         PropertyAttr('target-selector'),
         PropertyAttr('mode'),
+        PropertyAttr('callout-lane'),
         BooleanAttr('no-live'),
     ],
 };

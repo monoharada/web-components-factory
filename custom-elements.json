@@ -26077,6 +26077,1306 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/layout-aside/layout-aside.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "レイアウト補助領域",
+          "name": "DadsLayoutAside",
+          "cssProperties": [
+            {
+              "description": "背景色",
+              "name": "--dads-layout-aside-background"
+            },
+            {
+              "description": "境界線色",
+              "name": "--dads-layout-aside-border-color"
+            },
+            {
+              "description": "内側余白",
+              "name": "--dads-layout-aside-padding"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "補助領域",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "補助領域内コンテンツ",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-layout-aside', template: html` <aside part=\"base\"> <slot></slot> </aside> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), layoutAsideTokens, layoutAsideStyles, ], 'minimal', ), }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-layout-aside",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/layout-aside/layout-aside.ts",
+          "definitionPath": "./packages/components/layout-aside/layout-aside.ts",
+          "typeDefinitionPath": "./packages/components/layout-aside/layout-aside.ts",
+          "custom": {
+            "componentId": "layout-aside",
+            "install": {
+              "id": "layout-aside",
+              "define": "defineLayoutAside",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/layout-aside"
+              },
+              "tags": [
+                "dads-layout-aside"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsLayoutAside",
+          "declaration": {
+            "name": "DadsLayoutAside",
+            "module": "packages/components/layout-aside/layout-aside.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/layout-aside/layout-aside.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/layout-aside/layout-aside.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-layout-aside",
+          "declaration": {
+            "name": "DadsLayoutAside",
+            "module": "./packages/components/layout-aside/layout-aside.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/layout-shell/layout-shell.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "画面レイアウトシェル",
+          "name": "DadsLayoutShell",
+          "cssProperties": [
+            {
+              "description": "余白の基本値（inline-padding / block-gap の基準）",
+              "name": "--dads-layout-shell-space"
+            },
+            {
+              "description": "ペイン幅の基本値（sidebar / rail / aside の基準）",
+              "name": "--dads-layout-shell-pane-width"
+            },
+            {
+              "description": "websiteパターン時のメイン最大幅（基本調整）",
+              "name": "--dads-layout-shell-main-max-width"
+            },
+            {
+              "description": "mobile時の余白縮小倍率（spaceに乗算）",
+              "name": "--dads-layout-shell-mobile-space-scale"
+            },
+            {
+              "description": "コンテナの左右余白（詳細上書き）",
+              "name": "--dads-layout-shell-inline-padding"
+            },
+            {
+              "description": "ブロック間ギャップ（詳細上書き）",
+              "name": "--dads-layout-shell-block-gap"
+            },
+            {
+              "description": "app-shell desktop時のsidebar幅（詳細上書き）",
+              "name": "--dads-layout-shell-sidebar-width"
+            },
+            {
+              "description": "app-shell tablet時のsidebar幅（詳細上書き）",
+              "name": "--dads-layout-shell-sidebar-rail-width"
+            },
+            {
+              "description": "master-detail desktop時のaside幅（詳細上書き）",
+              "name": "--dads-layout-shell-aside-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "補助情報領域",
+              "name": "aside"
+            },
+            {
+              "description": "ルートレイアウト領域",
+              "name": "base"
+            },
+            {
+              "description": "本文レイアウト領域",
+              "name": "body"
+            },
+            {
+              "description": "フッター領域",
+              "name": "footer"
+            },
+            {
+              "description": "ヘッダー領域",
+              "name": "header"
+            },
+            {
+              "description": "メイン領域",
+              "name": "main"
+            },
+            {
+              "description": "サイドバー領域",
+              "name": "sidebar"
+            }
+          ],
+          "slots": [
+            {
+              "description": "補助情報領域",
+              "name": "aside"
+            },
+            {
+              "description": "メイン領域",
+              "name": "default"
+            },
+            {
+              "description": "フッター領域",
+              "name": "footer"
+            },
+            {
+              "description": "ヘッダー領域",
+              "name": "header"
+            },
+            {
+              "description": "サイドバー領域",
+              "name": "sidebar"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#asidePart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#asideSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#footerPart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#footerSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#hasDirectSlotElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#headerPart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#headerSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#lightDomObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#onViewportResize",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#resolveEffectiveMode",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Exclude<DadsLayoutShellMode, 'auto'>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupLightDomObserver",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupSlotListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sidebarPart",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#sidebarSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#subscriptions",
+              "privacy": "private",
+              "type": {
+                "text": "Array<() => void>"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#syncLayoutState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncMobileSidebarAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncModeAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPatternAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSlotFlags",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-layout-shell', template: html` <div part=\"base\" id=\"base\"> <header part=\"header\" id=\"header\"> <slot name=\"header\" id=\"header-slot\"></slot> </header> <div part=\"body\" id=\"body\"> <aside part=\"sidebar\" id=\"sidebar\"> <slot name=\"sidebar\" id=\"sidebar-slot\"></slot> </aside> <main part=\"main\" id=\"main\" aria-label=\"メインコンテンツ\"> <slot id=\"main-slot\"></slot> </main> <aside part=\"aside\" id=\"aside\"> <slot name=\"aside\" id=\"aside-slot\"></slot> </aside> </div> <footer part=\"footer\" id=\"footer\"> <slot name=\"footer\" id=\"footer-slot\"></slot> </footer> </div> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), layoutShellTokens, layoutShellStyles, ], 'minimal', ), attributes: [ PropertyAttr('pattern'), PropertyAttr('mode'), PropertyAttr('mobileSidebar', 'mobile-sidebar'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mobileSidebar",
+              "type": {
+                "text": "DadsLayoutShellMobileSidebar"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "type": {
+                "text": "DadsLayoutShellMode"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "pattern",
+              "type": {
+                "text": "DadsLayoutShellPattern"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'hidden' | 'top' | 'bottom'"
+              },
+              "description": "app-shell + mobile 時のサイドバー配置",
+              "name": "mobile-sidebar"
+            },
+            {
+              "type": {
+                "text": "'auto' | 'desktop' | 'tablet' | 'mobile'"
+              },
+              "description": "レイアウトモード",
+              "name": "mode"
+            },
+            {
+              "type": {
+                "text": "'website' | 'app-shell' | 'master-detail' | 'left-header-pane' | 'three-pane' | 'three-pane-shell'"
+              },
+              "description": "レイアウトパターン",
+              "name": "pattern"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-layout-shell",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/layout-shell/layout-shell.ts",
+          "definitionPath": "./packages/components/layout-shell/layout-shell.ts",
+          "typeDefinitionPath": "./packages/components/layout-shell/layout-shell.ts",
+          "custom": {
+            "componentId": "layout-shell",
+            "install": {
+              "id": "layout-shell",
+              "define": "defineLayoutShell",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/layout-shell"
+              },
+              "tags": [
+                "dads-layout-shell"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsLayoutShell",
+          "declaration": {
+            "name": "DadsLayoutShell",
+            "module": "packages/components/layout-shell/layout-shell.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/layout-shell/layout-shell.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/layout-shell/layout-shell.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-layout-shell",
+          "declaration": {
+            "name": "DadsLayoutShell",
+            "module": "./packages/components/layout-shell/layout-shell.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/layout-sidebar/layout-sidebar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "レイアウトサイドバー",
+          "name": "DadsLayoutSidebar",
+          "cssProperties": [
+            {
+              "description": "背景色",
+              "name": "--dads-layout-sidebar-background"
+            },
+            {
+              "description": "境界線色",
+              "name": "--dads-layout-sidebar-border-color"
+            },
+            {
+              "description": "内側余白",
+              "name": "--dads-layout-sidebar-padding"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "サイドバー領域",
+              "name": "base"
+            }
+          ],
+          "slots": [
+            {
+              "description": "サイドバー内コンテンツ",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-layout-sidebar', template: html` <aside part=\"base\"> <slot></slot> </aside> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), layoutSidebarTokens, layoutSidebarStyles, ], 'minimal', ), }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-layout-sidebar",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/layout-sidebar/layout-sidebar.ts",
+          "definitionPath": "./packages/components/layout-sidebar/layout-sidebar.ts",
+          "typeDefinitionPath": "./packages/components/layout-sidebar/layout-sidebar.ts",
+          "custom": {
+            "componentId": "layout-sidebar",
+            "install": {
+              "id": "layout-sidebar",
+              "define": "defineLayoutSidebar",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/layout-sidebar"
+              },
+              "tags": [
+                "dads-layout-sidebar"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsLayoutSidebar",
+          "declaration": {
+            "name": "DadsLayoutSidebar",
+            "module": "packages/components/layout-sidebar/layout-sidebar.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/layout-sidebar/layout-sidebar.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/layout-sidebar/layout-sidebar.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-layout-sidebar",
+          "declaration": {
+            "name": "DadsLayoutSidebar",
+            "module": "./packages/components/layout-sidebar/layout-sidebar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/list/list.ts",
       "declarations": [
         {
@@ -50109,6 +51409,30 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "packages/components/layout-shell/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/layout-sidebar/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/layout-aside/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "packages/components/hamburger-menu-button/index.js"
           }
         },
@@ -50487,6 +51811,492 @@
           "declaration": {
             "name": "languageSelectorTokens",
             "module": "packages/components/language-selector/language-selector-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-aside/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/layout-aside/layout-aside.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultLayoutAside",
+          "declaration": {
+            "name": "defineDefaultLayoutAside",
+            "module": "./layout-aside-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineLayoutAside",
+          "declaration": {
+            "name": "defineLayoutAside",
+            "module": "./layout-aside-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-aside/layout-aside-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultLayoutAside",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineLayoutAside",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-layout-aside`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultLayoutAside",
+          "declaration": {
+            "name": "defineDefaultLayoutAside",
+            "module": "packages/components/layout-aside/layout-aside-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineLayoutAside",
+          "declaration": {
+            "name": "defineLayoutAside",
+            "module": "packages/components/layout-aside/layout-aside-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-aside/layout-aside-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "layoutAsideStyles",
+          "default": "css` :host { display: block; min-inline-size: 0; } [part='base'] { display: block; min-inline-size: 0; inline-size: 100%; box-sizing: border-box; padding: var(--dads-layout-aside-padding); background: var(--dads-layout-aside-background); border: 1px solid var(--dads-layout-aside-border-color); border-radius: var(--border-radius-8, 0.5rem); } [part='base'] ::slotted(*) { min-inline-size: 0; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "layoutAsideStyles",
+          "declaration": {
+            "name": "layoutAsideStyles",
+            "module": "packages/components/layout-aside/layout-aside-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-aside/layout-aside-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "layoutAsideLocalTokens",
+          "default": "css`${layoutAsideLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "layoutAsideSemanticTokens",
+          "default": "css`${layoutAsideSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "layoutAsideTokens",
+          "default": "css` ${layoutAsideSemanticTokensText} ${layoutAsideLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "layoutAsideLocalTokens",
+          "declaration": {
+            "name": "layoutAsideLocalTokens",
+            "module": "packages/components/layout-aside/layout-aside-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "layoutAsideSemanticTokens",
+          "declaration": {
+            "name": "layoutAsideSemanticTokens",
+            "module": "packages/components/layout-aside/layout-aside-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "layoutAsideTokens",
+          "declaration": {
+            "name": "layoutAsideTokens",
+            "module": "packages/components/layout-aside/layout-aside-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-shell/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/layout-shell/layout-shell.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultLayoutShell",
+          "declaration": {
+            "name": "defineDefaultLayoutShell",
+            "module": "./layout-shell-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineLayoutShell",
+          "declaration": {
+            "name": "defineLayoutShell",
+            "module": "./layout-shell-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-shell/layout-shell-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultLayoutShell",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineLayoutShell",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-layout-shell`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultLayoutShell",
+          "declaration": {
+            "name": "defineDefaultLayoutShell",
+            "module": "packages/components/layout-shell/layout-shell-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineLayoutShell",
+          "declaration": {
+            "name": "defineLayoutShell",
+            "module": "packages/components/layout-shell/layout-shell-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-shell/layout-shell-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "layoutShellStyles",
+          "default": "css` :host { display: block; color: var(--color-neutral-solid-gray-800, #333333); font-family: var(--font-family-sans); } :host([data-effective-mode='mobile']) { --_dads-layout-shell-inline-padding-derived: calc(var(--dads-layout-shell-space) * var(--dads-layout-shell-mobile-space-scale)); --_dads-layout-shell-block-gap-derived: calc(var(--dads-layout-shell-space) * var(--dads-layout-shell-mobile-space-scale)); } [part='base'] { display: grid; grid-template-areas: 'header' 'body' 'footer'; row-gap: var(--dads-layout-shell-block-gap, var(--_dads-layout-shell-block-gap-derived)); padding-inline: var(--dads-layout-shell-inline-padding, var(--_dads-layout-shell-inline-padding-derived)); box-sizing: border-box; } [part='header'] { grid-area: header; min-inline-size: 0; } [part='body'] { grid-area: body; min-inline-size: 0; display: grid; align-items: stretch; gap: var(--dads-layout-shell-block-gap, var(--_dads-layout-shell-block-gap-derived)); } [part='main'] { grid-area: main; min-inline-size: 0; } [part='sidebar'] { grid-area: sidebar; min-inline-size: 0; } [part='aside'] { grid-area: aside; min-inline-size: 0; } [part='footer'] { grid-area: footer; min-inline-size: 0; } :host([data-effective-pattern='website']) [part='body'] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'main'; } :host([data-effective-pattern='website']) [part='main'] { inline-size: min(100%, var(--dads-layout-shell-main-max-width, var(--layout-shell-main-max-width))); justify-self: center; } :host([data-body-layout='single']) [part='body'] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'main'; } :host([data-body-layout='app-shell']) [part='body'] { grid-template-columns: minmax(0, var(--dads-layout-shell-sidebar-width, var(--_dads-layout-shell-sidebar-width-derived))) minmax(0, 1fr); grid-template-areas: 'sidebar main'; } :host([data-body-layout='app-shell-rail']) [part='body'] { grid-template-columns: minmax(0, var(--dads-layout-shell-sidebar-rail-width, var(--_dads-layout-shell-sidebar-rail-width-derived))) minmax(0, 1fr); grid-template-areas: 'sidebar main'; } :host([data-body-layout='app-shell-mobile-stacked-top']) [part='body'] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'sidebar' 'main'; } :host([data-body-layout='app-shell-mobile-stacked-bottom']) [part='body'] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'main' 'sidebar'; } :host([data-body-layout='master-detail']) [part='body'] { grid-template-columns: minmax(0, 1fr) minmax(0, var(--dads-layout-shell-aside-width, var(--_dads-layout-shell-aside-width-derived))); grid-template-areas: 'main aside'; } :host([data-body-layout='master-detail-stacked']) [part='body'] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'main' 'aside'; } :host([data-body-layout='left-header-pane']) [part='base'] { min-block-size: 100%; grid-template-columns: minmax(0, var(--dads-layout-shell-sidebar-width, var(--_dads-layout-shell-sidebar-width-derived))) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; grid-template-areas: 'header body' 'footer footer'; column-gap: var(--dads-layout-shell-block-gap, var(--_dads-layout-shell-block-gap-derived)); } :host([data-body-layout='left-header-pane']) [part='header'], :host([data-body-layout='left-header-pane']) [part='body'] { block-size: 100%; min-block-size: 0; } :host([data-body-layout='left-header-pane']) [part='body'] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'main'; } :host([data-body-layout='three-pane']) [part='body'] { grid-template-columns: minmax(0, var(--dads-layout-shell-sidebar-width, var(--_dads-layout-shell-sidebar-width-derived))) minmax(0, 1fr) minmax(0, var(--dads-layout-shell-aside-width, var(--_dads-layout-shell-aside-width-derived))); grid-template-areas: 'sidebar main aside'; } :host([data-body-layout='three-pane-tablet']) [part='body'] { grid-template-columns: minmax(0, var(--dads-layout-shell-sidebar-rail-width, var(--_dads-layout-shell-sidebar-rail-width-derived))) minmax(0, 1fr); grid-template-areas: 'sidebar main' 'sidebar aside'; } :host([data-body-layout='three-pane-mobile-top']) [part='body'] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'sidebar' 'main' 'aside'; } :host([data-body-layout='three-pane-mobile-bottom']) [part='body'] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'main' 'aside' 'sidebar'; } [part='header'][hidden], [part='sidebar'][hidden], [part='aside'][hidden], [part='footer'][hidden] { display: none; } #header-slot::slotted(*), #sidebar-slot::slotted(*), #main-slot::slotted(*), #aside-slot::slotted(*), #footer-slot::slotted(*) { display: block; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "layoutShellStyles",
+          "declaration": {
+            "name": "layoutShellStyles",
+            "module": "packages/components/layout-shell/layout-shell-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-shell/layout-shell-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "layoutShellLocalTokens",
+          "default": "css`${layoutShellLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "layoutShellSemanticTokens",
+          "default": "css`${layoutShellSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "layoutShellTokens",
+          "default": "css` ${layoutShellSemanticTokensText} ${layoutShellLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "layoutShellLocalTokens",
+          "declaration": {
+            "name": "layoutShellLocalTokens",
+            "module": "packages/components/layout-shell/layout-shell-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "layoutShellSemanticTokens",
+          "declaration": {
+            "name": "layoutShellSemanticTokens",
+            "module": "packages/components/layout-shell/layout-shell-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "layoutShellTokens",
+          "declaration": {
+            "name": "layoutShellTokens",
+            "module": "packages/components/layout-shell/layout-shell-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-sidebar/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/layout-sidebar/layout-sidebar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultLayoutSidebar",
+          "declaration": {
+            "name": "defineDefaultLayoutSidebar",
+            "module": "./layout-sidebar-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineLayoutSidebar",
+          "declaration": {
+            "name": "defineLayoutSidebar",
+            "module": "./layout-sidebar-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-sidebar/layout-sidebar-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultLayoutSidebar",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineLayoutSidebar",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-layout-sidebar`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultLayoutSidebar",
+          "declaration": {
+            "name": "defineDefaultLayoutSidebar",
+            "module": "packages/components/layout-sidebar/layout-sidebar-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineLayoutSidebar",
+          "declaration": {
+            "name": "defineLayoutSidebar",
+            "module": "packages/components/layout-sidebar/layout-sidebar-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-sidebar/layout-sidebar-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "layoutSidebarStyles",
+          "default": "css` :host { display: block; min-inline-size: 0; } [part='base'] { display: block; min-inline-size: 0; inline-size: 100%; box-sizing: border-box; padding: var(--dads-layout-sidebar-padding); background: var(--dads-layout-sidebar-background); border: 1px solid var(--dads-layout-sidebar-border-color); border-radius: var(--border-radius-8, 0.5rem); } [part='base'] ::slotted(*) { min-inline-size: 0; } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "layoutSidebarStyles",
+          "declaration": {
+            "name": "layoutSidebarStyles",
+            "module": "packages/components/layout-sidebar/layout-sidebar-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/layout-sidebar/layout-sidebar-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "layoutSidebarLocalTokens",
+          "default": "css`${layoutSidebarLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "layoutSidebarSemanticTokens",
+          "default": "css`${layoutSidebarSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "layoutSidebarTokens",
+          "default": "css` ${layoutSidebarSemanticTokensText} ${layoutSidebarLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "layoutSidebarLocalTokens",
+          "declaration": {
+            "name": "layoutSidebarLocalTokens",
+            "module": "packages/components/layout-sidebar/layout-sidebar-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "layoutSidebarSemanticTokens",
+          "declaration": {
+            "name": "layoutSidebarSemanticTokens",
+            "module": "packages/components/layout-sidebar/layout-sidebar-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "layoutSidebarTokens",
+          "declaration": {
+            "name": "layoutSidebarTokens",
+            "module": "packages/components/layout-sidebar/layout-sidebar-tokens.ts"
           }
         }
       ]

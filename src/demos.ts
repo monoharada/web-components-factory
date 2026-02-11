@@ -14,6 +14,7 @@ import { demos as drawer } from './demos/drawer.js';
 import { demos as headerContainer } from './demos/header-container.js';
 import { demos as hamburgerMenuButton } from './demos/hamburger-menu-button.js';
 import { demos as mobileMenu } from './demos/mobile-menu.js';
+import { demos as layoutShell } from './demos/layout-shell.js';
 
 export const demos = {
   ...showcaseForm,
@@ -27,6 +28,7 @@ export const demos = {
   ...headerContainer,
   ...hamburgerMenuButton,
   ...mobileMenu,
+  ...layoutShell,
 } as const;
 
 export type DemoName = keyof typeof demos;

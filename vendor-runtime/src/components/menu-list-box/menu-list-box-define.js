@@ -3,12 +3,14 @@
  */
 import { WebComponentDefinition } from '../../core/web-components.js';
 import { getConfig, getPrefix } from '../../config.js';
+import { defineDivider } from '../divider/divider-define.js';
 import { defineMenuList } from '../menu-list/menu-list-define.js';
 import { DadsMenuListBox } from './menu-list-box.js';
 export function defineMenuListBox(prefix, registry) {
     const effectivePrefix = prefix ?? getPrefix();
     const effectiveRegistry = registry ?? getConfig().registry;
     // dependencies
+    defineDivider(effectivePrefix, effectiveRegistry);
     defineMenuList(effectivePrefix, effectiveRegistry);
     const name = `${effectivePrefix}-menu-list-box`;
     if (effectiveRegistry.get(name))

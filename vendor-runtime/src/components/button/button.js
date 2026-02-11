@@ -8,7 +8,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsButton_instances, _DadsButton_handleHostClick, _DadsButton_isLink, _DadsButton_renderTemplate, _DadsButton_createTemplate, _DadsButton_initButton, _DadsButton_handleClick, _DadsButton_handleFormAction, _DadsButton_emitClickEvent;
+var _DadsButton_instances, _DadsButton_handleHostClick, _DadsButton_isLink, _DadsButton_renderTemplate, _DadsButton_createTemplate, _DadsButton_initButton, _DadsButton_syncA11yAttributes, _DadsButton_handleClick, _DadsButton_handleFormAction, _DadsButton_emitClickEvent;
 import { html, BooleanAttr, PropertyAttr, DelegatingPropertyAttr } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -39,6 +39,8 @@ import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
  * @attr {string} type - ボタンタイプ (button | submit | reset)
  * @attr {boolean} full-width - 幅100%表示
  * @attr {string} aria-label - アクセシビリティラベル
+ * @attr {string} aria-describedby - 補足説明要素ID（スペース区切り可）
+ * @attr {string} aria-labelledby - ラベル要素ID（スペース区切り可）
  * @attr {string} command - command-store / commandfor 用（任意、動作は外部に委ねる）
  * @attr {string} commandfor - command-store / commandfor 用（任意、動作は外部に委ねる）
  *
@@ -166,10 +168,9 @@ export class DadsButton extends TypographyFormComponent {
                 }
                 break;
             case 'aria-label':
-                if (newValue)
-                    base.setAttribute('aria-label', newValue);
-                else
-                    base.removeAttribute('aria-label');
+            case 'aria-describedby':
+            case 'aria-labelledby':
+                __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_syncA11yAttributes).call(this, base);
                 break;
         }
     }
@@ -228,11 +229,17 @@ _DadsButton_handleHostClick = new WeakMap(), _DadsButton_handleClick = new WeakM
     }
     // a要素の場合はdisabled処理不要
     // 共通属性
-    const ariaLabel = this.getAttribute('aria-label');
-    if (ariaLabel)
-        base.setAttribute('aria-label', ariaLabel);
+    __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_syncA11yAttributes).call(this, base);
     // イベントリスナー
     base.addEventListener('click', __classPrivateFieldGet(this, _DadsButton_handleClick, "f"));
+}, _DadsButton_syncA11yAttributes = function _DadsButton_syncA11yAttributes(base) {
+    for (const name of ['aria-label', 'aria-describedby', 'aria-labelledby']) {
+        const value = this.getAttribute(name);
+        if (value)
+            base.setAttribute(name, value);
+        else
+            base.removeAttribute(name);
+    }
 }, _DadsButton_handleFormAction = function _DadsButton_handleFormAction() {
     const form = this._internals.form;
     if (!form)
@@ -293,6 +300,8 @@ DadsButton.definition = {
         PropertyAttr('type'),
         BooleanAttr('full-width'),
         PropertyAttr('aria-label'),
+        PropertyAttr('aria-describedby'),
+        PropertyAttr('aria-labelledby'),
         DelegatingPropertyAttr('[part="base"]', 'command'),
         DelegatingPropertyAttr('[part="base"]', 'commandfor'),
         PropertyAttr('as'),

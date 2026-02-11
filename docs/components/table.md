@@ -9,6 +9,7 @@
 
 ## 使われるBlocks
 
+- [`layout-master-detail`](../blocks/layout-master-detail.md)
 - [`table-with-pagination`](../blocks/table-with-pagination.md)
 
 ## 導入コマンド
