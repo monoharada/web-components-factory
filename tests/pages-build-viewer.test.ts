@@ -14,6 +14,8 @@ describe('pages:build', () => {
 
     const html = readFileSync('dist-pages/index.html', 'utf8');
     expect(html).toContain('<title>Web Components Viewer');
+    expect(html).toContain("from './styles/tokens.js'");
+    expect(html).not.toContain("from '/styles/tokens.js'");
 
     const tableControlDemoJs = readFileSync('dist-pages/src/demos/showcase-table-control.js', 'utf8');
     expect(tableControlDemoJs).not.toContain("import('/src/demos/");
