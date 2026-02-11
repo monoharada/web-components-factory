@@ -601,6 +601,19 @@ export async function vendorAdd({ prefix, outDir, pattern = null, components = [
       force: true,
     });
 
+    if (existing.length === 0) {
+      const driftFiles = await detectVendorDrift({
+        stageDir: stageMerged,
+        targetDir: outAbs,
+      });
+      if (driftFiles.length > 0 && !force) {
+        throw createCliError(
+          'E_VENDOR_DRIFT',
+          `Detected locally modified vendor files. Pass --force to overwrite.\n- ${driftFiles.join('\n- ')}`,
+        );
+      }
+    }
+
     await ensureDir(outAbs);
     await copyTree({ fromDir: stageMerged, toDir: outAbs });
   } finally {

@@ -202,6 +202,43 @@ describe('wcf vendor add', () => {
       await fs.rm(tmp, { recursive: true, force: true });
     }
   });
+
+  it('detects drift even when no managed components are discovered', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      await fs.mkdir(outDir, { recursive: true });
+      const bootFile = path.join(outDir, 'boot.js');
+      const marker = '// manual drift';
+      await fs.writeFile(bootFile, `${marker}\n`, 'utf8');
+
+      await expect(
+        withCwd(tmp, async () => {
+          await vendorAdd({
+            prefix: 'myui',
+            outDir: outDirRel,
+            components: ['card'],
+          });
+        }),
+      ).rejects.toThrow(/E_VENDOR_DRIFT/);
+      expect(await fs.readFile(bootFile, 'utf8')).toContain(marker);
+
+      await withCwd(tmp, async () => {
+        await vendorAdd({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['card'],
+          force: true,
+        });
+      });
+
+      expect(await fs.readFile(bootFile, 'utf8')).not.toContain(marker);
+      expect(await exists(path.join(outDir, 'components', 'card.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  });
 });
 
 describe('wcf agent init', () => {
