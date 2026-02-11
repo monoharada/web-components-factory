@@ -3,23 +3,31 @@ set -euo pipefail
 
 threshold_mb=200
 
+usage() {
+  echo "usage: $0 [--threshold-mb <number>]" >&2
+}
+
+die() {
+  echo "$1" >&2
+  exit 1
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --threshold-mb)
-      threshold_mb="${2:-}"
+      [[ $# -ge 2 ]] || die "missing value for --threshold-mb"
+      threshold_mb="$2"
       shift 2
       ;;
     *)
-      echo "unknown option: $1" >&2
-      echo "usage: $0 [--threshold-mb <number>]" >&2
-      exit 1
+      usage
+      die "unknown option: $1"
       ;;
   esac
 done
 
 if ! [[ "$threshold_mb" =~ ^[0-9]+$ ]]; then
-  echo "threshold must be an integer MB value" >&2
-  exit 1
+  die "threshold must be an integer MB value"
 fi
 
 codex_home="${CODEX_HOME:-$HOME/.codex}"
@@ -43,10 +51,10 @@ if (( size_bytes < threshold_bytes )); then
   exit 0
 fi
 
-mkdir -p "$archive_dir"
 timestamp="$(date +%Y%m%d-%H%M%S)"
 backup_path="$archive_dir/codex-tui.$timestamp.log.bak"
 
+mkdir -p "$archive_dir"
 mv "$log_path" "$backup_path"
 : > "$log_path"
 chmod 600 "$log_path" || true

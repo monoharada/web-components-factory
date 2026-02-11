@@ -11,6 +11,24 @@ fi
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
+print_section() {
+  echo "== $1 =="
+}
+
+run_cmd() {
+  local cmd="$1"
+  echo "\$ $cmd"
+  sh -c "$cmd"
+  echo
+}
+
+run_cmd_nonfatal() {
+  local cmd="$1"
+  echo "\$ $cmd"
+  sh -c "$cmd" || true
+  echo
+}
+
 measure_avg_sec() {
   local cmd="$1"
   local tmp_dir
@@ -23,65 +41,42 @@ measure_avg_sec() {
   rm -rf "$tmp_dir"
 }
 
-echo "== A) Repository State =="
-echo '$ git status --porcelain'
-git status --porcelain
-echo
-echo '$ git diff --stat'
-git diff --stat
-echo
-echo '$ git ls-files -v | head'
-git ls-files -v | head || true
-echo
-echo '$ git rev-parse --show-toplevel'
-git rev-parse --show-toplevel
-echo
-echo '$ git status --porcelain | wc -l'
-git status --porcelain | wc -l
-echo '$ git ls-files --others --exclude-standard | wc -l'
-git ls-files --others --exclude-standard | wc -l
-echo
+print_section "A) Repository State"
+run_cmd 'git status --porcelain'
+run_cmd 'git diff --stat'
+run_cmd_nonfatal 'git ls-files -v | head'
+run_cmd 'git rev-parse --show-toplevel'
+run_cmd 'git status --porcelain | wc -l'
+run_cmd 'git ls-files --others --exclude-standard | wc -l'
 
-echo "== B) Top 20 Large Files =="
-echo '$ find . -maxdepth 6 -type f -print0 | xargs -0 ls -ln | sort -nrk5 | head -n 20'
-find . -maxdepth 6 -type f -print0 | xargs -0 ls -ln 2>/dev/null | sort -nrk5 | head -n 20 || true
-echo
+print_section "B) Top 20 Large Files"
+run_cmd_nonfatal 'find . -maxdepth 6 -type f -print0 | xargs -0 ls -ln 2>/dev/null | sort -nrk5 | head -n 20'
 
 if [[ -f custom-elements.json ]]; then
-  echo "== C) custom-elements.json =="
-  echo '$ ls -lh custom-elements.json'
-  ls -lh custom-elements.json
-  echo '$ wc -c custom-elements.json'
-  wc -c custom-elements.json
-  echo '$ wc -l custom-elements.json'
-  wc -l custom-elements.json
-  echo '$ git log -n 5 --date=iso --pretty=format:"%h %ad %an %s" -- custom-elements.json'
-  git log -n 5 --date=iso --pretty=format:'%h %ad %an %s' -- custom-elements.json
-  echo
+  print_section "C) custom-elements.json"
+  run_cmd 'ls -lh custom-elements.json'
+  run_cmd 'wc -c custom-elements.json'
+  run_cmd 'wc -l custom-elements.json'
+  run_cmd 'git log -n 5 --date=iso --pretty=format:"%h %ad %an %s" -- custom-elements.json'
 fi
 
-echo "== D) Untracked Breakdown =="
+print_section "D) Untracked Breakdown"
 untracked_count="$(git ls-files --others --exclude-standard | wc -l | tr -d ' ')"
 echo "untracked_count=$untracked_count"
 if [[ "$untracked_count" -gt 0 ]]; then
-  git ls-files --others --exclude-standard | awk -F/ '{print $1}' | sort | uniq -c | sort -nr | head -n 20 || true
+  run_cmd_nonfatal "git ls-files --others --exclude-standard | awk -F/ '{print \\$1}' | sort | uniq -c | sort -nr | head -n 20"
+else
+  echo
 fi
-echo
 
-echo "== E) Codex Logs (Top by size) =="
-echo '$ find "$HOME" -maxdepth 6 \( -name "*codex*log*" -o -name "codex-tui.log" \) -type f'
-find "$HOME" -maxdepth 6 \( -name '*codex*log*' -o -name 'codex-tui.log' \) -type f 2>/dev/null \
-  | xargs -I{} ls -ln {} 2>/dev/null | sort -nrk5 | head -n 20 || true
-echo
+print_section "E) Codex Logs (Top by size)"
+run_cmd_nonfatal "find \"\$HOME\" -maxdepth 6 \\( -name '*codex*log*' -o -name 'codex-tui.log' \\) -type f 2>/dev/null | xargs -I{} ls -ln {} 2>/dev/null | sort -nrk5 | head -n 20"
 
-echo "== F) Worktree State =="
-echo '$ git worktree list'
-git worktree list
-echo '$ git worktree list | wc -l'
-git worktree list | wc -l
-echo
+print_section "F) Worktree State"
+run_cmd 'git worktree list'
+run_cmd 'git worktree list | wc -l'
 
-echo "== Quick Benchmarks =="
+print_section "Quick Benchmarks"
 echo "git status --porcelain: $(measure_avg_sec 'git status --porcelain')"
 echo "git status --porcelain --untracked-files=all: $(measure_avg_sec 'git status --porcelain --untracked-files=all')"
 echo "git diff -- custom-elements.json: $(measure_avg_sec 'git diff -- custom-elements.json')"
