@@ -7,8 +7,6 @@ import {
   CHIP_TAG_ICON_SVG,
   CHIP_TAG_ICON_OPTIONS,
   MAIL_CLEAR_ICON_SVG,
-  annotationToggleScript,
-  annotationToggleUI,
   dadsColHeaderLine,
   dadsColHeaderLines,
   dadsDataCellLines,
@@ -19,6 +17,8 @@ import {
   renderAllChipLabels,
   renderApiPanelWrapper,
   repeatLines,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 
 import { headingDemo } from './heading.js';
@@ -643,15 +643,11 @@ export const demos = {
         デジタル庁デザインシステム準拠の引用ブロックコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈（a11y-annotate） -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-blockquote">
           <div style="padding: 60px 0;">
             <dads-blockquote>
@@ -734,7 +730,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-blockquote-gap</code></th>
-                        <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>--spacing-4</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-blockquote-gap" value="" data-api-css-var="--dads-blockquote-gap" data-default=""></dads-input-text>
@@ -745,7 +741,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-blockquote-margin-inline</code></th>
-                        <td><code>--spacing-10</code><br><small style="color:#666">(40px)</small></td>
+                        <td><code>--spacing-10</code><br><small class="wc-api-table__meta">(40px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-blockquote-margin-inline" value="" data-api-css-var="--dads-blockquote-margin-inline" data-default=""></dads-input-text>
@@ -756,7 +752,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-blockquote-padding-inline-start</code></th>
-                        <td><code>--spacing-6</code><br><small style="color:#666">(24px)</small></td>
+                        <td><code>--spacing-6</code><br><small class="wc-api-table__meta">(24px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-blockquote-padding-inline-start" value="" data-api-css-var="--dads-blockquote-padding-inline-start" data-default=""></dads-input-text>
@@ -767,7 +763,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-blockquote-padding-inline-end</code></th>
-                        <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>--spacing-4</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-blockquote-padding-inline-end" value="" data-api-css-var="--dads-blockquote-padding-inline-end" data-default=""></dads-input-text>
@@ -789,7 +785,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-blockquote-border-color</code></th>
-                        <td><code>--color-neutral-solid-gray-536</code><br><small style="color:#666">(#767676)</small></td>
+                        <td><code>--color-neutral-solid-gray-536</code><br><small class="wc-api-table__meta">(#767676)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-blockquote-border-color" value="" data-api-css-var="--dads-blockquote-border-color" data-default=""></dads-input-text>
@@ -800,7 +796,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-blockquote-font-size</code></th>
-                        <td><code>1.0625rem</code><br><small style="color:#666">(17px)</small></td>
+                        <td><code>1.0625rem</code><br><small class="wc-api-table__meta">(17px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-blockquote-font-size" value="" data-api-css-var="--dads-blockquote-font-size" data-default=""></dads-input-text>
@@ -811,7 +807,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-blockquote-color</code></th>
-                        <td><code>--color-neutral-solid-gray-800</code><br><small style="color:#666">(#333)</small></td>
+                        <td><code>--color-neutral-solid-gray-800</code><br><small class="wc-api-table__meta">(#333)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-blockquote-color" value="" data-api-css-var="--dads-blockquote-color" data-default=""></dads-input-text>
@@ -967,15 +963,11 @@ export const demos = {
         デジタル庁デザインシステムv2.7.0準拠のボタンコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-button">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-button variant="solid" size="medium">ボタンテキスト</dads-button>
@@ -1298,8 +1290,7 @@ export const demos = {
         </p>
       </header>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <style>
         .card-page {
@@ -1406,10 +1397,7 @@ export const demos = {
 
       <!-- アクセシビリティ注釈 -->
       <section class="card-demo-section">
-        <h3 class="card-section__title">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p class="card-section__note">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader({ titleClassName: "card-section__title", noteClassName: "card-section__note" })}
         <a11y-annotate target-selector="dads-card">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-card style="width: min(420px, 100%);">
@@ -1688,7 +1676,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-border-radius</code></th>
-                          <td><code>--border-radius-16</code><br><small style="color:#666">(16px)</small></td>
+                          <td><code>--border-radius-16</code><br><small class="wc-api-table__meta">(16px)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-border-radius" value="" data-api-css-var="--dads-card-border-radius" data-default=""></dads-input-text>
@@ -1721,7 +1709,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-media-width</code></th>
-                          <td><code>calc(352 / 16 * 1rem)</code><br><small style="color:#666">(352px)</small></td>
+                          <td><code>calc(352 / 16 * 1rem)</code><br><small class="wc-api-table__meta">(352px)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-media-width" value="" data-api-css-var="--dads-card-media-width" data-default=""></dads-input-text>
@@ -1743,7 +1731,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-padding-block</code></th>
-                          <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                          <td><code>--spacing-4</code><br><small class="wc-api-table__meta">(16px)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-padding-block" value="" data-api-css-var="--dads-card-padding-block" data-default=""></dads-input-text>
@@ -1754,7 +1742,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-padding-inline</code></th>
-                          <td><code>--spacing-6</code><br><small style="color:#666">(24px)</small></td>
+                          <td><code>--spacing-6</code><br><small class="wc-api-table__meta">(24px)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-padding-inline" value="" data-api-css-var="--dads-card-padding-inline" data-default=""></dads-input-text>
@@ -1765,7 +1753,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-gap</code></th>
-                          <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                          <td><code>--spacing-4</code><br><small class="wc-api-table__meta">(16px)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-gap" value="" data-api-css-var="--dads-card-gap" data-default=""></dads-input-text>
@@ -1798,7 +1786,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-title-font-size</code></th>
-                          <td><code>--font-size-20</code><br><small style="color:#666">(1.25rem)</small></td>
+                          <td><code>--font-size-20</code><br><small class="wc-api-table__meta">(1.25rem)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-title-font-size" value="" data-api-css-var="--dads-card-title-font-size" data-default=""></dads-input-text>
@@ -1809,7 +1797,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-title-font-weight</code></th>
-                          <td><code>--font-weight-700</code><br><small style="color:#666">(700)</small></td>
+                          <td><code>--font-weight-700</code><br><small class="wc-api-table__meta">(700)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-title-font-weight" value="" data-api-css-var="--dads-card-title-font-weight" data-default=""></dads-input-text>
@@ -1831,7 +1819,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-title-underline-offset</code></th>
-                          <td><code>calc(3 / 16 * 1rem)</code><br><small style="color:#666">(3px)</small></td>
+                          <td><code>calc(3 / 16 * 1rem)</code><br><small class="wc-api-table__meta">(3px)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-title-underline-offset" value="" data-api-css-var="--dads-card-title-underline-offset" data-default=""></dads-input-text>
@@ -1842,7 +1830,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-title-underline-thickness</code></th>
-                          <td><code>calc(1 / 16 * 1rem)</code><br><small style="color:#666">(1px)</small></td>
+                          <td><code>calc(1 / 16 * 1rem)</code><br><small class="wc-api-table__meta">(1px)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-title-underline-thickness" value="" data-api-css-var="--dads-card-title-underline-thickness" data-default=""></dads-input-text>
@@ -1853,7 +1841,7 @@ export const demos = {
 
                         <tr>
                           <th scope="row"><code>--dads-card-title-underline-thickness-hover</code></th>
-                          <td><code>calc(3 / 16 * 1rem)</code><br><small style="color:#666">(3px)</small></td>
+                          <td><code>calc(3 / 16 * 1rem)</code><br><small class="wc-api-table__meta">(3px)</small></td>
                           <td>
                             <div class="wc-api-control">
                               <dads-input-text label="--dads-card-title-underline-thickness-hover" value="" data-api-css-var="--dads-card-title-underline-thickness-hover" data-default=""></dads-input-text>
@@ -3286,15 +3274,11 @@ export const demos = {
         DADS準拠の箇条書きリスト。<code>&lt;ol&gt;</code> や CSS カウンターは使わず、項番は地のテキストとして扱います。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈（a11y-annotate） -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate
           target-selector="dads-list"
           style="
@@ -3452,7 +3436,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-list-marker-gap</code></th>
-                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td><code>--spacing-2</code><br><small class="wc-api-table__meta">(8px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-list-marker-gap" value="" data-api-css-var="--dads-list-marker-gap" data-default=""></dads-input-text>
@@ -3474,7 +3458,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-list-marker-color</code></th>
-                        <td><code>--color-neutral-solid-gray-800</code><br><small style="color:#666">(#333)</small></td>
+                        <td><code>--color-neutral-solid-gray-800</code><br><small class="wc-api-table__meta">(#333)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-list-marker-color" value="" data-api-css-var="--dads-list-marker-color" data-default=""></dads-input-text>
@@ -3545,15 +3529,11 @@ export const demos = {
         <br>※ <code>div</code> ラップは任意です。<code>dt</code> / <code>dd</code> を直接書いた場合も内部で <code>dl</code> を構築します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈（a11y-annotate） -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate
           target-selector="dads-description-list"
           style="
@@ -3707,7 +3687,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-description-list-margin-block</code></th>
-                        <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>--spacing-4</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-description-list-margin-block" value="" data-api-css-var="--dads-description-list-margin-block" data-default=""></dads-input-text>
@@ -3718,7 +3698,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-description-list-item-gap</code></th>
-                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td><code>--spacing-2</code><br><small class="wc-api-table__meta">(8px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-description-list-item-gap" value="" data-api-css-var="--dads-description-list-item-gap" data-default=""></dads-input-text>
@@ -3729,7 +3709,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-description-list-indent</code></th>
-                        <td><code>--spacing-8</code><br><small style="color:#666">(32px)</small></td>
+                        <td><code>--spacing-8</code><br><small class="wc-api-table__meta">(32px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-description-list-indent" value="" data-api-css-var="--dads-description-list-indent" data-default=""></dads-input-text>
@@ -3740,7 +3720,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-description-list-term-font-weight</code></th>
-                        <td><code>--font-weight-700</code><br><small style="color:#666">(700)</small></td>
+                        <td><code>--font-weight-700</code><br><small class="wc-api-table__meta">(700)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-description-list-term-font-weight" value="" data-api-css-var="--dads-description-list-term-font-weight" data-default=""></dads-input-text>
@@ -4042,8 +4022,7 @@ export const demos = {
         DADS準拠のリソースリスト。カード状の1行要素として、リンク・選択コントロール・補足ラベル・アクションを組み合わせられます。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <style>
         .resource-list-figma-item {
@@ -4249,10 +4228,7 @@ export const demos = {
 
       <!-- アクセシビリティ注釈（a11y-annotate） -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <div class="resource-list-annotate-stack">
           <div>
             <p class="resource-list-annotate-variant-title">リンク版</p>
@@ -4771,15 +4747,11 @@ export const demos = {
         デジタル庁デザインシステム（DADS）HTML版 chip-label.css と同一の見た目になるよう実装したWeb Components版です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-chip-label">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-chip-label variant="filled-outline" color="purple">
@@ -4883,7 +4855,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-chip-label-min-height</code></th>
-                        <td><code>--spacing-8</code><br><small style="color:#666">(32px)</small></td>
+                        <td><code>--spacing-8</code><br><small class="wc-api-table__meta">(32px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-chip-label-min-height" value="" data-api-css-var="--dads-chip-label-min-height" data-default=""></dads-input-text>
@@ -4894,7 +4866,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-chip-label-border-radius</code></th>
-                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td><code>--spacing-2</code><br><small class="wc-api-table__meta">(8px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-chip-label-border-radius" value="" data-api-css-var="--dads-chip-label-border-radius" data-default=""></dads-input-text>
@@ -4927,7 +4899,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-chip-label-font-size</code></th>
-                        <td><code>--font-size-16</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>--font-size-16</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-chip-label-font-size" value="" data-api-css-var="--dads-chip-label-font-size" data-default=""></dads-input-text>
@@ -4949,7 +4921,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-chip-label-icon-gap</code></th>
-                        <td><code>--spacing-1</code><br><small style="color:#666">(4px)</small></td>
+                        <td><code>--spacing-1</code><br><small class="wc-api-table__meta">(4px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-chip-label-icon-gap" value="" data-api-css-var="--dads-chip-label-icon-gap" data-default=""></dads-input-text>
@@ -5001,15 +4973,11 @@ export const demos = {
         アイテム化した任意の情報を、表示・削除しやすくするための要素です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-chip-tag">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-chip-tag data-chip-tag-lead-target>
@@ -5175,7 +5143,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-chip-tag-min-height</code></th>
-                        <td><code>--spacing-8</code><br><small style="color:#666">(32px)</small></td>
+                        <td><code>--spacing-8</code><br><small class="wc-api-table__meta">(32px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-chip-tag-min-height" value="" data-api-css-var="--dads-chip-tag-min-height" data-default=""></dads-input-text>
@@ -5197,7 +5165,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-chip-tag-padding-block</code></th>
-                        <td><code>--spacing-1</code><br><small style="color:#666">(4px)</small></td>
+                        <td><code>--spacing-1</code><br><small class="wc-api-table__meta">(4px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-chip-tag-padding-block" value="" data-api-css-var="--dads-chip-tag-padding-block" data-default=""></dads-input-text>
@@ -5208,7 +5176,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-chip-tag-padding-inline</code></th>
-                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td><code>--spacing-2</code><br><small class="wc-api-table__meta">(8px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-chip-tag-padding-inline" value="" data-api-css-var="--dads-chip-tag-padding-inline" data-default=""></dads-input-text>
@@ -5219,7 +5187,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-chip-tag-icon-size</code></th>
-                        <td><code>--spacing-6</code><br><small style="color:#666">(24px)</small></td>
+                        <td><code>--spacing-6</code><br><small class="wc-api-table__meta">(24px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-chip-tag-icon-size" value="" data-api-css-var="--dads-chip-tag-icon-size" data-default=""></dads-input-text>
@@ -5417,8 +5385,7 @@ export const demos = {
         ネイティブの&lt;table&gt;をそのまま使い、DADS準拠の見た目とページ利用時の利便性（水平スクロール、行選択、ソートUI）を提供します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- 基本 -->
       <section class="table-annotate-basic" style="margin-bottom: 48px;">
@@ -6519,14 +6486,10 @@ ${dadsDataRows(6, 6)}
         DADS仕様（type/variant/close/actions）の通知バナー。重要度の高い情報をページ内で提示します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: var(--color-neutral-solid-gray-700, #4d4d4d); margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate
           target-selector="dads-notification-banner"
           style="
@@ -7087,12 +7050,11 @@ ${dadsDataRows(6, 6)}
         DADSの緊急時バナーをWeb Components化した実装です。接頭辞切替、更新日時、本文、CTAを提供します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 48px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: var(--color-neutral-solid-gray-900, #1a1a1a);">アクセシビリティ注釈（a11y-annotate）</h3>
-        <a11y-annotate
+        ${renderA11ySectionHeader()}
+<a11y-annotate
           target-selector="dads-emergency-banner"
           callout-lane="top"
           style="
@@ -7464,8 +7426,7 @@ ${dadsDataRows(6, 6)}
         デジタル庁デザインシステム準拠のスイッチ（トグル）コンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- 基本（アクセシビリティ注釈付き） -->
       <section style="margin-bottom: 60px;">

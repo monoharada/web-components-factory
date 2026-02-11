@@ -4,13 +4,13 @@ import {
   API_TABLE_PROPS_HEADER,
   MENU_LIST_BOX_DUMMY_START_ICON_SVG,
   MENU_LIST_BOX_OPENER_ICON,
-  annotationToggleScript,
-  annotationToggleUI,
   menuListBoxDescriptionItems,
   menuListBoxNumberedItems,
   menuListItemStartIcon,
   modulePreloadScript,
   renderApiPanelWrapper,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 
 const DEMO_H2_STYLE = 'font-size: 28px; margin-bottom: 20px; color: #333;';
@@ -99,15 +99,11 @@ export const demos = {
         auto-validate 属性による自動バリデーションの作例です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-textarea">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-textarea
@@ -422,15 +418,11 @@ export const demos = {
         auto-validate 属性による必須バリデーションと、Emailフォーマット検証の作例です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-input-text">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-input-text
@@ -740,15 +732,11 @@ export const demos = {
         auto-validate 属性による必須バリデーションの作例です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-select">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-select

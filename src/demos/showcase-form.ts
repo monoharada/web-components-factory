@@ -3,9 +3,9 @@ import {
   API_TABLE_CSS_VARS_NOTE,
   API_TABLE_PROPS_HEADER,
   API_TABLE_PROPS_WITH_TYPE_HEADER,
-  annotationToggleScript,
-  annotationToggleUI,
   renderApiPanelWrapper,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 
 export const demos = {
@@ -16,14 +16,10 @@ export const demos = {
         デジタル庁デザインシステム（DADS）HTML版 checkbox.css と同一の見た目になるよう実装したWeb Components版です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます（Annotateのバッジにバージョン表示）。
-        </p>
+        ${renderA11ySectionHeader({ note: "※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます（Annotateのバッジにバージョン表示）。" })}
 
         <a11y-annotate target-selector="dads-fieldset">
           <div style="display: grid; place-content: center; padding: 60px 0;">
@@ -234,7 +230,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--spacing-8</code></th>
-                        <td><code>2rem</code><br><small style="color:#666">(32px)</small></td>
+                        <td><code>2rem</code><br><small class="wc-api-table__meta">(32px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--spacing-8" value="" data-api-css-var="--spacing-8" data-default=""></dads-input-text>
@@ -245,7 +241,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--spacing-2</code></th>
-                        <td><code>0.5rem</code><br><small style="color:#666">(8px)</small></td>
+                        <td><code>0.5rem</code><br><small class="wc-api-table__meta">(8px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--spacing-2" value="" data-api-css-var="--spacing-2" data-default=""></dads-input-text>
@@ -256,7 +252,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--spacing-0-5</code></th>
-                        <td><code>0.125rem</code><br><small style="color:#666">(2px)</small></td>
+                        <td><code>0.125rem</code><br><small class="wc-api-table__meta">(2px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--spacing-0-5" value="" data-api-css-var="--spacing-0-5" data-default=""></dads-input-text>
@@ -267,7 +263,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--font-size-16</code></th>
-                        <td><code>1rem</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>1rem</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--font-size-16" value="" data-api-css-var="--font-size-16" data-default=""></dads-input-text>
@@ -454,14 +450,10 @@ export const demos = {
         Shadow DOMの制約により、同一nameグルーピング（排他）をコンポーネント側で補完します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
 
         <a11y-annotate target-selector="dads-radio">
           <div style="display: grid; place-content: center; padding: 60px 0;">
@@ -833,14 +825,10 @@ export const demos = {
         フォーム要素のグループ化と、aria-describedbyの自動設定を行います。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
 
         <a11y-annotate target-selector="dads-fieldset">
           <div style="display: grid; place-content: center; padding: 60px 0;">
@@ -969,7 +957,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--spacing-1</code></th>
-                        <td><code>0.25rem</code><br><small style="color:#666">(4px)</small></td>
+                        <td><code>0.25rem</code><br><small class="wc-api-table__meta">(4px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--spacing-1" value="" data-api-css-var="--spacing-1" data-default=""></dads-input-text>
@@ -980,7 +968,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--spacing-3</code></th>
-                        <td><code>0.75rem</code><br><small style="color:#666">(12px)</small></td>
+                        <td><code>0.75rem</code><br><small class="wc-api-table__meta">(12px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--spacing-3" value="" data-api-css-var="--spacing-3" data-default=""></dads-input-text>
@@ -991,7 +979,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--spacing-2</code></th>
-                        <td><code>0.5rem</code><br><small style="color:#666">(8px)</small></td>
+                        <td><code>0.5rem</code><br><small class="wc-api-table__meta">(8px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--spacing-2" value="" data-api-css-var="--spacing-2" data-default=""></dads-input-text>
@@ -1002,7 +990,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--font-size-16</code></th>
-                        <td><code>1rem</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>1rem</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--font-size-16" value="" data-api-css-var="--font-size-16" data-default=""></dads-input-text>
@@ -1113,15 +1101,11 @@ export const demos = {
         デジタル庁デザインシステム準拠のインプットテキストコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-input-text">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-input-text
@@ -1673,15 +1657,11 @@ export const demos = {
         デジタル庁デザインシステム準拠のテキストエリアコンポーネント。TDD（テスト駆動開発）で実装。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-textarea">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-textarea
@@ -2168,14 +2148,10 @@ export const demos = {
         DADS準拠のファイルアップロードUIです。ファイル選択ボタンを必須で提供し、ドラッグ&ドロップは補助操作として扱います。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ ファイル選択ボタン常設、ドロップ領域拡大切替、キーボード導線などを確認できます。
-        </p>
+        ${renderA11ySectionHeader({ note: "※ ファイル選択ボタン常設、ドロップ領域拡大切替、キーボード導線などを確認できます。" })}
         <a11y-annotate target-selector="dads-file-upload">
           <div style="display: grid; place-content: center; padding: 48px 0;">
             <dads-file-upload
@@ -2543,14 +2519,10 @@ export const demos = {
         デジタル庁デザインシステム（DADS）HTML版 search-box.css 相当をShadow DOM向けに移植したWeb Components版です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-search-box">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <form
@@ -2776,7 +2748,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-search-box-gap</code></th>
-                        <td><code>--spacing-4</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>--spacing-4</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-search-box-gap" value="" data-api-css-var="--dads-search-box-gap" data-default=""></dads-input-text>
@@ -2786,7 +2758,7 @@ export const demos = {
                       </tr>
                       <tr>
                         <th scope="row"><code>--dads-search-box-border-color</code></th>
-                        <td><code>--color-neutral-solid-gray-600</code><br><small style="color:#666">(#666)</small></td>
+                        <td><code>--color-neutral-solid-gray-600</code><br><small class="wc-api-table__meta">(#666)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text
@@ -2811,7 +2783,7 @@ export const demos = {
                       </tr>
 	                      <tr>
 	                        <th scope="row"><code>--dads-search-box-input-min-width</code></th>
-	                        <td><code>8rem</code><br><small style="color:#666">(128px)</small></td>
+	                        <td><code>8rem</code><br><small class="wc-api-table__meta">(128px)</small></td>
 	                        <td>
 	                          <div class="wc-api-control">
 	                            <dads-input-text label="--dads-search-box-input-min-width" value="" data-api-css-var="--dads-search-box-input-min-width" data-default=""></dads-input-text>
@@ -2821,7 +2793,7 @@ export const demos = {
 	                      </tr>
 	                      <tr>
 	                        <th scope="row"><code>--dads-search-box-search-icon-size</code></th>
-	                        <td><code>1.5rem</code><br><small style="color:#666">(24px)</small></td>
+	                        <td><code>1.5rem</code><br><small class="wc-api-table__meta">(24px)</small></td>
 	                        <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-search-box-search-icon-size" value="" data-api-css-var="--dads-search-box-search-icon-size" data-default=""></dads-input-text>
@@ -2831,7 +2803,7 @@ export const demos = {
                       </tr>
                       <tr>
                         <th scope="row"><code>--dads-search-box-scope-icon-size</code></th>
-                        <td><code>1rem</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>1rem</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-search-box-scope-icon-size" value="" data-api-css-var="--dads-search-box-scope-icon-size" data-default=""></dads-input-text>
@@ -2851,7 +2823,7 @@ export const demos = {
                       </tr>
                       <tr>
                         <th scope="row"><code>--dads-search-box-button-bg</code></th>
-                        <td><code>--color-primitive-blue-900</code><br><small style="color:#666">(#1a4ccc)</small></td>
+                        <td><code>--color-primitive-blue-900</code><br><small class="wc-api-table__meta">(#1a4ccc)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-search-box-button-bg" value="" data-api-css-var="--dads-search-box-button-bg" data-default=""></dads-input-text>
@@ -2861,7 +2833,7 @@ export const demos = {
                       </tr>
                       <tr>
                         <th scope="row"><code>--dads-search-box-button-color</code></th>
-                        <td><code>--color-neutral-white</code><br><small style="color:#666">(#fff)</small></td>
+                        <td><code>--color-neutral-white</code><br><small class="wc-api-table__meta">(#fff)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-search-box-button-color" value="" data-api-css-var="--dads-search-box-button-color" data-default=""></dads-input-text>
@@ -2871,7 +2843,7 @@ export const demos = {
                       </tr>
                       <tr>
                         <th scope="row"><code>--dads-search-box-button-bg-hover</code></th>
-                        <td><code>--color-primitive-blue-1000</code><br><small style="color:#666">(#143da3)</small></td>
+                        <td><code>--color-primitive-blue-1000</code><br><small class="wc-api-table__meta">(#143da3)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-search-box-button-bg-hover" value="" data-api-css-var="--dads-search-box-button-bg-hover" data-default=""></dads-input-text>
@@ -3075,15 +3047,11 @@ export const demos = {
         デジタル庁デザインシステム（DADS）HTML版 select.css 相当をShadow DOM向けに移植したWeb Components版です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-select">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-select

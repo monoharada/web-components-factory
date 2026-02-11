@@ -239,7 +239,7 @@ export class DadsAnnotate extends TypographyWebComponent {
             </div>
             <p part="panel-subtitle"></p>
           </div>
-          <div part="panel-body"></div>
+          <div part="panel-body" data-dads-typeset></div>
         </aside>
       </div>
     `,
@@ -263,12 +263,13 @@ export class DadsAnnotate extends TypographyWebComponent {
         /* Typography */
         --a11y-annotate-font-size: var(--font-size-16, 1rem);
         --a11y-annotate-circle-size: var(--spacing-6, 24px);
-        --a11y-annotate-body-line-height: var(--line-height-170, 1.7);
+        --a11y-annotate-body-line-height: var(--line-height-180, 1.8);
 
         /* Spacing */
-        --a11y-annotate-space-xs: var(--spacing-2, 8px);
-        --a11y-annotate-space-sm: var(--spacing-3, 12px);
-        --a11y-annotate-space-md: var(--spacing-4, 16px);
+        --a11y-annotate-space-xs: var(--spacing-2-5, 10px);
+        --a11y-annotate-space-sm: var(--spacing-4, 16px);
+        --a11y-annotate-space-md: var(--spacing-5, 20px);
+        --a11y-annotate-heading-margin-top: 0.75lh;
 
         /* パネル・レイアウト用カラー */
         --a11y-annotate-border-color: var(--color-border-light, #e5e7eb);
@@ -361,7 +362,7 @@ export class DadsAnnotate extends TypographyWebComponent {
       }
 
       a11y-annotate [part="panel-subtitle"] {
-        margin: var(--spacing-2, 8px) 0 0;
+        margin: var(--a11y-annotate-space-xs) 0 0;
         font-size: var(--a11y-annotate-font-size);
         line-height: 1.4;
         color: var(--a11y-annotate-text-secondary);
@@ -375,7 +376,7 @@ export class DadsAnnotate extends TypographyWebComponent {
 
       a11y-annotate section {
         display: grid;
-        gap: var(--a11y-annotate-space-xs);
+        gap: var(--a11y-annotate-space-sm);
       }
 
       a11y-annotate section > h3 {
@@ -386,11 +387,13 @@ export class DadsAnnotate extends TypographyWebComponent {
         color: var(--a11y-annotate-text-primary);
       }
 
+      a11y-annotate [part="panel-body"] > section:not(:first-child) > h3 {
+        margin-block-start: var(--a11y-annotate-heading-margin-top);
+      }
+
       a11y-annotate section > ul {
         margin: 0;
         padding-left: calc(var(--spacing-4, 16px) + var(--spacing-0-5, 2px));
-        display: grid;
-        gap: var(--a11y-annotate-space-xs);
         color: var(--a11y-annotate-text-primary);
         font-size: var(--a11y-annotate-font-size);
         line-height: var(--a11y-annotate-body-line-height);
@@ -505,7 +508,7 @@ export class DadsAnnotate extends TypographyWebComponent {
         padding: 0;
         list-style: none;
         display: grid;
-        gap: var(--a11y-annotate-space-sm);
+        gap: var(--a11y-annotate-space-md);
       }
 
       a11y-annotate .callout-item {
@@ -780,6 +783,7 @@ export class DadsAnnotate extends TypographyWebComponent {
     const panelCallouts = callouts.filter((c) => (c.callout.mode ?? 'both') !== 'marker');
     if (panelCallouts.length > 0) {
       const calloutSection = document.createElement('section');
+      calloutSection.setAttribute('data-dads-typeset', '');
       const calloutH3 = document.createElement('h3');
       calloutH3.textContent = 'アノテーション一覧';
       calloutSection.appendChild(calloutH3);
@@ -824,6 +828,7 @@ export class DadsAnnotate extends TypographyWebComponent {
     for (const category of CATEGORY_ORDER) {
       const content = asArray(categories[category] as string | readonly string[] | undefined);
       const section = document.createElement('section');
+      section.setAttribute('data-dads-typeset', '');
 
       const h3 = document.createElement('h3');
       h3.textContent = CATEGORY_LABELS[category];

@@ -73,50 +73,33 @@ Web Components ショーケースデモの標準テンプレートです。新�
 
 > 注釈表示は dev 専用です。viewer / demo では `?a11y=1` を付与してください。
 
-### トグルUI
+### トグルブロック
 
 ```javascript
-function annotationToggleUI(): string {
-  return `
-    <div style="display: flex; align-items: center; gap: 16px; ...">
-      <span>アクセシビリティ注釈:</span>
-      <dads-switch data-annotation-toggle checked>
-        <span slot="label-left">非表示</span>
-        <span slot="label-right">表示</span>
-      </dads-switch>
-    </div>
-  `;
-}
+${renderAnnotationToggleBlock()}
 ```
 
-### トグルスクリプト
+### 注釈見出し
 
 ```javascript
-function annotationToggleScript(): string {
-  return `
-    <script>
-      (function() {
-        var currentScript = document.currentScript;
-        customElements.whenDefined('dads-switch').then(function() {
-          var root = currentScript?.parentElement;
-          if (!root || !root.isConnected) return;
-          var toggle = root.querySelector('[data-annotation-toggle]');
-          if (!toggle) return;
-          var updateAnnotations = function() {
-            var isChecked = toggle.hasAttribute('checked');
-            var annotations = root.querySelectorAll('a11y-annotate');
-            for (var i = 0; i < annotations.length; i++) {
-              annotations[i].setAttribute('mode', isChecked ? 'both' : 'panel');
-            }
-          };
-          toggle.addEventListener('dads-change', updateAnnotations);
-          updateAnnotations();
-        });
-      })();
-    <\/script>
-  `;
-}
+${renderA11ySectionHeader()}
 ```
+
+特殊な見た目が必要な場合はクラス名を渡す。
+
+```javascript
+${renderA11ySectionHeader({ titleClassName: 'card-section__title', noteClassName: 'card-section__note' })}
+```
+
+## APIテーブル補足小字
+
+`<small style="color:#666">` は使わず、以下を使用する。
+
+```javascript
+"<code>--spacing-4</code><br>" + renderApiTableMeta("(16px)")
+```
+
+`renderApiTableMeta(text)` はプレーンテキスト限定で、内部でHTMLエスケープされる。
 
 ## CSS Variables テーブルのパターン
 

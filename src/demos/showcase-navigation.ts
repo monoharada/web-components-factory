@@ -7,11 +7,11 @@ import {
   CARD_APPLICATION_STEPS_EXTENDED,
   MENU_LIST_BOX_DUMMY_START_ICON_SVG,
   MENU_LIST_BOX_OPENER_ICON,
-  annotationToggleScript,
-  annotationToggleUI,
   menuListBoxNumberedItems,
   renderApiPanelWrapper,
   renderStepNavigationItems,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 
 export const demos = {
@@ -23,14 +23,10 @@ export const demos = {
         デジタル庁デザインシステム準拠のアコーディオンコンポーネント。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-accordion-details">
           <div style="padding: 60px 0;">
             <dads-accordion-details>
@@ -166,7 +162,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--accordion-border-color</code></th>
-                        <td><code>--color-neutral-solid-gray-420</code><br><small style="color:#666">(#949494)</small></td>
+                        <td><code>--color-neutral-solid-gray-420</code><br><small class="wc-api-table__meta">(#949494)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--accordion-border-color" value="" data-api-css-var="--accordion-border-color" data-default=""></dads-input-text>
@@ -188,7 +184,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--accordion-hover-bg</code></th>
-                        <td><code>--color-neutral-solid-gray-50</code><br><small style="color:#666">(#f2f2f2)</small></td>
+                        <td><code>--color-neutral-solid-gray-50</code><br><small class="wc-api-table__meta">(#f2f2f2)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--accordion-hover-bg" value="" data-api-css-var="--accordion-hover-bg" data-default=""></dads-input-text>
@@ -199,7 +195,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--accordion-text-primary</code></th>
-                        <td><code>--color-neutral-solid-gray-900</code><br><small style="color:#666">(#1a1a1a)</small></td>
+                        <td><code>--color-neutral-solid-gray-900</code><br><small class="wc-api-table__meta">(#1a1a1a)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--accordion-text-primary" value="" data-api-css-var="--accordion-text-primary" data-default=""></dads-input-text>
@@ -210,7 +206,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--accordion-font-size</code></th>
-                        <td><code>--font-size-16</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>--font-size-16</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--accordion-font-size" value="" data-api-css-var="--accordion-font-size" data-default=""></dads-input-text>
@@ -274,14 +270,10 @@ export const demos = {
         デジタル庁デザインシステム（DADS）HTML版 disclosure.css と同一の見た目になるよう実装したWeb Components版です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-disclosure">
           <div style="padding: 60px 0;">
             <dads-disclosure open>
@@ -477,7 +469,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-disclosure-gap</code></th>
-                        <td><code>--spacing-2</code><br><small style="color:#666">(8px)</small></td>
+                        <td><code>--spacing-2</code><br><small class="wc-api-table__meta">(8px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-disclosure-gap" value="" data-api-css-var="--dads-disclosure-gap" data-default=""></dads-input-text>
@@ -488,7 +480,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-disclosure-icon-size</code></th>
-                        <td><code>1.5rem</code><br><small style="color:#666">(24px)</small></td>
+                        <td><code>1.5rem</code><br><small class="wc-api-table__meta">(24px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-disclosure-icon-size" value="" data-api-css-var="--dads-disclosure-icon-size" data-default=""></dads-input-text>
@@ -499,7 +491,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-disclosure-icon-color</code></th>
-                        <td><code>--color-primitive-blue-1000</code><br><small style="color:#666">(#00118f)</small></td>
+                        <td><code>--color-primitive-blue-1000</code><br><small class="wc-api-table__meta">(#00118f)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-disclosure-icon-color" value="" data-api-css-var="--dads-disclosure-icon-color" data-default=""></dads-input-text>
@@ -510,7 +502,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-disclosure-content-padding-inline-start</code></th>
-                        <td><code>--spacing-8</code><br><small style="color:#666">(32px)</small></td>
+                        <td><code>--spacing-8</code><br><small class="wc-api-table__meta">(32px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-disclosure-content-padding-inline-start" value="" data-api-css-var="--dads-disclosure-content-padding-inline-start" data-default=""></dads-input-text>
@@ -521,7 +513,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-disclosure-back-link-color</code></th>
-                        <td><code>--color-primitive-blue-1000</code><br><small style="color:#666">(#00118f)</small></td>
+                        <td><code>--color-primitive-blue-1000</code><br><small class="wc-api-table__meta">(#00118f)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-disclosure-back-link-color" value="" data-api-css-var="--dads-disclosure-back-link-color" data-default=""></dads-input-text>
@@ -549,14 +541,10 @@ export const demos = {
         DADS準拠のメニューリスト（hover / focus / current / expanded / indentation）。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
 
         <a11y-annotate target-selector="dads-menu-list-item[current]">
           <div style="max-width: 560px; margin: 0 auto; padding: 24px 0;">
@@ -736,7 +724,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-menu-list-item-padding-x</code></th>
-                        <td><code>--spacing-4</code><br><small style="color:#666">(1rem)</small></td>
+                        <td><code>--spacing-4</code><br><small class="wc-api-table__meta">(1rem)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text
@@ -753,7 +741,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-menu-list-item-padding-y</code></th>
-                        <td><code>--spacing-2-5</code><br><small style="color:#666">(0.625rem)</small></td>
+                        <td><code>--spacing-2-5</code><br><small class="wc-api-table__meta">(0.625rem)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text
@@ -770,7 +758,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-menu-list-item-hover-background</code></th>
-                        <td><code>--color-neutral-solid-gray-50</code><br><small style="color:#666">(#f2f2f2)</small></td>
+                        <td><code>--color-neutral-solid-gray-50</code><br><small class="wc-api-table__meta">(#f2f2f2)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text
@@ -787,7 +775,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-menu-list-item-current-background</code></th>
-                        <td><code>--color-primitive-blue-100</code><br><small style="color:#666">(#d9e6ff)</small></td>
+                        <td><code>--color-primitive-blue-100</code><br><small class="wc-api-table__meta">(#d9e6ff)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text
@@ -804,7 +792,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--dads-menu-list-item-current-color</code></th>
-                        <td><code>--color-primitive-blue-1000</code><br><small style="color:#666">(#00118f)</small></td>
+                        <td><code>--color-primitive-blue-1000</code><br><small class="wc-api-table__meta">(#00118f)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text
@@ -890,8 +878,7 @@ export const demos = {
         opener + popup のメニュー（矢印キー / Home / End / Escape / 外側クリックで close）。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- 1. Overview -->
       <section style="margin-bottom: 40px;">
@@ -905,10 +892,7 @@ export const demos = {
 
       <!-- 2. A11y -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-menu-list-box">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-menu-list-box variant="outlined" size="sm" label="メニュー">
@@ -1719,14 +1703,10 @@ export const demos = {
         DADS準拠のグローバルメニュー。<code>dads-menu-list-box</code> と連携してサブメニューを表示します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、プレビュー上にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader({ note: "※ 右側パネルに仕様メモ、プレビュー上にターゲット要素のコールアウトが表示されます。" })}
         <a11y-annotate
           target-selector="dads-global-menu"
         >
@@ -1965,14 +1945,10 @@ export const demos = {
         <code>ul/ol/li</code> は使用せず、<code>role="list"</code>/<code>role="listitem"</code> でセマンティクスを補完します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
 
         <a11y-annotate target-selector="dads-breadcrumb">
           <div style="display: grid; place-content: center; padding: 48px 0;">
@@ -2259,14 +2235,10 @@ export const demos = {
         DADS準拠の補助リンク。先頭/末尾アイコンは任意で、末尾は <code>slot=&quot;tail-icon&quot;</code> が優先され、未指定時のみ <code>target=&quot;_blank&quot;</code> / <code>download</code> で自動表示します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-utility-link">
           <div style="display: grid; place-content: center; padding: 48px 0;">
             <dads-utility-link href="#" target="_blank">
@@ -2579,14 +2551,10 @@ export const demos = {
         DADS準拠の言語切替UI。opener（text/icon）、サイズ（regular/small）、キーボード操作、選択状態を提供します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          opener は表示言語に関わらず英語で表示し、項目は各言語表記で示します。
-        </p>
+        ${renderA11ySectionHeader({ note: "opener は表示言語に関わらず英語で表示し、項目は各言語表記で示します。" })}
         <a11y-annotate target-selector="dads-language-selector">
           <div style="display: grid; place-content: center; padding: 40px 0;">
             <dads-language-selector size="md" opener="text">
@@ -2846,8 +2814,7 @@ export const demos = {
         DADS カルーセル仕様に準拠しつつ、<code>items</code>（配列データ入力）と slot 入力の両方に対応し、<code>image-slider</code> で幅狭モードを明示指定できます。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">使い方（写真データの準備）</h3>
@@ -2907,10 +2874,7 @@ if (carousel) carousel.items = items;</code></pre>
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-carousel">
           <div style="padding: 24px 0;">
             <dads-carousel data-carousel-items aria-label="注目トピック"></dads-carousel>
@@ -3326,14 +3290,10 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
         デジタル庁デザインシステム（DADS）HTML版 step-navigation.css と同一の見た目になるよう実装したWeb Components版です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
 
         <a11y-annotate target-selector="dads-step-navigation">
           <div style="display: grid; place-content: center; padding: 48px 0;">
@@ -3582,7 +3542,7 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-step-navigation-step-width</code></th>
-                        <td><code>20rem</code><br><small style="color:#666">(320px)</small></td>
+                        <td><code>20rem</code><br><small class="wc-api-table__meta">(320px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-step-navigation-step-width" value="" data-api-css-var="--dads-step-navigation-step-width" data-default=""></dads-input-text>
@@ -3593,7 +3553,7 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
 
                       <tr>
                         <th scope="row"><code>--dads-step-navigation-step-min-width</code></th>
-                        <td><code>10rem</code><br><small style="color:#666">(160px)</small></td>
+                        <td><code>10rem</code><br><small class="wc-api-table__meta">(160px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-step-navigation-step-min-width" value="" data-api-css-var="--dads-step-navigation-step-min-width" data-default=""></dads-input-text>
@@ -3604,7 +3564,7 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
 
                       <tr>
                         <th scope="row"><code>--dads-step-navigation-color</code></th>
-                        <td><code>--color-neutral-solid-gray-800</code><br><small style="color:#666">(#333333)</small></td>
+                        <td><code>--color-neutral-solid-gray-800</code><br><small class="wc-api-table__meta">(#333333)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-step-navigation-color" value="" data-api-css-var="--dads-step-navigation-color" data-default=""></dads-input-text>
@@ -3615,7 +3575,7 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
 
                       <tr>
                         <th scope="row"><code>--dads-step-navigation-reached-number-bg</code></th>
-                        <td><code>--color-neutral-solid-gray-800</code><br><small style="color:#666">(#333333)</small></td>
+                        <td><code>--color-neutral-solid-gray-800</code><br><small class="wc-api-table__meta">(#333333)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-step-navigation-reached-number-bg" value="" data-api-css-var="--dads-step-navigation-reached-number-bg" data-default=""></dads-input-text>
@@ -3626,7 +3586,7 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
 
                       <tr>
                         <th scope="row"><code>--dads-step-navigation-reached-number-color</code></th>
-                        <td><code>--color-neutral-white</code><br><small style="color:#666">(#ffffff)</small></td>
+                        <td><code>--color-neutral-white</code><br><small class="wc-api-table__meta">(#ffffff)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-step-navigation-reached-number-color" value="" data-api-css-var="--dads-step-navigation-reached-number-color" data-default=""></dads-input-text>
@@ -3648,7 +3608,7 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
 
                       <tr>
                         <th scope="row"><code>--dads-step-navigation-focus-ring-color</code></th>
-                        <td><code>--color-primitive-yellow-300</code><br><small style="color:#666">(#ffd43d)</small></td>
+                        <td><code>--color-primitive-yellow-300</code><br><small class="wc-api-table__meta">(#ffd43d)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-step-navigation-focus-ring-color" value="" data-api-css-var="--dads-step-navigation-focus-ring-color" data-default=""></dads-input-text>
@@ -4156,14 +4116,9 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
       </section>
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="color: #666; margin-bottom: 16px; font-size: 14px;">
-          複数ステップを並べて、状態（state）や現在位置（aria-current）の注釈が分散して表示されるようにしています。
-          リンク/ボタンとして利用する場合は <code>aria-label</code>/<code>aria-labelledby</code> で「何のナビか」を指定し、必要に応じて <code>status-live</code> で進捗文言の読み上げを有効化します。
-        </p>
+        ${renderA11ySectionHeader({ note: "複数ステップを並べて、状態（state）や現在位置（aria-current）の注釈が分散して表示されるようにしています。 リンク/ボタンとして利用する場合は <code>aria-label</code>/<code>aria-labelledby</code> で「何のナビか」を指定し、必要に応じて <code>status-live</code> で進捗文言の読み上げを有効化します。" })}
 
-        ${annotationToggleUI()}
-        ${annotationToggleScript()}
+        ${renderAnnotationToggleBlock()}
 
         <a11y-annotate target-selector="dads-step-navigation">
           <div style="display: grid; place-content: center; padding: 24px 0;">
@@ -4338,15 +4293,11 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
         前/次の移動と、任意のステータス表示（例: 1/24, 9,999 / 9,999, ページ名など）を組み合わせるコンポーネント。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈 -->
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-page-navigation">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-page-navigation

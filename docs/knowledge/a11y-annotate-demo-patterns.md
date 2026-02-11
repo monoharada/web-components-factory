@@ -8,41 +8,13 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 
 ### 1. トグル機能の実装
 
-全デモで共通のトグルパターンを使用し、コールアウトマーカーのON/OFF切り替えを提供する。
+全デモで `src/demos/shared.ts` の共通ヘルパーを使い、コールアウトマーカーのON/OFF切り替えを提供する。
 
-```html
-<!-- 注釈表示切り替え -->
-<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding: 16px; background: #f0f4f8; border-radius: 8px;">
-  <span style="font-weight: 600; color: #333;">アクセシビリティ注釈:</span>
-  <dads-switch data-annotation-toggle checked>
-    <span slot="label-left">非表示</span>
-    <span slot="label-right">表示</span>
-  </dads-switch>
-</div>
-<script>
-  // 重要: document.currentScript は同期で捕捉する（then内だとnullになりうる）
-  const script = document.currentScript;
-  customElements.whenDefined('dads-switch').then(() => {
-    const root = script?.parentElement;
-    if (!root || !root.isConnected) return;
-
-    const toggle = root.querySelector('[data-annotation-toggle]');
-    if (!toggle) return;
-
-    const updateAnnotations = () => {
-      const isChecked = toggle.hasAttribute('checked');
-      const annotations = root.querySelectorAll('a11y-annotate');
-      for (const ann of annotations) {
-        // mode="both" でコールアウト表示、mode="panel" でパネルのみ
-        ann.setAttribute('mode', isChecked ? 'both' : 'panel');
-      }
-    };
-
-    toggle.addEventListener('dads-change', updateAnnotations);
-    updateAnnotations();
-  });
-</script>
+```ts
+${renderAnnotationToggleBlock()}
 ```
+
+`renderAnnotationToggleBlock()` は `annotationToggleUI()` + `annotationToggleScript()` の互換ラッパー。
 
 **重要**:
 - 公開APIの `mode` 属性で切り替え（内部パーツに依存しない）
@@ -63,10 +35,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 
 ```html
 <section style="margin-bottom: 40px;">
-  <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-  <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-    ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-  </p>
+  ${renderA11ySectionHeader()}
   <a11y-annotate target-selector="dads-button">
     <div style="display: grid; place-content: center; padding: 60px 0;">
       <dads-button variant="solid" size="medium">ボタンテキスト</dads-button>
@@ -79,10 +48,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 
 ```html
 <section style="margin-bottom: 40px;">
-  <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-  <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-    ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-  </p>
+  ${renderA11ySectionHeader()}
   <a11y-annotate target-selector="dads-textarea">
     <div style="display: grid; place-content: center; padding: 60px 0;">
       <dads-textarea
@@ -111,10 +77,7 @@ a11y-annotate（アクセシビリティ注釈）コンポーネントをデモ�
 
 ```html
 <section style="margin-bottom: 40px;">
-  <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-  <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-    ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-  </p>
+  ${renderA11ySectionHeader()}
   <a11y-annotate target-selector="dads-accordion-details">
     <div style="padding: 60px 0;">
       <dads-accordion-details>

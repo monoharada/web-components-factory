@@ -1,4 +1,7 @@
-import { annotationToggleScript, annotationToggleUI } from './shared.js';
+import {
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
+} from './shared.js';
 
 export const demos = {
   tableControl: () => `
@@ -746,15 +749,11 @@ export const demos = {
       </style>
 
       <section style="margin-bottom: 56px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（Table Control Components）</h3>
-        <p style="font-size: 14px; color: #666; margin: 0 0 16px;">
-          テーブルコントロールの検索行と表示件数行について、各要素の役割を注釈付きで確認できます。
-        </p>
+        ${renderA11ySectionHeader({ title: "アクセシビリティ注釈（Table Control Components）", note: "テーブルコントロールの検索行と表示件数行について、各要素の役割を注釈付きで確認できます。" })}
 
         <div class="table-control-annotate-demo__root table-control-municipal-demo__root">
           <div class="table-control-annotate-demo__toggle">
-            ${annotationToggleUI()}
-            ${annotationToggleScript()}
+            ${renderAnnotationToggleBlock()}
           </div>
 
           <div class="table-control-annotate-demo__frame">

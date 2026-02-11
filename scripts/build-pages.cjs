@@ -140,6 +140,7 @@ function rewriteAbsoluteAssetPathsToRelative(html) {
 
   // Dynamic import / preload arrays with leading "/@components/..."
   out = out.replace(/(['"])\/@components\//g, '$1./@components/');
+  out = out.replace(/(['"])\/styles\//g, '$1./styles/');
 
   return out;
 }
