@@ -4,6 +4,31 @@
 
 ---
 
+## [2026-02-11] 緊急時バナーは「API表・注釈レイアウト・フォーカス可視性」を同時に閉じる
+**タグ**: #emergency-banner #a11y #api-table #focus-visible #testing #postflight
+
+### 概要
+`dads-emergency-banner` で見た目・挙動は揃っていても、(1) APIテーブルのCSS変数網羅漏れ、(2) a11y注釈の視認性不足、(3) `outline: none` 検出、の3点が別々に残ると品質ゲートで詰まる。  
+UIの完成度は「実装コード」だけでなく「デモAPI表」「注釈表示」「lintルール適合」を同時に満たして初めて成立する。
+
+### 学び
+1. 公開CSS変数は実装・CEM・デモAPI表を三点一致させる（今回は `--dads-emergency-banner-color` の表記漏れを修正）。
+2. a11y注釈の「整理」は `callout-gutter` だけでなく `callout-lane` / `lane-offset` / コンテンツ幅をセットで調整する。
+3. フォーカスは `:focus` で可視リングを確保し、`:focus:not(:focus-visible)` でポインタ時のみ抑制すると監査と互換性の両立がしやすい。
+
+### 適用例（今回）
+- `src/demos/showcase-components.ts`
+  - 緊急時バナー注釈を `callout-lane="top"` + 幅拡張（`padding: 96px 160px`, `max-width: 1240px`）へ更新
+  - API表へ `--dads-emergency-banner-color` を追加
+- `src/demos/showcase-components.test.ts`
+  - 注釈レイアウト値とCSS変数行の存在を回帰テスト化
+- `packages/components/emergency-banner/emergency-banner-styles.ts`
+  - `outline: none` を廃止し、`:focus` 可視 + `:focus:not(:focus-visible)` 抑制に変更
+
+### 再発防止
+- 新規コンポーネントでは「実装・CEM・APIテーブル・a11y注釈」の4点を同一タスクで検証する。
+- postflight で `a11y_diff_lint` と coverage 比較を必ず実行し、UI調整系の見落としを早期検出する。
+
 ## [2026-02-10] Divider余白は「内部解決したshorthand変数」を1回だけmargin適用する
 **タグ**: #divider #css-variables #webcomponents #a11y #coverage
 

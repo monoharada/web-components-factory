@@ -2092,6 +2092,108 @@
       }
     ]
   },
+  "dads-emergency-banner": {
+    "version": 1,
+    "summary": "緊急時バナーのパーツ構成（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "緊急時バナーは、見出し・更新日時・本文・CTAをまとめて提示する情報コンテナです。",
+        "接頭辞（既定: 【緊急】）は prefix-mode で自動表示と手動表示を切り替えられます。",
+        "バナー本体は region として公開され、見出しと関連づけられます。"
+      ],
+      "keyboard": [
+        "CTAリンクはTabでフォーカスでき、Enterで遷移できます。",
+        "target=\"_blank\" の場合も通常リンクとしてキーボード操作できます。",
+        "target=\"_blank\" のときはリンク名に新規タブ遷移の補助情報を付与します。"
+      ],
+      "zoom": [
+        "本文は折り返しを前提とし、拡大時も情報欠落を防ぎます。",
+        "CTAは狭幅では全幅、広幅では中央配置で可読性と操作性を維持します。"
+      ],
+      "states": [
+        "prefix-mode=\"auto\" では接頭辞を表示し、prefix-mode=\"manual\" では接頭辞表示を抑制します。",
+        "href と slot=\"action\" の両方がある場合のみCTAを表示します。"
+      ],
+      "labels": [
+        "headingスロットの文言が通知の主要ラベルです。",
+        "prefix-label で接頭辞文字列を上書きできます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "emergency-region",
+        "title": "情報リージョン",
+        "label": "region",
+        "description": "見出しをラベル参照する情報コンテナです。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "emergency-heading",
+        "title": "見出し",
+        "label": "slot=\"heading\"",
+        "description": "緊急情報の主題を示す見出しテキストです。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "selector": "[slot=\"heading\"]"
+        }
+      },
+      {
+        "id": "emergency-prefix",
+        "title": "接頭辞",
+        "label": "prefix",
+        "description": "prefix-mode=\"auto\" のときに表示される接頭辞です。",
+        "category": "states",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"prefix\"]"
+        }
+      },
+      {
+        "id": "emergency-timestamp",
+        "title": "更新日時",
+        "label": "slot=\"timestamp\"",
+        "description": "通知の更新日時を示す補助情報です。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "selector": "[slot=\"timestamp\"]"
+        }
+      },
+      {
+        "id": "emergency-body",
+        "title": "本文",
+        "label": "default slot",
+        "description": "通知内容の説明本文です。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "selector": ":scope > p:not([slot])"
+        }
+      },
+      {
+        "id": "emergency-action",
+        "title": "CTAリンク",
+        "label": "action-link",
+        "description": "避難所確認などの緊急導線を提供するリンクです。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"action-link\"]"
+        }
+      }
+    ]
+  },
   "dads-page-navigation": {
     "version": 1,
     "summary": "ページナビゲーション（アクセシビリティ注釈）",

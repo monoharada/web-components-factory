@@ -210,6 +210,18 @@
         "componentDir": "packages/components/drawer"
       }
     },
+    "emergency-banner": {
+      "id": "emergency-banner",
+      "tags": [
+        "dads-emergency-banner"
+      ],
+      "define": "defineEmergencyBanner",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/emergency-banner"
+      }
+    },
     "fieldset": {
       "id": "fieldset",
       "tags": [
@@ -540,6 +552,7 @@
     "dads-disclosure": "disclosure",
     "dads-divider": "divider",
     "dads-drawer": "drawer",
+    "dads-emergency-banner": "emergency-banner",
     "dads-fieldset": "fieldset",
     "dads-file-upload": "file-upload",
     "dads-global-menu": "global-menu",
