@@ -37,6 +37,14 @@ Thumbs.db
 *.log
 logs/
 
+# Codex runtime artifacts (local)
+.codex/log/
+.codex/logs/
+.codex/cache/
+.codex/sessions/
+.codex/tmp/
+.codex/*.log
+
 # Runtime data
 pids/
 *.pid

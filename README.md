@@ -111,6 +111,20 @@ npm run mcp:design-system
 
 - 詳細: `docs/knowledge/chrome-devtools-mcp.md`
 
+### 6) Codex 遅延診断（運用）
+
+Codex App / CLI が重いときの最小切り分けコマンドです。
+
+```bash
+# リポジトリ状態 / 巨大ファイル / untracked / worktree / Codexログを一括診断
+npm run codex:perf:diagnose
+
+# codex-tui.log が肥大したときに安全ローテート（既定 100MB）
+npm run codex:perf:rotate-log
+```
+
+- 詳細: `docs/knowledge/codex-performance-checklist.md`
+
 ## 🌐 GitHub Pages での公開（Project Pages）
 
 `viewer.html` を静的化して `dist-pages/` に出力し、GitHub Pages で表示できます（`dist-pages/` はコミットせず、CIで生成してデプロイします）。

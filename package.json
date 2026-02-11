@@ -57,6 +57,8 @@
     "claude:quick": "npm run type-check && npm run test:run",
     "claude:all": "npm run claude:check && npm run test:run && npm run build && echo '🎉 Full pipeline complete'",
     "codex:install-skills": "scripts/codex/install-skills.sh",
+    "codex:perf:diagnose": "bash scripts/codex/perf-diagnose.sh",
+    "codex:perf:rotate-log": "bash scripts/codex/rotate-tui-log.sh --threshold-mb 100",
     "dads:sync": "node scripts/dads/sync.cjs",
     "dads:validate": "node scripts/dads/validate.cjs",
     "dads:figma:add": "node scripts/dads/figma-add.cjs",
@@ -71,8 +73,7 @@
     "wcf:smoke:npm": "node scripts/wcf/smoke-ttfr.js --runner npm",
     "wcf:smoke:bunx": "node scripts/wcf/smoke-ttfr.js --runner bunx",
     "runtime:build": "vite build --config vite.runtime.config.ts",
-    "size:esm": "node scripts/size/measure-esm.mjs --entry packages/components/date-picker/date-picker.ts --entry packages/components/calendar/calendar.ts"
-    ,
+    "size:esm": "node scripts/size/measure-esm.mjs --entry packages/components/date-picker/date-picker.ts --entry packages/components/calendar/calendar.ts",
     "contracts:check": "node scripts/contracts/check-autoload.mjs && node scripts/contracts/check-install-metadata.mjs",
     "registry:generate": "node scripts/registry/generate-install-registry.mjs",
     "registry:check": "node scripts/registry/generate-install-registry.mjs --check",
