@@ -180,10 +180,12 @@ function renderResourceListActionMenu(
   menuId: string,
   menuLabel: string,
   menuItems: readonly string[],
+  triggerLabel = `${menuLabel}を開く`,
 ): string {
+  const summaryLabel = triggerLabel.trim() || 'メニューを開く';
   return `
     <details slot="action" class="resource-list-account-menu">
-      <summary aria-label="メニュー" aria-haspopup="menu" aria-controls="${menuId}">
+      <summary aria-label="${summaryLabel}" aria-haspopup="menu" aria-controls="${menuId}">
         ${RESOURCE_LIST_ACTION_ICON_SVG}
       </summary>
       <ul id="${menuId}" role="menu" aria-label="${menuLabel}">
@@ -193,12 +195,13 @@ function renderResourceListActionMenu(
   `;
 }
 
-function renderResourceListAccountActionMenu(menuId: string): string {
-  return renderResourceListActionMenu(menuId, 'アカウント操作', [
+function renderResourceListAccountActionMenu(menuId: string, accountName: string): string {
+  const contextualLabel = `${accountName}のアカウント操作`;
+  return renderResourceListActionMenu(menuId, contextualLabel, [
     'プロフィールを見る',
     '権限を変更',
     '招待を再送',
-  ]);
+  ], `${contextualLabel}を開く`);
 }
 
 function renderResourceListDemoRow(row: ResourceListDemoRow, rowKey = 'resource-list-row'): string {
@@ -3818,7 +3821,7 @@ export const demos = {
         titleHref: '#',
         support: 'taro-dejita@example.com',
         sub: '招待中',
-        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-1'),
+        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-1', 'デジ田 太郎'),
       },
       {
         style: 'list',
@@ -3826,7 +3829,7 @@ export const demos = {
         title: 'デジ山 ひかり',
         titleHref: '#',
         support: 'hikari-dejiyama@example.com',
-        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-2'),
+        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-2', 'デジ山 ひかり'),
       },
       {
         style: 'list',
@@ -3834,7 +3837,7 @@ export const demos = {
         title: '出而足 長一郎',
         titleHref: '#',
         support: 'choichiro-dejitaru@example.com',
-        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-3'),
+        actionHtml: renderResourceListAccountActionMenu('resource-list-account-menu-3', '出而足 長一郎'),
       },
     ];
 
@@ -4155,7 +4158,8 @@ export const demos = {
 
         .resource-list-account-menu > [role='menu'] {
           position: absolute;
-          inset-inline-end: calc(100% + 4px);
+          inset-inline-start: calc(100% + 4px);
+          inset-inline-end: auto;
           inset-block-start: 0;
           display: none;
           margin: 0;
@@ -4167,11 +4171,6 @@ export const demos = {
           background: var(--color-neutral-white, #ffffff);
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
           z-index: 3;
-        }
-
-        .resource-list-figma-item--room-menu .resource-list-account-menu > [role='menu'] {
-          inset-inline-start: calc(100% + 4px);
-          inset-inline-end: auto;
         }
 
         .resource-list-account-menu[open] > [role='menu'] {

@@ -128,27 +128,33 @@ test('resource-list fidelity: action hover and right-side menu placement', async
   await hoverPart(page, 'demo-resource-list-whole-action-default', 'action');
   await expect(page.locator('#demo-resource-list-whole-action-default')).toHaveScreenshot('resource-list-whole-action-action-hover.png');
 
-  await page.click('#demo-resource-list-whole-action-default .resource-list-fidelity-menu > summary');
+  async function openMenuAndReadGeometry(hostId: string) {
+    await page.click(`#${hostId} .resource-list-fidelity-menu > summary`);
+    return page.evaluate((id) => {
+      const host = document.getElementById(id);
+      const details = document.querySelector<HTMLDetailsElement>(`#${id} .resource-list-fidelity-menu`);
+      const menu = details?.querySelector<HTMLElement>("[role='menu']");
+      if (!(host instanceof HTMLElement) || !menu) throw new Error(`Missing host/menu: ${id}`);
 
-  const geometry = await page.evaluate(() => {
-    const host = document.getElementById('demo-resource-list-whole-action-default');
-    const details = document.querySelector<HTMLDetailsElement>('#demo-resource-list-whole-action-default .resource-list-fidelity-menu');
-    const menu = details?.querySelector<HTMLElement>("[role='menu']");
-    if (!(host instanceof HTMLElement) || !menu) throw new Error('Missing host/menu');
+      const hostRect = host.getBoundingClientRect();
+      const menuRect = menu.getBoundingClientRect();
 
-    const hostRect = host.getBoundingClientRect();
-    const menuRect = menu.getBoundingClientRect();
+      return {
+        menuLeft: menuRect.left,
+        menuRight: menuRect.right,
+        hostRight: hostRect.right,
+        viewportRight: window.innerWidth,
+      };
+    }, hostId);
+  }
 
-    return {
-      menuLeft: menuRect.left,
-      menuRight: menuRect.right,
-      hostRight: hostRect.right,
-      viewportRight: window.innerWidth,
-    };
-  });
+  const roomGeometry = await openMenuAndReadGeometry('demo-resource-list-whole-action-default');
+  expect(roomGeometry.menuLeft).toBeGreaterThanOrEqual(roomGeometry.hostRight - 1);
+  expect(roomGeometry.menuRight).toBeLessThanOrEqual(roomGeometry.viewportRight);
 
-  expect(geometry.menuLeft).toBeGreaterThanOrEqual(geometry.hostRight - 1);
-  expect(geometry.menuRight).toBeLessThanOrEqual(geometry.viewportRight);
+  const accountGeometry = await openMenuAndReadGeometry('demo-resource-list-account-action-default');
+  expect(accountGeometry.menuLeft).toBeGreaterThanOrEqual(accountGeometry.hostRight - 1);
+  expect(accountGeometry.menuRight).toBeLessThanOrEqual(accountGeometry.viewportRight);
 
   await expect(page.locator('#demo-resource-list-whole-action-default')).toHaveScreenshot('resource-list-whole-action-menu-open.png');
 });

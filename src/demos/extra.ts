@@ -1734,6 +1734,28 @@ export const demos = {
               </details>
             </dads-resource-list>
           </div>
+
+          <div>
+            <div class="resource-list-fidelity-caption">account menu (list)</div>
+            <dads-resource-list
+              id="demo-resource-list-account-action-default"
+              class="resource-list-fidelity-row"
+              data-style="list"
+              data-interaction="inline"
+            >
+              <a slot="title" href="#resource-list-fidelity-account">デジ田 太郎</a>
+              <span slot="support">taro-dejita@example.com</span>
+              <span slot="sub">招待中</span>
+              <details slot="action" class="resource-list-fidelity-menu">
+                <summary aria-label="デジ田 太郎のアカウント操作を開く">⋮</summary>
+                <ul role="menu" aria-label="デジ田 太郎のアカウント操作">
+                  <li><button type="button" role="menuitem">プロフィールを見る</button></li>
+                  <li><button type="button" role="menuitem">権限を変更</button></li>
+                  <li><button type="button" role="menuitem">招待を再送</button></li>
+                </ul>
+              </details>
+            </dads-resource-list>
+          </div>
         </div>
       </section>
 

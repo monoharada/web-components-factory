@@ -152,8 +152,10 @@ describe('showcase-components (resourceList demo)', () => {
     expect(html).toContain('resource-list-account-menu');
     expect(html).toContain('resource-list-room-menu-1');
     expect(html).toContain('会議室Aのサブアクション');
+    expect(html).toContain('デジ田 太郎のアカウント操作を開く');
     expect(html).toContain(".resource-list-figma-item--account::part(base)");
     expect(html).toContain('inline-size: var(--dads-resource-list-action-width);');
+    expect(html).toContain('inset-inline-start: calc(100% + 4px);');
     expect(html).toContain('aria-haspopup="menu"');
     expect(html).toContain('role="menuitem"');
   });
