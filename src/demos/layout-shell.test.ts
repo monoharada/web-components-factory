@@ -186,4 +186,56 @@ describe('layout-shell demo', () => {
     expect(shell?.getAttribute('mode')).toBe('tablet');
     expect(tabletButton?.getAttribute('aria-pressed')).toBe('true');
   });
+
+  it('複数プレビューを同時にバインドしても、各プレビューの同期状態は独立する', async () => {
+    const host = document.createElement('div');
+    host.innerHTML = demos.layoutShell();
+    document.body.appendChild(host);
+
+    executePreviewScript(host);
+    await flushTasks();
+
+    const previews = host.querySelectorAll<HTMLElement>('[data-layout-shell-preview]');
+    const first = previews[0];
+    const second = previews[1];
+
+    expect(previews.length).toBeGreaterThanOrEqual(2);
+    expect(first).toBeTruthy();
+    expect(second).toBeTruthy();
+    if (!first || !second) throw new Error('expected at least two previews');
+
+    const firstRange = first.querySelector<HTMLInputElement>('[data-layout-shell-preview-range]');
+    const firstMock = first.querySelector<HTMLElement>('dads-device-mock.layout-shell-device');
+    const firstShell = first.querySelector<HTMLElement>('dads-layout-shell');
+    const firstMobileButton = first.querySelector<HTMLButtonElement>('[data-layout-shell-preview-device="mobile"]');
+
+    const secondRange = second.querySelector<HTMLInputElement>('[data-layout-shell-preview-range]');
+    const secondMock = second.querySelector<HTMLElement>('dads-device-mock.layout-shell-device');
+    const secondShell = second.querySelector<HTMLElement>('dads-layout-shell');
+    const secondTabletButton = second.querySelector<HTMLButtonElement>('[data-layout-shell-preview-device="tablet"]');
+
+    expect(firstRange?.value).toBe('1454');
+    expect(secondRange?.value).toBe('1454');
+    expect(firstMock?.getAttribute('device')).toBe('desktop');
+    expect(secondMock?.getAttribute('device')).toBe('desktop');
+
+    firstRange!.value = '405';
+    firstRange!.dispatchEvent(new Event('input', { bubbles: true }));
+    await flushTasks();
+
+    expect(firstMock?.getAttribute('device')).toBe('mobile');
+    expect(firstShell?.getAttribute('mode')).toBe('mobile');
+    expect(firstMobileButton?.getAttribute('aria-pressed')).toBe('true');
+    expect(secondMock?.getAttribute('device')).toBe('desktop');
+    expect(secondShell?.getAttribute('mode')).toBe('desktop');
+
+    secondTabletButton?.click();
+    await flushTasks();
+
+    expect(secondRange?.value).toBe('782');
+    expect(secondMock?.getAttribute('device')).toBe('tablet');
+    expect(secondShell?.getAttribute('mode')).toBe('tablet');
+    expect(firstMock?.getAttribute('device')).toBe('mobile');
+    expect(firstShell?.getAttribute('mode')).toBe('mobile');
+  });
 });
