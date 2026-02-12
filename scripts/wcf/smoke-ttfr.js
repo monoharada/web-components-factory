@@ -56,14 +56,24 @@ function run(command, args, options = {}) {
   }
 }
 
+function normalizePackageSpecForNpmExec(packageSpec) {
+  const value = String(packageSpec ?? '').trim();
+  const githubGitHttpRe = /^git\+https:\/\/github\.com\/([^/]+)\/([^/#]+?)(?:\.git)?#(.+)$/i;
+  const match = value.match(githubGitHttpRe);
+  if (!match) return value;
+  const [, owner, repo, ref] = match;
+  return `github:${owner}/${repo}#${ref}`;
+}
+
 function buildWcfRunner({ runner, repoRoot, runCwd, packageSpec }) {
   if (runner === 'local') {
     return (wcfArgs) =>
       run(process.execPath, [path.join(repoRoot, 'scripts', 'wcf', 'cli.js'), ...wcfArgs], { cwd: runCwd });
   }
   if (runner === 'npm') {
+    const normalizedSpec = normalizePackageSpecForNpmExec(packageSpec);
     return (wcfArgs) =>
-      run('npm', ['exec', '--yes', `--package=${packageSpec}`, '--', 'wcf', ...wcfArgs], { cwd: runCwd });
+      run('npm', ['exec', '--yes', `--package=${normalizedSpec}`, '--', 'wcf', ...wcfArgs], { cwd: runCwd });
   }
   if (runner === 'bun-local') {
     return (wcfArgs) => run('bun', [path.join(repoRoot, 'scripts', 'wcf', 'cli.js'), ...wcfArgs], { cwd: runCwd });
