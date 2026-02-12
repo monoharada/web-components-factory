@@ -12,17 +12,46 @@ const distPagesPath = path.join(projectRoot, 'dist-pages');
 const patterns = [
   {
     name: 'html-asset-attr',
-    regex: /\b(?:src|srcset|poster)\s*=\s*["']https?:\/\/[^"']+/gi,
+    regex: /\b(?:src|poster)\s*=\s*["']([^"']*)["']/gi,
+    type: 'value',
   },
   {
     name: 'js-asset-prop',
-    regex: /\b(?:src|srcset)\s*:\s*["']https?:\/\/[^"']+/gi,
+    regex: /\b(?:src|poster)\s*(?:=|:)\s*["']([^"']*)["']/gi,
+    type: 'value',
   },
   {
     name: 'css-url',
-    regex: /url\(\s*["']?https?:\/\/[^\s"')]+/gi,
+    regex: /url\(\s*["']?(?:https?:\/\/|\/\/)[^\s"')]+/gi,
+  },
+  {
+    name: 'html-srcset-attr',
+    regex: /\bsrcset\s*=\s*["']([^"']*)["']/gi,
+    type: 'srcset',
+  },
+  {
+    name: 'js-srcset-prop',
+    regex: /\bsrcset\s*:\s*["']([^"']*)["']/gi,
+    type: 'srcset',
   },
 ];
+
+const externalUrlPattern = /^\s*(?:https?:\/\/|\/\/)/;
+
+function hasExternalUrl(value) {
+  return externalUrlPattern.test(value);
+}
+
+function hasExternalSrcset(value) {
+  return value
+    .split(',')
+    .map((entry) => entry.trim())
+    .some((entry) => {
+      if (!entry) return false;
+      const [urlPart] = entry.split(/\s+/);
+      return hasExternalUrl(urlPart);
+    });
+}
 
 function collectFiles(dirPath) {
   const extensions = ['.ts', '.html'];
@@ -53,15 +82,50 @@ function scanFile(filePath) {
 
   for (let i = 0; i < lines.length; i += 1) {
     const line = lines[i];
+    const lineNo = i + 1;
+
     for (const pattern of patterns) {
-      const matches = line.match(pattern.regex);
-      if (!matches) continue;
-      for (const match of matches) {
+      const matchRegex = new RegExp(pattern.regex.source, pattern.regex.flags);
+
+      if (pattern.type === 'srcset') {
+        let match;
+        while ((match = matchRegex.exec(line)) !== null) {
+          const value = match[1];
+          if (hasExternalSrcset(value)) {
+            issues.push({
+              file: path.relative(projectRoot, filePath),
+              line: lineNo,
+              pattern: pattern.name,
+              snippet: match[0],
+            });
+          }
+        }
+        continue;
+      }
+
+      if (pattern.type === 'value') {
+        let match;
+        while ((match = matchRegex.exec(line)) !== null) {
+          const value = match[1];
+          if (hasExternalUrl(value)) {
+            issues.push({
+              file: path.relative(projectRoot, filePath),
+              line: lineNo,
+              pattern: pattern.name,
+              snippet: match[0],
+            });
+          }
+        }
+        continue;
+      }
+
+      let match;
+      while ((match = matchRegex.exec(line)) !== null) {
         issues.push({
           file: path.relative(projectRoot, filePath),
-          line: i + 1,
+          line: lineNo,
           pattern: pattern.name,
-          snippet: match,
+          snippet: match[0],
         });
       }
     }
