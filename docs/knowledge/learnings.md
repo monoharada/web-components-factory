@@ -4,6 +4,36 @@
 
 ---
 
+## [2026-02-12] GitHub Pages のアセットは「同一オリジン固定 + 二段ゲート」で外部依存を根絶する
+**タグ**: #github-pages #assets #carousel #playwright #ci #postflight
+
+### 概要
+Viewer デモのカルーセル画像とカード画像で外部 URL が混在しており、GitHub Pages で 404 / 外部取得失敗が起きる余地があった。  
+対策として、デモ内アセット参照を `./resources/...` に統一し、静的チェックと実行時チェックを CI に追加した。
+
+### 学び
+1. デモ資産は `src/srcset/url(...)` のどこか1箇所でも外部 URL が残ると、本番配信環境で不安定になる。
+2. 「ソース静的チェック」と「実ブラウザでの network 検査」を併用すると、取りこぼしが減る。
+3. `dist-pages` へ `resources/` を明示コピーしないと、ローカル開発で見えていても Pages 成果物では欠落しうる。
+
+### 適用例（今回）
+- `src/demos/showcase-navigation.ts`
+  - カルーセル画像参照を `./resources/...` へ統一
+- `src/demos/showcase-components.ts`
+  - `images.unsplash.com` / `design.digital.go.jp` の画像参照をローカル `resources` へ置換
+- `scripts/build-pages.cjs`
+  - `resources/` を `dist-pages/resources` へ再帰コピー
+- `scripts/check-no-external-demo-assets.cjs`
+  - `src/demos/**/*.ts` と `viewer.html` の外部アセット参照を禁止
+- `scripts/check-pages-asset-requests.cjs`
+  - 全コンポーネント巡回で same-origin 404 / 外部 asset request を検出
+- `.github/workflows/pages.yml`, `.github/workflows/ci.yml`
+  - 上記チェックを CI ゲートとして実行
+
+### 再発防止
+- デモ変更時は `npm run assets:check:local` と `npm run pages:check:assets` をセットで実行する。
+- 外部リンク許容は `href` のみとし、`src/srcset/url(...)` は常にローカル資産のみ許可する。
+
 ## [2026-02-12] Viewer 左ペインは「互換データ源を残したまま DADS ナビへ投影」すると安全に移行できる
 **タグ**: #viewer #navigation #dads #responsive #a11y #postflight
 

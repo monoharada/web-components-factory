@@ -54,6 +54,17 @@ describe('showcase-components (divider demo)', () => {
   });
 });
 
+describe('showcase-components (card demo)', () => {
+  it('画像はローカルアセットのみを参照する', () => {
+    const html = demos.card();
+    expect(html).toContain('./resources/dads/components/card/upstream/design-system-example-components-html/src/components/card/card-3-1.png');
+    expect(html).toContain('./resources/dads/components/card/upstream/design-system-example-components-html/src/components/card/card-3-2.png');
+    expect(html).toContain('./resources/dads/components/card/local/card-5-hero-960x640.jpg');
+    expect(html).not.toContain('https://images.unsplash.com/');
+    expect(html).not.toContain('https://design.digital.go.jp/dads/html/assets/');
+  });
+});
+
 describe('showcase-components (descriptionList demo)', () => {
   it('説明リストデモに marker 切り替え UI が含まれる', () => {
     const html = demos.descriptionList();

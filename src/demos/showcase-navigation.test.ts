@@ -106,8 +106,9 @@ describe('showcase-navigation (carousel demo)', () => {
 
   it('ローカル固定画像を使った6スライド構成になっている', () => {
     const html = demos.carousel();
-    expect(html).toContain('/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp');
-    expect(html).toContain('/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-6.webp');
+    expect(html).toContain('./resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp');
+    expect(html).toContain('./resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-6.webp');
+    expect(html).not.toMatch(/['"`(]\/resources\/dads\/components\/carousel\//);
     expect(html).not.toContain('picsum.photos');
   });
 
