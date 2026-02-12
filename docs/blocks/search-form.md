@@ -22,13 +22,13 @@
 ### npm (`npx`互換)
 ```bash
 npm exec --yes --package=git+https://github.com/monoharada/web-components-factory.git -- \
-  wcf vendor install --prefix myui --dir vendor/components/myui --pattern search-form
+  wcf vendor install --prefix myui --dir vendor/components/myui --pattern search-form --channel stable
 ```
 
 ### Bun (`bunx`)
 ```bash
 bunx --package git+https://github.com/monoharada/web-components-factory.git \
-  wcf vendor install --prefix myui --dir vendor/components/myui --pattern search-form
+  wcf vendor install --prefix myui --dir vendor/components/myui --pattern search-form --channel stable
 ```
 
 ### Bun (`bun create`経由)

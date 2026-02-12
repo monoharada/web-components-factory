@@ -1,8 +1,12 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 import { initAgentKit, printImportMap, vendorInstall } from '../scripts/wcf/core.js';
+
+const REPO_ROOT = path.resolve(__dirname, '..');
+const WCF_CLI = path.join(REPO_ROOT, 'scripts', 'wcf', 'cli.js');
 
 async function mkdtemp() {
   return await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-vendor-'));
@@ -130,5 +134,32 @@ describe('wcf agent init', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
+  });
+});
+
+describe('wcf cli channel local', () => {
+  it('keeps existing behavior with --channel local', () => {
+    const result = spawnSync(
+      process.execPath,
+      [
+        WCF_CLI,
+        'vendor-importmap-json',
+        '--channel',
+        'local',
+        '--prefix',
+        'myui',
+        '--dir',
+        'vendor/components/myui',
+        '--pattern',
+        'search-results',
+      ],
+      {
+        cwd: REPO_ROOT,
+        encoding: 'utf8',
+      },
+    );
+
+    expect(result.status).toBe(0);
+    expect(String(result.stdout)).toContain('"myui-search-box"');
   });
 });

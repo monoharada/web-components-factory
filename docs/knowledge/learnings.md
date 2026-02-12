@@ -1699,4 +1699,29 @@ dads-card.card-example-1::part(main) {
 
 ---
 
+## [2026-02-12] WCF の stable チャネル導入では「エラー契約」と「coverage比較ロジック」を同時に固定する
+**タグ**: #wcf #cli #release #testing #coverage #postflight
+
+### 概要
+`--channel stable` を導入した際、実装だけを通しても postflight で品質ゲートに落ちる。  
+特に「チャネル解決失敗時のエラーコード契約」と「coverage 比較時の成果物フォーマット差（Vitest v8）」を明示しないと、運用時に判断がぶれる。
+
+### 学び
+1. lock/キャッシュ起因の失敗は `E_CHANNEL_*` で stderr 1行に揃えると、CLI利用者の復旧判断が速くなる。
+2. Vitest `--coverage`（v8）の `json` は `coverage-summary.json` ではなく `coverage/coverage-final.json` なので、postflight 比較ロジックはこの前提で作る。
+3. coverage低下は実装変更よりも新規ファイルの未到達分岐で起きやすい。今回は `scripts/wcf/channel.js` の分岐テスト追加で非劣化ゲートを回復できた。
+
+### 適用例（今回）
+- `scripts/wcf/channel.js`
+  - stable解決（TTL/フォールバック）と `E_CHANNEL_*` 契約を実装
+- `tests/wcf-channel.test.ts`
+  - cache異常・lock異常・spawn異常・helper分岐の網羅を追加
+- postflight coverage 比較
+  - `coverage-final.json` から `lines/statements/functions/branches` を集計して `origin/main` と比較
+
+### 再発防止
+- 新規CLI導入時は「正常系テスト + エラー契約テスト + フォールバックテスト」を同一PRで揃える。
+- coverageゲートはツールの出力形式（summary/final）を固定してから自動化する。
+- 0.1pp 許容差ルールに収まるまで、まず新規追加ファイルの未到達分岐を優先して埋める。
+
 *継続的に更新されます*

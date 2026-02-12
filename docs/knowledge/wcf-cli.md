@@ -3,6 +3,7 @@
 `wcf` は no-build 前提の vendor install 体験を提供します。  
 目的は「発見 → 1コマンド導入 → ページ生成」を一貫させることです。
 生成物は `vendor/components/<prefix>/components/**` を中心に編集します（`elements/` 分離は行いません）。
+実運用の既定は `--channel stable`（固定SHA + 自動フォールバック）です。`--channel` 未指定時は `local` 扱いです。
 
 ## 組版CSS（標準同梱）
 
@@ -15,17 +16,17 @@
 
 ```bash
 # blocks 一覧（patterns alias）
-node scripts/wcf/cli.js blocks list
-node scripts/wcf/cli.js blocks show search-results
+node scripts/wcf/cli.js blocks list --channel stable
+node scripts/wcf/cli.js blocks show search-results --channel stable
 
 # vendor 資材導入
-node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myui --pattern search-results
+node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myui --pattern search-results --channel stable
 
 # importmap出力
-node scripts/wcf/cli.js vendor print-importmap --prefix myui --dir vendor/components/myui --pattern search-results --format html
+node scripts/wcf/cli.js vendor print-importmap --prefix myui --dir vendor/components/myui --pattern search-results --format html --channel stable
 
 # ページ生成
-node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir . --entry boot
+node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir . --entry boot --channel stable
 ```
 
 ## エントリモード（`page create --entry`）
@@ -44,8 +45,8 @@ node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir
 ## 同等導線（npm / bunx / bun create）
 
 ```bash
-npm exec --yes --package=git+https://github.com/monoharada/web-components-factory.git -- wcf --help
-bunx --package git+https://github.com/monoharada/web-components-factory.git wcf --help
+npm exec --yes --package=git+https://github.com/monoharada/web-components-factory.git -- wcf --help --channel stable
+bunx --package git+https://github.com/monoharada/web-components-factory.git wcf --help --channel stable
 bun create github.com/monoharada/web-components-factory my-app
 ```
 

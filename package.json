@@ -74,6 +74,8 @@
     "wcf:smoke:bun": "node scripts/wcf/smoke-ttfr.js --runner bun-local",
     "wcf:smoke:npm": "node scripts/wcf/smoke-ttfr.js --runner npm",
     "wcf:smoke:bunx": "node scripts/wcf/smoke-ttfr.js --runner bunx",
+    "wcf:channel:check": "node scripts/wcf/update-channel-lock.mjs --check",
+    "wcf:channel:set-stable": "node scripts/wcf/update-channel-lock.mjs --ref main",
     "runtime:build": "vite build --config vite.runtime.config.ts",
     "size:esm": "node scripts/size/measure-esm.mjs --entry packages/components/date-picker/date-picker.ts --entry packages/components/calendar/calendar.ts",
     "contracts:check": "node scripts/contracts/check-autoload.mjs && node scripts/contracts/check-install-metadata.mjs",
