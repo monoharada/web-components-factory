@@ -103,6 +103,12 @@
   <link rel="modulepreload" href="/styles/tokens.js">
 
   <style>
+    :root {
+      --viewer-surface: #ffffff;
+      /* Contrast vs white ≈ 3.03:1 */
+      --viewer-divider: #949494;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -111,43 +117,36 @@
 
     body {
       font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f5f5f5;
+      background: var(--viewer-surface);
       min-height: 100vh;
-    }
-
-    header {
-      background: white;
-      border-bottom: 1px solid #ddd;
-      padding: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    h1 {
-      color: #00118f;
-      font-size: 20px;
-    }
-
-    .header-controls {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-      flex-wrap: wrap;
     }
 
     .component-selector {
       display: flex;
       gap: 10px;
       align-items: center;
+    }
+
+    .component-selector--hidden {
+      display: none;
+    }
+
+    .component-pane-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 70;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: white;
+      color: #0f172a;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     select {
@@ -159,26 +158,95 @@
       cursor: pointer;
     }
 
-    .badge {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      background: #e3f2fd;
-      color: #1565c0;
-      font-weight: 500;
-    }
-
     main {
       max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
+      margin: 0 auto;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 0;
+      align-items: start;
+      background: var(--viewer-surface);
+      border-top: 1px solid var(--viewer-divider);
+    }
+
+    .component-viewer {
+      min-width: 0;
+      background: var(--viewer-surface);
+    }
+
+    #component-pane {
+      position: sticky;
+      top: 0;
+      max-height: 100vh;
+      overflow-y: auto;
+      background: var(--viewer-surface);
+      border-right: 1px solid var(--viewer-divider);
+    }
+
+    #component-pane > dads-layout-sidebar {
+      display: block;
+      min-height: 100vh;
+      --dads-layout-sidebar-padding: 8px;
+      --dads-layout-sidebar-background: var(--viewer-surface);
+      --dads-layout-sidebar-border-color: transparent;
+    }
+
+    .component-pane__meta {
+      display: grid;
+      gap: 0;
+      padding: 8px;
+    }
+
+    .component-pane__primary-nav {
+      padding: 0 0 8px;
+      margin-bottom: 8px;
+    }
+
+    .component-pane__primary-list {
+      display: block;
+      --dads-menu-list-font-size: 1.25rem;
+    }
+
+    .component-pane__primary-list dads-menu-list-item {
+      --dads-menu-list-item-padding-y: var(--spacing-1-5, 0.375rem);
+      --dads-menu-list-item-min-height: 2.875rem;
+    }
+
+    .component-pane__segment-title {
+      margin: 0;
+      padding: 8px;
+    }
+
+    .component-pane__segment + .component-pane__segment {
+      margin-top: 8px;
+      padding-top: 8px;
+      position: relative;
+    }
+
+    .component-pane__segment + .component-pane__segment::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 8px;
+      right: 8px;
+      border-top: 1px solid var(--viewer-divider);
+      pointer-events: none;
+    }
+
+    .component-pane__segment-list {
+      display: block;
+    }
+
+    .component-pane__segment-list dads-menu-list-item {
+      --dads-menu-list-item-padding-y: var(--spacing-1-5, 0.375rem);
     }
 
     #component-container {
-      background: white;
+      background: var(--viewer-surface);
       padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 0;
+      box-shadow: none;
       min-height: 400px;
     }
 
@@ -225,6 +293,10 @@
 
     body[data-component="layoutShell"] #component-container {
       padding: 16px;
+    }
+
+    .component-pane-backdrop {
+      display: none;
     }
 
     .loaded-log {
@@ -459,75 +531,152 @@
       animation: none;
       transition: opacity 0.1s ease-out;
     }
+
+    @media (max-width: 959px) {
+      .component-pane-toggle {
+        display: inline-flex;
+      }
+
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      #component-pane {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(86vw, 360px);
+        height: 100dvh;
+        max-height: none;
+        border-radius: 0;
+        border: 0;
+        z-index: 60;
+        background: var(--viewer-surface);
+        transform: translateX(-100%);
+        transition: transform 0.2s ease-out;
+      }
+
+      #component-pane > dads-layout-sidebar {
+        --dads-layout-sidebar-background: var(--viewer-surface);
+      }
+
+      body.component-pane-mobile-open #component-pane {
+        transform: translateX(0);
+      }
+
+      .component-pane-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.48);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease-out;
+        z-index: 50;
+      }
+
+      body.component-pane-mobile-open .component-pane-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      body.component-pane-mobile-open {
+        overflow: hidden;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #component-pane,
+      .component-pane-backdrop {
+        transition: none;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-content">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <h1>Web Components Viewer</h1>
-        <span class="badge">Autoload</span>
-      </div>
-      <div class="header-controls">
-        <div class="component-selector">
-          <label for="component">コンポーネント:</label>
-          <select id="component">
-            <option value="">-- 選択 --</option>
-            <option value="accordion">アコーディオン</option>
-            <option value="disclosure">ディスクロージャー</option>
-            <option value="blockquote">引用ブロック</option>
-            <option value="list">箇条書きリスト</option>
-            <option value="descriptionList">説明リスト</option>
-            <option value="resourceList">リソースリスト</option>
-            <option value="divider">ディバイダー</option>
-            <option value="heading">見出し</option>
-            <option value="checkbox">チェックボックス</option>
-            <option value="radio">ラジオボタン</option>
-            <option value="fieldset">フィールドセット</option>
-            <option value="button">ボタン</option>
-            <option value="card">カード</option>
-            <option value="table">テーブル／データテーブル</option>
-            <option value="tableControl">テーブルコントロール（独自）</option>
-            <option value="pageNavigation">ページナビゲーション</option>
-            <option value="breadcrumb">パンくずリスト</option>
-            <option value="utilityLink">ユーティリティリンク</option>
-            <option value="chipLabel">チップラベル</option>
-            <option value="chipTag">チップタグ</option>
-            <option value="calendar">カレンダー</option>
-            <option value="datePicker">日付ピッカー</option>
-            <option value="dialog">モーダルダイアログ</option>
-            <option value="drawer">ドロワー</option>
-            <option value="headerContainer">ヘッダーコンテナ</option>
-            <option value="layoutShell">レイアウトシェル</option>
-            <option value="hamburgerMenuButton">ハンバーガーメニューボタン</option>
-            <option value="mobileMenu">モバイルメニュー</option>
-            <option value="inputText">インプットテキスト</option>
-            <option value="inputTextValidation">インプットテキスト（バリデーション検証）</option>
-            <option value="fileUpload">ファイルアップロード／ドロップエリア</option>
-            <option value="searchBox">検索ボックス</option>
-            <option value="notificationBanner">ノティフィケーションバナー</option>
-            <option value="emergencyBanner">緊急時バナー</option>
-            <option value="select">セレクトボックス</option>
-            <option value="selectValidation">セレクトボックス（バリデーション検証）</option>
-            <option value="textarea">テキストエリア</option>
-            <option value="textareaValidation">テキストエリア（バリデーション検証）</option>
-            <option value="menuList">メニューリスト</option>
-            <option value="menuListBox">メニューリストボックス</option>
-            <option value="globalMenu">グローバルメニュー</option>
-            <option value="languageSelector">ランゲージセレクター</option>
-            <option value="switch">スイッチ</option>
-            <option value="carousel">カルーセル</option>
-            <option value="stepNavigation">ステップナビゲーション</option>
-            <option value="resetCss">リセットCSS比較デモ（独自）</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </header>
+  <button
+    type="button"
+    id="component-pane-toggle"
+    class="component-pane-toggle"
+    aria-label="コンポーネント一覧を開く"
+    aria-controls="component-pane"
+    aria-expanded="false"
+    aria-haspopup="dialog"
+  >
+    コンポーネント一覧
+  </button>
+  <div class="component-selector component-selector--hidden" aria-hidden="true">
+    <label for="component">コンポーネント:</label>
+    <select id="component">
+      <option value="">-- 選択 --</option>
+      <option value="accordion">アコーディオン</option>
+      <option value="disclosure">ディスクロージャー</option>
+      <option value="blockquote">引用ブロック</option>
+      <option value="list">箇条書きリスト</option>
+      <option value="descriptionList">説明リスト</option>
+      <option value="resourceList">リソースリスト</option>
+      <option value="divider">ディバイダー</option>
+      <option value="heading">見出し</option>
+      <option value="checkbox">チェックボックス</option>
+      <option value="radio">ラジオボタン</option>
+      <option value="fieldset">フィールドセット</option>
+      <option value="button">ボタン</option>
+      <option value="card">カード</option>
+      <option value="table">テーブル／データテーブル</option>
+      <option value="tableControl">テーブルコントロール（独自）</option>
+      <option value="pageNavigation">ページナビゲーション</option>
+      <option value="breadcrumb">パンくずリスト</option>
+      <option value="utilityLink">ユーティリティリンク</option>
+      <option value="chipLabel">チップラベル</option>
+      <option value="chipTag">チップタグ</option>
+      <option value="calendar">カレンダー</option>
+      <option value="datePicker">日付ピッカー</option>
+      <option value="dialog">モーダルダイアログ</option>
+      <option value="drawer">ドロワー</option>
+      <option value="headerContainer">ヘッダーコンテナ</option>
+      <option value="layoutShell">レイアウトシェル</option>
+      <option value="hamburgerMenuButton">ハンバーガーメニューボタン</option>
+      <option value="mobileMenu">モバイルメニュー</option>
+      <option value="inputText">インプットテキスト</option>
+      <option value="inputTextValidation">インプットテキスト（バリデーション検証）</option>
+      <option value="fileUpload">ファイルアップロード／ドロップエリア</option>
+      <option value="searchBox">検索ボックス</option>
+      <option value="notificationBanner">ノティフィケーションバナー</option>
+      <option value="emergencyBanner">緊急時バナー</option>
+      <option value="select">セレクトボックス</option>
+      <option value="selectValidation">セレクトボックス（バリデーション検証）</option>
+      <option value="textarea">テキストエリア</option>
+      <option value="textareaValidation">テキストエリア（バリデーション検証）</option>
+      <option value="menuList">メニューリスト</option>
+      <option value="menuListBox">メニューリストボックス</option>
+      <option value="globalMenu">グローバルメニュー</option>
+      <option value="languageSelector">ランゲージセレクター</option>
+      <option value="switch">スイッチ</option>
+      <option value="carousel">カルーセル</option>
+      <option value="stepNavigation">ステップナビゲーション</option>
+      <option value="resetCss">リセットCSS比較デモ（独自）</option>
+    </select>
+  </div>
 
   <main>
-    <div id="component-container"></div>
+    <aside id="component-pane" aria-label="コンポーネント一覧" tabindex="-1">
+      <dads-layout-sidebar>
+        <div class="component-pane__meta">
+          <dads-heading level="2" size="20" margin="none">Web Components Viewer</dads-heading>
+        </div>
+        <nav class="component-pane__primary-nav" aria-label="Viewerナビゲーション">
+          <dads-menu-list class="component-pane__primary-list">
+            <dads-menu-list-item current aria-current="page">コンポーネント一覧</dads-menu-list-item>
+          </dads-menu-list>
+        </nav>
+        <nav id="component-pane-nav" aria-label="コンポーネントナビゲーション"></nav>
+      </dads-layout-sidebar>
+    </aside>
+    <section class="component-viewer" aria-label="コンポーネントプレビュー">
+      <div id="component-container"></div>
+    </section>
   </main>
+  <div id="component-pane-backdrop" class="component-pane-backdrop" aria-hidden="true"></div>
 
   <div id="loaded-log" class="loaded-log">
     <h4>Loaded Components:</h4>
@@ -605,10 +754,72 @@
     // =====================================
     const container = document.getElementById('component-container');
     const componentSelector = document.getElementById('component');
+    const componentPane = document.getElementById('component-pane');
+    const componentPaneNav = document.getElementById('component-pane-nav');
+    const componentPaneToggle = document.getElementById('component-pane-toggle');
+    const componentPaneBackdrop = document.getElementById('component-pane-backdrop');
     const loadedLog = document.getElementById('loaded-log');
     const loadedList = document.getElementById('loaded-list');
     const japaneseSort = new Intl.Collator('ja');
+    const mobilePaneMediaQuery = window.matchMedia('(max-width: 959px)');
     const demoMaxWidthPattern = /max-width:\s*([0-9]+)px/gi;
+    const componentSegmentOrder = [
+      '入力・選択',
+      'ナビゲーション',
+      '表示・データ',
+      'フィードバック',
+      'レイアウト',
+      'その他',
+    ];
+    const hiddenComponentSegments = new Set(['その他']);
+    const componentSegmentByValue = {
+      button: '入力・選択',
+      checkbox: '入力・選択',
+      radio: '入力・選択',
+      fieldset: '入力・選択',
+      inputText: '入力・選択',
+      inputTextValidation: '入力・選択',
+      fileUpload: '入力・選択',
+      searchBox: '入力・選択',
+      select: '入力・選択',
+      selectValidation: '入力・選択',
+      textarea: '入力・選択',
+      textareaValidation: '入力・選択',
+      switch: '入力・選択',
+      calendar: '入力・選択',
+      datePicker: '入力・選択',
+      pageNavigation: 'ナビゲーション',
+      breadcrumb: 'ナビゲーション',
+      utilityLink: 'ナビゲーション',
+      menuList: 'ナビゲーション',
+      menuListBox: 'ナビゲーション',
+      globalMenu: 'ナビゲーション',
+      languageSelector: 'ナビゲーション',
+      hamburgerMenuButton: 'ナビゲーション',
+      mobileMenu: 'ナビゲーション',
+      stepNavigation: 'ナビゲーション',
+      accordion: '表示・データ',
+      disclosure: '表示・データ',
+      blockquote: '表示・データ',
+      list: '表示・データ',
+      descriptionList: '表示・データ',
+      resourceList: '表示・データ',
+      divider: '表示・データ',
+      heading: '表示・データ',
+      card: '表示・データ',
+      table: '表示・データ',
+      tableControl: '表示・データ',
+      chipLabel: '表示・データ',
+      chipTag: '表示・データ',
+      carousel: '表示・データ',
+      notificationBanner: 'フィードバック',
+      emergencyBanner: 'フィードバック',
+      dialog: 'フィードバック',
+      drawer: 'フィードバック',
+      headerContainer: 'レイアウト',
+      layoutShell: 'レイアウト',
+      resetCss: 'その他',
+    };
     const kanaSortOverrides = {
       '引用ブロック': 'いんようぶろっく',
       '箇条書きリスト': 'かじょうがきりすと',
@@ -641,6 +852,7 @@
 
     let currentAutoloader = null;
     const loadedComponents = new Set();
+    let isComponentPaneOpen = false;
     installContentTypesetStyle(document);
 
     function onComponentLoad(tagName) {
@@ -669,6 +881,7 @@
       applyAnnotationVisibilityOverrides(name, container);
       normalizeViewWidth(container, widestDemoWidthPx);
       activateEmbeddedScripts(container);
+      updateActiveComponentItem(name in demos ? name : '');
     }
 
     function applyTypesetToDemoRoot(root) {
@@ -732,8 +945,16 @@
         Number.parseFloat(mainStyles.paddingLeft) + Number.parseFloat(mainStyles.paddingRight);
       const containerHorizontalPadding =
         Number.parseFloat(containerStyles.paddingLeft) + Number.parseFloat(containerStyles.paddingRight);
+      const sidebarWidth = componentPane instanceof HTMLElement && !isMobilePaneMode()
+        ? componentPane.getBoundingClientRect().width
+        : 0;
+      const mainGap = !isMobilePaneMode()
+        ? Number.parseFloat(mainStyles.columnGap || mainStyles.gap || '0')
+        : 0;
 
-      const frameWidth = Math.ceil(maxWidthPx + mainHorizontalPadding + containerHorizontalPadding);
+      const frameWidth = Math.ceil(
+        maxWidthPx + mainHorizontalPadding + containerHorizontalPadding + sidebarWidth + mainGap
+      );
       main.style.maxWidth = `${frameWidth}px`;
     }
 
@@ -750,6 +971,10 @@
     function optionSortKey(option) {
       const label = option.textContent?.trim() ?? '';
       return kanaSortOverrides[label] ?? toHiragana(label);
+    }
+
+    function componentSortKey(component) {
+      return kanaSortOverrides[component.label] ?? toHiragana(component.label);
     }
 
     function sortComponentOptionsByKana(selectElement) {
@@ -769,6 +994,218 @@
       }
       for (const option of sortable) {
         selectElement.appendChild(option);
+      }
+    }
+
+    function isMobilePaneMode() {
+      return mobilePaneMediaQuery.matches;
+    }
+
+    function getSelectableComponents() {
+      if (!(componentSelector instanceof HTMLSelectElement)) return [];
+      return Array.from(componentSelector.options)
+        .filter((option) => option.value !== '' && option.value !== 'resetCss')
+        .map((option) => ({
+          value: option.value,
+          label: option.textContent?.trim() ?? '',
+        }));
+    }
+
+    function buildSegmentedComponents(components) {
+      const segmented = new Map(componentSegmentOrder.map((segment) => [segment, []]));
+      for (const component of components) {
+        const segment = componentSegmentByValue[component.value] ?? 'その他';
+        const list = segmented.get(segment);
+        if (list) list.push(component);
+      }
+
+      for (const segment of componentSegmentOrder) {
+        const entries = segmented.get(segment) ?? [];
+        entries.sort((a, b) => {
+          const byReading = japaneseSort.compare(componentSortKey(a), componentSortKey(b));
+          if (byReading !== 0) return byReading;
+          return japaneseSort.compare(a.label, b.label);
+        });
+      }
+
+      return segmented;
+    }
+
+    function renderComponentPane() {
+      if (!(componentPaneNav instanceof HTMLElement)) return;
+      componentPaneNav.innerHTML = '';
+      const segmentedComponents = buildSegmentedComponents(getSelectableComponents());
+
+      for (const segment of componentSegmentOrder) {
+        if (hiddenComponentSegments.has(segment)) continue;
+        const components = segmentedComponents.get(segment) ?? [];
+        if (components.length === 0) continue;
+
+        const section = document.createElement('section');
+        section.className = 'component-pane__segment';
+
+        const heading = document.createElement('dads-heading');
+        heading.className = 'component-pane__segment-title';
+        heading.setAttribute('level', '3');
+        heading.setAttribute('size', '16');
+        heading.setAttribute('margin', 'none');
+        heading.textContent = segment;
+        section.appendChild(heading);
+
+        const list = document.createElement('dads-menu-list');
+        list.className = 'component-pane__segment-list';
+        for (const component of components) {
+          const item = document.createElement('dads-menu-list-item');
+          item.dataset.component = component.value;
+          item.textContent = component.label;
+          list.appendChild(item);
+        }
+
+        section.appendChild(list);
+        componentPaneNav.appendChild(section);
+      }
+    }
+
+    function updateActiveComponentItem(componentName) {
+      if (componentPaneNav instanceof HTMLElement) {
+        const items = componentPaneNav.querySelectorAll('dads-menu-list-item[data-component]');
+        for (const item of items) {
+          if (!(item instanceof HTMLElement)) continue;
+          if (item.dataset.component === componentName) {
+            item.setAttribute('current', '');
+            item.setAttribute('aria-current', 'page');
+          } else {
+            item.removeAttribute('current');
+            item.removeAttribute('aria-current');
+          }
+        }
+      }
+
+      if (componentSelector instanceof HTMLSelectElement) {
+        componentSelector.value = componentName || '';
+      }
+    }
+
+    function updateComponentQuery(value) {
+      const url = new URL(window.location.href);
+      if (value) {
+        url.searchParams.set('component', value);
+      } else {
+        url.searchParams.delete('component');
+      }
+      window.history.pushState({}, '', url);
+    }
+
+    function getPaneFocusableElements() {
+      if (!(componentPane instanceof HTMLElement)) return [];
+      const componentItems = Array.from(
+        componentPane.querySelectorAll('dads-menu-list-item[data-component]')
+      ).filter((element) => element instanceof HTMLElement);
+
+      const selectors = [
+        'button:not([disabled])',
+        '[href]',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])',
+      ];
+      const genericFocusable = Array.from(componentPane.querySelectorAll(selectors.join(',')))
+        .filter((element) => element instanceof HTMLElement);
+      const merged = [...componentItems, ...genericFocusable];
+      const unique = [];
+      const seen = new Set();
+      for (const element of merged) {
+        if (!(element instanceof HTMLElement)) continue;
+        if (seen.has(element)) continue;
+        if (element.getAttribute('aria-hidden') === 'true') continue;
+        if (element.getClientRects().length === 0) continue;
+        seen.add(element);
+        unique.push(element);
+      }
+      return unique;
+    }
+
+    function closeComponentPane(options = {}) {
+      const { returnFocus = true } = options;
+      if (!(componentPaneToggle instanceof HTMLElement)) return;
+      isComponentPaneOpen = false;
+      document.body.classList.remove('component-pane-mobile-open');
+      componentPaneToggle.setAttribute('aria-expanded', 'false');
+      if (returnFocus) {
+        componentPaneToggle.focus();
+      }
+    }
+
+    function openComponentPane() {
+      if (!(componentPaneToggle instanceof HTMLElement) || !(componentPane instanceof HTMLElement)) return;
+      if (!isMobilePaneMode()) return;
+      isComponentPaneOpen = true;
+      document.body.classList.add('component-pane-mobile-open');
+      componentPaneToggle.setAttribute('aria-expanded', 'true');
+      const firstComponentItem = componentPane.querySelector('dads-menu-list-item[data-component]');
+      if (firstComponentItem instanceof HTMLElement) {
+        firstComponentItem.focus();
+        return;
+      }
+      const focusables = getPaneFocusableElements();
+      if (focusables.length > 0) {
+        focusables[0].focus();
+      } else {
+        componentPane.focus();
+      }
+    }
+
+    function toggleComponentPane() {
+      if (!isMobilePaneMode()) return;
+      if (isComponentPaneOpen) {
+        closeComponentPane();
+      } else {
+        openComponentPane();
+      }
+    }
+
+    function handleComponentPaneKeydown(event) {
+      if (!isComponentPaneOpen || !isMobilePaneMode()) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeComponentPane();
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+      const focusables = getPaneFocusableElements();
+      if (focusables.length === 0) {
+        event.preventDefault();
+        if (componentPane instanceof HTMLElement) componentPane.focus();
+        return;
+      }
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (!(active instanceof HTMLElement) || !(componentPane instanceof HTMLElement) || !componentPane.contains(active)) {
+        event.preventDefault();
+        first.focus();
+        return;
+      }
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+        return;
+      }
+
+      if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    function onViewportBreakpointChange() {
+      if (!isMobilePaneMode() && isComponentPaneOpen) {
+        closeComponentPane({ returnFocus: false });
       }
     }
 
@@ -794,25 +1231,48 @@
       currentAutoloader.start();
     }
 
-    // コンポーネントセレクタの変更
-    componentSelector.addEventListener('change', (e) => {
-      const value = e.target.value;
+    if (componentSelector instanceof HTMLSelectElement) {
+      componentSelector.addEventListener('change', (e) => {
+        const value = e.target.value;
+        updateComponentQuery(value);
+        showComponent(value || 'empty');
+      });
+    }
 
-      // URLパラメータを更新
-      const url = new URL(window.location.href);
-      if (value) {
-        url.searchParams.set('component', value);
-      } else {
-        url.searchParams.delete('component');
-      }
-      window.history.pushState({}, '', url);
+    if (componentPaneNav instanceof HTMLElement) {
+      componentPaneNav.addEventListener('click', (event) => {
+        const target = event.target instanceof HTMLElement
+          ? event.target.closest('dads-menu-list-item[data-component]')
+          : null;
+        if (!(target instanceof HTMLElement)) return;
+        const value = target.dataset.component ?? '';
+        updateComponentQuery(value);
+        showComponent(value || 'empty');
+        if (isMobilePaneMode()) {
+          closeComponentPane();
+        }
+      });
+    }
 
-      // コンポーネントを表示
-      showComponent(value || 'empty');
-    });
+    if (componentPaneToggle instanceof HTMLElement) {
+      componentPaneToggle.addEventListener('click', toggleComponentPane);
+    }
+
+    if (componentPaneBackdrop instanceof HTMLElement) {
+      componentPaneBackdrop.addEventListener('click', () => {
+        if (!isComponentPaneOpen) return;
+        closeComponentPane();
+      });
+    }
+
+    document.addEventListener('keydown', handleComponentPaneKeydown);
+    mobilePaneMediaQuery.addEventListener('change', onViewportBreakpointChange);
 
     // 初期化
-    sortComponentOptionsByKana(componentSelector);
+    if (componentSelector instanceof HTMLSelectElement) {
+      sortComponentOptionsByKana(componentSelector);
+    }
+    renderComponentPane();
     const params = new URLSearchParams(window.location.search);
     const initialComponent = params.get('component');
 
@@ -820,8 +1280,7 @@
     initAutoloader();
 
     // 初期コンポーネントを表示
-    if (initialComponent) {
-      componentSelector.value = initialComponent;
+    if (initialComponent && initialComponent in demos) {
       showComponent(initialComponent);
     } else {
       showComponent('empty');

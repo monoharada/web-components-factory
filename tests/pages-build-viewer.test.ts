@@ -18,6 +18,14 @@ describe('pages:build', () => {
     expect(html).toContain('<title>Web Components Viewer');
     expect(html).toContain("from './styles/tokens.js'");
     expect(html).not.toContain("from '/styles/tokens.js'");
+    expect(html).toContain('id="component-pane"');
+    expect(html).toContain('id="component-pane-nav"');
+    expect(html).toContain('id="component-pane-toggle"');
+    expect(html).toContain('id="component-pane-backdrop"');
+    expect(html).toContain('<dads-layout-sidebar>');
+    expect(html).toContain("createElement('dads-menu-list')");
+    expect(html).toContain("createElement('dads-menu-list-item')");
+    expect(html).not.toContain('<header>');
 
     const tableControlDemoJs = readFileSync('dist-pages/src/demos/showcase-table-control.js', 'utf8');
     expect(tableControlDemoJs).not.toContain("import('/src/demos/");
