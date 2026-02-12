@@ -133,6 +133,30 @@ npm run codex:perf:rotate-log
 
 - 詳細: `docs/knowledge/codex-performance-checklist.md`
 
+## 🤖 WCF Skills Pack（AIエージェント向け）
+
+画面設計から検証までを、`wcf-*` Skills で分割実行できます。
+
+- 入口: `wcf-ui-builder`
+- 段階: `wcf-discovery` → `wcf-install` → `wcf-compose` → `wcf-validate`
+
+Codexへインストール:
+
+```bash
+npm run skills:check
+npm run codex:install-skills
+```
+
+補足:
+- Skill 一覧は `registry/skills-registry.json` から解決されます（`deprecated` は既定で除外）
+- 管理対象の未登録Skillを掃除する場合は `npm run codex:install-skills -- --prune-managed`
+- deprecated も含める場合は `npm run codex:install-skills -- --include-deprecated`
+
+詳細:
+
+- `docs/codex-skills.md`
+- `docs/knowledge/wcf-skills-pack.md`
+
 ## 🌐 GitHub Pages での公開（Project Pages）
 
 `viewer.html` を静的化して `dist-pages/` に出力し、GitHub Pages で表示できます（`dist-pages/` はコミットせず、CIで生成してデプロイします）。
