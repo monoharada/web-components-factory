@@ -1,2 +1,2 @@
-import { defineSearchBox } from '../src/components/search-box/search-box-define.js';
+import { defineSearchBox } from '../src/components/search-box/index.js';
 defineSearchBox();

@@ -3,8 +3,8 @@
 # step-navigation
 
 - tag base: `step-navigation`
-- define module: `src/components/step-navigation/step-navigation-define.js`
-- define function: `defineStepNavigation`
+- define module: `src/components/step-navigation/index.js`
+- define function: `defineDefaultStepNavigation`
 - vendor entry: `components/step-navigation.js`
 
 ## 使われるBlocks

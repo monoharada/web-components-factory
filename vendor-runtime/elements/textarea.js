@@ -1,2 +1,2 @@
-import { defineTextarea } from '../src/components/textarea/textarea-define.js';
+import { defineTextarea } from '../src/components/textarea/index.js';
 defineTextarea();

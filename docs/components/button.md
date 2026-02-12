@@ -3,8 +3,8 @@
 # button
 
 - tag base: `button`
-- define module: `src/components/button/button-define.js`
-- define function: `defineButton`
+- define module: `src/components/button/index.js`
+- define function: `defineDefaultButton`
 - vendor entry: `components/button.js`
 
 ## 使われるBlocks
@@ -13,7 +13,10 @@
 - [`application-form-step-validation`](../blocks/application-form-step-validation.md)
 - [`card-grid`](../blocks/card-grid.md)
 - [`layout-website-hero-section-footer`](../blocks/layout-website-hero-section-footer.md)
+- [`mockup-mobile-form`](../blocks/mockup-mobile-form.md)
+- [`mockup-website`](../blocks/mockup-website.md)
 - [`search-form`](../blocks/search-form.md)
+- [`search-results`](../blocks/search-results.md)
 
 ## 導入コマンド
 

@@ -3,7 +3,7 @@
 # table
 
 - tag base: `table`
-- define module: `src/components/table/table-define.js`
+- define module: `src/components/table/index.js`
 - define function: `defineTable`
 - vendor entry: `components/table.js`
 

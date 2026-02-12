@@ -5,6 +5,12 @@
 生成物は `vendor/components/<prefix>/components/**` を中心に編集します（`elements/` 分離は行いません）。
 実運用の既定は `--channel stable`（固定SHA + 自動フォールバック）です。`--channel` 未指定時は `local` 扱いです。
 
+## Pattern Source of Truth
+
+- SoT は `registry/pattern-registry.json`
+- `vendor-runtime/registry.json` の pattern は生成物として扱う（手編集しない）
+- CLI / MCP で同じ pattern ID を共有する
+
 ## 組版CSS（標準同梱）
 
 - `page create` で生成される `index.html` には、`@layer ... contents` の組版CSS（`<style data-wcf-typeset>`）が標準で入る
@@ -33,7 +39,16 @@ node scripts/wcf/cli.js vendor print-importmap --prefix myui --dir vendor/compon
 
 # ページ生成
 node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir . --entry boot --channel stable
+
+# モックアップ生成（device-mock ベース）
+node scripts/wcf/cli.js page create --pattern mockup-mobile-form --prefix myui --dir . --entry boot --channel stable
 ```
+
+### 追加済み mockup patterns
+
+- `mockup-website`
+- `mockup-app-shell`
+- `mockup-mobile-form`
 
 ## `vendor install --force`
 

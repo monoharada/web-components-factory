@@ -1,2 +1,2 @@
-import { defineSelect } from '../src/components/select/select-define.js';
+import { defineSelect } from '../src/components/select/index.js';
 defineSelect();

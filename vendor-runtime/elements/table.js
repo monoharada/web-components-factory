@@ -1,2 +1,2 @@
-import { defineTable } from '../src/components/table/table-define.js';
+import { defineTable } from '../src/components/table/index.js';
 defineTable();

@@ -14,9 +14,12 @@
 
 ## 必須コンポーネント
 
-- `fieldset`
-- `input-text`
 - `button`
+- `fieldset`
+- `heading`
+- `input-text`
+- `select`
+- `textarea`
 
 ## コマンド例
 

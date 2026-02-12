@@ -14,10 +14,10 @@
 
 ## 必須コンポーネント
 
-- `heading`
-- `search-box`
 - `card`
+- `heading`
 - `page-navigation`
+- `search-box`
 
 ## コマンド例
 

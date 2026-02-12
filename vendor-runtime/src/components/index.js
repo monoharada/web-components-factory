@@ -39,6 +39,8 @@ export * from './chip-tag/index.js';
 export * from './divider/index.js';
 // ページナビゲーション
 export * from './page-navigation/index.js';
+// カルーセル
+export * from './carousel/index.js';
 // パンくずリスト
 export * from './breadcrumb/index.js';
 // ユーティリティリンク
@@ -61,10 +63,14 @@ export * from './language-selector/index.js';
 export * from './search-box/index.js';
 // ノティフィケーションバナー
 export * from './notification-banner/index.js';
+// 緊急時バナー
+export * from './emergency-banner/index.js';
 // 見出し
 export * from './heading/index.js';
 // 箇条書きリスト
 export * from './list/index.js';
+// リソースリスト
+export * from './resource-list/index.js';
 // 説明リスト
 export * from './description-list/index.js';
 // ディバイダー

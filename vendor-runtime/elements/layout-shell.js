@@ -1,2 +1,2 @@
-import { defineLayoutShell } from '../src/components/layout-shell/layout-shell-define.js';
+import { defineLayoutShell } from '../src/components/layout-shell/index.js';
 defineLayoutShell();

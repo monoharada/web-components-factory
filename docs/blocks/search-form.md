@@ -14,6 +14,7 @@
 
 ## 必須コンポーネント
 
+- `button`
 - `heading`
 - `search-box`
 
@@ -45,6 +46,7 @@ node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myu
   <dads-heading level="1">検索</dads-heading>
   <form id="search-form">
     <dads-search-box aria-label="検索"></dads-search-box>
+    <dads-button type="submit">検索</dads-button>
   </form>
 </main>
 ```

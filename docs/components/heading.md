@@ -3,7 +3,7 @@
 # heading
 
 - tag base: `heading`
-- define module: `src/components/heading/heading-define.js`
+- define module: `src/components/heading/index.js`
 - define function: `defineHeading`
 - vendor entry: `components/heading.js`
 
@@ -15,6 +15,9 @@
 - [`layout-app-shell`](../blocks/layout-app-shell.md)
 - [`layout-master-detail`](../blocks/layout-master-detail.md)
 - [`layout-website-hero-section-footer`](../blocks/layout-website-hero-section-footer.md)
+- [`mockup-app-shell`](../blocks/mockup-app-shell.md)
+- [`mockup-mobile-form`](../blocks/mockup-mobile-form.md)
+- [`mockup-website`](../blocks/mockup-website.md)
 - [`search-form`](../blocks/search-form.md)
 - [`search-results`](../blocks/search-results.md)
 - [`table-with-pagination`](../blocks/table-with-pagination.md)

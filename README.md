@@ -16,6 +16,8 @@ vendor 配下の JS は bundle せず、そのまま編集できます。
 `--entry` は `boot` を推奨し、`@wcf` / `index` は互換モード（N+1で廃止予定）です。
 配布導線は `--channel stable`（固定SHA + 自動フォールバック）を既定推奨とします。
 `vendor add` は既存 vendor の手編集 drift を検知し、`--force` 指定時のみ上書きします。
+Pattern の Source of Truth は `registry/pattern-registry.json` です。
+`--component` は `dads-*` の tag suffix（54件）を直接指定できます。
 
 ```bash
 # ブロック一覧（shadcn blocks相当）
@@ -32,6 +34,9 @@ node scripts/wcf/cli.js vendor add --prefix myui --dir vendor/components/myui --
 
 # index.html生成
 node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir . --entry boot --channel stable
+
+# モックアップ生成（新規）
+node scripts/wcf/cli.js page create --pattern mockup-mobile-form --prefix myui --dir . --entry boot --channel stable
 ```
 
 同等導線:

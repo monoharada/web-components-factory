@@ -1,2 +1,2 @@
-import { defineFieldset } from '../src/components/fieldset/fieldset-define.js';
-defineFieldset();
+import { defineDefaultFieldset } from '../src/components/fieldset/index.js';
+defineDefaultFieldset();

@@ -91,6 +91,24 @@ describe('wcf page create', () => {
       await fs.rm(tmp, { recursive: true, force: true });
     }
   });
+
+  it('creates page from mockup pattern and resolves device-mock tag', async () => {
+    const tmp = await mkdtemp();
+    try {
+      const res = await createPage({
+        prefix: 'myui',
+        pattern: 'mockup-mobile-form',
+        dir: tmp,
+        entry: 'boot',
+      });
+
+      const text = await fs.readFile(res.file, 'utf8');
+      expect(text).toContain('<myui-device-mock');
+      expect(text).toContain('"myui-device-mock": "./vendor/components/myui/components/device-mock.js"');
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  });
 });
 
 describe('wcf patterns metadata', () => {
@@ -100,6 +118,7 @@ describe('wcf patterns metadata', () => {
     expect(ids).toContain('search-results');
     expect(ids).toContain('application-form-single-validation');
     expect(ids).toContain('application-form-step-validation');
+    expect(ids).toContain('mockup-mobile-form');
   });
 
   it('returns pattern detail with entry hints and required components', async () => {

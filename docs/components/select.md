@@ -3,13 +3,14 @@
 # select
 
 - tag base: `select`
-- define module: `src/components/select/select-define.js`
+- define module: `src/components/select/index.js`
 - define function: `defineSelect`
 - vendor entry: `components/select.js`
 
 ## 使われるBlocks
 
 - [`application-form-single-validation`](../blocks/application-form-single-validation.md)
+- [`mockup-mobile-form`](../blocks/mockup-mobile-form.md)
 
 ## 導入コマンド
 

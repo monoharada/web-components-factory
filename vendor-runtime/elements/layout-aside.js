@@ -1,2 +1,2 @@
-import { defineLayoutAside } from '../src/components/layout-aside/layout-aside-define.js';
+import { defineLayoutAside } from '../src/components/layout-aside/index.js';
 defineLayoutAside();

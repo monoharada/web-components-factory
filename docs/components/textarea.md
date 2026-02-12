@@ -3,13 +3,14 @@
 # textarea
 
 - tag base: `textarea`
-- define module: `src/components/textarea/textarea-define.js`
+- define module: `src/components/textarea/index.js`
 - define function: `defineTextarea`
 - vendor entry: `components/textarea.js`
 
 ## 使われるBlocks
 
 - [`application-form-single-validation`](../blocks/application-form-single-validation.md)
+- [`mockup-mobile-form`](../blocks/mockup-mobile-form.md)
 
 ## 導入コマンド
 

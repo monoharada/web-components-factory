@@ -1,2 +1,2 @@
-import { defineHeading } from '../src/components/heading/heading-define.js';
+import { defineHeading } from '../src/components/heading/index.js';
 defineHeading();
