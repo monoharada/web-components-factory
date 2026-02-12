@@ -198,6 +198,10 @@ async function main() {
     path.join(projectRoot, 'src/viewer-api-controls.ts'),
     path.join(outDir, 'src/viewer-api-controls.js')
   );
+  await transpileFile(
+    path.join(projectRoot, 'src/viewer-install-panel.ts'),
+    path.join(outDir, 'src/viewer-install-panel.js')
+  );
 
   console.log('[pages] Done: dist-pages/');
 }

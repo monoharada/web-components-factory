@@ -503,6 +503,85 @@
       color: var(--color-neutral-solid-gray-600, #666);
     }
 
+    .wc-install-panel {
+      margin: 0 0 32px;
+      padding: 16px;
+      border: 1px solid var(--color-neutral-solid-gray-100, #e5e7eb);
+      border-radius: var(--border-radius-12, 12px);
+      background: var(--color-neutral-solid-gray-50, #f8fafc);
+    }
+
+    .wc-install-panel__title {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-neutral-solid-gray-900, #111827);
+    }
+
+    .wc-install-panel__meta-list {
+      margin: 0 0 12px;
+      --dads-description-list-margin-block: 0;
+      --dads-description-list-item-gap: 10px;
+      --dads-description-list-indent: 0px;
+    }
+
+    .wc-install-panel__meta-list > .wc-install-panel__meta-row,
+    .wc-install-panel__meta-list > dl[data-dads-description-list-base] > .wc-install-panel__meta-row {
+      display: grid;
+      grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+      column-gap: 12px;
+      align-items: baseline;
+    }
+
+    .wc-install-panel__meta-term {
+      color: var(--color-neutral-solid-gray-700, #4b5563);
+      font-weight: 600;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .wc-install-panel__meta-desc,
+    .wc-install-panel__meta-list > dl[data-dads-description-list-base] .wc-install-panel__meta-desc {
+      margin: 0;
+      margin-inline-start: 0;
+      min-width: 0;
+    }
+
+    .wc-install-panel__meta-value {
+      display: block;
+      max-width: 100%;
+      color: var(--color-neutral-solid-gray-900, #111827);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 640px) {
+      .wc-install-panel__meta-list > .wc-install-panel__meta-row,
+      .wc-install-panel__meta-list > dl[data-dads-description-list-base] > .wc-install-panel__meta-row {
+        grid-template-columns: 1fr;
+        row-gap: 2px;
+      }
+    }
+
+    .wc-install-panel__code {
+      margin: 0;
+      padding: 12px;
+      overflow-x: auto;
+      border-radius: var(--border-radius-8, 8px);
+      background: var(--color-neutral-white, #fff);
+      border: 1px solid var(--color-neutral-solid-gray-100, #e5e7eb);
+    }
+
+    .wc-install-panel__code code {
+      white-space: pre;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--color-neutral-solid-gray-900, #111827);
+    }
+
     /* FOUC防止: 未定義のカスタム要素にスケルトン表示 */
     :not(:defined) {
       display: inline-block;
@@ -748,6 +827,14 @@
     import { demos } from '@demos';
     import { Autoloader } from '@core/autoloader';
     import { installContentTypesetStyle } from './styles/tokens.js';
+    import {
+      buildInstallCommands,
+      createInstallPanelElement,
+      extractInstallComponentIdsFromManifest,
+      findInstallAnchor,
+      isLocalhostHost,
+      resolveComponentId,
+    } from './src/viewer-install-panel.js';
 
     // =====================================
     // Viewer 初期化
@@ -852,6 +939,8 @@
 
     let currentAutoloader = null;
     const loadedComponents = new Set();
+    let componentRenderSeq = 0;
+    let installIdSetPromise = null;
     let isComponentPaneOpen = false;
     installContentTypesetStyle(document);
 
@@ -873,6 +962,7 @@
     }
 
     function showComponent(name) {
+      const renderSeq = ++componentRenderSeq;
       const demoFn = demos[name] || demos.empty;
       document.body.dataset.component = name;
       syncViewerFrameWidth(widestDemoWidthPx);
@@ -882,6 +972,72 @@
       normalizeViewWidth(container, widestDemoWidthPx);
       activateEmbeddedScripts(container);
       updateActiveComponentItem(name in demos ? name : '');
+      void renderInstallPanel(name, container, renderSeq);
+    }
+
+    function warnInstallPanelDev(message, error) {
+      if (!isLocalhostHost(window.location.hostname)) return;
+      if (error) {
+        console.warn(`[Viewer Install] ${message}`, error);
+        return;
+      }
+      console.warn(`[Viewer Install] ${message}`);
+    }
+
+    function fetchInstallComponentIdsOnce() {
+      return fetch('./custom-elements.json')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to load custom-elements.json (${response.status})`);
+          }
+          return response.json();
+        })
+        .then((manifest) => extractInstallComponentIdsFromManifest(manifest));
+    }
+
+    function loadInstallComponentIds() {
+      if (installIdSetPromise) return installIdSetPromise;
+
+      installIdSetPromise = (async () => {
+        try {
+          return await fetchInstallComponentIdsOnce();
+        } catch (firstError) {
+          warnInstallPanelDev('custom-elements.json の読み込みに失敗したため 1回再試行します。', firstError);
+        }
+
+        try {
+          return await fetchInstallComponentIdsOnce();
+        } catch (retryError) {
+          warnInstallPanelDev('custom-elements.json の読み込みに2回失敗したため Install 表示をスキップします。', retryError);
+          installIdSetPromise = null;
+          return new Set();
+        }
+      })();
+
+      return installIdSetPromise;
+    }
+
+    async function renderInstallPanel(componentName, root, renderSeq) {
+      if (componentName === 'empty' || componentName === 'resetCss') return;
+
+      const installIds = await loadInstallComponentIds();
+      if (renderSeq !== componentRenderSeq) return;
+
+      const componentId = resolveComponentId(componentName, installIds);
+      if (!componentId) {
+        warnInstallPanelDev(`componentId を解決できないため Install 表示をスキップします: ${componentName}`);
+        return;
+      }
+
+      const anchor = findInstallAnchor(root);
+      if (!anchor) {
+        warnInstallPanelDev(`見出しアンカーが見つからないため Install 表示をスキップします: ${componentName}`);
+        return;
+      }
+
+      const commands = buildInstallCommands(componentId);
+      const panel = createInstallPanelElement(componentId, commands);
+      anchor.insertAdjacentElement('afterend', panel);
     }
 
     function applyTypesetToDemoRoot(root) {
