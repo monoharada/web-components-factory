@@ -23,7 +23,7 @@ export const radioStyles = css `
 
   /* ========== ラジオ外枠 ========== */
   [part="radio"] {
-    --_radio-hover-bg: var(--dads-radio-hover-bg);
+    --_radio-hover-bg: var(--dads-radio-force-hover-bg, var(--dads-radio-hover-bg));
 
     display: flex;
     justify-content: center;
@@ -37,7 +37,7 @@ export const radioStyles = css `
 
   @media (any-hover: hover) {
     [part="radio"]:has(:not(:focus, :disabled, [aria-disabled="true"]):hover) {
-      --_radio-hover-bg: var(--dads-radio-hover-bg-hover);
+      --_radio-hover-bg: var(--dads-radio-force-hover-bg, var(--dads-radio-hover-bg-hover));
     }
   }
 
@@ -48,8 +48,8 @@ export const radioStyles = css `
     --_accent-hover-color: var(--dads-radio-input-accent-hover-color);
     --_border-color: var(--dads-radio-input-border-color);
     --_border-hover-color: var(--dads-radio-input-border-hover-color);
-    --_border-color-current: var(--_border-color);
-    --_dot-color: var(--_accent-color);
+    --_border-color-current: var(--dads-radio-force-border-color, var(--_border-color));
+    --_dot-color: var(--dads-radio-force-dot-color, var(--_accent-color));
 
     position: relative;
     margin: 0;
@@ -78,13 +78,13 @@ export const radioStyles = css `
   }
 
   [part="input"]:checked {
-    --_border-color-current: var(--_accent-color);
+    --_border-color-current: var(--dads-radio-force-border-color, var(--_accent-color));
   }
 
   @media (any-hover: hover) {
     [part="input"]:checked:not(:disabled, [aria-disabled="true"]):hover {
-      --_border-color-current: var(--_accent-hover-color);
-      --_dot-color: var(--_accent-hover-color);
+      --_border-color-current: var(--dads-radio-force-border-color, var(--_accent-hover-color));
+      --_dot-color: var(--dads-radio-force-dot-color, var(--_accent-hover-color));
     }
   }
 
@@ -143,6 +143,12 @@ export const radioStyles = css `
     line-height: var(--dads-radio-label-line-height);
     font-family: var(--dads-radio-font-family);
     letter-spacing: 0;
+  }
+
+  /* ラベル未指定時は行ボックス由来の高さを持たせない */
+  [part="label"]:empty {
+    display: none;
+    padding-block-start: 0;
   }
 
   /* ========== 要否ラベル ========== */

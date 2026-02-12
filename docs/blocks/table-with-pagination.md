@@ -14,8 +14,9 @@
 
 ## 必須コンポーネント
 
-- `table`
+- `heading`
 - `page-navigation`
+- `table`
 
 ## コマンド例
 

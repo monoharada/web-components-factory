@@ -3,7 +3,7 @@
 # layout-aside
 
 - tag base: `layout-aside`
-- define module: `src/components/layout-aside/layout-aside-define.js`
+- define module: `src/components/layout-aside/index.js`
 - define function: `defineLayoutAside`
 - vendor entry: `components/layout-aside.js`
 

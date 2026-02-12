@@ -4,22 +4,24 @@
 import { css } from '../../core/web-components.js';
 const layoutShellSemanticTokensText = `
   :host {
-    --layout-shell-inline-padding: var(--spacing-6, 1.5rem);
-    --layout-shell-block-gap: var(--spacing-6, 1.5rem);
+    --layout-shell-space: var(--spacing-6, 1.5rem);
+    --layout-shell-pane-width: 18rem;
     --layout-shell-main-max-width: 75rem;
-    --layout-shell-sidebar-width: 18rem;
-    --layout-shell-sidebar-rail-width: 5rem;
-    --layout-shell-aside-width: 22rem;
+    --layout-shell-mobile-space-scale: 0.6666666667;
   }
 `;
 const layoutShellLocalTokensText = `
   :host {
-    --dads-layout-shell-inline-padding: var(--layout-shell-inline-padding);
-    --dads-layout-shell-block-gap: var(--layout-shell-block-gap);
+    --dads-layout-shell-space: var(--layout-shell-space);
+    --dads-layout-shell-pane-width: var(--layout-shell-pane-width);
     --dads-layout-shell-main-max-width: var(--layout-shell-main-max-width);
-    --dads-layout-shell-sidebar-width: var(--layout-shell-sidebar-width);
-    --dads-layout-shell-sidebar-rail-width: var(--layout-shell-sidebar-rail-width);
-    --dads-layout-shell-aside-width: var(--layout-shell-aside-width);
+    --dads-layout-shell-mobile-space-scale: var(--layout-shell-mobile-space-scale);
+
+    --_dads-layout-shell-inline-padding-derived: var(--dads-layout-shell-space);
+    --_dads-layout-shell-block-gap-derived: var(--dads-layout-shell-space);
+    --_dads-layout-shell-sidebar-width-derived: var(--dads-layout-shell-pane-width);
+    --_dads-layout-shell-sidebar-rail-width-derived: calc(var(--dads-layout-shell-pane-width) * 5 / 18);
+    --_dads-layout-shell-aside-width-derived: calc(var(--dads-layout-shell-pane-width) + 4rem);
   }
 `;
 export const layoutShellSemanticTokens = css `${layoutShellSemanticTokensText}`;

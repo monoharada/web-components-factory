@@ -3,7 +3,7 @@
 # search-box
 
 - tag base: `search-box`
-- define module: `src/components/search-box/search-box-define.js`
+- define module: `src/components/search-box/index.js`
 - define function: `defineSearchBox`
 - vendor entry: `components/search-box.js`
 

@@ -1,2 +1,2 @@
-import { defineCard } from '../src/components/card/card-define.js';
-defineCard();
+import { defineDefaultCard } from '../src/components/card/index.js';
+defineDefaultCard();

@@ -14,8 +14,9 @@
 
 ## 必須コンポーネント
 
-- `heading`
+- `button`
 - `card`
+- `heading`
 
 ## コマンド例
 

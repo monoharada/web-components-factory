@@ -3,8 +3,8 @@
 # page-navigation
 
 - tag base: `page-navigation`
-- define module: `src/components/page-navigation/page-navigation-define.js`
-- define function: `definePageNavigation`
+- define module: `src/components/page-navigation/index.js`
+- define function: `defineDefaultPageNavigation`
 - vendor entry: `components/page-navigation.js`
 
 ## 使われるBlocks

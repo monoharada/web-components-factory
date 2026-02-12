@@ -14,7 +14,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsLayoutShell_instances, _DadsLayoutShell_headerPart, _DadsLayoutShell_sidebarPart, _DadsLayoutShell_asidePart, _DadsLayoutShell_footerPart, _DadsLayoutShell_headerSlot, _DadsLayoutShell_sidebarSlot, _DadsLayoutShell_asideSlot, _DadsLayoutShell_footerSlot, _DadsLayoutShell_subscriptions, _DadsLayoutShell_lightDomObserver, _DadsLayoutShell_onViewportResize, _DadsLayoutShell_setupSlotListeners, _DadsLayoutShell_setupLightDomObserver, _DadsLayoutShell_syncPatternAttribute, _DadsLayoutShell_syncModeAttribute, _DadsLayoutShell_resolveEffectiveMode, _DadsLayoutShell_syncSlotFlags, _DadsLayoutShell_syncLayoutState;
+var _DadsLayoutShell_instances, _DadsLayoutShell_headerPart, _DadsLayoutShell_sidebarPart, _DadsLayoutShell_asidePart, _DadsLayoutShell_footerPart, _DadsLayoutShell_headerSlot, _DadsLayoutShell_sidebarSlot, _DadsLayoutShell_asideSlot, _DadsLayoutShell_footerSlot, _DadsLayoutShell_subscriptions, _DadsLayoutShell_lightDomObserver, _DadsLayoutShell_onViewportResize, _DadsLayoutShell_setupSlotListeners, _DadsLayoutShell_setupLightDomObserver, _DadsLayoutShell_syncPatternAttribute, _DadsLayoutShell_syncModeAttribute, _DadsLayoutShell_syncMobileSidebarAttribute, _DadsLayoutShell_resolveEffectiveMode, _DadsLayoutShell_hasDirectSlotElement, _DadsLayoutShell_syncSlotFlags, _DadsLayoutShell_syncLayoutState;
 import { PropertyAttr, html } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -25,16 +25,25 @@ import { layoutShellTokens } from './layout-shell-tokens.js';
 import { layoutShellStyles } from './layout-shell-styles.js';
 const DEFAULT_PATTERN = 'app-shell';
 const AUTO_MODE = 'auto';
+const DEFAULT_MOBILE_SIDEBAR = 'bottom';
 const VALID_PATTERNS = new Set([
     'website',
     'app-shell',
     'master-detail',
+    'left-header-pane',
+    'three-pane',
+    'three-pane-shell',
 ]);
 const VALID_MODES = new Set([
     AUTO_MODE,
     'desktop',
     'tablet',
     'mobile',
+]);
+const VALID_MOBILE_SIDEBARS = new Set([
+    'hidden',
+    'top',
+    'bottom',
 ]);
 function normalizePattern(value) {
     const normalized = value?.trim().toLowerCase() ?? '';
@@ -49,6 +58,13 @@ function normalizeMode(value) {
         return normalized;
     }
     return AUTO_MODE;
+}
+function normalizeMobileSidebar(value) {
+    const normalized = value?.trim().toLowerCase() ?? '';
+    if (VALID_MOBILE_SIDEBARS.has(normalized)) {
+        return normalized;
+    }
+    return DEFAULT_MOBILE_SIDEBAR;
 }
 function resolveAutoMode() {
     if (typeof window === 'undefined')
@@ -95,15 +111,19 @@ function unsubscribeAll(subscriptions) {
  * @csspart aside - 補助情報領域
  * @csspart footer - フッター領域
  *
- * @attr {'website' | 'app-shell' | 'master-detail'} pattern - レイアウトパターン
+ * @attr {'website' | 'app-shell' | 'master-detail' | 'left-header-pane' | 'three-pane' | 'three-pane-shell'} pattern - レイアウトパターン
  * @attr {'auto' | 'desktop' | 'tablet' | 'mobile'} mode - レイアウトモード
+ * @attr {'hidden' | 'top' | 'bottom'} mobile-sidebar - app-shell + mobile 時のサイドバー配置
  *
- * @cssprop --dads-layout-shell-inline-padding - コンテナの左右余白
- * @cssprop --dads-layout-shell-block-gap - ブロック間ギャップ
- * @cssprop --dads-layout-shell-main-max-width - websiteパターン時のメイン最大幅
- * @cssprop --dads-layout-shell-sidebar-width - app-shell desktop時のsidebar幅
- * @cssprop --dads-layout-shell-sidebar-rail-width - app-shell tablet時のsidebar幅
- * @cssprop --dads-layout-shell-aside-width - master-detail desktop時のaside幅
+ * @cssprop --dads-layout-shell-space - 余白の基本値（inline-padding / block-gap の基準）
+ * @cssprop --dads-layout-shell-pane-width - ペイン幅の基本値（sidebar / rail / aside の基準）
+ * @cssprop --dads-layout-shell-main-max-width - websiteパターン時のメイン最大幅（基本調整）
+ * @cssprop --dads-layout-shell-mobile-space-scale - mobile時の余白縮小倍率（spaceに乗算）
+ * @cssprop --dads-layout-shell-inline-padding - コンテナの左右余白（詳細上書き）
+ * @cssprop --dads-layout-shell-block-gap - ブロック間ギャップ（詳細上書き）
+ * @cssprop --dads-layout-shell-sidebar-width - app-shell desktop時のsidebar幅（詳細上書き）
+ * @cssprop --dads-layout-shell-sidebar-rail-width - app-shell tablet時のsidebar幅（詳細上書き）
+ * @cssprop --dads-layout-shell-aside-width - master-detail desktop時のaside幅（詳細上書き）
  */
 export class DadsLayoutShell extends TypographyWebComponent {
     constructor() {
@@ -137,6 +157,9 @@ export class DadsLayoutShell extends TypographyWebComponent {
         if (!this.hasAttribute('mode')) {
             this.setAttribute('mode', AUTO_MODE);
         }
+        if (!this.hasAttribute('mobile-sidebar')) {
+            this.setAttribute('mobile-sidebar', DEFAULT_MOBILE_SIDEBAR);
+        }
         __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_setupSlotListeners).call(this);
         __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_setupLightDomObserver).call(this);
         if (typeof window !== 'undefined') {
@@ -144,6 +167,7 @@ export class DadsLayoutShell extends TypographyWebComponent {
         }
         __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncPatternAttribute).call(this);
         __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncModeAttribute).call(this);
+        __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncMobileSidebarAttribute).call(this);
         __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncSlotFlags).call(this);
         __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncLayoutState).call(this);
     }
@@ -169,6 +193,11 @@ export class DadsLayoutShell extends TypographyWebComponent {
         }
         if (name === 'mode') {
             __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncModeAttribute).call(this);
+            __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncLayoutState).call(this);
+            return;
+        }
+        if (name === 'mobile-sidebar') {
+            __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncMobileSidebarAttribute).call(this);
             __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_syncLayoutState).call(this);
         }
     }
@@ -216,16 +245,28 @@ _DadsLayoutShell_headerPart = new WeakMap(), _DadsLayoutShell_sidebarPart = new 
     if (this.getAttribute('mode') !== normalized) {
         this.setAttribute('mode', normalized);
     }
+}, _DadsLayoutShell_syncMobileSidebarAttribute = function _DadsLayoutShell_syncMobileSidebarAttribute() {
+    const normalized = normalizeMobileSidebar(this.getAttribute('mobile-sidebar'));
+    if (this.getAttribute('mobile-sidebar') !== normalized) {
+        this.setAttribute('mobile-sidebar', normalized);
+    }
 }, _DadsLayoutShell_resolveEffectiveMode = function _DadsLayoutShell_resolveEffectiveMode() {
     const mode = normalizeMode(this.getAttribute('mode'));
     if (mode !== AUTO_MODE)
         return mode;
     return resolveAutoMode();
+}, _DadsLayoutShell_hasDirectSlotElement = function _DadsLayoutShell_hasDirectSlotElement(slotName) {
+    const children = this.children;
+    for (let i = 0; i < children.length; i++) {
+        if (children[i].getAttribute('slot') === slotName)
+            return true;
+    }
+    return false;
 }, _DadsLayoutShell_syncSlotFlags = function _DadsLayoutShell_syncSlotFlags() {
-    const hasHeader = hasSlotContent(__classPrivateFieldGet(this, _DadsLayoutShell_headerSlot, "f")) || this.querySelector('[slot="header"]') !== null;
-    const hasSidebar = hasSlotContent(__classPrivateFieldGet(this, _DadsLayoutShell_sidebarSlot, "f")) || this.querySelector('[slot="sidebar"]') !== null;
-    const hasAside = hasSlotContent(__classPrivateFieldGet(this, _DadsLayoutShell_asideSlot, "f")) || this.querySelector('[slot="aside"]') !== null;
-    const hasFooter = hasSlotContent(__classPrivateFieldGet(this, _DadsLayoutShell_footerSlot, "f")) || this.querySelector('[slot="footer"]') !== null;
+    const hasHeader = hasSlotContent(__classPrivateFieldGet(this, _DadsLayoutShell_headerSlot, "f")) || __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_hasDirectSlotElement).call(this, 'header');
+    const hasSidebar = hasSlotContent(__classPrivateFieldGet(this, _DadsLayoutShell_sidebarSlot, "f")) || __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_hasDirectSlotElement).call(this, 'sidebar');
+    const hasAside = hasSlotContent(__classPrivateFieldGet(this, _DadsLayoutShell_asideSlot, "f")) || __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_hasDirectSlotElement).call(this, 'aside');
+    const hasFooter = hasSlotContent(__classPrivateFieldGet(this, _DadsLayoutShell_footerSlot, "f")) || __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_hasDirectSlotElement).call(this, 'footer');
     this.toggleAttribute('data-has-header', hasHeader);
     this.toggleAttribute('data-has-sidebar', hasSidebar);
     this.toggleAttribute('data-has-aside', hasAside);
@@ -233,6 +274,7 @@ _DadsLayoutShell_headerPart = new WeakMap(), _DadsLayoutShell_sidebarPart = new 
 }, _DadsLayoutShell_syncLayoutState = function _DadsLayoutShell_syncLayoutState() {
     const pattern = normalizePattern(this.getAttribute('pattern'));
     const effectiveMode = __classPrivateFieldGet(this, _DadsLayoutShell_instances, "m", _DadsLayoutShell_resolveEffectiveMode).call(this);
+    const mobileSidebar = normalizeMobileSidebar(this.getAttribute('mobile-sidebar'));
     this.setAttribute('data-effective-pattern', pattern);
     this.setAttribute('data-effective-mode', effectiveMode);
     const hasHeader = this.hasAttribute('data-has-header');
@@ -254,11 +296,86 @@ _DadsLayoutShell_headerPart = new WeakMap(), _DadsLayoutShell_sidebarPart = new 
             sidebarState = showSidebar ? 'rail' : 'hidden';
             bodyLayout = showSidebar ? 'app-shell-rail' : 'single';
         }
+        else {
+            if (mobileSidebar === 'hidden') {
+                showSidebar = false;
+                sidebarState = 'hidden';
+                bodyLayout = 'single';
+            }
+            else {
+                showSidebar = hasSidebar;
+                sidebarState = showSidebar ? 'full' : 'hidden';
+                bodyLayout = showSidebar
+                    ? (mobileSidebar === 'top' ? 'app-shell-mobile-stacked-top' : 'app-shell-mobile-stacked-bottom')
+                    : 'single';
+            }
+        }
     }
     if (pattern === 'master-detail') {
         showAside = hasAside;
         if (showAside) {
             bodyLayout = effectiveMode === 'desktop' ? 'master-detail' : 'master-detail-stacked';
+        }
+    }
+    if (pattern === 'left-header-pane') {
+        showSidebar = false;
+        showAside = false;
+        bodyLayout = hasHeader && effectiveMode !== 'mobile' ? 'left-header-pane' : 'single';
+    }
+    if (pattern === 'three-pane' || pattern === 'three-pane-shell') {
+        showAside = hasAside;
+        if (effectiveMode === 'desktop') {
+            showSidebar = hasSidebar;
+            sidebarState = showSidebar ? 'full' : 'hidden';
+            if (showSidebar && showAside) {
+                bodyLayout = 'three-pane';
+            }
+            else if (showSidebar) {
+                bodyLayout = 'app-shell';
+            }
+            else if (showAside) {
+                bodyLayout = 'master-detail';
+            }
+            else {
+                bodyLayout = 'single';
+            }
+        }
+        else if (effectiveMode === 'tablet') {
+            showSidebar = hasSidebar;
+            sidebarState = showSidebar ? 'rail' : 'hidden';
+            if (showSidebar && showAside) {
+                bodyLayout = 'three-pane-tablet';
+            }
+            else if (showSidebar) {
+                bodyLayout = 'app-shell-rail';
+            }
+            else if (showAside) {
+                bodyLayout = 'master-detail-stacked';
+            }
+            else {
+                bodyLayout = 'single';
+            }
+        }
+        else {
+            const allowMobileSidebar = mobileSidebar !== 'hidden';
+            showSidebar = hasSidebar && allowMobileSidebar;
+            sidebarState = showSidebar ? 'full' : 'hidden';
+            if (showSidebar && showAside) {
+                bodyLayout = mobileSidebar === 'top'
+                    ? 'three-pane-mobile-top'
+                    : 'three-pane-mobile-bottom';
+            }
+            else if (showAside) {
+                bodyLayout = 'master-detail-stacked';
+            }
+            else if (showSidebar) {
+                bodyLayout = mobileSidebar === 'top'
+                    ? 'app-shell-mobile-stacked-top'
+                    : 'app-shell-mobile-stacked-bottom';
+            }
+            else {
+                bodyLayout = 'single';
+            }
         }
     }
     this.setAttribute('data-sidebar-state', sidebarState);
@@ -301,5 +418,9 @@ DadsLayoutShell.definition = {
         layoutShellTokens,
         layoutShellStyles,
     ], 'minimal'),
-    attributes: [PropertyAttr('pattern'), PropertyAttr('mode')],
+    attributes: [
+        PropertyAttr('pattern'),
+        PropertyAttr('mode'),
+        PropertyAttr('mobileSidebar', 'mobile-sidebar'),
+    ],
 };

@@ -14,9 +14,10 @@
 
 ## 必須コンポーネント
 
+- `card`
+- `heading`
 - `layout-shell`
 - `layout-sidebar`
-- `heading`
 
 ## コマンド例
 

@@ -163,6 +163,45 @@ describe('wcf vendor install', () => {
       await fs.rm(tmp, { recursive: true, force: true });
     }
   }, LONG_IO_TIMEOUT_MS);
+
+  it('supports all runtime suffixes such as checkbox/device-mock', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      await withCwd(tmp, async () => {
+        await vendorInstall({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['checkbox', 'device-mock'],
+        });
+      });
+
+      expect(await exists(path.join(outDir, 'components', 'checkbox.js'))).toBe(true);
+      expect(await exists(path.join(outDir, 'components', 'device-mock.js'))).toBe(true);
+      expect(await exists(path.join(outDir, 'autoload', 'checkbox.js'))).toBe(true);
+      expect(await exists(path.join(outDir, 'autoload', 'device-mock.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  }, LONG_IO_TIMEOUT_MS);
+
+  it('keeps rejecting unknown suffixes with E_COMPONENT_UNKNOWN', async () => {
+    const tmp = await mkdtemp();
+    try {
+      await expect(
+        withCwd(tmp, async () => {
+          await vendorInstall({
+            prefix: 'myui',
+            outDir: path.join('vendor', 'components', 'myui'),
+            components: ['unknown-x'],
+          });
+        }),
+      ).rejects.toThrow(/E_COMPONENT_UNKNOWN/);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  }, LONG_IO_TIMEOUT_MS);
 });
 
 describe('wcf vendor add', () => {

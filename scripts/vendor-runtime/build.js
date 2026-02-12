@@ -4,284 +4,6 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
-const COMPONENTS = {
-  button: {
-    tagBase: 'button',
-    defineModule: 'src/components/button/button-define.js',
-    defineFn: 'defineButton',
-  },
-  card: {
-    tagBase: 'card',
-    defineModule: 'src/components/card/card-define.js',
-    defineFn: 'defineCard',
-  },
-  fieldset: {
-    tagBase: 'fieldset',
-    defineModule: 'src/components/fieldset/fieldset-define.js',
-    defineFn: 'defineFieldset',
-  },
-  heading: {
-    tagBase: 'heading',
-    defineModule: 'src/components/heading/heading-define.js',
-    defineFn: 'defineHeading',
-  },
-  'layout-shell': {
-    tagBase: 'layout-shell',
-    defineModule: 'src/components/layout-shell/layout-shell-define.js',
-    defineFn: 'defineLayoutShell',
-  },
-  'layout-sidebar': {
-    tagBase: 'layout-sidebar',
-    defineModule: 'src/components/layout-sidebar/layout-sidebar-define.js',
-    defineFn: 'defineLayoutSidebar',
-  },
-  'layout-aside': {
-    tagBase: 'layout-aside',
-    defineModule: 'src/components/layout-aside/layout-aside-define.js',
-    defineFn: 'defineLayoutAside',
-  },
-  'input-text': {
-    tagBase: 'input-text',
-    defineModule: 'src/components/input-text/input-text-define.js',
-    defineFn: 'defineInputText',
-  },
-  'page-navigation': {
-    tagBase: 'page-navigation',
-    defineModule: 'src/components/page-navigation/page-navigation-define.js',
-    defineFn: 'definePageNavigation',
-  },
-  'step-navigation': {
-    tagBase: 'step-navigation',
-    defineModule: 'src/components/step-navigation/step-navigation-define.js',
-    defineFn: 'defineStepNavigation',
-  },
-  table: {
-    tagBase: 'table',
-    defineModule: 'src/components/table/table-define.js',
-    defineFn: 'defineTable',
-  },
-  'search-box': {
-    tagBase: 'search-box',
-    defineModule: 'src/components/search-box/search-box-define.js',
-    defineFn: 'defineSearchBox',
-  },
-  select: {
-    tagBase: 'select',
-    defineModule: 'src/components/select/select-define.js',
-    defineFn: 'defineSelect',
-  },
-  textarea: {
-    tagBase: 'textarea',
-    defineModule: 'src/components/textarea/textarea-define.js',
-    defineFn: 'defineTextarea',
-  },
-};
-
-const PATTERNS = {
-  'search-form': {
-    title: '検索フォーム（最小）',
-    description: '見出し + 検索フォーム（検索語 + ボタン）',
-    components: ['heading', 'search-box', 'button'],
-    requiredComponents: ['heading', 'search-box'],
-    stability: 'stable',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main data-dads-typeset>
-  <dads-heading level="1">検索</dads-heading>
-  <form id="search-form">
-    <dads-search-box aria-label="検索"></dads-search-box>
-  </form>
-</main>`,
-  },
-  'search-results': {
-    title: '検索結果一覧',
-    description: '見出し + 検索フォーム + 結果カード + ページネーション',
-    components: ['heading', 'search-box', 'card', 'page-navigation'],
-    requiredComponents: ['heading', 'search-box', 'card', 'page-navigation'],
-    stability: 'stable',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main data-dads-typeset>
-  <dads-heading level="1">検索</dads-heading>
-  <form id="search-form">
-    <dads-search-box aria-label="検索"></dads-search-box>
-  </form>
-  <h2>結果</h2>
-  <ul>
-    <li><dads-card>ダミー結果 1</dads-card></li>
-    <li><dads-card>ダミー結果 2</dads-card></li>
-    <li><dads-card>ダミー結果 3</dads-card></li>
-  </ul>
-  <dads-page-navigation current="1" total="1"></dads-page-navigation>
-</main>`,
-  },
-  'table-with-pagination': {
-    title: 'テーブル + ページネーション',
-    description: 'テーブル一覧とページネーションの基本構成',
-    components: ['heading', 'table', 'page-navigation'],
-    requiredComponents: ['table', 'page-navigation'],
-    stability: 'stable',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main data-dads-typeset>
-  <dads-heading level="1">一覧</dads-heading>
-  <dads-table>
-    <table>
-      <thead>
-        <tr><th>項目</th><th>値</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>サンプル</td><td>1</td></tr>
-      </tbody>
-    </table>
-  </dads-table>
-  <dads-page-navigation current="1" total="3"></dads-page-navigation>
-</main>`,
-  },
-  'card-grid': {
-    title: 'カードグリッド',
-    description: 'カードで一覧表示する基本レイアウト',
-    components: ['heading', 'card', 'button'],
-    requiredComponents: ['heading', 'card'],
-    stability: 'stable',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main data-dads-typeset>
-  <dads-heading level="1">お知らせ</dads-heading>
-  <section>
-    <dads-card>
-      <h2>カード1</h2>
-      <dads-button variant="outlined">詳細</dads-button>
-    </dads-card>
-    <dads-card>
-      <h2>カード2</h2>
-      <dads-button variant="outlined">詳細</dads-button>
-    </dads-card>
-  </section>
-</main>`,
-  },
-  'layout-website-hero-section-footer': {
-    title: 'レイアウト（Website: Hero + Section + Footer）',
-    description: 'コンテンツ主導の1カラムサイト向けレイアウト。',
-    components: ['layout-shell', 'heading', 'card', 'button'],
-    requiredComponents: ['layout-shell', 'heading', 'card'],
-    stability: 'stable',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<dads-layout-shell data-dads-typeset pattern="website" mode="auto">
-  <header slot="header">
-    <dads-heading level="1">くらしの手続きポータル</dads-heading>
-    <p>必要な手続きを1つの画面で確認できます。</p>
-  </header>
-  <section>
-    <dads-card>
-      <dads-heading level="2">はじめての方へ</dads-heading>
-      <p>制度の概要と申請までの流れを案内します。</p>
-      <dads-button variant="outlined">詳しく見る</dads-button>
-    </dads-card>
-  </section>
-  <footer slot="footer">© Digital Service</footer>
-</dads-layout-shell>`,
-  },
-  'layout-app-shell': {
-    title: 'レイアウト（App/SaaS: Header + Sidebar + Main）',
-    description: '業務アプリ向けの標準App Shellレイアウト。',
-    components: ['layout-shell', 'layout-sidebar', 'heading', 'card'],
-    requiredComponents: ['layout-shell', 'layout-sidebar', 'heading'],
-    stability: 'stable',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<dads-layout-shell data-dads-typeset pattern="app-shell" mode="auto">
-  <div slot="header">
-    <dads-heading level="2">業務ダッシュボード</dads-heading>
-  </div>
-  <dads-layout-sidebar slot="sidebar">
-    <ul>
-      <li>案件一覧</li>
-      <li>承認待ち</li>
-      <li>設定</li>
-    </ul>
-  </dads-layout-sidebar>
-  <section>
-    <dads-card>
-      <dads-heading level="3">進捗サマリー</dads-heading>
-      <p>主要KPIを表示します。</p>
-    </dads-card>
-  </section>
-</dads-layout-shell>`,
-  },
-  'layout-master-detail': {
-    title: 'レイアウト（Master-Detail: Main + Aside）',
-    description: '一覧 + 詳細を同時表示する2カラムレイアウト。',
-    components: ['layout-shell', 'layout-aside', 'heading', 'table'],
-    requiredComponents: ['layout-shell', 'layout-aside', 'table'],
-    stability: 'stable',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<dads-layout-shell data-dads-typeset pattern="master-detail" mode="auto">
-  <section>
-    <dads-heading level="2">申請一覧</dads-heading>
-    <dads-table>
-      <table>
-        <thead>
-          <tr><th scope="col">申請ID</th><th scope="col">状態</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>A-1001</td><td>審査中</td></tr>
-          <tr><td>A-1002</td><td>差戻し</td></tr>
-        </tbody>
-      </table>
-    </dads-table>
-  </section>
-  <dads-layout-aside slot="aside">
-    <dads-heading level="3">詳細情報</dads-heading>
-    <p>選択中レコードの詳細を表示します。</p>
-  </dads-layout-aside>
-</dads-layout-shell>`,
-  },
-  'application-form-single-validation': {
-    title: '申請フォーム（1ページ・検証エラー）',
-    description: '必須項目を含む1ページ申請フォームとバリデーションエラー表示',
-    components: ['heading', 'fieldset', 'input-text', 'select', 'textarea', 'button'],
-    requiredComponents: ['fieldset', 'input-text', 'button'],
-    stability: 'experimental',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main data-dads-typeset>
-  <dads-heading level="1">申請フォーム</dads-heading>
-  <form id="application-form-single">
-    <dads-fieldset>
-      <legend>申請情報</legend>
-      <dads-input-text name="name" required error error-text="氏名は必須です"></dads-input-text>
-      <dads-select name="type" required></dads-select>
-      <dads-textarea name="reason" required></dads-textarea>
-    </dads-fieldset>
-    <dads-button type="submit">送信</dads-button>
-  </form>
-</main>`,
-  },
-  'application-form-step-validation': {
-    title: '申請フォーム（ステップ・検証エラー）',
-    description: 'ステップナビゲーション付き申請フォームと検証エラー表示',
-    components: ['heading', 'step-navigation', 'fieldset', 'input-text', 'button'],
-    requiredComponents: ['step-navigation', 'fieldset', 'input-text', 'button'],
-    stability: 'experimental',
-    contractVersion: '1.0',
-    entryHints: ['boot', '@wcf', 'index'],
-    sampleHtml: `<main data-dads-typeset>
-  <dads-heading level="1">申請フォーム（ステップ）</dads-heading>
-  <dads-step-navigation current="1" total="3"></dads-step-navigation>
-  <form id="application-form-step">
-    <dads-fieldset>
-      <legend>ステップ1: 申請者情報</legend>
-      <dads-input-text name="name" required error error-text="氏名は必須です"></dads-input-text>
-    </dads-fieldset>
-    <dads-button type="submit">次へ</dads-button>
-  </form>
-</main>`,
-  },
-};
-
 const WC_AUTOLOADER_TEXT = `/**
  * wcf vendor runtime autoloader.
  *
@@ -347,6 +69,10 @@ function findPackageRoot() {
   return path.resolve(here, '..', '..');
 }
 
+function sortStrings(values) {
+  return [...values].sort((a, b) => a.localeCompare(b));
+}
+
 async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true });
 }
@@ -366,23 +92,213 @@ function run(command, args, options = {}) {
   }
 }
 
-async function generateElements(runtimeRoot) {
+async function readJson(filePath) {
+  const text = await fs.readFile(filePath, 'utf8');
+  return JSON.parse(text);
+}
+
+function failBuild(message) {
+  throw new Error(`[vendor:build] ${message}`);
+}
+
+function parseImportedNames(rawNamedImports) {
+  return rawNamedImports
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map((item) => {
+      const match = item.match(/^([A-Za-z0-9_$]+)(?:\s+as\s+([A-Za-z0-9_$]+))?$/);
+      return match?.[2] ?? match?.[1] ?? item;
+    });
+}
+
+function pickDefineFunction({ sourceText, importedNames }) {
+  const importedNameSet = new Set(importedNames);
+  const calls = [...sourceText.matchAll(/\b(define[A-Za-z0-9_$]*)\s*\(/g)]
+    .map((match) => match[1])
+    .filter((name) => importedNameSet.has(name));
+
+  if (calls.length > 0) return calls[0];
+  return importedNames.find((name) => /^define[A-Za-z0-9_$]*$/.test(name)) ?? null;
+}
+
+async function loadRuntimeComponents(pkgRoot) {
+  const autoloadRoot = path.join(pkgRoot, 'packages', 'autoload', 'dads');
+  const entries = await fs.readdir(autoloadRoot, { withFileTypes: true });
+  const files = entries.filter((entry) => entry.isFile() && entry.name.endsWith('.ts')).map((entry) => entry.name);
+  const components = {};
+
+  for (const fileName of sortStrings(files)) {
+    const suffix = fileName.slice(0, -'.ts'.length);
+    const absPath = path.join(autoloadRoot, fileName);
+    // eslint-disable-next-line no-await-in-loop
+    const sourceText = await fs.readFile(absPath, 'utf8');
+
+    const importMatch = sourceText.match(/import\s*{([\s\S]*?)}\s*from\s*['"]([^'"]+)['"]/m);
+    const relPath = path.posix.join('packages/autoload/dads', fileName);
+    if (!importMatch) {
+      failBuild(`${relPath}: expected a named import from ../../components/*/index.js`);
+    }
+
+    const rawNamedImports = importMatch[1];
+    const fromPath = importMatch[2];
+    if (!fromPath.startsWith('../../components/') || !fromPath.endsWith('/index.js')) {
+      failBuild(`${relPath}: unexpected import path "${fromPath}"`);
+    }
+
+    const importedNames = parseImportedNames(rawNamedImports);
+    const defineFn = pickDefineFunction({ sourceText, importedNames });
+    if (!defineFn) {
+      failBuild(`${relPath}: define* function not found in imported symbols`);
+    }
+
+    const defineModule = `src/${fromPath.slice('../../'.length)}`;
+    components[suffix] = {
+      tagBase: suffix,
+      defineModule,
+      defineFn,
+    };
+  }
+
+  return components;
+}
+
+function resolveComponentClosure({ installRegistry, requiredIds }) {
+  const installComponents = installRegistry?.components ?? {};
+  const visited = new Set();
+  const queue = [...requiredIds];
+
+  while (queue.length > 0) {
+    const nextId = queue.shift();
+    if (!nextId || visited.has(nextId)) continue;
+    const meta = installComponents[nextId];
+    if (!meta || typeof meta !== 'object') {
+      failBuild(`pattern requires unknown componentId: ${nextId}`);
+    }
+
+    visited.add(nextId);
+    const deps = Array.isArray(meta.deps) ? meta.deps : [];
+    for (const dep of deps) {
+      if (typeof dep === 'string' && dep.trim() !== '') queue.push(dep.trim());
+    }
+  }
+
+  return sortStrings(visited);
+}
+
+function componentIdToSuffixes({ componentId, installRegistry }) {
+  const canonicalPrefix = String(installRegistry?.canonicalPrefix ?? 'dads').trim();
+  const installComponents = installRegistry?.components ?? {};
+  const meta = installComponents?.[componentId];
+  if (!meta || typeof meta !== 'object') {
+    failBuild(`componentId "${componentId}" does not exist in install-registry`);
+  }
+
+  const tags = Array.isArray(meta.tags) ? meta.tags : [];
+  if (tags.length === 0) {
+    failBuild(`componentId "${componentId}" has no tags in install-registry`);
+  }
+
+  const prefix = `${canonicalPrefix}-`;
+  const suffixes = [];
+  for (const rawTag of tags) {
+    const tag = String(rawTag ?? '').trim().toLowerCase();
+    if (!tag.startsWith(prefix)) {
+      failBuild(`componentId "${componentId}" has non-canonical tag "${tag}"`);
+    }
+    const suffix = tag.slice(prefix.length);
+    if (!suffix) {
+      failBuild(`componentId "${componentId}" has invalid tag "${tag}"`);
+    }
+    suffixes.push(suffix);
+  }
+
+  return sortStrings(new Set(suffixes));
+}
+
+async function loadRuntimePatterns({ pkgRoot, runtimeComponents }) {
+  const patternRegistryPath = path.join(pkgRoot, 'registry', 'pattern-registry.json');
+  const installRegistryPath = path.join(pkgRoot, 'registry', 'install-registry.json');
+  const patternRegistry = await readJson(patternRegistryPath);
+  const installRegistry = await readJson(installRegistryPath);
+
+  const patternsInput = patternRegistry?.patterns;
+  if (!patternsInput || typeof patternsInput !== 'object') {
+    failBuild('registry/pattern-registry.json: "patterns" must be an object');
+  }
+
+  const patterns = {};
+  for (const patternId of sortStrings(Object.keys(patternsInput))) {
+    const rawPattern = patternsInput[patternId];
+    if (!rawPattern || typeof rawPattern !== 'object') {
+      failBuild(`registry/pattern-registry.json: pattern "${patternId}" must be an object`);
+    }
+
+    const requires = Array.isArray(rawPattern.requires)
+      ? rawPattern.requires.map((value) => String(value ?? '').trim()).filter(Boolean)
+      : [];
+    if (requires.length === 0) {
+      failBuild(`pattern "${patternId}" must define non-empty requires[]`);
+    }
+
+    const directSuffixes = new Set();
+    for (const componentId of requires) {
+      for (const suffix of componentIdToSuffixes({ componentId, installRegistry })) {
+        directSuffixes.add(suffix);
+      }
+    }
+
+    const closureIds = resolveComponentClosure({ installRegistry, requiredIds: requires });
+    const closureSuffixes = new Set();
+    for (const componentId of closureIds) {
+      for (const suffix of componentIdToSuffixes({ componentId, installRegistry })) {
+        closureSuffixes.add(suffix);
+      }
+    }
+
+    for (const suffix of closureSuffixes) {
+      if (!runtimeComponents[suffix]) {
+        failBuild(`pattern "${patternId}" references unavailable suffix "${suffix}"`);
+      }
+    }
+
+    const entryHints = Array.isArray(rawPattern.entryHints)
+      ? rawPattern.entryHints.map((value) => String(value ?? '').trim()).filter(Boolean)
+      : [];
+
+    patterns[patternId] = {
+      id: patternId,
+      title: String(rawPattern.title ?? patternId).trim() || patternId,
+      description: String(rawPattern.description ?? '').trim(),
+      components: sortStrings(closureSuffixes),
+      requiredComponents: sortStrings(directSuffixes),
+      stability: String(rawPattern.stability ?? 'stable').trim() || 'stable',
+      contractVersion: String(rawPattern.contractVersion ?? '1.0').trim() || '1.0',
+      entryHints: entryHints.length > 0 ? entryHints : ['boot'],
+      sampleHtml: String(rawPattern.html ?? ''),
+    };
+  }
+
+  return patterns;
+}
+
+async function generateElements(runtimeRoot, components) {
   const elementsDir = path.join(runtimeRoot, 'elements');
   await fs.rm(elementsDir, { recursive: true, force: true });
   await ensureDir(elementsDir);
 
-  for (const suffix of Object.keys(COMPONENTS).sort((a, b) => a.localeCompare(b))) {
-    const c = COMPONENTS[suffix];
+  for (const suffix of sortStrings(Object.keys(components))) {
+    const c = components[suffix];
     const code = `import { ${c.defineFn} } from '../${c.defineModule}';\n${c.defineFn}();\n`;
     // eslint-disable-next-line no-await-in-loop
     await writeText(path.join(elementsDir, `${suffix}.js`), code);
   }
 }
 
-async function generateRegistry(runtimeRoot) {
+async function generateRegistry(runtimeRoot, { components: runtimeComponents, patterns: runtimePatterns }) {
   const components = {};
-  for (const suffix of Object.keys(COMPONENTS).sort((a, b) => a.localeCompare(b))) {
-    const c = COMPONENTS[suffix];
+  for (const suffix of sortStrings(Object.keys(runtimeComponents))) {
+    const c = runtimeComponents[suffix];
     components[suffix] = {
       tagBase: c.tagBase,
       elementEntry: `components/${suffix}.js`,
@@ -392,8 +308,8 @@ async function generateRegistry(runtimeRoot) {
   }
 
   const patterns = {};
-  for (const name of Object.keys(PATTERNS).sort((a, b) => a.localeCompare(b))) {
-    const p = PATTERNS[name];
+  for (const name of sortStrings(Object.keys(runtimePatterns))) {
+    const p = runtimePatterns[name];
     patterns[name] = {
       id: name,
       title: p.title,
@@ -430,6 +346,8 @@ async function buildVendorRuntime({ check = false } = {}) {
   const pkgRoot = findPackageRoot();
   const runtimeRoot = path.join(pkgRoot, 'vendor-runtime');
   const runtimeSrc = path.join(runtimeRoot, 'src');
+  const components = await loadRuntimeComponents(pkgRoot);
+  const patterns = await loadRuntimePatterns({ pkgRoot, runtimeComponents: components });
 
   await ensureDir(runtimeRoot);
   await fs.rm(runtimeSrc, { recursive: true, force: true });
@@ -438,8 +356,8 @@ async function buildVendorRuntime({ check = false } = {}) {
   const tsconfigPath = path.join(pkgRoot, 'tsconfig.vendor-runtime.json');
   run(process.execPath, [tscPath, '-p', tsconfigPath], { cwd: pkgRoot });
 
-  await generateElements(runtimeRoot);
-  await generateRegistry(runtimeRoot);
+  await generateElements(runtimeRoot, components);
+  await generateRegistry(runtimeRoot, { components, patterns });
   await generateStaticFiles(runtimeRoot);
 
   if (check) {

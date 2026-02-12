@@ -5,89 +5,329 @@
     "graceCliMajorReleases": 1
   },
   "components": {
+    "accordion-details": {
+      "tagBase": "accordion-details",
+      "elementEntry": "components/accordion-details.js",
+      "defineModule": "src/components/accordion/index.js",
+      "defineFn": "defineDefaultAccordion"
+    },
+    "accordion-item-details": {
+      "tagBase": "accordion-item-details",
+      "elementEntry": "components/accordion-item-details.js",
+      "defineModule": "src/components/accordion/index.js",
+      "defineFn": "defineDefaultAccordion"
+    },
+    "blockquote": {
+      "tagBase": "blockquote",
+      "elementEntry": "components/blockquote.js",
+      "defineModule": "src/components/blockquote/index.js",
+      "defineFn": "defineDefaultBlockquote"
+    },
+    "breadcrumb": {
+      "tagBase": "breadcrumb",
+      "elementEntry": "components/breadcrumb.js",
+      "defineModule": "src/components/breadcrumb/index.js",
+      "defineFn": "defineDefaultBreadcrumb"
+    },
+    "breadcrumb-item": {
+      "tagBase": "breadcrumb-item",
+      "elementEntry": "components/breadcrumb-item.js",
+      "defineModule": "src/components/breadcrumb/index.js",
+      "defineFn": "defineDefaultBreadcrumb"
+    },
     "button": {
       "tagBase": "button",
       "elementEntry": "components/button.js",
-      "defineModule": "src/components/button/button-define.js",
-      "defineFn": "defineButton"
+      "defineModule": "src/components/button/index.js",
+      "defineFn": "defineDefaultButton"
+    },
+    "calendar": {
+      "tagBase": "calendar",
+      "elementEntry": "components/calendar.js",
+      "defineModule": "src/components/calendar/index.js",
+      "defineFn": "defineCalendar"
     },
     "card": {
       "tagBase": "card",
       "elementEntry": "components/card.js",
-      "defineModule": "src/components/card/card-define.js",
-      "defineFn": "defineCard"
+      "defineModule": "src/components/card/index.js",
+      "defineFn": "defineDefaultCard"
+    },
+    "carousel": {
+      "tagBase": "carousel",
+      "elementEntry": "components/carousel.js",
+      "defineModule": "src/components/carousel/index.js",
+      "defineFn": "defineDefaultCarousel"
+    },
+    "checkbox": {
+      "tagBase": "checkbox",
+      "elementEntry": "components/checkbox.js",
+      "defineModule": "src/components/checkbox/index.js",
+      "defineFn": "defineDefaultCheckbox"
+    },
+    "chip-label": {
+      "tagBase": "chip-label",
+      "elementEntry": "components/chip-label.js",
+      "defineModule": "src/components/chip-label/index.js",
+      "defineFn": "defineDefaultChipLabel"
+    },
+    "chip-tag": {
+      "tagBase": "chip-tag",
+      "elementEntry": "components/chip-tag.js",
+      "defineModule": "src/components/chip-tag/index.js",
+      "defineFn": "defineChipTag"
+    },
+    "code-block": {
+      "tagBase": "code-block",
+      "elementEntry": "components/code-block.js",
+      "defineModule": "src/components/code-block/index.js",
+      "defineFn": "defineDefaultCodeBlock"
+    },
+    "date-picker": {
+      "tagBase": "date-picker",
+      "elementEntry": "components/date-picker.js",
+      "defineModule": "src/components/date-picker/index.js",
+      "defineFn": "defineDatePicker"
+    },
+    "description-list": {
+      "tagBase": "description-list",
+      "elementEntry": "components/description-list.js",
+      "defineModule": "src/components/description-list/index.js",
+      "defineFn": "defineDescriptionList"
+    },
+    "device-mock": {
+      "tagBase": "device-mock",
+      "elementEntry": "components/device-mock.js",
+      "defineModule": "src/components/device-mock/index.js",
+      "defineFn": "defineDefaultDeviceMock"
+    },
+    "dialog": {
+      "tagBase": "dialog",
+      "elementEntry": "components/dialog.js",
+      "defineModule": "src/components/dialog/index.js",
+      "defineFn": "defineDefaultDialog"
+    },
+    "disclosure": {
+      "tagBase": "disclosure",
+      "elementEntry": "components/disclosure.js",
+      "defineModule": "src/components/disclosure/index.js",
+      "defineFn": "defineDisclosure"
+    },
+    "divider": {
+      "tagBase": "divider",
+      "elementEntry": "components/divider.js",
+      "defineModule": "src/components/divider/index.js",
+      "defineFn": "defineDefaultDivider"
+    },
+    "drawer": {
+      "tagBase": "drawer",
+      "elementEntry": "components/drawer.js",
+      "defineModule": "src/components/drawer/index.js",
+      "defineFn": "defineDefaultDrawer"
+    },
+    "emergency-banner": {
+      "tagBase": "emergency-banner",
+      "elementEntry": "components/emergency-banner.js",
+      "defineModule": "src/components/emergency-banner/index.js",
+      "defineFn": "defineEmergencyBanner"
     },
     "fieldset": {
       "tagBase": "fieldset",
       "elementEntry": "components/fieldset.js",
-      "defineModule": "src/components/fieldset/fieldset-define.js",
-      "defineFn": "defineFieldset"
+      "defineModule": "src/components/fieldset/index.js",
+      "defineFn": "defineDefaultFieldset"
+    },
+    "file-upload": {
+      "tagBase": "file-upload",
+      "elementEntry": "components/file-upload.js",
+      "defineModule": "src/components/file-upload/index.js",
+      "defineFn": "defineFileUpload"
+    },
+    "global-menu": {
+      "tagBase": "global-menu",
+      "elementEntry": "components/global-menu.js",
+      "defineModule": "src/components/global-menu/index.js",
+      "defineFn": "defineGlobalMenu"
+    },
+    "global-menu-item": {
+      "tagBase": "global-menu-item",
+      "elementEntry": "components/global-menu-item.js",
+      "defineModule": "src/components/global-menu/index.js",
+      "defineFn": "defineGlobalMenu"
+    },
+    "hamburger-menu-button": {
+      "tagBase": "hamburger-menu-button",
+      "elementEntry": "components/hamburger-menu-button.js",
+      "defineModule": "src/components/hamburger-menu-button/index.js",
+      "defineFn": "defineDefaultHamburgerMenuButton"
+    },
+    "header-container": {
+      "tagBase": "header-container",
+      "elementEntry": "components/header-container.js",
+      "defineModule": "src/components/header-container/index.js",
+      "defineFn": "defineDefaultHeaderContainer"
     },
     "heading": {
       "tagBase": "heading",
       "elementEntry": "components/heading.js",
-      "defineModule": "src/components/heading/heading-define.js",
+      "defineModule": "src/components/heading/index.js",
       "defineFn": "defineHeading"
     },
     "input-text": {
       "tagBase": "input-text",
       "elementEntry": "components/input-text.js",
-      "defineModule": "src/components/input-text/input-text-define.js",
+      "defineModule": "src/components/input-text/index.js",
       "defineFn": "defineInputText"
+    },
+    "language-selector": {
+      "tagBase": "language-selector",
+      "elementEntry": "components/language-selector.js",
+      "defineModule": "src/components/language-selector/index.js",
+      "defineFn": "defineLanguageSelector"
     },
     "layout-aside": {
       "tagBase": "layout-aside",
       "elementEntry": "components/layout-aside.js",
-      "defineModule": "src/components/layout-aside/layout-aside-define.js",
+      "defineModule": "src/components/layout-aside/index.js",
       "defineFn": "defineLayoutAside"
     },
     "layout-shell": {
       "tagBase": "layout-shell",
       "elementEntry": "components/layout-shell.js",
-      "defineModule": "src/components/layout-shell/layout-shell-define.js",
+      "defineModule": "src/components/layout-shell/index.js",
       "defineFn": "defineLayoutShell"
     },
     "layout-sidebar": {
       "tagBase": "layout-sidebar",
       "elementEntry": "components/layout-sidebar.js",
-      "defineModule": "src/components/layout-sidebar/layout-sidebar-define.js",
+      "defineModule": "src/components/layout-sidebar/index.js",
       "defineFn": "defineLayoutSidebar"
+    },
+    "list": {
+      "tagBase": "list",
+      "elementEntry": "components/list.js",
+      "defineModule": "src/components/list/index.js",
+      "defineFn": "defineList"
+    },
+    "list-item": {
+      "tagBase": "list-item",
+      "elementEntry": "components/list-item.js",
+      "defineModule": "src/components/list/index.js",
+      "defineFn": "defineList"
+    },
+    "menu-list": {
+      "tagBase": "menu-list",
+      "elementEntry": "components/menu-list.js",
+      "defineModule": "src/components/menu-list/index.js",
+      "defineFn": "defineMenuList"
+    },
+    "menu-list-box": {
+      "tagBase": "menu-list-box",
+      "elementEntry": "components/menu-list-box.js",
+      "defineModule": "src/components/menu-list-box/index.js",
+      "defineFn": "defineMenuListBox"
+    },
+    "menu-list-item": {
+      "tagBase": "menu-list-item",
+      "elementEntry": "components/menu-list-item.js",
+      "defineModule": "src/components/menu-list/index.js",
+      "defineFn": "defineMenuList"
+    },
+    "mobile-menu": {
+      "tagBase": "mobile-menu",
+      "elementEntry": "components/mobile-menu.js",
+      "defineModule": "src/components/mobile-menu/index.js",
+      "defineFn": "defineDefaultMobileMenu"
+    },
+    "mobile-mock": {
+      "tagBase": "mobile-mock",
+      "elementEntry": "components/mobile-mock.js",
+      "defineModule": "src/components/mobile-mock/index.js",
+      "defineFn": "defineDefaultMobileMock"
+    },
+    "notification-banner": {
+      "tagBase": "notification-banner",
+      "elementEntry": "components/notification-banner.js",
+      "defineModule": "src/components/notification-banner/index.js",
+      "defineFn": "defineNotificationBanner"
     },
     "page-navigation": {
       "tagBase": "page-navigation",
       "elementEntry": "components/page-navigation.js",
-      "defineModule": "src/components/page-navigation/page-navigation-define.js",
-      "defineFn": "definePageNavigation"
+      "defineModule": "src/components/page-navigation/index.js",
+      "defineFn": "defineDefaultPageNavigation"
+    },
+    "radio": {
+      "tagBase": "radio",
+      "elementEntry": "components/radio.js",
+      "defineModule": "src/components/radio/index.js",
+      "defineFn": "defineDefaultRadio"
+    },
+    "resource-list": {
+      "tagBase": "resource-list",
+      "elementEntry": "components/resource-list.js",
+      "defineModule": "src/components/resource-list/index.js",
+      "defineFn": "defineDefaultResourceList"
     },
     "search-box": {
       "tagBase": "search-box",
       "elementEntry": "components/search-box.js",
-      "defineModule": "src/components/search-box/search-box-define.js",
+      "defineModule": "src/components/search-box/index.js",
       "defineFn": "defineSearchBox"
     },
     "select": {
       "tagBase": "select",
       "elementEntry": "components/select.js",
-      "defineModule": "src/components/select/select-define.js",
+      "defineModule": "src/components/select/index.js",
       "defineFn": "defineSelect"
     },
     "step-navigation": {
       "tagBase": "step-navigation",
       "elementEntry": "components/step-navigation.js",
-      "defineModule": "src/components/step-navigation/step-navigation-define.js",
-      "defineFn": "defineStepNavigation"
+      "defineModule": "src/components/step-navigation/index.js",
+      "defineFn": "defineDefaultStepNavigation"
+    },
+    "step-navigation-item": {
+      "tagBase": "step-navigation-item",
+      "elementEntry": "components/step-navigation-item.js",
+      "defineModule": "src/components/step-navigation/index.js",
+      "defineFn": "defineDefaultStepNavigation"
+    },
+    "switch": {
+      "tagBase": "switch",
+      "elementEntry": "components/switch.js",
+      "defineModule": "src/components/switch/index.js",
+      "defineFn": "defineSwitch"
     },
     "table": {
       "tagBase": "table",
       "elementEntry": "components/table.js",
-      "defineModule": "src/components/table/table-define.js",
+      "defineModule": "src/components/table/index.js",
       "defineFn": "defineTable"
+    },
+    "table-control": {
+      "tagBase": "table-control",
+      "elementEntry": "components/table-control.js",
+      "defineModule": "src/components/table-control/index.js",
+      "defineFn": "defineDefaultTableControl"
+    },
+    "text": {
+      "tagBase": "text",
+      "elementEntry": "components/text.js",
+      "defineModule": "src/components/typography/index.js",
+      "defineFn": "defineDefaultText"
     },
     "textarea": {
       "tagBase": "textarea",
       "elementEntry": "components/textarea.js",
-      "defineModule": "src/components/textarea/textarea-define.js",
+      "defineModule": "src/components/textarea/index.js",
       "defineFn": "defineTextarea"
+    },
+    "utility-link": {
+      "tagBase": "utility-link",
+      "elementEntry": "components/utility-link.js",
+      "defineModule": "src/components/utility-link/index.js",
+      "defineFn": "defineUtilityLink"
     }
   },
   "patterns": {
@@ -96,17 +336,20 @@
       "title": "申請フォーム（1ページ・検証エラー）",
       "description": "必須項目を含む1ページ申請フォームとバリデーションエラー表示",
       "components": [
-        "heading",
+        "button",
         "fieldset",
+        "heading",
         "input-text",
         "select",
-        "textarea",
-        "button"
+        "textarea"
       ],
       "requiredComponents": [
+        "button",
         "fieldset",
+        "heading",
         "input-text",
-        "button"
+        "select",
+        "textarea"
       ],
       "stability": "experimental",
       "contractVersion": "1.0",
@@ -115,24 +358,27 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム</dads-heading>\n  <form id=\"application-form-single\">\n    <dads-fieldset>\n      <legend>申請情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n      <dads-select name=\"type\" required></dads-select>\n      <dads-textarea name=\"reason\" required></dads-textarea>\n    </dads-fieldset>\n    <dads-button type=\"submit\">送信</dads-button>\n  </form>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム</dads-heading>\n  <form id=\"application-form-single\">\n    <dads-fieldset>\n      <legend>申請情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n      <dads-select name=\"type\" required></dads-select>\n      <dads-textarea name=\"reason\" required></dads-textarea>\n    </dads-fieldset>\n    <dads-button type=\"submit\">送信</dads-button>\n  </form>\n</main>\n"
     },
     "application-form-step-validation": {
       "id": "application-form-step-validation",
       "title": "申請フォーム（ステップ・検証エラー）",
       "description": "ステップナビゲーション付き申請フォームと検証エラー表示",
       "components": [
-        "heading",
-        "step-navigation",
+        "button",
         "fieldset",
+        "heading",
         "input-text",
-        "button"
+        "step-navigation",
+        "step-navigation-item"
       ],
       "requiredComponents": [
-        "step-navigation",
+        "button",
         "fieldset",
+        "heading",
         "input-text",
-        "button"
+        "step-navigation",
+        "step-navigation-item"
       ],
       "stability": "experimental",
       "contractVersion": "1.0",
@@ -141,43 +387,20 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム（ステップ）</dads-heading>\n  <dads-step-navigation current=\"1\" total=\"3\"></dads-step-navigation>\n  <form id=\"application-form-step\">\n    <dads-fieldset>\n      <legend>ステップ1: 申請者情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n    </dads-fieldset>\n    <dads-button type=\"submit\">次へ</dads-button>\n  </form>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム（ステップ）</dads-heading>\n  <dads-step-navigation></dads-step-navigation>\n  <form id=\"application-form-step\">\n    <dads-fieldset>\n      <legend>ステップ1: 申請者情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n    </dads-fieldset>\n    <dads-button type=\"submit\">次へ</dads-button>\n  </form>\n</main>\n"
     },
     "card-grid": {
       "id": "card-grid",
       "title": "カードグリッド",
       "description": "カードで一覧表示する基本レイアウト",
       "components": [
-        "heading",
+        "button",
         "card",
-        "button"
+        "heading"
       ],
       "requiredComponents": [
-        "heading",
-        "card"
-      ],
-      "stability": "stable",
-      "contractVersion": "1.0",
-      "entryHints": [
-        "boot",
-        "@wcf",
-        "index"
-      ],
-      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">お知らせ</dads-heading>\n  <section>\n    <dads-card>\n      <h2>カード1</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n    <dads-card>\n      <h2>カード2</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n  </section>\n</main>"
-    },
-    "layout-app-shell": {
-      "id": "layout-app-shell",
-      "title": "レイアウト（App/SaaS: Header + Sidebar + Main）",
-      "description": "業務アプリ向けの標準App Shellレイアウト。",
-      "components": [
-        "layout-shell",
-        "layout-sidebar",
-        "heading",
-        "card"
-      ],
-      "requiredComponents": [
-        "layout-shell",
-        "layout-sidebar",
+        "button",
+        "card",
         "heading"
       ],
       "stability": "stable",
@@ -187,21 +410,47 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"app-shell\" mode=\"auto\">\n  <div slot=\"header\">\n    <dads-heading level=\"2\">業務ダッシュボード</dads-heading>\n  </div>\n  <dads-layout-sidebar slot=\"sidebar\">\n    <ul>\n      <li>案件一覧</li>\n      <li>承認待ち</li>\n      <li>設定</li>\n    </ul>\n  </dads-layout-sidebar>\n  <section>\n    <dads-card>\n      <dads-heading level=\"3\">進捗サマリー</dads-heading>\n      <p>主要KPIを表示します。</p>\n    </dads-card>\n  </section>\n</dads-layout-shell>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">お知らせ</dads-heading>\n  <section>\n    <dads-card>\n      <h2>カード1</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n    <dads-card>\n      <h2>カード2</h2>\n      <dads-button variant=\"outlined\">詳細</dads-button>\n    </dads-card>\n  </section>\n</main>\n"
+    },
+    "layout-app-shell": {
+      "id": "layout-app-shell",
+      "title": "レイアウト（App/SaaS: Header + Sidebar + Main）",
+      "description": "業務アプリ向けの標準App Shellレイアウト。",
+      "components": [
+        "card",
+        "heading",
+        "layout-shell",
+        "layout-sidebar"
+      ],
+      "requiredComponents": [
+        "card",
+        "heading",
+        "layout-shell",
+        "layout-sidebar"
+      ],
+      "stability": "stable",
+      "contractVersion": "1.0",
+      "entryHints": [
+        "boot",
+        "@wcf",
+        "index"
+      ],
+      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"app-shell\" mode=\"auto\">\n  <div slot=\"header\">\n    <dads-heading level=\"2\">業務ダッシュボード</dads-heading>\n  </div>\n  <dads-layout-sidebar slot=\"sidebar\">\n    <ul>\n      <li>案件一覧</li>\n      <li>承認待ち</li>\n      <li>設定</li>\n    </ul>\n  </dads-layout-sidebar>\n  <section>\n    <dads-card>\n      <dads-heading level=\"3\">進捗サマリー</dads-heading>\n      <p>主要KPIを表示します。</p>\n    </dads-card>\n  </section>\n</dads-layout-shell>\n"
     },
     "layout-master-detail": {
       "id": "layout-master-detail",
       "title": "レイアウト（Master-Detail: Main + Aside）",
       "description": "一覧 + 詳細を同時表示する2カラムレイアウト。",
       "components": [
-        "layout-shell",
-        "layout-aside",
         "heading",
+        "layout-aside",
+        "layout-shell",
         "table"
       ],
       "requiredComponents": [
-        "layout-shell",
+        "heading",
         "layout-aside",
+        "layout-shell",
         "table"
       ],
       "stability": "stable",
@@ -211,22 +460,23 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"master-detail\" mode=\"auto\">\n  <section>\n    <dads-heading level=\"2\">申請一覧</dads-heading>\n    <dads-table>\n      <table>\n        <thead>\n          <tr><th scope=\"col\">申請ID</th><th scope=\"col\">状態</th></tr>\n        </thead>\n        <tbody>\n          <tr><td>A-1001</td><td>審査中</td></tr>\n          <tr><td>A-1002</td><td>差戻し</td></tr>\n        </tbody>\n      </table>\n    </dads-table>\n  </section>\n  <dads-layout-aside slot=\"aside\">\n    <dads-heading level=\"3\">詳細情報</dads-heading>\n    <p>選択中レコードの詳細を表示します。</p>\n  </dads-layout-aside>\n</dads-layout-shell>"
+      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"master-detail\" mode=\"auto\">\n  <section>\n    <dads-heading level=\"2\">申請一覧</dads-heading>\n    <dads-table>\n      <table>\n        <thead>\n          <tr><th scope=\"col\">申請ID</th><th scope=\"col\">状態</th></tr>\n        </thead>\n        <tbody>\n          <tr><td>A-1001</td><td>審査中</td></tr>\n          <tr><td>A-1002</td><td>差戻し</td></tr>\n        </tbody>\n      </table>\n    </dads-table>\n  </section>\n  <dads-layout-aside slot=\"aside\">\n    <dads-heading level=\"3\">詳細情報</dads-heading>\n    <p>選択中レコードの詳細を表示します。</p>\n  </dads-layout-aside>\n</dads-layout-shell>\n"
     },
     "layout-website-hero-section-footer": {
       "id": "layout-website-hero-section-footer",
       "title": "レイアウト（Website: Hero + Section + Footer）",
       "description": "コンテンツ主導の1カラムサイト向けレイアウト。",
       "components": [
-        "layout-shell",
-        "heading",
+        "button",
         "card",
-        "button"
+        "heading",
+        "layout-shell"
       ],
       "requiredComponents": [
-        "layout-shell",
+        "button",
+        "card",
         "heading",
-        "card"
+        "layout-shell"
       ],
       "stability": "stable",
       "contractVersion": "1.0",
@@ -235,18 +485,98 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"website\" mode=\"auto\">\n  <header slot=\"header\">\n    <dads-heading level=\"1\">くらしの手続きポータル</dads-heading>\n    <p>必要な手続きを1つの画面で確認できます。</p>\n  </header>\n  <section>\n    <dads-card>\n      <dads-heading level=\"2\">はじめての方へ</dads-heading>\n      <p>制度の概要と申請までの流れを案内します。</p>\n      <dads-button variant=\"outlined\">詳しく見る</dads-button>\n    </dads-card>\n  </section>\n  <footer slot=\"footer\">© Digital Service</footer>\n</dads-layout-shell>"
+      "sampleHtml": "<dads-layout-shell data-dads-typeset pattern=\"website\" mode=\"auto\">\n  <header slot=\"header\">\n    <dads-heading level=\"1\">くらしの手続きポータル</dads-heading>\n    <p>必要な手続きを1つの画面で確認できます。</p>\n  </header>\n  <section>\n    <dads-card>\n      <dads-heading level=\"2\">はじめての方へ</dads-heading>\n      <p>制度の概要と申請までの流れを案内します。</p>\n      <dads-button variant=\"outlined\">詳しく見る</dads-button>\n    </dads-card>\n  </section>\n  <footer slot=\"footer\">© Digital Service</footer>\n</dads-layout-shell>\n"
+    },
+    "mockup-app-shell": {
+      "id": "mockup-app-shell",
+      "title": "モックアップ（App Shell）",
+      "description": "業務画面向けのヘッダー + サイドバー + メイン領域を device-mock で再現するモックアップ。",
+      "components": [
+        "card",
+        "device-mock",
+        "heading",
+        "layout-shell",
+        "layout-sidebar"
+      ],
+      "requiredComponents": [
+        "card",
+        "device-mock",
+        "heading",
+        "layout-shell",
+        "layout-sidebar"
+      ],
+      "stability": "stable",
+      "contractVersion": "1.0",
+      "entryHints": [
+        "boot"
+      ],
+      "sampleHtml": "<section data-dads-typeset>\n  <dads-device-mock device=\"desktop\">\n    <dads-layout-shell pattern=\"app-shell\" mode=\"desktop\">\n      <div slot=\"header\">\n        <dads-heading level=\"2\">申請管理ダッシュボード</dads-heading>\n      </div>\n      <dads-layout-sidebar slot=\"sidebar\">\n        <ul>\n          <li>一覧</li>\n          <li>承認待ち</li>\n          <li>設定</li>\n        </ul>\n      </dads-layout-sidebar>\n      <section>\n        <dads-card>\n          <dads-heading level=\"3\">本日の処理件数</dads-heading>\n          <p>処理済み 128 件 / 未処理 24 件</p>\n        </dads-card>\n      </section>\n    </dads-layout-shell>\n  </dads-device-mock>\n</section>\n"
+    },
+    "mockup-mobile-form": {
+      "id": "mockup-mobile-form",
+      "title": "モックアップ（Mobile Form）",
+      "description": "モバイル端末上で入力フォームの配置と余白を確認するモックアップ。",
+      "components": [
+        "button",
+        "device-mock",
+        "fieldset",
+        "heading",
+        "input-text",
+        "select",
+        "textarea"
+      ],
+      "requiredComponents": [
+        "button",
+        "device-mock",
+        "fieldset",
+        "heading",
+        "input-text",
+        "select",
+        "textarea"
+      ],
+      "stability": "stable",
+      "contractVersion": "1.0",
+      "entryHints": [
+        "boot"
+      ],
+      "sampleHtml": "<section data-dads-typeset>\n  <dads-device-mock device=\"mobile\" visible-height=\"560px\">\n    <main>\n      <dads-heading level=\"2\">申請フォーム</dads-heading>\n      <form>\n        <dads-fieldset>\n          <legend>基本情報</legend>\n          <dads-input-text name=\"name\" required></dads-input-text>\n          <dads-select name=\"type\" required></dads-select>\n          <dads-textarea name=\"detail\" required></dads-textarea>\n        </dads-fieldset>\n        <dads-button type=\"submit\">確認へ進む</dads-button>\n      </form>\n    </main>\n  </dads-device-mock>\n</section>\n"
+    },
+    "mockup-website": {
+      "id": "mockup-website",
+      "title": "モックアップ（Website）",
+      "description": "Webサイト向けのヒーロー + セクション構成を device-mock で確認するモックアップ。",
+      "components": [
+        "button",
+        "card",
+        "device-mock",
+        "heading",
+        "layout-shell"
+      ],
+      "requiredComponents": [
+        "button",
+        "card",
+        "device-mock",
+        "heading",
+        "layout-shell"
+      ],
+      "stability": "stable",
+      "contractVersion": "1.0",
+      "entryHints": [
+        "boot"
+      ],
+      "sampleHtml": "<section data-dads-typeset>\n  <dads-device-mock device=\"desktop\">\n    <dads-layout-shell pattern=\"website\" mode=\"desktop\">\n      <header slot=\"header\">\n        <dads-heading level=\"1\">公共サービス ポータル</dads-heading>\n        <p>申請・確認・問い合わせを1つの画面で行えます。</p>\n      </header>\n      <section>\n        <dads-card>\n          <dads-heading level=\"2\">新着のお知らせ</dads-heading>\n          <p>重要なお知らせを確認してください。</p>\n          <dads-button variant=\"outlined\">詳細</dads-button>\n        </dads-card>\n      </section>\n      <footer slot=\"footer\">© Digital Service</footer>\n    </dads-layout-shell>\n  </dads-device-mock>\n</section>\n"
     },
     "search-form": {
       "id": "search-form",
       "title": "検索フォーム（最小）",
       "description": "見出し + 検索フォーム（検索語 + ボタン）",
       "components": [
+        "button",
         "heading",
-        "search-box",
-        "button"
+        "search-box"
       ],
       "requiredComponents": [
+        "button",
         "heading",
         "search-box"
       ],
@@ -257,23 +587,24 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">検索</dads-heading>\n  <form id=\"search-form\">\n    <dads-search-box aria-label=\"検索\"></dads-search-box>\n  </form>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">検索</dads-heading>\n  <form id=\"search-form\">\n    <dads-search-box aria-label=\"検索\"></dads-search-box>\n    <dads-button type=\"submit\">検索</dads-button>\n  </form>\n</main>\n"
     },
     "search-results": {
       "id": "search-results",
       "title": "検索結果一覧",
       "description": "見出し + 検索フォーム + 結果カード + ページネーション",
       "components": [
-        "heading",
-        "search-box",
+        "button",
         "card",
-        "page-navigation"
+        "heading",
+        "page-navigation",
+        "search-box"
       ],
       "requiredComponents": [
-        "heading",
-        "search-box",
         "card",
-        "page-navigation"
+        "heading",
+        "page-navigation",
+        "search-box"
       ],
       "stability": "stable",
       "contractVersion": "1.0",
@@ -282,7 +613,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">検索</dads-heading>\n  <form id=\"search-form\">\n    <dads-search-box aria-label=\"検索\"></dads-search-box>\n  </form>\n  <h2>結果</h2>\n  <ul>\n    <li><dads-card>ダミー結果 1</dads-card></li>\n    <li><dads-card>ダミー結果 2</dads-card></li>\n    <li><dads-card>ダミー結果 3</dads-card></li>\n  </ul>\n  <dads-page-navigation current=\"1\" total=\"1\"></dads-page-navigation>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">検索</dads-heading>\n  <form id=\"search-form\">\n    <dads-search-box aria-label=\"検索\"></dads-search-box>\n  </form>\n  <h2>結果</h2>\n  <ul>\n    <li><dads-card>ダミー結果 1</dads-card></li>\n    <li><dads-card>ダミー結果 2</dads-card></li>\n    <li><dads-card>ダミー結果 3</dads-card></li>\n  </ul>\n  <dads-page-navigation current=\"1\" total=\"1\"></dads-page-navigation>\n</main>\n"
     },
     "table-with-pagination": {
       "id": "table-with-pagination",
@@ -290,12 +621,13 @@
       "description": "テーブル一覧とページネーションの基本構成",
       "components": [
         "heading",
-        "table",
-        "page-navigation"
+        "page-navigation",
+        "table"
       ],
       "requiredComponents": [
-        "table",
-        "page-navigation"
+        "heading",
+        "page-navigation",
+        "table"
       ],
       "stability": "stable",
       "contractVersion": "1.0",
@@ -304,7 +636,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">一覧</dads-heading>\n  <dads-table>\n    <table>\n      <thead>\n        <tr><th>項目</th><th>値</th></tr>\n      </thead>\n      <tbody>\n        <tr><td>サンプル</td><td>1</td></tr>\n      </tbody>\n    </table>\n  </dads-table>\n  <dads-page-navigation current=\"1\" total=\"3\"></dads-page-navigation>\n</main>"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">一覧</dads-heading>\n  <dads-table>\n    <table>\n      <thead>\n        <tr><th>項目</th><th>値</th></tr>\n      </thead>\n      <tbody>\n        <tr><td>サンプル</td><td>1</td></tr>\n      </tbody>\n    </table>\n  </dads-table>\n  <dads-page-navigation current=\"1\" total=\"3\"></dads-page-navigation>\n</main>\n"
     }
   }
 }

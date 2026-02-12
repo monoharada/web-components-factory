@@ -3,13 +3,14 @@
 # layout-sidebar
 
 - tag base: `layout-sidebar`
-- define module: `src/components/layout-sidebar/layout-sidebar-define.js`
+- define module: `src/components/layout-sidebar/index.js`
 - define function: `defineLayoutSidebar`
 - vendor entry: `components/layout-sidebar.js`
 
 ## 使われるBlocks
 
 - [`layout-app-shell`](../blocks/layout-app-shell.md)
+- [`mockup-app-shell`](../blocks/mockup-app-shell.md)
 
 ## 導入コマンド
 

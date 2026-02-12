@@ -459,12 +459,19 @@ _a = DadsRadio, _DadsRadio_base = new WeakMap(), _DadsRadio_input = new WeakMap(
     }
     return fallback;
 }, _DadsRadio_setCheckedFromGroup = function _DadsRadio_setCheckedFromGroup(v) {
+    const wasChecked = this.checked;
     if (!__classPrivateFieldGet(this, _DadsRadio_input, "f")) {
         this.toggleAttribute('checked', v);
         return;
     }
     __classPrivateFieldGet(this, _DadsRadio_input, "f").checked = v;
     __classPrivateFieldGet(this, _DadsRadio_instances, "m", _DadsRadio_syncFormValue).call(this);
+    if (wasChecked === v)
+        return;
+    this.emitEvent('dads-change', {
+        checked: this.checked,
+        value: this.value,
+    });
 }, _DadsRadio_enforceSingleSelection = function _DadsRadio_enforceSingleSelection() {
     if (!this.checked)
         return;

@@ -48,6 +48,9 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 
 `registry/pattern-registry.json` に、AI がそのまま使える **画面/レイアウトのレシピ**を持ちます。
 
+- Pattern の SoT は `registry/pattern-registry.json`
+- `vendor-runtime/registry.json` の pattern は CLI 用の生成物（SoT から反映）
+
 ### `list_patterns()`
 
 パターンの一覧を返します。
@@ -59,6 +62,12 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 ### `generate_pattern_snippet({ patternId, prefix? })`
 
 HTML snippet だけを返します。
+
+### 追加済み mockup patterns
+
+- `mockup-website`
+- `mockup-app-shell`
+- `mockup-mobile-form`
 
 ## wctools MCP / language server との違い
 

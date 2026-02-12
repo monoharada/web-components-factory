@@ -14,10 +14,12 @@
 
 ## 必須コンポーネント
 
-- `step-navigation`
-- `fieldset`
-- `input-text`
 - `button`
+- `fieldset`
+- `heading`
+- `input-text`
+- `step-navigation`
+- `step-navigation-item`
 
 ## コマンド例
 
@@ -45,7 +47,7 @@ node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myu
 ```html
 <main data-dads-typeset>
   <dads-heading level="1">申請フォーム（ステップ）</dads-heading>
-  <dads-step-navigation current="1" total="3"></dads-step-navigation>
+  <dads-step-navigation></dads-step-navigation>
   <form id="application-form-step">
     <dads-fieldset>
       <legend>ステップ1: 申請者情報</legend>

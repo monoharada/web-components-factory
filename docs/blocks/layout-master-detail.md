@@ -14,8 +14,9 @@
 
 ## 必須コンポーネント
 
-- `layout-shell`
+- `heading`
 - `layout-aside`
+- `layout-shell`
 - `table`
 
 ## コマンド例
