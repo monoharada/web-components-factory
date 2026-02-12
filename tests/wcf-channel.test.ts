@@ -215,6 +215,45 @@ describe('resolveStablePackageSpec', () => {
     expect(resolved.warnings.join('\n')).toContain('E_CHANNEL_LOCK_FETCH_FAILED');
   });
 
+  it('prefers stale cache over bundled lock when lock fetch fails', async () => {
+    const tmp = await makeTempDir();
+    tempDirs.push(tmp);
+    const cachePath = path.join(tmp, 'channel-cache.json');
+    const bundledLockPath = path.join(tmp, 'wcf-channel-lock.json');
+    const cacheSha = 'abababababababababababababababababababab';
+    const bundledSha = 'cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd';
+    await writeFile(
+      cachePath,
+      `${JSON.stringify(
+        {
+          version: 1,
+          stable: {
+            spec: `git+${STABLE_REPO_URL}#${cacheSha}`,
+            sha: cacheSha,
+            resolvedAt: '2026-02-11T00:00:00.000Z',
+            checkedAt: '2026-02-10T23:00:00.000Z',
+          },
+        },
+        null,
+        2,
+      )}\n`,
+      'utf8',
+    );
+    await writeFile(bundledLockPath, `${JSON.stringify(makeLock(bundledSha), null, 2)}\n`, 'utf8');
+
+    const resolved = await resolveStablePackageSpec({
+      cachePath,
+      bundledLockPath,
+      fetchImpl: async () => {
+        throw new Error('network unavailable');
+      },
+      nowMs: Date.parse('2026-02-11T01:00:00.000Z'),
+    });
+
+    expect(resolved.source).toBe('fallback-cache');
+    expect(resolved.sha).toBe(cacheSha);
+  });
+
   it('throws E_CHANNEL_RESOLVE_FAILED when lock fetch fails and cache is missing', async () => {
     const tmp = await makeTempDir();
     tempDirs.push(tmp);

@@ -93,7 +93,7 @@ describe('wcf vendor install', () => {
     expect(text).toContain('"myui-page-navigation": "./vendor/components/myui/components/page-navigation.js"');
   });
 
-  it('rejects overwrite by default and allows overwrite with force', async () => {
+  it('rejects overwrite by default and allows overwrite with force on managed dir', async () => {
     const tmp = await mkdtemp();
     const outDir = path.join(tmp, 'vendor', 'components', 'myui');
 
@@ -120,8 +120,31 @@ describe('wcf vendor install', () => {
         force: true,
       });
 
-      expect(await exists(path.join(outDir, 'extra.txt'))).toBe(false);
+      expect(await exists(path.join(outDir, 'extra.txt'))).toBe(true);
       expect(await exists(path.join(outDir, 'components', 'search-box.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it('refuses --force on unmanaged non-empty directory', async () => {
+    const tmp = await mkdtemp();
+    const outDir = path.join(tmp, 'unsafe-dir');
+
+    try {
+      await fs.mkdir(outDir, { recursive: true });
+      await fs.writeFile(path.join(outDir, 'keep.txt'), 'do-not-touch', 'utf8');
+
+      await expect(
+        vendorInstall({
+          prefix: 'myui',
+          outDir,
+          pattern: 'search-results',
+          force: true,
+        }),
+      ).rejects.toThrow('Refusing --force on unmanaged output directory');
+
+      expect(await exists(path.join(outDir, 'keep.txt'))).toBe(true);
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }

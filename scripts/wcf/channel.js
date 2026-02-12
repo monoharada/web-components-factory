@@ -335,6 +335,18 @@ export async function resolveStablePackageSpec({
   }
 
   if (lockError?.code === 'E_CHANNEL_LOCK_FETCH_FAILED') {
+    if (cachedEntry) {
+      warnings.push(
+        `${lockError.code}: ${toErrorMessage(lockError)}. Falling back to cached stable spec.`,
+      );
+      return {
+        spec: cachedEntry.spec,
+        sha: cachedEntry.sha,
+        source: 'fallback-cache',
+        warnings,
+      };
+    }
+
     try {
       const resolvedBundled = await readBundledLockDocument({ bundledLockPath });
       const spec = toStableSpec(resolvedBundled.sha);
@@ -357,17 +369,6 @@ export async function resolveStablePackageSpec({
     } catch (bundledError) {
       if (bundledError?.code === 'E_CHANNEL_LOCK_INVALID') {
         throw bundledError;
-      }
-      if (cachedEntry) {
-        warnings.push(
-          `${lockError.code}: ${toErrorMessage(lockError)}. Falling back to cached stable spec.`,
-        );
-        return {
-          spec: cachedEntry.spec,
-          sha: cachedEntry.sha,
-          source: 'fallback-cache',
-          warnings,
-        };
       }
     }
   }
