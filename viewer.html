@@ -771,21 +771,35 @@
       console.warn(`[Viewer Install] ${message}`);
     }
 
-    function loadInstallComponentIds() {
-      if (installIdSetPromise) return installIdSetPromise;
-
-      installIdSetPromise = fetch('./custom-elements.json')
+    function fetchInstallComponentIdsOnce() {
+      return fetch('./custom-elements.json')
         .then((response) => {
           if (!response.ok) {
             throw new Error(`Failed to load custom-elements.json (${response.status})`);
           }
           return response.json();
         })
-        .then((manifest) => extractInstallComponentIdsFromManifest(manifest))
-        .catch((error) => {
-          warnInstallPanelDev('custom-elements.json の読み込みに失敗したため Install 表示をスキップします。', error);
+        .then((manifest) => extractInstallComponentIdsFromManifest(manifest));
+    }
+
+    function loadInstallComponentIds() {
+      if (installIdSetPromise) return installIdSetPromise;
+
+      installIdSetPromise = (async () => {
+        try {
+          return await fetchInstallComponentIdsOnce();
+        } catch (firstError) {
+          warnInstallPanelDev('custom-elements.json の読み込みに失敗したため 1回再試行します。', firstError);
+        }
+
+        try {
+          return await fetchInstallComponentIdsOnce();
+        } catch (retryError) {
+          warnInstallPanelDev('custom-elements.json の読み込みに2回失敗したため Install 表示をスキップします。', retryError);
+          installIdSetPromise = null;
           return new Set();
-        });
+        }
+      })();
 
       return installIdSetPromise;
     }
