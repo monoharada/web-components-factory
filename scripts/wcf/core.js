@@ -74,11 +74,14 @@ async function prepareVendorOutDir(outAbs, { force = false } = {}) {
   if (entries.length === 0) return;
 
   if (!force) {
-    throw new Error(`Output directory is not empty: ${outAbs}`);
+    throw new Error(`Output directory is not empty: ${outAbs}. Pass --force to overwrite.`);
   }
 
-  await fs.rm(outAbs, { recursive: true, force: true });
-  await ensureDir(outAbs);
+  if (!(await isManagedVendorInstallDir(outAbs))) {
+    throw new Error(`Refusing --force on unmanaged output directory: ${outAbs}`);
+  }
+
+  await resetManagedVendorInstallDir(outAbs);
 }
 
 async function readJson(filePath) {
@@ -194,6 +197,24 @@ function createReadme({ prefix, selectedSuffixes }) {
     '```',
     '',
   ].join('\n');
+}
+
+async function isManagedVendorInstallDir(outAbs) {
+  const readmePath = path.join(outAbs, 'README.md');
+  try {
+    const text = await fs.readFile(readmePath, 'utf8');
+    return text.includes('# wcf vendor install output');
+  } catch {
+    return false;
+  }
+}
+
+async function resetManagedVendorInstallDir(outAbs) {
+  const generatedTargets = ['components', 'autoload', 'boot.js', 'index.js', 'wc-autoloader.js', 'README.md'];
+  for (const target of generatedTargets) {
+    // eslint-disable-next-line no-await-in-loop
+    await fs.rm(path.join(outAbs, target), { recursive: true, force: true });
+  }
 }
 
 function normalizeRelDirForImportMap(dir) {

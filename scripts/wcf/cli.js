@@ -13,6 +13,7 @@ import {
   vendorAdd,
   vendorInstall,
 } from './core.js';
+import { CHANNEL_DELEGATED_ENV, normalizeChannel, runDelegatedChannel } from './channel.js';
 
 function printHelp() {
   // eslint-disable-next-line no-console
@@ -38,6 +39,7 @@ function printHelp() {
       '  --pattern <name>        component pattern name from vendor-runtime/registry.json',
       '  --component <suffix>    add component suffix manually (repeatable)',
       '  --entry <@wcf|index|boot>  page entry mode (default: boot)',
+      '  --channel <local|stable>   execution channel (default: local)',
       '  --vendor-dir <path>     vendor directory path for page scaffolding',
       '  --file <path>           output html file name (default: index.html)',
       '  --format <json|html>    print-importmap output format (default: json)',
@@ -65,6 +67,7 @@ function parseArgs(argv) {
     components: [],
     format: 'json',
     entry: 'boot',
+    channel: 'local',
     vendorDir: null,
     file: 'index.html',
     force: false,
@@ -100,6 +103,14 @@ function parseArgs(argv) {
     }
     if (a === '--entry') {
       result.entry = argv[++i] ?? 'boot';
+      continue;
+    }
+    if (a === '--channel') {
+      const value = argv[++i];
+      if (!value || value.startsWith('-')) {
+        throw new Error('Missing required option: --channel');
+      }
+      result.channel = value;
       continue;
     }
     if (a === '--vendor-dir') {
@@ -325,10 +336,21 @@ async function runInit(args) {
 }
 
 async function main() {
-  const args = parseArgs(process.argv.slice(2));
+  const rawArgv = process.argv.slice(2);
+  const args = parseArgs(rawArgv);
+  args.channel = normalizeChannel(args.channel);
   if (args.help || args.command.length === 0) {
     printHelp();
     process.exit(args.help ? 0 : 1);
+  }
+
+  if (args.channel !== 'local' && process.env[CHANNEL_DELEGATED_ENV] !== '1') {
+    const delegated = await runDelegatedChannel({
+      channel: args.channel,
+      rawArgv,
+    });
+    printWarnings(delegated.warnings);
+    process.exit(delegated.exitCode);
   }
 
   if (args.command[0] === 'patterns') {
@@ -380,7 +402,12 @@ async function main() {
 }
 
 main().catch((error) => {
-  // eslint-disable-next-line no-console
-  console.error(String(error?.stack ?? error));
+  if (error?.code && String(error.code).startsWith('E_CHANNEL_')) {
+    // eslint-disable-next-line no-console
+    console.error(String(error?.message ?? error));
+  } else {
+    // eslint-disable-next-line no-console
+    console.error(String(error?.stack ?? error));
+  }
   process.exit(1);
 });

@@ -1,10 +1,13 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 import { initAgentKit, printImportMap, vendorAdd, vendorInstall } from '../scripts/wcf/core.js';
 import { withCwd } from './utils/with-cwd';
 
+const REPO_ROOT = path.resolve(__dirname, '..');
+const WCF_CLI = path.join(REPO_ROOT, 'scripts', 'wcf', 'cli.js');
 const LONG_IO_TIMEOUT_MS = 20_000;
 
 async function mkdtemp() {
@@ -87,7 +90,14 @@ describe('wcf vendor install', () => {
     const outDirRel = path.join('vendor', 'components', 'myui');
     const outDir = path.join(tmp, outDirRel);
     try {
-      await fs.mkdir(outDir, { recursive: true });
+      await withCwd(tmp, async () => {
+        await vendorInstall({
+          prefix: 'myui',
+          outDir: outDirRel,
+          pattern: 'search-results',
+        });
+      });
+
       await fs.writeFile(path.join(outDir, 'keep.txt'), 'manual', 'utf8');
 
       await expect(
@@ -108,7 +118,7 @@ describe('wcf vendor install', () => {
           force: true,
         });
       });
-      expect(await exists(path.join(outDir, 'keep.txt'))).toBe(false);
+      expect(await exists(path.join(outDir, 'keep.txt'))).toBe(true);
       expect(await exists(path.join(outDir, 'boot.js'))).toBe(true);
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
@@ -126,6 +136,32 @@ describe('wcf vendor install', () => {
     expect(text).toContain('<script type="importmap">');
     expect(text).toContain('"myui-search-box": "./vendor/components/myui/components/search-box.js"');
     expect(text).toContain('"myui-page-navigation": "./vendor/components/myui/components/page-navigation.js"');
+  }, LONG_IO_TIMEOUT_MS);
+
+  it('refuses --force on unmanaged non-empty directory', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = 'unsafe-dir';
+    const outDir = path.join(tmp, outDirRel);
+
+    try {
+      await fs.mkdir(outDir, { recursive: true });
+      await fs.writeFile(path.join(outDir, 'keep.txt'), 'do-not-touch', 'utf8');
+
+      await expect(
+        withCwd(tmp, async () => {
+          await vendorInstall({
+            prefix: 'myui',
+            outDir: outDirRel,
+            pattern: 'search-results',
+            force: true,
+          });
+        }),
+      ).rejects.toThrow('Refusing --force on unmanaged output directory');
+
+      expect(await exists(path.join(outDir, 'keep.txt'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
   }, LONG_IO_TIMEOUT_MS);
 });
 
@@ -284,4 +320,31 @@ describe('wcf agent init', () => {
       await fs.rm(tmp, { recursive: true, force: true });
     }
   }, LONG_IO_TIMEOUT_MS);
+});
+
+describe('wcf cli channel local', () => {
+  it('keeps existing behavior with --channel local', () => {
+    const result = spawnSync(
+      process.execPath,
+      [
+        WCF_CLI,
+        'vendor-importmap-json',
+        '--channel',
+        'local',
+        '--prefix',
+        'myui',
+        '--dir',
+        'vendor/components/myui',
+        '--pattern',
+        'search-results',
+      ],
+      {
+        cwd: REPO_ROOT,
+        encoding: 'utf8',
+      },
+    );
+
+    expect(result.status).toBe(0);
+    expect(String(result.stdout)).toContain('"myui-search-box"');
+  });
 });

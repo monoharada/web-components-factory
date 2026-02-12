@@ -19,6 +19,23 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Validate WCF channel lock
+        run: npm run wcf:channel:check
+
+      - name: Detect lock file changes
+        id: changed-files
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            channel_lock:
+              - 'registry/wcf-channel-lock.json'
+
+      - name: Smoke stable channel lock (npm exec)
+        if: steps.changed-files.outputs.channel_lock == 'true'
+        run: |
+          SPEC="$(node -e "const fs=require('node:fs'); const lock=JSON.parse(fs.readFileSync('registry/wcf-channel-lock.json','utf8')); process.stdout.write('git+' + lock.channels.stable.repo + '#' + lock.channels.stable.sha);")"
+          WCF_PACKAGE="$SPEC" npm run wcf:smoke:npm
+
       - name: Generate Custom Elements Manifest
         run: npm run cem:analyze
 

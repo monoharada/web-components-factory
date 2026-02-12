@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "updatedAt": "2026-02-11T00:00:00.000Z",
+  "channels": {
+    "stable": {
+      "repo": "https://github.com/monoharada/web-components-factory.git",
+      "sha": "1cce1d4c3f2abdae2f6b635ac977fd42ab25e470"
+    }
+  }
+}

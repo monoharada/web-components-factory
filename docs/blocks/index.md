@@ -7,8 +7,10 @@ shadcn風の「発見 → 1コマンド導入 → ページ生成」を行うた
 ## 使い方
 
 ```bash
-node scripts/wcf/cli.js blocks list
-node scripts/wcf/cli.js page create --pattern <patternId> --prefix myui --dir . --entry boot
+npm exec --yes --package=git+https://github.com/monoharada/web-components-factory.git -- \
+  wcf blocks list --channel stable
+npm exec --yes --package=git+https://github.com/monoharada/web-components-factory.git -- \
+  wcf page create --pattern <patternId> --prefix myui --dir . --entry boot --channel stable
 ```
 
 ## Pattern List
