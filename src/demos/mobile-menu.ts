@@ -2,10 +2,10 @@ import {
   API_TABLE_CSS_VARS_HEADER,
   API_TABLE_CSS_VARS_NOTE,
   API_TABLE_PROPS_HEADER,
-  annotationToggleScript,
-  annotationToggleUI,
   modulePreloadScript,
   renderApiPanelWrapper,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 
 const BACK_ICON = `
@@ -612,14 +612,10 @@ export const demos = {
         }
       </style>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          注釈対象は <code>dads-mobile-menu</code> 本体です。アコーディオン開閉、外部リンク、区切り線、現在地表示を確認できます。
-        </p>
+        ${renderA11ySectionHeader({ note: "注釈対象は <code>dads-mobile-menu</code> 本体です。アコーディオン開閉、外部リンク、区切り線、現在地表示を確認できます。" })}
 
         <a11y-annotate target-selector="dads-mobile-menu">
           <div class="mobile-menu-demo__surface">

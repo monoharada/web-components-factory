@@ -2,10 +2,10 @@ import {
   API_TABLE_CSS_VARS_HEADER,
   API_TABLE_CSS_VARS_NOTE,
   API_TABLE_PROPS_HEADER,
-  annotationToggleScript,
-  annotationToggleUI,
   modulePreloadScript,
   renderApiPanelWrapper,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 
 export const demos = {
@@ -17,14 +17,10 @@ export const demos = {
         デジタル庁デザインシステム（DADS）HTML版 calendar.css と同等の見た目・操作になるよう実装したWeb Components版です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-calendar">
           <div style="display: grid; place-content: center; padding: 40px 0;">
             <dads-calendar min-date="2024-01-01" max-date="2026-12-31"></dads-calendar>
@@ -116,7 +112,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--dads-calendar-control-size</code></th>
-                        <td><code>2.75rem</code><br><small style="color:#666">(44px)</small></td>
+                        <td><code>2.75rem</code><br><small class="wc-api-table__meta">(44px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--dads-calendar-control-size" value="" data-api-css-var="--dads-calendar-control-size" data-default=""></dads-input-text>
@@ -192,14 +188,10 @@ export const demos = {
         デジタル庁デザインシステム（DADS）HTML版 date-picker.css 相当をShadow DOM向けに移植したWeb Components版です。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 32px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-date-picker">
           <div style="display: grid; place-content: center; padding: 40px 0;">
             <dads-fieldset required>
@@ -413,7 +405,7 @@ export const demos = {
                     <tbody>
                       <tr>
                         <th scope="row"><code>--spacing-4</code></th>
-                        <td><code>1rem</code><br><small style="color:#666">(16px)</small></td>
+                        <td><code>1rem</code><br><small class="wc-api-table__meta">(16px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--spacing-4" value="" data-api-css-var="--spacing-4" data-default=""></dads-input-text>
@@ -424,7 +416,7 @@ export const demos = {
 
                       <tr>
                         <th scope="row"><code>--spacing-2</code></th>
-                        <td><code>0.5rem</code><br><small style="color:#666">(8px)</small></td>
+                        <td><code>0.5rem</code><br><small class="wc-api-table__meta">(8px)</small></td>
                         <td>
                           <div class="wc-api-control">
                             <dads-input-text label="--spacing-2" value="" data-api-css-var="--spacing-2" data-default=""></dads-input-text>

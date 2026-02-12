@@ -15,13 +15,20 @@ vendor 配下の JS は bundle せず、そのまま編集できます。
 導入後はまず `vendor/components/<prefix>/components/**` だけ見れば改修できます。
 `--entry` は `boot` を推奨し、`@wcf` / `index` は互換モード（N+1で廃止予定）です。
 配布導線は `--channel stable`（固定SHA + 自動フォールバック）を既定推奨とします。
+`vendor add` は既存 vendor の手編集 drift を検知し、`--force` 指定時のみ上書きします。
 
 ```bash
 # ブロック一覧（shadcn blocks相当）
 node scripts/wcf/cli.js blocks list --channel stable
 
-# 資材導入
+# 初期導入（vendor install + page create）
+node scripts/wcf/cli.js init --prefix myui --dir . --pattern search-results --entry boot --channel stable
+
+# 資材導入（空ディレクトリ向け）
 node scripts/wcf/cli.js vendor install --prefix myui --dir vendor/components/myui --pattern search-results --channel stable
+
+# 既存 vendor へ段階追加（drift保護あり）
+node scripts/wcf/cli.js vendor add --prefix myui --dir vendor/components/myui --component card --channel stable
 
 # index.html生成
 node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir . --entry boot --channel stable
@@ -32,11 +39,11 @@ node scripts/wcf/cli.js page create --pattern search-results --prefix myui --dir
 ```bash
 # npm (npx互換)
 npm exec --yes --package=git+https://github.com/monoharada/web-components-factory.git -- \
-  wcf vendor install --prefix myui --dir vendor/components/myui --pattern search-results --channel stable
+  wcf init --prefix myui --dir . --pattern search-results --entry boot --channel stable
 
 # bunx
 bunx --package git+https://github.com/monoharada/web-components-factory.git \
-  wcf vendor install --prefix myui --dir vendor/components/myui --pattern search-results --channel stable
+  wcf init --prefix myui --dir . --pattern search-results --entry boot --channel stable
 
 # bun create
 bun create github.com/monoharada/web-components-factory my-app

@@ -2,10 +2,10 @@ import {
   API_TABLE_CSS_VARS_HEADER,
   API_TABLE_CSS_VARS_NOTE,
   API_TABLE_PROPS_HEADER,
-  annotationToggleScript,
-  annotationToggleUI,
   modulePreloadScript,
   renderApiPanelWrapper,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 
 const DRAWER_MOBILE_MENU_ITEMS = Array.from(
@@ -258,14 +258,10 @@ export const demos = {
         }
       </style>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate
           target-selector="dads-drawer"
           callout-lane="side"

@@ -4,9 +4,10 @@ import {
   API_TABLE_PROPS_WITH_TYPE_HEADER,
   CHIP_LABEL_ICON_SVG,
   HEADING_ICON_PATH_OPTIONS,
-  annotationToggleScript,
-  annotationToggleUI,
   renderApiPanelWrapper,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
+  renderApiTableMeta,
 } from './shared.js';
 
 export const headingDemo = () => `
@@ -16,15 +17,11 @@ export const headingDemo = () => `
         デジタル庁デザインシステム準拠の見出しコンポーネントです。見出しレベルとサイズ、マージンの自動設定に対応します。
       </p>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <!-- アクセシビリティ注釈（a11y-annotate） -->
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <div style="display: grid; grid-template-columns: 1fr; gap: 8px; max-width: 360px; margin-bottom: 16px;">
           <dads-select id="heading-a11y-variant" label="preset" size="md 360" value="default">
             <option value="default">default</option>
@@ -463,49 +460,49 @@ export const headingDemo = () => `
                     {
                       name: '--dads-heading-color',
                       defaultCellHtml:
-                        '<code>--color-neutral-solid-gray-800</code><br><small style="color:#666">(#333)</small>',
+                        "<code>--color-neutral-solid-gray-800</code><br>" + renderApiTableMeta("(#333)"),
                       description: '文字色',
                     },
                     {
                       name: '--dads-heading-font-size',
                       defaultCellHtml:
-                        '<code>--font-size-36</code><br><small style="color:#666">(36px)</small>',
+                        "<code>--font-size-36</code><br>" + renderApiTableMeta("(36px)"),
                       description: '見出しフォントサイズ',
                     },
                     {
                       name: '--dads-heading-line-height',
                       defaultCellHtml:
-                        '<code>--line-height-140</code><br><small style="color:#666">(1.4)</small>',
+                        "<code>--line-height-140</code><br>" + renderApiTableMeta("(1.4)"),
                       description: '行高',
                     },
                     { name: '--dads-heading-letter-spacing', defaultCellHtml: '<code>0.01em</code>', description: '文字間隔' },
                     {
                       name: '--dads-heading-shoulder-font-size',
                       defaultCellHtml:
-                        '<code>--font-size-20</code><br><small style="color:#666">(20px)</small>',
+                        "<code>--font-size-20</code><br>" + renderApiTableMeta("(20px)"),
                       description: 'ショルダーのフォントサイズ',
                     },
                     {
                       name: '--dads-heading-icon-size',
                       defaultCellHtml:
-                        '<code>1.25em</code><br><small style="color:#666">(相対: font-size追従)</small>',
+                        "<code>1.25em</code><br>" + renderApiTableMeta("(相対: font-size追従)"),
                       description: 'アイコンサイズ',
                     },
                     {
                       name: '--dads-heading-icon-gap',
                       defaultCellHtml:
-                        '<code>calc(0.4em - 0.25em)</code><br><small style="color:#666">(相対: font-size追従)</small>',
+                        "<code>calc(0.4em - 0.25em)</code><br>" + renderApiTableMeta("(相対: font-size追従)"),
                       description: 'アイコンと本文の間隔',
                     },
                     {
                       name: '--dads-heading-icon-vertical-align',
                       defaultCellHtml:
-                        '<code>-0.19em</code><br><small style="color:#666">(相対: font-size追従)</small>',
+                        "<code>-0.19em</code><br>" + renderApiTableMeta("(相対: font-size追従)"),
                       description: 'アイコンの光学補正（vertical-align）',
                     },
                     {
                       name: '--dads-heading-margin-block-start',
-                      defaultCellHtml: '<code>2lh</code><br><small style="color:#666">(default)</small>',
+                      defaultCellHtml: "<code>2lh</code><br>" + renderApiTableMeta("(default)"),
                       description: '上マージン',
                     },
                     {
@@ -515,22 +512,22 @@ export const headingDemo = () => `
                     },
                     {
                       name: '--dads-heading-chip-width',
-                      defaultCellHtml: '<code>--spacing-3</code><br><small style="color:#666">(size=36相当)</small>',
+                      defaultCellHtml: "<code>--spacing-3</code><br>" + renderApiTableMeta("(size=36相当)"),
                       description: 'チップの幅',
                     },
                     {
                       name: '--dads-heading-chip-padding-inline',
-                      defaultCellHtml: '<code>--spacing-8</code><br><small style="color:#666">(size=36相当)</small>',
+                      defaultCellHtml: "<code>--spacing-8</code><br>" + renderApiTableMeta("(size=36相当)"),
                       description: 'チップのインライン余白',
                     },
                     {
                       name: '--dads-heading-chip-top',
-                      defaultCellHtml: '<code>0.2em</code><br><small style="color:#666">(lh対応時は自動補正)</small>',
+                      defaultCellHtml: "<code>0.2em</code><br>" + renderApiTableMeta("(lh対応時は自動補正)"),
                       description: 'チップの上位置',
                     },
                     {
                       name: '--dads-heading-chip-bottom',
-                      defaultCellHtml: '<code>0.1em</code><br><small style="color:#666">(lh対応時は自動補正)</small>',
+                      defaultCellHtml: "<code>0.1em</code><br>" + renderApiTableMeta("(lh対応時は自動補正)"),
                       description: 'チップの下位置',
                     },
                     {

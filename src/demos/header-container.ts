@@ -3,10 +3,10 @@ import {
   API_TABLE_CSS_VARS_NOTE,
   API_TABLE_PROPS_HEADER,
   MENU_LIST_BOX_DUMMY_START_ICON_SVG,
-  annotationToggleScript,
-  annotationToggleUI,
   modulePreloadScript,
   renderApiPanelWrapper,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 import { createIconWithSlot } from '../../packages/utils/icons.js';
 
@@ -523,14 +523,10 @@ export const demos = {
 
       </style>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ レイアウトの責務を持つコンテナとして、主要パーツ（logo / utility / menu / hamburger）の役割を注釈で確認します。
-        </p>
+        ${renderA11ySectionHeader({ note: "※ レイアウトの責務を持つコンテナとして、主要パーツ（logo / utility / menu / hamburger）の役割を注釈で確認します。" })}
         <a11y-annotate
           target-selector="#header-container-annotate-target"
           callout-lane="side"

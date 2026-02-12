@@ -56,19 +56,20 @@ function run(command, args, options = {}) {
   }
 }
 
-function buildWcfRunner({ runner, cwd, packageSpec }) {
+function buildWcfRunner({ runner, repoRoot, runCwd, packageSpec }) {
   if (runner === 'local') {
-    return (wcfArgs) => run(process.execPath, [path.join(cwd, 'scripts', 'wcf', 'cli.js'), ...wcfArgs], { cwd });
+    return (wcfArgs) =>
+      run(process.execPath, [path.join(repoRoot, 'scripts', 'wcf', 'cli.js'), ...wcfArgs], { cwd: runCwd });
   }
   if (runner === 'npm') {
     return (wcfArgs) =>
-      run('npm', ['exec', '--yes', `--package=${packageSpec}`, '--', 'wcf', ...wcfArgs], { cwd });
+      run('npm', ['exec', '--yes', `--package=${packageSpec}`, '--', 'wcf', ...wcfArgs], { cwd: runCwd });
   }
   if (runner === 'bun-local') {
-    return (wcfArgs) => run('bun', [path.join(cwd, 'scripts', 'wcf', 'cli.js'), ...wcfArgs], { cwd });
+    return (wcfArgs) => run('bun', [path.join(repoRoot, 'scripts', 'wcf', 'cli.js'), ...wcfArgs], { cwd: runCwd });
   }
   if (runner === 'bunx') {
-    return (wcfArgs) => run('bunx', ['--package', packageSpec, 'wcf', ...wcfArgs], { cwd });
+    return (wcfArgs) => run('bunx', ['--package', packageSpec, 'wcf', ...wcfArgs], { cwd: runCwd });
   }
 
   throw new Error(`Unknown runner: ${runner}`);
@@ -76,18 +77,18 @@ function buildWcfRunner({ runner, cwd, packageSpec }) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const cwd = path.resolve(process.cwd());
-  const defaultPackageSpec = `file:${cwd}`;
+  const repoRoot = path.resolve(process.cwd());
+  const defaultPackageSpec = `file:${repoRoot}`;
   const packageSpec =
     args.packageSpec ??
     process.env.WCF_PACKAGE ??
     defaultPackageSpec;
   const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-ttfr-'));
-  const runWcf = buildWcfRunner({ runner: args.runner, cwd, packageSpec });
+  const runWcf = buildWcfRunner({ runner: args.runner, repoRoot, runCwd: tmpDir, packageSpec });
 
   const start = performance.now();
-  runWcf(['vendor', 'install', '--prefix', 'myui', '--dir', path.join(tmpDir, 'vendor', 'components', 'myui'), '--pattern', 'search-results']);
-  runWcf(['page', 'create', '--pattern', 'search-results', '--prefix', 'myui', '--dir', tmpDir, '--entry', 'boot']);
+  runWcf(['vendor', 'install', '--prefix', 'myui', '--dir', path.join('vendor', 'components', 'myui'), '--pattern', 'search-results']);
+  runWcf(['page', 'create', '--pattern', 'search-results', '--prefix', 'myui', '--dir', '.', '--entry', 'boot']);
   const end = performance.now();
 
   const indexPath = path.join(tmpDir, 'index.html');

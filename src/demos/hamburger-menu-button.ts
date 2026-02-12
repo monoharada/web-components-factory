@@ -2,10 +2,10 @@ import {
   API_TABLE_CSS_VARS_HEADER,
   API_TABLE_CSS_VARS_NOTE,
   API_TABLE_PROPS_HEADER,
-  annotationToggleScript,
-  annotationToggleUI,
   modulePreloadScript,
   renderApiPanelWrapper,
+  renderA11ySectionHeader,
+  renderAnnotationToggleBlock,
 } from './shared.js';
 
 export const demos = {
@@ -65,14 +65,10 @@ export const demos = {
         }
       </style>
 
-      ${annotationToggleUI()}
-      ${annotationToggleScript()}
+      ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">アクセシビリティ注釈（a11y-annotate）</h3>
-        <p style="font-size: 14px; color: #666; margin-bottom: 16px;">
-          ※ 右側パネルに仕様メモ、左側にターゲット要素のコールアウトが表示されます。
-        </p>
+        ${renderA11ySectionHeader()}
         <a11y-annotate target-selector="dads-hamburger-menu-button">
           <div style="display: grid; place-content: center; min-height: 200px; border: 1px dashed #e5e7eb; border-radius: 12px; background: #f8fafc;">
             <dads-hamburger-menu-button variant="standard" type="menu" lang="ja"></dads-hamburger-menu-button>
