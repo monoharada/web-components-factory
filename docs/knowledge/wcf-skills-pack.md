@@ -9,6 +9,8 @@
 
 SoTは `.claude/skills/*` です。
 
+配布・発見の機械可読入口は `registry/skills-registry.json` です。
+
 ## 対応クライアント（v1）
 
 - Codex
@@ -46,7 +48,20 @@ MCPが使えない場合は `registry/install-registry.json` と `custom-element
 ## Codex での導入
 
 ```bash
+npm run skills:check
 npm run codex:install-skills
+```
+
+既定では `status: "deprecated"` の Skill は除外されます。必要時のみ `--include-deprecated` を使います。
+
+```bash
+npm run codex:install-skills -- --include-deprecated
+```
+
+管理対象（`.codex-installed-from` 保有）のみ掃除したい場合:
+
+```bash
+npm run codex:install-skills -- --prune-managed
 ```
 
 確認:
@@ -115,6 +130,7 @@ args = ["scripts/mcp/design-system-mcp.mjs"]
 ### 日常
 
 ```bash
+npm run skills:check
 npm run validate:wc
 npm run agents:pre-pr
 ```

@@ -70,10 +70,12 @@ npm run contracts:check
 CEM を単一の真実として運用するため、Codex / Claude Code を含む AI エージェントは PR作成・更新前に次を実行します。
 
 ```bash
+npm run skills:check
 npm run agents:pre-pr
 npm run agents:verify
 ```
 
+- `skills:check` は `registry/skills-registry.json` と `.claude/skills/*` の整合性を検証
 - `agents:pre-pr` は CEM生成・contracts・registry・markup検証・生成物クリーンチェックを一括実行
 - `agents:verify` は `agents:pre-pr` + `npm run ci` を実行
 - `custom-elements.json` / `registry/install-registry.json` に差分がある場合、同一PRに含めるまで更新禁止

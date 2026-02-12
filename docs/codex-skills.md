@@ -10,9 +10,17 @@ Codex でも同じガイドラインを参照できるように、`~/.codex/skil
 npm run codex:install-skills
 ```
 
+レジストリ整合チェック:
+
+```bash
+npm run skills:check
+```
+
+Skill 一覧は `registry/skills-registry.json` を機械可読の入口として扱います。
+
 ### 何が起きるか
 
-次の 7 Skill を `~/.codex/skills/` にコピーします。
+`registry/skills-registry.json` のうち、`clients` に `codex` を含み、`status: "active"` の Skill を `~/.codex/skills/` にコピーします（現状は次の 7 Skill）。
 
 - `<repo>/.claude/skills/css-writing-rules`
 - `<repo>/.claude/skills/headless-component-design`
@@ -40,12 +48,29 @@ ls -la ~/.codex/skills/wcf-validate
 - 段階実行: `wcf-discovery` → `wcf-install` → `wcf-compose` → `wcf-validate`
 - 詳細ガイド: `docs/knowledge/wcf-skills-pack.md`
 
+## オプション
+
+```bash
+# 計画のみ表示（変更なし）
+npm run codex:install-skills -- --dry-run
+
+# managed marker を持つ未登録Skillを削除
+npm run codex:install-skills -- --prune-managed
+
+# deprecated を含める
+npm run codex:install-skills -- --include-deprecated
+```
+
 ## うまくいかないとき
 
 - **workspace が変わった**
   - コピー方式のため壊れません（ただし `.claude/skills` を更新したら再インストールしてください）
 - **同名ディレクトリが既に存在して失敗する**
   - `scripts/codex/install-skills.sh --force` を実行してください（既存を置換）
+- **管理下ディレクトリの掃除もしたい**
+  - `scripts/codex/install-skills.sh --prune-managed` を実行してください（`.codex-installed-from` がある管理対象だけ削除）
+- **deprecated Skill も含めて検証したい**
+  - `scripts/codex/install-skills.sh --include-deprecated` を実行してください（既定は除外）
 
 ## 品質ゲート（推奨）
 

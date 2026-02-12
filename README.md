@@ -142,8 +142,14 @@ npm run codex:perf:rotate-log
 Codexへインストール:
 
 ```bash
+npm run skills:check
 npm run codex:install-skills
 ```
+
+補足:
+- Skill 一覧は `registry/skills-registry.json` から解決されます（`deprecated` は既定で除外）
+- 管理対象の未登録Skillを掃除する場合は `npm run codex:install-skills -- --prune-managed`
+- deprecated も含める場合は `npm run codex:install-skills -- --include-deprecated`
 
 詳細:
 
