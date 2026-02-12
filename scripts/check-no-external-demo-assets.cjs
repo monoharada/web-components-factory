@@ -6,6 +6,8 @@ const path = require('node:path');
 const projectRoot = process.cwd();
 const demosDir = path.join(projectRoot, 'src', 'demos');
 const viewerPath = path.join(projectRoot, 'viewer.html');
+const resourcesPath = path.join(projectRoot, 'resources');
+const distPagesPath = path.join(projectRoot, 'dist-pages');
 
 const patterns = [
   {
@@ -23,7 +25,10 @@ const patterns = [
 ];
 
 function collectFiles(dirPath) {
+  const extensions = ['.ts', '.html'];
   const files = [];
+  if (!fs.existsSync(dirPath)) return files;
+
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -33,7 +38,7 @@ function collectFiles(dirPath) {
       continue;
     }
 
-    if (entry.isFile() && entry.name.endsWith('.ts')) {
+    if (entry.isFile() && extensions.includes(path.extname(entry.name))) {
       files.push(fullPath);
     }
   }
@@ -71,7 +76,12 @@ function main() {
     process.exit(1);
   }
 
-  const targets = [...collectFiles(demosDir), viewerPath].filter((filePath) => fs.existsSync(filePath));
+  const targets = [
+    ...collectFiles(demosDir),
+    ...collectFiles(resourcesPath),
+    ...collectFiles(distPagesPath),
+    viewerPath,
+  ].filter((filePath) => fs.existsSync(filePath));
   const issues = targets.flatMap((filePath) => scanFile(filePath));
 
   if (issues.length === 0) {
