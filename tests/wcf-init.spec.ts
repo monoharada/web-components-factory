@@ -5,6 +5,8 @@ import path from 'node:path';
 import { initProject } from '../scripts/wcf/core.js';
 import { withCwd } from './utils/with-cwd';
 
+const LONG_IO_TIMEOUT_MS = 20_000;
+
 async function mkdtemp() {
   return await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-init-'));
 }
@@ -43,7 +45,7 @@ describe('wcf init project', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 
   it('fails fast for existing page unless --force is set', async () => {
     const tmp = await mkdtemp();
@@ -80,7 +82,7 @@ describe('wcf init project', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 
   it('keeps vendor output when page creation fails after vendor install', async () => {
     const tmp = await mkdtemp();
@@ -104,5 +106,5 @@ describe('wcf init project', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 });

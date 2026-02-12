@@ -10,6 +10,8 @@ knowledge/
 ├── learnings.md                 # 学習内容の記録
 ├── patterns.md                  # 発見したパターン
 ├── skill-map.md                 # vendor install + AI理解のスキル図
+├── wcf-skills-pack.md           # wcf-* Skills の運用ガイド
+├── 2026-02-12-wcf-skills-pack-v1-postflight.md # WCF Skills Pack v1 実装後の学び
 ├── performance-average-case.md  # averageCase の計測/運用ルール
 ├── device-mock.md               # dads-device-mock の実装/運用ガイド（AI向け）
 ├── improvements.md              # 改善提案

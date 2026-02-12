@@ -48,6 +48,10 @@ skills=(
   "css-writing-rules"
   "headless-component-design"
   "wcf-ui-builder"
+  "wcf-discovery"
+  "wcf-install"
+  "wcf-compose"
+  "wcf-validate"
 )
 
 if [[ ! -d "$src_root" ]]; then

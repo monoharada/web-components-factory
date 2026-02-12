@@ -1,80 +1,67 @@
 ---
 name: wcf-ui-builder
-description: wcf（vendor install）+ install-registry（軽量）+ CEM/MCP（詳細）を使い、対話的に「画面/レイアウト」を組み立てるための実装スキル図（ワークフロー）。Use when (1) 別リポジトリにコンポーネントを持ち込みたい, (2) コンポーネント選定〜インストール〜マークアップ生成〜検証までを一貫してやりたい, (3) 画面パターンを継続的に増やしたい。
+description: wcfのUI構築を discovery/install/compose/validate の4Skillでオーケストレーションする入口スキル。Use when (1) 画面要件から実装まで一貫して進めたい, (2) どのwcf-* skillを使うべきか迷う, (3) 検証ゲート込みで完了させたい。
 ---
 
-# wcf UI Builder（Skill Map）
+# wcf-ui-builder
 
-このスキルは「ShadCN UI 風に 1コンポーネントずつ vendor install して、AI が理解した上で UI を組み立てる」ための **スキル図（ワークフロー）**です。
+目的: `wcf-discovery` / `wcf-install` / `wcf-compose` / `wcf-validate` を順番に使い、画面構築を完了させる。
 
-## North Star（設計の軸）
+## Router
 
-- **vendor install**: `node_modules` ではなく `vendor/` にソースを置く（detach/attach 可能）
-- **AI がまず軽量入口**: `registry/install-registry.json`（deps/define/call/source/tags）
-- **詳細は必要時だけ**: `custom-elements.json`（CEM）または MCP（API/usage/validate）
-- **将来の新規コンポーネントでも壊れない**: contracts/CI が “install可能” を強制する
+- 要件整理・コンポーネント選定: `wcf-discovery`
+- 導入コマンド確定: `wcf-install`
+- 画面HTML生成: `wcf-compose`
+- 検証・修正提案: `wcf-validate`
 
-## スキル図（最小）
+## Standard Workflow
 
-1. **要件分解（UI intent）**
-   - 画面の目的、主要タスク、必要な入力/出力、状態（loading/error/empty）を短く確定する
-2. **コンポーネント選定（Discovery）**
-   - まず `registry/install-registry.json` で “必要な componentId + deps” を決める
-   - 不明点が残る時だけ CEM/MCP を見る（属性/slots/events/cssParts）
-3. **vendor install（Install）**
-   - consumer 側で `wcf init` → `wcf add <componentId...>` を実行
-   - 手編集したいものは `detach`、更新したい場合は `attach`
-4. **配線（Wiring）**
-   - `--lang js` の場合：importmap と `autoload/*.js` を読み込む
-   - `--lang ts` の場合：consumer 側の bundler/tsc 前提で import する
-5. **マークアップ生成（Compose）**
-   - usage snippet を起点に、要件の状態/バリエーションを埋めた最小 HTML を作る
-6. **検証（Validate）**
-   - `npm run validate:wc` or MCP `validate_markup` で unknownElement/error を潰す
-7. **仕上げ（A11y/UX）**
-   - 必要なら `$a11y-checker` / `$practical-ui-2nd-edition` の観点で仕上げる
+1. `wcf-discovery` で `componentIds` / `dependencyIds` / `patternIds` を確定
+2. `wcf-install` で `wcf init` / `wcf add` コマンドを確定
+3. `wcf-compose` で `default/loading/error/empty` を含む `htmlSnippet` を作成
+4. `wcf-validate` で `unknownElement` を0にするまで修正
 
-## 実行インターフェース（エージェントが使う道具）
+## Shared Contracts
 
-### 入口（軽量）
+### Output
 
-- `registry/install-registry.json`
-  - `components[componentId] = { tags, define, call, deps, source.componentDir }`
-  - `tags[tagName] = componentId`
+各Skillは以下を必ず返す:
 
-### UI パターン（レイアウト/画面レシピ）
+1. 人間向けMarkdown要約
+2. JSONブロック（機械可読）
 
-- `registry/pattern-registry.json`
-  - `patterns[patternId] = { requires(componentId[]), html(dads-*), title, description }`
+### Error Categories
 
-### 詳細（必要時のみ）
+- `*_MCP_UNAVAILABLE`
+- `*_REGISTRY_UNAVAILABLE`
+- `*_PREFIX_MISMATCH`
+- `*_INSUFFICIENT_INPUT`
 
-- `custom-elements.json`（CEM）
-  - API（attributes/slots/events/cssParts）
-  - `decl.custom.install`（install recipe の単一の真実）
-- Design System MCP
-  - `get_install_recipe({ component, prefix? })`
-  - `get_component_api({ tagName|className, prefix? })`
-  - `generate_usage_snippet({ component, prefix? })`
-  - `validate_markup({ html, prefix? })`
-  - `list_patterns()`
-  - `get_pattern_recipe({ patternId, prefix? })`
-  - `generate_pattern_snippet({ patternId, prefix? })`
+### Fallback
 
-### インストール（consumer 側）
+MCPが使えない場合は `registry/install-registry.json` と `custom-elements.json` ベースの最小提案に降格する。
 
-- `wcf init --prefix <myui> --lang js --out vendor/components/<myui>`
-- `wcf add <componentId...> --prefix <myui> --lang js --out vendor/components/<myui>`
+## Input/Output Bridge
 
-## Conversation Protocol（対話の型）
+- Discovery output `componentIds` は Install input にそのまま渡す。
+- Install output `installOrder` と `postChecks` は Compose/Validate の前提に使う。
+- Compose output `htmlSnippet` は Validate input `html` にそのまま渡す。
 
-1. 「何を作るか（目的/画面名）」→「入力/操作/出力」→「状態（loading/error/empty）」を先に確定
-2. “必要最小” の componentId を提案し、deps は自動で含める前提で合意
-3. vendor install を行い、まず 1画面を **動く最小**で通す
-4. 仕様の詰め（バリデーション/エッジケース/アクセシビリティ）を後段で詰める
+## Quality Gates
 
-## 拡張（パターンが増えたとき）
+- 日常: `npm run validate:wc` / `npm run agents:pre-pr`
+- PR前: `npm run agents:verify`
 
-- 画面/レイアウトの再利用は `registry/pattern-registry.json` に “レシピ” として追加するのがスケールしやすい
-  - 例：`patternId`, `requires(componentId[])`, `html(dads-*)`
-- パターンは MCP `get_pattern_recipe` で取得でき、consumer 側で `wcf add` に直結できる
+## Quick Example
+
+```json
+{
+  "pipeline": [
+    "wcf-discovery",
+    "wcf-install",
+    "wcf-compose",
+    "wcf-validate"
+  ],
+  "goal": "検索結果画面を最小構成で生成して検証する"
+}
+```
