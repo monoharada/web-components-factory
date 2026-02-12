@@ -72,8 +72,17 @@ function buildWcfRunner({ runner, repoRoot, runCwd, packageSpec }) {
   }
   if (runner === 'npm') {
     const normalizedSpec = normalizePackageSpecForNpmExec(packageSpec);
-    return (wcfArgs) =>
-      run('npm', ['exec', '--yes', `--package=${normalizedSpec}`, '--', 'wcf', ...wcfArgs], { cwd: runCwd });
+    const isWin = process.platform === 'win32';
+    const localWcfBin = path.join(runCwd, 'node_modules', '.bin', isWin ? 'wcf.cmd' : 'wcf');
+    let installed = false;
+
+    return (wcfArgs) => {
+      if (!installed) {
+        run('npm', ['install', '--no-save', normalizedSpec], { cwd: runCwd });
+        installed = true;
+      }
+      run(localWcfBin, wcfArgs, { cwd: runCwd, shell: isWin });
+    };
   }
   if (runner === 'bun-local') {
     return (wcfArgs) => run('bun', [path.join(repoRoot, 'scripts', 'wcf', 'cli.js'), ...wcfArgs], { cwd: runCwd });
