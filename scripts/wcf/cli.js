@@ -193,6 +193,7 @@ async function runVendor(cmd, args) {
       outDir: dir,
       pattern: args.pattern,
       components: args.components,
+      force: args.force,
     });
     printWarnings(res.warnings);
 

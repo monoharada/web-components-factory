@@ -334,7 +334,7 @@ export async function printImportMap({ prefix, dir, pattern = null, components =
   throw new Error(`Invalid --format: ${format}`);
 }
 
-export async function vendorInstall({ prefix, outDir, pattern = null, components = [] }) {
+export async function vendorInstall({ prefix, outDir, pattern = null, components = [], force = false }) {
   const p = normalizePrefix(prefix);
   const pkgRoot = findPackageRoot();
   const runtimeRoot = path.join(pkgRoot, 'vendor-runtime');
@@ -352,7 +352,11 @@ export async function vendorInstall({ prefix, outDir, pattern = null, components
 
   const existing = await fs.readdir(outAbs);
   if (existing.length > 0) {
-    throw new Error(`Output directory is not empty: ${outAbs}`);
+    if (!force) {
+      throw new Error(`Output directory is not empty: ${outAbs}. Pass --force to overwrite.`);
+    }
+    await fs.rm(outAbs, { recursive: true, force: true });
+    await ensureDir(outAbs);
   }
 
   const outComponents = path.join(outAbs, 'components');

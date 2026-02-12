@@ -92,6 +92,40 @@ describe('wcf vendor install', () => {
     expect(text).toContain('"myui-search-box": "./vendor/components/myui/components/search-box.js"');
     expect(text).toContain('"myui-page-navigation": "./vendor/components/myui/components/page-navigation.js"');
   });
+
+  it('rejects overwrite by default and allows overwrite with force', async () => {
+    const tmp = await mkdtemp();
+    const outDir = path.join(tmp, 'vendor', 'components', 'myui');
+
+    try {
+      await vendorInstall({
+        prefix: 'myui',
+        outDir,
+        pattern: 'search-results',
+      });
+
+      await expect(
+        vendorInstall({
+          prefix: 'myui',
+          outDir,
+          pattern: 'search-results',
+        }),
+      ).rejects.toThrow('Pass --force to overwrite');
+
+      await fs.writeFile(path.join(outDir, 'extra.txt'), 'temporary', 'utf8');
+      await vendorInstall({
+        prefix: 'myui',
+        outDir,
+        pattern: 'search-results',
+        force: true,
+      });
+
+      expect(await exists(path.join(outDir, 'extra.txt'))).toBe(false);
+      expect(await exists(path.join(outDir, 'components', 'search-box.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  });
 });
 
 describe('wcf agent init', () => {

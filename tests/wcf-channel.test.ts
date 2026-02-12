@@ -205,6 +205,7 @@ describe('resolveStablePackageSpec', () => {
 
     const resolved = await resolveStablePackageSpec({
       cachePath,
+      bundledLockPath: path.join(tmp, 'missing-lock.json'),
       fetchImpl,
       nowMs: Date.parse('2026-02-11T01:00:00.000Z'),
     });
@@ -222,11 +223,34 @@ describe('resolveStablePackageSpec', () => {
     await expect(
       resolveStablePackageSpec({
         cachePath,
+        bundledLockPath: path.join(tmp, 'missing-lock.json'),
         fetchImpl: async () => {
           throw new Error('network unavailable');
         },
       }),
     ).rejects.toMatchObject({ code: 'E_CHANNEL_RESOLVE_FAILED' });
+  });
+
+  it('falls back to bundled lock when lock fetch fails without cache', async () => {
+    const tmp = await makeTempDir();
+    tempDirs.push(tmp);
+    const cachePath = path.join(tmp, 'channel-cache.json');
+    const bundledLockPath = path.join(tmp, 'wcf-channel-lock.json');
+    const sha = '1212121212121212121212121212121212121212';
+    await writeFile(bundledLockPath, `${JSON.stringify(makeLock(sha), null, 2)}\n`, 'utf8');
+
+    const resolved = await resolveStablePackageSpec({
+      cachePath,
+      bundledLockPath,
+      fetchImpl: async () => {
+        throw new Error('network unavailable');
+      },
+      nowMs: Date.parse('2026-02-11T01:00:00.000Z'),
+    });
+
+    expect(resolved.source).toBe('bundled-lock');
+    expect(resolved.sha).toBe(sha);
+    expect(resolved.warnings.join('\n')).toContain('E_CHANNEL_LOCK_FETCH_FAILED');
   });
 
   it('continues with remote resolution when cache JSON is broken', async () => {
@@ -371,7 +395,7 @@ describe('resolveStablePackageSpec', () => {
     }
   });
 
-  it('uses stale cache fallback when lock payload is invalid', async () => {
+  it('fails closed when lock payload is invalid even when stale cache exists', async () => {
     const tmp = await makeTempDir();
     tempDirs.push(tmp);
     const cachePath = path.join(tmp, 'channel-cache.json');
@@ -394,26 +418,25 @@ describe('resolveStablePackageSpec', () => {
       'utf8',
     );
 
-    const resolved = await resolveStablePackageSpec({
-      cachePath,
-      fetchImpl: async () => ({
-        ok: true,
-        async json() {
-          return {
-            channels: {
-              stable: {
-                repo: 'https://example.com/bad.git',
-                sha: 'abc',
+    await expect(
+      resolveStablePackageSpec({
+        cachePath,
+        fetchImpl: async () => ({
+          ok: true,
+          async json() {
+            return {
+              channels: {
+                stable: {
+                  repo: 'https://example.com/bad.git',
+                  sha: 'abc',
+                },
               },
-            },
-          };
-        },
+            };
+          },
+        }),
+        nowMs: Date.parse('2026-02-11T01:00:00.000Z'),
       }),
-      nowMs: Date.parse('2026-02-11T01:00:00.000Z'),
-    });
-
-    expect(resolved.source).toBe('fallback-cache');
-    expect(resolved.warnings.join('\n')).toContain('E_CHANNEL_LOCK_INVALID');
+    ).rejects.toMatchObject({ code: 'E_CHANNEL_LOCK_INVALID' });
   });
 
   it('fails when lock endpoint returns non-ok status without cache', async () => {
@@ -424,6 +447,7 @@ describe('resolveStablePackageSpec', () => {
     await expect(
       resolveStablePackageSpec({
         cachePath,
+        bundledLockPath: path.join(tmp, 'missing-lock.json'),
         fetchImpl: async () => ({
           ok: false,
           status: 503,
@@ -440,6 +464,7 @@ describe('resolveStablePackageSpec', () => {
     await expect(
       resolveStablePackageSpec({
         cachePath,
+        bundledLockPath: path.join(tmp, 'missing-lock.json'),
         fetchImpl: async () => ({
           ok: true,
           async json() {
@@ -447,7 +472,7 @@ describe('resolveStablePackageSpec', () => {
           },
         }),
       }),
-    ).rejects.toMatchObject({ code: 'E_CHANNEL_RESOLVE_FAILED' });
+    ).rejects.toMatchObject({ code: 'E_CHANNEL_LOCK_INVALID' });
   });
 
   it('throws lock fetch error when fetch implementation is unavailable', async () => {
@@ -458,6 +483,7 @@ describe('resolveStablePackageSpec', () => {
     await expect(
       resolveStablePackageSpec({
         cachePath,
+        bundledLockPath: path.join(tmp, 'missing-lock.json'),
         fetchImpl: undefined as unknown as typeof fetch,
       }),
     ).rejects.toMatchObject({ code: 'E_CHANNEL_RESOLVE_FAILED' });

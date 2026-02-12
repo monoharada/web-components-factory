@@ -3,6 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 export const CHANNEL_LOCAL = 'local';
 export const CHANNEL_STABLE = 'stable';
@@ -15,6 +16,13 @@ export const DEFAULT_LOCK_RETRY_BACKOFF_MS = 500;
 export const STABLE_REPO_URL = 'https://github.com/monoharada/web-components-factory.git';
 export const STABLE_LOCK_URL =
   'https://raw.githubusercontent.com/monoharada/web-components-factory/main/registry/wcf-channel-lock.json';
+export const STABLE_BUNDLED_LOCK_PATH = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+  '..',
+  'registry',
+  'wcf-channel-lock.json',
+);
 
 const SHA_RE = /^[0-9a-f]{40}$/;
 
@@ -246,10 +254,32 @@ async function fetchLockDocument({
   throw lastError ?? createChannelError('E_CHANNEL_LOCK_FETCH_FAILED', 'Unknown lock fetch failure');
 }
 
+async function readBundledLockDocument({ bundledLockPath }) {
+  let content;
+  try {
+    content = await fs.readFile(bundledLockPath, 'utf8');
+  } catch (error) {
+    throw createChannelError(
+      'E_CHANNEL_LOCK_FETCH_FAILED',
+      `Unable to read bundled lock document: ${toErrorMessage(error)}`,
+      error,
+    );
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(content);
+  } catch (error) {
+    throw createChannelError('E_CHANNEL_LOCK_INVALID', `Bundled lock JSON parse failed: ${toErrorMessage(error)}`, error);
+  }
+  return validateStableLockDocument(parsed);
+}
+
 export async function resolveStablePackageSpec({
   fetchImpl = globalThis.fetch,
   cachePath = process.env[CHANNEL_CACHE_PATH_ENV] || getDefaultChannelCachePath(),
   cacheTtlMs = DEFAULT_CHANNEL_TTL_MS,
+  bundledLockPath = STABLE_BUNDLED_LOCK_PATH,
   lockUrl = STABLE_LOCK_URL,
   lockTimeoutMs = DEFAULT_LOCK_TIMEOUT_MS,
   lockRetries = DEFAULT_LOCK_RETRIES,
@@ -300,18 +330,46 @@ export async function resolveStablePackageSpec({
     lockError = error;
   }
 
-  if (cachedEntry) {
-    warnings.push(
-      `${lockError?.code ?? 'E_CHANNEL_LOCK_FETCH_FAILED'}: ${toErrorMessage(
-        lockError,
-      )}. Falling back to cached stable spec.`,
-    );
-    return {
-      spec: cachedEntry.spec,
-      sha: cachedEntry.sha,
-      source: 'fallback-cache',
-      warnings,
-    };
+  if (lockError?.code === 'E_CHANNEL_LOCK_INVALID') {
+    throw lockError;
+  }
+
+  if (lockError?.code === 'E_CHANNEL_LOCK_FETCH_FAILED') {
+    try {
+      const resolvedBundled = await readBundledLockDocument({ bundledLockPath });
+      const spec = toStableSpec(resolvedBundled.sha);
+      const timestamp = new Date(nowMs).toISOString();
+      await writeCacheEntry(cachePath, {
+        spec,
+        sha: resolvedBundled.sha,
+        resolvedAt: timestamp,
+        checkedAt: timestamp,
+      });
+      warnings.push(
+        `${lockError.code}: ${toErrorMessage(lockError)}. Falling back to bundled lock document.`,
+      );
+      return {
+        spec,
+        sha: resolvedBundled.sha,
+        source: 'bundled-lock',
+        warnings,
+      };
+    } catch (bundledError) {
+      if (bundledError?.code === 'E_CHANNEL_LOCK_INVALID') {
+        throw bundledError;
+      }
+      if (cachedEntry) {
+        warnings.push(
+          `${lockError.code}: ${toErrorMessage(lockError)}. Falling back to cached stable spec.`,
+        );
+        return {
+          spec: cachedEntry.spec,
+          sha: cachedEntry.sha,
+          source: 'fallback-cache',
+          warnings,
+        };
+      }
+    }
   }
 
   throw createChannelError(
