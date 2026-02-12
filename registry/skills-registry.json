@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "sourceOfTruth": ".claude/skills",
+  "clients": {
+    "codex": {
+      "description": "Codex local skills install destination (~/.codex/skills)"
+    },
+    "claude_code": {
+      "description": "Claude Code project-level skill references"
+    },
+    "cursor": {
+      "description": "Cursor project-level skill references"
+    }
+  },
+  "skills": [
+    {
+      "name": "css-writing-rules",
+      "path": ".claude/skills/css-writing-rules",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "CSS coding guidelines for Web Components with Shadow DOM."
+    },
+    {
+      "name": "headless-component-design",
+      "path": ".claude/skills/headless-component-design",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "Headless Web Component design patterns with DADS conventions."
+    },
+    {
+      "name": "wcf-compose",
+      "path": ".claude/skills/wcf-compose",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "Compose screen HTML and state variants from installed component IDs."
+    },
+    {
+      "name": "wcf-discovery",
+      "path": ".claude/skills/wcf-discovery",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "Discover component IDs and patterns from screen requirements."
+    },
+    {
+      "name": "wcf-install",
+      "path": ".claude/skills/wcf-install",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "Resolve install order and generate WCF install commands."
+    },
+    {
+      "name": "wcf-ui-builder",
+      "path": ".claude/skills/wcf-ui-builder",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "Orchestrator skill for discovery, install, compose, and validate flow."
+    },
+    {
+      "name": "wcf-validate",
+      "path": ".claude/skills/wcf-validate",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "Validate generated markup and return diagnostics with fix suggestions."
+    }
+  ]
+}

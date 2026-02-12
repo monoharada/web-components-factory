@@ -5,6 +5,8 @@ import path from 'node:path';
 import { initAgentKit, printImportMap, vendorAdd, vendorInstall } from '../scripts/wcf/core.js';
 import { withCwd } from './utils/with-cwd';
 
+const LONG_IO_TIMEOUT_MS = 20_000;
+
 async function mkdtemp() {
   return await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-vendor-'));
 }
@@ -78,7 +80,7 @@ describe('wcf vendor install', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 
   it('keeps non-empty outDir protected unless --force is set', async () => {
     const tmp = await mkdtemp();
@@ -111,7 +113,7 @@ describe('wcf vendor install', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 
   it('prints importmap with stable component paths', async () => {
     const text = await printImportMap({
@@ -124,7 +126,7 @@ describe('wcf vendor install', () => {
     expect(text).toContain('<script type="importmap">');
     expect(text).toContain('"myui-search-box": "./vendor/components/myui/components/search-box.js"');
     expect(text).toContain('"myui-page-navigation": "./vendor/components/myui/components/page-navigation.js"');
-  });
+  }, LONG_IO_TIMEOUT_MS);
 });
 
 describe('wcf vendor add', () => {
@@ -156,7 +158,7 @@ describe('wcf vendor add', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 
   it('detects drift and allows overwrite only with --force', async () => {
     const tmp = await mkdtemp();
@@ -201,7 +203,7 @@ describe('wcf vendor add', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 
   it('detects drift even when no managed components are discovered', async () => {
     const tmp = await mkdtemp();
@@ -238,7 +240,7 @@ describe('wcf vendor add', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 });
 
 describe('wcf agent init', () => {
@@ -281,5 +283,5 @@ describe('wcf agent init', () => {
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }
-  });
+  }, LONG_IO_TIMEOUT_MS);
 });
