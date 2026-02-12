@@ -4,6 +4,28 @@
 
 ---
 
+## [2026-02-12] Viewer 左ペインは「互換データ源を残したまま DADS ナビへ投影」すると安全に移行できる
+**タグ**: #viewer #navigation #dads #responsive #a11y #postflight
+
+### 概要
+`viewer.html` のコンポーネント一覧を左ペイン化する際、既存の `#component`（`select`）を削除せずに「内部データ源」として残し、表示UIだけを `dads-menu-list` / `dads-menu-list-item` に移すと、URL同期・`showComponent()`・Autoloader を壊さず移行できた。
+
+### 学び
+1. 既存 `option` を唯一のソースにすると、表示順変更やセグメント分割を入れても demo key の整合が崩れにくい。
+2. 白背景レイアウトの区切り線は `#949494`（白背景比 約3.03:1）を使うと、最小UIでも境界が視認しやすい。
+3. 960px 未満のオフキャンバスでは `Escape` / 背景クリック / 項目選択で閉じる経路を揃え、トグルへのフォーカス復帰まで実装しないと実運用で迷子になりやすい。
+
+### 適用例（今回）
+- `viewer.html`
+  - `#component-pane` / `#component-pane-nav` / `#component-pane-toggle` / `#component-pane-backdrop` を追加
+  - セグメント順固定 + 五十音順（`kanaSortOverrides` / `toHiragana`）で `dads-menu-list-item` を生成
+  - `resetCss` を一覧から除外し、`その他` セグメント自体を非表示
+  - サイドバー区切りを左右余白つきディバイダー（擬似要素）で描画
+
+### 再発防止
+- Viewer のUI刷新時は、`?component=` 同期・幅特殊ロジック（`card/tableControl/headerContainer/layoutShell`）・モバイルフォーカス制御を回帰テスト対象に含める。
+- 「見た目用UI」と「互換データ源」を分離する場合、互換側を先に消さず、段階移行で差分を小さく保つ。
+
 ## [2026-02-11] Layout Shell は「基本3値 + mobile倍率 + 詳細上書き」で運用すると破綻しにくい
 **タグ**: #layout-shell #responsive #css-vars #design-tokens #postflight
 
