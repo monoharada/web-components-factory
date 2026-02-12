@@ -17,10 +17,15 @@ describe('pages:build', () => {
     const html = readFileSync('dist-pages/index.html', 'utf8');
     expect(html).toContain('<title>Web Components Viewer');
     expect(html).toContain("from './styles/tokens.js'");
+    expect(html).toContain("from './src/viewer-install-panel.js'");
     expect(html).not.toContain("from '/styles/tokens.js'");
 
     const tableControlDemoJs = readFileSync('dist-pages/src/demos/showcase-table-control.js', 'utf8');
     expect(tableControlDemoJs).not.toContain("import('/src/demos/");
     expect(tableControlDemoJs).toContain("import('./src/demos/");
+
+    const installPanelJs = readFileSync('dist-pages/src/viewer-install-panel.js', 'utf8');
+    expect(installPanelJs).toContain('function buildInstallCommands');
+    expect(installPanelJs).toContain('resetCss');
   }, LONG_IO_TIMEOUT_MS);
 });
