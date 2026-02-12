@@ -37,7 +37,7 @@ description: 生成したHTMLをCEM/MCP/CLIで検証し、修正提案まで返�
   ],
   "fixSuggestions": [
     "replace myui-unknown with myui-card",
-    "ensure wcf add card was executed"
+    "ensure wcf vendor add --component card was executed"
   ],
   "rerunCommands": [
     "npm run validate:wc",

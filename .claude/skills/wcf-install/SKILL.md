@@ -1,6 +1,6 @@
 ---
 name: wcf-install
-description: componentIds から vendor install 手順を確定する。Use when (1) discovery結果を実際に導入したい, (2) wcf init/add の順序を安全に生成したい, (3) prefix/lang を固定したい。
+description: componentIds から vendor install 手順を確定する。Use when (1) discovery結果を実際に導入したい, (2) wcf init/vendor add の順序を安全に生成したい, (3) prefix/dir を固定したい。
 ---
 
 # wcf-install
@@ -11,7 +11,8 @@ description: componentIds から vendor install 手順を確定する。Use when
 
 - `componentIds: string[]`
 - `prefix: string`
-- `lang: "js" | "ts"`
+- `dir: string`
+- `patternId: string` (`wcf init` 実行時に必須)
 
 ## Output Contract
 
@@ -23,8 +24,8 @@ description: componentIds から vendor install 手順を確定する。Use when
 ```json
 {
   "commands": [
-    "wcf init --prefix myui --lang js --out vendor/components/myui",
-    "wcf add button card --prefix myui --lang js --out vendor/components/myui"
+    "wcf init --prefix myui --dir . --pattern search-results --entry boot",
+    "wcf vendor add --prefix myui --dir vendor/components/myui --component button --component card"
   ],
   "installOrder": ["icon", "button", "card"],
   "postChecks": [
@@ -51,7 +52,7 @@ MCPが使えない場合は `registry/install-registry.json` の `deps` と `cal
 1. `componentIds` を重複排除する。
 2. `install-registry` の `deps` を閉包展開する。
 3. `installOrder` を依存先優先で並べる。
-4. `wcf init` と `wcf add` のコマンドを生成する。
+4. `wcf init` と `wcf vendor add` のコマンドを生成する。
 5. `postChecks` に最低3項目を含める。
 
 ## Success Example
@@ -61,8 +62,8 @@ MCPが使えない場合は `registry/install-registry.json` の `deps` と `cal
 ```json
 {
   "commands": [
-    "wcf init --prefix myui --lang js --out vendor/components/myui",
-    "wcf add button card --prefix myui --lang js --out vendor/components/myui"
+    "wcf init --prefix myui --dir . --pattern search-results --entry boot",
+    "wcf vendor add --prefix myui --dir vendor/components/myui --component button --component card"
   ],
   "installOrder": ["icon", "button", "card"],
   "postChecks": [
@@ -81,10 +82,10 @@ MCPが使えない場合は `registry/install-registry.json` の `deps` と `cal
 {
   "error": {
     "code": "INSTALL_INSUFFICIENT_INPUT",
-    "message": "prefix は必須です。"
+    "message": "prefix / dir / patternId は必須です。"
   },
   "commands": [],
   "installOrder": [],
-  "postChecks": ["prefix を指定して再実行"]
+  "postChecks": ["prefix / dir / patternId を指定して再実行"]
 }
 ```

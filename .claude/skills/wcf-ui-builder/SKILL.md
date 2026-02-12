@@ -17,7 +17,7 @@ description: wcfのUI構築を discovery/install/compose/validate の4Skillで�
 ## Standard Workflow
 
 1. `wcf-discovery` で `componentIds` / `dependencyIds` / `patternIds` を確定
-2. `wcf-install` で `wcf init` / `wcf add` コマンドを確定
+2. `wcf-install` で `wcf init` / `wcf vendor add` コマンドを確定
 3. `wcf-compose` で `default/loading/error/empty` を含む `htmlSnippet` を作成
 4. `wcf-validate` で `unknownElement` を0にするまで修正
 

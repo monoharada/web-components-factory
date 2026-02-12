@@ -106,7 +106,7 @@ args = ["scripts/mcp/design-system-mcp.mjs"]
 ## 推奨実行フロー
 
 1. `wcf-discovery` で `componentIds` を確定
-2. `wcf-install` で `wcf init` / `wcf add` を確定
+2. `wcf-install` で `wcf init` / `wcf vendor add` を確定
 3. `wcf-compose` で4状態込みHTMLを生成
 4. `wcf-validate` で検証と修正提案
 
