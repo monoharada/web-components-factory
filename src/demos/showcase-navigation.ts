@@ -3124,12 +3124,12 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">slot 入力（互換モード）</h3>
         <dads-carousel aria-label="slot 入力のカルーセル">
           <a href="#slot-1">
-            <img src="/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp" alt="slot スライド1" />
+            <img src="./resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp" alt="slot スライド1" />
           </a>
           <a href="#slot-2">
-            <img src="/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2.webp" alt="slot スライド2" />
+            <img src="./resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2.webp" alt="slot スライド2" />
           </a>
-          <img src="/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3.webp" alt="slot スライド3" />
+          <img src="./resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3.webp" alt="slot スライド3" />
         </dads-carousel>
       </section>
 
@@ -3140,8 +3140,8 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
         (() => {
           const baseItems = [
             {
-              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp',
-              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1@2x.webp 2x',
+              src: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp',
+              srcset: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1@2x.webp 2x',
               alt: '学ぼうSDGs 偶数月の第3土曜日 環境保全の「自分事化」で学べるワークショップ開催',
               href: '#news-1',
               title: '開催中のイベント 1',
@@ -3149,8 +3149,8 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
               height: 392,
             },
             {
-              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2.webp',
-              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2@2x.webp 2x',
+              src: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2.webp',
+              srcset: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-2@2x.webp 2x',
               alt: '地産地消キャンペーン 県の名産品や体験イベントを楽しもう 期間：4月から7月までの毎週末開催！',
               href: '#news-2',
               title: '開催中のイベント 2',
@@ -3158,8 +3158,8 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
               height: 392,
             },
             {
-              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3.webp',
-              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3@2x.webp 2x',
+              src: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3.webp',
+              srcset: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-3@2x.webp 2x',
               alt: '令和 国立公園・歴史名所スタンプラリー',
               href: '#news-3',
               title: '開催中のイベント 3',
@@ -3167,8 +3167,8 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
               height: 392,
             },
             {
-              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-4.webp',
-              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-4@2x.webp 2x',
+              src: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-4.webp',
+              srcset: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-4@2x.webp 2x',
               alt: '合同健康診断のお知らせ ご自身とご家族の健康維持のため、定期的な健康診断の受診を。',
               href: '#news-4',
               title: '開催中のイベント 4',
@@ -3176,8 +3176,8 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
               height: 392,
             },
             {
-              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-5.webp',
-              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-5@2x.webp 2x',
+              src: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-5.webp',
+              srcset: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-5@2x.webp 2x',
               alt: '夏の体験学習プログラム 参加者募集',
               href: '#news-5',
               title: '開催中のイベント 5',
@@ -3185,8 +3185,8 @@ carousel?.addEventListener('dads-carousel-layout-change', (event) => {
               height: 392,
             },
             {
-              src: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-6.webp',
-              srcset: '/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-6@2x.webp 2x',
+              src: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-6.webp',
+              srcset: './resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-6@2x.webp 2x',
               alt: '地域防災フェアのお知らせ',
               href: '#news-6',
               title: '開催中のイベント 6',

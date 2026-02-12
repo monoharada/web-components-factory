@@ -21,6 +21,8 @@
     "preview": "vite preview",
     "pages:build": "node scripts/build-pages.cjs",
     "pages:preview": "node scripts/preview-pages.cjs",
+    "pages:check:assets": "node scripts/check-pages-asset-requests.cjs",
+    "assets:check:local": "node scripts/check-no-external-demo-assets.cjs",
     "cem:analyze": "cem analyze --config custom-elements-manifest.config.js",
     "cem:prefix": "node scripts/cem/transform-prefix.mjs",
     "validate:wc": "node scripts/wc/validate.mjs",

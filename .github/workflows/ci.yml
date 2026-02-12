@@ -59,3 +59,18 @@ jobs:
 
       - name: Type Check / Test / Build
         run: npm run ci
+
+      - name: Build Pages output
+        run: npm run pages:build
+
+      - name: Sanity check output is Viewer
+        run: node scripts/check-pages-output.cjs
+
+      - name: Check local-only demo assets
+        run: npm run assets:check:local
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Check asset requests (404 / external)
+        run: npm run pages:check:assets

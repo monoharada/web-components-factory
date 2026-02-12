@@ -69,6 +69,15 @@ const renderChipTagPersonChip = (label: string) => `
   </dads-chip-tag>
 `;
 
+const CARD_DEMO_IMAGE_BASE =
+  './resources/dads/components/card/upstream/design-system-example-components-html/src/components/card';
+const CARD_EXAMPLE_2_IMAGE_1 = `${CARD_DEMO_IMAGE_BASE}/card-2.jpg`;
+const CARD_EXAMPLE_2_IMAGE_2 = `${CARD_DEMO_IMAGE_BASE}/card-6.jpg`;
+const CARD_EXAMPLE_2_IMAGE_3 = `${CARD_DEMO_IMAGE_BASE}/card-2.jpg`;
+const CARD_EXAMPLE_3_AVATAR_IMAGE = `${CARD_DEMO_IMAGE_BASE}/card-3-1.png`;
+const CARD_EXAMPLE_3_SUB_IMAGE = `${CARD_DEMO_IMAGE_BASE}/card-3-2.png`;
+const CARD_EXAMPLE_5_HERO_IMAGE = './resources/dads/components/card/local/card-5-hero-960x640.jpg';
+
 const RESOURCE_LIST_DEMO_ICON_SVG = `
   <svg slot="icon" width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true">
     <path d="M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z"/>
@@ -2233,7 +2242,7 @@ export const demos = {
             <li>
               <dads-card class="card-example-2" layout="horizontal">
                 <img slot="media"
-                     src="https://images.unsplash.com/photo-1522383225653-ed111181a951?w=352&h=235&fit=crop"
+                     src="${CARD_EXAMPLE_2_IMAGE_1}"
                      width="352" height="235"
                      alt="満開の桜の枝が青い水面を背景に咲き誇る春の風景写真">
                 <div class="card-example-2__header">
@@ -2256,7 +2265,7 @@ export const demos = {
             <li>
               <dads-card class="card-example-2" layout="horizontal">
                 <img slot="media"
-                     src="https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=352&h=235&fit=crop"
+                     src="${CARD_EXAMPLE_2_IMAGE_2}"
                      width="352" height="235"
                      alt="子どもたちが一緒に遊んでいる公園の風景">
                 <div class="card-example-2__header">
@@ -2279,7 +2288,7 @@ export const demos = {
             <li>
               <dads-card class="card-example-2" layout="horizontal">
                 <img slot="media"
-                     src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=352&h=235&fit=crop"
+                     src="${CARD_EXAMPLE_2_IMAGE_3}"
                      width="352" height="235"
                      alt="パソコンで作業をしている様子">
                 <div class="card-example-2__header">
@@ -2491,7 +2500,7 @@ export const demos = {
                   </div>
                   <img
                     class="card-example-3__avatar"
-                    src="https://design.digital.go.jp/dads/html/assets/card-3-1-DlYbs6z8.png"
+                    src="${CARD_EXAMPLE_3_AVATAR_IMAGE}"
                     width="64" height="64"
                     alt="著者のアイコン"
                   >
@@ -2502,7 +2511,7 @@ export const demos = {
                 <div slot="sub" class="card-example-3__contents">
                   <p>
                     <img
-                      src="https://design.digital.go.jp/dads/html/assets/card-3-2-NWWtZhQN.png"
+                      src="${CARD_EXAMPLE_3_SUB_IMAGE}"
                       width="304" height="235"
                       alt="ポストに書類を投函する人物のイラスト"
                     >
@@ -2534,7 +2543,7 @@ export const demos = {
                   </div>
                   <img
                     class="card-example-3__avatar"
-                    src="https://design.digital.go.jp/dads/html/assets/card-3-1-DlYbs6z8.png"
+                    src="${CARD_EXAMPLE_3_AVATAR_IMAGE}"
                     width="64" height="64"
                     alt="著者のアイコン"
                   >
@@ -2545,7 +2554,7 @@ export const demos = {
                 <div slot="sub" class="card-example-3__contents">
                   <p>
                     <img
-                      src="https://design.digital.go.jp/dads/html/assets/card-3-2-NWWtZhQN.png"
+                      src="${CARD_EXAMPLE_3_SUB_IMAGE}"
                       width="304" height="235"
                       alt="パソコンでオンライン申請をする人物のイラスト"
                     >
@@ -2577,7 +2586,7 @@ export const demos = {
                   </div>
                   <img
                     class="card-example-3__avatar"
-                    src="https://design.digital.go.jp/dads/html/assets/card-3-1-DlYbs6z8.png"
+                    src="${CARD_EXAMPLE_3_AVATAR_IMAGE}"
                     width="64" height="64"
                     alt="著者のアイコン"
                   >
@@ -2588,7 +2597,7 @@ export const demos = {
                 <div slot="sub" class="card-example-3__contents">
                   <p>
                     <img
-                      src="https://design.digital.go.jp/dads/html/assets/card-3-2-NWWtZhQN.png"
+                      src="${CARD_EXAMPLE_3_SUB_IMAGE}"
                       width="304" height="235"
                       alt="よくある質問に答えるサポートスタッフのイラスト"
                     >
@@ -3155,7 +3164,7 @@ export const demos = {
               <dads-card class="card-example-5" data-card-example-5>
                 <div slot="media" class="card-example-5__media">
                   <img
-                    src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?w=960&h=640&fit=crop"
+                    src="${CARD_EXAMPLE_5_HERO_IMAGE}"
                     width="960" height="640"
                     alt="雪原と空が広がる冬の風景写真"
                   >
@@ -3182,7 +3191,7 @@ export const demos = {
               <dads-card class="card-example-5" data-card-example-5>
                 <div slot="media" class="card-example-5__media">
                   <img
-                    src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?w=960&h=640&fit=crop"
+                    src="${CARD_EXAMPLE_5_HERO_IMAGE}"
                     width="960" height="640"
                     alt="雪景色が広がる湖畔の風景写真"
                   >
@@ -3209,7 +3218,7 @@ export const demos = {
               <dads-card class="card-example-5" data-card-example-5>
                 <div slot="media" class="card-example-5__media">
                   <img
-                    src="https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?w=960&h=640&fit=crop"
+                    src="${CARD_EXAMPLE_5_HERO_IMAGE}"
                     width="960" height="640"
                     alt="雪の平原を望む冬の風景写真"
                   >

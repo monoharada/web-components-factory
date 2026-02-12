@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { describe, expect, test } from 'vitest';
 
@@ -35,5 +35,22 @@ describe('pages:build', () => {
     const installPanelJs = readFileSync('dist-pages/src/viewer-install-panel.js', 'utf8');
     expect(installPanelJs).toContain('function buildInstallCommands');
     expect(installPanelJs).toContain('resetCss');
+
+    const carouselDemoJs = readFileSync('dist-pages/src/demos/showcase-navigation.js', 'utf8');
+    expect(carouselDemoJs).toContain('./resources/dads/components/carousel/');
+    expect(carouselDemoJs).not.toMatch(/['"`(]\/resources\/dads\/components\/carousel\//);
+
+    const cardDemoJs = readFileSync('dist-pages/src/demos/showcase-components.js', 'utf8');
+    expect(cardDemoJs).not.toContain('https://images.unsplash.com/');
+    expect(cardDemoJs).not.toContain('https://design.digital.go.jp/dads/html/assets/');
+
+    expect(
+      existsSync(
+        'dist-pages/resources/dads/components/carousel/upstream/design-system-example-components-html/src/components/carousel/image-1.webp'
+      )
+    ).toBe(true);
+    expect(
+      existsSync('dist-pages/resources/dads/components/card/local/card-5-hero-960x640.jpg')
+    ).toBe(true);
   }, LONG_IO_TIMEOUT_MS);
 });

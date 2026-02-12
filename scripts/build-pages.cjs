@@ -71,10 +71,22 @@ function rewriteImportsForDistPages(js) {
   // ../packages/xxx/ → ../xxx/
   // ../../packages/xxx/ → ../../xxx/
   // etc.
-  return js.replace(
+  let rewritten = js.replace(
     /(from\s+['"])((?:\.\.\/)+)packages\/(core|utils|styles|components)\//g,
     (_match, prefix, dots, moduleType) => `${prefix}${dots}${moduleType}/`
   );
+
+  // デモHTML内scriptの文字列リテラルも dist-pages 構成に合わせる
+  rewritten = rewritten.replace(
+    /(['"`])\.\/packages\/(core|utils|styles|components)\//g,
+    (_match, quote, moduleType) => `${quote}./${moduleType}/`
+  );
+  rewritten = rewritten.replace(
+    /(['"`])\/packages\/(core|utils|styles|components)\//g,
+    (_match, quote, moduleType) => `${quote}./${moduleType}/`
+  );
+
+  return rewritten;
 }
 
 async function transpileFile(srcPath, destPath) {
@@ -164,6 +176,12 @@ async function copyCustomElementsManifest() {
   await fs.copyFile(srcPath, destPath);
 }
 
+async function copyResources() {
+  const srcDir = path.join(projectRoot, 'resources');
+  const destDir = path.join(outDir, 'resources');
+  await fs.cp(srcDir, destDir, { recursive: true });
+}
+
 async function cleanOutDir() {
   await fs.rm(outDir, { recursive: true, force: true });
   await ensureDir(outDir);
@@ -175,6 +193,7 @@ async function main() {
   await cleanOutDir();
   await buildIndexHtml();
   await copyCustomElementsManifest();
+  await copyResources();
 
   await transpileFile(path.join(projectRoot, 'packages/config.ts'), path.join(outDir, 'config.js'));
 
