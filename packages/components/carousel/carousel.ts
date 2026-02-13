@@ -1332,10 +1332,13 @@ export class DadsCarousel extends TypographyWebComponent {
     });
 
     const bgMedia = this.#createSlideMedia(slide, true, 'lazy', 'async');
+    const bgImage = bgMedia ? extractImageElement(bgMedia) : null;
+    if (bgImage) bgImage.loading = 'eager';
     this.#replaceMediaWhenReady(this.#nextBgContent, bgMedia, {
       renderSeq,
       lockMainHeight: false,
       context: { index, role: 'next-bg', source },
+      waitPolicy: 'insert-immediately',
     });
   }
 

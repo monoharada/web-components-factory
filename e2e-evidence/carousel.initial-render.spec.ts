@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('carousel: 画像ロード保留時でも初期1tickで next preview img が存在する', async ({ page }) => {
+test('carousel: 画像ロード保留時でも初期1tickで next preview/bg img が存在する', async ({ page }) => {
   const baseUrl = process.env.WCF_E2E_BASE_URL?.replace(/\/$/, '') ?? '';
   const targetUrl = baseUrl
     ? `${baseUrl}/?nosw=1&component=carousel`
@@ -26,13 +26,18 @@ test('carousel: 画像ロード保留時でも初期1tickで next preview img �
     return Boolean(host && Array.isArray(host.items) && host.items.length >= 3);
   }, null, { timeout: 15_000 });
 
-  const hasNextPreviewImageOnInitialTick = await page.evaluate(async () => {
+  const hasNextPreviewAndBgImageOnInitialTick = await page.evaluate(async () => {
     const host = document.querySelector('dads-carousel[data-carousel-items]') as HTMLElement | null;
-    if (!host?.shadowRoot) return false;
+    if (!host?.shadowRoot) return { preview: false, bg: false };
     await Promise.resolve();
-    const image = host.shadowRoot.querySelector('#next-image-container img');
-    return image instanceof HTMLImageElement;
+    const previewImage = host.shadowRoot.querySelector('#next-image-container img');
+    const bgImage = host.shadowRoot.querySelector('#next-bg-content img');
+    return {
+      preview: previewImage instanceof HTMLImageElement,
+      bg: bgImage instanceof HTMLImageElement,
+    };
   });
 
-  expect(hasNextPreviewImageOnInitialTick).toBe(true);
+  expect(hasNextPreviewAndBgImageOnInitialTick.preview).toBe(true);
+  expect(hasNextPreviewAndBgImageOnInitialTick.bg).toBe(true);
 });
