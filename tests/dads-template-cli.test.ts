@@ -71,17 +71,53 @@ function runNode(
 }
 
 function parseLastJson(raw: string): unknown {
-  const lines = raw
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-  for (let i = lines.length - 1; i >= 0; i -= 1) {
-    try {
-      return JSON.parse(lines[i]);
-    } catch {
-      // continue
+  let start = -1;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let i = 0; i < raw.length; i += 1) {
+    const char = raw[i];
+
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+
+    if (char === '\\') {
+      escaped = inString;
+      continue;
+    }
+
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+
+    if (inString) {
+      continue;
+    }
+
+    if (char === '{') {
+      if (depth === 0) {
+        start = i;
+      }
+      depth += 1;
+      continue;
+    }
+
+    if (char === '}' && depth > 0) {
+      depth -= 1;
+      if (depth === 0 && start >= 0) {
+        try {
+          return JSON.parse(raw.slice(start, i + 1));
+        } catch {
+          start = -1;
+        }
+      }
     }
   }
+
   return {};
 }
 
@@ -247,11 +283,11 @@ describe('dads-template CLI', () => {
 
     const quick = await runNode([CLI, 'validate', 'templates', '--mode', 'quick'], { cwd, env });
     expect(quick.code).toBe(0);
-    expect(quick.stdout).toContain('"mode":"quick"');
+    expect(parseLastJson(quick.stdout)).toMatchObject({ mode: 'quick' });
 
     const full = await runNode([CLI, 'validate', 'templates', '--mode', 'full'], { cwd, env });
     expect(full.code).toBe(0);
-    expect(full.stdout).toContain('"mode":"full"');
+    expect(parseLastJson(full.stdout)).toMatchObject({ mode: 'full' });
   });
 
   test('validate templates reports VALIDATION_FAILED on failed subprocess', async () => {
@@ -464,7 +500,13 @@ describe('dads-template CLI', () => {
     const summary = parseLastJson(result.stdout) as { mode?: string; items?: Array<{ action?: string }> };
     expect(summary.mode).toBe('dry-run');
     expect(summary.items?.[0]?.action).toBe('dry-run:plan');
-    await expect(readFile(path.join(cwd, 'tmp', 'template-gaps.retry.json')).rejects.toThrow();
+    let retryReadError: unknown;
+    try {
+      await readFile(path.join(cwd, 'tmp', 'template-gaps.retry.json'));
+    } catch (error) {
+      retryReadError = error;
+    }
+    expect((retryReadError as NodeJS.ErrnoException | undefined)?.code).toBe('ENOENT');
   });
 
   test('escalate dry-run fails when item is invalid', async () => {
@@ -487,7 +529,13 @@ describe('dads-template CLI', () => {
     expect(result.code).toBe(1);
     expect(result.stderr).toContain('INPUT_INVALID');
     expect(result.stderr).not.toContain('tmp/template-gaps.retry.json');
-    await expect(readFile(path.join(cwd, 'tmp', 'template-gaps.retry.json')).rejects.toThrow();
+    let missingRetryReadError: unknown;
+    try {
+      await readFile(path.join(cwd, 'tmp', 'template-gaps.retry.json'));
+    } catch (error) {
+      missingRetryReadError = error;
+    }
+    expect((missingRetryReadError as NodeJS.ErrnoException | undefined)?.code).toBe('ENOENT');
   });
 
   test('escalate create requires gh auth', async () => {
