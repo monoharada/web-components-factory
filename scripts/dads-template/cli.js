@@ -805,9 +805,13 @@ async function runEscalate(args, root = CLI_ROOT) {
   console.log(JSON.stringify(summary, null, 2));
 
   if (failed > 0) {
+    const baseMessage = `Failed to process ${failed} item(s) during escalation.`;
+    const message = create
+      ? `${baseMessage} See ${path.relative(CLI_ROOT, RETRY_PATH)}`
+      : `${baseMessage} See summary output for failed items.`;
     throw {
       errorCode: create ? ERROR_CODES.ISSUE_CREATE_FAILED : ERROR_CODES.INPUT_INVALID,
-      message: `Failed to process ${failed} item(s) during escalation. See ${path.relative(CLI_ROOT, RETRY_PATH)}`,
+      message,
     };
   }
 }

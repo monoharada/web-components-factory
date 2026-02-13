@@ -486,6 +486,7 @@ describe('dads-template CLI', () => {
     });
     expect(result.code).toBe(1);
     expect(result.stderr).toContain('INPUT_INVALID');
+    expect(result.stderr).not.toContain('tmp/template-gaps.retry.json');
     await expect(readFile(path.join(cwd, 'tmp', 'template-gaps.retry.json')).rejects.toThrow();
   });
 
