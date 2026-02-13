@@ -82,8 +82,8 @@ npm run templates:gaps:create
 
 ### エラーハンドリング
 
-- `status=failed` が1件以上あると `tmp/template-gaps.retry.json` を出力。
-- `status=failed` がある場合は `0` 以外で終了。
+- `status=failed` が1件以上あると `0` 以外で終了。
+- `--create` 時のみ `status=failed` 件数分の `tmp/template-gaps.retry.json` を出力。
 - 重複検知時は `skipped-existing` として新規作成しない。
 
 ## 5) エラーレスポンス規約

@@ -78,13 +78,24 @@ function parseArgs(argv) {
     return result;
   }
 
-  result.cmd = argv[0] || null;
-  result.sub = argv[1] || null;
-
-  const args = argv.slice(2);
+  const args = argv;
+  let isCmdResolved = false;
+  let isSubResolved = false;
   for (let i = 0; i < args.length; i += 1) {
     const current = args[i];
     if (!current?.startsWith('--')) {
+      if (!isCmdResolved) {
+        result.cmd = current;
+        isCmdResolved = true;
+        continue;
+      }
+
+      if (!isSubResolved) {
+        result.sub = current;
+        isSubResolved = true;
+        continue;
+      }
+
       result.rest.push(current);
       continue;
     }
@@ -426,7 +437,16 @@ async function collectViewerScope({ root, cemIndex }) {
 
   for (const includePath of include) {
     const abs = path.resolve(root, includePath);
-    const text = await fs.readFile(abs, 'utf8');
+    let text = '';
+    try {
+      text = await fs.readFile(abs, 'utf8');
+    } catch (error) {
+      throw {
+        errorCode: ERROR_CODES.INPUT_INVALID,
+        message: `viewer include file not found: ${includePath}`,
+        details: error?.message || String(error),
+      };
+    }
     const diagnostics = validateTextAgainstCem({
       filePath: includePath,
       text,
@@ -733,10 +753,10 @@ async function runEscalate(args, root = CLI_ROOT) {
   };
   console.log(JSON.stringify(summary, null, 2));
 
-  if (failed > 0 && create) {
+  if (failed > 0) {
     throw {
-      errorCode: ERROR_CODES.ISSUE_CREATE_FAILED,
-      message: `Failed to create ${failed} issue(s). See ${path.relative(CLI_ROOT, RETRY_PATH)}`,
+      errorCode: create ? ERROR_CODES.ISSUE_CREATE_FAILED : ERROR_CODES.INPUT_INVALID,
+      message: `Failed to process ${failed} item(s) during escalation. See ${path.relative(CLI_ROOT, RETRY_PATH)}`,
     };
   }
 }

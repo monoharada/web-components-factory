@@ -149,7 +149,7 @@ if (args[0] === 'run' && args[1]) {
 }
 
 if (statePath) fs.writeFileSync(statePath, JSON.stringify(state));
-console.error(`Unhandled npm command: ${args.join(' ')}`);
+console.error(`Unhandled npm command: \${args.join(' ')}`);
 process.exit(1);
 `;
 
@@ -195,7 +195,7 @@ if (args[0] === 'issue' && args[1] === 'create') {
   emit(response);
 }
 
-console.error(`Unhandled gh command: ${args.join(' ')}`);
+console.error(`Unhandled gh command: \${args.join(' ')}`);
 emit({ code: 1 });
 `;
 
@@ -406,6 +406,37 @@ describe('dads-template CLI', () => {
     expect(payload.gaps.some((gap) => gap.type === 'component-gap')).toBe(true);
   });
 
+  test('collect viewer scope fails with INPUT_INVALID when include file is missing', async () => {
+    const cwd = await makeWorkspace(
+      {
+        schemaVersion: 1,
+        modules: [],
+      },
+      {
+        schemaVersion: 1,
+        patterns: {},
+      },
+      {
+        include: ['src/missing-viewer.html'],
+      },
+    );
+
+    const result = await runNode([CLI, 'collect', 'gaps', '--scope', 'viewer', '--out', 'tmp/viewer-missing.json'], {
+      cwd,
+      env: process.env as Record<string, string>,
+    });
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain('INPUT_INVALID');
+  });
+
+  test('global --help shows usage', async () => {
+    const cwd = await makeWorkspace({ schemaVersion: 1, modules: [] }, { schemaVersion: 1, patterns: {} });
+    const result = await runNode([CLI, '--help'], { cwd, env: process.env as Record<string, string> });
+
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain('Usage:');
+  });
+
   test('escalate dry-run generates plan only', async () => {
     const cwd = await makeWorkspace({ schemaVersion: 1, modules: [] }, { schemaVersion: 1, patterns: {} });
     const payload = {
@@ -433,6 +464,28 @@ describe('dads-template CLI', () => {
     const summary = parseLastJson(result.stdout) as { mode?: string; items?: Array<{ action?: string }> };
     expect(summary.mode).toBe('dry-run');
     expect(summary.items?.[0]?.action).toBe('dry-run:plan');
+    await expect(readFile(path.join(cwd, 'tmp', 'template-gaps.retry.json')).rejects.toThrow();
+  });
+
+  test('escalate dry-run fails when item is invalid', async () => {
+    const cwd = await makeWorkspace({ schemaVersion: 1, modules: [] }, { schemaVersion: 1, patterns: {} });
+    const payload = {
+      schemaVersion: 1,
+      generatedAt: new Date().toISOString(),
+      gaps: [
+        {
+          invalid: true,
+        } as never,
+      ],
+    };
+    await writeFixtureFile(path.join(cwd, 'tmp', 'gaps-invalid.json'), `${JSON.stringify(payload, null, 2)}\n`);
+
+    const result = await runNode([CLI, 'escalate', 'gaps', '--input', 'tmp/gaps-invalid.json'], {
+      cwd,
+      env: process.env as Record<string, string>,
+    });
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain('INPUT_INVALID');
     await expect(readFile(path.join(cwd, 'tmp', 'template-gaps.retry.json')).rejects.toThrow();
   });
 
