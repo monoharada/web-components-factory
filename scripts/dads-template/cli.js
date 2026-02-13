@@ -560,6 +560,44 @@ function sanitizeEvidence(evidences) {
     .filter(Boolean);
 }
 
+function validateGapRecord(rawGap) {
+  const issues = [];
+
+  if (!rawGap || typeof rawGap !== 'object') {
+    return {
+      ok: false,
+      reason: 'Gap item must be an object.',
+      dedupeKey: 'unknown',
+      id: 'unknown',
+    };
+  }
+
+  const type = normalize(rawGap.type);
+  const scope = normalize(rawGap.scope);
+  const proposedComponentId = normalize(rawGap.proposedComponentId);
+  const title = normalize(rawGap.title);
+
+  if (!type) issues.push('type');
+  if (!scope) issues.push('scope');
+  if (!proposedComponentId) issues.push('proposedComponentId');
+  if (!title) issues.push('title');
+
+  if (issues.length > 0) {
+    return {
+      ok: false,
+      reason: `Missing required gap fields: ${issues.join(', ')}`,
+      dedupeKey: makeDedupeKey(type || 'unknown', scope || 'unknown', proposedComponentId || 'unknown'),
+      id: rawGap.id || makeGapId(type || 'unknown', scope || 'unknown', proposedComponentId || 'unknown', title || 'Unknown'),
+    };
+  }
+
+  return {
+    ok: true,
+    dedupeKey: makeDedupeKey(type, scope, proposedComponentId),
+    id: rawGap.id || makeGapId(type, scope, proposedComponentId, title),
+  };
+}
+
 async function checkGhAuth() {
   try {
     await runCommand('gh', ['auth', 'status']);
@@ -684,17 +722,30 @@ async function runEscalate(args, root = CLI_ROOT) {
   const seenDedupes = new Set();
 
   for (const rawGap of payload.gaps) {
-    if (!rawGap || typeof rawGap !== 'object') {
+    const validation = validateGapRecord(rawGap);
+    if (!validation.ok) {
+      const reason = validation.reason || 'invalid-gap-item';
       failed += 1;
-      const invalid = { id: 'unknown', reason: 'invalid-gap-item' };
-      failedItems.push(invalid);
-      items.push({ ...invalid, status: 'failed', reason: 'invalid-gap-item' });
+      failedItems.push({
+        id: validation.id,
+        dedupeKey: validation.dedupeKey,
+        reason,
+      });
+      items.push({
+        ...rawGap,
+        id: validation.id,
+        dedupeKey: validation.dedupeKey,
+        status: 'failed',
+        reason,
+        action: create ? 'validation-failed' : 'dry-run-validation-failed',
+      });
       continue;
     }
 
     const gap = {
       ...rawGap,
-      dedupeKey: rawGap.dedupeKey || makeDedupeKey(rawGap.type, rawGap.scope, rawGap.proposedComponentId),
+      dedupeKey: rawGap.dedupeKey || validation.dedupeKey,
+      id: rawGap.id || validation.id,
       evidence: sanitizeEvidence(rawGap.evidence),
     };
     if (seenDedupes.has(gap.dedupeKey)) {
