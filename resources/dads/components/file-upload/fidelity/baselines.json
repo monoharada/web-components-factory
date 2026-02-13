@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "component": "file-upload",
+  "generatedAt": "2026-02-13T00:00:00.000Z",
+  "states": {
+    "default": {
+      "path": "resources/dads/components/file-upload/docs/overview/images/file_upload_overview.png",
+      "source": "DADS docs overview image",
+      "priority": 1
+    },
+    "error-required": {
+      "path": "resources/dads/components/file-upload/docs/usage/images/file_upload_anatomy_2.png",
+      "source": "DADS docs usage anatomy image (error representation)",
+      "priority": 1
+    },
+    "disabled": {
+      "path": "resources/dads/components/file-upload/docs/usage/images/file_upload_anatomy_1.png",
+      "source": "DADS docs usage anatomy image (fallback for disabled state)",
+      "priority": 2
+    },
+    "button-only": {
+      "path": "resources/dads/components/file-upload/docs/overview/images/file_upload_overview.png",
+      "source": "DADS docs overview image (fallback for button-only state)",
+      "priority": 2
+    },
+    "fullscreen-dragover": {
+      "path": "resources/dads/components/file-upload/docs/usage/images/file_upload_expand_area.png",
+      "source": "DADS docs usage expand-area image",
+      "priority": 1
+    }
+  },
+  "notes": [
+    "優先順位1は docs 画像をそのまま使用。",
+    "優先順位2は PoC補完扱い。厳密一致が必要な場合は専用 baseline を差し替える。"
+  ]
+}
+
