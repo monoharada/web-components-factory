@@ -1,0 +1,58 @@
+name: Template Gap
+about: テンプレート制作時の不足要素を記録する
+labels:
+  - enhancement
+title: '[template-gap][component-gap][patterns][dads-xxx] タイトルを入力'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        `dads-template` ワークフローで検出した `component-gap` / `api-gap` / `expression-gap` を登録してください。
+  - type: input
+    id: type
+    attributes:
+      label: Type
+      description: component-gap / api-gap / expression-gap
+    validations:
+      required: true
+  - type: input
+    id: scope
+    attributes:
+      label: Scope
+      description: patterns / viewer
+    validations:
+      required: true
+  - type: input
+    id: proposed_component_id
+    attributes:
+      label: Proposed Component ID
+      description: component-gap/api-gap はコンポーネント識別子、expression-gap は expr:<slug>
+    validations:
+      required: true
+  - type: input
+    id: dedupe_key
+    attributes:
+      label: Dedupe Key
+      description: 必須。type:scope:proposedComponentId で記載
+    validations:
+      required: true
+  - type: input
+    id: priority
+    attributes:
+      label: Priority
+      description: P1 / P2 / P3
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: 何が足りないかを1〜2文で
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: 完了条件をリストで
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: 検出場所/証跡
