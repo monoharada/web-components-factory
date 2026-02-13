@@ -7394,7 +7394,7 @@
                 {
                   "name": "options",
                   "type": {
-                    "text": "{\n      renderSeq: number;\n      lockMainHeight: boolean;\n      context: CarouselMediaContext;\n    }"
+                    "text": "{\n      renderSeq: number;\n      lockMainHeight: boolean;\n      context: CarouselMediaContext;\n      waitPolicy?: CarouselMediaWaitPolicy;\n    }"
                   }
                 }
               ]
