@@ -149,7 +149,7 @@ if (args[0] === 'run' && args[1]) {
 }
 
 if (statePath) fs.writeFileSync(statePath, JSON.stringify(state));
-console.error(`Unhandled npm command: \${args.join(' ')}`);
+  console.error('Unhandled npm command:', args.join(' '));
 process.exit(1);
 `;
 
@@ -195,7 +195,7 @@ if (args[0] === 'issue' && args[1] === 'create') {
   emit(response);
 }
 
-console.error(`Unhandled gh command: \${args.join(' ')}`);
+  console.error('Unhandled gh command:', args.join(' '));
 emit({ code: 1 });
 `;
 
