@@ -37,6 +37,35 @@ function makeItems(total: number): DadsCarouselItem[] {
   return items;
 }
 
+function stubPendingImageReadiness(): () => void {
+  const completeDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'complete');
+  const decodeDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'decode');
+  const pending = new Promise<void>(() => {});
+
+  Object.defineProperty(HTMLImageElement.prototype, 'complete', {
+    configurable: true,
+    get: () => false,
+  });
+  Object.defineProperty(HTMLImageElement.prototype, 'decode', {
+    configurable: true,
+    value: vi.fn().mockReturnValue(pending),
+  });
+
+  return (): void => {
+    if (completeDescriptor) {
+      Object.defineProperty(HTMLImageElement.prototype, 'complete', completeDescriptor);
+    } else {
+      Reflect.deleteProperty(HTMLImageElement.prototype, 'complete');
+    }
+
+    if (decodeDescriptor) {
+      Object.defineProperty(HTMLImageElement.prototype, 'decode', decodeDescriptor);
+    } else {
+      Reflect.deleteProperty(HTMLImageElement.prototype, 'decode');
+    }
+  };
+}
+
 function createCarousel(markup = '<dads-carousel></dads-carousel>'): DadsCarousel & HTMLElement {
   return renderWebComponent(markup) as DadsCarousel & HTMLElement;
 }
@@ -448,6 +477,65 @@ describe('DadsCarousel', () => {
       currentIndex: 0,
       imageSlider: true,
     });
+  });
+
+  it('next preview は画像未readyでも初期描画でDOM挿入される', async () => {
+    const restore = stubPendingImageReadiness();
+
+    try {
+      const carousel = createCarousel();
+      await waitForComponent('dads-carousel');
+
+      carousel.items = makeItems(3);
+      await waitTick();
+
+      const nextImage = getShadowElement<HTMLElement>(carousel, '#next-image-container')
+        ?.querySelector<HTMLImageElement>('img');
+      expect(nextImage).not.toBeNull();
+    } finally {
+      restore();
+    }
+  });
+
+  it('next preview は loading 属性を常に eager にする', async () => {
+    const restore = stubPendingImageReadiness();
+
+    try {
+      const carousel = createCarousel();
+      await waitForComponent('dads-carousel');
+
+      carousel.items = makeItems(3).map((item) => ({ ...item, loading: 'lazy' }));
+      await waitTick();
+
+      const nextImage = getShadowElement<HTMLElement>(carousel, '#next-image-container')
+        ?.querySelector<HTMLImageElement>('img');
+      expect(nextImage).not.toBeNull();
+      expect(nextImage?.loading).toBe('eager');
+    } finally {
+      restore();
+    }
+  });
+
+  it('insert-immediately 時は ready完了前に mediaイベントを発火しない', async () => {
+    const restore = stubPendingImageReadiness();
+
+    try {
+      const carousel = createCarousel();
+      await waitForComponent('dads-carousel');
+
+      const loadedHandler = vi.fn();
+      const errorHandler = vi.fn();
+      carousel.addEventListener('dads-carousel-media-loaded', loadedHandler);
+      carousel.addEventListener('dads-carousel-media-error', errorHandler);
+
+      carousel.items = makeItems(3);
+      await waitTick();
+
+      expect(loadedHandler).toHaveBeenCalledTimes(0);
+      expect(errorHandler).toHaveBeenCalledTimes(0);
+    } finally {
+      restore();
+    }
   });
 
   it('dads-carousel-media-loaded が描画対象のメディア情報を返す', async () => {

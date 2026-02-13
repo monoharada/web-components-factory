@@ -157,6 +157,8 @@ type CarouselMediaContext = {
   source: DadsCarouselEventSource;
 };
 
+type CarouselMediaWaitPolicy = 'wait-before-insert' | 'insert-immediately';
+
 const DEFAULT_TYPE: DadsCarouselType = 'container';
 const DEFAULT_ARIA_LABEL = 'カルーセル';
 const DEFAULT_UNIT = 'スライド';
@@ -1320,10 +1322,13 @@ export class DadsCarousel extends TypographyWebComponent {
     if (!this.#nextImageContainer || !this.#nextBgContent) return;
     const media = this.#createSlideMedia(slide, true, 'lazy', 'async');
     const previewMedia = media ? (media.cloneNode(true) as HTMLElement) : null;
+    const previewImage = previewMedia ? extractImageElement(previewMedia) : null;
+    if (previewImage) previewImage.loading = 'eager';
     this.#replaceMediaWhenReady(this.#nextImageContainer, previewMedia, {
       renderSeq,
       lockMainHeight: false,
       context: { index, role: 'next-preview', source },
+      waitPolicy: 'insert-immediately',
     });
 
     const bgMedia = this.#createSlideMedia(slide, true, 'lazy', 'async');
@@ -1483,9 +1488,15 @@ export class DadsCarousel extends TypographyWebComponent {
       renderSeq: number;
       lockMainHeight: boolean;
       context: CarouselMediaContext;
+      waitPolicy?: CarouselMediaWaitPolicy;
     },
   ): void {
-    const { renderSeq, lockMainHeight, context } = options;
+    const {
+      renderSeq,
+      lockMainHeight,
+      context,
+      waitPolicy = 'wait-before-insert',
+    } = options;
     if (!container) return;
     if (renderSeq !== this.#renderSeq) return;
 
@@ -1496,6 +1507,19 @@ export class DadsCarousel extends TypographyWebComponent {
     }
 
     if (!this.#isMediaReady(media)) {
+      if (waitPolicy === 'insert-immediately') {
+        const releaseLock = lockMainHeight ? this.#lockMainPanelHeight() : (): void => {};
+        container.replaceChildren(media);
+        void this.#waitForMediaReady(media).then((result) => {
+          if (renderSeq !== this.#renderSeq) {
+            releaseLock();
+            return;
+          }
+          this.#emitMediaResult(result, media, context);
+          releaseLock();
+        });
+        return;
+      }
       const releaseLock = lockMainHeight ? this.#lockMainPanelHeight() : (): void => {};
       void this.#waitForMediaReady(media).then((result) => {
         if (renderSeq !== this.#renderSeq) {
