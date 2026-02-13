@@ -66,3 +66,27 @@ npm run mcp:design-system
 新規コンポーネントは `docs/rules/new-component-dod.md` に従い、少なくとも以下を満たしてください：
 - `npm run cem:analyze` 後、`decl.custom.install` が注入されている
 - `npm run contracts:check` がパスする
+- `npm run validate:wc` がパスする
+
+## 5) テンプレート制作（DADS強制）と不足検知
+
+- 依頼プロンプト（ベース）：`.codex/prompts/create-dads-template-page.md`
+- 運用手順：`docs/rules/template-development-workflow.md`
+
+### 主要コマンド
+
+- `npm run validate:templates:quick`  
+  `patterns:check` と `validate:wc` だけを実行する
+- `npm run validate:templates`  
+  `patterns:check` / `vendor:check` / `wcf:docs:check` / `validate:wc`
+- `npm run templates:gaps:collect`  
+  `collect gaps --scope all --out tmp/template-gaps.json`
+- `npm run templates:gaps:dry-run`  
+  起票計画を作成（作成自体はしない）
+- `npm run templates:gaps:create`  
+  ローカル `gh auth` が通る場合のみ Issue を作成
+
+## 6) Issueテンプレート
+
+不足起票テンプレートは `.github/ISSUE_TEMPLATE/dads-template-gap.yml` です。  
+ラベルは `enhancement` のみで起票します。
