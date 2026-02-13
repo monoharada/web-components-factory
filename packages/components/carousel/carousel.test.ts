@@ -66,6 +66,43 @@ function stubPendingImageReadiness(): () => void {
   };
 }
 
+function stubDeferredImageReadiness(): {
+  pending: Array<{ resolve: () => void; reject: (reason?: unknown) => void }>;
+  restore: () => void;
+} {
+  const completeDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'complete');
+  const decodeDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'decode');
+  const pending: Array<{ resolve: () => void; reject: (reason?: unknown) => void }> = [];
+
+  Object.defineProperty(HTMLImageElement.prototype, 'complete', {
+    configurable: true,
+    get: () => false,
+  });
+  Object.defineProperty(HTMLImageElement.prototype, 'decode', {
+    configurable: true,
+    value: vi.fn().mockImplementation(
+      () => new Promise<void>((resolve, reject) => pending.push({ resolve, reject })),
+    ),
+  });
+
+  return {
+    pending,
+    restore: (): void => {
+      if (completeDescriptor) {
+        Object.defineProperty(HTMLImageElement.prototype, 'complete', completeDescriptor);
+      } else {
+        Reflect.deleteProperty(HTMLImageElement.prototype, 'complete');
+      }
+
+      if (decodeDescriptor) {
+        Object.defineProperty(HTMLImageElement.prototype, 'decode', decodeDescriptor);
+      } else {
+        Reflect.deleteProperty(HTMLImageElement.prototype, 'decode');
+      }
+    },
+  };
+}
+
 function createCarousel(markup = '<dads-carousel></dads-carousel>'): DadsCarousel & HTMLElement {
   return renderWebComponent(markup) as DadsCarousel & HTMLElement;
 }
@@ -497,6 +534,24 @@ describe('DadsCarousel', () => {
     }
   });
 
+  it('next bg は画像未readyでも初期描画でDOM挿入される', async () => {
+    const restore = stubPendingImageReadiness();
+
+    try {
+      const carousel = createCarousel();
+      await waitForComponent('dads-carousel');
+
+      carousel.items = makeItems(3);
+      await waitTick();
+
+      const nextBgImage = getShadowElement<HTMLElement>(carousel, '#next-bg-content')
+        ?.querySelector<HTMLImageElement>('img');
+      expect(nextBgImage).not.toBeNull();
+    } finally {
+      restore();
+    }
+  });
+
   it('next preview は loading 属性を常に eager にする', async () => {
     const restore = stubPendingImageReadiness();
 
@@ -516,7 +571,57 @@ describe('DadsCarousel', () => {
     }
   });
 
-  it('insert-immediately 時は ready完了前に mediaイベントを発火しない', async () => {
+  it('next bg は loading 属性を常に eager にする', async () => {
+    const restore = stubPendingImageReadiness();
+
+    try {
+      const carousel = createCarousel();
+      await waitForComponent('dads-carousel');
+
+      carousel.items = makeItems(3).map((item) => ({ ...item, loading: 'lazy' }));
+      await waitTick();
+
+      const nextBgImage = getShadowElement<HTMLElement>(carousel, '#next-bg-content')
+        ?.querySelector<HTMLImageElement>('img');
+      expect(nextBgImage).not.toBeNull();
+      expect(nextBgImage?.loading).toBe('eager');
+    } finally {
+      restore();
+    }
+  });
+
+  it('slot 入力の picture でも next bg は未ready時に初期描画される', async () => {
+    const restore = stubPendingImageReadiness();
+
+    try {
+      const carousel = createCarousel();
+      await waitForComponent('dads-carousel');
+
+      const picture = document.createElement('picture');
+      const source = document.createElement('source');
+      source.srcset = '/images/slot-picture-1@2x.jpg 2x';
+      const pictureImg = document.createElement('img');
+      pictureImg.src = '/images/slot-picture-1.jpg';
+      pictureImg.alt = 'slot-picture-1';
+      picture.append(source, pictureImg);
+
+      const second = document.createElement('img');
+      second.src = '/images/slot-2.jpg';
+      second.alt = 'slot-2';
+
+      carousel.append(picture, second);
+      await waitTick();
+      await waitTick();
+
+      const nextBgImage = getShadowElement<HTMLElement>(carousel, '#next-bg-content')
+        ?.querySelector<HTMLImageElement>('img');
+      expect(nextBgImage).not.toBeNull();
+    } finally {
+      restore();
+    }
+  });
+
+  it('insert-immediately 時は next preview/bg を先に描画し、ready完了前に mediaイベントを発火しない', async () => {
     const restore = stubPendingImageReadiness();
 
     try {
@@ -531,8 +636,41 @@ describe('DadsCarousel', () => {
       carousel.items = makeItems(3);
       await waitTick();
 
+      const nextPreviewImage = getShadowElement<HTMLElement>(carousel, '#next-image-container')
+        ?.querySelector<HTMLImageElement>('img');
+      const nextBgImage = getShadowElement<HTMLElement>(carousel, '#next-bg-content')
+        ?.querySelector<HTMLImageElement>('img');
+      expect(nextPreviewImage).not.toBeNull();
+      expect(nextBgImage).not.toBeNull();
       expect(loadedHandler).toHaveBeenCalledTimes(0);
       expect(errorHandler).toHaveBeenCalledTimes(0);
+    } finally {
+      restore();
+    }
+  });
+
+  it('stale renderSeq の media ready 完了では mediaイベントを発火しない', async () => {
+    const { pending, restore } = stubDeferredImageReadiness();
+
+    try {
+      const carousel = createCarousel();
+      await waitForComponent('dads-carousel');
+
+      const loadedHandler = vi.fn();
+      carousel.addEventListener('dads-carousel-media-loaded', loadedHandler);
+
+      carousel.items = makeItems(3);
+      await waitTick();
+      const staleResolvers = pending.splice(0);
+
+      carousel.goTo(1);
+      await waitTick();
+
+      for (const deferred of staleResolvers) deferred.resolve();
+      await waitTick();
+      await waitTick();
+
+      expect(loadedHandler).toHaveBeenCalledTimes(0);
     } finally {
       restore();
     }
