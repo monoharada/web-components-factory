@@ -90,3 +90,16 @@ npm run mcp:design-system
 
 不足起票テンプレートは `.github/ISSUE_TEMPLATE/dads-template-gap.yml` です。  
 ラベルは `enhancement` のみで起票します。
+
+## 7) GovUI Pattern Issue の引き継ぎルール
+
+GovUI テンプレート群（`gov-*`）を AI に実装させる場合、Issue 本文の情報密度がそのまま実装品質に影響します。
+`#106` 配下の Pattern Issue（`#112` から `#126`）は、次の共通契約を前提に扱ってください。
+
+- 認証方式の列挙値は `municipal | e-gov | myna` で統一する。
+- 申請状態辞書は次を共通語彙として再利用する。  
+  `draft, in_progress, submitted, under_review, needs_fix, needs_resubmission, failed, completed, rejected, withdrawn, expired`
+- Pattern Issue には「UI要件（セクション順）」「API/状態契約」「a11y要件」「受け入れ条件（挙動）」を必ず含める。
+- 実装前の最小検証は `patterns:check` / `validate:wc` / `validate:templates:quick` / `templates:gaps:dry-run` を使う。
+
+この契約は、テンプレートの再現性と cross-pattern 整合を維持するための運用上の Source of Truth とする。
