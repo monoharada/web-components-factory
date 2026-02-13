@@ -10,7 +10,7 @@
 
 ## What Worked
 - `next-bg` を `insert-immediately` に変更し、初期1tickで `img` を DOM に確実に挿入できた。
-- `extractImageElement()` で実画像要素を取得して `loading='eager'` を上書きする方式は、slot の `<picture>/<img>` 両経路で有効だった。
+- `extractImageElement()` で実画像要素を取得して `loading='eager'` を上書きする方式は、slot の `picture` / image 要素の両経路で有効だった。
 - `ready` 前イベント非発火を維持するテストを追加したことで、互換性要件を明示的にロックできた。
 
 ## What Blocked Progress
