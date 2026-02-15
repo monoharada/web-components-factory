@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0189,271004,大阪府,大阪市,municipality,A,kinki,https://www.city.osaka.lg.jp/,,,,,,designated_city,政令指定都市
+S0190,271403,大阪府,堺市,municipality,A,kinki,https://www.city.sakai.lg.jp/,,,,,,designated_city,政令指定都市
+S0191,281000,兵庫県,神戸市,municipality,A,kinki,https://www.city.kobe.lg.jp/,,,,,,designated_city,政令指定都市
+S0192,242012,三重県,津市,municipality,C,kinki,https://www.info.city.tsu.mie.jp/,,,,,,prefecture_capital,県庁所在地
+S0193,252018,滋賀県,大津市,municipality,B,kinki,https://www.city.otsu.lg.jp/,,,,,,core_city,中核市・県庁所在地
+S0194,292010,奈良県,奈良市,municipality,B,kinki,https://www.city.nara.lg.jp/,,,,,,core_city,中核市・県庁所在地
+S0195,302015,和歌山県,和歌山市,municipality,B,kinki,https://www.city.wakayama.wakayama.jp/,,,,,,core_city,中核市・県庁所在地

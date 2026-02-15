@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0002,020001,青森県,青森県,prefecture,unknown,tohoku,https://www.pref.aomori.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0003,030007,岩手県,岩手県,prefecture,unknown,tohoku,https://www.pref.iwate.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0005,050008,秋田県,秋田県,prefecture,unknown,tohoku,https://www.pref.akita.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0006,060003,山形県,山形県,prefecture,unknown,tohoku,https://www.pref.yamagata.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0007,070009,福島県,福島県,prefecture,unknown,tohoku,https://www.pref.fukushima.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0065,041009,宮城県,仙台市,municipality,A,tohoku,https://www.city.sendai.jp/,,,,,,designated_city,政令指定都市
+S0066,042021,宮城県,石巻市,municipality,C,tohoku,https://www.city.ishinomaki.lg.jp/,,,,,,regional_balance,人口約13万

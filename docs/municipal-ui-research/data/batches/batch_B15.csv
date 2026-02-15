@@ -1,0 +1,7 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0142,133647,東京都,神津島村,municipality,D,kanto,https://vill.kouzushima.tokyo.jp/,,,,,,island_municipality,離島
+S0143,143413,神奈川県,大磯町,municipality,D,kanto,https://www.town.oiso.kanagawa.jp/,,,,,,regional_balance,人口約3万
+S0144,143014,神奈川県,葉山町,municipality,D,kanto,https://www.town.hayama.lg.jp/,,,,,,ui_diversity,人口約3万
+S0145,094072,栃木県,那須町,municipality,D,kanto,https://www.town.nasu.lg.jp/,,,,,,regional_balance,人口約2万
+S0146,112071,埼玉県,秩父市,municipality,D,kanto,https://www.city.chichibu.lg.jp/,,,,,,rural_representative,山間部
+S0147,082031,茨城県,土浦市,municipality,C,kanto,https://www.city.tsuchiura.lg.jp/,,,,,,regional_balance,人口約14万

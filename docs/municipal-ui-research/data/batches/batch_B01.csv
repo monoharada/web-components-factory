@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0050,012025,北海道,函館市,municipality,B,hokkaido,https://www.city.hakodate.hokkaido.jp/,,,,,,core_city,中核市
+S0052,012068,北海道,釧路市,municipality,C,hokkaido,https://www.city.kushiro.lg.jp/,,,,,,population_top,人口約16万
+S0053,012084,北海道,北見市,municipality,C,hokkaido,https://www.city.kitami.lg.jp/,,,,,,population_top,人口約11万
+S0054,012131,北海道,苫小牧市,municipality,C,hokkaido,https://www.city.tomakomai.hokkaido.jp/,,,,,,population_top,人口約17万
+S0055,012173,北海道,江別市,municipality,C,hokkaido,https://www.city.ebetsu.hokkaido.jp/,,,,,,regional_balance,人口約12万
+S0056,012033,北海道,小樽市,municipality,C,hokkaido,https://www.city.otaru.lg.jp/,,,,,,regional_balance,人口約10万
+S0057,012246,北海道,千歳市,municipality,C,hokkaido,https://www.city.chitose.lg.jp/,,,,,,regional_balance,人口約9万

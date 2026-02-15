@@ -1,0 +1,4 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0090,074446,福島県,三島町,municipality,D,tohoku,https://www.town.mishima.fukushima.jp/,,,,,,rural_representative,過疎地域
+S0091,074454,福島県,金山町,municipality,D,tohoku,https://www.town.kaneyama.fukushima.jp/,,,,,,rural_representative,過疎地域
+S0092,075647,福島県,飯舘村,municipality,D,tohoku,https://www.vill.iitate.fukushima.jp/,,,,,,rural_representative,原発事故避難地域

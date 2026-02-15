@@ -15,8 +15,8 @@
 |------|------|-------|------|
 | 01 | Repo Discovery | Phase 1 | **完了** |
 | 02 | Build Roster 300 | Phase 1 | **完了** |
-| 03 | URL Discovery | Phase 2 | 準備完了 |
-| 04 | Shallow Probe | Phase 2 | パイロット準備完了 |
+| 03 | URL Discovery | Phase 2 | パイロット30完了 / **270拡大準備完了** |
+| 04 | Shallow Probe | Phase 2 | パイロット30完了(PASS) / **270拡大準備完了** |
 | 05 | Aggregate & Select 50 | Phase 2 | 未着手 |
 | 06 | Deep Probe | Phase 3 | 未着手 |
 | 07 | Pattern Modeling | Phase 3 | 未着手 |

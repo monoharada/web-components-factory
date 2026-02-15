@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0219,264636,京都府,伊根町,municipality,D,kinki,https://www.town.ine.kyoto.jp/,,,,,,rural_representative,舟屋の里
+S0220,272329,大阪府,千早赤阪村,municipality,D,kinki,https://www.vill.chihayaakasaka.osaka.jp/,,,,,,rural_representative,大阪唯一の村
+S0221,282286,兵庫県,淡路市,municipality,D,kinki,https://www.city.awaji.lg.jp/,,,,,,island_municipality,離島・淡路島
+S0222,294250,奈良県,十津川村,municipality,D,kinki,https://www.vill.totsukawa.lg.jp/,,,,,,rural_representative,日本最大面積の村
+S0223,294411,奈良県,野迫川村,municipality,D,kinki,https://www.vill.nosegawa.nara.jp/,,,,,,rural_representative,過疎地域
+S0224,304271,和歌山県,北山村,municipality,D,kinki,https://www.vill.kitayama.wakayama.jp/,,,,,,rural_representative,飛び地の村
+S0225,304247,和歌山県,古座川町,municipality,D,kinki,https://www.town.kozagawa.wakayama.jp/,,,,,,rural_representative,過疎地域

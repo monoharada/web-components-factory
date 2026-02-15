@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0253,382035,愛媛県,新居浜市,municipality,C,shikoku,https://www.city.niihama.lg.jp/,,,,,,regional_balance,人口約11万
+S0254,372021,香川県,丸亀市,municipality,C,shikoku,https://www.city.marugame.lg.jp/,,,,,,regional_balance,人口約11万
+S0255,372030,香川県,坂出市,municipality,C,shikoku,https://www.city.sakaide.lg.jp/,,,,,,regional_balance,人口約5万
+S0256,362026,徳島県,鳴門市,municipality,C,shikoku,https://www.city.naruto.tokushima.jp/,,,,,,regional_balance,人口約5万
+S0257,392049,高知県,南国市,municipality,D,shikoku,https://www.city.nankoku.lg.jp/,,,,,,regional_balance,人口約4万
+S0258,392103,高知県,四万十市,municipality,D,shikoku,https://www.city.shimanto.lg.jp/,,,,,,rural_representative,人口約3万
+S0259,362085,徳島県,三好市,municipality,D,shikoku,https://www.city-miyoshi.jp/,,,,,,rural_representative,人口約2万

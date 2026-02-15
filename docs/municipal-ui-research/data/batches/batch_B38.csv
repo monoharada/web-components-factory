@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0273,472018,沖縄県,那覇市,municipality,B,kyushu_okinawa,https://www.city.naha.okinawa.jp/,,,,,,core_city,中核市・県庁所在地
+S0275,402052,福岡県,飯塚市,municipality,C,kyushu_okinawa,https://www.city.iizuka.lg.jp/,,,,,,regional_balance,人口約12万
+S0276,402028,福岡県,大牟田市,municipality,C,kyushu_okinawa,https://www.city.omuta.lg.jp/,,,,,,regional_balance,人口約10万
+S0277,402176,福岡県,春日市,municipality,C,kyushu_okinawa,https://www.city.kasuga.fukuoka.jp/,,,,,,regional_balance,人口約11万
+S0278,402184,福岡県,筑紫野市,municipality,C,kyushu_okinawa,https://www.city.chikushino.fukuoka.jp/,,,,,,regional_balance,人口約10万
+S0279,412023,佐賀県,唐津市,municipality,C,kyushu_okinawa,https://www.city.karatsu.lg.jp/,,,,,,regional_balance,人口約11万
+S0280,422045,長崎県,諫早市,municipality,C,kyushu_okinawa,https://www.city.isahaya.nagasaki.jp/,,,,,,regional_balance,人口約13万

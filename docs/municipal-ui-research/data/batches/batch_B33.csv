@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0036,360007,徳島県,徳島県,prefecture,unknown,shikoku,https://www.pref.tokushima.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0037,370002,香川県,香川県,prefecture,unknown,shikoku,https://www.pref.kagawa.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0038,380008,愛媛県,愛媛県,prefecture,unknown,shikoku,https://www.pref.ehime.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0039,390003,高知県,高知県,prefecture,unknown,shikoku,https://www.pref.kochi.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0248,362018,徳島県,徳島市,municipality,B,shikoku,https://www.city.tokushima.tokushima.jp/,,,,,,core_city,中核市・県庁所在地
+S0249,372013,香川県,高松市,municipality,B,shikoku,https://www.city.takamatsu.kagawa.jp/,,,,,,core_city,中核市・県庁所在地
+S0251,392014,高知県,高知市,municipality,B,shikoku,https://www.city.kochi.kochi.jp/,,,,,,core_city,中核市・県庁所在地

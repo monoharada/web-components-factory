@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0058,012106,北海道,岩見沢市,municipality,C,hokkaido,https://www.city.iwamizawa.hokkaido.jp/,,,,,,regional_balance,人口約7万
+S0059,012092,北海道,夕張市,municipality,D,hokkaido,https://www.city.yubari.lg.jp/,,,,,,rural_representative,過疎地域
+S0060,012271,北海道,歌志内市,municipality,D,hokkaido,https://www.city.utashinai.hokkaido.jp/,,,,,,rural_representative,日本最小の市
+S0061,013676,北海道,奥尻町,municipality,D,hokkaido,https://www.town.okushiri.lg.jp/,,,,,,island_municipality,離島
+S0062,015181,北海道,利尻町,municipality,D,hokkaido,https://www.town.rishiri.hokkaido.jp/,,,,,,island_municipality,離島
+S0063,014591,北海道,美瑛町,municipality,D,hokkaido,https://town.biei.hokkaido.jp/,,,,,,ui_diversity,観光地
+S0064,013951,北海道,ニセコ町,municipality,D,hokkaido,https://www.town.niseko.lg.jp/,,,,,,ui_diversity,国際観光地

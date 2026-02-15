@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0022,220001,静岡県,静岡県,prefecture,unknown,chubu,https://www.pref.shizuoka.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0023,230006,愛知県,愛知県,prefecture,unknown,chubu,https://www.pref.aichi.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0148,151009,新潟県,新潟市,municipality,A,chubu,https://www.city.niigata.lg.jp/,,,,,,designated_city,政令指定都市
+S0149,221007,静岡県,静岡市,municipality,A,chubu,https://www.city.shizuoka.lg.jp/,,,,,,designated_city,政令指定都市
+S0150,221309,静岡県,浜松市,municipality,A,chubu,https://www.city.hamamatsu.shizuoka.jp/,,,,,,designated_city,政令指定都市
+S0151,231002,愛知県,名古屋市,municipality,A,chubu,https://www.city.nagoya.jp/,,,,,,designated_city,政令指定都市
+S0152,162019,富山県,富山市,municipality,B,chubu,https://www.city.toyama.lg.jp/,,,,,,core_city,中核市・県庁所在地

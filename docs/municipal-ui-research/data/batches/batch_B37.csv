@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0264,401005,福岡県,北九州市,municipality,A,kyushu_okinawa,https://www.city.kitakyushu.lg.jp/,,,,,,designated_city,政令指定都市
+S0266,431001,熊本県,熊本市,municipality,A,kyushu_okinawa,https://www.city.kumamoto.jp/,,,,,,designated_city,政令指定都市
+S0267,402036,福岡県,久留米市,municipality,B,kyushu_okinawa,https://www.city.kurume.fukuoka.jp/,,,,,,core_city,中核市
+S0268,422011,長崎県,長崎市,municipality,B,kyushu_okinawa,https://www.city.nagasaki.lg.jp/,,,,,,core_city,中核市・県庁所在地
+S0269,422029,長崎県,佐世保市,municipality,B,kyushu_okinawa,https://www.city.sasebo.lg.jp/,,,,,,core_city,中核市
+S0270,442011,大分県,大分市,municipality,B,kyushu_okinawa,https://www.city.oita.oita.jp/,,,,,,core_city,中核市・県庁所在地
+S0271,452017,宮崎県,宮崎市,municipality,B,kyushu_okinawa,https://www.city.miyazaki.miyazaki.jp/,,,,,,core_city,中核市・県庁所在地

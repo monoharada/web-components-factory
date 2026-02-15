@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0127,082201,茨城県,つくば市,municipality,C,kanto,https://www.city.tsukuba.lg.jp/,,,,,,population_top,人口約25万
+S0128,112089,埼玉県,所沢市,municipality,C,kanto,https://www.city.tokorozawa.saitama.jp/,,,,,,regional_balance,人口約34万
+S0129,112216,埼玉県,草加市,municipality,C,kanto,https://www.city.soka.saitama.jp/,,,,,,regional_balance,人口約25万
+S0130,122033,千葉県,市川市,municipality,C,kanto,https://www.city.ichikawa.lg.jp/,,,,,,population_top,人口約50万
+S0131,122076,千葉県,松戸市,municipality,C,kanto,https://www.city.matsudo.chiba.jp/,,,,,,population_top,人口約50万
+S0132,122271,千葉県,浦安市,municipality,C,kanto,https://www.city.urayasu.lg.jp/,,,,,,regional_balance,人口約17万
+S0133,092088,栃木県,小山市,municipality,C,kanto,https://www.city.oyama.tochigi.jp/,,,,,,regional_balance,人口約16万

@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0102,112011,埼玉県,川越市,municipality,B,kanto,https://www.city.kawagoe.saitama.jp/,,,,,,core_city,中核市
+S0103,112224,埼玉県,越谷市,municipality,B,kanto,https://www.city.koshigaya.saitama.jp/,,,,,,core_city,中核市
+S0105,122041,千葉県,船橋市,municipality,B,kanto,https://www.city.funabashi.lg.jp/,,,,,,core_city,中核市
+S0106,122173,千葉県,柏市,municipality,B,kanto,https://www.city.kashiwa.lg.jp/,,,,,,core_city,中核市
+S0107,142018,神奈川県,横須賀市,municipality,B,kanto,https://www.city.yokosuka.kanagawa.jp/,,,,,,core_city,中核市
+S0108,131016,東京都,千代田区,municipality,C,kanto,https://www.city.chiyoda.lg.jp/,,,,,,special_ward,特別区
+S0109,131024,東京都,中央区,municipality,C,kanto,https://www.city.chuo.lg.jp/,,,,,,special_ward,特別区

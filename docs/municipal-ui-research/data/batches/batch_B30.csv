@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0228,312011,鳥取県,鳥取市,municipality,B,chugoku,https://www.city.tottori.lg.jp/,,,,,,core_city,中核市・県庁所在地
+S0229,322016,島根県,松江市,municipality,B,chugoku,https://www.city.matsue.shimane.jp/,,,,,,core_city,中核市・県庁所在地
+S0230,332020,岡山県,倉敷市,municipality,B,chugoku,https://www.city.kurashiki.okayama.jp/,,,,,,core_city,中核市
+S0231,342076,広島県,福山市,municipality,B,chugoku,https://www.city.fukuyama.hiroshima.jp/,,,,,,core_city,中核市
+S0232,342025,広島県,呉市,municipality,B,chugoku,https://www.city.kure.lg.jp/,,,,,,core_city,中核市
+S0233,352012,山口県,下関市,municipality,B,chugoku,https://www.city.shimonoseki.lg.jp/,,,,,,core_city,中核市
+S0235,312029,鳥取県,米子市,municipality,C,chugoku,https://www.city.yonago.lg.jp/,,,,,,regional_balance,人口約14万

@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0169,202037,長野県,上田市,municipality,C,chubu,https://www.city.ueda.nagano.jp/,,,,,,regional_balance,人口約15万
+S0170,202053,長野県,飯田市,municipality,C,chubu,https://www.city.iida.lg.jp/,,,,,,regional_balance,人口約9万
+S0171,212024,岐阜県,大垣市,municipality,C,chubu,https://www.city.ogaki.lg.jp/,,,,,,regional_balance,人口約15万
+S0172,212148,岐阜県,各務原市,municipality,C,chubu,https://www.city.kakamigahara.lg.jp/,,,,,,regional_balance,人口約14万
+S0173,222101,静岡県,富士市,municipality,C,chubu,https://www.city.fuji.shizuoka.jp/,,,,,,population_top,人口約24万
+S0174,222038,静岡県,沼津市,municipality,C,chubu,https://www.city.numazu.shizuoka.jp/,,,,,,regional_balance,人口約18万
+S0175,222119,静岡県,磐田市,municipality,C,chubu,https://www.city.iwata.shizuoka.jp/,,,,,,regional_balance,人口約16万
