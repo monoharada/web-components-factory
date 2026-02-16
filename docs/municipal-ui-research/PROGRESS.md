@@ -15,9 +15,9 @@
 |------|------|-------|------|
 | 01 | Repo Discovery | Phase 1 | **完了** |
 | 02 | Build Roster 300 | Phase 1 | **完了** |
-| 03 | URL Discovery | Phase 2 | パイロット30完了 / **270拡大準備完了** |
-| 04 | Shallow Probe | Phase 2 | パイロット30完了(PASS) / **270拡大準備完了** |
-| 05 | Aggregate & Select 50 | Phase 2 | 未着手 |
+| 03 | URL Discovery | Phase 2 | **完了** (300自治体, 41バッチ) |
+| 04 | Shallow Probe | Phase 2 | **完了** (1,471行, レビューGO判定) |
+| 05 | Aggregate & Select 50 | Phase 2 | **実行可能** (入力3ファイル準備完了) |
 | 06 | Deep Probe | Phase 3 | 未着手 |
 | 07 | Pattern Modeling | Phase 3 | 未着手 |
 | 08 | Template Spec | Phase 4 | 未着手 |
@@ -147,12 +147,38 @@ Codex CLI（gpt-5.3-codex）によるクロスモデルレビュー後、以下�
 
 ---
 
+## Phase 2 成果物（完了）
+
+### STEP03+04: URL Discovery + Shallow Probe（300自治体完了）
+
+**成果物**:
+- `.context/municipal-ui-research/data/derived/observations_shallow.csv` (1,471行 × 45列)
+- `.context/municipal-ui-research/data/derived/roster_300_with_pages.csv` (300行 × 15列)
+- `.context/municipal-ui-research/review/STEP03_04_review_report.md` (品質レビュー: **GO判定**)
+
+#### 実行概要
+
+| 項目 | 値 |
+|------|---|
+| 対象自治体 | 300（47都道府県 + 253市区町村） |
+| バッチ数 | 41（B01-B41） |
+| 観測行数 | 1,471（パイロット137 + 拡大1,334） |
+| HTTP 200成功率 | 99.0%（1,457/1,471） |
+| Boolean Precision | 100.0%（内部整合性検証） |
+| Boolean Recall | 97.0%（保守的推定） |
+
+#### レビューで検出された注意事項（Warning）
+- hub/service URL重複3件（D-cat極小自治体、許容）
+- has_contact_form / has_article_meta の検出範囲がやや広い（STEP06で精緻化推奨）
+- dns_error自治体2件（S0225古座川町, S0244新庄村）→ STEP05サンプリングで考慮
+
+---
+
 ## 次のアクション
 
-1. **STEP03**: パイロット30自治体を優先してURL Discovery実行
-2. **taxonomy修正**: `:contains()` セレクタ3箇所を標準セレクタに修正
-3. **STEP04パイロット**: 30自治体DOM観測 -> Go/No-Go判定
-4. **STEP04本番**: Go判定後に300自治体フルスケール実行
+1. **STEP05**: 浅観測データ集計 + UI構造クラスタリング + 50自治体抽出
+   - 入力: `observations_shallow.csv`, `roster_300_with_pages.csv`, `sampling_rules.yaml`
+   - 出力: `roster_50.csv`, `selection_report_50.md`
 
 ---
 
