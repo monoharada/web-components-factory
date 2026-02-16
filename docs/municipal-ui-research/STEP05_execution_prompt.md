@@ -231,7 +231,7 @@ max_iter = 300     # 最大反復回数
 1. UI構造ベクトル（18次元 0/1）を入力
 2. k = 5〜10 で実行し、シルエットスコアで最適k を選定（全て `random_state=42`）
 3. 各クラスタの特徴（どのコンポーネントが多い/少ないか）を記述
-4. 各自治体に `cluster_id` を付与（`cluster_id` は重心の `has_skip_link` 降順でソートして 0 から連番）
+4. 各自治体に `cluster_id` を付与。付番ルール: 重心ベクトルを `has_skip_link` 降順 → 同値なら `has_header_brand` 降順 → 同値なら `has_global_nav` 降順（boolean列の定義順で逐次タイブレーク）でソートし 0 から連番
 
 **scikit-learn が使えない場合の代替**:
 - 手動でハミング距離ベースの階層的クラスタリングを実装
@@ -375,13 +375,15 @@ roster_300_with_pages.csv と同じ15列構成。50行。
 | roster_50.csv 行数 | = 50 |
 | 都道府県 | = 10件 |
 | 市区町村 | = 40件 |
-| population_category 各カテゴリ | >= 1件（A/B/C/D/unknown） |
-| region_block 各地域 | >= 1件 |
-| クラスタ 各クラスタ | >= 2件 |
-| CMS 主要5種 | >= 1件ずつ |
-| a11y_maturity_score | 0-1 が 2件以上、5 が 2件以上 |
+| population_category 各カテゴリ | >= 1件（A/B/C/D/unknown）**ソフト** — 未達時は理由記録 |
+| region_block 各地域 | >= 1件 **ソフト** — 未達時は理由記録 |
+| クラスタ 各クラスタ | >= 2件 **ソフト** — 未達時は理由記録 |
+| CMS 主要5種 | >= 1件ずつ **ソフト** — 未達時は理由記録 |
+| a11y_maturity_score | 0-1 が 2件以上、5 が 2件以上 **ソフト** — 未達時は理由記録 |
 | selection_report_50.md | 全50件の選定理由が記載 |
-| 全出力ファイル | `.context/municipal-ui-research/data/derived/` に配置済み |
+| 分析出力ファイル | `.context/municipal-ui-research/data/derived/shallow_stats/` に配置済み |
+| 選定出力ファイル | `.context/municipal-ui-research/data/derived/roster_50.csv` + `selection_report_50.md` |
+| 分析スクリプト | `docs/municipal-ui-research/scripts/step05_analysis.py`（再現用、`data/derived/` とは別） |
 
 ---
 
@@ -399,4 +401,4 @@ STEP05での選定が、STEP06以降の**テンプレート設計の多様性と
 ---
 
 *このプロンプトは Municipal UI Research STEP05 実行用です。*
-*入力データの変更は禁止。出力は全て `.context/municipal-ui-research/data/derived/` に配置してください。*
+*入力データの変更は禁止。分析出力は `.context/municipal-ui-research/data/derived/` に、スクリプトは `docs/municipal-ui-research/scripts/` に配置してください。*
