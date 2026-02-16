@@ -26,6 +26,7 @@ describe('skills registry', () => {
     });
 
     expect(skills).toEqual([
+      'component-design-study',
       'css-writing-rules',
       'headless-component-design',
       'wcf-compose',

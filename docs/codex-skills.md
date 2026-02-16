@@ -20,9 +20,10 @@ Skill 一覧は `registry/skills-registry.json` を機械可読の入口とし�
 
 ### 何が起きるか
 
-`registry/skills-registry.json` のうち、`clients` に `codex` を含み、`status: "active"` の Skill を `~/.codex/skills/` にコピーします（現状は次の 7 Skill）。
+`registry/skills-registry.json` のうち、`clients` に `codex` を含み、`status: "active"` の Skill を `~/.codex/skills/` にコピーします（現状は次の 8 Skill）。
 
 - `<repo>/.claude/skills/css-writing-rules`
+- `<repo>/.claude/skills/component-design-study`
 - `<repo>/.claude/skills/headless-component-design`
 - `<repo>/.claude/skills/wcf-ui-builder`
 - `<repo>/.claude/skills/wcf-discovery`
@@ -34,6 +35,7 @@ Skill 一覧は `registry/skills-registry.json` を機械可読の入口とし�
 
 ```bash
 ls -la ~/.codex/skills/css-writing-rules
+ls -la ~/.codex/skills/component-design-study
 ls -la ~/.codex/skills/headless-component-design
 ls -la ~/.codex/skills/wcf-ui-builder
 ls -la ~/.codex/skills/wcf-discovery
@@ -84,6 +86,7 @@ npm run agents:verify
 
 ```bash
 rm ~/.codex/skills/css-writing-rules
+rm ~/.codex/skills/component-design-study
 rm ~/.codex/skills/headless-component-design
 rm ~/.codex/skills/wcf-ui-builder
 rm ~/.codex/skills/wcf-discovery
