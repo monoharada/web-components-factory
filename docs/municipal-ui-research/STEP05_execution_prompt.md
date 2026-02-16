@@ -28,7 +28,8 @@
 |---|---------|---------------------------|------|------|
 | 1 | 浅観測データ | `.context/municipal-ui-research/data/derived/observations_shallow.csv` | 1,471 | 45 |
 | 2 | 名簿（URL付き） | `.context/municipal-ui-research/data/derived/roster_300_with_pages.csv` | 300 | 15 |
-| 3 | 深観測スキーマ | `.context/municipal-ui-research/schemas/observation_deep_schema.csv` | — | 60列定義 |
+| 3 | サンプリングルール | `.context/municipal-ui-research/config/sampling_rules.yaml` | — | 選定条件 |
+| 4 | 深観測スキーマ | `.context/municipal-ui-research/schemas/observation_deep_schema.csv` | — | 60列定義 |
 
 ### observations_shallow.csv の構造
 
@@ -70,6 +71,24 @@ article_page_url, selection_reason, notes
 
 ## 分析手順
 
+### Task 0: 前処理（ディレクトリ作成 + エンコーディング確認）
+
+```bash
+# 出力ディレクトリ作成
+mkdir -p .context/municipal-ui-research/data/derived/shallow_stats
+mkdir -p docs/municipal-ui-research/scripts
+```
+
+**CSVエンコーディング**: 入力CSVの先頭列は BOM付き（`\ufeff`）。読み込み時は `encoding='utf-8-sig'` を使用すること。
+
+```python
+# 正しい読み込み方法
+with open(path, 'r', encoding='utf-8-sig') as f:
+    reader = csv.DictReader(f)
+```
+
+---
+
 ### Task 1: データ読み込み＆バリデーション
 
 ```python
@@ -77,20 +96,31 @@ article_page_url, selection_reason, notes
 import csv
 import os
 
-# 1. observations_shallow.csv 読み込み
-# 2. roster_300_with_pages.csv 読み込み
+# 1. observations_shallow.csv 読み込み（encoding='utf-8-sig'）
+# 2. roster_300_with_pages.csv 読み込み（encoding='utf-8-sig'）
 # 3. バリデーション:
 #    - observations の sample_id が roster に全て存在するか
 #    - 45列であるか
 #    - boolean列が true/false のみか（不正値があれば報告）
-#    - 品質スコア列に不正値がないか（URL文字列等が混入している可能性あり）
+#    - 品質スコア列の正規化（下記ルール適用）
 ```
 
-**既知のデータ品質問題**:
-- `heading_outline_score` に URL 文字列が混入している行がある（例: `api5th.smart-lgov.jp`）→ `unknown` として扱う
-- `keyboard_nav_risk` に URL/パス文字列が混入 → `unknown` として扱う
-- S0225（古座川町）: top の dns_error で boolean 全 false
-- S0244（新庄村）: 全5ページ dns_error で boolean 全 false → 選定候補から除外推奨
+**品質スコア列の正規化ルール**:
+
+| 列名 | 許容値 | 不正値の例 | 正規化 |
+|------|--------|-----------|--------|
+| `heading_outline_score` | `good`, `fair`, `poor` | `api5th.smart-lgov.jp`, URL文字列 | → `unknown` |
+| `keyboard_nav_risk` | `low`, `medium`, `high` | `/ssi/css/detail.css`, パス文字列 | → `unknown` |
+| `contrast_risk_hint` | `low`, `medium`, `high` | — | — |
+
+正規化処理: 許容値セット以外の値は全て `unknown` に置換（元データは変更せず、メモリ上で処理）。
+
+**dns_error 自治体の一般化ルール**:
+
+top ページの `http_status` が `200` 以外の自治体を識別し、以下を適用:
+- UIベクトル: 全 false（`[0,0,...,0]`）としてクラスタリングに含める
+- 選定候補: **全ページ** が取得失敗（`http_status != 200` が全行）の自治体は除外
+- **一部ページのみ失敗** の自治体は選定候補に残す（成功ページで特徴判定可能）
 
 ---
 
@@ -98,7 +128,7 @@ import os
 
 ページタイプ別に18種booleanの出現率を算出。
 
-**出力**: `data/derived/shallow_stats/prevalence_by_page_type.csv`
+**出力**: `.context/municipal-ui-research/data/derived/shallow_stats/prevalence_by_page_type.csv`
 
 ```
 page_type,component,true_count,total_count,prevalence
@@ -114,7 +144,7 @@ contact,has_contact_info,280,294,0.952
 
 各バリアント列の値分布を集計（ページタイプ別）。
 
-**出力**: `data/derived/shallow_stats/variant_distribution.csv`
+**出力**: `.context/municipal-ui-research/data/derived/shallow_stats/variant_distribution.csv`
 
 ```
 page_type,variant_column,variant_value,count
@@ -137,7 +167,7 @@ top,global_nav_variant,dropdown,45
 - `ReadSpeaker;custom` → `custom`（CMSではなくアドオン）
 - `custom;Google_CSE` → `custom`（検索はCMSではない）
 
-**出力**: `data/derived/shallow_stats/cms_distribution.csv`
+**出力**: `.context/municipal-ui-research/data/derived/shallow_stats/cms_distribution.csv`
 
 ---
 
@@ -154,7 +184,7 @@ top,global_nav_variant,dropdown,45
 | keyboard_risk | top ページの `keyboard_nav_risk=low` | 1 |
 | contrast_risk | top ページの `contrast_risk_hint=low` | 1 |
 
-**出力**: `data/derived/shallow_stats/a11y_maturity.csv`
+**出力**: `.context/municipal-ui-research/data/derived/shallow_stats/a11y_maturity.csv`
 
 ```
 sample_id,municipality_name,a11y_maturity_score,has_skip_link_any,has_accessibility_link_any,heading_quality_good,keyboard_risk_low,contrast_risk_low
@@ -173,11 +203,12 @@ sample_id,municipality_name,a11y_maturity_score,has_skip_link_any,has_accessibil
 > - トップページのUI構成が自治体のサイト設計方針を最も反映する
 > - 他ページタイプは欠損あり（service=290, article=292 等）
 
-**例外処理**:
-- S0244（新庄村）: dns_error で全false → ベクトルは [0,0,...,0]。クラスタリングには含めるが選定候補からは除外
-- S0225（古座川町）: top が dns_error → 同上
+**例外処理**（Task 1 の一般化ルールに従う）:
+- top ページの `http_status != 200` の自治体: ベクトルは `[0,0,...,0]`
+- クラスタリングには含める（外れ値クラスタに分類される）
+- 選定候補の除外判定は Task 8 で実施
 
-**出力**: `data/derived/shallow_stats/ui_structure_vectors.csv`
+**出力**: `.context/municipal-ui-research/data/derived/shallow_stats/ui_structure_vectors.csv`
 
 ```
 sample_id,municipality_name,layer,population_category,region_block,cms_fingerprint,a11y_maturity_score,has_skip_link,has_header_brand,...,has_attachments,cluster_id
@@ -189,11 +220,18 @@ sample_id,municipality_name,layer,population_category,region_block,cms_fingerpri
 
 **アルゴリズム**: K-means（scikit-learn がなければ手動実装でも可）
 
+**再現性パラメータ**（必須）:
+```python
+random_state = 42
+n_init = 10        # 初期値の試行回数
+max_iter = 300     # 最大反復回数
+```
+
 **手順**:
 1. UI構造ベクトル（18次元 0/1）を入力
-2. k = 5〜10 で実行し、シルエットスコアで最適k を選定
+2. k = 5〜10 で実行し、シルエットスコアで最適k を選定（全て `random_state=42`）
 3. 各クラスタの特徴（どのコンポーネントが多い/少ないか）を記述
-4. 各自治体に `cluster_id` を付与
+4. 各自治体に `cluster_id` を付与（`cluster_id` は重心の `has_skip_link` 降順でソートして 0 から連番）
 
 **scikit-learn が使えない場合の代替**:
 - 手動でハミング距離ベースの階層的クラスタリングを実装
@@ -203,7 +241,7 @@ sample_id,municipality_name,layer,population_category,region_block,cms_fingerpri
   3. `has_hub_cards` のみ → 「シンプルUI」型
   4. いずれもなし → 「最小UI」型
 
-**出力**: `data/derived/shallow_stats/cluster_summary.csv`
+**出力**: `.context/municipal-ui-research/data/derived/shallow_stats/cluster_summary.csv`
 
 ```
 cluster_id,size,description,top_components,missing_components
@@ -216,11 +254,16 @@ cluster_id,size,description,top_components,missing_components
 
 **ルール** (`sampling_rules.yaml` 準拠):
 
-| 項目 | 値 |
-|------|---|
-| 都道府県 | 10件 |
-| 市区町村 | 40件 |
-| 合計 | **50件** |
+| 項目 | 値 | 制約タイプ |
+|------|---|-----------|
+| 合計 | **50件** | **ハード制約**（必達） |
+| 都道府県 | 10件 | **ハード制約** |
+| 市区町村 | 40件 | **ハード制約** |
+| population_category 各カテゴリ >= 1 | A/B/C/D/unknown | **ソフト制約**（可能な限り） |
+| region_block 各地域 >= 1 | 8地域 | **ソフト制約** |
+| CMS 主要5種 >= 1 | SMART_CMS/WordPress/Joruri/KanaboWeb/FI | **ソフト制約** |
+
+**同点時タイブレークルール**: 複数の候補が同等の場合、`sample_id` の昇順（番号が若い方）を優先する。
 
 #### 8-1. 都道府県 10件の選定
 
@@ -250,9 +293,9 @@ cluster_id,size,description,top_components,missing_components
 
 #### 8-3. 除外条件
 
-以下の自治体は選定候補から除外:
-- S0244（新庄村）: 全ページ dns_error
-- 他に全ページ取得失敗の自治体があれば同様に除外
+以下の条件に該当する自治体は選定候補から除外:
+- **全ページ取得失敗**: 全行の `http_status != 200` の自治体（例: S0244 新庄村）
+- Task 1 で識別した除外対象リストに基づく
 
 #### 8-4. 手動調整
 
@@ -338,7 +381,7 @@ roster_300_with_pages.csv と同じ15列構成。50行。
 | CMS 主要5種 | >= 1件ずつ |
 | a11y_maturity_score | 0-1 が 2件以上、5 が 2件以上 |
 | selection_report_50.md | 全50件の選定理由が記載 |
-| 全出力ファイル | `data/derived/` に配置済み |
+| 全出力ファイル | `.context/municipal-ui-research/data/derived/` に配置済み |
 
 ---
 
@@ -356,4 +399,4 @@ STEP05での選定が、STEP06以降の**テンプレート設計の多様性と
 ---
 
 *このプロンプトは Municipal UI Research STEP05 実行用です。*
-*入力データの変更は禁止。出力は全て `data/derived/` に配置してください。*
+*入力データの変更は禁止。出力は全て `.context/municipal-ui-research/data/derived/` に配置してください。*
