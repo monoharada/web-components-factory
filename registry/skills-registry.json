@@ -14,6 +14,18 @@
   },
   "skills": [
     {
+      "name": "component-design-study",
+      "path": ".claude/skills/component-design-study",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "Drive design studies for new web components with evidence-based variant selection."
+    },
+    {
       "name": "css-writing-rules",
       "path": ".claude/skills/css-writing-rules",
       "entry": "SKILL.md",
