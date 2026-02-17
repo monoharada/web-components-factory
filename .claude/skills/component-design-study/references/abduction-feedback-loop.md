@@ -4,8 +4,9 @@ Step7-8 は「作例を作るほど仕様が見える」前提で回す。
 
 ## 1. Parallel Model
 
-- Step6（洗練）と Step7（作例リサーチ）は並行で進める
-- Step8（作例制作）は Step4-6 への差し戻しを前提にする
+- Step6（洗練）と Step7（作例リサーチ）は `steps.5.outcome=done` を前提に並行で進める
+- Step8（作例制作）は `steps.6.outcome=done` かつ `example_case_log` が1件以上で開始する
+- Step8 実行中は `current_step=8` を維持し、戻し先が出た時点で `status=blocked` にする
 - 差し戻しは失敗ではなく、仕様を強化する通常動作
 
 ## 2. Step7: Example Research
@@ -42,6 +43,10 @@ Step7-8 は「作例を作るほど仕様が見える」前提で回す。
 2. 説明テキストが増殖し始めた -> Step4
 3. エラーが複数系統へ分岐した -> Step5
 4. 想定外の導線/文脈が現れた -> Step4
+
+補足:
+- Step8 -> Step6 は「新状態追加なし / 既存基準維持」の場合に限定する
+- Step8 -> Step4 または Step5 に戻した場合、Step8 は `outcome=blocked` にする
 
 ## 5. Feedback Record Template
 

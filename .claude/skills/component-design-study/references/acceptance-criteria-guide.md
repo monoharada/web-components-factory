@@ -7,6 +7,7 @@ Step4 の「正解条件」を一貫して定義するためのガイド。
 Step1 に入る前に、最低限次を確認する。
 
 - `standards.required` に `WCAG 2.2 AA` が入っている
+- `standards.aa_required_sc` が空でない（対象SC母集団が定義済み）
 - 対象コンポーネントに関係する AA 必須項目の読解メモがある
 - 非対象 (`non_goals`) と `scope.excluded` が明示されている
 
@@ -33,19 +34,26 @@ Step1 に入る前に、最低限次を確認する。
 計算例:
 
 ```text
+required_items = len(standards.aa_required_sc)
+defined_required_items = len(standards.aa_defined_sc)
+if required_items == 0: fail with STUDY_STANDARD_GAP
 aa_definition_ratio = defined_required_items / required_items
-pass if aa_definition_ratio == 1.0
+pass if required_items > 0 and aa_definition_ratio == 1.0
 ```
 
 ## 3. Required Artifact Shape
 
 ```json
 {
+  "standards": {
+    "aa_required_sc": ["3.3.1", "3.3.3"],
+    "aa_defined_sc": ["3.3.1"]
+  },
   "acceptance_criteria": [
     {
       "id": "AC-01",
       "criterion": "例: エラー状態で再入力手順が理解可能",
-      "related_standard": ["WCAG 2.2 AA: 3.3.1"],
+      "related_standard": ["WCAG 2.2 SC 3.3.1 (A)"],
       "applies_to_states": ["validation_error", "format_error"]
     }
   ],
@@ -74,8 +82,10 @@ pass if aa_definition_ratio == 1.0
 
 ## 5. Block Conditions
 
+- `standards.aa_required_sc` が空（母集団未定義）
 - `acceptance_criteria` が空
 - `related_standard` が空の criterion がある
 - AA 定義率が 100% 未満
 
-上記いずれかで `STUDY_NO_QUALITY_BASIS` を返し、Step4 をやり直す。
+`standards.aa_required_sc` が空なら `STUDY_STANDARD_GAP` を返し Step0 へ戻す。  
+それ以外の未達は `STUDY_NO_QUALITY_BASIS` を返し Step4 をやり直す。

@@ -19,7 +19,7 @@ Step2 と Step3 の精度を担保するための記述規約。
   observation: [フォーカス移動時にエラー文へ到達できない]
   evaluation: [WCAG 2.2 AA の観点で再入力導線が不足]
   hypothesis: [エラー要約リンクと field-level の関連付けを追加]
-  related_standard: [WCAG 2.2 AA: 3.3.1, 3.3.3]
+  related_standard: [WCAG 2.2 SC 3.3.1 (A), WCAG 2.2 SC 3.3.3 (AA)]
 ```
 
 ## 3. NG/OK Examples

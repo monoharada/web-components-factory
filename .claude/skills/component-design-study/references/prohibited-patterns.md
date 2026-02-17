@@ -55,5 +55,5 @@
 | --- | --- | --- |
 | P-01 | `STUDY_NO_QUALITY_BASIS` | Step2/5 を再実行 |
 | P-02 | `STUDY_NO_QUALITY_BASIS` | Step4 へ差し戻し |
-| P-03 | `STUDY_SCOPE_MISMATCH` または `STUDY_NO_QUALITY_BASIS` | Step5 を再実行 |
-| P-04 | `STUDY_SCOPE_MISMATCH` | Step8 から前段へ差し戻し |
+| P-03 | `STUDY_NO_QUALITY_BASIS` | Step5 を再実行 |
+| P-04 | `STUDY_NO_QUALITY_BASIS` | Step8 から前段へ差し戻し |

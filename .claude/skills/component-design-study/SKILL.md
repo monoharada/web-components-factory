@@ -51,8 +51,10 @@ description: 新規 Web コンポーネント開発時に、デザインスタ�
 
 | ユースケース | 参照ドキュメント |
 | --- | --- |
+| Step0の品質基準前提チェック | [acceptance-criteria-guide.md](references/acceptance-criteria-guide.md) |
 | スタディ全体の思想と前提を揃える | [design-philosophy.md](references/design-philosophy.md) |
 | Step2の観測/評価分離を精密化する | [observation-evaluation-protocol.md](references/observation-evaluation-protocol.md) |
+| Step3の状態棚卸しを進める | [observation-evaluation-protocol.md](references/observation-evaluation-protocol.md)（Section 4-5） |
 | Step4の正解条件を定義する | [acceptance-criteria-guide.md](references/acceptance-criteria-guide.md) |
 | Step5-6のバリエーション比較を進める | [variation-study-protocol.md](references/variation-study-protocol.md) |
 | Step7-8の差し戻し判断を行う | [abduction-feedback-loop.md](references/abduction-feedback-loop.md) |
@@ -73,7 +75,9 @@ description: 新規 Web コンポーネント開発時に、デザインスタ�
 - 洗練で品質が下がったら Step6 へ戻る。
 
 ### フィードバックループ（Step5-8）
-- Step5 -> Step8: 採択案を作例へ適用して欠損検知
+- Step6 と Step7 は `steps.5.outcome=done` を前提に並行実行する
+- Step8 は `steps.6.outcome=done` かつ `steps.7.artifacts.example_case_log` が1件以上で開始する
+- Step8 中は `current_step=8` とし、差し戻しが出たら `status=blocked` と `failure` を必須出力する
 - Step8 -> Step4: 新状態/新導線が発生した場合
 - Step8 -> Step5: 既存論点の比較不足が見つかった場合
 - Step8 -> Step6: 採択済み案の品質低下のみを修正する場合
@@ -89,6 +93,7 @@ description: 新規 Web コンポーネント開発時に、デザインスタ�
 ## Step0 前提チェック（Step1開始前）
 
 - `standards.required` に `WCAG 2.2 AA` が含まれていること
+- `standards.aa_required_sc` に案件対象の AA 必須SCが1件以上列挙されていること
 - 対象に関連する AA 必須項目の読解メモがあること
 - 欠落時は `STUDY_STANDARD_GAP` を返し、Step0 を満たすまで進行しない
 - 詳細: [acceptance-criteria-guide.md](references/acceptance-criteria-guide.md)
@@ -111,6 +116,8 @@ description: 新規 Web コンポーネント開発時に、デザインスタ�
   },
   "standards": {
     "required": ["WCAG 2.2 AA"],
+    "aa_required_sc": ["3.3.1", "3.3.3"],
+    "aa_defined_sc": ["3.3.1"],
     "baseline": [],
     "deferred": []
   },
@@ -118,6 +125,12 @@ description: 新規 Web コンポーネント開発時に、デザインスタ�
     "non_goals": [],
     "constraints": [],
     "failure_definition": ""
+  },
+  "failure": {
+    "code": "",
+    "step": 0,
+    "message": "",
+    "details": []
   },
   "steps": {
     "1": {
@@ -199,27 +212,32 @@ description: 新規 Web コンポーネント開発時に、デザインスタ�
   "evidence_gates": [
     {
       "gate": "purpose_met",
-      "passed": true,
+      "status": "pass",
+      "failure_code": null,
       "reason": "Step目的を満たす成果物が揃っている"
     },
     {
       "gate": "handoff_ready",
-      "passed": true,
+      "status": "pass",
+      "failure_code": null,
       "reason": "次Stepが必要とする入力が不足していない"
     },
     {
       "gate": "scope_consistency",
-      "passed": true,
+      "status": "pass",
+      "failure_code": null,
       "reason": "included/excluded を逸脱していない"
     },
     {
       "gate": "no_drift",
-      "passed": true,
+      "status": "pass",
+      "failure_code": null,
       "reason": "禁止事項に該当する痕跡がない"
     },
     {
       "gate": "current_explainable",
-      "passed": true,
+      "status": "pass",
+      "failure_code": null,
       "reason": "現状/判断/次アクションを説明できる"
     }
   ],
@@ -230,29 +248,36 @@ description: 新規 Web コンポーネント開発時に、デザインスタ�
 ```
 
 `steps.N.outcome` は `todo/partial/done/blocked` を使う。
+- `status=blocked` の場合は `failure.code`, `failure.step`, `failure.message` を必須とする。
+- `evidence_gates[].status` は `pass|fail`。`fail` の場合は `failure_code` と `reason` を必須とする。
 
 ## Evidence Gates 判定条件（if-then）
 - `purpose_met`:
   - If: 現在Stepで定義された必須 artifacts が埋まり、レビュー観点の未達がない
-  - Then: `passed=true`
+  - Then: `status=pass`
+  - Else: `status=fail`, `failure_code=STUDY_NO_QUALITY_BASIS`
 - `handoff_ready`:
   - If: 次Stepに必要な入力が `open_questions` に残っていない
-  - Then: `passed=true`
+  - Then: `status=pass`
+  - Else: `status=fail`, `failure_code=STUDY_INSUFFICIENT_INPUT`
 - `scope_consistency`:
   - If: 出力が `scope.excluded` を含まない
-  - Then: `passed=true`
+  - Then: `status=pass`
+  - Else: `status=fail`, `failure_code=STUDY_SCOPE_MISMATCH`
 - `no_drift`:
   - If: 禁止事項4項目に該当しない
-  - Then: `passed=true`
+  - Then: `status=pass`
+  - Else: `status=fail`, `failure_code=STUDY_NO_QUALITY_BASIS`
 - `current_explainable`:
   - If: 「現状/判断/次アクション」を1分以内に説明できる
-  - Then: `passed=true`
+  - Then: `status=pass`
+  - Else: `status=fail`, `failure_code=STUDY_INSUFFICIENT_INPUT`
 
 ## Core Workflow（Step0 + 10ステップ要約）
 
 ### Step 0: 品質基準前提チェック
 - 目的: 必須品質基準の欠落を先に防ぐ
-- 成果物: `standards.required` と読解メモ
+- 成果物: `standards.required`, `standards.aa_required_sc`, 読解メモ
 - 詳細: [acceptance-criteria-guide.md](references/acceptance-criteria-guide.md)
 
 ### Step 1: 観察リサーチ
@@ -323,7 +348,7 @@ description: 新規 Web コンポーネント開発時に、デザインスタ�
 ### Pattern A: Step2 完了時
 ```
 Human summary:
-- Step2 完了。観測12件、評価8件、仮説5件を整理。
+- Step2 完了。観測12件、評価12件、仮説12件を整理。
 - 観測と評価の混在は0件。
 - 次アクション: Step3 で状態棚卸しを開始。
 
@@ -341,7 +366,7 @@ JSON excerpt:
     }
   },
   "evidence_gates": [
-    {"gate":"purpose_met","passed":true,"reason":"観測/評価分離が完了"}
+    {"gate":"purpose_met","status":"pass","failure_code":null,"reason":"観測/評価分離が完了"}
   ]
 }
 ```
@@ -380,6 +405,12 @@ JSON excerpt:
 {
   "current_step": 8,
   "status": "blocked",
+  "failure": {
+    "code": "STUDY_NO_QUALITY_BASIS",
+    "step": 4,
+    "message": "rate-limit 状態に対応する acceptance_criteria が未定義",
+    "details": ["add criterion for rate-limit state"]
+  },
   "steps": {
     "8": {
       "outcome": "partial",
@@ -388,12 +419,17 @@ JSON excerpt:
       }
     }
   },
+  "evidence_gates": [
+    {"gate":"purpose_met","status":"fail","failure_code":"STUDY_NO_QUALITY_BASIS","reason":"Step4 criteria update is required"}
+  ],
   "open_questions": ["Step4 criteria update for rate-limit state"]
 }
 ```
 
 ## Sources
-- `.context/attachments/デザインスタディガイド-v2.md`
+- `references/design-philosophy.md`
+- `references/acceptance-criteria-guide.md`
+- `references/abduction-feedback-loop.md`
 - https://www.w3.org/TR/WCAG22/
 - https://design.digital.go.jp/
 
