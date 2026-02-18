@@ -11,6 +11,7 @@ import {
   cleanup,
   waitForComponent,
 } from '../../../test/utils/test-helpers';
+import { CommandStore } from '../../utils/command-store.js';
 import type { DadsButton } from './button';
 
 // ========== Phase 1: 基本レンダリング ==========
@@ -166,6 +167,25 @@ describe('DadsButton - アイコンスロット', () => {
 
     await waitForComponent('dads-button');
     expect(component.hasAttribute('data-icon-only')).toBe(false);
+  });
+
+  it('直接子ではない誤った slot 指定は icon-start として扱わない', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button>
+        ラベル
+        <span>
+          <svg slot="icon-start" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M0 0h24v24H0z"></path>
+          </svg>
+        </span>
+      </dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    expect(component.hasAttribute('data-has-icon-start')).toBe(false);
   });
 });
 
@@ -448,6 +468,44 @@ describe('DadsButton - commandfor デリゲーション', () => {
       expect(base?.getAttribute('command')).toBe('clear');
       expect(base?.getAttribute('commandfor')).toBe('#x');
     });
+  });
+
+  it('commandfor のクリック経路で command handler は1回だけ実行される', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const root = document.createElement('div');
+    const target = document.createElement('div');
+    target.id = 'x';
+    root.appendChild(target);
+
+    const component = document.createElement('dads-button');
+    component.setAttribute('command', 'clear');
+    component.setAttribute('commandfor', '#x');
+    component.textContent = 'Clear';
+    root.appendChild(component);
+    document.body.appendChild(root);
+
+    await waitForComponent('dads-button');
+    await waitFor(() => {
+      const base = getShadowElement(component, '[part="base"]');
+      expect(base).toBeTruthy();
+      expect(base?.getAttribute('command')).toBe('clear');
+      expect(base?.getAttribute('commandfor')).toBe('#x');
+    });
+
+    const store = new CommandStore();
+    const handler = vi.fn();
+    store.on('clear', handler);
+    const cleanupStore = store.bind(root);
+
+    const base = getShadowElement(component, '[part="base"]') as HTMLButtonElement | null;
+    base?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+
+    cleanupStore();
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0]?.[0]?.target).toBe(target);
   });
 });
 

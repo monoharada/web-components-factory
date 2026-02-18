@@ -3822,6 +3822,24 @@
               }
             },
             {
+              "kind": "method",
+              "name": "#hasDirectSlottedElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
               "kind": "field",
               "name": "#iconEndSlot",
               "privacy": "private",

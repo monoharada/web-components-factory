@@ -377,13 +377,17 @@ export class DadsButton extends TypographyFormComponent {
     });
   }
 
+  #hasDirectSlottedElement(slotName: string): boolean {
+    return Array.from(this.children).some(
+      (node) => node.getAttribute('slot') === slotName && !node.hasAttribute('hidden'),
+    );
+  }
+
   #syncIconVisibility(): void {
     const hasStartIcon =
-      this.#hasAssignedContent(this.#iconStartSlot) ||
-      this.querySelector('[slot="icon-start"]:not([hidden])') !== null;
+      this.#hasAssignedContent(this.#iconStartSlot) || this.#hasDirectSlottedElement('icon-start');
     const hasEndIcon =
-      this.#hasAssignedContent(this.#iconEndSlot) ||
-      this.querySelector('[slot="icon-end"]:not([hidden])') !== null;
+      this.#hasAssignedContent(this.#iconEndSlot) || this.#hasDirectSlottedElement('icon-end');
     const hasDefaultSlotContent =
       this.#hasAssignedContent(this.#labelSlot) || this.#hasDefaultSlotLightDomContent();
     const hasLabelText = this.#hasAssignedText(this.#labelSlot) || this.#hasDefaultSlotLightDomText();

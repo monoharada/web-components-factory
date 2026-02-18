@@ -124,4 +124,21 @@ describe('command-store', () => {
 
     expect(handler).toHaveBeenCalledTimes(1);
   });
+
+  it('bind: CustomEvent("click") は無視する', () => {
+    const root = document.createElement('div');
+    const invoker = document.createElement('button');
+    invoker.setAttribute('command', 'remove');
+    root.appendChild(invoker);
+
+    const store = new CommandStore();
+    const handler = vi.fn();
+    store.on('remove', handler);
+
+    const cleanup = store.bind(root);
+    invoker.dispatchEvent(new CustomEvent('click', { bubbles: true, composed: true }));
+    cleanup();
+
+    expect(handler).toHaveBeenCalledTimes(0);
+  });
 });

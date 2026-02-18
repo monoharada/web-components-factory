@@ -81,6 +81,21 @@ describe('showcase-components (button demo)', () => {
     expect(html).toContain('<svg slot="icon-start" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">');
     expect(html).toContain('<path d="M10.825 22Q10.35 22');
   });
+
+  it('API controls の同期スクリプトは icon の表示・path更新・reset同期を行う', () => {
+    const html = demos.button();
+    expect(html).toContain("var startSelect = root.querySelector('[data-button-icon-start]');");
+    expect(html).toContain("var endSelect = root.querySelector('[data-button-icon-end]');");
+    expect(html).toContain("var value = String(select.value || 'none');");
+    expect(html).toContain("icon.setAttribute('hidden', '');");
+    expect(html).toContain("path.setAttribute('d', nextPath);");
+    expect(html).toContain("icon.removeAttribute('hidden');");
+    expect(html).toContain("startSelect.addEventListener('change', syncAll);");
+    expect(html).toContain("endSelect.addEventListener('change', syncAll);");
+    expect(html).toContain("startSelect.value = startSelect.getAttribute('data-default') || 'none';");
+    expect(html).toContain("endSelect.value = endSelect.getAttribute('data-default') || 'none';");
+    expect(html).toContain('syncAll();');
+  });
 });
 
 describe('showcase-components (card demo)', () => {
