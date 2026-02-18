@@ -3762,6 +3762,103 @@
             },
             {
               "kind": "field",
+              "name": "#handleIconSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#hasAssignedContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#hasAssignedText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slot",
+                  "type": {
+                    "text": "HTMLSlotElement | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#hasDefaultSlotLightDomContent",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#hasDefaultSlotLightDomText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#hasDirectSlottedElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "slotName",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#iconEndSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#iconStartSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "#init",
               "privacy": "private",
               "type": {
@@ -3789,6 +3886,15 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#labelSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
               "kind": "method",
               "name": "#renderTemplate",
               "privacy": "private",
@@ -3806,6 +3912,25 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "#setupIconSlots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#slotObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
             },
             {
               "kind": "field",
@@ -3836,6 +3961,26 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncIconVisibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#teardownIconSlots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
             },
             {
               "kind": "field",
@@ -47339,7 +47484,7 @@
         {
           "kind": "variable",
           "name": "buttonStyles",
-          "default": "css` /* ========== ホストレベル共通設定 ========== */ :host { display: inline-block; vertical-align: middle; width: var(--dads-button-width, auto); min-width: var(--dads-button-min-width, auto); max-width: var(--dads-button-max-width, none); } :host([full-width]) { display: block; width: 100%; } /* ========== ベース要素共通スタイル ========== */ [part=\"base\"] { /* すべてのバリアントで共通のプロパティ定義 */ display: inline-flex; align-items: center; justify-content: center; gap: var(--dads-button-icon-gap, 8px); /* プロパティと変数のマッピング（一度だけ定義） */ background-color: var(--dads-button-background); color: var(--dads-button-color); border: var(--dads-button-border-width, 2px) solid var(--dads-button-border-color); border-radius: var(--dads-button-border-radius, 0.5rem); padding: var(--dads-button-padding, var(--spacing-3, 12px) var(--spacing-6, 24px)); width: var(--dads-button-width, auto); min-width: var(--dads-button-min-width, auto); max-width: var(--dads-button-max-width, none); min-height: var(--dads-button-min-height, var(--dads-button-min-height-default, 48px)); aspect-ratio: var(--dads-button-aspect-ratio, auto); /* フォント設定 - グローバルトークン参照 */ font-family: var(--font-family-sans); font-size: var(--dads-button-font-size, 1rem); font-weight: var(--dads-button-font-weight, 700); line-height: var(--dads-button-line-height, 1.25); text-align: var(--dads-button-text-align, center); text-transform: var(--dads-button-text-transform, none); text-decoration: var(--dads-button-text-decoration, none); white-space: var(--dads-button-white-space, nowrap); user-select: var(--dads-button-user-select, none); -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color, transparent); /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */ position: relative; /* overflow: hidden を削除して擬似要素が見えるように */ box-sizing: border-box; appearance: none; -webkit-appearance: none; -moz-appearance: none; } /* フォーカススタイルはmixin (applyFocusStyles) で適用 */ /* Disabled時のフォーカススタイル（button要素のみ） */ :host([disabled]) button[part=\"base\"]:focus, button[part=\"base\"]:disabled:focus { outline: var(--focus-outline-width, 4px) solid var(--focus-outline-color, #000000); outline-offset: 0; } :host([disabled]) button[part=\"base\"]:focus::after, button[part=\"base\"]:disabled:focus::after { content: ''; position: absolute; inset: calc(var(--focus-outline-width, 4px) * -1); border: var(--focus-ring-width, 4px) solid var(--focus-ring-color, #ffd43d); border-radius: inherit; pointer-events: none; } /* 無効状態（button要素のみ） */ :host([disabled]) button[part=\"base\"], button[part=\"base\"]:disabled { opacity: var(--dads-button-opacity, 1); } /* アイコンスロット */ [part=\"icon-start\"], [part=\"icon-end\"] { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: var(--dads-button-icon-size, 1.25em); color: var(--dads-button-icon-color, currentColor); } /* 空のアイコンスロットは非表示 */ [part=\"icon-start\"]:empty, [part=\"icon-end\"]:empty { display: none; } /* ラベル */ [part=\"label\"] { flex: 1 1 auto; } /* ========== a要素固有のスタイル ========== */ /* a要素のデフォルトスタイルをリセット */ [part=\"base\"]:where(a) { text-decoration: none; color: inherit; /* hrefなしのa要素やJavaScript処理用 */ cursor: pointer; } /* ========== Hover / Active ========== */ :host(:not([disabled])) [part=\"base\"]:is(:hover, :active) { text-decoration: underline; text-underline-offset: 0.2em; } :host(:not([disabled])) [part=\"base\"]:hover { --dads-button-background: var(--dads-button-background-hover); --dads-button-color: var(--dads-button-color-hover); --dads-button-border-color: var(--dads-button-border-color-hover); } :host(:not([disabled])) [part=\"base\"]:active { --dads-button-background: var(--dads-button-background-active); --dads-button-color: var(--dads-button-color-active); --dads-button-border-color: var(--dads-button-border-color-active); } /* ========== Solid (Primary) バリアント ========== */ /* Solid Disabled状態 */ :host([variant=\"solid\"][disabled]) button[part=\"base\"], :host([variant=\"primary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-primary-bg); --dads-button-color: var(--button-disabled-primary-text); --dads-button-border-color: var(--button-disabled-primary-border); } /* ========== Outlined (Secondary) バリアント ========== */ /* Outlined Disabled状態 */ :host([variant=\"outlined\"][disabled]) button[part=\"base\"], :host([variant=\"secondary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-secondary-bg); --dads-button-color: var(--button-disabled-secondary-text); --dads-button-border-color: var(--button-disabled-secondary-border); } /* ========== Text（テキストのみ）バリアント ========== */ /* Text基本状態 - 下線付き */ :host([variant=\"text\"]) [part=\"base\"], :host([variant=\"tertiary\"]) [part=\"base\"] { --dads-button-border-width: 0; text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; } /* hover/active で下線を太く */ :host([variant=\"text\"]:not([disabled])) [part=\"base\"]:is(:hover, :active), :host([variant=\"tertiary\"]:not([disabled])) [part=\"base\"]:is(:hover, :active) { text-decoration-thickness: 2px; } /* Text Disabled状態 */ :host([variant=\"text\"][disabled]) button[part=\"base\"], :host([variant=\"tertiary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-tertiary-bg); --dads-button-color: var(--button-disabled-tertiary-text); --dads-button-border-color: var(--button-disabled-tertiary-border); text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; } /* ========== デフォルト（variant未指定）のDisabled状態 ========== */ :host([disabled]:not([variant])) button[part=\"base\"] { --dads-button-background: var(--button-disabled-primary-bg); --dads-button-color: var(--button-disabled-primary-text); --dads-button-border-color: var(--button-disabled-primary-border); } /* ========== 印刷対応 ========== */ @media print { [part=\"base\"] { background-color: transparent !important; color: black !important; border: 1px solid black !important; } } `"
+          "default": "css` /* ========== ホストレベル共通設定 ========== */ :host { display: inline-block; vertical-align: middle; width: var(--dads-button-width, auto); min-width: var(--dads-button-min-width, auto); max-width: var(--dads-button-max-width, none); } :host([full-width]) { display: block; width: 100%; } /* ========== ベース要素共通スタイル ========== */ [part=\"base\"] { /* すべてのバリアントで共通のプロパティ定義 */ display: inline-flex; align-items: center; justify-content: center; gap: var(--dads-button-icon-gap, 8px); /* プロパティと変数のマッピング（一度だけ定義） */ background-color: var(--dads-button-background); color: var(--dads-button-color); border: var(--dads-button-border-width, 2px) solid var(--dads-button-border-color); border-radius: var(--dads-button-border-radius, 0.5rem); padding: var(--dads-button-padding, var(--spacing-3, 12px) var(--spacing-6, 24px)); width: var(--dads-button-width, auto); min-width: var(--dads-button-min-width, auto); max-width: var(--dads-button-max-width, none); min-height: var(--dads-button-min-height, var(--dads-button-min-height-default, 48px)); aspect-ratio: var(--dads-button-aspect-ratio, auto); /* フォント設定 - グローバルトークン参照 */ font-family: var(--font-family-sans); font-size: var(--dads-button-font-size, 1rem); font-weight: var(--dads-button-font-weight, 700); line-height: var(--dads-button-line-height, 1.25); text-align: var(--dads-button-text-align, center); text-transform: var(--dads-button-text-transform, none); text-decoration: var(--dads-button-text-decoration, none); white-space: var(--dads-button-white-space, nowrap); user-select: var(--dads-button-user-select, none); -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color, transparent); /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */ position: relative; /* overflow: hidden を削除して擬似要素が見えるように */ box-sizing: border-box; appearance: none; -webkit-appearance: none; -moz-appearance: none; } /* フォーカススタイルはmixin (applyFocusStyles) で適用 */ /* Disabled時のフォーカススタイル（button要素のみ） */ :host([disabled]) button[part=\"base\"]:focus, button[part=\"base\"]:disabled:focus { outline: var(--focus-outline-width, 4px) solid var(--focus-outline-color, #000000); outline-offset: 0; } :host([disabled]) button[part=\"base\"]:focus::after, button[part=\"base\"]:disabled:focus::after { content: ''; position: absolute; inset: calc(var(--focus-outline-width, 4px) * -1); border: var(--focus-ring-width, 4px) solid var(--focus-ring-color, #ffd43d); border-radius: inherit; pointer-events: none; } /* 無効状態（button要素のみ） */ :host([disabled]) button[part=\"base\"], button[part=\"base\"]:disabled { opacity: var(--dads-button-opacity, 1); } /* アイコンスロット */ [part=\"icon-start\"], [part=\"icon-end\"] { display: none; align-items: center; justify-content: center; flex-shrink: 0; font-size: var(--dads-button-icon-size, 1.25em); color: var(--dads-button-icon-color, currentColor); } :host([data-has-icon-start]) [part=\"icon-start\"], :host([data-has-icon-end]) [part=\"icon-end\"] { display: inline-flex; } /* ラベル */ [part=\"label\"] { flex: 1 1 auto; } :host([data-icon-only]) [part=\"label\"] { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; line-height: 1; } /* ========== a要素固有のスタイル ========== */ /* a要素のデフォルトスタイルをリセット */ [part=\"base\"]:where(a) { text-decoration: none; color: inherit; /* hrefなしのa要素やJavaScript処理用 */ cursor: pointer; } /* ========== Hover / Active ========== */ :host(:not([disabled])) [part=\"base\"]:is(:hover, :active) { text-decoration: underline; text-underline-offset: 0.2em; } :host(:not([disabled])) [part=\"base\"]:hover { --dads-button-background: var(--dads-button-background-hover); --dads-button-color: var(--dads-button-color-hover); --dads-button-border-color: var(--dads-button-border-color-hover); } :host(:not([disabled])) [part=\"base\"]:active { --dads-button-background: var(--dads-button-background-active); --dads-button-color: var(--dads-button-color-active); --dads-button-border-color: var(--dads-button-border-color-active); } /* ========== Solid (Primary) バリアント ========== */ /* Solid Disabled状態 */ :host([variant=\"solid\"][disabled]) button[part=\"base\"], :host([variant=\"primary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-primary-bg); --dads-button-color: var(--button-disabled-primary-text); --dads-button-border-color: var(--button-disabled-primary-border); } /* ========== Outlined (Secondary) バリアント ========== */ /* Outlined Disabled状態 */ :host([variant=\"outlined\"][disabled]) button[part=\"base\"], :host([variant=\"secondary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-secondary-bg); --dads-button-color: var(--button-disabled-secondary-text); --dads-button-border-color: var(--button-disabled-secondary-border); } /* ========== Text（テキストのみ）バリアント ========== */ /* Text基本状態 - 下線付き */ :host([variant=\"text\"]) [part=\"base\"], :host([variant=\"tertiary\"]) [part=\"base\"] { --dads-button-border-width: 0; text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; } :host([variant=\"text\"][data-icon-only]) [part=\"base\"], :host([variant=\"tertiary\"][data-icon-only]) [part=\"base\"] { text-decoration: none; } :host([variant=\"text\"][data-icon-only]) [part=\"label\"], :host([variant=\"tertiary\"][data-icon-only]) [part=\"label\"] { border-bottom: 1px solid currentColor; padding-bottom: 0.2em; } /* hover/active で下線を太く */ :host([variant=\"text\"]:not([disabled])) [part=\"base\"]:is(:hover, :active), :host([variant=\"tertiary\"]:not([disabled])) [part=\"base\"]:is(:hover, :active) { text-decoration-thickness: 2px; } :host([variant=\"text\"]:not([disabled])[data-icon-only]) [part=\"base\"]:is(:hover, :active) [part=\"label\"], :host([variant=\"tertiary\"]:not([disabled])[data-icon-only]) [part=\"base\"]:is(:hover, :active) [part=\"label\"] { border-bottom-width: 2px; } /* Text Disabled状態 */ :host([variant=\"text\"][disabled]) button[part=\"base\"], :host([variant=\"tertiary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-tertiary-bg); --dads-button-color: var(--button-disabled-tertiary-text); --dads-button-border-color: var(--button-disabled-tertiary-border); text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; } /* ========== デフォルト（variant未指定）のDisabled状態 ========== */ :host([disabled]:not([variant])) button[part=\"base\"] { --dads-button-background: var(--button-disabled-primary-bg); --dads-button-color: var(--button-disabled-primary-text); --dads-button-border-color: var(--button-disabled-primary-border); } /* ========== 印刷対応 ========== */ @media print { [part=\"base\"] { background-color: transparent !important; color: black !important; border: 1px solid black !important; } } `"
         }
       ],
       "exports": [
@@ -59735,9 +59880,9 @@
           "kind": "variable",
           "name": "iconPaths",
           "type": {
-            "text": "{\n  /**\n   * DADSダミーアイコン（斜線パターン）\n   * 作例やプレースホルダーに使用\n   */\n  dummy:\n    'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z',\n\n  /**\n   * チェックマーク\n   * 選択状態、完了状態の表示に使用\n   */\n  checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /**\n   * 編集（鉛筆）アイコン\n   */\n  edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z',\n\n  /**\n   * ダウンロードアイコン\n   */\n  download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z',\n\n  /**\n   * 複製（コピー）アイコン\n   */\n  duplicate:\n    'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z',\n\n  /**\n   * 削除（ゴミ箱）アイコン\n   */\n  delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z',\n\n  /**\n   * 開閉矢印（キャレット）アイコン\n   * ドロップダウン、アコーディオンに使用\n   */\n  caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z',\n\n  /**\n   * 新規タブで開くアイコン\n   * 外部リンクの表示に使用\n   * Note: 24x24 viewBox用パス\n   */\n  externalLink:\n    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',\n\n  /**\n   * ログインアイコン（Material Symbols）\n   */\n  login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z',\n\n  /**\n   * ログアウトアイコン（Material Symbols）\n   */\n  logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z',\n\n  /**\n   * 検索（虫眼鏡）アイコン\n   */\n  search:\n    'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z',\n}"
+            "text": "{\n  /**\n   * DADSダミーアイコン（斜線パターン）\n   * 作例やプレースホルダーに使用\n   */\n  dummy:\n    'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z',\n\n  /**\n   * チェックマーク\n   * 選択状態、完了状態の表示に使用\n   */\n  checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /**\n   * 編集（鉛筆）アイコン\n   */\n  edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z',\n\n  /**\n   * ダウンロードアイコン\n   */\n  download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z',\n\n  /**\n   * 複製（コピー）アイコン\n   */\n  duplicate:\n    'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z',\n\n  /**\n   * 削除（ゴミ箱）アイコン\n   */\n  delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z',\n\n  /**\n   * 開閉矢印（キャレット）アイコン\n   * ドロップダウン、アコーディオンに使用\n   */\n  caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z',\n\n  /**\n   * 新規タブで開くアイコン\n   * 外部リンクの表示に使用\n   * Note: 24x24 viewBox用パス\n   */\n  externalLink:\n    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',\n\n  /**\n   * ログインアイコン（Material Symbols）\n   */\n  login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z',\n\n  /**\n   * ログアウトアイコン（Material Symbols）\n   */\n  logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z',\n\n  /**\n   * 設定アイコン（Material Symbols）\n   */\n  settings:\n    'M10.825 22Q10.35 22 9.938 21.725Q9.525 21.45 9.375 20.975L9 19.725Q8.675 19.6 8.362 19.425Q8.05 19.25 7.8 19L6.575 19.35Q6.1 19.475 5.675 19.3Q5.25 19.125 5 18.7L3.8 16.625Q3.55 16.2 3.587 15.725Q3.625 15.25 3.975 14.9L4.925 13.95Q4.875 13.625 4.85 13.3Q4.825 12.975 4.825 12.65Q4.825 12.325 4.85 12Q4.875 11.675 4.925 11.35L3.975 10.4Q3.625 10.05 3.587 9.575Q3.55 9.1 3.8 8.675L5 6.6Q5.25 6.175 5.675 6Q6.1 5.825 6.575 5.95L7.8 6.3Q8.05 6.05 8.362 5.875Q8.675 5.7 9 5.575L9.375 4.325Q9.525 3.85 9.938 3.575Q10.35 3.3 10.825 3.3H13.175Q13.65 3.3 14.062 3.575Q14.475 3.85 14.625 4.325L15 5.575Q15.325 5.7 15.638 5.875Q15.95 6.05 16.2 6.3L17.425 5.95Q17.9 5.825 18.325 6Q18.75 6.175 19 6.6L20.2 8.675Q20.45 9.1 20.413 9.575Q20.375 10.05 20.025 10.4L19.075 11.35Q19.125 11.675 19.15 12Q19.175 12.325 19.175 12.65Q19.175 12.975 19.15 13.3Q19.125 13.625 19.075 13.95L20.025 14.9Q20.375 15.25 20.413 15.725Q20.45 16.2 20.2 16.625L19 18.7Q18.75 19.125 18.325 19.3Q17.9 19.475 17.425 19.35L16.2 19Q15.95 19.25 15.638 19.425Q15.325 19.6 15 19.725L14.625 20.975Q14.475 21.45 14.062 21.725Q13.65 22 13.175 22H10.825ZM12 15.8Q13.3 15.8 14.225 14.875Q15.15 13.95 15.15 12.65Q15.15 11.35 14.225 10.425Q13.3 9.5 12 9.5Q10.7 9.5 9.775 10.425Q8.85 11.35 8.85 12.65Q8.85 13.95 9.775 14.875Q10.7 15.8 12 15.8Z',\n\n  /**\n   * 検索（虫眼鏡）アイコン\n   */\n  search:\n    'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z',\n}"
           },
-          "default": "{ /** * DADSダミーアイコン（斜線パターン） * 作例やプレースホルダーに使用 */ dummy: 'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z', /** * チェックマーク * 選択状態、完了状態の表示に使用 */ checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** * 編集（鉛筆）アイコン */ edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z', /** * ダウンロードアイコン */ download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z', /** * 複製（コピー）アイコン */ duplicate: 'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z', /** * 削除（ゴミ箱）アイコン */ delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z', /** * 開閉矢印（キャレット）アイコン * ドロップダウン、アコーディオンに使用 */ caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z', /** * 新規タブで開くアイコン * 外部リンクの表示に使用 * Note: 24x24 viewBox用パス */ externalLink: 'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z', /** * ログインアイコン（Material Symbols） */ login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z', /** * ログアウトアイコン（Material Symbols） */ logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z', /** * 検索（虫眼鏡）アイコン */ search: 'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z', }",
+          "default": "{ /** * DADSダミーアイコン（斜線パターン） * 作例やプレースホルダーに使用 */ dummy: 'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z', /** * チェックマーク * 選択状態、完了状態の表示に使用 */ checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** * 編集（鉛筆）アイコン */ edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z', /** * ダウンロードアイコン */ download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z', /** * 複製（コピー）アイコン */ duplicate: 'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z', /** * 削除（ゴミ箱）アイコン */ delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z', /** * 開閉矢印（キャレット）アイコン * ドロップダウン、アコーディオンに使用 */ caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z', /** * 新規タブで開くアイコン * 外部リンクの表示に使用 * Note: 24x24 viewBox用パス */ externalLink: 'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z', /** * ログインアイコン（Material Symbols） */ login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z', /** * ログアウトアイコン（Material Symbols） */ logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z', /** * 設定アイコン（Material Symbols） */ settings: 'M10.825 22Q10.35 22 9.938 21.725Q9.525 21.45 9.375 20.975L9 19.725Q8.675 19.6 8.362 19.425Q8.05 19.25 7.8 19L6.575 19.35Q6.1 19.475 5.675 19.3Q5.25 19.125 5 18.7L3.8 16.625Q3.55 16.2 3.587 15.725Q3.625 15.25 3.975 14.9L4.925 13.95Q4.875 13.625 4.85 13.3Q4.825 12.975 4.825 12.65Q4.825 12.325 4.85 12Q4.875 11.675 4.925 11.35L3.975 10.4Q3.625 10.05 3.587 9.575Q3.55 9.1 3.8 8.675L5 6.6Q5.25 6.175 5.675 6Q6.1 5.825 6.575 5.95L7.8 6.3Q8.05 6.05 8.362 5.875Q8.675 5.7 9 5.575L9.375 4.325Q9.525 3.85 9.938 3.575Q10.35 3.3 10.825 3.3H13.175Q13.65 3.3 14.062 3.575Q14.475 3.85 14.625 4.325L15 5.575Q15.325 5.7 15.638 5.875Q15.95 6.05 16.2 6.3L17.425 5.95Q17.9 5.825 18.325 6Q18.75 6.175 19 6.6L20.2 8.675Q20.45 9.1 20.413 9.575Q20.375 10.05 20.025 10.4L19.075 11.35Q19.125 11.675 19.15 12Q19.175 12.325 19.175 12.65Q19.175 12.975 19.15 13.3Q19.125 13.625 19.075 13.95L20.025 14.9Q20.375 15.25 20.413 15.725Q20.45 16.2 20.2 16.625L19 18.7Q18.75 19.125 18.325 19.3Q17.9 19.475 17.425 19.35L16.2 19Q15.95 19.25 15.638 19.425Q15.325 19.6 15 19.725L14.625 20.975Q14.475 21.45 14.062 21.725Q13.65 22 13.175 22H10.825ZM12 15.8Q13.3 15.8 14.225 14.875Q15.15 13.95 15.15 12.65Q15.15 11.35 14.225 10.425Q13.3 9.5 12 9.5Q10.7 9.5 9.775 10.425Q8.85 11.35 8.85 12.65Q8.85 13.95 9.775 14.875Q10.7 15.8 12 15.8Z', /** * 検索（虫眼鏡）アイコン */ search: 'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z', }",
           "description": "アイコンのSVGパス定義"
         }
       ],

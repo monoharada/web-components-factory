@@ -11,6 +11,7 @@ import {
   cleanup,
   waitForComponent,
 } from '../../../test/utils/test-helpers';
+import { CommandStore } from '../../utils/command-store.js';
 import type { DadsButton } from './button';
 
 // ========== Phase 1: 基本レンダリング ==========
@@ -68,6 +69,123 @@ describe('DadsButton - 基本レンダリング', () => {
 
     await waitForComponent('dads-button');
     expect(component.textContent).toContain('Button Text');
+  });
+});
+
+describe('DadsButton - アイコンスロット', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('icon-start がある場合、先頭アイコン状態が有効になる', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button>
+        <svg slot="icon-start" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z"></path></svg>
+        Search
+      </dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    const startSlot = getShadowElement(component, 'slot[name="icon-start"]') as HTMLSlotElement;
+    expect(component.hasAttribute('data-has-icon-start')).toBe(true);
+    expect(component.hasAttribute('data-has-icon-end')).toBe(false);
+    expect(startSlot.assignedElements().length).toBe(1);
+  });
+
+  it('icon-end がある場合、末尾アイコン状態が有効になる', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button>
+        Next
+        <svg slot="icon-end" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z"></path></svg>
+      </dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    const endSlot = getShadowElement(component, 'slot[name="icon-end"]') as HTMLSlotElement;
+    expect(component.hasAttribute('data-has-icon-start')).toBe(false);
+    expect(component.hasAttribute('data-has-icon-end')).toBe(true);
+    expect(endSlot.assignedElements().length).toBe(1);
+  });
+
+  it('アイコン未指定の場合はアイコン状態が無効のまま', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button>Label only</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    expect(component.hasAttribute('data-has-icon-start')).toBe(false);
+    expect(component.hasAttribute('data-has-icon-end')).toBe(false);
+  });
+
+  it('icon-start のみ指定では icon-only 状態にならない', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button aria-label="設定">
+        <svg slot="icon-start" viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z"></path></svg>
+      </dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    expect(component.hasAttribute('data-icon-only')).toBe(false);
+  });
+
+  it('default slot にアイコンのみを置いた場合、icon-only 状態が有効になる', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button aria-label="設定">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z"></path></svg>
+      </dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    expect(component.hasAttribute('data-icon-only')).toBe(true);
+  });
+
+  it('default slot にテキストがある場合、icon-only 状態は無効のまま', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z"></path></svg>
+        設定
+      </dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    expect(component.hasAttribute('data-icon-only')).toBe(false);
+  });
+
+  it('直接子ではない誤った slot 指定は icon-start として扱わない', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button>
+        ラベル
+        <span>
+          <svg slot="icon-start" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M0 0h24v24H0z"></path>
+          </svg>
+        </span>
+      </dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    expect(component.hasAttribute('data-has-icon-start')).toBe(false);
   });
 });
 
@@ -350,6 +468,44 @@ describe('DadsButton - commandfor デリゲーション', () => {
       expect(base?.getAttribute('command')).toBe('clear');
       expect(base?.getAttribute('commandfor')).toBe('#x');
     });
+  });
+
+  it('commandfor のクリック経路で command handler は1回だけ実行される', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const root = document.createElement('div');
+    const target = document.createElement('div');
+    target.id = 'x';
+    root.appendChild(target);
+
+    const component = document.createElement('dads-button');
+    component.setAttribute('command', 'clear');
+    component.setAttribute('commandfor', '#x');
+    component.textContent = 'Clear';
+    root.appendChild(component);
+    document.body.appendChild(root);
+
+    await waitForComponent('dads-button');
+    await waitFor(() => {
+      const base = getShadowElement(component, '[part="base"]');
+      expect(base).toBeTruthy();
+      expect(base?.getAttribute('command')).toBe('clear');
+      expect(base?.getAttribute('commandfor')).toBe('#x');
+    });
+
+    const store = new CommandStore();
+    const handler = vi.fn();
+    store.on('clear', handler);
+    const cleanupStore = store.bind(root);
+
+    const base = getShadowElement(component, '[part="base"]') as HTMLButtonElement | null;
+    base?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+
+    cleanupStore();
+
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(handler.mock.calls[0]?.[0]?.target).toBe(target);
   });
 });
 

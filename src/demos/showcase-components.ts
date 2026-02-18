@@ -22,6 +22,7 @@ import {
 } from './shared.js';
 
 import { headingDemo } from './heading.js';
+import { iconPaths } from '../../packages/utils/icons.js';
 
 const CHIP_TAG_ICON_MAP = Object.fromEntries(
   CHIP_TAG_ICON_OPTIONS.map((option) => [option.value, option.svg]),
@@ -52,6 +53,15 @@ const CHIP_TAG_EXAMPLE_CHIP_LIST_STYLE = `
   align-items: center;
   flex-wrap: wrap;
 `;
+const BUTTON_MATERIAL_ICON_PATHS = {
+  dummy: iconPaths.dummy,
+  login: iconPaths.login,
+  logout: iconPaths.logout,
+  settings: iconPaths.settings,
+} as const;
+const BUTTON_MATERIAL_ICON_OPTIONS_HTML = Object.keys(BUTTON_MATERIAL_ICON_PATHS)
+  .map((name) => `<option value="${name}">${name}</option>`)
+  .join('');
 const CHIP_TAG_PERSON_ICON = `
   <span slot="start-icon" style="padding: 2px; box-sizing: content-box; display: block;">
     <svg width="100%" height="100%" viewBox="0 0 40 40" fill="currentcolor" aria-hidden="true">
@@ -1001,15 +1011,19 @@ export const demos = {
                   data-api-target
                   variant="solid"
                   size="medium"
-                >ボタンテキスト</dads-button>
+                >
+                  <svg slot="icon-start" data-api-button-icon-start width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" hidden>
+                    <path d="M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z" fill="currentcolor" />
+                  </svg>
+                  <span data-api-button-label>ボタンテキスト</span>
+                  <svg slot="icon-end" data-api-button-icon-end width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" hidden>
+                    <path d="M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z" fill="currentcolor" />
+                  </svg>
+                </dads-button>
               </div>
               <div style="margin-top: 16px;">
                 <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
-                <dads-code-block data-api-code>
-                  <template>
-                    <dads-button variant="solid" size="medium">ボタンテキスト</dads-button>
-                  </template>
-                </dads-code-block>
+                <dads-code-block data-api-code></dads-code-block>
               </div>
             </div>
 
@@ -1098,11 +1112,52 @@ export const demos = {
                               label="textContent"
                               value="ボタンテキスト"
                               data-api-prop="textContent"
+                              data-api-target-selector="[data-api-button-label]"
                               data-default="ボタンテキスト"
                             ></dads-input-text>
                           </div>
                         </td>
                         <td>デフォルトスロット（ラベル文字列）</td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>icon-start</code></th>
+                        <td><code>slot</code></td>
+                        <td><code>"none" | "dummy" | "login" | "logout" | "settings"</code></td>
+                        <td><code>none</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select
+                              aria-label="icon-start"
+                              data-button-icon-start
+                              data-default="none"
+                            >
+                              <option value="none" selected>none</option>
+                              ${BUTTON_MATERIAL_ICON_OPTIONS_HTML}
+                            </select>
+                          </div>
+                        </td>
+                        <td>先頭（リード）アイコン。テキスト付きボタン向け。例: <code>&lt;svg slot="icon-start"&gt;</code></td>
+                      </tr>
+
+                      <tr>
+                        <th scope="row"><code>icon-end</code></th>
+                        <td><code>slot</code></td>
+                        <td><code>"none" | "dummy" | "login" | "logout" | "settings"</code></td>
+                        <td><code>none</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select
+                              aria-label="icon-end"
+                              data-button-icon-end
+                              data-default="none"
+                            >
+                              <option value="none" selected>none</option>
+                              ${BUTTON_MATERIAL_ICON_OPTIONS_HTML}
+                            </select>
+                          </div>
+                        </td>
+                        <td>末尾（テール）アイコン。テキスト付きボタン向け。例: <code>&lt;svg slot="icon-end"&gt;</code></td>
                       </tr>
 
                       <tr>
@@ -1230,6 +1285,31 @@ export const demos = {
         </div>
       </section>
 
+      <!-- アイコン -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">アイコン付き（Material Symbols）</h3>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+          <dads-button variant="outlined" size="medium">
+            <svg slot="icon-start" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z" fill="currentcolor" />
+            </svg>
+            ログイン
+          </dads-button>
+          <dads-button variant="solid" size="medium">
+            ログアウト
+            <svg slot="icon-end" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z" fill="currentcolor" />
+            </svg>
+          </dads-button>
+          <dads-button variant="text" size="medium">
+            <svg slot="icon-start" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10.825 22Q10.35 22 9.938 21.725Q9.525 21.45 9.375 20.975L9 19.725Q8.675 19.6 8.362 19.425Q8.05 19.25 7.8 19L6.575 19.35Q6.1 19.475 5.675 19.3Q5.25 19.125 5 18.7L3.8 16.625Q3.55 16.2 3.587 15.725Q3.625 15.25 3.975 14.9L4.925 13.95Q4.875 13.625 4.85 13.3Q4.825 12.975 4.825 12.65Q4.825 12.325 4.85 12Q4.875 11.675 4.925 11.35L3.975 10.4Q3.625 10.05 3.587 9.575Q3.55 9.1 3.8 8.675L5 6.6Q5.25 6.175 5.675 6Q6.1 5.825 6.575 5.95L7.8 6.3Q8.05 6.05 8.362 5.875Q8.675 5.7 9 5.575L9.375 4.325Q9.525 3.85 9.938 3.575Q10.35 3.3 10.825 3.3H13.175Q13.65 3.3 14.062 3.575Q14.475 3.85 14.625 4.325L15 5.575Q15.325 5.7 15.638 5.875Q15.95 6.05 16.2 6.3L17.425 5.95Q17.9 5.825 18.325 6Q18.75 6.175 19 6.6L20.2 8.675Q20.45 9.1 20.413 9.575Q20.375 10.05 20.025 10.4L19.075 11.35Q19.125 11.675 19.15 12Q19.175 12.325 19.175 12.65Q19.175 12.975 19.15 13.3Q19.125 13.625 19.075 13.95L20.025 14.9Q20.375 15.25 20.413 15.725Q20.45 16.2 20.2 16.625L19 18.7Q18.75 19.125 18.325 19.3Q17.9 19.475 17.425 19.35L16.2 19Q15.95 19.25 15.638 19.425Q15.325 19.6 15 19.725L14.625 20.975Q14.475 21.45 14.062 21.725Q13.65 22 13.175 22H10.825ZM12 15.8Q13.3 15.8 14.225 14.875Q15.15 13.95 15.15 12.65Q15.15 11.35 14.225 10.425Q13.3 9.5 12 9.5Q10.7 9.5 9.775 10.425Q8.85 11.35 8.85 12.65Q8.85 13.95 9.775 14.875Q10.7 15.8 12 15.8Z" fill="currentcolor" />
+            </svg>
+            設定
+          </dads-button>
+        </div>
+      </section>
+
       <!-- 実際の使用例 -->
       <section style="margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 20px; color: #333;">実際の使用例</h3>
@@ -1288,6 +1368,57 @@ export const demos = {
         </ul>
       </div>
     </div>
+
+    <script>
+      (function() {
+        var currentScript = document.currentScript;
+        Promise.all([customElements.whenDefined('dads-button')]).then(function() {
+          var root = currentScript?.parentElement;
+          if (!root) return;
+          var target = root.querySelector('dads-button[data-api-target]');
+          if (!target) return;
+          var iconPaths = ${JSON.stringify(BUTTON_MATERIAL_ICON_PATHS)};
+          var startSelect = root.querySelector('[data-button-icon-start]');
+          var endSelect = root.querySelector('[data-button-icon-end]');
+
+          var syncIcon = function(select, selector) {
+            if (!select) return;
+            var icon = target.querySelector(selector);
+            if (!icon) return;
+            var path = icon.querySelector('path');
+            if (!path) return;
+
+            var value = String(select.value || 'none');
+            var nextPath = iconPaths[value];
+            if (!nextPath) {
+              icon.setAttribute('hidden', '');
+              return;
+            }
+            path.setAttribute('d', nextPath);
+            icon.removeAttribute('hidden');
+          };
+
+          var syncAll = function() {
+            syncIcon(startSelect, '[data-api-button-icon-start]');
+            syncIcon(endSelect, '[data-api-button-icon-end]');
+          };
+
+          if (startSelect) startSelect.addEventListener('change', syncAll);
+          if (endSelect) endSelect.addEventListener('change', syncAll);
+
+          var resetButton = root.querySelector('[data-api-reset]');
+          if (resetButton) {
+            resetButton.addEventListener('click', function() {
+              if (startSelect) startSelect.value = startSelect.getAttribute('data-default') || 'none';
+              if (endSelect) endSelect.value = endSelect.getAttribute('data-default') || 'none';
+              syncAll();
+            });
+          }
+
+          syncAll();
+        });
+      })();
+    </script>
   `,
 
   card: () => `

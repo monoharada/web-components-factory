@@ -56,6 +56,10 @@ import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
  */
 export class DadsButton extends TypographyFormComponent {
   static override readonly formAssociated = true;
+  #iconStartSlot: HTMLSlotElement | null = null;
+  #iconEndSlot: HTMLSlotElement | null = null;
+  #labelSlot: HTMLSlotElement | null = null;
+  #slotObserver: MutationObserver | null = null;
 
   static definition = {
     name: 'dads-button',
@@ -115,6 +119,7 @@ export class DadsButton extends TypographyFormComponent {
 
     // ボタン要素の初期化
     this.#initButton();
+    this.#setupIconSlots();
     this.transferDelegatedAttributes();
 
     // ホスト要素へのクリックリスナー追加
@@ -125,6 +130,7 @@ export class DadsButton extends TypographyFormComponent {
 
   disconnectedCallback() {
     this.removeEventListener('click', this.#handleHostClick);
+    this.#teardownIconSlots();
   }
 
   /**
@@ -232,8 +238,10 @@ export class DadsButton extends TypographyFormComponent {
     
     // as属性やhref属性が変更された場合は再レンダリングが必要
     if (name === 'as' || name === 'href') {
+      this.#teardownIconSlots();
       this.#renderTemplate();
       this.#initButton();
+      this.#setupIconSlots();
       this.transferDelegatedAttributes();
       return;
     }
@@ -282,6 +290,113 @@ export class DadsButton extends TypographyFormComponent {
       if (value) base.setAttribute(name, value);
       else base.removeAttribute(name);
     }
+  }
+
+  #setupIconSlots(): void {
+    this.#teardownIconSlots();
+    this.#iconStartSlot = this.shadowRoot?.querySelector('slot[name="icon-start"]') ?? null;
+    this.#iconEndSlot = this.shadowRoot?.querySelector('slot[name="icon-end"]') ?? null;
+    this.#labelSlot = this.shadowRoot?.querySelector('slot:not([name])') ?? null;
+    this.#iconStartSlot?.addEventListener('slotchange', this.#handleIconSlotChange);
+    this.#iconEndSlot?.addEventListener('slotchange', this.#handleIconSlotChange);
+    this.#labelSlot?.addEventListener('slotchange', this.#handleIconSlotChange);
+    this.#slotObserver = new MutationObserver(this.#handleIconSlotChange);
+    this.#slotObserver.observe(this, {
+      attributes: true,
+      attributeFilter: ['slot', 'hidden'],
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+    this.#syncIconVisibility();
+  }
+
+  #teardownIconSlots(): void {
+    this.#iconStartSlot?.removeEventListener('slotchange', this.#handleIconSlotChange);
+    this.#iconEndSlot?.removeEventListener('slotchange', this.#handleIconSlotChange);
+    this.#labelSlot?.removeEventListener('slotchange', this.#handleIconSlotChange);
+    this.#slotObserver?.disconnect();
+    this.#slotObserver = null;
+    this.#iconStartSlot = null;
+    this.#iconEndSlot = null;
+    this.#labelSlot = null;
+  }
+
+  #handleIconSlotChange = () => {
+    this.#syncIconVisibility();
+  };
+
+  #hasAssignedContent(slot: HTMLSlotElement | null): boolean {
+    if (!slot) return false;
+
+    const assignedNodes = slot.assignedNodes({ flatten: true });
+    return assignedNodes.some((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return !!node.textContent?.trim();
+      }
+      if (node instanceof Element && node.hasAttribute('hidden')) return false;
+      return true;
+    });
+  }
+
+  #hasAssignedText(slot: HTMLSlotElement | null): boolean {
+    if (!slot) return false;
+
+    const assignedNodes = slot.assignedNodes({ flatten: true });
+    return assignedNodes.some((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return !!node.textContent?.trim();
+      }
+      if (!(node instanceof Element)) return false;
+      if (node.hasAttribute('hidden')) return false;
+      if (node.getAttribute('aria-hidden') === 'true') return false;
+      return !!node.textContent?.trim();
+    });
+  }
+
+  #hasDefaultSlotLightDomContent(): boolean {
+    return Array.from(this.childNodes).some((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return !!node.textContent?.trim();
+      }
+      if (!(node instanceof Element)) return false;
+      if (node.hasAttribute('slot')) return false;
+      return !node.hasAttribute('hidden');
+    });
+  }
+
+  #hasDefaultSlotLightDomText(): boolean {
+    return Array.from(this.childNodes).some((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return !!node.textContent?.trim();
+      }
+      if (!(node instanceof Element)) return false;
+      if (node.hasAttribute('slot') || node.hasAttribute('hidden')) return false;
+      if (node.getAttribute('aria-hidden') === 'true') return false;
+      return !!node.textContent?.trim();
+    });
+  }
+
+  #hasDirectSlottedElement(slotName: string): boolean {
+    return Array.from(this.children).some(
+      (node) => node.getAttribute('slot') === slotName && !node.hasAttribute('hidden'),
+    );
+  }
+
+  #syncIconVisibility(): void {
+    const hasStartIcon =
+      this.#hasAssignedContent(this.#iconStartSlot) || this.#hasDirectSlottedElement('icon-start');
+    const hasEndIcon =
+      this.#hasAssignedContent(this.#iconEndSlot) || this.#hasDirectSlottedElement('icon-end');
+    const hasDefaultSlotContent =
+      this.#hasAssignedContent(this.#labelSlot) || this.#hasDefaultSlotLightDomContent();
+    const hasLabelText = this.#hasAssignedText(this.#labelSlot) || this.#hasDefaultSlotLightDomText();
+    const isDefaultSlotIconOnly =
+      hasDefaultSlotContent && !hasLabelText && !hasStartIcon && !hasEndIcon;
+
+    this.toggleAttribute('data-has-icon-start', hasStartIcon);
+    this.toggleAttribute('data-has-icon-end', hasEndIcon);
+    this.toggleAttribute('data-icon-only', isDefaultSlotIconOnly);
   }
 
   #handleClick = (event: MouseEvent) => {

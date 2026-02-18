@@ -90,7 +90,7 @@ export const buttonStyles = css`
   /* アイコンスロット */
   [part="icon-start"],
   [part="icon-end"] {
-    display: inline-flex;
+    display: none;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
@@ -98,15 +98,22 @@ export const buttonStyles = css`
     color: var(--dads-button-icon-color, currentColor);
   }
 
-  /* 空のアイコンスロットは非表示 */
-  [part="icon-start"]:empty,
-  [part="icon-end"]:empty {
-    display: none;
+  :host([data-has-icon-start]) [part="icon-start"],
+  :host([data-has-icon-end]) [part="icon-end"] {
+    display: inline-flex;
   }
 
   /* ラベル */
   [part="label"] {
     flex: 1 1 auto;
+  }
+
+  :host([data-icon-only]) [part="label"] {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
   }
   
   /* ========== a要素固有のスタイル ========== */
@@ -168,11 +175,27 @@ export const buttonStyles = css`
     text-underline-offset: 0.2em;
     text-decoration-thickness: 1px;
   }
+
+  :host([variant="text"][data-icon-only]) [part="base"],
+  :host([variant="tertiary"][data-icon-only]) [part="base"] {
+    text-decoration: none;
+  }
+
+  :host([variant="text"][data-icon-only]) [part="label"],
+  :host([variant="tertiary"][data-icon-only]) [part="label"] {
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 0.2em;
+  }
   
   /* hover/active で下線を太く */
   :host([variant="text"]:not([disabled])) [part="base"]:is(:hover, :active),
   :host([variant="tertiary"]:not([disabled])) [part="base"]:is(:hover, :active) {
     text-decoration-thickness: 2px;
+  }
+
+  :host([variant="text"]:not([disabled])[data-icon-only]) [part="base"]:is(:hover, :active) [part="label"],
+  :host([variant="tertiary"]:not([disabled])[data-icon-only]) [part="base"]:is(:hover, :active) [part="label"] {
+    border-bottom-width: 2px;
   }
   
   /* Text Disabled状態 */
