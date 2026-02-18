@@ -54,6 +54,35 @@ describe('showcase-components (divider demo)', () => {
   });
 });
 
+describe('showcase-components (button demo)', () => {
+  it('Props / Attrs テーブルに icon-start / icon-end の slot 行を含む', () => {
+    const html = demos.button();
+    expect(html).toContain('<th scope="row"><code>icon-start</code></th>');
+    expect(html).toContain('<th scope="row"><code>icon-end</code></th>');
+    expect(html).toContain('先頭（リード）アイコン');
+    expect(html).toContain('末尾（テール）アイコン');
+    expect(html).toContain('data-button-icon-start');
+    expect(html).toContain('data-button-icon-end');
+    expect(html).toContain('aria-label="icon-start"');
+    expect(html).toContain('aria-label="icon-end"');
+    expect(html).toContain('<option value="none" selected>none</option>');
+    expect(html).toContain('<option value="dummy">dummy</option>');
+    expect(html).toContain('<option value="login">login</option>');
+    expect(html).toContain('<option value="logout">logout</option>');
+    expect(html).toContain('<option value="settings">settings</option>');
+  });
+
+  it('Material Symbols のアイコン作例は全てラベル付きで配置する', () => {
+    const html = demos.button();
+    expect(html).toContain('アイコン付き（Material Symbols）');
+    expect(html).toContain('ログイン');
+    expect(html).toContain('ログアウト');
+    expect(html).toContain('設定');
+    expect(html).toContain('<svg slot="icon-start" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">');
+    expect(html).toContain('<path d="M10.825 22Q10.35 22');
+  });
+});
+
 describe('showcase-components (card demo)', () => {
   it('画像はローカルアセットのみを参照する', () => {
     const html = demos.card();
