@@ -15,6 +15,7 @@ import { demos as headerContainer } from './demos/header-container.js';
 import { demos as hamburgerMenuButton } from './demos/hamburger-menu-button.js';
 import { demos as mobileMenu } from './demos/mobile-menu.js';
 import { demos as layoutShell } from './demos/layout-shell.js';
+import { demos as municipalTemplates } from './demos/municipal-templates.js';
 
 export const demos = {
   ...showcaseForm,
@@ -29,6 +30,7 @@ export const demos = {
   ...hamburgerMenuButton,
   ...mobileMenu,
   ...layoutShell,
+  ...municipalTemplates,
 } as const;
 
 export type DemoName = keyof typeof demos;

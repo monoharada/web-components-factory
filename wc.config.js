@@ -17,6 +17,7 @@ export default {
     'src/demos/showcase-components.ts',
     'src/demos/showcase-navigation.ts',
     'src/demos/extra.ts',
+    'src/demos/municipal-templates.ts',
     'src/entry.ts',
   ],
   exclude: ['node_modules/**', 'dist/**', 'dist-pages/**'],
