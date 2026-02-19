@@ -38,6 +38,14 @@ function getDeepActiveElement(root = document) {
     }
     return active;
 }
+function isFocusWithin(host) {
+    try {
+        return host.matches(':focus-within');
+    }
+    catch {
+        return false;
+    }
+}
 /**
  * メニューリストボックスコンポーネント
  *
@@ -386,7 +394,7 @@ _DadsMenuListBox_opener = new WeakMap(), _DadsMenuListBox_popup = new WeakMap(),
     return host;
 }, _DadsMenuListBox_currentIndex = function _DadsMenuListBox_currentIndex(entries) {
     const active = getDeepActiveElement(document);
-    return entries.findIndex(({ host, target }) => active === target || active === host || host.matches(':focus-within'));
+    return entries.findIndex(({ host, target }) => active === target || active === host || isFocusWithin(host));
 }, _DadsMenuListBox_focusItem = function _DadsMenuListBox_focusItem(index) {
     const entries = __classPrivateFieldGet(this, _DadsMenuListBox_instances, "m", _DadsMenuListBox_getMenuItemEntries).call(this);
     if (index < 0 || index >= entries.length)

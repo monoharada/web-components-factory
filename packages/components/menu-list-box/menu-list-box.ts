@@ -49,6 +49,14 @@ function getDeepActiveElement(root: Document | ShadowRoot = document): Element |
   return active;
 }
 
+function isFocusWithin(host: Element): boolean {
+  try {
+    return host.matches(':focus-within');
+  } catch {
+    return false;
+  }
+}
+
 /**
  * メニューリストボックスコンポーネント
  *
@@ -503,7 +511,7 @@ export class DadsMenuListBox extends TypographyWebComponent {
 
   #currentIndex(entries: MenuItemEntry[]): number {
     const active = getDeepActiveElement(document);
-    return entries.findIndex(({ host, target }) => active === target || active === host || host.matches(':focus-within'));
+    return entries.findIndex(({ host, target }) => active === target || active === host || isFocusWithin(host));
   }
 
   #focusItem(index: number): void {

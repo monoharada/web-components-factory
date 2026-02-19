@@ -68,7 +68,7 @@ describe('DadsMenuListBox - 基本', () => {
     expect(document.activeElement).toBe(opener);
   });
 
-  it('Shadow DOM 配下でも ArrowDown で末尾まで移動できる', async () => {
+  it('Shadow DOM 配下でも ArrowDown/ArrowUp で移動できる', async () => {
     const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
     defineDefaultMenuListBox();
 
@@ -104,6 +104,60 @@ describe('DadsMenuListBox - 基本', () => {
 
     const opener = getShadowContent(listBox, '#opener') as HTMLButtonElement | null;
     const menu = getShadowContent(listBox, '#menu') as HTMLElement | null;
+    if (!opener || !menu) throw new Error('shadow parts not found');
+
+    opener.click();
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const firstBase = getShadowContent(items[0], '#base') as HTMLElement | null;
+    const secondBase = getShadowContent(items[1], '#base') as HTMLElement | null;
+    const thirdBase = getShadowContent(items[2], '#base') as HTMLElement | null;
+    if (!firstBase || !secondBase || !thirdBase) throw new Error('menu item base not found');
+
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+    expect(secondBase.getAttribute('tabindex')).toBe('0');
+
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+    expect(secondBase.getAttribute('tabindex')).toBe('-1');
+    expect(thirdBase.getAttribute('tabindex')).toBe('0');
+
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+    expect(secondBase.getAttribute('tabindex')).toBe('0');
+
+    menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+    expect(firstBase.getAttribute('tabindex')).toBe('0');
+  });
+
+  it('focus-within selector 例外時も ArrowDown で移動できる', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <dads-menu-list-item>One</dads-menu-list-item>
+        <dads-menu-list-item>Two</dads-menu-list-item>
+        <dads-menu-list-item>Three</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+
+    const items = Array.from(element.querySelectorAll('dads-menu-list-item')) as HTMLElement[];
+    for (const item of items) await waitForCustomElement(item);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const firstItem = items[0];
+    const originalMatches = firstItem.matches.bind(firstItem);
+    (firstItem as HTMLElement & { matches: (selectors: string) => boolean }).matches = (selectors: string) => {
+      if (selectors === ':focus-within') throw new DOMException('Unsupported selector', 'SyntaxError');
+      return originalMatches(selectors);
+    };
+
+    const opener = getShadowContent(element, '#opener') as HTMLButtonElement | null;
+    const menu = getShadowContent(element, '#menu') as HTMLElement | null;
     if (!opener || !menu) throw new Error('shadow parts not found');
 
     opener.click();
