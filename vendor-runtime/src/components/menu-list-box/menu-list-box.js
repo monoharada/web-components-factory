@@ -38,12 +38,17 @@ function getDeepActiveElement(root = document) {
     }
     return active;
 }
+function isUnsupportedFocusWithinSelectorError(error) {
+    return error instanceof DOMException && error.name === 'SyntaxError';
+}
 function isFocusWithin(host) {
     try {
         return host.matches(':focus-within');
     }
-    catch {
-        return false;
+    catch (error) {
+        if (isUnsupportedFocusWithinSelectorError(error))
+            return false;
+        throw error;
     }
 }
 /**

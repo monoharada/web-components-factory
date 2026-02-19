@@ -49,11 +49,16 @@ function getDeepActiveElement(root: Document | ShadowRoot = document): Element |
   return active;
 }
 
+function isUnsupportedFocusWithinSelectorError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === 'SyntaxError';
+}
+
 function isFocusWithin(host: Element): boolean {
   try {
     return host.matches(':focus-within');
-  } catch {
-    return false;
+  } catch (error) {
+    if (isUnsupportedFocusWithinSelectorError(error)) return false;
+    throw error;
   }
 }
 

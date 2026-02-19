@@ -177,6 +177,44 @@ describe('DadsMenuListBox - 基本', () => {
     expect(thirdBase.getAttribute('tabindex')).toBe('0');
   });
 
+  it('focus-within 判定で想定外例外は握りつぶさない', async () => {
+    const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
+    defineDefaultMenuListBox();
+
+    element = renderWebComponent(`
+      <dads-menu-list-box label="メニュー">
+        <dads-menu-list-item>One</dads-menu-list-item>
+        <dads-menu-list-item>Two</dads-menu-list-item>
+      </dads-menu-list-box>
+    `);
+    await waitForCustomElement(element);
+
+    const items = Array.from(element.querySelectorAll('dads-menu-list-item')) as HTMLElement[];
+    for (const item of items) await waitForCustomElement(item);
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    const firstItem = items[0];
+    const originalMatches = firstItem.matches.bind(firstItem);
+    (firstItem as HTMLElement & { matches: (selectors: string) => boolean }).matches = (selectors: string) => {
+      if (selectors === ':focus-within') throw new Error('unexpected-focus-within-error');
+      return originalMatches(selectors);
+    };
+
+    const opener = getShadowContent(element, '#opener') as HTMLButtonElement | null;
+    const menu = getShadowContent(element, '#menu') as HTMLElement | null;
+    if (!opener || !menu) throw new Error('shadow parts not found');
+
+    opener.click();
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    opener.focus();
+    await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+
+    expect(() => menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))).toThrow(
+      'unexpected-focus-within-error',
+    );
+  });
+
   it('menuitemselect を dispatch して閉じる', async () => {
     const { defineDefaultMenuListBox } = await import('./menu-list-box-define');
     defineDefaultMenuListBox();
