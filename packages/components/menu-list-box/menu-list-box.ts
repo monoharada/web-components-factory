@@ -41,6 +41,14 @@ function unsubscribeAll(subscriptions: Array<() => void>): void {
   subscriptions.length = 0;
 }
 
+function getDeepActiveElement(root: Document | ShadowRoot = document): Element | null {
+  let active = root.activeElement instanceof Element ? root.activeElement : null;
+  while (active && active.shadowRoot?.activeElement instanceof Element) {
+    active = active.shadowRoot.activeElement;
+  }
+  return active;
+}
+
 /**
  * メニューリストボックスコンポーネント
  *
@@ -494,8 +502,8 @@ export class DadsMenuListBox extends TypographyWebComponent {
   }
 
   #currentIndex(entries: MenuItemEntry[]): number {
-    const active = document.activeElement;
-    return entries.findIndex(({ host, target }) => active === target || active === host);
+    const active = getDeepActiveElement(document);
+    return entries.findIndex(({ host, target }) => active === target || active === host || host.matches(':focus-within'));
   }
 
   #focusItem(index: number): void {
