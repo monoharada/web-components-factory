@@ -76,3 +76,9 @@ temp/
 playwright-report/
 test-results/
 /.worktrees/
+
+# Playwright CLI artifacts
+.playwright-cli/
+
+# Output artifacts (screenshots, audit reports)
+output/

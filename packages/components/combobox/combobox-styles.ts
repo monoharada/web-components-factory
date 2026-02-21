@@ -112,33 +112,29 @@ export const comboboxStyles = css`
     display: none;
   }
 
-  :host([mode='multiple']) [part='control'] {
-    align-items: flex-start;
-    gap: var(--spacing-2, 0.5rem);
-    min-height: var(--dads-combobox-control-height);
-    height: auto;
-  }
-
-  :host([mode='multiple']) [part='indicator'] {
-    align-self: flex-start;
-  }
-
-  :host([mode='multiple']) [part='chip-list'] {
+  :host([multiple]) [part='chip-list'] {
     order: 1;
   }
 
-  :host([mode='multiple']) [part='input'] {
+  :host([multiple]) [part='input'] {
     order: 2;
     flex: 1 1 8ch;
     min-width: 6ch;
   }
 
-  :host([mode='multiple']) [part='control'][data-has-chip] [part='input'],
-  :host([mode='single']) [part='control'][data-has-chip] [part='input'] {
+  :host([multiple]) [part='control'][data-has-chip] [part='input'],
+  :host(:not([multiple])) [part='control'][data-has-chip] [part='input'] {
     flex: 0 0 0.0625rem;
     min-width: 0;
     max-width: 0.0625rem;
     opacity: 0;
+  }
+
+  :host([behavior='input']) [part='control'][data-has-chip] [part='input'] {
+    flex: 1 1 auto;
+    min-width: 6ch;
+    max-width: none;
+    opacity: 1;
   }
 
   [part='input'] {
@@ -220,6 +216,10 @@ export const comboboxStyles = css`
     border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494);
     padding: var(--spacing-4, 1rem);
     background: var(--dads-combobox-background);
+
+    &[hidden] {
+      display: none;
+    }
   }
 
   [part='search-icon'] {
@@ -292,7 +292,7 @@ export const comboboxStyles = css`
     color: inherit;
   }
 
-  :host([mode='multiple']) [part='option'][aria-selected='true'] [part='option-label'] {
+  :host([multiple]) [part='option'][aria-selected='true'] [part='option-label'] {
     font-weight: var(--font-weight-700, 700);
   }
 
@@ -341,12 +341,12 @@ export const comboboxStyles = css`
     background: var(--color-neutral-white, #ffffff);
   }
 
-  :host([mode='multiple']) [part='option'][aria-selected='true'] [part='option-check']::before {
+  :host([multiple]) [part='option'][aria-selected='true'] [part='option-check']::before {
     background: var(--color-primitive-blue-900, #0017c1);
     border-color: var(--color-primitive-blue-900, #0017c1);
   }
 
-  :host([mode='multiple']) [part='option'][aria-selected='true'] [part='option-check']::after {
+  :host([multiple]) [part='option'][aria-selected='true'] [part='option-check']::after {
     content: '✓';
     position: absolute;
     color: var(--color-neutral-white, #ffffff);

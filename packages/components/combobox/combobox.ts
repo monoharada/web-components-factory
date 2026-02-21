@@ -21,7 +21,7 @@ import {
   setupSlotChangeListeners,
 } from '../../utils/form-component-helpers.js';
 
-type ComboboxMode = 'single' | 'multiple';
+type ComboboxBehavior = 'selection' | 'input';
 
 type ComboboxOption = {
   value: string;
@@ -70,7 +70,7 @@ let comboboxIdSequence = 0;
  * @csspart option-meta - 候補補助テキスト
  * @csspart error-text - エラーテキスト
  *
- * @attr {'single' | 'multiple'} mode - 選択モード
+ * @attr {boolean} multiple - 複数選択モード
  * @attr {boolean} filterable - 入力絞り込みの有効化
  * @attr {boolean} clear-on-close - close時にqueryをクリア（常に実行）
  * @attr {boolean} restore-on-cancel - singleで未確定離脱時の復帰
@@ -78,9 +78,11 @@ let comboboxIdSequence = 0;
  * @attr {boolean} disabled - 無効状態
  * @attr {boolean} required - 必須状態
  * @attr {string} name - フォーム名
- * @attr {string} value - 選択値（mode=multiple時はカンマ区切り）
+ * @attr {string} value - 選択値（multiple時はカンマ区切り）
  * @attr {string} placeholder - プレースホルダー
  * @attr {'s' | 'm' | 'l' | 'sm' | 'md' | 'lg'} size - サイズ
+ * @attr {'selection' | 'input'} behavior - 操作モード（default: selection）
+ * @attr {'notice' | 'create'} no-match-behavior - 候補なし時挙動（default: notice）
  * @attr {string} label - ラベル属性フォールバック
  * @attr {string} support-text - サポート属性フォールバック
  * @attr {boolean} error - エラー状態
@@ -119,6 +121,8 @@ export class DadsCombobox extends TypographyFormComponent {
   #query = '';
   #activeIndex = -1;
   #isSearchInputComposing = false;
+  #isInputComposing = false;
+  #isPointerDownOnPanel = false;
   #options: ComboboxOption[] = [];
   #selectedSingle = '';
   #selectedMultiple = new Set<string>();
@@ -193,13 +197,15 @@ export class DadsCombobox extends TypographyFormComponent {
       PropertyAttr('error-text'),
       BooleanAttr('disabled'),
       PropertyAttr('name'),
-      PropertyAttr('mode'),
+      BooleanAttr('multiple'),
       BooleanAttr('filterable'),
       BooleanAttr('clear-on-close'),
       BooleanAttr('restore-on-cancel'),
       BooleanAttr('open'),
       PropertyAttr('placeholder'),
       PropertyAttr('size'),
+      PropertyAttr('behavior'),
+      PropertyAttr('no-match-behavior'),
       { attribute: 'value' },
     ],
   };
@@ -207,7 +213,7 @@ export class DadsCombobox extends TypographyFormComponent {
   connectedCallback(): void {
     super.connectedCallback();
 
-    setDefaultAttributes(this, { mode: 'single', size: 'md' });
+    setDefaultAttributes(this, { size: 'md' });
     this.#ensureDefaultBooleans();
     this.#upgradePreDefinedValueProperty();
 
@@ -253,6 +259,11 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#searchInput?.removeEventListener('input', this.#handleSearchInput);
     this.#searchInput?.removeEventListener('compositionstart', this.#handleSearchCompositionStart);
     this.#searchInput?.removeEventListener('compositionend', this.#handleSearchCompositionEnd);
+    this.#input?.removeEventListener('compositionstart', this.#handleInputCompositionStart);
+    this.#input?.removeEventListener('compositionend', this.#handleInputCompositionEnd);
+    this.#input?.removeEventListener('blur', this.#handleInputBlur);
+    this.#panel?.removeEventListener('pointerdown', this.#handlePanelPointerDown);
+    this.#panel?.removeEventListener('pointerup', this.#handlePanelPointerUp);
     this.removeEventListener('keydown', this.#handleHostKeydown, true);
 
     this.#optionsObserver?.disconnect();
@@ -297,11 +308,20 @@ export class DadsCombobox extends TypographyFormComponent {
         updateRequirement(this.#requirement, this.hasAttribute('required'), false);
         this.#syncInputAria();
         break;
-      case 'mode':
-        this.#sanitizeModeAttribute();
+      case 'multiple':
         this.#syncSelectionForModeChange();
         this.#syncSelectionView();
         this.#syncFormValue();
+        break;
+      case 'behavior':
+        this.#syncInputAttributes();
+        this.#syncInputAria();
+        this.#syncInputDisplay();
+        this.#syncPanelVisibility();
+        this.#renderChipList();
+        if (this.#input) this.#input.removeAttribute('aria-activedescendant');
+        break;
+      case 'no-match-behavior':
         break;
       case 'filterable':
       case 'disabled':
@@ -327,12 +347,12 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   get value(): ComboboxValue {
-    if (this.#mode === 'multiple') return Array.from(this.#selectedMultiple);
+    if (this.#isMultiple) return Array.from(this.#selectedMultiple);
     return this.#selectedSingle;
   }
 
   set value(v: ComboboxValue) {
-    if (this.#mode === 'multiple') {
+    if (this.#isMultiple) {
       const next = new Set<string>();
       if (Array.isArray(v)) {
         for (const value of v) {
@@ -345,7 +365,7 @@ export class DadsCombobox extends TypographyFormComponent {
       this.setAttribute('value', Array.from(this.#selectedMultiple).join(','));
     } else {
       const next = typeof v === 'string' ? v : String(v?.[0] ?? '');
-      this.#selectedSingle = this.#isKnownOptionValue(next) ? next : '';
+      this.#selectedSingle = (this.#behavior === 'input' || this.#isKnownOptionValue(next)) ? next : '';
       if (this.#selectedSingle.length > 0) this.setAttribute('value', this.#selectedSingle);
       else this.removeAttribute('value');
     }
@@ -360,7 +380,7 @@ export class DadsCombobox extends TypographyFormComponent {
 
   formStateRestoreCallback(state: unknown, _mode: unknown): void {
     if (typeof state !== 'string') return;
-    if (this.#mode === 'multiple') this.value = this.#parseCommaSeparatedValues(state);
+    if (this.#isMultiple) this.value = this.#parseCommaSeparatedValues(state);
     else this.value = state;
   }
 
@@ -393,14 +413,20 @@ export class DadsCombobox extends TypographyFormComponent {
     }
   }
 
-  get #mode(): ComboboxMode {
-    return this.getAttribute('mode') === 'multiple' ? 'multiple' : 'single';
+  get #isMultiple(): boolean {
+    return this.hasAttribute('multiple');
   }
 
-  #sanitizeModeAttribute(): void {
-    const rawMode = this.getAttribute('mode');
-    if (rawMode === 'single' || rawMode === 'multiple') return;
-    this.setAttribute('mode', 'single');
+  get #behavior(): ComboboxBehavior {
+    return this.getAttribute('behavior') === 'input' ? 'input' : 'selection';
+  }
+
+  get #isFilterable(): boolean {
+    return this.#behavior === 'input' || this.hasAttribute('filterable');
+  }
+
+  get #noMatchBehavior(): 'notice' | 'create' {
+    return this.getAttribute('no-match-behavior') === 'create' ? 'create' : 'notice';
   }
 
   #setupSlots(): void {
@@ -446,11 +472,17 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#searchInput?.addEventListener('input', this.#handleSearchInput);
     this.#searchInput?.addEventListener('compositionstart', this.#handleSearchCompositionStart);
     this.#searchInput?.addEventListener('compositionend', this.#handleSearchCompositionEnd);
+    this.#input?.addEventListener('compositionstart', this.#handleInputCompositionStart);
+    this.#input?.addEventListener('compositionend', this.#handleInputCompositionEnd);
+    this.#input?.addEventListener('blur', this.#handleInputBlur);
+    this.#panel?.addEventListener('pointerdown', this.#handlePanelPointerDown);
+    this.#panel?.addEventListener('pointerup', this.#handlePanelPointerUp);
   }
 
   #hasVisibleSearchInput(): boolean {
+    if (this.#behavior === 'input') return false;
     return Boolean(
-      this.hasAttribute('filterable') &&
+      this.#isFilterable &&
         this.#searchBox &&
         !this.#searchBox.hidden &&
         this.#searchInput &&
@@ -548,7 +580,7 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   #applyValueAttribute(attrValue: string | null): void {
-    if (this.#mode === 'multiple') {
+    if (this.#isMultiple) {
       if (attrValue !== null) {
         this.#selectedMultiple = this.#filterKnownValues(new Set(this.#parseCommaSeparatedValues(attrValue)));
       } else {
@@ -562,7 +594,7 @@ export class DadsCombobox extends TypographyFormComponent {
     }
 
     if (attrValue !== null) {
-      this.#selectedSingle = this.#isKnownOptionValue(attrValue) ? attrValue : '';
+      this.#selectedSingle = (this.#behavior === 'input' || this.#isKnownOptionValue(attrValue)) ? attrValue : '';
       return;
     }
 
@@ -572,13 +604,13 @@ export class DadsCombobox extends TypographyFormComponent {
       return;
     }
 
-    if (!this.#isKnownOptionValue(this.#selectedSingle)) {
+    if (this.#behavior !== 'input' && !this.#isKnownOptionValue(this.#selectedSingle)) {
       this.#selectedSingle = '';
     }
   }
 
   #syncSelectionForModeChange(): void {
-    if (this.#mode === 'single') {
+    if (!this.#isMultiple) {
       if (!this.#isKnownOptionValue(this.#selectedSingle)) {
         const firstMultiple = Array.from(this.#selectedMultiple)[0];
         this.#selectedSingle = this.#isKnownOptionValue(firstMultiple) ? firstMultiple : '';
@@ -598,6 +630,7 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   #filterKnownValues(values: Set<string>): Set<string> {
+    if (this.#behavior === 'input') return values;
     const filtered = new Set<string>();
     for (const value of values) {
       if (this.#isKnownOptionValue(value)) filtered.add(value);
@@ -610,12 +643,16 @@ export class DadsCombobox extends TypographyFormComponent {
 
     this.#input.setAttribute('aria-controls', this.#listboxId);
     this.#listbox.id = this.#listboxId;
-    this.#listbox.setAttribute('aria-multiselectable', this.#mode === 'multiple' ? 'true' : 'false');
+    this.#listbox.setAttribute('aria-multiselectable', this.#isMultiple ? 'true' : 'false');
 
     const disabled = this.#isDisabled();
+    const isInputBehavior = this.#behavior === 'input';
     this.#input.disabled = disabled;
-    this.#input.readOnly = true;
-    if (this.#searchInput) this.#searchInput.disabled = disabled;
+    this.#input.readOnly = !isInputBehavior;
+    if (this.#searchInput) {
+      this.#searchInput.disabled = disabled || isInputBehavior;
+      this.#searchInput.hidden = isInputBehavior;
+    }
     this.#indicator?.toggleAttribute('disabled', disabled);
 
     const placeholder = this.getAttribute('placeholder');
@@ -623,9 +660,9 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   #resolveControlPlaceholder(placeholderAttr: string | null): string {
-    if (this.#mode === 'multiple' && this.#selectedMultiple.size > 0) return '';
+    if (this.#isMultiple && this.#selectedMultiple.size > 0) return '';
     if (placeholderAttr !== null) return placeholderAttr;
-    return '選択してください';
+    return this.#behavior === 'input' ? '入力してください' : '選択してください';
   }
 
   #syncInputAria(): void {
@@ -639,7 +676,7 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   #syncFormValue(): void {
-    if (this.#mode === 'multiple') {
+    if (this.#isMultiple) {
       this._internals.setFormValue(Array.from(this.#selectedMultiple).join(','));
       return;
     }
@@ -683,7 +720,7 @@ export class DadsCombobox extends TypographyFormComponent {
           ? detailValue
           : '';
     if (!value) return;
-    if (this.#mode === 'multiple') {
+    if (this.#isMultiple) {
       if (!this.#selectedMultiple.has(value)) return;
       event.preventDefault();
       this.#selectedMultiple.delete(value);
@@ -705,11 +742,15 @@ export class DadsCombobox extends TypographyFormComponent {
 
   #handleInput = (): void => {
     if (this.#isDisabled()) return;
-    if (!this.hasAttribute('filterable')) return;
+    if (!this.#isFilterable) return;
     if (!this.#input) return;
-    if (this.#mode === 'multiple') return;
 
-    this.#query = this.#resolveQueryFromRawInput(this.#input.value);
+    const isInputBehavior = this.#behavior === 'input';
+
+    // selection型 + multipleは入力無効（従来動作）
+    if (!isInputBehavior && this.#isMultiple) return;
+
+    this.#query = isInputBehavior ? this.#input.value : this.#resolveQueryFromRawInput(this.#input.value);
     if (!this.#isOpen) this.setAttribute('open', '');
 
     this.#activeIndex = this.#findFirstFilteredEnabledIndex();
@@ -719,7 +760,7 @@ export class DadsCombobox extends TypographyFormComponent {
 
   #handleSearchInput = (): void => {
     if (this.#isDisabled()) return;
-    if (!this.hasAttribute('filterable')) return;
+    if (!this.#isFilterable) return;
     if (!this.#searchInput) return;
     this.#query = this.#searchInput.value;
     if (!this.#isOpen) this.setAttribute('open', '');
@@ -750,8 +791,106 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#handleSearchInput();
   };
 
+  #handleInputCompositionStart = (): void => {
+    this.#isInputComposing = true;
+  };
+
+  #handleInputCompositionEnd = (): void => {
+    this.#isInputComposing = false;
+    if (this.#behavior !== 'input') return;
+    this.#handleInput();
+  };
+
+  #handlePanelPointerDown = (): void => {
+    this.#isPointerDownOnPanel = true;
+  };
+
+  #handlePanelPointerUp = (): void => {
+    this.#isPointerDownOnPanel = false;
+  };
+
+  #handleInputBlur = (event: FocusEvent): void => {
+    if (this.#behavior !== 'input') return;
+    if (!this.#isOpen) return;
+
+    // Guard 1: relatedTarget（パネル内遷移は確定しない）
+    const related = event.relatedTarget;
+    if (related instanceof Node && this.#isInsideComponent(related)) return;
+
+    // Guard 2: pointerdown（option click中のblurは無視）
+    if (this.#isPointerDownOnPanel) return;
+
+    // Guard 3: isComposing（IME中は無視）
+    if (this.#isInputComposing) return;
+
+    // Guard 4: timing（setTimeout(0)で遅延判定）
+    setTimeout(() => {
+      if (!this.isConnected) return;
+      if (this.#isInputComposing) return;
+      if (this.#isPointerDownOnPanel) return;
+      this.#handleBlurCommit();
+    }, 0);
+  };
+
+  #isInsideComponent(node: Node): boolean {
+    if (this.contains(node)) return true;
+    if (this.shadowRoot?.contains(node)) return true;
+    const root = node.getRootNode();
+    if (root instanceof ShadowRoot && root.host === this) return true;
+    return false;
+  }
+
+  #handleBlurCommit(): void {
+    if (!this.#isOpen) return;
+
+    const query = this.#input?.value.trim() ?? '';
+
+    // 空文字はキャンセル（D-09）
+    if (query.length === 0) {
+      this.removeAttribute('open');
+      return;
+    }
+
+    // activeIndexがあれば候補確定
+    if (this.#activeIndex >= 0) {
+      this.#commitIndex(this.#activeIndex);
+      return;
+    }
+
+    // 候補なし時の分岐（P-15）
+    const filteredIndexes = this.#getFilteredIndexes();
+    if (filteredIndexes.length === 0) {
+      if (this.#noMatchBehavior === 'create') {
+        this.#commitFreeText(query);
+        return;
+      }
+      // notice: キャンセル
+      this.removeAttribute('open');
+      return;
+    }
+
+    // 候補ありだがactiveIndex < 0: キャンセル
+    this.removeAttribute('open');
+  }
+
+  #commitFreeText(text: string): void {
+    if (this.#isMultiple) {
+      this.#selectedMultiple.add(text);
+      this.setAttribute('value', Array.from(this.#selectedMultiple).join(','));
+      this.#syncFormValue();
+      this.#syncSelectionView();
+      this.emitEvent('dads-change', { value: Array.from(this.#selectedMultiple), source: 'free-text' });
+    } else {
+      this.#selectedSingle = text;
+      this.setAttribute('value', text);
+      this.#syncFormValue();
+      this.emitEvent('dads-change', { value: text, source: 'free-text' });
+    }
+    this.removeAttribute('open');
+  }
+
   #resolveQueryFromRawInput(rawInput: string): string {
-    if (this.#isOpen || this.#mode !== 'single') return rawInput;
+    if (this.#isOpen || this.#isMultiple) return rawInput;
     const selectedLabel = this.#labelFromValue(this.#selectedSingle);
     if (selectedLabel.length === 0) return rawInput;
     return rawInput.startsWith(selectedLabel) ? rawInput.slice(selectedLabel.length) : rawInput;
@@ -812,21 +951,39 @@ export class DadsCombobox extends TypographyFormComponent {
         }
         if (!this.#isOpen) return;
         event.preventDefault();
-        if (this.#activeIndex < 0) {
-          if (isControlInput) this.#toggleOpenFromControl();
+        if (this.#activeIndex >= 0) {
+          this.#commitIndex(this.#activeIndex);
+          break;
+        }
+        // activeIndex < 0
+        if (this.#behavior === 'input') {
+          const query = this.#input?.value.trim() ?? '';
+          const filteredIndexes = this.#getFilteredIndexes();
+          if (filteredIndexes.length === 0 && query.length > 0 && this.#noMatchBehavior === 'create') {
+            this.#commitFreeText(query);
+          } else if (filteredIndexes.length === 0 && this.#noMatchBehavior === 'notice') {
+            // no-op: nothingFound + notice は状態維持
+          } else {
+            this.removeAttribute('open');
+          }
           return;
         }
-        this.#commitIndex(this.#activeIndex);
+        if (isControlInput) this.#toggleOpenFromControl();
         break;
       case ' ':
       case 'Spacebar':
         if (!isControlInput) return;
+        if (this.#behavior === 'input') return;
         event.preventDefault();
         this.#toggleOpenFromControl();
         break;
       case 'Tab':
         if (!this.#isOpen) return;
         if (event.shiftKey) return;
+        if (isControlInput && this.#behavior === 'input') {
+          this.removeAttribute('open');
+          return;
+        }
         if (isControlInput) {
           if (this.#hasVisibleSearchInput()) {
             event.preventDefault();
@@ -862,7 +1019,7 @@ export class DadsCombobox extends TypographyFormComponent {
     const option = this.#options[index];
     if (!option || option.disabled) return;
 
-    if (this.#mode === 'multiple') {
+    if (this.#isMultiple) {
       if (this.#selectedMultiple.has(option.value)) this.#selectedMultiple.delete(option.value);
       else this.#selectedMultiple.add(option.value);
 
@@ -891,7 +1048,7 @@ export class DadsCombobox extends TypographyFormComponent {
       this.#syncInputAria();
       this.#syncInputDisplay();
       this.#renderOptions();
-      if (this.hasAttribute('filterable')) {
+      if (this.#isFilterable && this.#behavior !== 'input') {
         this.#searchInput?.focus();
       }
       this.emitEvent('dads-open');
@@ -924,6 +1081,7 @@ export class DadsCombobox extends TypographyFormComponent {
   #handleDocumentClick = (event: Event): void => {
     if (!this.#isOpen) return;
     if (event.composedPath().includes(this)) return;
+    if (this.#behavior === 'input') return;
     this.removeAttribute('open');
   };
 
@@ -938,6 +1096,7 @@ export class DadsCombobox extends TypographyFormComponent {
   #handleDocumentFocusIn = (event: FocusEvent): void => {
     if (!this.#isOpen) return;
     if (event.composedPath().includes(this)) return;
+    if (this.#behavior === 'input') return;
     this.removeAttribute('open');
   };
 
@@ -945,9 +1104,17 @@ export class DadsCombobox extends TypographyFormComponent {
     const chipList = this.#chipList;
     if (!chipList) return;
 
+    // behavior="input" ではchipを表示しない
+    if (this.#behavior === 'input') {
+      chipList.replaceChildren();
+      chipList.hidden = true;
+      this.#control?.removeAttribute('data-has-chip');
+      return;
+    }
+
     chipList.replaceChildren();
 
-    if (this.#mode === 'single') {
+    if (!this.#isMultiple) {
       const option = this.#options.find((item) => item.value === this.#selectedSingle);
       if (!option) {
         chipList.hidden = true;
@@ -1008,6 +1175,8 @@ export class DadsCombobox extends TypographyFormComponent {
 
     if (!this.#isOpen) {
       this.#isSearchInputComposing = false;
+      this.#isInputComposing = false;
+      this.#isPointerDownOnPanel = false;
       this.#input.removeAttribute('aria-activedescendant');
       return;
     }
@@ -1026,7 +1195,7 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#listbox.hidden = !this.#isOpen;
 
     if (!this.#searchBox) return;
-    const showSearchBox = this.#isOpen && this.hasAttribute('filterable');
+    const showSearchBox = this.#isOpen && this.#isFilterable && this.#behavior !== 'input';
     this.#searchBox.hidden = !showSearchBox;
   }
 
@@ -1078,7 +1247,7 @@ export class DadsCombobox extends TypographyFormComponent {
     optionElement.tabIndex = option.disabled ? -1 : 0;
     if (option.disabled) optionElement.setAttribute('aria-disabled', 'true');
 
-    if (this.#mode === 'multiple') {
+    if (this.#isMultiple) {
       const check = document.createElement('span');
       check.setAttribute('part', 'option-check');
       check.setAttribute('aria-hidden', 'true');
@@ -1113,12 +1282,12 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   #isOptionSelected(option: ComboboxOption): boolean {
-    if (this.#mode === 'multiple') return this.#selectedMultiple.has(option.value);
+    if (this.#isMultiple) return this.#selectedMultiple.has(option.value);
     return this.#selectedSingle.length > 0 && this.#selectedSingle === option.value;
   }
 
   #getFilteredIndexes(): number[] {
-    if (!this.hasAttribute('filterable')) return this.#allOptionIndexes();
+    if (!this.#isFilterable) return this.#allOptionIndexes();
 
     const query = this.#normalizeSearchText(this.#query);
     if (query.length === 0) return this.#allOptionIndexes();
@@ -1151,9 +1320,9 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   #preferredActiveIndex(): number {
-    if (this.#mode === 'multiple') return -1;
+    if (this.#isMultiple) return -1;
 
-    if (this.#mode === 'single' && this.#selectedSingle) {
+    if (this.#selectedSingle) {
       const selectedIndex = this.#options.findIndex((option) => option.value === this.#selectedSingle);
       if (selectedIndex >= 0 && this.#getFilteredIndexes().includes(selectedIndex)) return selectedIndex;
     }
@@ -1275,9 +1444,12 @@ export class DadsCombobox extends TypographyFormComponent {
     const key = event.key;
     if (key !== 'ArrowDown' && key !== 'ArrowUp') return;
 
-    const target = event.target;
-    if (target === this.#input || target === this.#searchInput) return;
-    if (target instanceof HTMLElement && target.getAttribute('part') === 'option') return;
+    // composedPath を使い Shadow DOM 内の実際の発行元を判定する
+    // （host の capture リスナーでは event.target が host にリターゲットされるため）
+    const path = event.composedPath();
+    if (this.#input && path.includes(this.#input)) return;
+    if (this.#searchInput && path.includes(this.#searchInput)) return;
+    if (path.some((node) => node instanceof HTMLElement && node.getAttribute('part') === 'option')) return;
 
     event.preventDefault();
     this.#moveActive(key === 'ArrowDown' ? 1 : -1, true);
@@ -1315,8 +1487,20 @@ export class DadsCombobox extends TypographyFormComponent {
 
     this.#input.placeholder = this.#resolveControlPlaceholder(this.getAttribute('placeholder'));
 
+    // behavior="input": open中は入力値保持、close時はラベルまたは空
+    if (this.#behavior === 'input') {
+      if (this.#isOpen) return;
+      if (!this.#isMultiple) {
+        const label = this.#labelFromValue(this.#selectedSingle);
+        this.#input.value = label.length > 0 ? label : this.#selectedSingle;
+      } else {
+        this.#input.value = '';
+      }
+      return;
+    }
+
     if (this.#isOpen && this.hasAttribute('filterable')) {
-      if (this.#mode === 'multiple') {
+      if (this.#isMultiple) {
         this.#input.value = '';
         return;
       }
@@ -1324,7 +1508,7 @@ export class DadsCombobox extends TypographyFormComponent {
       return;
     }
 
-    if (this.#mode === 'single') {
+    if (!this.#isMultiple) {
       this.#input.value = this.#labelFromValue(this.#selectedSingle);
       return;
     }

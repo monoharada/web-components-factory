@@ -3087,18 +3087,6 @@ export const demos = {
                   <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
                   <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
                 </dads-combobox>
-
-                <dads-combobox
-                  mode="multiple"
-                  label="対象地域（複数選択）"
-                  support-text="Enter またはクリックで候補をトグル選択します。"
-                  value="tokyo,fukuoka"
-                >
-                  <option value="tokyo" data-search='["とうきょう","東京","t"]'>東京都</option>
-                  <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
-                  <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
-                  <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
-                </dads-combobox>
               </div>
 
               <div style="margin-top: 16px;">
@@ -3128,18 +3116,46 @@ export const demos = {
                     ${API_TABLE_PROPS_HEADER}
                     <tbody>
                       <tr>
-                        <th scope="row"><code>mode</code></th>
+                        <th scope="row"><code>behavior</code></th>
                         <td><code>attr</code></td>
-                        <td><code>single</code></td>
+                        <td><code>selection</code></td>
                         <td>
                           <div class="wc-api-control">
-                            <select aria-label="mode" data-api-attr="mode" data-default="single">
-                              <option value="single" selected>single</option>
-                              <option value="multiple">multiple</option>
+                            <select aria-label="behavior" data-api-attr="behavior" data-default="selection">
+                              <option value="selection" selected>selection</option>
+                              <option value="input">input</option>
                             </select>
                           </div>
                         </td>
-                        <td>選択モード</td>
+                        <td>操作モード（input: 入力支援型）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>no-match-behavior</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>notice</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="no-match-behavior" data-api-attr="no-match-behavior" data-default="notice">
+                              <option value="notice" selected>notice</option>
+                              <option value="create">create</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>候補なし時の挙動</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>multiple</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="multiple" data-api-attr="multiple" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>複数選択</td>
                       </tr>
                       <tr>
                         <th scope="row"><code>filterable</code></th>
@@ -3213,6 +3229,83 @@ export const demos = {
 
     <script type="module">
       await Promise.all([import('dads-combobox'), import('a11y-annotate')]);
+
+      const behaviorSelect = document.querySelector('[data-api-attr="behavior"]');
+      const multipleSwitch = document.querySelector('[data-api-attr="multiple"]');
+      const noMatchSelect = document.querySelector('[data-api-attr="no-match-behavior"]');
+      if (behaviorSelect) {
+        const syncBehaviorDependents = () => {
+          const isInput = behaviorSelect.value === 'input';
+          if (multipleSwitch) {
+            multipleSwitch.disabled = isInput;
+            if (isInput && multipleSwitch.checked) {
+              multipleSwitch.checked = false;
+              multipleSwitch.dispatchEvent(new Event('dads-change', { bubbles: true }));
+            }
+          }
+          if (noMatchSelect) {
+            noMatchSelect.disabled = !isInput;
+            if (!isInput && noMatchSelect.value !== 'notice') {
+              noMatchSelect.value = 'notice';
+              noMatchSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }
+        };
+        behaviorSelect.addEventListener('change', syncBehaviorDependents);
+        syncBehaviorDependents();
+      }
+    </script>
+  `,
+
+
+  'combobox-input': () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">コンボボックス（入力支援型）</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        <code>behavior="input"</code> で入力支援モードを有効化します。候補を絞り込みながら自由入力も可能です。<br>
+        入力支援型では <strong>chip表示を行わず</strong>、入力欄にそのまま値を表示します。
+      </p>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">single / no-match-behavior="create"</h3>
+        <p style="color: #666; margin-bottom: 12px;">候補外の文字列をEnterまたはBlurで自由入力として確定できます。</p>
+        <div style="display: grid; gap: 20px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+          <dads-combobox
+            behavior="input"
+            no-match-behavior="create"
+            label="所属部署"
+            support-text="候補から選択するか、新しい部署名を入力してください。"
+          >
+            <option value="engineering">エンジニアリング部</option>
+            <option value="design">デザイン部</option>
+            <option value="marketing">マーケティング部</option>
+            <option value="sales">営業部</option>
+          </dads-combobox>
+        </div>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">single / no-match-behavior="notice"</h3>
+        <p style="color: #666; margin-bottom: 12px;">候補外の文字列では確定せず「候補がありません」を表示します。</p>
+        <div style="display: grid; gap: 20px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+          <dads-combobox
+            behavior="input"
+            no-match-behavior="notice"
+            label="都道府県"
+            support-text="候補から都道府県を選択してください。"
+          >
+            <option value="tokyo" data-search='["とうきょう","t"]'>東京都</option>
+            <option value="osaka" data-search='["おおさか","o"]'>大阪府</option>
+            <option value="fukuoka" data-search='["ふくおか","f"]'>福岡県</option>
+            <option value="hokkaido" data-search='["ほっかいどう","h"]'>北海道</option>
+          </dads-combobox>
+        </div>
+      </section>
+
+    </div>
+
+    <script type="module">
+      await import('dads-combobox');
     </script>
   `,
 

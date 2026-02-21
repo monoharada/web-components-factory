@@ -73,7 +73,7 @@ describe('DadsCombobox - API契約', () => {
     `);
     await waitForCustomElement(element);
 
-    expect(element.getAttribute('mode')).toBe('single');
+    expect(element.hasAttribute('multiple')).toBe(false);
     expect(element.hasAttribute('filterable')).toBe(true);
     expect(element.hasAttribute('clear-on-close')).toBe(true);
     expect(element.hasAttribute('restore-on-cancel')).toBe(true);
@@ -136,10 +136,10 @@ describe('DadsCombobox - 分岐補強', () => {
     element = null;
   });
 
-  it('valueプロパティはmode=multipleで配列と文字列を正規化する', async () => {
+  it('valueプロパティはmultipleで配列と文字列を正規化する', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -157,10 +157,10 @@ describe('DadsCombobox - 分岐補強', () => {
     expect(element.getAttribute('value')).toBe('fukuoka');
   });
 
-  it('formStateRestoreCallbackとmode正規化はsingle/multipleで整合する', async () => {
+  it('formStateRestoreCallbackとmultiple属性トグルはsingle/multipleで整合する', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -179,9 +179,9 @@ describe('DadsCombobox - 分岐補強', () => {
     await waitMicrotask();
     expect(host.value).toEqual(['tokyo', 'fukuoka']);
 
-    element.setAttribute('mode', 'invalid');
+    element.removeAttribute('multiple');
     await waitMicrotask();
-    expect(element.getAttribute('mode')).toBe('single');
+    expect(element.hasAttribute('multiple')).toBe(false);
 
     host.formStateRestoreCallback('osaka', null);
     await waitMicrotask();
@@ -295,7 +295,7 @@ describe('DadsCombobox - 分岐補強', () => {
   it('multipleモードでactive未設定のEnterはヘッダー開閉にフォールバックする', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -886,7 +886,7 @@ describe('DadsCombobox - 拘束条件', () => {
   });
 });
 
-describe('DadsCombobox - mode=multiple', () => {
+describe('DadsCombobox - multiple', () => {
   let element: HTMLElement | null = null;
 
   afterEach(() => {
@@ -897,7 +897,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('複数選択時はEnterでトグル選択し、openを維持する', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -920,7 +920,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードで未選択時も既定プレースホルダーを表示する', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -933,7 +933,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードで選択済みチップがあるときはプレースホルダーを非表示にする', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo,osaka">
+      <dads-combobox multiple value="tokyo,osaka">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -946,7 +946,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードはヘッダー全体クリックで開閉できる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo,osaka">
+      <dads-combobox multiple value="tokyo,osaka">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -965,7 +965,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードはcontrol入力を先頭にし、削除ボタンはTab対象にする', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo,osaka">
+      <dads-combobox multiple value="tokyo,osaka">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1002,7 +1002,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードの選択済み表示は dads-chip-tag を使う', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo,osaka">
+      <dads-combobox multiple value="tokyo,osaka">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1022,7 +1022,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードでチップ削除イベントを受けると選択解除される', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo,osaka">
+      <dads-combobox multiple value="tokyo,osaka">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1048,7 +1048,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードで最後のチップを削除したらcontrolへフォーカスを戻す', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo">
+      <dads-combobox multiple value="tokyo">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1075,7 +1075,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードで開くと検索入力(part=search-input)を表示する', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1093,7 +1093,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('search-input は listbox の外側に配置される（ARIA構造）', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1114,7 +1114,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('検索入力フォーカス中でもArrowUp/ArrowDownで候補のアクティブ行を移動できる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1156,7 +1156,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('option 最終行から Tab 離脱するとパネルを閉じる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1180,7 +1180,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('open中は focus順を control -> search -> option -> 削除ボタン にできる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo,osaka">
+      <dads-combobox multiple value="tokyo,osaka">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1215,7 +1215,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('open中に削除ボタンへフォーカスしてもArrowDownで候補を移動できる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo,osaka">
+      <dads-combobox multiple value="tokyo,osaka">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1241,7 +1241,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('open中にチップ削除ボタンからコンポーネント外へTab離脱するとパネルを閉じる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple" value="tokyo,osaka">
+      <dads-combobox multiple value="tokyo,osaka">
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1277,7 +1277,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードをクリック展開した直後は候補のactive強調を持たない', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1294,7 +1294,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードで開くと検索アイコン(part=search-icon)を表示する', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1312,7 +1312,7 @@ describe('DadsCombobox - mode=multiple', () => {
   it('multipleモードの候補行にチェック領域(part=option-check)を表示する', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1481,7 +1481,7 @@ describe('DadsCombobox - キーボード選択ユースケース', () => {
   it('multipleモードはキーボードだけで選択→解除をトグルできる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1523,7 +1523,7 @@ describe('DadsCombobox - キーボード選択ユースケース', () => {
   it('multipleモードはキーボードだけで複数選択を維持したまま閉じて再展開できる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
-      <dads-combobox mode="multiple">
+      <dads-combobox multiple>
         ${baseOptions}
       </dads-combobox>
     `);
@@ -1678,6 +1678,422 @@ describe('DadsCombobox - IME入力', () => {
   });
 });
 
+describe('DadsCombobox - behavior="input" 入力支援型', () => {
+  let element: HTMLElement | null = null;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+    element = null;
+  });
+
+  it('free-text確定時に dads-change detail に source:"free-text" を含む', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const events: CustomEvent[] = [];
+    element.addEventListener('dads-change', (e) => events.push(e as CustomEvent));
+
+    const input = getInput(element);
+    input.focus();
+    input.value = '新しい項目';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    expect(events.length).toBe(1);
+    expect(events[0].detail.value).toBe('新しい項目');
+    expect(events[0].detail.source).toBe('free-text');
+  });
+
+  it('free-text確定値がvalue属性とゲッターに反映される（single）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create" name="city">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+    input.value = 'カスタム値';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    const host = element as unknown as { value: unknown };
+    expect(host.value).toBe('カスタム値');
+    expect(element.getAttribute('value')).toBe('カスタム値');
+  });
+
+  it('free-text確定値がvalue属性とゲッターに反映される（multiple）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create" multiple>
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+
+    // 1つ目のfree-text
+    input.value = 'タグA';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    // パネルが閉じるので再度開く
+    input.focus();
+    input.value = 'タグB';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    const host = element as unknown as { value: unknown };
+    expect(host.value).toEqual(['タグA', 'タグB']);
+    expect(element.getAttribute('value')).toBe('タグA,タグB');
+  });
+
+  it('formStateRestoreCallbackでfree-textが復元される', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const host = element as unknown as {
+      value: unknown;
+      formStateRestoreCallback: (state: unknown, mode: unknown) => void;
+    };
+
+    host.formStateRestoreCallback('カスタム復元値', null);
+    await waitMicrotask();
+
+    expect(host.value).toBe('カスタム復元値');
+    expect(getInput(element).value).toBe('カスタム復元値');
+  });
+
+  it('dads-inputイベントが入力中に発火する', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const events: CustomEvent[] = [];
+    element.addEventListener('dads-input', (e) => events.push(e as CustomEvent));
+
+    const input = getInput(element);
+    input.focus();
+    input.value = '東';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    expect(events.length).toBe(1);
+    expect(events[0].detail.query).toBe('東');
+  });
+
+  it('behavior="input" では chip が描画されない', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create" value="tokyo">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const chips = Array.from(element.shadowRoot?.querySelectorAll('dads-chip-tag') ?? []);
+    expect(chips.length).toBe(0);
+
+    const chipList = getShadowContent(element, '#chip-list') as HTMLElement | null;
+    expect(chipList?.hidden).toBe(true);
+
+    const control = getControl(element);
+    expect(control.hasAttribute('data-has-chip')).toBe(false);
+  });
+
+  it('Spaceキーは behavior="input" で空白入力として扱う（トグルしない）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+
+    const spaceEvent = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+    const result = input.dispatchEvent(spaceEvent);
+    await waitMicrotask();
+
+    // preventDefaultされないのでresultはtrue、openにならない
+    expect(result).toBe(true);
+    expect(element.hasAttribute('open')).toBe(false);
+  });
+
+  it('Spaceキーは behavior="selection" で従来通りトグル動作する', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox>
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    await waitMicrotask();
+    expect(element.hasAttribute('open')).toBe(true);
+  });
+
+  it('no-match-behavior="notice" は候補なし時にEnterで確定しない', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="notice">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const events: CustomEvent[] = [];
+    element.addEventListener('dads-change', (e) => events.push(e as CustomEvent));
+
+    const input = getInput(element);
+    input.focus();
+    input.value = '一致しない文字列';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    expect(element.hasAttribute('open')).toBe(true);
+    expect(getOptions(element).length).toBe(0);
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    // notice: no-op、パネルは開いたまま、値は変わらない
+    expect(events.length).toBe(0);
+    expect(element.hasAttribute('open')).toBe(true);
+  });
+
+  it('no-match-behavior="create" は候補なし時にEnterでfree-text確定する', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const events: CustomEvent[] = [];
+    element.addEventListener('dads-change', (e) => events.push(e as CustomEvent));
+
+    const input = getInput(element);
+    input.focus();
+    input.value = '新規作成テスト';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    expect(events.length).toBe(1);
+    expect(events[0].detail.value).toBe('新規作成テスト');
+    expect(events[0].detail.source).toBe('free-text');
+    expect(element.hasAttribute('open')).toBe(false);
+  });
+
+  it('候補一致時はEnterで既存optionを確定する（free-textではない）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const events: CustomEvent[] = [];
+    element.addEventListener('dads-change', (e) => events.push(e as CustomEvent));
+
+    const input = getInput(element);
+    input.focus();
+    input.value = '東';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    expect(getOptions(element).length).toBe(1);
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    expect(events.length).toBe(1);
+    expect(events[0].detail.value).toBe('tokyo');
+    // sourceフィールドはoption選択時には付かない（free-textのみ）
+    expect(events[0].detail.source).toBeUndefined();
+    expect(element.hasAttribute('open')).toBe(false);
+  });
+
+  it('behavior="input" のplaceholderデフォルトは「入力してください」', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    expect(input.placeholder).toBe('入力してください');
+  });
+
+  it('behavior="input" は#inputがreadOnly=falseで検索入力が無効になる', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    expect(input.readOnly).toBe(false);
+
+    const searchInput = getShadowContent(element, '[part="search-input"]') as HTMLInputElement | null;
+    expect(searchInput?.disabled).toBe(true);
+    expect(searchInput?.hidden).toBe(true);
+
+    const searchBox = getShadowContent(element, '[part="search-box"]') as HTMLElement | null;
+    // open してもsearch-boxはhiddenのまま
+    input.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await waitMicrotask();
+    expect(element.hasAttribute('open')).toBe(true);
+    expect(searchBox?.hidden).toBe(true);
+  });
+
+  it('空文字blurはキャンセルで確定しない（D-09）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const events: CustomEvent[] = [];
+    element.addEventListener('dads-change', (e) => events.push(e as CustomEvent));
+
+    const input = getInput(element);
+    input.focus();
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    // blurイベントをシミュレート
+    input.dispatchEvent(new FocusEvent('blur', { bubbles: false, relatedTarget: null }));
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    await waitMicrotask();
+
+    expect(events.length).toBe(0);
+  });
+
+  it('free-text確定後にvalueゲッターが値を返す', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+    input.value = 'カスタム値';
+    input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    const host = element as unknown as { value: unknown };
+    expect(host.value).toBe('カスタム値');
+    expect(element.getAttribute('value')).toBe('カスタム値');
+  });
+
+  it('behavior="input" でもArrowDown/Upで候補のactive行を移動できる', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox behavior="input" no-match-behavior="create">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+
+    // ArrowDownでパネルを開き、最初の候補がactiveになる
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+    expect(element.hasAttribute('open')).toBe(true);
+    let options = getOptions(element);
+    expect(options[0]?.getAttribute('data-active')).toBe('true');
+
+    // もう一度ArrowDownで次の候補に移動
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+    options = getOptions(element);
+    expect(options[1]?.getAttribute('data-active')).toBe('true');
+
+    // ArrowUpで前の候補に戻る
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+    options = getOptions(element);
+    expect(options[0]?.getAttribute('data-active')).toBe('true');
+
+    // Enterでactive候補を選択
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+    expect((element as unknown as { value: unknown }).value).toBe('tokyo');
+  });
+
+  it('behavior未指定時はselectionデフォルトで回帰しない', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox value="osaka">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    expect(input.readOnly).toBe(true);
+    expect(input.placeholder).toBe('選択してください');
+
+    const chips = Array.from(element.shadowRoot?.querySelectorAll('dads-chip-tag') ?? []);
+    expect(chips.length).toBe(1);
+  });
+});
+
 describe('DadsCombobox - styles', () => {
   it('検索入力はDADS標準フォーカスインジケーターを持つ', async () => {
     const sourcePath = join(process.cwd(), 'packages/components/combobox/combobox-styles.ts');
@@ -1711,7 +2127,7 @@ describe('DadsCombobox - styles', () => {
   it('singleで選択済みチップ表示時は入力幅を畳む', async () => {
     const sourcePath = join(process.cwd(), 'packages/components/combobox/combobox-styles.ts');
     const source = readFileSync(sourcePath, 'utf8');
-    expect(source.includes(":host([mode='single']) [part='control'][data-has-chip] [part='input'] {")).toBe(
+    expect(source.includes(":host(:not([multiple])) [part='control'][data-has-chip] [part='input'] {")).toBe(
       true,
     );
   });
@@ -1732,13 +2148,13 @@ describe('DadsCombobox - styles', () => {
   it('single選択時の入力折りたたみはmultipleと同じで、pointer-events差分を持たない', async () => {
     const sourcePath = join(process.cwd(), 'packages/components/combobox/combobox-styles.ts');
     const source = readFileSync(sourcePath, 'utf8');
-    const blockStart = ":host([mode='multiple']) [part='control'][data-has-chip] [part='input'],";
+    const blockStart = ":host([multiple]) [part='control'][data-has-chip] [part='input'],";
     const blockEnd = "  [part='input'] {";
     const startIndex = source.indexOf(blockStart);
     const endIndex = source.indexOf(blockEnd, startIndex);
     const collapseBlock = startIndex >= 0 && endIndex > startIndex ? source.slice(startIndex, endIndex) : '';
 
-    expect(collapseBlock.includes(":host([mode='single']) [part='control'][data-has-chip] [part='input'] {")).toBe(
+    expect(collapseBlock.includes(":host(:not([multiple])) [part='control'][data-has-chip] [part='input'] {")).toBe(
       true,
     );
     expect(collapseBlock.includes('pointer-events: none;')).toBe(false);
@@ -1819,8 +2235,5 @@ describe('DadsCombobox - styles', () => {
     const styleSourcePath = join(process.cwd(), 'packages/components/combobox/combobox-styles.ts');
     const styleSource = readFileSync(styleSourcePath, 'utf8');
     expect(styleSource.includes('height: var(--dads-combobox-control-height);')).toBe(true);
-    expect(styleSource.includes(":host([mode='multiple']) [part='control'] {")).toBe(true);
-    expect(styleSource.includes('height: auto;')).toBe(true);
-    expect(styleSource.includes('min-height: var(--dads-combobox-control-height);')).toBe(true);
   });
 });
