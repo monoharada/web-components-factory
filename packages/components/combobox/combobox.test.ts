@@ -1620,4 +1620,28 @@ describe('DadsCombobox - styles', () => {
     expect(source.includes(':host([size="m"]),')).toBe(true);
     expect(source.includes(':host([size="l"]),')).toBe(true);
   });
+
+  it('size属性変更でcontrol高さが変わるよう、paddingとindicatorもサイズ連動する', async () => {
+    const tokenSourcePath = join(process.cwd(), 'packages/components/combobox/combobox-tokens.ts');
+    const tokenSource = readFileSync(tokenSourcePath, 'utf8');
+    expect(tokenSource.includes('--combobox-padding-y-s: 0.4375rem;')).toBe(true);
+    expect(tokenSource.includes('--combobox-padding-y-m: 0.5625rem;')).toBe(true);
+    expect(tokenSource.includes('--combobox-padding-y-l: 0.6875rem;')).toBe(true);
+    expect(tokenSource.includes('--combobox-indicator-size-s: 1.5rem;')).toBe(true);
+    expect(tokenSource.includes('--combobox-indicator-size-m: 1.75rem;')).toBe(true);
+    expect(tokenSource.includes('--combobox-indicator-size-l: 2rem;')).toBe(true);
+    expect(tokenSource.includes('--dads-combobox-padding-y: var(--combobox-padding-y-m);')).toBe(true);
+    expect(tokenSource.includes('--dads-combobox-indicator-size: var(--combobox-indicator-size-m);')).toBe(true);
+    expect(tokenSource.includes('--dads-combobox-padding-y: var(--combobox-padding-y-s);')).toBe(true);
+    expect(tokenSource.includes('--dads-combobox-indicator-size: var(--combobox-indicator-size-s);')).toBe(true);
+    expect(tokenSource.includes('--dads-combobox-padding-y: var(--combobox-padding-y-l);')).toBe(true);
+    expect(tokenSource.includes('--dads-combobox-indicator-size: var(--combobox-indicator-size-l);')).toBe(true);
+
+    const styleSourcePath = join(process.cwd(), 'packages/components/combobox/combobox-styles.ts');
+    const styleSource = readFileSync(styleSourcePath, 'utf8');
+    expect(styleSource.includes('height: var(--dads-combobox-control-height);')).toBe(true);
+    expect(styleSource.includes(":host([mode='multiple']) [part='control'] {")).toBe(true);
+    expect(styleSource.includes('height: auto;')).toBe(true);
+    expect(styleSource.includes('min-height: var(--dads-combobox-control-height);')).toBe(true);
+  });
 });

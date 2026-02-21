@@ -50,7 +50,7 @@ export const comboboxStyles = css`
     display: flex;
     align-items: center;
     gap: var(--combobox-gap);
-    min-height: var(--dads-combobox-control-height);
+    height: var(--dads-combobox-control-height);
     border: var(--dads-combobox-border-width) solid var(--dads-combobox-border-color);
     border-radius: var(--dads-combobox-border-radius);
     background: var(--dads-combobox-background);
@@ -115,6 +115,8 @@ export const comboboxStyles = css`
   :host([mode='multiple']) [part='control'] {
     align-items: flex-start;
     gap: var(--spacing-2, 0.5rem);
+    min-height: var(--dads-combobox-control-height);
+    height: auto;
   }
 
   :host([mode='multiple']) [part='indicator'] {

@@ -38,9 +38,19 @@ const comboboxSemanticTokensText = `
     --combobox-chip-border-color: var(--color-neutral-solid-gray-700, #4d4d4d);
 
     --combobox-gap: var(--spacing-4, 1rem);
-    --combobox-padding-y: var(--spacing-3, 0.75rem);
+    --combobox-padding-y-s: 0.4375rem;
+    --combobox-padding-y-m: 0.5625rem;
+    --combobox-padding-y-l: 0.6875rem;
+    --combobox-padding-y-sm: var(--combobox-padding-y-s);
+    --combobox-padding-y-md: var(--combobox-padding-y-m);
+    --combobox-padding-y-lg: var(--combobox-padding-y-l);
     --combobox-padding-inline: var(--spacing-3, 0.75rem);
-    --combobox-indicator-size: 2rem;
+    --combobox-indicator-size-s: 1.5rem;
+    --combobox-indicator-size-m: 1.75rem;
+    --combobox-indicator-size-l: 2rem;
+    --combobox-indicator-size-sm: var(--combobox-indicator-size-s);
+    --combobox-indicator-size-md: var(--combobox-indicator-size-m);
+    --combobox-indicator-size-lg: var(--combobox-indicator-size-l);
     --combobox-indicator-radius: var(--border-radius-4, 0.25rem);
     --combobox-indicator-border-color: var(--color-primitive-blue-1000, #00118f);
     --combobox-indicator-background: var(--color-neutral-white, #ffffff);
@@ -82,9 +92,9 @@ const comboboxLocalTokensText = `
     --dads-combobox-text-color: var(--combobox-text-color);
     --dads-combobox-placeholder-color: var(--combobox-placeholder-color);
     --dads-combobox-control-height: var(--combobox-control-height-m);
-    --dads-combobox-padding-y: var(--combobox-padding-y);
+    --dads-combobox-padding-y: var(--combobox-padding-y-m);
     --dads-combobox-padding-inline: var(--combobox-padding-inline);
-    --dads-combobox-indicator-size: var(--combobox-indicator-size);
+    --dads-combobox-indicator-size: var(--combobox-indicator-size-m);
     --dads-combobox-indicator-radius: var(--combobox-indicator-radius);
     --dads-combobox-indicator-border-color: var(--combobox-indicator-border-color);
     --dads-combobox-indicator-background: var(--combobox-indicator-background);
@@ -113,18 +123,24 @@ const comboboxLocalTokensText = `
   :host([size="sm"]) {
     --dads-combobox-label-size: var(--combobox-label-size-sm);
     --dads-combobox-control-height: var(--combobox-control-height-s);
+    --dads-combobox-padding-y: var(--combobox-padding-y-s);
+    --dads-combobox-indicator-size: var(--combobox-indicator-size-s);
   }
 
   :host([size="m"]),
   :host([size="md"]) {
     --dads-combobox-label-size: var(--combobox-label-size-md);
     --dads-combobox-control-height: var(--combobox-control-height-m);
+    --dads-combobox-padding-y: var(--combobox-padding-y-m);
+    --dads-combobox-indicator-size: var(--combobox-indicator-size-m);
   }
 
   :host([size="l"]),
   :host([size="lg"]) {
     --dads-combobox-label-size: var(--combobox-label-size-lg);
     --dads-combobox-control-height: var(--combobox-control-height-l);
+    --dads-combobox-padding-y: var(--combobox-padding-y-l);
+    --dads-combobox-indicator-size: var(--combobox-indicator-size-l);
   }
 
   :host([error]) {
