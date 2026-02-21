@@ -217,7 +217,8 @@ describe('DadsCombobox - 分岐補強', () => {
     await waitMicrotask();
 
     expect(element.hasAttribute('open')).toBe(true);
-    expect(element.shadowRoot?.querySelector('[part="search-input"]')).toBeNull();
+    const searchBox = getShadowContent(element, '[part="search-box"]') as HTMLElement | null;
+    expect(searchBox?.hidden).toBe(true);
 
     let options = getOptions(element);
     expect(options[2]?.getAttribute('data-active')).toBe('true');
@@ -689,6 +690,34 @@ describe('DadsCombobox - 拘束条件', () => {
     expect(element.shadowRoot?.activeElement).toBe(options[0]);
   });
 
+  it('open中に検索入力からTab離脱し候補がないときはパネルを閉じる', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox>
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const control = getControl(element);
+    control.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    const input = getInput(element);
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+
+    const searchInput = getSearchInput(element);
+    searchInput.value = '一致しない';
+    searchInput.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+
+    expect(element.hasAttribute('open')).toBe(false);
+  });
+
   it('候補行にフォーカス中でもEscapeで離脱し、controlへ戻る', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
@@ -1061,6 +1090,27 @@ describe('DadsCombobox - mode=multiple', () => {
     expect(searchInput).not.toBeNull();
   });
 
+  it('search-input は listbox の外側に配置される（ARIA構造）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox mode="multiple">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    const searchInput = getSearchInput(element);
+    const listbox = getShadowContent(element, '[part="listbox"]') as HTMLElement | null;
+    expect(searchInput.closest('[part="listbox"]')).toBeNull();
+    expect(listbox?.querySelector('[part="search-input"]')).toBeNull();
+    expect(listbox?.querySelector('[part="search-box"]')).toBeNull();
+  });
+
   it('検索入力フォーカス中でもArrowUp/ArrowDownで候補のアクティブ行を移動できる', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
@@ -1100,6 +1150,91 @@ describe('DadsCombobox - mode=multiple', () => {
     searchInput = getSearchInput(element);
     expect(element.shadowRoot?.activeElement).toBe(searchInput);
     options = getOptions(element);
+    expect(options[0]?.getAttribute('data-active')).toBe('true');
+  });
+
+  it('option 最終行から Tab 離脱するとパネルを閉じる', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox mode="multiple">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    const options = getOptions(element);
+    expect(options.length).toBeGreaterThan(0);
+    const lastOption = options[options.length - 1] as HTMLButtonElement;
+    lastOption.focus();
+    lastOption.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+
+    expect(element.hasAttribute('open')).toBe(false);
+  });
+
+  it('open中は focus順を control -> search -> option -> 削除ボタン にできる', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox mode="multiple" value="tokyo,osaka">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+    const searchInput = getSearchInput(element);
+    expect(element.shadowRoot?.activeElement).toBe(searchInput);
+
+    searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+
+    const options = getOptions(element) as HTMLButtonElement[];
+    expect(options.length).toBeGreaterThan(0);
+    const lastOption = options[options.length - 1];
+    lastOption.focus();
+    lastOption.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+    await waitMicrotask();
+
+    const chipActions = getChipActionButtons(element);
+    expect(chipActions.length).toBeGreaterThan(0);
+    const chipHost = (chipActions[0].getRootNode() as ShadowRoot).host;
+    expect([chipActions[0], chipHost]).toContain(document.activeElement);
+  });
+
+  it('open中に削除ボタンへフォーカスしてもArrowDownで候補を移動できる', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox mode="multiple" value="tokyo,osaka">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.focus();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await waitMicrotask();
+
+    const chipActions = getChipActionButtons(element);
+    expect(chipActions.length).toBeGreaterThan(0);
+    chipActions[0].focus();
+    chipActions[0].dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true, composed: true }),
+    );
+    await waitMicrotask();
+
+    const options = getOptions(element);
     expect(options[0]?.getAttribute('data-active')).toBe('true');
   });
 

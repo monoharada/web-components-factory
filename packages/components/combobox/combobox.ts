@@ -58,10 +58,11 @@ let comboboxIdSequence = 0;
  * @csspart chip-list - 複数選択チップ群
  * @csspart chip - 複数選択チップ
  * @csspart indicator - ドロップダウンインジケータ
+ * @csspart panel - フローティングパネル
  * @csspart listbox - 候補リスト
- * @csspart search-box - 候補リスト内検索ラッパー
- * @csspart search-icon - 候補リスト内検索アイコン
- * @csspart search-input - 候補リスト内検索入力
+ * @csspart search-box - パネル内検索ラッパー
+ * @csspart search-icon - パネル内検索アイコン
+ * @csspart search-input - パネル内検索入力
  * @csspart option - 候補行
  * @csspart option-check - 候補行チェック領域（multiple）
  * @csspart option-label - 候補ラベル
@@ -97,6 +98,8 @@ export class DadsCombobox extends TypographyFormComponent {
   #searchInput: HTMLInputElement | null = null;
   #control: HTMLElement | null = null;
   #indicator: HTMLButtonElement | null = null;
+  #panel: HTMLElement | null = null;
+  #searchBox: HTMLElement | null = null;
   #listbox: HTMLElement | null = null;
   #chipList: HTMLElement | null = null;
 
@@ -158,7 +161,17 @@ export class DadsCombobox extends TypographyFormComponent {
           </button>
         </div>
 
-        <div part="listbox" id="listbox" role="listbox" hidden></div>
+        <div part="panel" id="panel" hidden>
+          <div part="search-box" id="search-box" hidden>
+            <span part="search-icon" id="search-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"></path>
+              </svg>
+            </span>
+            <input part="search-input" id="search-input" type="text" aria-label="候補を検索" autocomplete="off" />
+          </div>
+          <div part="listbox" id="listbox" role="listbox" hidden></div>
+        </div>
 
         <div part="error-text" id="error-text">
           <slot name="error-text" id="error-slot"></slot>
@@ -201,6 +214,9 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#input = this.shadowRoot?.querySelector('#input') as HTMLInputElement | null;
     this.#control = this.shadowRoot?.querySelector('#control') as HTMLElement | null;
     this.#indicator = this.shadowRoot?.querySelector('#indicator') as HTMLButtonElement | null;
+    this.#panel = this.shadowRoot?.querySelector('#panel') as HTMLElement | null;
+    this.#searchBox = this.shadowRoot?.querySelector('#search-box') as HTMLElement | null;
+    this.#searchInput = this.shadowRoot?.querySelector('#search-input') as HTMLInputElement | null;
     this.#listbox = this.shadowRoot?.querySelector('#listbox') as HTMLElement | null;
     this.#chipList = this.shadowRoot?.querySelector('#chip-list') as HTMLElement | null;
 
@@ -218,7 +234,7 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#setupSlots();
     this.#setupControlListeners();
     this.#setupOptionsObserver();
-    this.addEventListener('keydown', this.#handleHostEscapeKeydown, true);
+    this.addEventListener('keydown', this.#handleHostKeydown, true);
     this.#syncFromLightDomOptions();
     this.#syncAllState();
 
@@ -237,7 +253,7 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#searchInput?.removeEventListener('input', this.#handleSearchInput);
     this.#searchInput?.removeEventListener('compositionstart', this.#handleSearchCompositionStart);
     this.#searchInput?.removeEventListener('compositionend', this.#handleSearchCompositionEnd);
-    this.removeEventListener('keydown', this.#handleHostEscapeKeydown, true);
+    this.removeEventListener('keydown', this.#handleHostKeydown, true);
 
     this.#optionsObserver?.disconnect();
     this.#optionsObserver = null;
@@ -426,6 +442,21 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#input?.addEventListener('input', this.#handleInput);
     this.#control?.addEventListener('click', this.#handleControlClick);
     this.#chipList?.addEventListener('dads-chip-tag-remove', this.#handleChipRemove as EventListener);
+    this.#searchInput?.addEventListener('keydown', this.#handleInputKeydown);
+    this.#searchInput?.addEventListener('input', this.#handleSearchInput);
+    this.#searchInput?.addEventListener('compositionstart', this.#handleSearchCompositionStart);
+    this.#searchInput?.addEventListener('compositionend', this.#handleSearchCompositionEnd);
+  }
+
+  #hasVisibleSearchInput(): boolean {
+    return Boolean(
+      this.hasAttribute('filterable') &&
+        this.#searchBox &&
+        !this.#searchBox.hidden &&
+        this.#searchInput &&
+        !this.#searchInput.hidden &&
+        !this.#searchInput.disabled,
+    );
   }
 
   #setupOptionsObserver(): void {
@@ -584,6 +615,7 @@ export class DadsCombobox extends TypographyFormComponent {
     const disabled = this.#isDisabled();
     this.#input.disabled = disabled;
     this.#input.readOnly = true;
+    if (this.#searchInput) this.#searchInput.disabled = disabled;
     this.#indicator?.toggleAttribute('disabled', disabled);
 
     const placeholder = this.getAttribute('placeholder');
@@ -794,13 +826,32 @@ export class DadsCombobox extends TypographyFormComponent {
         break;
       case 'Tab':
         if (!this.#isOpen) return;
-        if (isControlInput && this.#searchInput && !event.shiftKey) {
-          event.preventDefault();
-          this.#searchInput.focus();
+        if (event.shiftKey) return;
+        if (isControlInput) {
+          if (this.#hasVisibleSearchInput()) {
+            event.preventDefault();
+            this.#searchInput?.focus();
+            return;
+          }
+          if (this.#focusTabTargetOption()) {
+            event.preventDefault();
+            return;
+          }
+          this.removeAttribute('open');
           return;
         }
-        if (isSearchInput && !event.shiftKey && this.#focusTabTargetOption()) {
-          event.preventDefault();
+        if (isSearchInput) {
+          if (this.#focusTabTargetOption()) {
+            event.preventDefault();
+            return;
+          }
+          const chipActions = this.#getChipActionButtons();
+          if (chipActions.length > 0) {
+            event.preventDefault();
+            chipActions[0].focus();
+            return;
+          }
+          this.removeAttribute('open');
           return;
         }
         break;
@@ -944,53 +995,32 @@ export class DadsCombobox extends TypographyFormComponent {
   #renderOptions(): void {
     if (!this.#listbox || !this.#input) return;
 
-    this.#listbox.hidden = !this.#isOpen;
     this.#listbox.replaceChildren();
     this.#syncListboxFloatingPosition();
+    this.#syncPanelVisibility();
 
     if (!this.#isOpen) {
       this.#isSearchInputComposing = false;
-      this.#searchInput = null;
       this.#input.removeAttribute('aria-activedescendant');
       return;
     }
 
-    if (this.hasAttribute('filterable')) {
-      const searchBox = document.createElement('div');
-      searchBox.setAttribute('part', 'search-box');
-
-      const searchIcon = document.createElement('span');
-      searchIcon.setAttribute('part', 'search-icon');
-      searchIcon.setAttribute('aria-hidden', 'true');
-      searchIcon.innerHTML =
-        '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z"></path></svg>';
-      searchBox.appendChild(searchIcon);
-
-      const searchInput = document.createElement('input');
-      searchInput.type = 'text';
-      searchInput.setAttribute('part', 'search-input');
-      searchInput.setAttribute('aria-label', '候補を検索');
-      searchInput.autocomplete = 'off';
-      searchInput.value = this.#query;
-      searchInput.placeholder = '';
-      searchInput.addEventListener('keydown', this.#handleInputKeydown);
-      searchInput.addEventListener('input', this.#handleSearchInput);
-      searchInput.addEventListener('compositionstart', this.#handleSearchCompositionStart);
-      searchInput.addEventListener('compositionend', this.#handleSearchCompositionEnd);
-      searchBox.appendChild(searchInput);
-
-      this.#searchInput?.removeEventListener('keydown', this.#handleInputKeydown);
-      this.#searchInput?.removeEventListener('input', this.#handleSearchInput);
-      this.#searchInput?.removeEventListener('compositionstart', this.#handleSearchCompositionStart);
-      this.#searchInput?.removeEventListener('compositionend', this.#handleSearchCompositionEnd);
-      this.#searchInput = searchInput;
-      this.#listbox.appendChild(searchBox);
-    } else {
-      this.#isSearchInputComposing = false;
-      this.#searchInput = null;
+    if (this.#searchInput) {
+      this.#searchInput.value = this.#query;
+      this.#searchInput.placeholder = '';
     }
 
     this.#renderOptionRowsIntoListbox();
+  }
+
+  #syncPanelVisibility(): void {
+    if (!this.#panel || !this.#listbox) return;
+    this.#panel.hidden = !this.#isOpen;
+    this.#listbox.hidden = !this.#isOpen;
+
+    if (!this.#searchBox) return;
+    const showSearchBox = this.#isOpen && this.hasAttribute('filterable');
+    this.#searchBox.hidden = !showSearchBox;
   }
 
   #renderOptionRowsIntoListbox(): void {
@@ -1162,6 +1192,13 @@ export class DadsCombobox extends TypographyFormComponent {
     );
   }
 
+  #getChipActionButtons(): HTMLButtonElement[] {
+    const chips = Array.from(this.shadowRoot?.querySelectorAll('dads-chip-tag') ?? []) as HTMLElement[];
+    return chips
+      .map((chip) => chip.shadowRoot?.querySelector('[part="action"]') as HTMLButtonElement | null)
+      .filter((button): button is HTMLButtonElement => button instanceof HTMLButtonElement);
+  }
+
   #restoreSearchInputFocus(cursor: number): void {
     if (!this.#searchInput) return;
     this.#searchInput.focus();
@@ -1183,6 +1220,10 @@ export class DadsCombobox extends TypographyFormComponent {
         this.#moveActive(-1, true);
         this.#focusTabTargetOption();
         return;
+      case 'Tab':
+        if (event.shiftKey) return;
+        this.#handleOptionTab(event);
+        return;
     }
 
     if (!this.#isEscapeKey(event)) return;
@@ -1191,12 +1232,49 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#focusControl();
   };
 
-  #handleHostEscapeKeydown = (event: KeyboardEvent): void => {
-    if (!this.#isEscapeKey(event)) return;
-    if (!this.#isOpen) return;
-    event.preventDefault();
+  #handleOptionTab(event: KeyboardEvent): void {
+    const currentOption = event.currentTarget;
+    if (!(currentOption instanceof HTMLButtonElement)) return;
+
+    const options = this.#getTabNavigableOptions();
+    if (options.length === 0) {
+      this.removeAttribute('open');
+      return;
+    }
+
+    const lastOption = options[options.length - 1];
+    if (currentOption !== lastOption) return;
+
+    const chipActions = this.#getChipActionButtons();
+    if (chipActions.length > 0) {
+      event.preventDefault();
+      chipActions[0].focus();
+      return;
+    }
+
     this.removeAttribute('open');
-    this.#focusControl();
+  }
+
+  #handleHostKeydown = (event: KeyboardEvent): void => {
+    if (!this.#isOpen) return;
+    if (this.#isEscapeKey(event)) {
+      event.preventDefault();
+      this.removeAttribute('open');
+      this.#focusControl();
+      return;
+    }
+
+    if (this.#isImeComposing(event)) return;
+    const key = event.key;
+    if (key !== 'ArrowDown' && key !== 'ArrowUp') return;
+
+    const target = event.target;
+    if (target === this.#input || target === this.#searchInput) return;
+    if (target instanceof HTMLElement && target.getAttribute('part') === 'option') return;
+
+    event.preventDefault();
+    this.#moveActive(key === 'ArrowDown' ? 1 : -1, true);
+    this.#focusTabTargetOption();
   };
 
   #isEscapeKey(eventOrKey: KeyboardEvent | string): boolean {
