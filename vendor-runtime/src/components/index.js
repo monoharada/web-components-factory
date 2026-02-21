@@ -11,6 +11,8 @@ export * from './button/index.js';
 export * from './card/index.js';
 // インプットテキスト
 export * from './input-text/index.js';
+// コンボボックス
+export * from './combobox/index.js';
 // ファイルアップロード
 export * from './file-upload/index.js';
 // セレクトボックス

@@ -83,6 +83,12 @@
       "defineModule": "src/components/code-block/index.js",
       "defineFn": "defineDefaultCodeBlock"
     },
+    "combobox": {
+      "tagBase": "combobox",
+      "elementEntry": "components/combobox.js",
+      "defineModule": "src/components/combobox/index.js",
+      "defineFn": "defineCombobox"
+    },
     "date-picker": {
       "tagBase": "date-picker",
       "elementEntry": "components/date-picker.js",

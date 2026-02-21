@@ -136,6 +136,20 @@
         "componentDir": "packages/components/code-block"
       }
     },
+    "combobox": {
+      "id": "combobox",
+      "tags": [
+        "dads-combobox"
+      ],
+      "define": "defineCombobox",
+      "call": "prefix-registry",
+      "deps": [
+        "chip-tag"
+      ],
+      "source": {
+        "componentDir": "packages/components/combobox"
+      }
+    },
     "date-picker": {
       "id": "date-picker",
       "tags": [
@@ -618,6 +632,7 @@
     "dads-chip-label": "chip-label",
     "dads-chip-tag": "chip-tag",
     "dads-code-block": "code-block",
+    "dads-combobox": "combobox",
     "dads-date-picker": "date-picker",
     "dads-description-list": "description-list",
     "dads-device-mock": "device-mock",

@@ -944,16 +944,24 @@ _DadsCarousel_instanceId = new WeakMap(), _DadsCarousel_items = new WeakMap(), _
         return;
     const media = __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_createSlideMedia).call(this, slide, true, 'lazy', 'async');
     const previewMedia = media ? media.cloneNode(true) : null;
+    const previewImage = previewMedia ? extractImageElement(previewMedia) : null;
+    if (previewImage)
+        previewImage.loading = 'eager';
     __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_replaceMediaWhenReady).call(this, __classPrivateFieldGet(this, _DadsCarousel_nextImageContainer, "f"), previewMedia, {
         renderSeq,
         lockMainHeight: false,
         context: { index, role: 'next-preview', source },
+        waitPolicy: 'insert-immediately',
     });
     const bgMedia = __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_createSlideMedia).call(this, slide, true, 'lazy', 'async');
+    const bgImage = bgMedia ? extractImageElement(bgMedia) : null;
+    if (bgImage)
+        bgImage.loading = 'eager';
     __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_replaceMediaWhenReady).call(this, __classPrivateFieldGet(this, _DadsCarousel_nextBgContent, "f"), bgMedia, {
         renderSeq,
         lockMainHeight: false,
         context: { index, role: 'next-bg', source },
+        waitPolicy: 'insert-immediately',
     });
 }, _DadsCarousel_syncLink = function _DadsCarousel_syncLink(link, slide) {
     if (slide.href) {
@@ -1082,7 +1090,7 @@ _DadsCarousel_instanceId = new WeakMap(), _DadsCarousel_items = new WeakMap(), _
     }
     __classPrivateFieldGet(this, _DadsCarousel_allSlidesList, "f").appendChild(fragment);
 }, _DadsCarousel_replaceMediaWhenReady = function _DadsCarousel_replaceMediaWhenReady(container, media, options) {
-    const { renderSeq, lockMainHeight, context } = options;
+    const { renderSeq, lockMainHeight, context, waitPolicy = 'wait-before-insert', } = options;
     if (!container)
         return;
     if (renderSeq !== __classPrivateFieldGet(this, _DadsCarousel_renderSeq, "f"))
@@ -1094,6 +1102,19 @@ _DadsCarousel_instanceId = new WeakMap(), _DadsCarousel_items = new WeakMap(), _
         return;
     }
     if (!__classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_isMediaReady).call(this, media)) {
+        if (waitPolicy === 'insert-immediately') {
+            const releaseLock = lockMainHeight ? __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_lockMainPanelHeight).call(this) : () => { };
+            container.replaceChildren(media);
+            void __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_waitForMediaReady).call(this, media).then((result) => {
+                if (renderSeq !== __classPrivateFieldGet(this, _DadsCarousel_renderSeq, "f")) {
+                    releaseLock();
+                    return;
+                }
+                __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_emitMediaResult).call(this, result, media, context);
+                releaseLock();
+            });
+            return;
+        }
         const releaseLock = lockMainHeight ? __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_lockMainPanelHeight).call(this) : () => { };
         void __classPrivateFieldGet(this, _DadsCarousel_instances, "m", _DadsCarousel_waitForMediaReady).call(this, media).then((result) => {
             if (renderSeq !== __classPrivateFieldGet(this, _DadsCarousel_renderSeq, "f")) {

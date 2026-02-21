@@ -11088,6 +11088,1745 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/combobox/combobox.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Comboboxコンポーネント",
+          "name": "DadsCombobox",
+          "cssParts": [
+            {
+              "description": "複数選択チップ",
+              "name": "chip"
+            },
+            {
+              "description": "複数選択チップ群",
+              "name": "chip-list"
+            },
+            {
+              "description": "入力コントロール",
+              "name": "control"
+            },
+            {
+              "description": "エラーテキスト",
+              "name": "error-text"
+            },
+            {
+              "description": "ドロップダウンインジケータ",
+              "name": "indicator"
+            },
+            {
+              "description": "入力欄",
+              "name": "input"
+            },
+            {
+              "description": "ラベル要素",
+              "name": "label"
+            },
+            {
+              "description": "ラベルテキスト",
+              "name": "label-text"
+            },
+            {
+              "description": "候補リスト",
+              "name": "listbox"
+            },
+            {
+              "description": "候補行",
+              "name": "option"
+            },
+            {
+              "description": "候補行チェック領域（multiple）",
+              "name": "option-check"
+            },
+            {
+              "description": "候補ラベル",
+              "name": "option-label"
+            },
+            {
+              "description": "候補ラベル内のquery一致強調",
+              "name": "option-match"
+            },
+            {
+              "description": "候補補助テキスト",
+              "name": "option-meta"
+            },
+            {
+              "description": "必須表示",
+              "name": "requirement"
+            },
+            {
+              "description": "候補リスト内検索ラッパー",
+              "name": "search-box"
+            },
+            {
+              "description": "候補リスト内検索アイコン",
+              "name": "search-icon"
+            },
+            {
+              "description": "候補リスト内検索入力",
+              "name": "search-input"
+            },
+            {
+              "description": "サポートテキスト",
+              "name": "support-text"
+            },
+            {
+              "description": "全体ラッパー",
+              "name": "wrapper"
+            }
+          ],
+          "slots": [
+            {
+              "description": "option 要素（optionの `data-search` にJSON配列文字列を指定すると検索別名を追加可能）",
+              "name": ""
+            },
+            {
+              "description": "エラーテキスト",
+              "name": "error-text"
+            },
+            {
+              "description": "ラベルテキスト",
+              "name": "label"
+            },
+            {
+              "description": "必須バリデーション用のカスタムメッセージ",
+              "name": "required-error"
+            },
+            {
+              "description": "サポートテキスト",
+              "name": "support-text"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_internals",
+              "type": {
+                "text": "ElementInternals"
+              },
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#activeIndex",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "-1"
+            },
+            {
+              "kind": "method",
+              "name": "#allOptionIndexes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#applyValueAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "attrValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#buildSearchIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "tokens",
+                  "type": {
+                    "text": "string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#chipList",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#clearRenderedOptionRows",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#commitIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#control",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#createOptionElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#disabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#documentAbort",
+              "privacy": "private",
+              "type": {
+                "text": "AbortController | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureDefaultBooleans",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#errorFallback",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#errorSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#errorText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#filterKnownValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Set<string>"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "values",
+                  "type": {
+                    "text": "Set<string>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#findFirstFilteredEnabledIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#findLastFilteredEnabledIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#focusControl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#focusTabTargetOption",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyFormComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#formDisabled",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#getFilteredIndexes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getTabNavigableOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement[]"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleChipRemove",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleControlClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDocumentClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleDocumentKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleHostEscapeKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleInput",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleInputKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleOptionKeydown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSearchCompositionEnd",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSearchCompositionStart",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSearchInput",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#indicator",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#input",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#isEscapeKey",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "eventOrKey",
+                  "type": {
+                    "text": "KeyboardEvent | string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isImeComposing",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isKnownOptionValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#isOpen",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#isOptionSelected",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "ComboboxOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#isSearchInputComposing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#labelFallback",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#labelFromValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#labelSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#listbox",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#listboxId",
+              "privacy": "private",
+              "default": "`combobox-listbox-${comboboxIdSequence++}`"
+            },
+            {
+              "kind": "field",
+              "name": "#mode",
+              "privacy": "private",
+              "type": {
+                "text": "ComboboxMode"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#moveActive",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "step",
+                  "type": {
+                    "text": "1 | -1"
+                  }
+                },
+                {
+                  "name": "allowInitialize",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#normalizeSearchText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#options",
+              "privacy": "private",
+              "type": {
+                "text": "ComboboxOption[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#optionsObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#parseCommaSeparatedValues",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rawValue",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#parseSearchAliases",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string[]"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rawValue",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#preferredActiveIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "number"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#query",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "method",
+              "name": "#renderChipList",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderOptionLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "labelElement",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "labelText",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderOptionRowsIntoListbox",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#requirement",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#resolveControlPlaceholder",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "placeholderAttr",
+                  "type": {
+                    "text": "string | null"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#resolveQueryFromRawInput",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "rawInput",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#restoreSearchInputFocus",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cursor",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#sanitizeModeAttribute",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#searchInput",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLInputElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#selectedMultiple",
+              "privacy": "private",
+              "default": "new Set<string>()"
+            },
+            {
+              "kind": "field",
+              "name": "#selectedSingle",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "method",
+              "name": "#setActiveIndex",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupControlListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupOptionsObserver",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setupSlots",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#shouldSyncOptionsFromMutation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "mutation",
+                  "type": {
+                    "text": "MutationRecord"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#supportFallback",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#supportSlot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#supportText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAllState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncDocumentListeners",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "enable",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncFormValue",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncFromLightDomOptions",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncInputAria",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncInputAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncInputDisplay",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncListboxFloatingPosition",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncOpenState",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "nextOpen",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#syncSelectionForModeChange",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSelectionView",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValueAndSelectionView",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#toggleOpenFromControl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#updateAriaDescribedBy",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#upgradePreDefinedValueProperty",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "blur",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "checkValidity",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-combobox', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"input\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"control\" id=\"control\"> <input part=\"input\" id=\"input\" role=\"combobox\" aria-autocomplete=\"list\" aria-expanded=\"false\" autocomplete=\"off\" /> <ul part=\"chip-list\" id=\"chip-list\"></ul> <button part=\"indicator\" id=\"indicator\" type=\"button\" aria-label=\"候補を開閉\" tabindex=\"-1\"> <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"> <path d=\"M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z\"></path> </svg> </button> </div> <div part=\"listbox\" id=\"listbox\" role=\"listbox\" hidden></div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> </div> `, styles: withReset( [applyDADSTokens(), applySpacingTokens(), comboboxTokens, comboboxStyles, applyDADSFocusStyles()], 'minimal', ), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), PropertyAttr('name'), PropertyAttr('mode'), BooleanAttr('filterable'), BooleanAttr('clear-on-close'), BooleanAttr('restore-on-cancel'), BooleanAttr('open'), PropertyAttr('placeholder'), PropertyAttr('size'), { attribute: 'value' }, ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "form",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "formAssociated",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "true",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formDisabledCallback",
+              "parameters": [
+                {
+                  "name": "disabled",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formResetCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "formStateRestoreCallback",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "state",
+                  "type": {
+                    "text": "unknown"
+                  }
+                },
+                {
+                  "name": "_mode",
+                  "type": {
+                    "text": "unknown"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "reportValidity",
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "type",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validationMessage",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "validity",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "ComboboxValue"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "willValidate",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "FormComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "description": "明示確定時のみ",
+              "name": "dads-change"
+            },
+            {
+              "description": "ポップアップ閉時",
+              "name": "dads-close"
+            },
+            {
+              "description": "query入力変化時",
+              "name": "dads-input"
+            },
+            {
+              "description": "ポップアップ開時",
+              "name": "dads-open"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "close時にqueryをクリア（常に実行）",
+              "name": "clear-on-close"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "無効状態",
+              "name": "disabled"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "エラー状態",
+              "name": "error"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "エラー属性フォールバック",
+              "name": "error-text"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "入力絞り込みの有効化",
+              "name": "filterable"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "ラベル属性フォールバック",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "'single' | 'multiple'"
+              },
+              "description": "選択モード",
+              "name": "mode"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "フォーム名",
+              "name": "name"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "開閉状態",
+              "name": "open"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "プレースホルダー",
+              "name": "placeholder"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "必須状態",
+              "name": "required"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "singleで未確定離脱時の復帰",
+              "name": "restore-on-cancel"
+            },
+            {
+              "type": {
+                "text": "'s' | 'm' | 'l' | 'sm' | 'md' | 'lg'"
+              },
+              "description": "サイズ",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "サポート属性フォールバック",
+              "name": "support-text"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "選択値（mode=multiple時はカンマ区切り）",
+              "name": "value"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyFormComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-combobox",
+          "customElement": true,
+          "modulePath": "./packages/components/combobox/combobox.ts",
+          "definitionPath": "./packages/components/combobox/combobox.ts",
+          "typeDefinitionPath": "./packages/components/combobox/combobox.ts",
+          "custom": {
+            "componentId": "combobox",
+            "install": {
+              "id": "combobox",
+              "define": "defineCombobox",
+              "call": "prefix-registry",
+              "deps": [
+                "chip-tag"
+              ],
+              "source": {
+                "componentDir": "packages/components/combobox"
+              },
+              "tags": [
+                "dads-combobox"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsCombobox",
+          "declaration": {
+            "name": "DadsCombobox",
+            "module": "packages/components/combobox/combobox.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/combobox/combobox.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/combobox/combobox.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-combobox",
+          "declaration": {
+            "name": "DadsCombobox",
+            "module": "./packages/components/combobox/combobox.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/date-picker/date-picker-impl.ts",
       "declarations": [
         {
@@ -48827,6 +50566,193 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/combobox/combobox-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "autoDefineCombobox",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineCombobox",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultCombobox",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-combobox`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "autoDefineCombobox",
+          "declaration": {
+            "name": "autoDefineCombobox",
+            "module": "packages/components/combobox/combobox-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineCombobox",
+          "declaration": {
+            "name": "defineCombobox",
+            "module": "packages/components/combobox/combobox-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCombobox",
+          "declaration": {
+            "name": "defineDefaultCombobox",
+            "module": "packages/components/combobox/combobox-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/combobox/combobox-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "comboboxStyles",
+          "default": "css` :host { display: block; position: relative; font-family: var(--font-family-sans); color: var(--dads-combobox-text-color); } [part='wrapper'] { position: relative; display: flex; flex-direction: column; gap: var(--combobox-gap); } [part='label'] { display: flex; align-items: baseline; gap: 0; font-size: var(--dads-combobox-label-size); font-weight: var(--dads-combobox-label-weight); color: var(--dads-combobox-label-color); line-height: var(--line-height-150); } [part='label-text'] { display: contents; } [part='requirement'] { margin-left: var(--spacing-1, 0.25rem); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); color: var(--dads-combobox-required-color); } [part='support-text'] { color: var(--dads-combobox-support-color); line-height: var(--line-height-150); } [part='control'] { position: relative; box-sizing: border-box; display: flex; align-items: center; gap: var(--combobox-gap); min-height: var(--dads-combobox-control-height); border: var(--dads-combobox-border-width) solid var(--dads-combobox-border-color); border-radius: var(--dads-combobox-border-radius); background: var(--dads-combobox-background); padding-block: var(--dads-combobox-padding-y); padding-inline: var(--dads-combobox-padding-inline); transition: border-color 0.16s ease; } @media (any-hover: hover) { :host(:not([disabled])) [part='control']:hover { --dads-combobox-border-color: var(--combobox-border-color-hover); } } :host([disabled]) [part='control'] { --dads-combobox-background: var(--combobox-bg-disabled); --dads-combobox-border-color: var(--combobox-border-color-disabled); --dads-combobox-text-color: var(--combobox-text-color-disabled); cursor: not-allowed; } :host(:not([disabled])) [part='control']:focus-within { border-color: var(--combobox-border-color-focus); outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); } :host([error]:not([disabled])) [part='control']:focus-within { border-color: var(--combobox-border-color-error); } :host [part='control'] [part='input']:focus-visible { outline: none; box-shadow: none; } :host [part='control'] [part='input']:focus { outline: none; box-shadow: none; } [part='chip-list'] { display: inline-flex; flex-wrap: wrap; gap: var(--spacing-1, 0.25rem); margin: 0; padding: 0; list-style: none; flex: 1 1 auto; order: 1; } [part='chip-item'] { display: inline-flex; } [part='chip-list'][hidden] { display: none; } :host([mode='multiple']) [part='control'] { align-items: flex-start; gap: var(--spacing-2, 0.5rem); } :host([mode='multiple']) [part='indicator'] { align-self: flex-start; } :host([mode='multiple']) [part='chip-list'] { order: 1; } :host([mode='multiple']) [part='input'] { order: 2; flex: 1 1 8ch; min-width: 6ch; } :host([mode='multiple']) [part='control'][data-has-chip] [part='input'], :host([mode='single']) [part='control'][data-has-chip] [part='input'] { flex: 0 0 0.0625rem; min-width: 0; max-width: 0.0625rem; opacity: 0; } [part='input'] { flex: 1 1 auto; min-width: 0; order: 2; border: none; outline: none; background: transparent; color: var(--dads-combobox-text-color); font-size: var(--dads-combobox-font-size); line-height: 1; font-family: var(--font-family-sans); padding: 0; text-align: left; } [part='input']::placeholder { color: var(--dads-combobox-text-color); } [part='input']:disabled { cursor: not-allowed; } [part='indicator'] { display: inline-flex; align-items: center; justify-content: center; order: 0; width: var(--dads-combobox-indicator-size); height: var(--dads-combobox-indicator-size); color: var(--dads-combobox-indicator-border-color); background: var(--dads-combobox-indicator-background); border: 1px solid var(--dads-combobox-indicator-border-color); border-radius: var(--dads-combobox-indicator-radius); padding: 0; flex-shrink: 0; } [part='indicator'] svg { width: 1.25rem; height: 1.25rem; } :host([disabled]) [part='indicator'] { color: var(--combobox-border-color-disabled); border-color: var(--combobox-border-color-disabled); background: var(--combobox-bg-disabled); } :host([open]) [part='indicator'] svg { transform: rotate(180deg); } [part='listbox'] { display: block; position: absolute; inset-inline: 0; top: calc(var(--dads-combobox-control-bottom, 0px) + var(--spacing-2, 0.5rem)); z-index: var(--dads-combobox-list-z-index, 10); max-height: var(--dads-combobox-list-max-height); overflow: auto; border: var(--dads-combobox-border-width) solid var(--dads-combobox-border-color); border-radius: 0 0 var(--dads-combobox-border-radius) var(--dads-combobox-border-radius); background: var(--dads-combobox-background); box-shadow: var(--dads-combobox-list-shadow); } [part='search-box'] { position: relative; display: flex; align-items: center; border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494); padding: var(--spacing-4, 1rem); background: var(--dads-combobox-background); } [part='search-icon'] { position: absolute; left: calc(var(--spacing-4, 1rem) + var(--spacing-3, 0.75rem)); top: 50%; transform: translateY(-50%); color: var(--color-neutral-solid-gray-420, #949494); pointer-events: none; display: inline-flex; align-items: center; justify-content: center; } [part='search-input'] { box-sizing: border-box; width: 100%; min-height: 3.5rem; border: 1px solid var(--dads-combobox-border-color); border-radius: var(--dads-combobox-border-radius); background: var(--dads-combobox-background); color: var(--dads-combobox-text-color); font-size: var(--font-size-16, 1rem); font-family: var(--font-family-sans); padding-inline: var(--spacing-4, 1rem); padding-inline-start: 2.75rem; } [part='search-input']:focus-visible { border-color: var(--combobox-border-color-focus); outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); } [part='listbox'][hidden] { display: none; } [part='option'] { display: flex; align-items: center; justify-content: flex-start; gap: var(--spacing-2, 0.5rem); min-height: var(--dads-combobox-option-min-height); width: 100%; border: 0; border-bottom: 1px solid var(--dads-combobox-option-divider-color); background: transparent; color: inherit; text-align: left; padding-block: var(--dads-combobox-option-padding-y); padding-inline: var(--dads-combobox-option-padding-inline); cursor: pointer; font-size: var(--dads-combobox-font-size); line-height: var(--line-height-150); } [part='option']:last-child { border-bottom: none; } [part='option'][data-active='true'] { background: var(--dads-combobox-option-hover-bg); box-shadow: inset 0 0 0 1px var(--dads-focus-ring-color); } [part='option'][aria-selected='true'] { background: var(--dads-combobox-option-selected-bg); color: inherit; } :host([mode='multiple']) [part='option'][aria-selected='true'] [part='option-label'] { font-weight: var(--font-weight-700, 700); } @media (any-hover: hover) { [part='option']:hover { background: var(--dads-combobox-option-hover-bg); } } [part='option'][aria-disabled='true'] { cursor: not-allowed; color: var(--combobox-text-color-disabled); } [part='option-label'] { display: inline-flex; align-items: center; gap: var(--spacing-1, 0.25rem); min-width: 0; white-space: normal; } [part='option-meta'] { font-size: var(--font-size-16, 1rem); color: var(--color-neutral-solid-gray-600, #666666); line-height: var(--line-height-170); } [part='option-check'] { display: inline-flex; align-items: center; justify-content: center; position: relative; width: 2rem; height: 2rem; flex: 0 0 auto; } [part='option-check']::before { content: ''; box-sizing: border-box; width: var(--dads-combobox-multi-check-size); height: var(--dads-combobox-multi-check-size); border: 2px solid var(--color-neutral-solid-gray-600, #666666); border-radius: var(--dads-combobox-multi-check-radius); background: var(--color-neutral-white, #ffffff); } :host([mode='multiple']) [part='option'][aria-selected='true'] [part='option-check']::before { background: var(--color-primitive-blue-900, #0017c1); border-color: var(--color-primitive-blue-900, #0017c1); } :host([mode='multiple']) [part='option'][aria-selected='true'] [part='option-check']::after { content: '✓'; position: absolute; color: var(--color-neutral-white, #ffffff); font-size: 1rem; font-weight: var(--font-weight-700, 700); line-height: 1; } [part='option-match'] { font-weight: var(--font-weight-700, 700); } [part='empty'] { padding: 0.75rem 1rem; color: var(--color-neutral-solid-gray-600, #666666); } [part='error-text'] { color: var(--dads-combobox-error-color); line-height: var(--line-height-150); } :host([error]) [part='control'] { --dads-combobox-border-color: var(--combobox-border-color-error); } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "comboboxStyles",
+          "declaration": {
+            "name": "comboboxStyles",
+            "module": "packages/components/combobox/combobox-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/combobox/combobox-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "comboboxLocalTokens",
+          "default": "css`${comboboxLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "comboboxSemanticTokens",
+          "default": "css`${comboboxSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "comboboxTokens",
+          "default": "css` ${comboboxSemanticTokensText} ${comboboxLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "comboboxLocalTokens",
+          "declaration": {
+            "name": "comboboxLocalTokens",
+            "module": "packages/components/combobox/combobox-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "comboboxSemanticTokens",
+          "declaration": {
+            "name": "comboboxSemanticTokens",
+            "module": "packages/components/combobox/combobox-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "comboboxTokens",
+          "declaration": {
+            "name": "comboboxTokens",
+            "module": "packages/components/combobox/combobox-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/combobox/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/combobox/combobox.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "autoDefineCombobox",
+          "declaration": {
+            "name": "autoDefineCombobox",
+            "module": "./combobox-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineCombobox",
+          "declaration": {
+            "name": "defineCombobox",
+            "module": "./combobox-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultCombobox",
+          "declaration": {
+            "name": "defineDefaultCombobox",
+            "module": "./combobox-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/date-picker/date-picker-a11y.ts",
       "declarations": [
         {
@@ -51259,6 +53185,14 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/input-text/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/combobox/index.js"
           }
         },
         {

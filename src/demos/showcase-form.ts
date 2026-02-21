@@ -3040,6 +3040,183 @@ export const demos = {
   `,
 
 
+  combobox: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">コンボボックス</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        検索・候補絞り込みと選択を一体化した入力コンポーネントです。single / multiple / filterable をサポートします。
+      </p>
+
+      ${renderAnnotationToggleBlock()}
+
+      <section style="margin-bottom: 40px;">
+        ${renderA11ySectionHeader()}
+        <a11y-annotate target-selector="dads-combobox">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-combobox
+              label="都道府県"
+              support-text="候補を入力して選択してください。"
+              value="osaka"
+            >
+              <option value="tokyo" data-search='["とうきょう","東京","t"]'>東京都</option>
+              <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
+              <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
+              <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
+            </dads-combobox>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
+        ${renderApiPanelWrapper({
+          imports: ['dads-combobox'],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; gap: 20px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-combobox
+                  data-api-target
+                  label="都道府県"
+                  support-text="候補を入力して選択してください（ひらがな/略称は data-search で拡張）。"
+                  value="osaka"
+                  size="m"
+                >
+                  <option value="tokyo" data-search='["とうきょう","東京","t"]'>東京都</option>
+                  <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
+                  <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
+                  <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
+                </dads-combobox>
+
+                <dads-combobox
+                  mode="multiple"
+                  label="対象地域（複数選択）"
+                  support-text="Enter またはクリックで候補をトグル選択します。"
+                  value="tokyo,fukuoka"
+                >
+                  <option value="tokyo" data-search='["とうきょう","東京","t"]'>東京都</option>
+                  <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
+                  <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
+                  <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
+                </dads-combobox>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block>
+                  <template>
+                    <dads-combobox
+                      label="都道府県"
+                      support-text="候補を入力して選択してください。"
+                      value="osaka"
+                    >
+                      <option value="tokyo" data-search='["とうきょう","東京","t"]'>東京都</option>
+                      <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
+                      <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
+                      <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
+                    </dads-combobox>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>mode</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>single</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="mode" data-api-attr="mode" data-default="single">
+                              <option value="single" selected>single</option>
+                              <option value="multiple">multiple</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>選択モード</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>filterable</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>true</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="filterable" data-api-attr="filterable" data-default="true" checked>
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>入力絞り込み</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>m</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="size" data-api-attr="size" data-default="m">
+                              <option value="s">s (40px)</option>
+                              <option value="m" selected>m (48px)</option>
+                              <option value="l">l (56px)</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>ボックス高さ（s:40px / m:48px / l:56px）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>value</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>osaka</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="value" data-api-attr="value" data-default="osaka">
+                              <option value="">(empty)</option>
+                              <option value="tokyo">tokyo</option>
+                              <option value="osaka" selected>osaka</option>
+                              <option value="fukuoka">fukuoka</option>
+                              <option value="hokkaido">hokkaido</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>選択値（multipleではカンマ区切り）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>disabled</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="disabled" data-api-attr="disabled" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>無効状態</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-combobox'), import('a11y-annotate')]);
+    </script>
+  `,
+
+
   select: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">セレクトボックス</h2>
