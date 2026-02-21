@@ -1238,6 +1238,42 @@ describe('DadsCombobox - mode=multiple', () => {
     expect(options[0]?.getAttribute('data-active')).toBe('true');
   });
 
+  it('open中にチップ削除ボタンからコンポーネント外へTab離脱するとパネルを閉じる', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox mode="multiple" value="tokyo,osaka">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const outsideButton = document.createElement('button');
+    outsideButton.type = 'button';
+    outsideButton.textContent = 'outside';
+    document.body.appendChild(outsideButton);
+
+    try {
+      const input = getInput(element);
+      input.focus();
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+      await waitMicrotask();
+      expect(element.hasAttribute('open')).toBe(true);
+
+      const chipActions = getChipActionButtons(element);
+      expect(chipActions.length).toBeGreaterThan(0);
+      chipActions[0].focus();
+
+      chipActions[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
+      outsideButton.focus();
+      await waitMicrotask();
+
+      expect(document.activeElement).toBe(outsideButton);
+      expect(element.hasAttribute('open')).toBe(false);
+    } finally {
+      outsideButton.remove();
+    }
+  });
+
   it('multipleモードをクリック展開した直後は候補のactive強調を持たない', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
@@ -1731,12 +1767,20 @@ describe('DadsCombobox - styles', () => {
     expect(source.includes('border-top: 0;')).toBe(false);
   });
 
-  it('listboxはフローティング表示のため絶対配置する', async () => {
+  it('panelはフローティング表示のため絶対配置する', async () => {
     const sourcePath = join(process.cwd(), 'packages/components/combobox/combobox-styles.ts');
     const source = readFileSync(sourcePath, 'utf8');
-    expect(source.includes('position: absolute;')).toBe(true);
-    expect(source.includes('inset-inline: 0;')).toBe(true);
-    expect(source.includes('z-index: var(--dads-combobox-list-z-index, 10);')).toBe(true);
+    const blockStart = "  [part='panel'] {";
+    const blockEnd = "  [part='search-box'] {";
+    const startIndex = source.indexOf(blockStart);
+    const endIndex = source.indexOf(blockEnd, startIndex);
+    const panelBlock = startIndex >= 0 && endIndex > startIndex ? source.slice(startIndex, endIndex) : '';
+    expect(panelBlock.includes('position: absolute;')).toBe(true);
+    expect(panelBlock.includes('inset-inline: 0;')).toBe(true);
+    expect(panelBlock.includes('top: calc(var(--dads-combobox-control-bottom, 0px) + var(--spacing-2, 0.5rem));')).toBe(
+      true,
+    );
+    expect(panelBlock.includes('z-index: var(--dads-combobox-list-z-index, 10);')).toBe(true);
   });
 
   it('listboxシャドーはmenu-list-boxと同じ elevation-1 を使う', async () => {

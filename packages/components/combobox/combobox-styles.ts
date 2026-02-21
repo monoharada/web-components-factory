@@ -194,18 +194,23 @@ export const comboboxStyles = css`
     transform: rotate(180deg);
   }
 
-  [part='listbox'] {
-    display: block;
+  [part='panel'] {
     position: absolute;
     inset-inline: 0;
     top: calc(var(--dads-combobox-control-bottom, 0px) + var(--spacing-2, 0.5rem));
     z-index: var(--dads-combobox-list-z-index, 10);
-    max-height: var(--dads-combobox-list-max-height);
-    overflow: auto;
     border: var(--dads-combobox-border-width) solid var(--dads-combobox-border-color);
-    border-radius: 0 0 var(--dads-combobox-border-radius) var(--dads-combobox-border-radius);
+    border-radius: var(--dads-combobox-border-radius);
     background: var(--dads-combobox-background);
     box-shadow: var(--dads-combobox-list-shadow);
+    overflow: hidden;
+  }
+
+  [part='listbox'] {
+    display: block;
+    max-height: var(--dads-combobox-list-max-height);
+    overflow: auto;
+    background: var(--dads-combobox-background);
   }
 
   [part='search-box'] {

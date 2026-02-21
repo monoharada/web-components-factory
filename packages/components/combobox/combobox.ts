@@ -918,6 +918,7 @@ export class DadsCombobox extends TypographyFormComponent {
 
     document.addEventListener('click', this.#handleDocumentClick, { signal: controller.signal });
     document.addEventListener('keydown', this.#handleDocumentKeydown, { signal: controller.signal });
+    document.addEventListener('focusin', this.#handleDocumentFocusIn, { signal: controller.signal });
   }
 
   #handleDocumentClick = (event: Event): void => {
@@ -932,6 +933,12 @@ export class DadsCombobox extends TypographyFormComponent {
     event.preventDefault();
     this.removeAttribute('open');
     this.#focusControl();
+  };
+
+  #handleDocumentFocusIn = (event: FocusEvent): void => {
+    if (!this.#isOpen) return;
+    if (event.composedPath().includes(this)) return;
+    this.removeAttribute('open');
   };
 
   #renderChipList(): void {
@@ -1100,9 +1107,9 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   #syncListboxFloatingPosition(): void {
-    if (!this.#listbox || !this.#control) return;
+    if (!this.#panel || !this.#control) return;
     const controlBottom = this.#control.offsetTop + this.#control.offsetHeight;
-    this.#listbox.style.setProperty('--dads-combobox-control-bottom', `${controlBottom}px`);
+    this.#panel.style.setProperty('--dads-combobox-control-bottom', `${controlBottom}px`);
   }
 
   #isOptionSelected(option: ComboboxOption): boolean {
