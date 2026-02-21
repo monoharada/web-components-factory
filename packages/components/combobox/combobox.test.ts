@@ -500,6 +500,72 @@ describe('DadsCombobox - 拘束条件', () => {
     expect(chipList?.firstElementChild?.tagName).toBe('LI');
   });
 
+  it('disabled時は選択済みチップもdisabledになり、削除ボタンを無効化する', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox disabled value="osaka">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const chips = Array.from(element.shadowRoot?.querySelectorAll('dads-chip-tag') ?? []);
+    const chip = chips[0] as HTMLElement | undefined;
+    expect(chip).toBeTruthy();
+    expect(chip?.hasAttribute('disabled')).toBe(true);
+
+    const action = chip?.shadowRoot?.querySelector('[part="action"]') as HTMLButtonElement | null;
+    expect(action?.disabled).toBe(true);
+    expect(action?.tabIndex).toBe(-1);
+  });
+
+  it('disabledを後から付与しても選択済みチップをdisabled化する', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox value="osaka">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    element.setAttribute('disabled', '');
+    await waitMicrotask();
+
+    const chip = element.shadowRoot?.querySelector('dads-chip-tag') as HTMLElement | null;
+    expect(chip?.hasAttribute('disabled')).toBe(true);
+    const action = chip?.shadowRoot?.querySelector('[part="action"]') as HTMLButtonElement | null;
+    expect(action?.disabled).toBe(true);
+  });
+
+  it('disabled解除後にformDisabledCallback(false)でチップ削除を再開できる', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox value="osaka">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    element.setAttribute('disabled', '');
+    await waitMicrotask();
+    (element as HTMLElement & { formDisabledCallback: (disabled: boolean) => void }).formDisabledCallback(true);
+
+    element.removeAttribute('disabled');
+    await waitMicrotask();
+    (element as HTMLElement & { formDisabledCallback: (disabled: boolean) => void }).formDisabledCallback(false);
+    await waitMicrotask();
+
+    const chip = element.shadowRoot?.querySelector('dads-chip-tag') as HTMLElement | null;
+    expect(chip?.hasAttribute('disabled')).toBe(false);
+    const action = chip?.shadowRoot?.querySelector('[part="action"]') as HTMLButtonElement | null;
+    expect(action?.disabled).toBe(false);
+
+    action?.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await waitMicrotask();
+
+    expect(element.getAttribute('value')).toBeNull();
+  });
+
   it('singleモードでチップ削除イベントを受けると選択解除される', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
@@ -661,7 +727,7 @@ describe('DadsCombobox - 拘束条件', () => {
     expect(element.shadowRoot?.activeElement).toBe(getSearchInput(element));
   });
 
-  it('open中に検索入力でTabすると候補行へフォーカスが移る', async () => {
+  it('open中に検索入力でTabするとパネルを閉じ、候補行をタブ順に含めない', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
       <dads-combobox>
@@ -681,13 +747,14 @@ describe('DadsCombobox - 拘束条件', () => {
     const searchInput = getSearchInput(element);
     expect(element.shadowRoot?.activeElement).toBe(searchInput);
 
+    const optionsBeforeTab = getOptions(element);
+    expect(optionsBeforeTab.length).toBeGreaterThan(0);
+    expect(optionsBeforeTab.every((option) => option.tabIndex === -1)).toBe(true);
+
     searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
     await waitMicrotask();
 
-    const options = getOptions(element);
-    expect(options.length).toBeGreaterThan(0);
-    expect(options[0]?.tabIndex).toBe(0);
-    expect(element.shadowRoot?.activeElement).toBe(options[0]);
+    expect(element.hasAttribute('open')).toBe(false);
   });
 
   it('open中に検索入力からTab離脱し候補がないときはパネルを閉じる', async () => {
@@ -731,15 +798,8 @@ describe('DadsCombobox - 拘束条件', () => {
     control.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     await waitMicrotask();
 
-    const input = getInput(element);
-    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
-    await waitMicrotask();
-
-    const searchInput = getSearchInput(element);
-    searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
-    await waitMicrotask();
-
     const options = getOptions(element);
+    options[0]?.focus();
     expect(element.shadowRoot?.activeElement).toBe(options[0]);
 
     options[0]?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
@@ -762,15 +822,8 @@ describe('DadsCombobox - 拘束条件', () => {
     control.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     await waitMicrotask();
 
-    const input = getInput(element);
-    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
-    await waitMicrotask();
-
-    const searchInput = getSearchInput(element);
-    searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
-    await waitMicrotask();
-
     let options = getOptions(element);
+    options[0]?.focus();
     expect(element.shadowRoot?.activeElement).toBe(options[0]);
     expect(options[0]?.getAttribute('data-active')).toBe('true');
 
@@ -1177,7 +1230,7 @@ describe('DadsCombobox - multiple', () => {
     expect(element.hasAttribute('open')).toBe(false);
   });
 
-  it('open中は focus順を control -> search -> option -> 削除ボタン にできる', async () => {
+  it('open中は control -> search までを内部遷移し、Tabで候補行へは進まない', async () => {
     await defineComboboxForTest();
     element = renderWebComponent(`
       <dads-combobox multiple value="tokyo,osaka">
@@ -1196,20 +1249,14 @@ describe('DadsCombobox - multiple', () => {
     const searchInput = getSearchInput(element);
     expect(element.shadowRoot?.activeElement).toBe(searchInput);
 
+    const optionsBeforeTab = getOptions(element) as HTMLButtonElement[];
+    expect(optionsBeforeTab.length).toBeGreaterThan(0);
+    expect(optionsBeforeTab.every((option) => option.tabIndex === -1)).toBe(true);
+
     searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
     await waitMicrotask();
 
-    const options = getOptions(element) as HTMLButtonElement[];
-    expect(options.length).toBeGreaterThan(0);
-    const lastOption = options[options.length - 1];
-    lastOption.focus();
-    lastOption.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }));
-    await waitMicrotask();
-
-    const chipActions = getChipActionButtons(element);
-    expect(chipActions.length).toBeGreaterThan(0);
-    const chipHost = (chipActions[0].getRootNode() as ShadowRoot).host;
-    expect([chipActions[0], chipHost]).toContain(document.activeElement);
+    expect(element.hasAttribute('open')).toBe(false);
   });
 
   it('open中に削除ボタンへフォーカスしてもArrowDownで候補を移動できる', async () => {

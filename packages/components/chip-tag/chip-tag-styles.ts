@@ -10,6 +10,10 @@ export const chipTagStyles = css`
     --dads-chip-tag-action-hit-padding: 0px;
   }
 
+  :host([disabled]) {
+    pointer-events: none;
+  }
+
   [part='base'] {
     display: inline-flex;
     align-items: center;

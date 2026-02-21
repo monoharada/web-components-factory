@@ -328,6 +328,7 @@ export class DadsCombobox extends TypographyFormComponent {
       case 'placeholder':
       case 'name':
         this.#syncInputAttributes();
+        if (name === 'disabled') this.#renderChipList();
         break;
       case 'open':
         this.#syncOpenState(this.hasAttribute('open'));
@@ -388,6 +389,7 @@ export class DadsCombobox extends TypographyFormComponent {
     super.formDisabledCallback(disabled);
     this.#formDisabled = disabled;
     this.#syncInputAttributes();
+    this.#renderChipList();
   }
 
   focus(options?: FocusOptions): void {
@@ -709,16 +711,8 @@ export class DadsCombobox extends TypographyFormComponent {
   };
 
   #handleChipRemove = (event: CustomEvent<{ value?: string | null }>): void => {
-    const target = event.target;
-    const optionValue =
-      target instanceof HTMLElement ? target.getAttribute('data-option-value') ?? '' : '';
-    const detailValue = event.detail?.value;
-    const value =
-      optionValue.length > 0
-        ? optionValue
-        : typeof detailValue === 'string' && detailValue.length > 0
-          ? detailValue
-          : '';
+    if (this.#isDisabled()) return;
+    const value = this.#resolveChipRemoveValue(event);
     if (!value) return;
     if (this.#isMultiple) {
       if (!this.#selectedMultiple.has(value)) return;
@@ -739,6 +733,18 @@ export class DadsCombobox extends TypographyFormComponent {
     this.#focusControl();
     this.emitEvent('dads-change', { value: '' });
   };
+
+  #resolveChipRemoveValue(event: CustomEvent<{ value?: string | null }>): string {
+    const target = event.target;
+    const optionValue =
+      target instanceof HTMLElement ? target.getAttribute('data-option-value') ?? '' : '';
+    if (optionValue.length > 0) return optionValue;
+
+    const detailValue = event.detail?.value;
+    if (typeof detailValue === 'string' && detailValue.length > 0) return detailValue;
+
+    return '';
+  }
 
   #handleInput = (): void => {
     if (this.#isDisabled()) return;
@@ -990,24 +996,10 @@ export class DadsCombobox extends TypographyFormComponent {
             this.#searchInput?.focus();
             return;
           }
-          if (this.#focusTabTargetOption()) {
-            event.preventDefault();
-            return;
-          }
           this.removeAttribute('open');
           return;
         }
         if (isSearchInput) {
-          if (this.#focusTabTargetOption()) {
-            event.preventDefault();
-            return;
-          }
-          const chipActions = this.#getChipActionButtons();
-          if (chipActions.length > 0) {
-            event.preventDefault();
-            chipActions[0].focus();
-            return;
-          }
           this.removeAttribute('open');
           return;
         }
@@ -1107,8 +1099,7 @@ export class DadsCombobox extends TypographyFormComponent {
     // behavior="input" ではchipを表示しない
     if (this.#behavior === 'input') {
       chipList.replaceChildren();
-      chipList.hidden = true;
-      this.#control?.removeAttribute('data-has-chip');
+      this.#setChipListVisible(false);
       return;
     }
 
@@ -1117,53 +1108,54 @@ export class DadsCombobox extends TypographyFormComponent {
     if (!this.#isMultiple) {
       const option = this.#options.find((item) => item.value === this.#selectedSingle);
       if (!option) {
-        chipList.hidden = true;
-        this.#control?.removeAttribute('data-has-chip');
+        this.#setChipListVisible(false);
         return;
       }
 
-      const chip = document.createElement('dads-chip-tag');
-      chip.setAttribute('part', 'chip');
-      chip.setAttribute('action', 'remove');
-      chip.setAttribute('remove-label', `${option.label}を削除`);
-      chip.setAttribute('value', option.label);
-      chip.setAttribute('data-option-value', option.value);
-      chip.textContent = option.label;
-      const item = document.createElement('li');
-      item.setAttribute('part', 'chip-item');
-      item.appendChild(chip);
-      chipList.appendChild(item);
-      chipList.hidden = false;
-      this.#control?.setAttribute('data-has-chip', '');
+      chipList.appendChild(this.#createChipItem(option));
+      this.#setChipListVisible(true);
       return;
     }
 
     const values = Array.from(this.#selectedMultiple);
     if (values.length === 0) {
-      chipList.hidden = true;
-      this.#control?.removeAttribute('data-has-chip');
+      this.#setChipListVisible(false);
       return;
     }
 
+    let hasChips = false;
     for (const value of values) {
       const option = this.#options.find((item) => item.value === value);
       if (!option) continue;
 
-      const chip = document.createElement('dads-chip-tag');
-      chip.setAttribute('part', 'chip');
-      chip.setAttribute('action', 'remove');
-      chip.setAttribute('remove-label', `${option.label}を削除`);
-      chip.setAttribute('value', option.label);
-      chip.setAttribute('data-option-value', option.value);
-      chip.textContent = option.label;
-      const item = document.createElement('li');
-      item.setAttribute('part', 'chip-item');
-      item.appendChild(chip);
-      chipList.appendChild(item);
+      chipList.appendChild(this.#createChipItem(option));
+      hasChips = true;
     }
 
-    chipList.hidden = false;
-    this.#control?.setAttribute('data-has-chip', '');
+    this.#setChipListVisible(hasChips);
+  }
+
+  #setChipListVisible(visible: boolean): void {
+    if (!this.#chipList) return;
+    this.#chipList.hidden = !visible;
+    if (visible) this.#control?.setAttribute('data-has-chip', '');
+    else this.#control?.removeAttribute('data-has-chip');
+  }
+
+  #createChipItem(option: ComboboxOption): HTMLLIElement {
+    const chip = document.createElement('dads-chip-tag');
+    chip.setAttribute('part', 'chip');
+    chip.setAttribute('action', 'remove');
+    if (this.#isDisabled()) chip.setAttribute('disabled', '');
+    chip.setAttribute('remove-label', `${option.label}を削除`);
+    chip.setAttribute('value', option.label);
+    chip.setAttribute('data-option-value', option.value);
+    chip.textContent = option.label;
+
+    const item = document.createElement('li');
+    item.setAttribute('part', 'chip-item');
+    item.appendChild(chip);
+    return item;
   }
 
   #renderOptions(): void {
@@ -1244,7 +1236,7 @@ export class DadsCombobox extends TypographyFormComponent {
     optionElement.setAttribute('aria-selected', this.#isOptionSelected(option) ? 'true' : 'false');
     optionElement.setAttribute('data-option-index', String(index));
     if (index === this.#activeIndex) optionElement.setAttribute('data-active', 'true');
-    optionElement.tabIndex = option.disabled ? -1 : 0;
+    optionElement.tabIndex = -1;
     if (option.disabled) optionElement.setAttribute('aria-disabled', 'true');
 
     if (this.#isMultiple) {

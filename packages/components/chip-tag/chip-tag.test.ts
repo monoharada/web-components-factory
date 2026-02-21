@@ -89,6 +89,44 @@ describe('DadsChipTag - 属性', () => {
     expect(base?.getAttribute('tabindex')).toBe('0');
   });
 
+  it('disabled の場合はアクションを無効化し、baseをフォーカス不可にする', async () => {
+    const { defineDefaultChipTag } = await import('./chip-tag-define');
+    defineDefaultChipTag();
+
+    const component = renderWebComponent(`
+      <dads-chip-tag disabled>ラベル</dads-chip-tag>
+    `);
+
+    await waitForComponent('dads-chip-tag');
+    const base = getShadowElement(component, '[part="base"]');
+    const action = getShadowElement(component, '[part="action"]') as HTMLButtonElement | null;
+    expect(base?.getAttribute('role')).toBeNull();
+    expect(base?.getAttribute('tabindex')).toBeNull();
+    expect(base?.getAttribute('aria-disabled')).toBe('true');
+    expect(action?.disabled).toBe(true);
+    expect(action?.tabIndex).toBe(-1);
+  });
+
+  it('disabled を後から付与してもアクション状態が更新される', async () => {
+    const { defineDefaultChipTag } = await import('./chip-tag-define');
+    defineDefaultChipTag();
+
+    const component = renderWebComponent(`
+      <dads-chip-tag>ラベル</dads-chip-tag>
+    `);
+    await waitForComponent('dads-chip-tag');
+
+    component.setAttribute('disabled', '');
+    await Promise.resolve();
+
+    const base = getShadowElement(component, '[part="base"]');
+    const action = getShadowElement(component, '[part="action"]') as HTMLButtonElement | null;
+    expect(base?.getAttribute('role')).toBeNull();
+    expect(base?.getAttribute('tabindex')).toBeNull();
+    expect(base?.getAttribute('aria-disabled')).toBe('true');
+    expect(action?.disabled).toBe(true);
+  });
+
   it('valueを設定すると表示テキストがvalueで上書きされる', async () => {
     const { defineDefaultChipTag } = await import('./chip-tag-define');
     defineDefaultChipTag();

@@ -3044,13 +3044,14 @@ export const demos = {
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">コンボボックス</h2>
       <p style="color: #666; margin-bottom: 40px;">
-        検索・候補絞り込みと選択を一体化した入力コンポーネントです。single / multiple / filterable をサポートします。
+        選択支援（<code>behavior="selection"</code>）と入力支援（<code>behavior="input"</code>）を切り替えられるコンポーネントです。<br>
+        入力支援は single 限定の運用とし、候補なし時は <code>no-match-behavior="notice|create"</code> で挙動を切り替えます。
       </p>
 
       ${renderAnnotationToggleBlock()}
 
       <section style="margin-bottom: 40px;">
-        ${renderA11ySectionHeader()}
+        ${renderA11ySectionHeader({ note: '※ selection と input（single）の両方を注釈対象にしています。selection では候補パネル内の検索ボックス、input では notice/create の差分、共通で Enter / Escape / Arrow 操作を確認してください。' })}
         <a11y-annotate target-selector="dads-combobox">
           <div style="display: grid; place-content: center; padding: 60px 0;">
             <dads-combobox
@@ -3062,6 +3063,22 @@ export const demos = {
               <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
               <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
               <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
+            </dads-combobox>
+          </div>
+        </a11y-annotate>
+
+        <a11y-annotate target-selector="dads-combobox" style="margin-top: 20px;">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-combobox
+              behavior="input"
+              no-match-behavior="create"
+              label="所属部署"
+              support-text="候補から選択するか、新しい部署名を入力してください。"
+            >
+              <option value="engineering">エンジニアリング部</option>
+              <option value="design">デザイン部</option>
+              <option value="marketing">マーケティング部</option>
+              <option value="sales">営業部</option>
             </dads-combobox>
           </div>
         </a11y-annotate>
@@ -3254,58 +3271,6 @@ export const demos = {
         behaviorSelect.addEventListener('change', syncBehaviorDependents);
         syncBehaviorDependents();
       }
-    </script>
-  `,
-
-
-  'combobox-input': () => `
-    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
-      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">コンボボックス（入力支援型）</h2>
-      <p style="color: #666; margin-bottom: 40px;">
-        <code>behavior="input"</code> で入力支援モードを有効化します。候補を絞り込みながら自由入力も可能です。<br>
-        入力支援型では <strong>chip表示を行わず</strong>、入力欄にそのまま値を表示します。
-      </p>
-
-      <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">single / no-match-behavior="create"</h3>
-        <p style="color: #666; margin-bottom: 12px;">候補外の文字列をEnterまたはBlurで自由入力として確定できます。</p>
-        <div style="display: grid; gap: 20px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
-          <dads-combobox
-            behavior="input"
-            no-match-behavior="create"
-            label="所属部署"
-            support-text="候補から選択するか、新しい部署名を入力してください。"
-          >
-            <option value="engineering">エンジニアリング部</option>
-            <option value="design">デザイン部</option>
-            <option value="marketing">マーケティング部</option>
-            <option value="sales">営業部</option>
-          </dads-combobox>
-        </div>
-      </section>
-
-      <section style="margin-bottom: 40px;">
-        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">single / no-match-behavior="notice"</h3>
-        <p style="color: #666; margin-bottom: 12px;">候補外の文字列では確定せず「候補がありません」を表示します。</p>
-        <div style="display: grid; gap: 20px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
-          <dads-combobox
-            behavior="input"
-            no-match-behavior="notice"
-            label="都道府県"
-            support-text="候補から都道府県を選択してください。"
-          >
-            <option value="tokyo" data-search='["とうきょう","t"]'>東京都</option>
-            <option value="osaka" data-search='["おおさか","o"]'>大阪府</option>
-            <option value="fukuoka" data-search='["ふくおか","f"]'>福岡県</option>
-            <option value="hokkaido" data-search='["ほっかいどう","h"]'>北海道</option>
-          </dads-combobox>
-        </div>
-      </section>
-
-    </div>
-
-    <script type="module">
-      await import('dads-combobox');
     </script>
   `,
 
