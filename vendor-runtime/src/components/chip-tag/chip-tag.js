@@ -15,7 +15,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
 var _DadsChipTag_instances, _DadsChipTag_base, _DadsChipTag_action, _DadsChipTag_labelSlot, _DadsChipTag_valueText, _DadsChipTag_syncActionState, _DadsChipTag_syncActionLabel, _DadsChipTag_syncValueLabel, _DadsChipTag_handleActionClick, _DadsChipTag_handleDadsCommand, _DadsChipTag_requestRemove, _DadsChipTag_handleBaseClick, _DadsChipTag_handleBaseKeydown, _DadsChipTag_getLabelText;
-import { html, PropertyAttr } from '../../core/web-components.js';
+import { html, BooleanAttr, PropertyAttr } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { applySpacingTokens } from '../../styles/spacing-tokens.js';
@@ -42,6 +42,7 @@ import { chipTagStyles } from './chip-tag-styles.js';
  * @csspart action-icon - 末尾アイコンコンテナ
  *
  * @attr {'remove' | 'none'} action - 末尾アクションの表示制御
+ * @attr {boolean} disabled - 無効状態
  * @attr {string} remove-label - 末尾アクションのaria-label
  * @attr {string} value - 任意の値（イベントdetailに含まれる）
  * @attr {string} size - サイズ (sm | md | lg)
@@ -92,6 +93,8 @@ export class DadsChipTag extends TypographyWebComponent {
         _DadsChipTag_labelSlot.set(this, null);
         _DadsChipTag_valueText.set(this, null);
         _DadsChipTag_handleActionClick.set(this, (event) => {
+            if (this.hasAttribute('disabled'))
+                return;
             if (this.getAttribute('action') === 'none')
                 return;
             event.stopPropagation();
@@ -99,6 +102,8 @@ export class DadsChipTag extends TypographyWebComponent {
         });
         _DadsChipTag_handleDadsCommand.set(this, (event) => {
             if (event.target !== this)
+                return;
+            if (this.hasAttribute('disabled'))
                 return;
             const command = event.detail?.command ?? '';
             if (command === 'remove') {
@@ -116,6 +121,8 @@ export class DadsChipTag extends TypographyWebComponent {
             }
         });
         _DadsChipTag_handleBaseClick.set(this, () => {
+            if (this.hasAttribute('disabled'))
+                return;
             if (this.getAttribute('action') !== 'none')
                 return;
             this.dispatchEvent(new CustomEvent('dads-chip-tag-click', {
@@ -128,6 +135,8 @@ export class DadsChipTag extends TypographyWebComponent {
             }));
         });
         _DadsChipTag_handleBaseKeydown.set(this, (event) => {
+            if (this.hasAttribute('disabled'))
+                return;
             if (this.getAttribute('action') !== 'none')
                 return;
             if (event.key === 'Enter' || event.key === ' ') {
@@ -160,7 +169,7 @@ export class DadsChipTag extends TypographyWebComponent {
     }
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
-        if (name === 'action') {
+        if (name === 'action' || name === 'disabled') {
             __classPrivateFieldGet(this, _DadsChipTag_instances, "m", _DadsChipTag_syncActionState).call(this);
         }
         if (name === 'remove-label') {
@@ -173,8 +182,9 @@ export class DadsChipTag extends TypographyWebComponent {
 }
 _DadsChipTag_base = new WeakMap(), _DadsChipTag_action = new WeakMap(), _DadsChipTag_labelSlot = new WeakMap(), _DadsChipTag_valueText = new WeakMap(), _DadsChipTag_handleActionClick = new WeakMap(), _DadsChipTag_handleDadsCommand = new WeakMap(), _DadsChipTag_handleBaseClick = new WeakMap(), _DadsChipTag_handleBaseKeydown = new WeakMap(), _DadsChipTag_instances = new WeakSet(), _DadsChipTag_syncActionState = function _DadsChipTag_syncActionState() {
     const isActionNone = this.getAttribute('action') === 'none';
+    const isDisabled = this.hasAttribute('disabled');
     if (__classPrivateFieldGet(this, _DadsChipTag_base, "f")) {
-        if (isActionNone) {
+        if (isActionNone && !isDisabled) {
             __classPrivateFieldGet(this, _DadsChipTag_base, "f").setAttribute('role', 'button');
             __classPrivateFieldGet(this, _DadsChipTag_base, "f").setAttribute('tabindex', '0');
         }
@@ -182,10 +192,13 @@ _DadsChipTag_base = new WeakMap(), _DadsChipTag_action = new WeakMap(), _DadsChi
             __classPrivateFieldGet(this, _DadsChipTag_base, "f").removeAttribute('role');
             __classPrivateFieldGet(this, _DadsChipTag_base, "f").removeAttribute('tabindex');
         }
+        __classPrivateFieldGet(this, _DadsChipTag_base, "f").setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
     }
     if (__classPrivateFieldGet(this, _DadsChipTag_action, "f")) {
-        __classPrivateFieldGet(this, _DadsChipTag_action, "f").tabIndex = isActionNone ? -1 : 0;
+        __classPrivateFieldGet(this, _DadsChipTag_action, "f").disabled = isDisabled;
+        __classPrivateFieldGet(this, _DadsChipTag_action, "f").tabIndex = (isActionNone || isDisabled) ? -1 : 0;
         __classPrivateFieldGet(this, _DadsChipTag_action, "f").setAttribute('aria-hidden', isActionNone ? 'true' : 'false');
+        __classPrivateFieldGet(this, _DadsChipTag_action, "f").setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
     }
 }, _DadsChipTag_syncActionLabel = function _DadsChipTag_syncActionLabel() {
     if (!__classPrivateFieldGet(this, _DadsChipTag_action, "f"))
@@ -250,6 +263,7 @@ DadsChipTag.definition = {
     ], 'minimal'),
     attributes: [
         PropertyAttr('action'),
+        BooleanAttr('disabled'),
         PropertyAttr('remove-label'),
         PropertyAttr('value'),
         PropertyAttr('size'),

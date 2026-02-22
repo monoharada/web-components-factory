@@ -189,7 +189,7 @@
       "tagBase": "icon",
       "elementEntry": "components/icon.js",
       "defineModule": "src/components/icon/index.js",
-      "defineFn": "defineIcon"
+      "defineFn": "defineDefaultIcon"
     },
     "input-text": {
       "tagBase": "input-text",

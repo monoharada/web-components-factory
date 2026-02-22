@@ -5,6 +5,10 @@
 export * from './accordion/index.js';
 // アノテート（アクセシビリティ注釈）
 export * from './annotate/index.js';
+// アバター
+export * from './avatar/index.js';
+// アイコン
+export * from './icon/index.js';
 // ボタン
 export * from './button/index.js';
 // カード

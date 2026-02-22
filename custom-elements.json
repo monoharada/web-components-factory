@@ -11954,6 +11954,15 @@
             },
             {
               "kind": "field",
+              "name": "#defaultValue",
+              "privacy": "private",
+              "type": {
+                "text": "string | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
               "name": "#disabled",
               "privacy": "private",
               "type": {

@@ -2617,3 +2617,85 @@ describe('DadsCombobox - optgroup グループ', () => {
     expect(groupLabels.length).toBe(1);
   });
 });
+
+describe('DadsCombobox - formResetCallback', () => {
+  let element: HTMLElement | null = null;
+
+  afterEach(() => {
+    cleanupTestElement(element);
+    element = null;
+  });
+
+  it('formResetCallback は初期マークアップ value に復帰する（single）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" value="tokyo">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+    await waitMicrotask();
+
+    // 初期値確認
+    expect((element as unknown as { value: string }).value).toBe('tokyo');
+
+    // 別の値に変更
+    (element as unknown as { value: string }).value = 'osaka';
+    expect((element as unknown as { value: string }).value).toBe('osaka');
+
+    // formResetCallback で初期値に戻る
+    (element as unknown as { formResetCallback: () => void }).formResetCallback();
+    await waitMicrotask();
+
+    expect((element as unknown as { value: string }).value).toBe('tokyo');
+    expect(element.getAttribute('value')).toBe('tokyo');
+  });
+
+  it('formResetCallback は初期 value 属性なしの場合に空に復帰する（single）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+    await waitMicrotask();
+
+    // 値を設定
+    (element as unknown as { value: string }).value = 'osaka';
+    expect((element as unknown as { value: string }).value).toBe('osaka');
+
+    // formResetCallback で空に戻る
+    (element as unknown as { formResetCallback: () => void }).formResetCallback();
+    await waitMicrotask();
+
+    expect((element as unknown as { value: string }).value).toBe('');
+    expect(element.hasAttribute('value')).toBe(false);
+  });
+
+  it('formResetCallback は初期マークアップ value に復帰する（multiple）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" multiple value="tokyo,osaka">
+        ${baseOptions}
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+    await waitMicrotask();
+
+    // 初期値確認
+    const initial = (element as unknown as { value: string[] }).value;
+    expect(initial).toEqual(['tokyo', 'osaka']);
+
+    // 別の値に変更
+    (element as unknown as { value: string[] }).value = ['fukuoka'];
+    expect((element as unknown as { value: string[] }).value).toEqual(['fukuoka']);
+
+    // formResetCallback で初期値に戻る
+    (element as unknown as { formResetCallback: () => void }).formResetCallback();
+    await waitMicrotask();
+
+    expect((element as unknown as { value: string[] }).value).toEqual(['tokyo', 'osaka']);
+    expect(element.getAttribute('value')).toBe('tokyo,osaka');
+  });
+});

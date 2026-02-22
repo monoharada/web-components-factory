@@ -143,6 +143,7 @@ export class DadsCombobox extends TypographyFormComponent {
   #groups: ComboboxOptionGroup[] = [];
   #selectedSingle = '';
   #selectedMultiple = new Set<string>();
+  #defaultValue: string | null = null;
   #formDisabled = false;
 
   #optionsObserver: MutationObserver | null = null;
@@ -260,6 +261,7 @@ export class DadsCombobox extends TypographyFormComponent {
     this.addEventListener('keydown', this.#handleHostKeydown, true);
     this.#syncFromLightDomOptions();
     this.#syncAllState();
+    this.#defaultValue = this.getAttribute('value');
 
     queueMicrotask(() => {
       if (!this.isConnected) return;
@@ -392,7 +394,17 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   formResetCallback(): void {
-    this.#applyValueAttribute(this.getAttribute('value'));
+    // 内部状態を先にクリアしてから初期値を適用する
+    // （attributeChangedCallback が既存選択を保持するのを防ぐため）
+    this.#selectedSingle = '';
+    this.#selectedMultiple.clear();
+
+    if (this.#defaultValue !== null) {
+      this.setAttribute('value', this.#defaultValue);
+    } else {
+      this.removeAttribute('value');
+    }
+    this.#applyValueAttribute(this.#defaultValue);
     this.#syncValueAndSelectionView();
   }
 
