@@ -1675,6 +1675,530 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/avatar/avatar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "アバターコンポーネント\n\nテキストイニシャルまたは写真を円形で表示するアバター。\nコンボボックスなどの人名選択UIでアイコンとして使用可能。",
+          "name": "DadsAvatar",
+          "cssProperties": [
+            {
+              "description": "背景色（デフォルト: #949494）",
+              "name": "--dads-avatar-background"
+            },
+            {
+              "description": "テキスト色（デフォルト: white）",
+              "name": "--dads-avatar-text-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "img要素（写真モード）",
+              "name": "img"
+            },
+            {
+              "description": "SVG要素（イニシャルモード）",
+              "name": "svg"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#circle",
+              "privacy": "private",
+              "type": {
+                "text": "SVGCircleElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#img",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLImageElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#svg",
+              "privacy": "private",
+              "type": {
+                "text": "SVGSVGElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncSvgAccessibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "hasLabel",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "name": "labelText",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#text",
+              "privacy": "private",
+              "type": {
+                "text": "SVGTextElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "colorChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-avatar', template: html`<svg part=\"svg\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" aria-hidden=\"true\" focusable=\"false\"> <circle cx=\"24\" cy=\"24\" r=\"24\" /> <text x=\"24\" y=\"31\" text-anchor=\"middle\" font-size=\"20\" font-weight=\"bold\" font-family=\"sans-serif\" fill=\"var(--dads-avatar-text-color, white)\"></text> </svg><img part=\"img\" alt=\"\" />`, styles: withReset([ applyDADSTokens(), applySpacingTokens(), avatarTokens, avatarStyles, ], 'minimal'), attributes: [ PropertyAttr('src'), PropertyAttr('initials'), PropertyAttr('color'), PropertyAttr('size'), PropertyAttr('label'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "initials",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "initialsChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "labelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "sizeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "src",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "srcChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "背景色（CSSカスタムプロパティ名, 例: --color-primitive-blue-600）",
+              "name": "color"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "表示文字（1〜2文字、写真未指定時のフォールバック）",
+              "name": "initials"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "アクセシブルラベル（指定時はaria-hidden解除）",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "サイズpx（デフォルト: '32'）",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "写真URL（指定時は写真モード）",
+              "name": "src"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-avatar",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/avatar/avatar.ts",
+          "definitionPath": "./packages/components/avatar/avatar.ts",
+          "typeDefinitionPath": "./packages/components/avatar/avatar.ts",
+          "custom": {
+            "componentId": "avatar",
+            "install": {
+              "id": "avatar",
+              "define": "defineAvatar",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/avatar"
+              },
+              "tags": [
+                "dads-avatar"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsAvatar",
+          "declaration": {
+            "name": "DadsAvatar",
+            "module": "packages/components/avatar/avatar.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/avatar/avatar.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/avatar/avatar.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-avatar",
+          "declaration": {
+            "name": "DadsAvatar",
+            "module": "./packages/components/avatar/avatar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/blockquote/blockquote.ts",
       "declarations": [
         {
@@ -11143,8 +11667,20 @@
               "name": "option"
             },
             {
+              "description": "候補行のアバター画像",
+              "name": "option-avatar"
+            },
+            {
               "description": "候補行チェック領域（multiple）",
               "name": "option-check"
+            },
+            {
+              "description": "グループ見出し",
+              "name": "option-group-label"
+            },
+            {
+              "description": "候補行のアイコン画像",
+              "name": "option-icon"
             },
             {
               "description": "候補ラベル",
@@ -11364,6 +11900,24 @@
                   "name": "option",
                   "type": {
                     "text": "ComboboxOption"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#createGroupHeader",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "ComboboxOptionGroup"
                   }
                 }
               ]
@@ -11599,6 +12153,15 @@
               }
             },
             {
+              "kind": "field",
+              "name": "#groups",
+              "privacy": "private",
+              "type": {
+                "text": "ComboboxOptionGroup[]"
+              },
+              "default": "[]"
+            },
+            {
               "kind": "method",
               "name": "#handleBlurCommit",
               "privacy": "private",
@@ -11791,6 +12354,24 @@
             },
             {
               "kind": "method",
+              "name": "#isIconName",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#isImeComposing",
               "privacy": "private",
               "return": {
@@ -11896,6 +12477,24 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#isSafeIconUrl",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -12050,6 +12649,28 @@
                   "type": {
                     "text": "string"
                   }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#parseOptionElement",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "ComboboxOption"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "HTMLOptionElement"
+                  }
+                },
+                {
+                  "name": "group",
+                  "default": "-1"
                 }
               ]
             },
@@ -13195,7 +13816,9 @@
               "define": "defineCombobox",
               "call": "prefix-registry",
               "deps": [
-                "chip-tag"
+                "avatar",
+                "chip-tag",
+                "icon"
               ],
               "source": {
                 "componentDir": "packages/components/combobox"
@@ -25638,6 +26261,435 @@
           "declaration": {
             "name": "DadsHeading",
             "module": "./packages/components/heading/heading.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/icon/icon.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "アイコンコンポーネント\n\niconPaths に登録されたSVGアイコンを宣言的に表示する汎用コンポーネント。\n他コンポーネントのスロット（button の icon-start/icon-end、menu-list の start-icon 等）に配置可能。",
+          "name": "DadsIcon",
+          "cssProperties": [
+            {
+              "description": "アイコン色（デフォルト: currentColor）",
+              "name": "--dads-icon-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "SVG要素",
+              "name": "svg"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#svg",
+              "privacy": "private",
+              "type": {
+                "text": "SVGSVGElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAccessibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-icon', template: html`<svg part=\"svg\" xmlns=\"http://www.w3.org/2000/svg\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"></svg>`, styles: withReset([ applyDADSTokens(), applySpacingTokens(), iconTokens, iconStyles, ], 'minimal'), attributes: [ PropertyAttr('name'), PropertyAttr('size'), PropertyAttr('label'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "labelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "nameChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "sizeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "アクセシブルラベル（指定時はaria-hidden解除、role=\"img\"、title要素追加）",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "アイコン名（iconPathsのキー: dummy, checkmark, check, edit, delete, duplicate, download, add, subtract, search, print, update, menu, close, home, language, favorite, lock, dragIndicator, more, moreVert, mic, scanner, login, logout, settings, caret, arrowRight, arrowLeft, arrowDown, arrowUp, arrowDropUp, arrowDropDown, arrowUpward, arrowDownward, arrowForward, arrowBack, error, attention, warning, information, help, complete, checkCircle, cancel, notification, history, visibility, visibilityOff, externalLink, document, pdf, image, folder, person, location, checkbox, checkboxBlank, indeterminateCheckbox, radioChecked, radioUnchecked, circle）",
+              "name": "name"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "サイズpx（デフォルト: '20'）",
+              "name": "size"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-icon",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/icon/icon.ts",
+          "definitionPath": "./packages/components/icon/icon.ts",
+          "typeDefinitionPath": "./packages/components/icon/icon.ts",
+          "custom": {
+            "componentId": "icon",
+            "install": {
+              "id": "icon",
+              "define": "defineIcon",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/icon"
+              },
+              "tags": [
+                "dads-icon"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsIcon",
+          "declaration": {
+            "name": "DadsIcon",
+            "module": "packages/components/icon/icon.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/icon/icon.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/icon/icon.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-icon",
+          "declaration": {
+            "name": "DadsIcon",
+            "module": "./packages/components/icon/icon.ts"
           }
         }
       ]
@@ -49143,6 +50195,175 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/avatar/avatar-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "autoDefineAvatar",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineAvatar",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultAvatar",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-avatar`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "autoDefineAvatar",
+          "declaration": {
+            "name": "autoDefineAvatar",
+            "module": "packages/components/avatar/avatar-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineAvatar",
+          "declaration": {
+            "name": "defineAvatar",
+            "module": "packages/components/avatar/avatar-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultAvatar",
+          "declaration": {
+            "name": "defineDefaultAvatar",
+            "module": "packages/components/avatar/avatar-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/avatar/avatar-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "avatarStyles",
+          "default": "css` :host { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; line-height: 0; } [part='svg'] { display: block; } [part='img'] { display: block; border-radius: 50%; object-fit: cover; } @media (forced-colors: active) { [part='svg'] circle { fill: Highlight; } [part='svg'] text { fill: HighlightText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "avatarStyles",
+          "declaration": {
+            "name": "avatarStyles",
+            "module": "packages/components/avatar/avatar-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/avatar/avatar-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "avatarTokens",
+          "default": "css`${avatarTokensText}`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "avatarTokens",
+          "declaration": {
+            "name": "avatarTokens",
+            "module": "packages/components/avatar/avatar-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/avatar/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "avatarStyles",
+          "declaration": {
+            "name": "avatarStyles",
+            "module": "./avatar-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "avatarTokens",
+          "declaration": {
+            "name": "avatarTokens",
+            "module": "./avatar-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DadsAvatar",
+          "declaration": {
+            "name": "DadsAvatar",
+            "module": "./avatar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineAvatar",
+          "declaration": {
+            "name": "defineAvatar",
+            "module": "./avatar-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultAvatar",
+          "declaration": {
+            "name": "defineDefaultAvatar",
+            "module": "./avatar-define.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/blockquote/blockquote-define.ts",
       "declarations": [
         {
@@ -51061,7 +52282,7 @@
         {
           "kind": "variable",
           "name": "comboboxStyles",
-          "default": "css` :host { display: block; position: relative; font-family: var(--font-family-sans); color: var(--dads-combobox-text-color); } [part='wrapper'] { position: relative; display: flex; flex-direction: column; gap: var(--combobox-gap); } [part='label'] { display: flex; align-items: baseline; gap: 0; font-size: var(--dads-combobox-label-size); font-weight: var(--dads-combobox-label-weight); color: var(--dads-combobox-label-color); line-height: var(--line-height-150); } [part='label-text'] { display: contents; } [part='requirement'] { margin-left: var(--spacing-1, 0.25rem); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); color: var(--dads-combobox-required-color); } [part='support-text'] { color: var(--dads-combobox-support-color); line-height: var(--line-height-150); } [part='control'] { position: relative; box-sizing: border-box; display: flex; align-items: center; gap: var(--combobox-gap); height: var(--dads-combobox-control-height); border: var(--dads-combobox-border-width) solid var(--dads-combobox-border-color); border-radius: var(--dads-combobox-border-radius); background: var(--dads-combobox-background); padding-block: var(--dads-combobox-padding-y); padding-inline: var(--dads-combobox-padding-inline); transition: border-color 0.16s ease; } @media (any-hover: hover) { :host(:not([disabled])) [part='control']:hover { --dads-combobox-border-color: var(--combobox-border-color-hover); } } :host([disabled]) [part='control'] { --dads-combobox-background: var(--combobox-bg-disabled); --dads-combobox-border-color: var(--combobox-border-color-disabled); --dads-combobox-text-color: var(--combobox-text-color-disabled); cursor: not-allowed; } :host(:not([disabled])) [part='control']:focus-within { border-color: var(--combobox-border-color-focus); outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); } :host([error]:not([disabled])) [part='control']:focus-within { border-color: var(--combobox-border-color-error); } :host [part='control'] [part='input']:focus-visible { outline: none; box-shadow: none; } :host [part='control'] [part='input']:focus { outline: none; box-shadow: none; } [part='chip-list'] { display: inline-flex; flex-wrap: wrap; gap: var(--spacing-1, 0.25rem); margin: 0; padding: 0; list-style: none; flex: 1 1 auto; order: 1; } [part='chip-item'] { display: inline-flex; } [part='chip-list'][hidden] { display: none; } :host([multiple]) [part='chip-list'] { order: 1; } :host([multiple]) [part='input'] { order: 2; flex: 1 1 8ch; min-width: 6ch; } :host([multiple]) [part='control'][data-has-chip] [part='input'], :host(:not([multiple])) [part='control'][data-has-chip] [part='input'] { flex: 0 0 0.0625rem; min-width: 0; max-width: 0.0625rem; opacity: 0; } :host([behavior='input']) [part='control'][data-has-chip] [part='input'] { flex: 1 1 auto; min-width: 6ch; max-width: none; opacity: 1; } [part='input'] { flex: 1 1 auto; min-width: 0; order: 2; border: none; outline: none; background: transparent; color: var(--dads-combobox-text-color); font-size: var(--dads-combobox-font-size); line-height: 1; font-family: var(--font-family-sans); padding: 0; text-align: left; } [part='input']::placeholder { color: var(--dads-combobox-text-color); } [part='input']:disabled { cursor: not-allowed; } [part='indicator'] { display: inline-flex; align-items: center; justify-content: center; order: 0; width: var(--dads-combobox-indicator-size); height: var(--dads-combobox-indicator-size); color: var(--dads-combobox-indicator-border-color); background: var(--dads-combobox-indicator-background); border: 1px solid var(--dads-combobox-indicator-border-color); border-radius: var(--dads-combobox-indicator-radius); padding: 0; flex-shrink: 0; } [part='indicator'] svg { width: 1.25rem; height: 1.25rem; } :host([disabled]) [part='indicator'] { color: var(--combobox-border-color-disabled); border-color: var(--combobox-border-color-disabled); background: var(--combobox-bg-disabled); } :host([open]) [part='indicator'] svg { transform: rotate(180deg); } [part='panel'] { position: absolute; inset-inline: 0; top: calc(var(--dads-combobox-control-bottom, 0px) + var(--spacing-2, 0.5rem)); z-index: var(--dads-combobox-list-z-index, 10); border: var(--dads-combobox-border-width) solid var(--dads-combobox-border-color); border-radius: var(--dads-combobox-border-radius); background: var(--dads-combobox-background); box-shadow: var(--dads-combobox-list-shadow); overflow: hidden; } [part='listbox'] { display: block; max-height: var(--dads-combobox-list-max-height); overflow: auto; background: var(--dads-combobox-background); } [part='search-box'] { position: relative; display: flex; align-items: center; border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494); padding: var(--spacing-4, 1rem); background: var(--dads-combobox-background); &[hidden] { display: none; } } [part='search-icon'] { position: absolute; left: calc(var(--spacing-4, 1rem) + var(--spacing-3, 0.75rem)); top: 50%; transform: translateY(-50%); color: var(--color-neutral-solid-gray-420, #949494); pointer-events: none; display: inline-flex; align-items: center; justify-content: center; } [part='search-input'] { box-sizing: border-box; width: 100%; min-height: 3.5rem; border: 1px solid var(--dads-combobox-border-color); border-radius: var(--dads-combobox-border-radius); background: var(--dads-combobox-background); color: var(--dads-combobox-text-color); font-size: var(--font-size-16, 1rem); font-family: var(--font-family-sans); padding-inline: var(--spacing-4, 1rem); padding-inline-start: 2.75rem; } [part='search-input']:focus-visible { border-color: var(--combobox-border-color-focus); outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); } [part='listbox'][hidden] { display: none; } [part='option'] { display: flex; align-items: center; justify-content: flex-start; gap: var(--spacing-2, 0.5rem); min-height: var(--dads-combobox-option-min-height); width: 100%; border: 0; border-bottom: 1px solid var(--dads-combobox-option-divider-color); background: transparent; color: inherit; text-align: left; padding-block: var(--dads-combobox-option-padding-y); padding-inline: var(--dads-combobox-option-padding-inline); cursor: pointer; font-size: var(--dads-combobox-font-size); line-height: var(--line-height-150); } [part='option']:last-child { border-bottom: none; } [part='option'][data-active='true'] { background: var(--dads-combobox-option-hover-bg); box-shadow: inset 0 0 0 1px var(--dads-focus-ring-color); } [part='option'][aria-selected='true'] { background: var(--dads-combobox-option-selected-bg); color: inherit; } :host([multiple]) [part='option'][aria-selected='true'] [part='option-label'] { font-weight: var(--font-weight-700, 700); } @media (any-hover: hover) { [part='option']:hover { background: var(--dads-combobox-option-hover-bg); } } [part='option'][aria-disabled='true'] { cursor: not-allowed; color: var(--combobox-text-color-disabled); } [part='option-label'] { display: inline-flex; align-items: center; gap: var(--spacing-1, 0.25rem); min-width: 0; white-space: normal; } [part='option-meta'] { font-size: var(--font-size-16, 1rem); color: var(--color-neutral-solid-gray-600, #666666); line-height: var(--line-height-170); } [part='option-check'] { display: inline-flex; align-items: center; justify-content: center; position: relative; width: 2rem; height: 2rem; flex: 0 0 auto; } [part='option-check']::before { content: ''; box-sizing: border-box; width: var(--dads-combobox-multi-check-size); height: var(--dads-combobox-multi-check-size); border: 2px solid var(--color-neutral-solid-gray-600, #666666); border-radius: var(--dads-combobox-multi-check-radius); background: var(--color-neutral-white, #ffffff); } :host([multiple]) [part='option'][aria-selected='true'] [part='option-check']::before { background: var(--color-primitive-blue-900, #0017c1); border-color: var(--color-primitive-blue-900, #0017c1); } :host([multiple]) [part='option'][aria-selected='true'] [part='option-check']::after { content: '✓'; position: absolute; color: var(--color-neutral-white, #ffffff); font-size: 1rem; font-weight: var(--font-weight-700, 700); line-height: 1; } [part='option-match'] { font-weight: var(--font-weight-700, 700); } [part='empty'] { padding: 0.75rem 1rem; color: var(--color-neutral-solid-gray-600, #666666); } [part='error-text'] { color: var(--dads-combobox-error-color); line-height: var(--line-height-150); } :host([error]) [part='control'] { --dads-combobox-border-color: var(--combobox-border-color-error); } `"
+          "default": "css` :host { display: block; position: relative; font-family: var(--font-family-sans); color: var(--dads-combobox-text-color); } [part='wrapper'] { position: relative; display: flex; flex-direction: column; gap: var(--combobox-gap); } [part='label'] { display: flex; align-items: baseline; gap: 0; font-size: var(--dads-combobox-label-size); font-weight: var(--dads-combobox-label-weight); color: var(--dads-combobox-label-color); line-height: var(--line-height-150); } [part='label-text'] { display: contents; } [part='requirement'] { margin-left: var(--spacing-1, 0.25rem); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); color: var(--dads-combobox-required-color); } [part='support-text'] { color: var(--dads-combobox-support-color); line-height: var(--line-height-150); } [part='control'] { position: relative; box-sizing: border-box; display: flex; align-items: center; gap: var(--combobox-gap); height: var(--dads-combobox-control-height); border: var(--dads-combobox-border-width) solid var(--dads-combobox-border-color); border-radius: var(--dads-combobox-border-radius); background: var(--dads-combobox-background); padding-block: var(--dads-combobox-padding-y); padding-inline: var(--dads-combobox-padding-inline); transition: border-color 0.16s ease; } @media (any-hover: hover) { :host(:not([disabled])) [part='control']:hover { --dads-combobox-border-color: var(--combobox-border-color-hover); } } :host([disabled]) [part='control'] { --dads-combobox-background: var(--combobox-bg-disabled); --dads-combobox-border-color: var(--combobox-border-color-disabled); --dads-combobox-text-color: var(--combobox-text-color-disabled); cursor: not-allowed; } :host(:not([disabled])) [part='control']:focus-within { border-color: var(--combobox-border-color-focus); outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); } :host([error]:not([disabled])) [part='control']:focus-within { border-color: var(--combobox-border-color-error); } :host [part='control'] [part='input']:focus-visible { outline: none; box-shadow: none; } :host [part='control'] [part='input']:focus { outline: none; box-shadow: none; } [part='chip-list'] { display: inline-flex; flex-wrap: wrap; gap: var(--spacing-1, 0.25rem); margin: 0; padding: 0; list-style: none; flex: 1 1 auto; order: 1; } [part='chip-item'] { display: inline-flex; } [part='chip-list'][hidden] { display: none; } :host([multiple]) [part='chip-list'] { order: 1; } :host([multiple]) [part='input'] { order: 2; flex: 1 1 8ch; min-width: 6ch; } :host([multiple]) [part='control'][data-has-chip] [part='input'], :host(:not([multiple])) [part='control'][data-has-chip] [part='input'] { flex: 0 0 0.0625rem; min-width: 0; max-width: 0.0625rem; opacity: 0; } :host([behavior='input']) [part='control'][data-has-chip] [part='input'] { flex: 1 1 auto; min-width: 6ch; max-width: none; opacity: 1; } [part='input'] { flex: 1 1 auto; min-width: 0; order: 2; border: none; outline: none; background: transparent; color: var(--dads-combobox-text-color); font-size: var(--dads-combobox-font-size); line-height: 1; font-family: var(--font-family-sans); padding: 0; text-align: left; } [part='input']::placeholder { color: var(--dads-combobox-text-color); } [part='input']:disabled { cursor: not-allowed; } [part='indicator'] { display: inline-flex; align-items: center; justify-content: center; order: 0; width: var(--dads-combobox-indicator-size); height: var(--dads-combobox-indicator-size); color: var(--dads-combobox-indicator-border-color); background: var(--dads-combobox-indicator-background); border: 1px solid var(--dads-combobox-indicator-border-color); border-radius: var(--dads-combobox-indicator-radius); padding: 0; flex-shrink: 0; } [part='indicator'] svg { width: 1.25rem; height: 1.25rem; } :host([disabled]) [part='indicator'] { color: var(--combobox-border-color-disabled); border-color: var(--combobox-border-color-disabled); background: var(--combobox-bg-disabled); } :host([open]) [part='indicator'] svg { transform: rotate(180deg); } [part='panel'] { position: absolute; inset-inline: 0; top: calc(var(--dads-combobox-control-bottom, 0px) + var(--spacing-2, 0.5rem)); z-index: var(--dads-combobox-list-z-index, 10); border: var(--dads-combobox-border-width) solid var(--dads-combobox-border-color); border-radius: var(--dads-combobox-border-radius); background: var(--dads-combobox-background); box-shadow: var(--dads-combobox-list-shadow); overflow: hidden; } [part='listbox'] { display: block; max-height: var(--dads-combobox-list-max-height); overflow: auto; background: var(--dads-combobox-background); } [part='search-box'] { position: relative; display: flex; align-items: center; border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494); padding: var(--spacing-4, 1rem); background: var(--dads-combobox-background); &[hidden] { display: none; } } [part='search-icon'] { position: absolute; left: calc(var(--spacing-4, 1rem) + var(--spacing-3, 0.75rem)); top: 50%; transform: translateY(-50%); color: var(--color-neutral-solid-gray-420, #949494); pointer-events: none; display: inline-flex; align-items: center; justify-content: center; } [part='search-input'] { box-sizing: border-box; width: 100%; min-height: 3.5rem; border: 1px solid var(--dads-combobox-border-color); border-radius: var(--dads-combobox-border-radius); background: var(--dads-combobox-background); color: var(--dads-combobox-text-color); font-size: var(--font-size-16, 1rem); font-family: var(--font-family-sans); padding-inline: var(--spacing-4, 1rem); padding-inline-start: 2.75rem; } [part='search-input']:focus-visible { border-color: var(--combobox-border-color-focus); outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color); outline-offset: var(--dads-focus-outline-offset); box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color); } [part='listbox'][hidden] { display: none; } [part='option'] { display: flex; align-items: center; justify-content: flex-start; gap: var(--spacing-2, 0.5rem); min-height: var(--dads-combobox-option-min-height); width: 100%; border: 0; border-bottom: 1px solid var(--dads-combobox-option-divider-color); background: transparent; color: inherit; text-align: left; padding-block: var(--dads-combobox-option-padding-y); padding-inline: var(--dads-combobox-option-padding-inline); cursor: pointer; font-size: var(--dads-combobox-font-size); line-height: var(--line-height-150); } [part='option']:last-child { border-bottom: none; } [part='option'][data-active='true'] { background: var(--dads-combobox-option-hover-bg); box-shadow: inset 0 0 0 1px var(--dads-focus-ring-color); } [part='option'][aria-selected='true'] { background: var(--dads-combobox-option-selected-bg); color: inherit; } :host([multiple]) [part='option'][aria-selected='true'] [part='option-label'] { font-weight: var(--font-weight-700, 700); } @media (any-hover: hover) { [part='option']:hover { background: var(--dads-combobox-option-hover-bg); } } [part='option'][aria-disabled='true'] { cursor: not-allowed; color: var(--combobox-text-color-disabled); } [part='option-label'] { display: inline-flex; align-items: center; gap: var(--spacing-1, 0.25rem); min-width: 0; white-space: normal; } [part='option-meta'] { margin-inline-start: auto; flex-shrink: 0; font-size: var(--font-size-16, 1rem); color: var(--color-neutral-solid-gray-600, #666666); line-height: var(--line-height-170); } [part='option-icon'] { width: 1.25rem; height: 1.25rem; flex: 0 0 auto; object-fit: contain; } [part='option-avatar'] { width: 2rem; height: 2rem; flex: 0 0 auto; border-radius: 50%; object-fit: cover; } [part='option-group-label'] { display: block; padding-block: var(--spacing-2, 0.5rem); padding-inline: var(--dads-combobox-option-padding-inline); font-size: var(--font-size-14, 0.875rem); font-weight: var(--font-weight-700, 700); color: var(--color-neutral-solid-gray-600, #666666); border-bottom: 1px solid var(--dads-combobox-option-divider-color); pointer-events: none; user-select: none; } [part='option-check'] { display: inline-flex; align-items: center; justify-content: center; position: relative; width: 2rem; height: 2rem; flex: 0 0 auto; } [part='option-check']::before { content: ''; box-sizing: border-box; width: var(--dads-combobox-multi-check-size); height: var(--dads-combobox-multi-check-size); border: 2px solid var(--color-neutral-solid-gray-600, #666666); border-radius: var(--dads-combobox-multi-check-radius); background: var(--color-neutral-white, #ffffff); } :host([multiple]) [part='option'][aria-selected='true'] [part='option-check']::before { background: var(--color-primitive-blue-900, #0017c1); border-color: var(--color-primitive-blue-900, #0017c1); } :host([multiple]) [part='option'][aria-selected='true'] [part='option-check']::after { content: '✓'; position: absolute; color: var(--color-neutral-white, #ffffff); font-size: 1rem; font-weight: var(--font-weight-700, 700); line-height: 1; } [part='option-match'] { font-weight: var(--font-weight-700, 700); } [part='empty'] { padding: 0.75rem 1rem; color: var(--color-neutral-solid-gray-600, #666666); } [part='error-text'] { color: var(--dads-combobox-error-color); line-height: var(--line-height-150); } :host([error]) [part='control'] { --dads-combobox-border-color: var(--combobox-border-color-error); } `"
         }
       ],
       "exports": [
@@ -53554,6 +54775,175 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/icon/icon-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "autoDefineIcon",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultIcon",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineIcon",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-icon`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "autoDefineIcon",
+          "declaration": {
+            "name": "autoDefineIcon",
+            "module": "packages/components/icon/icon-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultIcon",
+          "declaration": {
+            "name": "defineDefaultIcon",
+            "module": "packages/components/icon/icon-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineIcon",
+          "declaration": {
+            "name": "defineIcon",
+            "module": "packages/components/icon/icon-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/icon/icon-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "iconStyles",
+          "default": "css` :host { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; line-height: 0; color: var(--dads-icon-color, currentColor); } [part='svg'] { display: block; fill: currentColor; } @media (forced-colors: active) { [part='svg'] { fill: CanvasText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "iconStyles",
+          "declaration": {
+            "name": "iconStyles",
+            "module": "packages/components/icon/icon-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/icon/icon-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "iconTokens",
+          "default": "css`${iconTokensText}`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "iconTokens",
+          "declaration": {
+            "name": "iconTokens",
+            "module": "packages/components/icon/icon-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/icon/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsIcon",
+          "declaration": {
+            "name": "DadsIcon",
+            "module": "./icon.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultIcon",
+          "declaration": {
+            "name": "defineDefaultIcon",
+            "module": "./icon-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineIcon",
+          "declaration": {
+            "name": "defineIcon",
+            "module": "./icon-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconStyles",
+          "declaration": {
+            "name": "iconStyles",
+            "module": "./icon-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "iconTokens",
+          "declaration": {
+            "name": "iconTokens",
+            "module": "./icon-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/index.ts",
       "declarations": [],
       "exports": [
@@ -53571,6 +54961,22 @@
           "declaration": {
             "name": "*",
             "module": "packages/components/annotate/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/avatar/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/icon/index.js"
           }
         },
         {
@@ -62224,10 +63630,10 @@
           "kind": "variable",
           "name": "iconPaths",
           "type": {
-            "text": "{\n  /**\n   * DADSダミーアイコン（斜線パターン）\n   * 作例やプレースホルダーに使用\n   */\n  dummy:\n    'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z',\n\n  /**\n   * チェックマーク\n   * 選択状態、完了状態の表示に使用\n   */\n  checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /**\n   * 編集（鉛筆）アイコン\n   */\n  edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z',\n\n  /**\n   * ダウンロードアイコン\n   */\n  download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z',\n\n  /**\n   * 複製（コピー）アイコン\n   */\n  duplicate:\n    'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z',\n\n  /**\n   * 削除（ゴミ箱）アイコン\n   */\n  delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z',\n\n  /**\n   * 開閉矢印（キャレット）アイコン\n   * ドロップダウン、アコーディオンに使用\n   */\n  caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z',\n\n  /**\n   * 新規タブで開くアイコン\n   * 外部リンクの表示に使用\n   * Note: 24x24 viewBox用パス\n   */\n  externalLink:\n    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',\n\n  /**\n   * ログインアイコン（Material Symbols）\n   */\n  login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z',\n\n  /**\n   * ログアウトアイコン（Material Symbols）\n   */\n  logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z',\n\n  /**\n   * 設定アイコン（Material Symbols）\n   */\n  settings:\n    'M10.825 22Q10.35 22 9.938 21.725Q9.525 21.45 9.375 20.975L9 19.725Q8.675 19.6 8.362 19.425Q8.05 19.25 7.8 19L6.575 19.35Q6.1 19.475 5.675 19.3Q5.25 19.125 5 18.7L3.8 16.625Q3.55 16.2 3.587 15.725Q3.625 15.25 3.975 14.9L4.925 13.95Q4.875 13.625 4.85 13.3Q4.825 12.975 4.825 12.65Q4.825 12.325 4.85 12Q4.875 11.675 4.925 11.35L3.975 10.4Q3.625 10.05 3.587 9.575Q3.55 9.1 3.8 8.675L5 6.6Q5.25 6.175 5.675 6Q6.1 5.825 6.575 5.95L7.8 6.3Q8.05 6.05 8.362 5.875Q8.675 5.7 9 5.575L9.375 4.325Q9.525 3.85 9.938 3.575Q10.35 3.3 10.825 3.3H13.175Q13.65 3.3 14.062 3.575Q14.475 3.85 14.625 4.325L15 5.575Q15.325 5.7 15.638 5.875Q15.95 6.05 16.2 6.3L17.425 5.95Q17.9 5.825 18.325 6Q18.75 6.175 19 6.6L20.2 8.675Q20.45 9.1 20.413 9.575Q20.375 10.05 20.025 10.4L19.075 11.35Q19.125 11.675 19.15 12Q19.175 12.325 19.175 12.65Q19.175 12.975 19.15 13.3Q19.125 13.625 19.075 13.95L20.025 14.9Q20.375 15.25 20.413 15.725Q20.45 16.2 20.2 16.625L19 18.7Q18.75 19.125 18.325 19.3Q17.9 19.475 17.425 19.35L16.2 19Q15.95 19.25 15.638 19.425Q15.325 19.6 15 19.725L14.625 20.975Q14.475 21.45 14.062 21.725Q13.65 22 13.175 22H10.825ZM12 15.8Q13.3 15.8 14.225 14.875Q15.15 13.95 15.15 12.65Q15.15 11.35 14.225 10.425Q13.3 9.5 12 9.5Q10.7 9.5 9.775 10.425Q8.85 11.35 8.85 12.65Q8.85 13.95 9.775 14.875Q10.7 15.8 12 15.8Z',\n\n  /**\n   * 検索（虫眼鏡）アイコン\n   */\n  search:\n    'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z',\n}"
+            "text": "{\n  // ─── DADS独自アイコン ─────────────────────────────────\n\n  /** DADSダミーアイコン（斜線パターン）— 作例やプレースホルダーに使用 */\n  dummy:\n    'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z',\n\n  // ─── アクション ───────────────────────────────────────\n\n  /** チェックマーク — 選択状態、完了状態 */\n  checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /** チェック（Material Symbols） */\n  check: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z',\n\n  /** 編集（鉛筆） */\n  edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z',\n\n  /** 削除（ゴミ箱） */\n  delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z',\n\n  /** 複製（コピー） */\n  duplicate:\n    'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z',\n\n  /** ダウンロード */\n  download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z',\n\n  /** 追加（+） */\n  add: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z',\n\n  /** 減算（-） */\n  subtract: 'M19 13H5v-2h14v2z',\n\n  /** 検索（虫眼鏡） */\n  search:\n    'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z',\n\n  /** 印刷 */\n  print:\n    'M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm8 12v2H8v-4h8v2zm2-2v-2H6v2H4v-4c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v4h-2z',\n\n  /** 更新（リフレッシュ） */\n  update:\n    'M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z',\n\n  /** メニュー（ハンバーガー） */\n  menu: 'M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z',\n\n  /** 閉じる（×） */\n  close: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z',\n\n  /** ホーム */\n  home: 'M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z',\n\n  /** 言語（グローブ） */\n  language:\n    'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z',\n\n  /** お気に入り（ハート枠線） */\n  favorite:\n    'M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z',\n\n  /** 鍵（ロック） */\n  lock:\n    'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z',\n\n  /** ドラッグハンドル */\n  dragIndicator:\n    'M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',\n\n  /** 3点メニュー（横） */\n  more: 'M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',\n\n  /** 3点メニュー（縦） */\n  moreVert: 'M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z',\n\n  /** マイク */\n  mic:\n    'M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-1.09z',\n\n  /** スキャナー */\n  scanner:\n    'M19.8 10.7L4.2 5l-.7 1.9L17.6 12H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5.5c0-.8-.5-1.6-1.2-1.8zM19 18H5v-4h14v4zM6 15h2v2H6zm4 0h8v2h-8z',\n\n  /** ログイン */\n  login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z',\n\n  /** ログアウト */\n  logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z',\n\n  /** 設定（歯車） */\n  settings:\n    'M10.825 22Q10.35 22 9.938 21.725Q9.525 21.45 9.375 20.975L9 19.725Q8.675 19.6 8.362 19.425Q8.05 19.25 7.8 19L6.575 19.35Q6.1 19.475 5.675 19.3Q5.25 19.125 5 18.7L3.8 16.625Q3.55 16.2 3.587 15.725Q3.625 15.25 3.975 14.9L4.925 13.95Q4.875 13.625 4.85 13.3Q4.825 12.975 4.825 12.65Q4.825 12.325 4.85 12Q4.875 11.675 4.925 11.35L3.975 10.4Q3.625 10.05 3.587 9.575Q3.55 9.1 3.8 8.675L5 6.6Q5.25 6.175 5.675 6Q6.1 5.825 6.575 5.95L7.8 6.3Q8.05 6.05 8.362 5.875Q8.675 5.7 9 5.575L9.375 4.325Q9.525 3.85 9.938 3.575Q10.35 3.3 10.825 3.3H13.175Q13.65 3.3 14.062 3.575Q14.475 3.85 14.625 4.325L15 5.575Q15.325 5.7 15.638 5.875Q15.95 6.05 16.2 6.3L17.425 5.95Q17.9 5.825 18.325 6Q18.75 6.175 19 6.6L20.2 8.675Q20.45 9.1 20.413 9.575Q20.375 10.05 20.025 10.4L19.075 11.35Q19.125 11.675 19.15 12Q19.175 12.325 19.175 12.65Q19.175 12.975 19.15 13.3Q19.125 13.625 19.075 13.95L20.025 14.9Q20.375 15.25 20.413 15.725Q20.45 16.2 20.2 16.625L19 18.7Q18.75 19.125 18.325 19.3Q17.9 19.475 17.425 19.35L16.2 19Q15.95 19.25 15.638 19.425Q15.325 19.6 15 19.725L14.625 20.975Q14.475 21.45 14.062 21.725Q13.65 22 13.175 22H10.825ZM12 15.8Q13.3 15.8 14.225 14.875Q15.15 13.95 15.15 12.65Q15.15 11.35 14.225 10.425Q13.3 9.5 12 9.5Q10.7 9.5 9.775 10.425Q8.85 11.35 8.85 12.65Q8.85 13.95 9.775 14.875Q10.7 15.8 12 15.8Z',\n\n  // ─── ナビゲーション矢印 ──────────────────────────────\n\n  /** 開閉矢印（キャレット） — ドロップダウン、アコーディオンに使用 */\n  caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z',\n\n  /** 右シェブロン */\n  arrowRight: 'M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z',\n\n  /** 左シェブロン */\n  arrowLeft: 'M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z',\n\n  /** 下シェブロン */\n  arrowDown: 'M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z',\n\n  /** 上シェブロン */\n  arrowUp: 'M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z',\n\n  /** ドロップダウン上矢印（小三角） */\n  arrowDropUp: 'M7 14l5-5 5 5H7z',\n\n  /** ドロップダウン下矢印（小三角） */\n  arrowDropDown: 'M7 10l5 5 5-5H7z',\n\n  /** 上向き矢印 */\n  arrowUpward: 'M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z',\n\n  /** 下向き矢印 */\n  arrowDownward: 'M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z',\n\n  /** 進む矢印 */\n  arrowForward: 'M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z',\n\n  /** 戻る矢印 */\n  arrowBack: 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z',\n\n  // ─── 通知・ステータス ────────────────────────────────\n\n  /** エラー（!マーク丸枠） */\n  error: 'M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',\n\n  /** 注意（三角形!マーク） */\n  attention: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',\n\n  /** 警告（三角形!マーク）— attention のエイリアス */\n  warning: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',\n\n  /** 情報（iマーク丸枠） */\n  information: 'M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z',\n\n  /** ヘルプ（?マーク丸枠） */\n  help: 'M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z',\n\n  /** 完了（チェック+丸枠） */\n  complete:\n    'M22 5.18L10.59 16.6l-4.24-4.24l1.41-1.41l2.83 2.83l10-10L22 5.18z M19.79 10.22C19.92 10.79 20 11.39 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.42 3.58-8 8-8c1.58 0 3.04.46 4.28 1.25l1.44-1.44C16.1 2.67 14.13 2 12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10c0-1.19-.22-2.33-.6-3.39L19.79 10.22z',\n\n  /** チェック+丸枠（塗り） */\n  checkCircle:\n    'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z',\n\n  /** キャンセル（×丸枠） */\n  cancel:\n    'M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z',\n\n  /** 通知（ベル） */\n  notification:\n    'M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z',\n\n  /** 履歴（時計+矢印） */\n  history:\n    'M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z',\n\n  /** 表示（目） */\n  visibility:\n    'M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z',\n\n  /** 非表示（目に斜線） */\n  visibilityOff:\n    'M12 6c3.79 0 7.17 2.13 8.82 5.5-.59 1.22-1.42 2.27-2.41 3.12l1.41 1.41c1.39-1.23 2.49-2.77 3.18-4.53C21.27 7.11 17 4 12 4c-1.27 0-2.49.2-3.64.57l1.65 1.65C10.66 6.09 11.32 6 12 6zm-1.07 1.14L13 9.21c.57.25 1.03.71 1.28 1.28l2.07 2.07c.08-.34.14-.7.14-1.07C16.5 9.01 14.48 7 12 7c-.37 0-.72.05-1.07.14zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.5 2.73 15.89 7 19 12 19c1.52 0 2.98-.29 4.32-.82l3.42 3.42 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5l2.61 2.61c-.04.01-.08.02-.12.02-1.38 0-2.5-1.12-2.5-2.5 0-.05.01-.08.01-.13zm-3.4-3.4l1.75 1.75c-.23.55-.36 1.15-.36 1.78 0 2.48 2.02 4.5 4.5 4.5.63 0 1.23-.13 1.77-.36l.98.98c-.88.24-1.8.38-2.75.38-3.79 0-7.17-2.13-8.82-5.5.7-1.43 1.72-2.61 2.93-3.53z',\n\n  // ─── ファイル・コンテンツ ─────────────────────────────\n\n  /** 新規タブで開く — 外部リンクの表示 */\n  externalLink:\n    'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z',\n\n  /** ドキュメント */\n  document:\n    'M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z',\n\n  /** PDF */\n  pdf:\n    'M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm12 6V9c0-.55-.45-1-1-1h-2v5h2c.55 0 1-.45 1-1zm-2-3h1v3h-1V9zm4 2h1v-1h-1V9h1V8h-2v5h1zm-8 0h1c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1H9v5h1v-2zm0-2h1v1h-1V9z',\n\n  /** 画像 */\n  image:\n    'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z',\n\n  /** フォルダ */\n  folder:\n    'M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z',\n\n  /** 人物 */\n  person:\n    'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z',\n\n  /** 場所（ピン） */\n  location:\n    'M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14zM12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2z',\n\n  // ─── フォーム要素 ────────────────────────────────────\n\n  /** チェックボックス（チェック済み） */\n  checkbox:\n    'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM17.99 9l-1.41-1.42-6.59 6.59-2.58-2.57-1.42 1.41 4 3.99z',\n\n  /** チェックボックス（未チェック） */\n  checkboxBlank: 'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z',\n\n  /** チェックボックス（不定状態） */\n  indeterminateCheckbox:\n    'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 11h10v2H7z',\n\n  /** ラジオボタン（選択済み） */\n  radioChecked:\n    'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z',\n\n  /** ラジオボタン（未選択） */\n  radioUnchecked:\n    'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',\n\n  /** 丸（円形） */\n  circle:\n    'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z',\n}"
           },
-          "default": "{ /** * DADSダミーアイコン（斜線パターン） * 作例やプレースホルダーに使用 */ dummy: 'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z', /** * チェックマーク * 選択状態、完了状態の表示に使用 */ checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** * 編集（鉛筆）アイコン */ edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z', /** * ダウンロードアイコン */ download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z', /** * 複製（コピー）アイコン */ duplicate: 'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z', /** * 削除（ゴミ箱）アイコン */ delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z', /** * 開閉矢印（キャレット）アイコン * ドロップダウン、アコーディオンに使用 */ caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z', /** * 新規タブで開くアイコン * 外部リンクの表示に使用 * Note: 24x24 viewBox用パス */ externalLink: 'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z', /** * ログインアイコン（Material Symbols） */ login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z', /** * ログアウトアイコン（Material Symbols） */ logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z', /** * 設定アイコン（Material Symbols） */ settings: 'M10.825 22Q10.35 22 9.938 21.725Q9.525 21.45 9.375 20.975L9 19.725Q8.675 19.6 8.362 19.425Q8.05 19.25 7.8 19L6.575 19.35Q6.1 19.475 5.675 19.3Q5.25 19.125 5 18.7L3.8 16.625Q3.55 16.2 3.587 15.725Q3.625 15.25 3.975 14.9L4.925 13.95Q4.875 13.625 4.85 13.3Q4.825 12.975 4.825 12.65Q4.825 12.325 4.85 12Q4.875 11.675 4.925 11.35L3.975 10.4Q3.625 10.05 3.587 9.575Q3.55 9.1 3.8 8.675L5 6.6Q5.25 6.175 5.675 6Q6.1 5.825 6.575 5.95L7.8 6.3Q8.05 6.05 8.362 5.875Q8.675 5.7 9 5.575L9.375 4.325Q9.525 3.85 9.938 3.575Q10.35 3.3 10.825 3.3H13.175Q13.65 3.3 14.062 3.575Q14.475 3.85 14.625 4.325L15 5.575Q15.325 5.7 15.638 5.875Q15.95 6.05 16.2 6.3L17.425 5.95Q17.9 5.825 18.325 6Q18.75 6.175 19 6.6L20.2 8.675Q20.45 9.1 20.413 9.575Q20.375 10.05 20.025 10.4L19.075 11.35Q19.125 11.675 19.15 12Q19.175 12.325 19.175 12.65Q19.175 12.975 19.15 13.3Q19.125 13.625 19.075 13.95L20.025 14.9Q20.375 15.25 20.413 15.725Q20.45 16.2 20.2 16.625L19 18.7Q18.75 19.125 18.325 19.3Q17.9 19.475 17.425 19.35L16.2 19Q15.95 19.25 15.638 19.425Q15.325 19.6 15 19.725L14.625 20.975Q14.475 21.45 14.062 21.725Q13.65 22 13.175 22H10.825ZM12 15.8Q13.3 15.8 14.225 14.875Q15.15 13.95 15.15 12.65Q15.15 11.35 14.225 10.425Q13.3 9.5 12 9.5Q10.7 9.5 9.775 10.425Q8.85 11.35 8.85 12.65Q8.85 13.95 9.775 14.875Q10.7 15.8 12 15.8Z', /** * 検索（虫眼鏡）アイコン */ search: 'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z', }",
-          "description": "アイコンのSVGパス定義"
+          "default": "{ // ─── DADS独自アイコン ───────────────────────────────── /** DADSダミーアイコン（斜線パターン）— 作例やプレースホルダーに使用 */ dummy: 'M4.6 20.5c-.5-.1-1-.6-1.1-1l16-16c.5.1.9.6 1 1l-16 16Zm-1.1-6.4v-2L12 3.4h2.1L3.5 14.1Zm0-7.4V5.3c0-1 .8-1.8 1.8-1.8h1.4L3.5 6.7Zm13.8 13.8 3.2-3.2v1.4c0 1-.8 1.8-1.8 1.8h-1.4Zm-7.4 0L20.5 9.9v2L12 20.6H9.9Z', // ─── アクション ─────────────────────────────────────── /** チェックマーク — 選択状態、完了状態 */ checkmark: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** チェック（Material Symbols） */ check: 'M9 16.2 4.8 12l1.4-1.4L9 13.4 17.8 4.6 19.2 6 9 16.2Z', /** 編集（鉛筆） */ edit: 'M3 17.3V21h3.7l10.9-10.9-3.7-3.7L3 17.3Zm18.7-11.6c.4-.4.4-1 0-1.4L19.7 2.3c-.4-.4-1-.4-1.4 0l-1.8 1.8 3.7 3.7 1.5-1.1Z', /** 削除（ゴミ箱） */ delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z', /** 複製（コピー） */ duplicate: 'M16 1H4c-1.1 0-2 .9-2 2v12h2V3h12V1Zm4 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h12v14Z', /** ダウンロード */ download: 'M5 20h14v-2H5v2Zm7-18v10.2l3.6-3.6L17 10l-5 5-5-5 1.4-1.4L11 12.2V2h1Z', /** 追加（+） */ add: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z', /** 減算（-） */ subtract: 'M19 13H5v-2h14v2z', /** 検索（虫眼鏡） */ search: 'm21 20.5-6-6a7.4 7.4 0 0 0 1.9-5A7.4 7.4 0 0 0 9.5 2 7.5 7.5 0 1 0 14 15.5l6 6 1-1ZM3.5 9.5a6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6 6 6 0 0 1-6-6Z', /** 印刷 */ print: 'M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm8 12v2H8v-4h8v2zm2-2v-2H6v2H4v-4c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v4h-2z', /** 更新（リフレッシュ） */ update: 'M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z', /** メニュー（ハンバーガー） */ menu: 'M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z', /** 閉じる（×） */ close: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z', /** ホーム */ home: 'M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z', /** 言語（グローブ） */ language: 'M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z', /** お気に入り（ハート枠線） */ favorite: 'M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z', /** 鍵（ロック） */ lock: 'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z', /** ドラッグハンドル */ dragIndicator: 'M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z', /** 3点メニュー（横） */ more: 'M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z', /** 3点メニュー（縦） */ moreVert: 'M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z', /** マイク */ mic: 'M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-1.09z', /** スキャナー */ scanner: 'M19.8 10.7L4.2 5l-.7 1.9L17.6 12H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-5.5c0-.8-.5-1.6-1.2-1.8zM19 18H5v-4h14v4zM6 15h2v2H6zm4 0h8v2h-8z', /** ログイン */ login: 'M10 17L5 12L10 7L11.4 8.4L8.8 11H20V13H8.8L11.4 15.6L10 17ZM13 21Q12.175 21 11.588 20.413Q11 19.825 11 19V15H13V19H21V5H13V9H11V5Q11 4.175 11.588 3.588Q12.175 3 13 3H21Q21.825 3 22.413 3.588Q23 4.175 23 5V19Q23 19.825 22.413 20.413Q21.825 21 21 21H13Z', /** ログアウト */ logout: 'M16 17L14.6 15.6L17.2 13H5V11H17.2L14.6 8.4L16 7L21 12L16 17ZM7 21Q6.175 21 5.588 20.413Q5 19.825 5 19V15H7V19H15V21H7ZM5 9V5Q5 4.175 5.588 3.588Q6.175 3 7 3H15V5H7V9H5Z', /** 設定（歯車） */ settings: 'M10.825 22Q10.35 22 9.938 21.725Q9.525 21.45 9.375 20.975L9 19.725Q8.675 19.6 8.362 19.425Q8.05 19.25 7.8 19L6.575 19.35Q6.1 19.475 5.675 19.3Q5.25 19.125 5 18.7L3.8 16.625Q3.55 16.2 3.587 15.725Q3.625 15.25 3.975 14.9L4.925 13.95Q4.875 13.625 4.85 13.3Q4.825 12.975 4.825 12.65Q4.825 12.325 4.85 12Q4.875 11.675 4.925 11.35L3.975 10.4Q3.625 10.05 3.587 9.575Q3.55 9.1 3.8 8.675L5 6.6Q5.25 6.175 5.675 6Q6.1 5.825 6.575 5.95L7.8 6.3Q8.05 6.05 8.362 5.875Q8.675 5.7 9 5.575L9.375 4.325Q9.525 3.85 9.938 3.575Q10.35 3.3 10.825 3.3H13.175Q13.65 3.3 14.062 3.575Q14.475 3.85 14.625 4.325L15 5.575Q15.325 5.7 15.638 5.875Q15.95 6.05 16.2 6.3L17.425 5.95Q17.9 5.825 18.325 6Q18.75 6.175 19 6.6L20.2 8.675Q20.45 9.1 20.413 9.575Q20.375 10.05 20.025 10.4L19.075 11.35Q19.125 11.675 19.15 12Q19.175 12.325 19.175 12.65Q19.175 12.975 19.15 13.3Q19.125 13.625 19.075 13.95L20.025 14.9Q20.375 15.25 20.413 15.725Q20.45 16.2 20.2 16.625L19 18.7Q18.75 19.125 18.325 19.3Q17.9 19.475 17.425 19.35L16.2 19Q15.95 19.25 15.638 19.425Q15.325 19.6 15 19.725L14.625 20.975Q14.475 21.45 14.062 21.725Q13.65 22 13.175 22H10.825ZM12 15.8Q13.3 15.8 14.225 14.875Q15.15 13.95 15.15 12.65Q15.15 11.35 14.225 10.425Q13.3 9.5 12 9.5Q10.7 9.5 9.775 10.425Q8.85 11.35 8.85 12.65Q8.85 13.95 9.775 14.875Q10.7 15.8 12 15.8Z', // ─── ナビゲーション矢印 ────────────────────────────── /** 開閉矢印（キャレット） — ドロップダウン、アコーディオンに使用 */ caret: 'M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z', /** 右シェブロン */ arrowRight: 'M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z', /** 左シェブロン */ arrowLeft: 'M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z', /** 下シェブロン */ arrowDown: 'M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z', /** 上シェブロン */ arrowUp: 'M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z', /** ドロップダウン上矢印（小三角） */ arrowDropUp: 'M7 14l5-5 5 5H7z', /** ドロップダウン下矢印（小三角） */ arrowDropDown: 'M7 10l5 5 5-5H7z', /** 上向き矢印 */ arrowUpward: 'M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z', /** 下向き矢印 */ arrowDownward: 'M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z', /** 進む矢印 */ arrowForward: 'M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z', /** 戻る矢印 */ arrowBack: 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z', // ─── 通知・ステータス ──────────────────────────────── /** エラー（!マーク丸枠） */ error: 'M11 15h2v2h-2v-2zm0-8h2v6h-2V7zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z', /** 注意（三角形!マーク） */ attention: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z', /** 警告（三角形!マーク）— attention のエイリアス */ warning: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z', /** 情報（iマーク丸枠） */ information: 'M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z', /** ヘルプ（?マーク丸枠） */ help: 'M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z', /** 完了（チェック+丸枠） */ complete: 'M22 5.18L10.59 16.6l-4.24-4.24l1.41-1.41l2.83 2.83l10-10L22 5.18z M19.79 10.22C19.92 10.79 20 11.39 20 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-4.42 3.58-8 8-8c1.58 0 3.04.46 4.28 1.25l1.44-1.44C16.1 2.67 14.13 2 12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10c0-1.19-.22-2.33-.6-3.39L19.79 10.22z', /** チェック+丸枠（塗り） */ checkCircle: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z', /** キャンセル（×丸枠） */ cancel: 'M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z', /** 通知（ベル） */ notification: 'M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z', /** 履歴（時計+矢印） */ history: 'M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z', /** 表示（目） */ visibility: 'M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z', /** 非表示（目に斜線） */ visibilityOff: 'M12 6c3.79 0 7.17 2.13 8.82 5.5-.59 1.22-1.42 2.27-2.41 3.12l1.41 1.41c1.39-1.23 2.49-2.77 3.18-4.53C21.27 7.11 17 4 12 4c-1.27 0-2.49.2-3.64.57l1.65 1.65C10.66 6.09 11.32 6 12 6zm-1.07 1.14L13 9.21c.57.25 1.03.71 1.28 1.28l2.07 2.07c.08-.34.14-.7.14-1.07C16.5 9.01 14.48 7 12 7c-.37 0-.72.05-1.07.14zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.5 2.73 15.89 7 19 12 19c1.52 0 2.98-.29 4.32-.82l3.42 3.42 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5l2.61 2.61c-.04.01-.08.02-.12.02-1.38 0-2.5-1.12-2.5-2.5 0-.05.01-.08.01-.13zm-3.4-3.4l1.75 1.75c-.23.55-.36 1.15-.36 1.78 0 2.48 2.02 4.5 4.5 4.5.63 0 1.23-.13 1.77-.36l.98.98c-.88.24-1.8.38-2.75.38-3.79 0-7.17-2.13-8.82-5.5.7-1.43 1.72-2.61 2.93-3.53z', // ─── ファイル・コンテンツ ───────────────────────────── /** 新規タブで開く — 外部リンクの表示 */ externalLink: 'M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm5 16H5V5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6z', /** ドキュメント */ document: 'M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z', /** PDF */ pdf: 'M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm12 6V9c0-.55-.45-1-1-1h-2v5h2c.55 0 1-.45 1-1zm-2-3h1v3h-1V9zm4 2h1v-1h-1V9h1V8h-2v5h1zm-8 0h1c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1H9v5h1v-2zm0-2h1v1h-1V9z', /** 画像 */ image: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z', /** フォルダ */ folder: 'M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z', /** 人物 */ person: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z', /** 場所（ピン） */ location: 'M12 12c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-1.8C18 6.57 15.35 4 12 4s-6 2.57-6 6.2c0 2.34 1.95 5.44 6 9.14 4.05-3.7 6-6.8 6-9.14zM12 2c4.2 0 8 3.22 8 8.2 0 3.32-2.67 7.25-8 11.8-5.33-4.55-8-8.48-8-11.8C4 5.22 7.8 2 12 2z', // ─── フォーム要素 ──────────────────────────────────── /** チェックボックス（チェック済み） */ checkbox: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM17.99 9l-1.41-1.42-6.59 6.59-2.58-2.57-1.42 1.41 4 3.99z', /** チェックボックス（未チェック） */ checkboxBlank: 'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z', /** チェックボックス（不定状態） */ indeterminateCheckbox: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 11h10v2H7z', /** ラジオボタン（選択済み） */ radioChecked: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z', /** ラジオボタン（未選択） */ radioUnchecked: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z', /** 丸（円形） */ circle: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z', }",
+          "description": "アイコンのSVGパス定義（viewBox: 0 0 24 24）"
         }
       ],
       "exports": [

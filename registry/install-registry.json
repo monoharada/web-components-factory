@@ -15,6 +15,18 @@
         "componentDir": "packages/components/accordion"
       }
     },
+    "avatar": {
+      "id": "avatar",
+      "tags": [
+        "dads-avatar"
+      ],
+      "define": "defineAvatar",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/avatar"
+      }
+    },
     "blockquote": {
       "id": "blockquote",
       "tags": [
@@ -144,7 +156,9 @@
       "define": "defineCombobox",
       "call": "prefix-registry",
       "deps": [
-        "chip-tag"
+        "avatar",
+        "chip-tag",
+        "icon"
       ],
       "source": {
         "componentDir": "packages/components/combobox"
@@ -324,6 +338,18 @@
       "deps": [],
       "source": {
         "componentDir": "packages/components/heading"
+      }
+    },
+    "icon": {
+      "id": "icon",
+      "tags": [
+        "dads-icon"
+      ],
+      "define": "defineIcon",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/icon"
       }
     },
     "input-text": {
@@ -621,6 +647,7 @@
   "tags": {
     "dads-accordion-details": "accordion",
     "dads-accordion-item-details": "accordion",
+    "dads-avatar": "avatar",
     "dads-blockquote": "blockquote",
     "dads-breadcrumb": "breadcrumb",
     "dads-breadcrumb-item": "breadcrumb",
@@ -648,6 +675,7 @@
     "dads-hamburger-menu-button": "hamburger-menu-button",
     "dads-header-container": "header-container",
     "dads-heading": "heading",
+    "dads-icon": "icon",
     "dads-input-text": "input-text",
     "dads-language-selector": "language-selector",
     "dads-layout-aside": "layout-aside",
