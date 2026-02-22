@@ -55,6 +55,29 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component he
 | `shoulder` | ショルダーテキスト |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-heading-color` | - | 文字色 |
+| `--dads-heading-font-size` | - | 見出しフォントサイズ |
+| `--dads-heading-line-height` | - | 行高 |
+| `--dads-heading-letter-spacing` | - | 文字間隔 |
+| `--dads-heading-shoulder-font-size` | - | ショルダーのフォントサイズ |
+| `--dads-heading-icon-size` | - | アイコンサイズ |
+| `--dads-heading-icon-gap` | - | アイコンと本文の間隔 |
+| `--dads-heading-icon-vertical-align` | - | アイコンのベースライン補正（vertical-align） |
+| `--dads-heading-margin-block-start-base` | - | 上マージンのベース値 |
+| `--dads-heading-margin-scale` | - | 上マージンの倍率（例: compact連動） |
+| `--dads-heading-margin-block-start` | - | 上マージン |
+| `--dads-heading-chip-color` | - | チップ色 |
+| `--dads-heading-chip-width` | - | チップの幅 |
+| `--dads-heading-chip-padding-inline` | - | チップのインライン余白 |
+| `--dads-heading-chip-top` | - | チップの上位置 |
+| `--dads-heading-chip-bottom` | - | チップの下位置 |
+| `--dads-heading-rule-color` | - | ルール色 |
+
+
 ## Styling
 
 ```css

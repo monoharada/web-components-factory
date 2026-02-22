@@ -38,6 +38,15 @@ None
 | `base` | サイドバー領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-layout-sidebar-background` | - | 背景色 |
+| `--dads-layout-sidebar-border-color` | - | 境界線色 |
+| `--dads-layout-sidebar-padding` | - | 内側余白 |
+
+
 ## Styling
 
 ```css

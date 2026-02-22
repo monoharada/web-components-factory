@@ -44,6 +44,13 @@ None
 | `svg` | SVG要素 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-icon-color` | - | アイコン色（デフォルト: currentColor） |
+
+
 ## Styling
 
 ```css

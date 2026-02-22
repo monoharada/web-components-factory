@@ -28,7 +28,7 @@ const CHECK_MODE = process.argv.includes('--check');
 // CEM 読み込みとパース
 // ---------------------------------------------------------------------------
 
-/** @returns {{ tagName: string, className: string, description: string, superclass: string, attributes: Array, slots: Array, cssParts: Array, events: Array, modulePath: string }[]} */
+/** @returns {{ tagName: string, className: string, description: string, superclass: string, attributes: Array, slots: Array, cssParts: Array, cssProperties: Array, events: Array, modulePath: string }[]} */
 function extractDeclarations(cem) {
   const results = [];
   for (const mod of cem.modules ?? []) {
@@ -56,6 +56,11 @@ function extractDeclarations(cem) {
         })),
         cssParts: (decl.cssParts ?? []).map(p => ({
           name: p.name,
+          description: p.description ?? '',
+        })),
+        cssProperties: (decl.cssProperties ?? []).map(p => ({
+          name: p.name,
+          default: p.default ?? '',
           description: p.description ?? '',
         })),
         events: (decl.events ?? []).map(e => ({
@@ -168,6 +173,15 @@ function renderPartsTable(parts) {
   return lines.join('\n') + '\n';
 }
 
+function renderCssPropertiesTable(props) {
+  if (props.length === 0) return 'None\n';
+  const lines = ['| CSS Custom Property | Default | Description |', '|---------------------|---------|-------------|'];
+  for (const p of props) {
+    lines.push(`| \`${p.name}\` | ${p.default || '-'} | ${p.description} |`);
+  }
+  return lines.join('\n') + '\n';
+}
+
 function renderEventsTable(events) {
   if (events.length === 0) return 'None\n';
   const lines = ['| Event | Type | Description |', '|-------|------|-------------|'];
@@ -266,6 +280,14 @@ function generateLlmsFull(declarations, installRegistry, patternRegistry) {
     lines.push('');
     lines.push(renderPartsTable(decl.cssParts));
     lines.push('');
+
+    // CSS Custom Properties
+    if (decl.cssProperties.length > 0) {
+      lines.push('#### CSS Custom Properties');
+      lines.push('');
+      lines.push(renderCssPropertiesTable(decl.cssProperties));
+      lines.push('');
+    }
 
     // Events
     if (decl.events.length > 0) {
@@ -473,6 +495,14 @@ function generateComponentDoc(decl, installRegistry) {
   lines.push('');
   lines.push(renderPartsTable(decl.cssParts));
   lines.push('');
+
+  // CSS Custom Properties
+  if (decl.cssProperties.length > 0) {
+    lines.push('## CSS Custom Properties');
+    lines.push('');
+    lines.push(renderCssPropertiesTable(decl.cssProperties));
+    lines.push('');
+  }
 
   // Events
   if (decl.events.length > 0) {

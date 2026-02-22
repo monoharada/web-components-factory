@@ -53,6 +53,15 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component dr
 | `title` | タイトル領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-drawer-width` | - | ドロワー幅 |
+| `--dads-drawer-backdrop-background` | - | 背景(backdrop)色 |
+| `--dads-drawer-shadow` | - | ドロワー影 |
+
+
 ## Events
 
 | Event | Type | Description |

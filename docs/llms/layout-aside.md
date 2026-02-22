@@ -38,6 +38,15 @@ None
 | `base` | 補助領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-layout-aside-background` | - | 背景色 |
+| `--dads-layout-aside-border-color` | - | 境界線色 |
+| `--dads-layout-aside-padding` | - | 内側余白 |
+
+
 ## Styling
 
 ```css

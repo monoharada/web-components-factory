@@ -58,6 +58,17 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component di
 | `title` | タイトル領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-dialog-backdrop-background` | - | 背景(backdrop)色 |
+| `--dads-dialog-border-color` | - | ダイアログ境界線色 |
+| `--dads-dialog-border-width` | - | ダイアログ境界線幅 |
+| `--dads-dialog-width` | - | ダイアログ幅 |
+| `--dads-dialog-border-radius` | - | ダイアログ角丸 |
+
+
 ## Events
 
 | Event | Type | Description |

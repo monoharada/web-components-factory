@@ -50,6 +50,15 @@ None
 | `label` | ラベル領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-hamburger-menu-button-icon-size` | - | アイコンサイズ |
+| `--dads-hamburger-menu-button-min-height` | - | 最小高さ |
+| `--dads-hamburger-menu-button-background-hover` | - | hover背景色 |
+
+
 ## Styling
 
 ```css

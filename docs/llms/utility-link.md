@@ -51,6 +51,22 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ut
 | `tail-icon` | 末尾アイコン領域（tail-icon slot または target="_blank"/download フォールバックを表示） |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-utility-link-label-color` | - | ラベル色 |
+| `--dads-utility-link-label-color-hover` | - | ホバー時ラベル色 |
+| `--dads-utility-link-label-color-active` | - | アクティブ時ラベル色 |
+| `--dads-utility-link-icon-color` | - | アイコン色 |
+| `--dads-utility-link-underline-thickness` | - | 下線太さ |
+| `--dads-utility-link-underline-thickness-hover` | - | ホバー時下線太さ |
+| `--dads-utility-link-underline-offset` | - | 下線オフセット |
+| `--dads-utility-link-focus-outline-color` | - | フォーカス時アウトライン色 |
+| `--dads-utility-link-focus-ring-color` | - | フォーカス時リング色 |
+| `--dads-utility-link-focus-background` | - | フォーカス時背景色 |
+
+
 ## Styling
 
 ```css

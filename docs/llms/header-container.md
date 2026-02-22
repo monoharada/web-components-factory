@@ -54,6 +54,16 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component he
 | `utility` | 補助リンク領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-header-container-inline-padding` | - | インライン余白 |
+| `--dads-header-container-primary-min-block-size` | - | 1段目の最小高さ |
+| `--dads-header-container-global-menu-min-block-size` | - | メニュー段の最小高さ |
+| `--dads-header-container-border-color` | - | 境界線色 |
+
+
 ## Styling
 
 ```css

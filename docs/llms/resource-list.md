@@ -68,6 +68,26 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component re
 | `title` | タイトル領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-resource-list-background` | - | 背景色 |
+| `--dads-resource-list-background-selected` | - | 選択時背景色 |
+| `--dads-resource-list-background-disabled` | - | 無効時背景色 |
+| `--dads-resource-list-color` | - | 文字色 |
+| `--dads-resource-list-color-disabled` | - | 無効時文字色 |
+| `--dads-resource-list-border-color` | - | 罫線色 |
+| `--dads-resource-list-border-color-selected` | - | 選択時罫線色 |
+| `--dads-resource-list-border-color-disabled` | - | 無効時罫線色 |
+| `--dads-resource-list-padding-block` | - | 上下余白 |
+| `--dads-resource-list-padding-inline` | - | 左右余白 |
+| `--dads-resource-list-gap` | - | body 内要素間隔 |
+| `--dads-resource-list-content-gap` | - | contents 内行間 |
+| `--dads-resource-list-control-hit-area` | - | control 領域の最小ヒットサイズ |
+| `--dads-resource-list-action-width` | - | action 幅 |
+
+
 ## Styling
 
 ```css

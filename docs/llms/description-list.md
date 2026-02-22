@@ -39,6 +39,17 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component de
 None
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-description-list-margin-block` | - | ブロック方向マージン |
+| `--dads-description-list-item-gap` | - | 項目間の行間 |
+| `--dads-description-list-indent` | - | dt/dd のインデント |
+| `--dads-description-list-term-font-weight` | - | 用語（dt）の文字ウェイト |
+| `--dads-description-list-overflow-wrap` | - | 折り返し規則 |
+
+
 ## Styling
 
 ```css

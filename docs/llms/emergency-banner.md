@@ -61,6 +61,20 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component em
 | `timestamp` | 更新日時領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-emergency-banner-border-color` | - | 外枠色 |
+| `--dads-emergency-banner-background` | - | 背景色 |
+| `--dads-emergency-banner-color` | - | 本文文字色 |
+| `--dads-emergency-banner-heading-color` | - | 見出し色 |
+| `--dads-emergency-banner-action-background` | - | CTA背景色 |
+| `--dads-emergency-banner-action-background-hover` | - | CTAホバー背景色 |
+| `--dads-emergency-banner-action-color` | - | CTA文字色 |
+| `--dads-emergency-banner-action-border-radius` | - | CTA角丸 |
+
+
 ## Styling
 
 ```css

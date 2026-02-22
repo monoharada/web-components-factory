@@ -63,6 +63,36 @@ None
 | `visually-hidden` | スクリーンリーダー向けラベル |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-search-box-gap` | - | fields と button の間隔 |
+| `--dads-search-box-color` | - | 全体の文字色 |
+| `--dads-search-box-font-size` | - | ベース文字サイズ |
+| `--dads-search-box-letter-spacing` | - | 文字詰め |
+| `--dads-search-box-border-color` | - | 枠線色 |
+| `--dads-search-box-border-color-hover` | - | hover時の枠線色 |
+| `--dads-search-box-border-radius` | - | 角丸（8px） |
+| `--dads-search-box-border-width` | - | 枠線幅（デフォルト: 1px） |
+| `--dads-search-box-control-min-height` | - | input/select の最小高さ（44px相当） |
+| `--dads-search-box-scope-width` | - | scope select 幅 |
+| `--dads-search-box-scope-bg` | - | scope select 背景 |
+| `--dads-search-box-scope-label-color` | - | scopeラベル色 |
+| `--dads-search-box-scope-icon-color` | - | scopeアイコン色 |
+| `--dads-search-box-scope-icon-size` | - | scopeアイコンサイズ（デフォルト: 16px） |
+| `--dads-search-box-scope-padding` | - | scope select のパディング |
+| `--dads-search-box-input-bg` | - | input 背景 |
+| `--dads-search-box-input-min-width` | - | input 最小幅（デフォルト: 8rem） |
+| `--dads-search-box-input-padding` | - | input padding |
+| `--dads-search-box-search-icon-color` | - | 虫眼鏡色 |
+| `--dads-search-box-search-icon-size` | - | 虫眼鏡アイコンサイズ（デフォルト: 24px） |
+| `--dads-search-box-button-bg` | - | ボタン背景色 |
+| `--dads-search-box-button-color` | - | ボタン文字色 |
+| `--dads-search-box-button-bg-hover` | - | ボタンホバー時背景色 |
+| `--dads-search-box-button-border-color` | - | ボタン枠線色 |
+
+
 ## Events
 
 | Event | Type | Description |

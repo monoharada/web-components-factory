@@ -57,6 +57,21 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component la
 | `sidebar` | サイドバー領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-layout-shell-space` | - | 余白の基本値（inline-padding / block-gap の基準） |
+| `--dads-layout-shell-pane-width` | - | ペイン幅の基本値（sidebar / rail / aside の基準） |
+| `--dads-layout-shell-main-max-width` | - | websiteパターン時のメイン最大幅（基本調整） |
+| `--dads-layout-shell-mobile-space-scale` | - | mobile時の余白縮小倍率（spaceに乗算） |
+| `--dads-layout-shell-inline-padding` | - | コンテナの左右余白（詳細上書き） |
+| `--dads-layout-shell-block-gap` | - | ブロック間ギャップ（詳細上書き） |
+| `--dads-layout-shell-sidebar-width` | - | app-shell desktop時のsidebar幅（詳細上書き） |
+| `--dads-layout-shell-sidebar-rail-width` | - | app-shell tablet時のsidebar幅（詳細上書き） |
+| `--dads-layout-shell-aside-width` | - | master-detail desktop時のaside幅（詳細上書き） |
+
+
 ## Styling
 
 ```css

@@ -46,6 +46,14 @@ None
 | `svg` | SVG要素（イニシャルモード） |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-avatar-background` | - | 背景色（デフォルト: #949494） |
+| `--dads-avatar-text-color` | - | テキスト色（デフォルト: white） |
+
+
 ## Styling
 
 ```css

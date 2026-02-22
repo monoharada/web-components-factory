@@ -74,6 +74,21 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component no
 | `title` | タイトル領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-notification-banner-background` | - | 背景色 |
+| `--dads-notification-banner-color` | - | 本文文字色 |
+| `--dads-notification-banner-title-color` | - | タイトル文字色 |
+| `--dads-notification-banner-border-color` | - | 外枠色 |
+| `--dads-notification-banner-border-width` | - | 外枠線幅 |
+| `--dads-notification-banner-border-radius` | - | 角丸 |
+| `--dads-notification-banner-chip-color` | - | color-chip左帯色 |
+| `--dads-notification-banner-icon-color` | - | アイコン色 |
+| `--dads-notification-banner-action-color` | - | アクション色 |
+
+
 ## Events
 
 | Event | Type | Description |

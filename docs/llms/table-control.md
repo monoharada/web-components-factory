@@ -68,6 +68,17 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ta
 | `search` | Search control block |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-table-control-gap` | - | Primary spacing between blocks |
+| `--dads-table-control-count-color` | - | Result count text color |
+| `--dads-table-control-divider-color` | - | Divider color for action group |
+| `--dads-table-control-items-gap` | - | Gap between page size options |
+| `--dads-table-control-popular-gap` | - | Gap between search and popular areas |
+
+
 ## Events
 
 | Event | Type | Description |

@@ -41,6 +41,24 @@ None
 | `line` | 区切り線 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-divider-color` | - | 区切り線の色 |
+| `--dads-divider-style` | - | 区切り線の線種 |
+| `--dads-divider-width` | - | 区切り線の太さ |
+| `--dads-divider-margin` | - | 区切り余白（shorthand）。例: `8px 0` |
+| `--dads-divider-margin-vertical` | - | 垂直方向時の区切り余白（shorthand）。未指定時は block/inline から自動生成 |
+| `--dads-divider-margin-block` | - | 上下余白 |
+| `--dads-divider-margin-inline` | - | 左右余白 |
+| `--dads-divider-margin-block-start` | - | 上側余白 |
+| `--dads-divider-margin-block-end` | - | 下側余白 |
+| `--dads-divider-margin-inline-start` | - | 左側余白 |
+| `--dads-divider-margin-inline-end` | - | 右側余白 |
+| `--dads-divider-vertical-length` | - | 垂直方向時の線長 |
+
+
 ## Styling
 
 ```css

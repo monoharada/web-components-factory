@@ -44,6 +44,22 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component li
 | `base` | role="list" のルート |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-list-indent` | - | インデント（depthに応じて設定） |
+| `--dads-list-item-gap` | - | アイテム間隔（spacingに応じて設定） |
+| `--dads-list-marker-width` | - | マーカー列の幅（marker-widthで上書き可能） |
+| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-marker-color` | - | マーカー色 |
+| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
+| `--dads-list-marker-content` | - | リストマーク（markerタイプ用、装飾用途） |
+| `--dads-list-marker-content-1` | - | マーカー種別1（depth1） |
+| `--dads-list-marker-content-2` | - | マーカー種別2（depth2-4） |
+| `--dads-list-marker-content-3` | - | マーカー種別3（depth5+） |
+
+
 ## Styling
 
 ```css

@@ -211,6 +211,14 @@ None
 | `svg` | SVG要素（イニシャルモード） |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-avatar-background` | - | 背景色（デフォルト: #949494） |
+| `--dads-avatar-text-color` | - | テキスト色（デフォルト: white） |
+
+
 #### Usage
 
 ```html
@@ -522,6 +530,39 @@ None
 | `sub` | サブエリア（アクション領域のカスタマイズ） |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-card-background` | - | 背景色 |
+| `--dads-card-border-color` | - | 外周色 |
+| `--dads-card-border-width` | - | 外周の線幅 |
+| `--dads-card-border-radius` | - | 角丸 |
+| `--dads-card-divider-color` | - | エリア間の区切り線色（media/sub の境界） |
+| `--dads-card-divider-width` | - | エリア間の区切り線幅 |
+| `--dads-card-media-width` | - | layout="horizontal" のメディア列幅 |
+| `--dads-card-media-aspect-ratio` | - | メディア領域の aspect-ratio |
+| `--dads-card-padding-block` | - | パディング（上下） |
+| `--dads-card-padding-inline` | - | パディング（左右） |
+| `--dads-card-gap` | - | エリア内の余白 |
+| `--dads-card-color` | - | 本文/ラベルなどの文字色 |
+| `--dads-card-title-color` | - | タイトル（h1-h6）の文字色 |
+| `--dads-card-title-font-size` | - | タイトルのフォントサイズ |
+| `--dads-card-title-font-weight` | - | タイトルのフォントウェイト |
+| `--dads-card-title-line-height` | - | タイトルの行高 |
+| `--dads-card-title-letter-spacing` | - | タイトルの字間 |
+| `--dads-card-content-color` | - | コンテンツ（p）の文字色 |
+| `--dads-card-content-font-size` | - | コンテンツのフォントサイズ |
+| `--dads-card-content-font-weight` | - | コンテンツのフォントウェイト |
+| `--dads-card-content-line-height` | - | コンテンツの行高 |
+| `--dads-card-content-letter-spacing` | - | コンテンツの字間 |
+| `--dads-card-focus-outline-color` | - | フォーカスアウトライン色（委譲ON時） |
+| `--dads-card-focus-outline-width` | - | フォーカスアウトライン幅（委譲ON時） |
+| `--dads-card-focus-outline-offset` | - | フォーカスアウトラインのオフセット（委譲ON時） |
+| `--dads-card-focus-ring-color` | - | フォーカスリング色（委譲ON時） |
+| `--dads-card-focus-ring-width` | - | フォーカスリング幅（委譲ON時） |
+
+
 #### Usage
 
 ```html
@@ -777,6 +818,33 @@ None
 | `label` | ラベルテキストコンテナ |
 | `start-icon` | 先頭アイコンスロット |
 | `value` | value属性の表示テキスト |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-chip-tag-background` | - | 背景色 |
+| `--dads-chip-tag-border-color` | - | 枠線色 |
+| `--dads-chip-tag-border-width` | - | 枠線の太さ |
+| `--dads-chip-tag-border-shadow` | - | 外周の補助線 |
+| `--dads-chip-tag-border-shadow-hover` | - | hover時の外周補助線 |
+| `--dads-chip-tag-text-color` | - | テキスト色 |
+| `--dads-chip-tag-text-color-hover` | - | hover時のテキスト色 |
+| `--dads-chip-tag-text-color-active` | - | active時のテキスト色 |
+| `--dads-chip-tag-border-radius` | - | 角丸 |
+| `--dads-chip-tag-min-height` | - | 最小高さ |
+| `--dads-chip-tag-padding-block` | - | 上下パディング |
+| `--dads-chip-tag-padding-inline` | - | 左右パディング |
+| `--dads-chip-tag-label-padding-inline` | - | ラベルの左右パディング |
+| `--dads-chip-tag-label-padding-bottom` | - | ラベルの下パディング |
+| `--dads-chip-tag-label-text-decoration` | - | ラベルの装飾線 |
+| `--dads-chip-tag-label-underline-thickness` | - | ラベル下線の太さ |
+| `--dads-chip-tag-label-underline-thickness-hover` | - | hover/active時のラベル下線の太さ |
+| `--dads-chip-tag-label-underline-offset` | - | ラベル下線のオフセット |
+| `--dads-chip-tag-icon-size` | - | アイコンサイズ |
+| `--dads-chip-tag-action-hit-area` | - | アクションのヒット領域（見た目は維持したまま拡張） |
+| `--dads-chip-tag-action-icon-size` | - | アクション内アイコンサイズ |
 
 
 #### Events
@@ -1045,6 +1113,17 @@ None
 None
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-description-list-margin-block` | - | ブロック方向マージン |
+| `--dads-description-list-item-gap` | - | 項目間の行間 |
+| `--dads-description-list-indent` | - | dt/dd のインデント |
+| `--dads-description-list-term-font-weight` | - | 用語（dt）の文字ウェイト |
+| `--dads-description-list-overflow-wrap` | - | 折り返し規則 |
+
+
 #### Usage
 
 ```html
@@ -1094,6 +1173,17 @@ None
 | `header` | ヘッダー領域 |
 | `panel` | ダイアログ本体 |
 | `title` | タイトル領域 |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-dialog-backdrop-background` | - | 背景(backdrop)色 |
+| `--dads-dialog-border-color` | - | ダイアログ境界線色 |
+| `--dads-dialog-border-width` | - | ダイアログ境界線幅 |
+| `--dads-dialog-width` | - | ダイアログ幅 |
+| `--dads-dialog-border-radius` | - | ダイアログ角丸 |
 
 
 #### Events
@@ -1159,6 +1249,17 @@ None
 | `summary-text` | 見出しテキストラッパー |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-disclosure-gap` | - | summary内のgap |
+| `--dads-disclosure-icon-size` | - | アイコンサイズ |
+| `--dads-disclosure-icon-color` | - | アイコン色 |
+| `--dads-disclosure-content-padding-inline-start` | - | 本文のインライン開始padding |
+| `--dads-disclosure-back-link-color` | - | 戻るリンク色 |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -1209,6 +1310,24 @@ None
 | `line` | 区切り線 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-divider-color` | - | 区切り線の色 |
+| `--dads-divider-style` | - | 区切り線の線種 |
+| `--dads-divider-width` | - | 区切り線の太さ |
+| `--dads-divider-margin` | - | 区切り余白（shorthand）。例: `8px 0` |
+| `--dads-divider-margin-vertical` | - | 垂直方向時の区切り余白（shorthand）。未指定時は block/inline から自動生成 |
+| `--dads-divider-margin-block` | - | 上下余白 |
+| `--dads-divider-margin-inline` | - | 左右余白 |
+| `--dads-divider-margin-block-start` | - | 上側余白 |
+| `--dads-divider-margin-block-end` | - | 下側余白 |
+| `--dads-divider-margin-inline-start` | - | 左側余白 |
+| `--dads-divider-margin-inline-end` | - | 右側余白 |
+| `--dads-divider-vertical-length` | - | 垂直方向時の線長 |
+
+
 #### Usage
 
 ```html
@@ -1256,6 +1375,15 @@ None
 | `header` | ヘッダー領域 |
 | `panel` | ドロワー本体 |
 | `title` | タイトル領域 |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-drawer-width` | - | ドロワー幅 |
+| `--dads-drawer-backdrop-background` | - | 背景(backdrop)色 |
+| `--dads-drawer-shadow` | - | ドロワー影 |
 
 
 #### Events
@@ -1323,6 +1451,20 @@ None
 | `heading` | 見出し領域 |
 | `prefix` | 見出し接頭辞 |
 | `timestamp` | 更新日時領域 |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-emergency-banner-border-color` | - | 外枠色 |
+| `--dads-emergency-banner-background` | - | 背景色 |
+| `--dads-emergency-banner-color` | - | 本文文字色 |
+| `--dads-emergency-banner-heading-color` | - | 見出し色 |
+| `--dads-emergency-banner-action-background` | - | CTA背景色 |
+| `--dads-emergency-banner-action-background-hover` | - | CTAホバー背景色 |
+| `--dads-emergency-banner-action-color` | - | CTA文字色 |
+| `--dads-emergency-banner-action-border-radius` | - | CTA角丸 |
 
 
 #### Usage
@@ -1623,6 +1765,15 @@ None
 | `label` | ラベル領域 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-hamburger-menu-button-icon-size` | - | アイコンサイズ |
+| `--dads-hamburger-menu-button-min-height` | - | 最小高さ |
+| `--dads-hamburger-menu-button-background-hover` | - | hover背景色 |
+
+
 #### Usage
 
 ```html
@@ -1671,6 +1822,16 @@ None
 | `logo` | ロゴ領域 |
 | `primary-row` | 1段目レイアウト領域 |
 | `utility` | 補助リンク領域 |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-header-container-inline-padding` | - | インライン余白 |
+| `--dads-header-container-primary-min-block-size` | - | 1段目の最小高さ |
+| `--dads-header-container-global-menu-min-block-size` | - | メニュー段の最小高さ |
+| `--dads-header-container-border-color` | - | 境界線色 |
 
 
 #### Usage
@@ -1726,6 +1887,29 @@ None
 | `shoulder` | ショルダーテキスト |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-heading-color` | - | 文字色 |
+| `--dads-heading-font-size` | - | 見出しフォントサイズ |
+| `--dads-heading-line-height` | - | 行高 |
+| `--dads-heading-letter-spacing` | - | 文字間隔 |
+| `--dads-heading-shoulder-font-size` | - | ショルダーのフォントサイズ |
+| `--dads-heading-icon-size` | - | アイコンサイズ |
+| `--dads-heading-icon-gap` | - | アイコンと本文の間隔 |
+| `--dads-heading-icon-vertical-align` | - | アイコンのベースライン補正（vertical-align） |
+| `--dads-heading-margin-block-start-base` | - | 上マージンのベース値 |
+| `--dads-heading-margin-scale` | - | 上マージンの倍率（例: compact連動） |
+| `--dads-heading-margin-block-start` | - | 上マージン |
+| `--dads-heading-chip-color` | - | チップ色 |
+| `--dads-heading-chip-width` | - | チップの幅 |
+| `--dads-heading-chip-padding-inline` | - | チップのインライン余白 |
+| `--dads-heading-chip-top` | - | チップの上位置 |
+| `--dads-heading-chip-bottom` | - | チップの下位置 |
+| `--dads-heading-rule-color` | - | ルール色 |
+
+
 #### Usage
 
 ```html
@@ -1767,6 +1951,13 @@ None
 | Part | Description |
 |------|-------------|
 | `svg` | SVG要素 |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-icon-color` | - | アイコン色（デフォルト: currentColor） |
 
 
 #### Usage
@@ -1957,6 +2148,15 @@ None
 | `base` | 補助領域 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-layout-aside-background` | - | 背景色 |
+| `--dads-layout-aside-border-color` | - | 境界線色 |
+| `--dads-layout-aside-padding` | - | 内側余白 |
+
+
 #### Usage
 
 ```html
@@ -2007,6 +2207,21 @@ None
 | `sidebar` | サイドバー領域 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-layout-shell-space` | - | 余白の基本値（inline-padding / block-gap の基準） |
+| `--dads-layout-shell-pane-width` | - | ペイン幅の基本値（sidebar / rail / aside の基準） |
+| `--dads-layout-shell-main-max-width` | - | websiteパターン時のメイン最大幅（基本調整） |
+| `--dads-layout-shell-mobile-space-scale` | - | mobile時の余白縮小倍率（spaceに乗算） |
+| `--dads-layout-shell-inline-padding` | - | コンテナの左右余白（詳細上書き） |
+| `--dads-layout-shell-block-gap` | - | ブロック間ギャップ（詳細上書き） |
+| `--dads-layout-shell-sidebar-width` | - | app-shell desktop時のsidebar幅（詳細上書き） |
+| `--dads-layout-shell-sidebar-rail-width` | - | app-shell tablet時のsidebar幅（詳細上書き） |
+| `--dads-layout-shell-aside-width` | - | master-detail desktop時のaside幅（詳細上書き） |
+
+
 #### Usage
 
 ```html
@@ -2046,6 +2261,15 @@ None
 | Part | Description |
 |------|-------------|
 | `base` | サイドバー領域 |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-layout-sidebar-background` | - | 背景色 |
+| `--dads-layout-sidebar-border-color` | - | 境界線色 |
+| `--dads-layout-sidebar-padding` | - | 内側余白 |
 
 
 #### Usage
@@ -2088,6 +2312,22 @@ None
 | `base` | role="list" のルート |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-list-indent` | - | インデント（depthに応じて設定） |
+| `--dads-list-item-gap` | - | アイテム間隔（spacingに応じて設定） |
+| `--dads-list-marker-width` | - | マーカー列の幅（marker-widthで上書き可能） |
+| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-marker-color` | - | マーカー色 |
+| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
+| `--dads-list-marker-content` | - | リストマーク（markerタイプ用、装飾用途） |
+| `--dads-list-marker-content-1` | - | マーカー種別1（depth1） |
+| `--dads-list-marker-content-2` | - | マーカー種別2（depth2-4） |
+| `--dads-list-marker-content-3` | - | マーカー種別3（depth5+） |
+
+
 #### Usage
 
 ```html
@@ -2128,6 +2368,17 @@ None
 | `item` | role="listitem" のルート |
 | `marker` | マーカー列 |
 | `marker-glyph` | 予備のマーカー記号領域（通常は非表示） |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-list-marker-width` | - | マーカー列の幅 |
+| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-marker-color` | - | マーカー色 |
+| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
+| `--dads-list-marker-content` | - | リストマーク（markerタイプ用、装飾用途） |
 
 
 #### Usage
@@ -2339,6 +2590,23 @@ None
 | `content` | メニュー本文 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-mobile-menu-width` | - | メニュー幅 |
+| `--dads-mobile-menu-background` | - | 背景色 |
+| `--dads-mobile-menu-padding-block` | - | ルート上下余白 |
+| `--dads-mobile-menu-padding-inline` | - | ルート左右余白 |
+| `--dads-mobile-menu-border-color` | - | 枠線色 |
+| `--dads-mobile-menu-border-width` | - | 枠線幅 |
+| `--dads-mobile-menu-divider-margin-inline` | - | 区切り線の左右余白（標準） |
+| `--dads-mobile-menu-divider-margin-inline-wide` | - | 区切り線の左右余白（ワイド） |
+| `--dads-mobile-menu-back-padding-inline` | - | 戻る行左右余白 |
+| `--dads-mobile-menu-back-padding-block-start` | - | 戻る行上余白 |
+| `--dads-mobile-menu-back-padding-block-end` | - | 戻る行下余白 |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -2410,6 +2678,21 @@ None
 | `restore-button` | 再表示ボタン |
 | `restore-text` | 折りたたみ時の補助テキスト |
 | `title` | タイトル領域 |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-notification-banner-background` | - | 背景色 |
+| `--dads-notification-banner-color` | - | 本文文字色 |
+| `--dads-notification-banner-title-color` | - | タイトル文字色 |
+| `--dads-notification-banner-border-color` | - | 外枠色 |
+| `--dads-notification-banner-border-width` | - | 外枠線幅 |
+| `--dads-notification-banner-border-radius` | - | 角丸 |
+| `--dads-notification-banner-chip-color` | - | color-chip左帯色 |
+| `--dads-notification-banner-icon-color` | - | アイコン色 |
+| `--dads-notification-banner-action-color` | - | アクション色 |
 
 
 #### Events
@@ -2621,6 +2904,26 @@ None
 | `title` | タイトル領域 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-resource-list-background` | - | 背景色 |
+| `--dads-resource-list-background-selected` | - | 選択時背景色 |
+| `--dads-resource-list-background-disabled` | - | 無効時背景色 |
+| `--dads-resource-list-color` | - | 文字色 |
+| `--dads-resource-list-color-disabled` | - | 無効時文字色 |
+| `--dads-resource-list-border-color` | - | 罫線色 |
+| `--dads-resource-list-border-color-selected` | - | 選択時罫線色 |
+| `--dads-resource-list-border-color-disabled` | - | 無効時罫線色 |
+| `--dads-resource-list-padding-block` | - | 上下余白 |
+| `--dads-resource-list-padding-inline` | - | 左右余白 |
+| `--dads-resource-list-gap` | - | body 内要素間隔 |
+| `--dads-resource-list-content-gap` | - | contents 内行間 |
+| `--dads-resource-list-control-hit-area` | - | control 領域の最小ヒットサイズ |
+| `--dads-resource-list-action-width` | - | action 幅 |
+
+
 #### Usage
 
 ```html
@@ -2683,6 +2986,36 @@ None
 | `scope-select` | 検索対象セレクト |
 | `search-icon` | 虫眼鏡アイコン |
 | `visually-hidden` | スクリーンリーダー向けラベル |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-search-box-gap` | - | fields と button の間隔 |
+| `--dads-search-box-color` | - | 全体の文字色 |
+| `--dads-search-box-font-size` | - | ベース文字サイズ |
+| `--dads-search-box-letter-spacing` | - | 文字詰め |
+| `--dads-search-box-border-color` | - | 枠線色 |
+| `--dads-search-box-border-color-hover` | - | hover時の枠線色 |
+| `--dads-search-box-border-radius` | - | 角丸（8px） |
+| `--dads-search-box-border-width` | - | 枠線幅（デフォルト: 1px） |
+| `--dads-search-box-control-min-height` | - | input/select の最小高さ（44px相当） |
+| `--dads-search-box-scope-width` | - | scope select 幅 |
+| `--dads-search-box-scope-bg` | - | scope select 背景 |
+| `--dads-search-box-scope-label-color` | - | scopeラベル色 |
+| `--dads-search-box-scope-icon-color` | - | scopeアイコン色 |
+| `--dads-search-box-scope-icon-size` | - | scopeアイコンサイズ（デフォルト: 16px） |
+| `--dads-search-box-scope-padding` | - | scope select のパディング |
+| `--dads-search-box-input-bg` | - | input 背景 |
+| `--dads-search-box-input-min-width` | - | input 最小幅（デフォルト: 8rem） |
+| `--dads-search-box-input-padding` | - | input padding |
+| `--dads-search-box-search-icon-color` | - | 虫眼鏡色 |
+| `--dads-search-box-search-icon-size` | - | 虫眼鏡アイコンサイズ（デフォルト: 24px） |
+| `--dads-search-box-button-bg` | - | ボタン背景色 |
+| `--dads-search-box-button-color` | - | ボタン文字色 |
+| `--dads-search-box-button-bg-hover` | - | ボタンホバー時背景色 |
+| `--dads-search-box-button-border-color` | - | ボタン枠線色 |
 
 
 #### Events
@@ -3013,6 +3346,17 @@ None
 | `search` | Search control block |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-table-control-gap` | - | Primary spacing between blocks |
+| `--dads-table-control-count-color` | - | Result count text color |
+| `--dads-table-control-divider-color` | - | Divider color for action group |
+| `--dads-table-control-items-gap` | - | Gap between page size options |
+| `--dads-table-control-popular-gap` | - | Gap between search and popular areas |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -3249,6 +3593,22 @@ None
 | `label` | ラベル領域 |
 | `lead-icon` | 先頭アイコン領域 |
 | `tail-icon` | 末尾アイコン領域（tail-icon slot または target="_blank"/download フォールバックを表示） |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-utility-link-label-color` | - | ラベル色 |
+| `--dads-utility-link-label-color-hover` | - | ホバー時ラベル色 |
+| `--dads-utility-link-label-color-active` | - | アクティブ時ラベル色 |
+| `--dads-utility-link-icon-color` | - | アイコン色 |
+| `--dads-utility-link-underline-thickness` | - | 下線太さ |
+| `--dads-utility-link-underline-thickness-hover` | - | ホバー時下線太さ |
+| `--dads-utility-link-underline-offset` | - | 下線オフセット |
+| `--dads-utility-link-focus-outline-color` | - | フォーカス時アウトライン色 |
+| `--dads-utility-link-focus-ring-color` | - | フォーカス時リング色 |
+| `--dads-utility-link-focus-background` | - | フォーカス時背景色 |
 
 
 #### Usage

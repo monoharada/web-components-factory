@@ -44,6 +44,17 @@ None
 | `marker-glyph` | 予備のマーカー記号領域（通常は非表示） |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-list-marker-width` | - | マーカー列の幅 |
+| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-marker-color` | - | マーカー色 |
+| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
+| `--dads-list-marker-content` | - | リストマーク（markerタイプ用、装飾用途） |
+
+
 ## Styling
 
 ```css

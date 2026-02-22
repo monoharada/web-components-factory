@@ -54,6 +54,17 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component di
 | `summary-text` | 見出しテキストラッパー |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-disclosure-gap` | - | summary内のgap |
+| `--dads-disclosure-icon-size` | - | アイコンサイズ |
+| `--dads-disclosure-icon-color` | - | アイコン色 |
+| `--dads-disclosure-content-padding-inline-start` | - | 本文のインライン開始padding |
+| `--dads-disclosure-back-link-color` | - | 戻るリンク色 |
+
+
 ## Events
 
 | Event | Type | Description |
