@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "conflicting-tag-extension",
+    "version": "1.0.0"
+  },
+  "canonicalPrefix": "dads",
+  "components": {
+    "button-alt": {
+      "id": "button-alt",
+      "tags": ["dads-button"],
+      "define": "defineButtonAlt",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": { "componentDir": "components/button-alt" }
+    }
+  },
+  "tags": {
+    "dads-button": "button-alt"
+  },
+  "patterns": {}
+}

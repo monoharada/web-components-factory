@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "test-extension",
+    "version": "1.0.0",
+    "description": "A valid test extension"
+  },
+  "canonicalPrefix": "ext",
+  "components": {
+    "widget": {
+      "id": "widget",
+      "tags": ["ext-widget"],
+      "define": "defineWidget",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": { "componentDir": "components/widget" }
+    },
+    "panel": {
+      "id": "panel",
+      "tags": ["ext-panel"],
+      "define": "definePanel",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": { "componentDir": "components/panel" }
+    }
+  },
+  "tags": {
+    "ext-widget": "widget",
+    "ext-panel": "panel"
+  },
+  "patterns": {
+    "ext-dashboard": {
+      "title": "Extension Dashboard",
+      "components": ["widget", "panel"]
+    }
+  }
+}

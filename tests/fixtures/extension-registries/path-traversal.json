@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "evil-extension",
+    "version": "1.0.0"
+  },
+  "canonicalPrefix": "evil",
+  "components": {
+    "evil-widget": {
+      "id": "evil-widget",
+      "tags": ["evil-widget"],
+      "define": "defineEvilWidget",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": { "componentDir": "../../etc/passwd" }
+    }
+  },
+  "tags": {
+    "evil-widget": "evil-widget"
+  },
+  "patterns": {}
+}

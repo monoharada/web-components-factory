@@ -13,6 +13,12 @@ import {
   vendorAdd,
   vendorInstall,
 } from './core.js';
+import {
+  addExtension,
+  removeExtension,
+  listExtensions,
+  showExtension,
+} from './extension.js';
 import { CHANNEL_DELEGATED_ENV, normalizeChannel, runDelegatedChannel } from './channel.js';
 
 function printHelp() {
@@ -23,11 +29,15 @@ function printHelp() {
       '',
       'Usage:',
       '  wcf init --prefix myui --dir . --pattern search-results [--entry @wcf|index|boot] [--file index.html] [--vendor-dir vendor/components/myui] [--force]',
-      '  wcf vendor install --prefix myui --dir vendor/components/myui [--pattern search-results] [--component heading ...] [--force]',
-      '  wcf vendor add --prefix myui --dir vendor/components/myui [--pattern search-results] [--component heading ...] [--force]',
-      '  wcf vendor print-importmap --prefix myui --dir vendor/components/myui [--pattern search-results] [--format json|html] [--component ...]',
+      '  wcf vendor install --prefix myui --dir vendor/components/myui [--pattern search-results] [--component heading ...] [--no-deps] [--force] [--registry ./ext.json]',
+      '  wcf vendor add --prefix myui --dir vendor/components/myui [--pattern search-results] [--component heading ...] [--no-deps] [--force] [--registry ./ext.json]',
+      '  wcf vendor print-importmap --prefix myui --dir vendor/components/myui [--pattern search-results] [--format json|html] [--component ...] [--no-deps]',
       '  wcf page create --pattern search-results --prefix myui --dir . [--entry @wcf|index|boot] [--vendor-dir vendor/components/myui]',
       '  wcf agent init --prefix myui --dir . [--pattern search-results]',
+      '  wcf extension add <source> [--name <name>] [--namespace <ns>] [--force]',
+      '  wcf extension list [--format json]',
+      '  wcf extension remove <name>',
+      '  wcf extension show <name>',
       '  wcf patterns',
       '  wcf patterns show <name>',
       '  wcf blocks list',
@@ -38,11 +48,15 @@ function printHelp() {
       '  --dir <path>            output directory / importmap base directory (required for vendor commands)',
       '  --pattern <name>        component pattern name from vendor-runtime/registry.json',
       '  --component <suffix>    add component suffix manually (repeatable)',
+      '  --no-deps               do not resolve component dependencies for --component (default: include deps)',
       '  --entry <@wcf|index|boot>  page entry mode (default: boot)',
       '  --channel <local|stable>   execution channel (default: local)',
       '  --vendor-dir <path>     vendor directory path for page scaffolding',
       '  --file <path>           output html file name (default: index.html)',
       '  --format <json|html>    print-importmap output format (default: json)',
+      '  --registry <path>       external registry JSON file (repeatable)',
+      '  --name <name>           extension name (for extension add)',
+      '  --namespace <ns>        extension namespace (for extension add)',
       '  --force                 overwrite existing files',
       '  -h, --help              show this help',
       '',
@@ -65,12 +79,16 @@ function parseArgs(argv) {
     dir: null,
     pattern: null,
     components: [],
-    format: 'json',
+    registries: [],
+    name: null,
+    namespace: null,
+    format: null,
     entry: 'boot',
     channel: 'local',
     vendorDir: null,
     file: 'index.html',
     force: false,
+    includeDeps: true,
     help: false,
   };
 
@@ -97,8 +115,24 @@ function parseArgs(argv) {
       result.components.push(argv[++i]);
       continue;
     }
+    if (a === '--registry') {
+      result.registries.push(argv[++i]);
+      continue;
+    }
+    if (a === '--name') {
+      result.name = argv[++i];
+      continue;
+    }
+    if (a === '--namespace') {
+      result.namespace = argv[++i];
+      continue;
+    }
+    if (a === '--no-deps') {
+      result.includeDeps = false;
+      continue;
+    }
     if (a === '--format') {
-      result.format = argv[++i] ?? 'json';
+      result.format = argv[++i] ?? null;
       continue;
     }
     if (a === '--entry') {
@@ -197,7 +231,9 @@ async function runVendor(cmd, args) {
       outDir: dir,
       pattern: args.pattern,
       components: args.components,
+      includeDeps: args.includeDeps,
       force: args.force,
+      registries: args.registries,
     });
     printWarnings(res.warnings);
 
@@ -220,7 +256,9 @@ async function runVendor(cmd, args) {
       outDir: dir,
       pattern: args.pattern,
       components: args.components,
+      includeDeps: args.includeDeps,
       force: args.force,
+      registries: args.registries,
     });
     printWarnings(res.warnings);
     // eslint-disable-next-line no-console
@@ -243,7 +281,8 @@ async function runVendor(cmd, args) {
       dir,
       pattern: args.pattern,
       components: args.components,
-      format: args.format,
+      includeDeps: args.includeDeps,
+      format: args.format ?? 'json',
     });
     // eslint-disable-next-line no-console
     console.log(text.trimEnd());
@@ -335,6 +374,86 @@ async function runInit(args) {
   );
 }
 
+async function runExtension(cmd, args) {
+  const sub = cmd[1];
+  const projectRoot = process.cwd();
+
+  if (sub === 'add') {
+    const source = cmd[2];
+    if (!source) throw new Error('Usage: wcf extension add <source> [--name <name>] [--namespace <ns>] [--force]');
+
+    const res = await addExtension(projectRoot, {
+      source,
+      name: args.name,
+      namespace: args.namespace,
+      force: args.force,
+    });
+
+    // eslint-disable-next-line no-console
+    console.log(
+      [
+        `拡張レジストリを追加しました: ${res.name} (コンポーネント: ${res.componentCount}, パターン: ${res.patternCount})`,
+        '',
+        '\u26a0 vendor ディレクトリを更新するには以下を実行してください:',
+        '  wcf vendor install --prefix <prefix> --dir <dir> --force',
+      ].join('\n'),
+    );
+    return;
+  }
+
+  if (sub === 'list') {
+    const extensions = await listExtensions(projectRoot);
+    if (extensions.length === 0) {
+      // eslint-disable-next-line no-console
+      console.log('登録されている拡張レジストリはありません。');
+      return;
+    }
+
+    if (args.format === 'json') {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(extensions, null, 2));
+    } else {
+      // Default: TSV table output (format is null or non-json)
+      for (const ext of extensions) {
+        // eslint-disable-next-line no-console
+        console.log(`${ext.name}\t${ext.source}\t${ext.addedAt ?? ''}`);
+      }
+    }
+    return;
+  }
+
+  if (sub === 'remove') {
+    const name = cmd[2];
+    if (!name) throw new Error('Usage: wcf extension remove <name>');
+    const removed = await removeExtension(projectRoot, name);
+    // eslint-disable-next-line no-console
+    console.log(`拡張レジストリを削除しました: ${removed.name}`);
+    return;
+  }
+
+  if (sub === 'show') {
+    const name = cmd[2];
+    if (!name) throw new Error('Usage: wcf extension show <name>');
+    const detail = await showExtension(projectRoot, name);
+    // eslint-disable-next-line no-console
+    console.log(
+      [
+        `name: ${detail.name}`,
+        `source: ${detail.source}`,
+        `components: ${detail.components.join(', ')}`,
+        `patterns: ${detail.patterns.join(', ')}`,
+        `addedAt: ${detail.addedAt ?? ''}`,
+        detail.loadError ? '(warning: レジストリファイルの読み込みに失敗しました)' : '',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    );
+    return;
+  }
+
+  throw new Error('Usage: wcf extension <add|list|remove|show> ...');
+}
+
 async function main() {
   const rawArgv = process.argv.slice(2);
   const args = parseArgs(rawArgv);
@@ -383,6 +502,11 @@ async function main() {
     process.exit(0);
   }
 
+  if (args.command[0] === 'extension') {
+    await runExtension(args.command, args);
+    process.exit(0);
+  }
+
   // quick validation helper for scripts/pipelines
   if (args.command[0] === 'vendor-importmap-json') {
     const prefix = requireValue(args.prefix, '--prefix');
@@ -392,6 +516,7 @@ async function main() {
       dir,
       pattern: args.pattern,
       components: args.components,
+      includeDeps: args.includeDeps,
     });
     // eslint-disable-next-line no-console
     console.log(JSON.stringify({ imports: map.imports }, null, 2));
@@ -402,7 +527,10 @@ async function main() {
 }
 
 main().catch((error) => {
-  if (error?.code && String(error.code).startsWith('E_CHANNEL_')) {
+  if (
+    error?.code &&
+    (String(error.code).startsWith('E_CHANNEL_') || String(error.code).startsWith('E_EXTENSION_'))
+  ) {
     // eslint-disable-next-line no-console
     console.error(String(error?.message ?? error));
   } else {

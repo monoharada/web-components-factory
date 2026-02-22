@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "core-deps-extension",
+    "version": "1.0.0"
+  },
+  "canonicalPrefix": "ext",
+  "components": {
+    "fancy-button": {
+      "id": "fancy-button",
+      "tags": ["ext-fancy-button"],
+      "define": "defineFancyButton",
+      "call": "prefix-registry",
+      "deps": ["button"],
+      "depsNamespace": { "button": "core" },
+      "source": { "componentDir": "components/fancy-button" }
+    }
+  },
+  "tags": {
+    "ext-fancy-button": "fancy-button"
+  },
+  "patterns": {}
+}

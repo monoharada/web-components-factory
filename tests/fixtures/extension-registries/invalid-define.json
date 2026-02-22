@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "meta": { "name": "invalid-define-test" },
+  "canonicalPrefix": "ext",
+  "components": {
+    "widget": {
+      "id": "widget",
+      "tags": ["ext-widget"],
+      "define": "alert('xss')",
+      "deps": []
+    }
+  },
+  "tags": { "ext-widget": "widget" },
+  "patterns": {}
+}

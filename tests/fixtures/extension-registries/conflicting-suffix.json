@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "suffix-conflict-extension",
+    "version": "1.0.0"
+  },
+  "canonicalPrefix": "myui",
+  "components": {
+    "heading-ext": {
+      "id": "heading-ext",
+      "tags": ["myui-heading"],
+      "define": "defineHeadingExt",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": { "componentDir": "components/heading-ext" }
+    }
+  },
+  "tags": {
+    "myui-heading": "heading-ext"
+  },
+  "patterns": {}
+}

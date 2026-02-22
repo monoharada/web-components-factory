@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "meta": { "name": "proto-pollution-test" },
+  "canonicalPrefix": "ext",
+  "components": {
+    "__proto__": {
+      "id": "__proto__",
+      "tags": ["ext-proto"],
+      "define": "defineProto",
+      "deps": []
+    }
+  },
+  "tags": { "ext-proto": "__proto__" },
+  "patterns": {}
+}

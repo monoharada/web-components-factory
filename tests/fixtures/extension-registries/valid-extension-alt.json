@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "alt-extension",
+    "version": "1.0.0",
+    "description": "Another valid extension with no conflicts"
+  },
+  "canonicalPrefix": "alt",
+  "components": {
+    "sidebar": {
+      "id": "sidebar",
+      "tags": ["alt-sidebar"],
+      "define": "defineSidebar",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": { "componentDir": "components/sidebar" }
+    }
+  },
+  "tags": {
+    "alt-sidebar": "sidebar"
+  },
+  "patterns": {}
+}
