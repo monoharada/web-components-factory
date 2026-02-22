@@ -477,12 +477,15 @@ export async function loadMergedRegistry(pkgRoot, { projectRoot = null, cliRegis
 
   const resolvedProjectRoot = projectRoot || process.cwd();
   let extensions = [];
+  const loadWarnings = [];
 
   // Load extensions from .wcf/extensions.json
   try {
     extensions = await loadAllExtensions(resolvedProjectRoot);
-  } catch {
-    // If extensions can't be loaded, proceed without them
+  } catch (extError) {
+    loadWarnings.push(
+      `W_EXTENSION_LOAD_FAILED: ローカル拡張設定の読み込みに失敗しました: ${extError?.message ?? extError}`,
+    );
     extensions = [];
   }
 
@@ -496,10 +499,11 @@ export async function loadMergedRegistry(pkgRoot, { projectRoot = null, cliRegis
 
   // Fast path: no extensions → preserve existing behavior exactly
   if (extensions.length === 0) {
-    return { registry, installRegistry, merged: null };
+    return { registry, installRegistry, merged: null, warnings: loadWarnings.length > 0 ? loadWarnings : undefined };
   }
 
   const { merged, warnings } = mergeRegistries({ core: installRegistry, extensions });
+  warnings.push(...loadWarnings);
   validateDeps(merged);
 
   // Build a runtime-compatible registry from merged data

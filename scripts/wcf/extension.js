@@ -5,8 +5,29 @@ import { createCliError } from './errors.js';
 const EXTENSION_SCHEMA_VERSION = 1;
 const EXTENSION_CONFIG_FILE = '.wcf/extensions.json';
 const FORBIDDEN_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+const RESERVED_NAMESPACES = new Set(['core']);
+const NAMESPACE_RE = /^[a-z][a-z0-9-]*$/;
 const COMPONENT_ID_RE = /^[a-z][a-z0-9-]*$/;
 const JS_IDENTIFIER_RE = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+
+/**
+ * Validate that a namespace is not reserved and matches the allowed format.
+ */
+function assertValidNamespace(ns, source) {
+  if (ns == null) return; // null/undefined means auto-resolve, OK
+  if (RESERVED_NAMESPACES.has(ns)) {
+    throw createCliError(
+      'E_EXTENSION_INVALID',
+      `予約済みの namespace です: "${ns}" (使用不可: ${[...RESERVED_NAMESPACES].join(', ')}) [source: ${source}]`,
+    );
+  }
+  if (!NAMESPACE_RE.test(ns)) {
+    throw createCliError(
+      'E_EXTENSION_INVALID',
+      `不正な namespace です: "${ns}" (小文字英数字とハイフンのみ許可、先頭は小文字) [source: ${source}]`,
+    );
+  }
+}
 
 /**
  * Validate that a componentDir path is safe (no traversal, no absolute paths).
@@ -161,6 +182,12 @@ export function mergeRegistries({ core, extensions = [] }) {
   for (const ext of extensions) {
     if (!ext.registry) continue;
     const ns = ext.namespace ?? ext.name ?? 'unknown';
+    if (RESERVED_NAMESPACES.has(ns)) {
+      throw createCliError(
+        'E_EXTENSION_INVALID',
+        `予約済みの namespace です: "${ns}" (拡張の name/namespace に "${ns}" は使用できません)`,
+      );
+    }
     addRegistryToMerged(merged, ext.registry, ns, conflicts, warnings);
   }
 
@@ -382,6 +409,8 @@ export function validateDeps(merged) {
  * Add an extension to the config. Throws on duplicate unless force=true.
  */
 export async function addExtension(projectRoot, { source, name, namespace = null, force = false }) {
+  assertValidNamespace(namespace, source);
+
   const config = await loadExtensionConfig(projectRoot);
   const { registry } = await loadExternalRegistry(source, projectRoot);
   const resolvedName = name || resolveExtensionName(source, registry);

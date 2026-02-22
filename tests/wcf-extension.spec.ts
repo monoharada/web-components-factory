@@ -653,3 +653,157 @@ describe('meta separation', () => {
     expect(merged._meta.get('widget')).toEqual({ namespace: 'ext', qualifiedId: 'ext:widget' });
   });
 });
+
+// ──────────────────────────────────────────
+// 10. Namespace Validation
+// ──────────────────────────────────────────
+describe('namespace validation', () => {
+  it('rejects reserved namespace "core" in addExtension', async () => {
+    const tmp = await mkdtemp();
+    const fixtureSrc = path.join(FIXTURES_DIR, 'valid-extension.json');
+    const fixtureDst = path.join(tmp, 'valid-extension.json');
+    await fs.copyFile(fixtureSrc, fixtureDst);
+
+    await expect(
+      addExtension(tmp, { source: './valid-extension.json', name: 'my-ext', namespace: 'core' }),
+    ).rejects.toThrow('E_EXTENSION_INVALID');
+    await expect(
+      addExtension(tmp, { source: './valid-extension.json', name: 'my-ext', namespace: 'core' }),
+    ).rejects.toThrow('予約済みの namespace');
+    await fs.rm(tmp, { recursive: true, force: true });
+  });
+
+  it('rejects invalid namespace characters in addExtension', async () => {
+    const tmp = await mkdtemp();
+    const fixtureSrc = path.join(FIXTURES_DIR, 'valid-extension.json');
+    const fixtureDst = path.join(tmp, 'valid-extension.json');
+    await fs.copyFile(fixtureSrc, fixtureDst);
+
+    await expect(
+      addExtension(tmp, { source: './valid-extension.json', name: 'my-ext', namespace: 'Bad_NS' }),
+    ).rejects.toThrow('E_EXTENSION_INVALID');
+    await expect(
+      addExtension(tmp, { source: './valid-extension.json', name: 'my-ext', namespace: '' }),
+    ).rejects.toThrow('E_EXTENSION_INVALID');
+    await fs.rm(tmp, { recursive: true, force: true });
+  });
+
+  it('rejects reserved namespace "core" in mergeRegistries', () => {
+    const core = {
+      schemaVersion: 1,
+      canonicalPrefix: 'dads',
+      components: {},
+      tags: {},
+      patterns: {},
+    };
+    const ext = loadFixture('valid-extension.json');
+    expect(() =>
+      mergeRegistries({
+        core,
+        extensions: [{ name: 'core', registry: ext }],
+      }),
+    ).toThrow('E_EXTENSION_INVALID');
+  });
+
+  it('allows valid custom namespaces', async () => {
+    const tmp = await mkdtemp();
+    const fixtureSrc = path.join(FIXTURES_DIR, 'valid-extension.json');
+    const fixtureDst = path.join(tmp, 'valid-extension.json');
+    await fs.copyFile(fixtureSrc, fixtureDst);
+
+    const result = await addExtension(tmp, {
+      source: './valid-extension.json',
+      name: 'my-ext',
+      namespace: 'my-team',
+    });
+    expect(result.name).toBe('my-ext');
+
+    const config = await loadExtensionConfig(tmp);
+    expect(config.extensions[0].namespace).toBe('my-team');
+    await fs.rm(tmp, { recursive: true, force: true });
+  });
+});
+
+// ──────────────────────────────────────────
+// 11. CLI format defaults & warning propagation
+// ──────────────────────────────────────────
+describe('CLI format defaults and warning propagation', () => {
+  const LONG_IO_TIMEOUT_MS = 20_000;
+
+  it('extension list defaults to TSV when --format is not specified', async () => {
+    const tmp = await mkdtemp();
+    const fixtureSrc = path.join(FIXTURES_DIR, 'valid-extension.json');
+    const fixtureDst = path.join(tmp, 'valid-extension.json');
+    await fs.copyFile(fixtureSrc, fixtureDst);
+
+    spawnSync(
+      'node',
+      [WCF_CLI, 'extension', 'add', './valid-extension.json', '--name', 'test-ext'],
+      { cwd: tmp, timeout: LONG_IO_TIMEOUT_MS, encoding: 'utf8' },
+    );
+
+    const tsvResult = spawnSync('node', [WCF_CLI, 'extension', 'list'], {
+      cwd: tmp,
+      timeout: LONG_IO_TIMEOUT_MS,
+      encoding: 'utf8',
+    });
+    expect(tsvResult.status).toBe(0);
+    // TSV output: name\tsource\taddedAt
+    expect(tsvResult.stdout).toContain('test-ext\t');
+    // Should NOT be JSON
+    expect(tsvResult.stdout.trim()).not.toMatch(/^\[/);
+
+    const jsonResult = spawnSync('node', [WCF_CLI, 'extension', 'list', '--format', 'json'], {
+      cwd: tmp,
+      timeout: LONG_IO_TIMEOUT_MS,
+      encoding: 'utf8',
+    });
+    expect(jsonResult.status).toBe(0);
+    const parsed = JSON.parse(jsonResult.stdout);
+    expect(Array.isArray(parsed)).toBe(true);
+    expect(parsed[0].name).toBe('test-ext');
+
+    await fs.rm(tmp, { recursive: true, force: true });
+  }, LONG_IO_TIMEOUT_MS);
+
+  it('emits warning when .wcf/extensions.json is corrupted and --registry is specified', async () => {
+    const tmp = await mkdtemp();
+    // Write corrupted extensions.json
+    const wcfDir = path.join(tmp, '.wcf');
+    await fs.mkdir(wcfDir, { recursive: true });
+    await fs.writeFile(path.join(wcfDir, 'extensions.json'), '{invalid json!!!', 'utf8');
+
+    // Create a valid extension registry to use with --registry
+    const fixtureSrc = path.join(FIXTURES_DIR, 'valid-extension.json');
+    const fixtureDst = path.join(tmp, 'valid-extension.json');
+    await fs.copyFile(fixtureSrc, fixtureDst);
+
+    const result = spawnSync(
+      'node',
+      [WCF_CLI, 'vendor', 'install', '--prefix', 'myui', '--dir', 'vendor/myui',
+       '--pattern', 'search-results', '--registry', './valid-extension.json', '--force'],
+      { cwd: tmp, timeout: LONG_IO_TIMEOUT_MS, encoding: 'utf8' },
+    );
+    // stderr should contain the load-failed warning
+    expect(result.stderr).toContain('W_EXTENSION_LOAD_FAILED');
+
+    await fs.rm(tmp, { recursive: true, force: true });
+  }, LONG_IO_TIMEOUT_MS);
+
+  it('extension add rejects reserved namespace via CLI', async () => {
+    const tmp = await mkdtemp();
+    const fixtureSrc = path.join(FIXTURES_DIR, 'valid-extension.json');
+    const fixtureDst = path.join(tmp, 'valid-extension.json');
+    await fs.copyFile(fixtureSrc, fixtureDst);
+
+    const result = spawnSync(
+      'node',
+      [WCF_CLI, 'extension', 'add', './valid-extension.json', '--name', 'test-ext', '--namespace', 'core'],
+      { cwd: tmp, timeout: LONG_IO_TIMEOUT_MS, encoding: 'utf8' },
+    );
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('予約済みの namespace');
+
+    await fs.rm(tmp, { recursive: true, force: true });
+  }, LONG_IO_TIMEOUT_MS);
+});
