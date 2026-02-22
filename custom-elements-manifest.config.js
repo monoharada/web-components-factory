@@ -207,6 +207,18 @@ function applyComponentOverride(componentId, inferred) {
 }
 
 /**
+ * Explicit prefix overrides for components whose CSS custom property naming
+ * doesn't follow the `--dads-{componentId}-*` convention.
+ *
+ * Key: componentId, Value: CSS custom property prefix to use.
+ * Add entries here instead of relying on automatic fallback detection.
+ */
+const CSS_PROPERTY_PREFIX_OVERRIDES = new Map([
+  // input-text uses --dads-input-* instead of --dads-input-text-*
+  ['input-text', '--dads-input-'],
+]);
+
+/**
  * Extract `--dads-{component}-*` CSS custom properties from token/style files
  * and inject them into `decl.cssProperties`.
  *
@@ -226,6 +238,9 @@ function extractPublicCssProperties(componentDir, componentId) {
     path.join(dirAbs, `${componentId}-styles.ts`),
   ];
 
+  // Deterministic prefix: explicit override or standard convention.
+  const componentPrefix = CSS_PROPERTY_PREFIX_OVERRIDES.get(componentId) ?? `--dads-${componentId}-`;
+
   /** @type {Map<string, string>} name → description */
   const found = new Map();
 
@@ -233,15 +248,12 @@ function extractPublicCssProperties(componentDir, componentId) {
     if (!existsSync(filePath)) continue;
     const text = readFileSync(filePath, 'utf-8');
 
-    // Match lines like:
-    //   --dads-button-background: ...;
-    //   --dads-button-background: ...; /* description */
-    // Also match in var() references for :host definitions:
-    //   var(--dads-button-width, auto)
-    // We use a broad regex first, then deduplicate.
+    // Collect all --dads-* occurrences (declarations + var() references),
+    // then filter by componentPrefix to keep only this component's tokens.
     const varRe = /--dads-[\w-]+/g;
     for (let m = varRe.exec(text); m; m = varRe.exec(text)) {
       const name = m[0];
+      if (!name.startsWith(componentPrefix)) continue;
       if (found.has(name)) continue;
       found.set(name, '');
     }
@@ -251,6 +263,7 @@ function extractPublicCssProperties(componentDir, componentId) {
     const declLineRe = /^\s*(--dads-[\w-]+)\s*:\s*[^;\n]*;[ \t]*\/\*\s*(.+?)\s*\*\//gm;
     for (let m = declLineRe.exec(text); m; m = declLineRe.exec(text)) {
       const name = m[1];
+      if (!name.startsWith(componentPrefix)) continue;
       const desc = m[2]?.trim() ?? '';
       if (desc && found.has(name) && !found.get(name)) {
         found.set(name, desc);
@@ -258,9 +271,12 @@ function extractPublicCssProperties(componentDir, componentId) {
     }
 
     // Pattern 2: Usage in var() — property: var(--dads-foo-bar, fallback); /* Description */
+    // When a line contains multiple var(--dads-*), only the first gets the description.
+    // To avoid ambiguity, put each --dads-* on its own line with its own comment.
     const varUsageRe = /var\((--dads-[\w-]+)[^)]*\)[^;\n]*;[ \t]*\/\*\s*(.+?)\s*\*\//gm;
     for (let m = varUsageRe.exec(text); m; m = varUsageRe.exec(text)) {
       const name = m[1];
+      if (!name.startsWith(componentPrefix)) continue;
       const desc = m[2]?.trim() ?? '';
       if (desc && found.has(name) && !found.get(name)) {
         found.set(name, desc);
@@ -272,43 +288,9 @@ function extractPublicCssProperties(componentDir, componentId) {
     // notes rather than property descriptions. Use inline comments only.
   }
 
-  // Filter to only properties that start with the component-specific prefix.
-  // e.g. for componentId "button", keep only --dads-button-*
-  // Some components use a shorter prefix (e.g. "input-text" → "--dads-input-*").
-  // We try the full prefix first, then fall back to shorter segments.
-  const fullPrefix = `--dads-${componentId}-`;
-  let componentPrefix = fullPrefix;
-  const hasFullMatch = [...found.keys()].some((n) => n.startsWith(fullPrefix));
-  if (!hasFullMatch) {
-    // Try shorter prefixes: "input-text" → try "--dads-input-"
-    const segments = componentId.split('-');
-    for (let i = segments.length - 1; i >= 1; i--) {
-      const shorter = `--dads-${segments.slice(0, i).join('-')}-`;
-      if ([...found.keys()].some((n) => n.startsWith(shorter))) {
-        componentPrefix = shorter;
-        break;
-      }
-    }
-
-    // Guard: warn if the shorter prefix could match other known componentIds.
-    if (componentPrefix !== fullPrefix) {
-      const shorterBase = componentPrefix.replace('--dads-', '').replace(/-$/, '');
-      const conflicting = [...KNOWN_COMPONENT_IDS].filter(
-        (id) => id !== componentId && id.startsWith(`${shorterBase}-`),
-      );
-      if (conflicting.length > 0) {
-        console.warn(
-          `  [wcf-css-properties-from-tokens] WARNING: ${componentId} uses shorter prefix "${componentPrefix}" ` +
-            `which may conflict with: ${conflicting.join(', ')}. Consider renaming tokens to ${fullPrefix}*.`,
-        );
-      }
-    }
-  }
-
   /** @type {{ name: string, description?: string }[]} */
   const result = [];
   for (const [name, description] of found) {
-    if (!name.startsWith(componentPrefix)) continue;
     const entry = { name };
     if (description) entry.description = description;
     result.push(entry);
