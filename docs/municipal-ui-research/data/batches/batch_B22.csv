@@ -1,0 +1,5 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0184,204145,長野県,泰阜村,municipality,D,chubu,https://www.vill.yasuoka.nagano.jp/,,,,,,rural_representative,過疎地域
+S0185,216046,岐阜県,白川村,municipality,D,chubu,https://shirakawa-go.org/,,,,,,ui_diversity,世界遺産
+S0186,224286,静岡県,川根本町,municipality,D,chubu,https://www.town.kawanehon.shizuoka.jp/,,,,,,rural_representative,過疎地域
+S0187,235628,愛知県,東栄町,municipality,D,chubu,https://www.town.toei.aichi.jp/,,,,,,rural_representative,過疎地域

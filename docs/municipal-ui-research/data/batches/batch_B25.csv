@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0196,272272,大阪府,東大阪市,municipality,B,kinki,https://www.city.higashiosaka.lg.jp/,,,,,,core_city,中核市
+S0197,272035,大阪府,豊中市,municipality,B,kinki,https://www.city.toyonaka.osaka.jp/,,,,,,core_city,中核市
+S0198,272078,大阪府,高槻市,municipality,B,kinki,https://www.city.takatsuki.osaka.jp/,,,,,,core_city,中核市
+S0199,272108,大阪府,枚方市,municipality,B,kinki,https://www.city.hirakata.osaka.jp/,,,,,,core_city,中核市
+S0200,272124,大阪府,八尾市,municipality,B,kinki,https://www.city.yao.osaka.jp/,,,,,,core_city,中核市
+S0202,282022,兵庫県,尼崎市,municipality,B,kinki,https://www.city.amagasaki.hyogo.jp/,,,,,,core_city,中核市
+S0203,282049,兵庫県,西宮市,municipality,B,kinki,https://www.nishi.or.jp/,,,,,,core_city,中核市

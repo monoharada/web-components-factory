@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0094,121002,千葉県,千葉市,municipality,A,kanto,https://www.city.chiba.jp/,,,,,,designated_city,政令指定都市
+S0096,141305,神奈川県,川崎市,municipality,A,kanto,https://www.city.kawasaki.jp/,,,,,,designated_city,政令指定都市
+S0097,141500,神奈川県,相模原市,municipality,A,kanto,https://www.city.sagamihara.kanagawa.jp/,,,,,,designated_city,政令指定都市
+S0098,082015,茨城県,水戸市,municipality,B,kanto,https://www.city.mito.lg.jp/,,,,,,core_city,中核市・県庁所在地
+S0099,092011,栃木県,宇都宮市,municipality,B,kanto,https://www.city.utsunomiya.tochigi.jp/,,,,,,core_city,中核市・県庁所在地
+S0100,102016,群馬県,前橋市,municipality,B,kanto,https://www.city.maebashi.gunma.jp/,,,,,,core_city,中核市・県庁所在地
+S0101,102024,群馬県,高崎市,municipality,B,kanto,https://www.city.takasaki.gunma.jp/,,,,,,core_city,中核市

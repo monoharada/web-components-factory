@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0031,310000,鳥取県,鳥取県,prefecture,unknown,chugoku,https://www.pref.tottori.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0032,320005,島根県,島根県,prefecture,unknown,chugoku,https://www.pref.shimane.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0033,330001,岡山県,岡山県,prefecture,unknown,chugoku,https://www.pref.okayama.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0034,340006,広島県,広島県,prefecture,unknown,chugoku,https://www.pref.hiroshima.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0035,350001,山口県,山口県,prefecture,unknown,chugoku,https://www.pref.yamaguchi.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0226,331007,岡山県,岡山市,municipality,A,chugoku,https://www.city.okayama.jp/,,,,,,designated_city,政令指定都市
+S0227,341002,広島県,広島市,municipality,A,chugoku,https://www.city.hiroshima.lg.jp/,,,,,,designated_city,政令指定都市

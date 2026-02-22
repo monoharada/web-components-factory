@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0067,042153,宮城県,大崎市,municipality,C,tohoku,https://www.city.osaki.miyagi.jp/,,,,,,regional_balance,人口約12万
+S0068,043028,宮城県,七ヶ宿町,municipality,D,tohoku,https://town.shichikashuku.miyagi.jp/,,,,,,rural_representative,過疎地域
+S0069,022012,青森県,青森市,municipality,B,tohoku,https://www.city.aomori.aomori.jp/,,,,,,core_city,中核市・県庁所在地
+S0070,022039,青森県,八戸市,municipality,B,tohoku,https://www.city.hachinohe.aomori.jp/,,,,,,core_city,中核市
+S0071,022021,青森県,弘前市,municipality,C,tohoku,https://www.city.hirosaki.aomori.jp/,,,,,,regional_balance,人口約16万
+S0072,023434,青森県,西目屋村,municipality,D,tohoku,https://www.nishimeya.jp/,,,,,,rural_representative,過疎地域
+S0073,032018,岩手県,盛岡市,municipality,B,tohoku,https://www.city.morioka.iwate.jp/,,,,,,core_city,中核市・県庁所在地

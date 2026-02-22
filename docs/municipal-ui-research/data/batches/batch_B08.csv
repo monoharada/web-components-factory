@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0008,080004,茨城県,茨城県,prefecture,unknown,kanto,https://www.pref.ibaraki.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0009,090000,栃木県,栃木県,prefecture,unknown,kanto,https://www.pref.tochigi.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0010,100005,群馬県,群馬県,prefecture,unknown,kanto,https://www.pref.gunma.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0011,110001,埼玉県,埼玉県,prefecture,unknown,kanto,https://www.pref.saitama.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0012,120006,千葉県,千葉県,prefecture,unknown,kanto,https://www.pref.chiba.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0014,140007,神奈川県,神奈川県,prefecture,unknown,kanto,https://www.pref.kanagawa.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0093,111007,埼玉県,さいたま市,municipality,A,kanto,https://www.city.saitama.jp/,,,,,,designated_city,政令指定都市

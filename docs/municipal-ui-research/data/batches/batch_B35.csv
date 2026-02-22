@@ -1,0 +1,5 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0260,383562,愛媛県,上島町,municipality,D,shikoku,https://www.town.kamijima.lg.jp/,,,,,,island_municipality,離島
+S0261,373249,香川県,直島町,municipality,D,shikoku,https://www.town.naoshima.lg.jp/,,,,,,island_municipality,離島・現代アート
+S0262,393444,高知県,大豊町,municipality,D,shikoku,https://www.town.otoyo.kochi.jp/,,,,,,rural_representative,過疎地域
+S0263,393061,高知県,馬路村,municipality,D,shikoku,https://www.vill.umaji.kochi.jp/,,,,,,rural_representative,過疎地域

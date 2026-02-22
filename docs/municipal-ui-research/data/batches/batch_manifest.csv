@@ -1,0 +1,42 @@
+batch_id,region,assigned_count,sample_ids,step03_status,step04_status,observations_rows,notes
+B01,hokkaido,7,S0050;S0052;S0053;S0054;S0055;S0056;S0057,complete,complete,35,
+B02,hokkaido,7,S0058;S0059;S0060;S0061;S0062;S0063;S0064,complete,complete,34,S0062 article=NOT_FOUND(4pages)
+B03,tohoku,7,S0002;S0003;S0005;S0006;S0007;S0065;S0066,complete,complete,35,
+B04,tohoku,7,S0067;S0068;S0069;S0070;S0071;S0072;S0073,complete,complete,33,S0068 contact=NOT_FOUND service=NOT_FOUND(3pages)
+B05,tohoku,7,S0074;S0075;S0076;S0077;S0078;S0079;S0080,complete,complete,34,S0079 service=NOT_FOUND(4pages)
+B06,tohoku,7,S0081;S0082;S0083;S0085;S0087;S0088;S0089,complete,complete,34,S0089 service=NOT_FOUND(4pages)
+B07,tohoku,3,S0090;S0091;S0092,complete,complete,12,S0090 S0091 S0092 all service=NOT_FOUND(4pages each)
+B08,kanto,7,S0008;S0009;S0010;S0011;S0012;S0014;S0093,complete,complete,35,
+B09,kanto,7,S0094;S0096;S0097;S0098;S0099;S0100;S0101,complete,complete,35,S0099 SSL expired on .tochigi.jp (.lg.jp used)
+B10,kanto,7,S0102;S0103;S0105;S0106;S0107;S0108;S0109,complete,complete,35,
+B11,kanto,7,S0110;S0112;S0113;S0114;S0115;S0116;S0119,complete,complete,35,
+B12,kanto,7,S0120;S0121;S0122;S0123;S0124;S0125;S0126,complete,complete,35,S0123 S0124 emergency=インフルエンザ; S0124 service=category_page
+B13,kanto,7,S0127;S0128;S0129;S0130;S0131;S0132;S0133,complete,complete,35,S0127 emergency=林野火災警報
+B14,kanto,7,S0134;S0135;S0136;S0137;S0138;S0140;S0141,complete,complete,35,S0135 emergency=インフルエンザ; S0140 D-cat(檜原村); S0141 D-cat(奥多摩町) top=hub兼用
+B15,kanto,6,S0142;S0143;S0144;S0145;S0146;S0147,complete,complete,29,S0142 service=NOT_FOUND(4pages); S0146 emergency=林野火災+クマ目撃
+B16,chubu,7,S0015;S0016;S0017;S0018;S0019;S0020;S0021,complete,complete,35,全prefecture; S0018 emergency=インフルエンザ+大雪; S0020 emergency=焼岳+浅間山; S0021 emergency=焼岳; S0020 Salesforce Sites; S0018 service=児童扶養手当(児童手当404); S0020 service=ひとり親支援(児童手当ページなし)
+B17,chubu,7,S0022;S0023;S0148;S0149;S0150;S0151;S0152,complete,complete,35,S0022 emergency=台風15号 KanaboWeb; S0150 emergency=豪雨災害; S0152 emergency=能登半島地震(復興); S0151 KanaboWeb+5SNS; S0022+S0151 KanaboWeb共通CMS
+B18,chubu,7,S0154;S0155;S0156;S0157;S0158;S0159;S0160,complete,complete,35,全core_city(B); S0154 ReadSpeaker+Splide; S0155 ReadSpeaker; S0157 KanaboWeb系(FI.jQuery); S0158 emergency=火山警戒(焼岳); S0159 ASP.NET+HP番号検索+emergency=節水; S0160 skip_link不在+3cat+emergency=緊急情報
+B19,chubu,7,S0161;S0163;S0164;S0165;S0166;S0167;S0168,complete,complete,35,S0161 KanaboVoice+5SNS+SDGs; S0163 emergency=雪害+はしか; S0164 SMART CMS+emergency=能登半島地震; S0165 SMART CMS+J-ALERT+もしもしセンター; S0166 roster_URL修正(hakusan.ishikawa.jp→hakusan.lg.jp)+emergency=災害医療; S0167 emergency=能登半島地震+インフルエンザ+いつどこナビ; S0168 Slick+Google CSE+Clarity(D-cat)
+B20,chubu,7,S0169;S0170;S0171;S0172;S0173;S0174;S0175,complete,complete,35,S0169 tsutaeruMO+やさしい日本語+ruby; S0170 Google_CSE+5SNS+リニア開発; S0171 ReadSpeaker+ふりがな+AIチャットボット+6言語+contact=/soshiki/=403; S0172 Supersized+3cat(minimal)+Typekit; S0173 ReadSpeaker+ふりがな+8言語+7ch+audience_segmentation; S0174 8cat+TikTok+Google_Translate_25言語+Well-being_city; S0175 FI系CMS+同報無線+Google_Translate_6言語
+B21,chubu,7,S0176;S0177;S0179;S0180;S0181;S0182;S0183,complete,complete,33,S0183 service=NOT_FOUND article=NOT_FOUND(blogのみ) URL修正(nebamura.jp); S0179 Cms::Page; S0180+S0181 SMART_CMS(api5th); S0182 Slick+Google_CSE+震災復興; S0183 WordPress
+B22,chubu,4,S0184;S0185;S0186;S0187,complete,complete,20,S0184 SS.config+contact=top兼用; S0185 白川郷(shirakawa-go.org=SSL_error→vill.shirakawa.lg.jp); S0186 SMART_CMS(api3rd); S0187 i-site_CMS
+B23,kinki,7,S0024;S0025;S0026;S0028;S0029;S0030;S0188,complete,complete,34,kinki prefectures+cities
+B24,kinki,7,S0189;S0190;S0191;S0192;S0193;S0194;S0195,complete,complete,35,kinki B/C cities
+B25,kinki,7,S0196;S0197;S0198;S0199;S0200;S0202;S0203,complete,complete,35,kinki C cities
+B26,kinki,7,S0205;S0206;S0207;S0208;S0209;S0210;S0211,complete,complete,35,kinki C/D cities
+B27,kinki,7,S0212;S0213;S0214;S0215;S0216;S0217;S0218,complete,complete,35,kinki D municipalities
+B28,kinki,7,S0219;S0220;S0221;S0222;S0223;S0224;S0225,complete,complete,31,kinki D rural/islands; S0225 dns_error(古座川町)
+B29,chugoku,7,S0031;S0032;S0033;S0034;S0035;S0226;S0227,complete,complete,35,chugoku prefectures+cities
+B30,chugoku,7,S0228;S0229;S0230;S0231;S0232;S0233;S0235,complete,complete,35,chugoku cities
+B31,chugoku,7,S0236;S0237;S0239;S0240;S0241;S0242;S0243,complete,complete,35,chugoku C/D municipalities
+B32,chugoku,4,S0244;S0245;S0246;S0247,complete,complete,20,chugoku D municipalities
+B33,shikoku,7,S0036;S0037;S0038;S0039;S0248;S0249;S0251,complete,complete,35,shikoku prefectures+cities
+B34,shikoku,7,S0253;S0254;S0255;S0256;S0257;S0258;S0259,complete,complete,35,S0259 domain修正(miyoshi.i-tokushima.jp); KanaboWeb(S0253); Joruri(S0256)
+B35,shikoku,4,S0260;S0261;S0262;S0263,complete,complete,20,S0263 domain修正(vill.umaji.lg.jp); WordPress(S0263 pop754); 離島(S0260 S0261)
+B36,kyushu_okinawa,7,S0040;S0041;S0042;S0043;S0044;S0045;S0046,complete,complete,35,全prefecture; S0042 custom_tracking(access_log.php); S0045 4色背景; S0046 ReadSpeaker+mojiiro
+B37,kyushu_okinawa,7,S0264;S0266;S0267;S0268;S0269;S0270;S0271,complete,complete,35,S0266 ASP.NET+12cat; S0271 Clarity; S0264 pageNo(9桁); S0269 JS必須
+B38,kyushu_okinawa,7,S0273;S0275;S0276;S0277;S0278;S0279;S0280,complete,complete,35,S0275 ツタエル+ひらがな; S0276 やさしいブラウザ; S0280 KanaboVoice+skip-link
+B39,kyushu_okinawa,7,S0281;S0282;S0283;S0284;S0285;S0287;S0288,complete,complete,35,S0282 chatbot(生成AI子育て); S0283 tsutaeru+chatbot(nakanohito); S0287 Joruri; S0288 SMART_CMS
+B40,kyushu_okinawa,7,S0289;S0290;S0291;S0292;S0293;S0294;S0295,complete,complete,35,S0290 domain修正(town.genkai.lg.jp); S0292 SMART_CMS+domain修正(town.ojika.lg.jp); S0295 WordPress+離島
+B41,kyushu_okinawa,4,S0296;S0297;S0299;S0300,complete,complete,20,S0296 jQuery_Cycle+秘境; S0297 WordPress4.7.3; S0299 WordPress+MetaSlider+トカラ列島; S0300 エコアイランド

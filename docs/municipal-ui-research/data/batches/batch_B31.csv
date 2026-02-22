@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0236,322032,島根県,出雲市,municipality,C,chugoku,https://www.city.izumo.shimane.jp/,,,,,,regional_balance,人口約17万
+S0237,332038,岡山県,津山市,municipality,C,chugoku,https://www.city.tsuyama.lg.jp/,,,,,,regional_balance,人口約9万
+S0239,342050,広島県,尾道市,municipality,C,chugoku,https://www.city.onomichi.hiroshima.jp/,,,,,,regional_balance,人口約12万
+S0240,352152,山口県,周南市,municipality,C,chugoku,https://www.city.shunan.lg.jp/,,,,,,regional_balance,人口約13万
+S0241,352063,山口県,防府市,municipality,C,chugoku,https://www.city.hofu.yamaguchi.jp/,,,,,,regional_balance,人口約11万
+S0242,325287,島根県,隠岐の島町,municipality,D,chugoku,https://www.town.okinoshima.shimane.jp/,,,,,,island_municipality,離島
+S0243,323438,島根県,奥出雲町,municipality,D,chugoku,https://www.town.okuizumo.shimane.jp/,,,,,,rural_representative,過疎地域

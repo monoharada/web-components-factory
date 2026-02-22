@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0110,131032,東京都,港区,municipality,C,kanto,https://www.city.minato.tokyo.jp/,,,,,,special_ward,特別区
+S0112,131059,東京都,文京区,municipality,C,kanto,https://www.city.bunkyo.lg.jp/,,,,,,special_ward,特別区
+S0113,131067,東京都,台東区,municipality,C,kanto,https://www.city.taito.lg.jp/,,,,,,special_ward,特別区
+S0114,131075,東京都,墨田区,municipality,C,kanto,https://www.city.sumida.lg.jp/,,,,,,special_ward,特別区
+S0115,131091,東京都,品川区,municipality,C,kanto,https://www.city.shinagawa.tokyo.jp/,,,,,,special_ward,特別区
+S0116,131105,東京都,目黒区,municipality,C,kanto,https://www.city.meguro.tokyo.jp/,,,,,,special_ward,特別区
+S0119,131148,東京都,中野区,municipality,C,kanto,https://www.city.tokyo-nakano.lg.jp/,,,,,,special_ward,特別区

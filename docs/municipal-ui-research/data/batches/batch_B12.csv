@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0120,131156,東京都,杉並区,municipality,C,kanto,https://www.city.suginami.tokyo.jp/,,,,,,special_ward,特別区
+S0121,131164,東京都,豊島区,municipality,C,kanto,https://www.city.toshima.lg.jp/,,,,,,special_ward,特別区
+S0122,131211,東京都,足立区,municipality,C,kanto,https://www.city.adachi.tokyo.jp/,,,,,,special_ward,特別区
+S0123,132012,東京都,八王子市,municipality,B,kanto,https://www.city.hachioji.tokyo.jp/,,,,,,core_city,中核市
+S0124,132098,東京都,町田市,municipality,C,kanto,https://www.city.machida.tokyo.jp/,,,,,,population_top,人口約43万
+S0125,132063,東京都,府中市,municipality,C,kanto,https://www.city.fuchu.tokyo.jp/,,,,,,regional_balance,人口約26万
+S0126,082023,茨城県,日立市,municipality,C,kanto,https://www.city.hitachi.lg.jp/,,,,,,regional_balance,人口約16万

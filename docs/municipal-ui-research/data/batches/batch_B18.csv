@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0154,182010,福井県,福井市,municipality,B,chubu,https://www.city.fukui.lg.jp/,,,,,,core_city,中核市・県庁所在地
+S0155,192015,山梨県,甲府市,municipality,B,chubu,https://www.city.kofu.yamanashi.jp/,,,,,,core_city,中核市・県庁所在地
+S0156,202011,長野県,長野市,municipality,B,chubu,https://www.city.nagano.nagano.jp/,,,,,,core_city,中核市・県庁所在地
+S0157,212016,岐阜県,岐阜市,municipality,B,chubu,https://www.city.gifu.lg.jp/,,,,,,core_city,中核市・県庁所在地
+S0158,202029,長野県,松本市,municipality,B,chubu,https://www.city.matsumoto.nagano.jp/,,,,,,core_city,中核市
+S0159,232017,愛知県,豊橋市,municipality,B,chubu,https://www.city.toyohashi.lg.jp/,,,,,,core_city,中核市
+S0160,232025,愛知県,岡崎市,municipality,B,chubu,https://www.city.okazaki.lg.jp/,,,,,,core_city,中核市

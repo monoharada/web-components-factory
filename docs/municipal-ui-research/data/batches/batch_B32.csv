@@ -1,0 +1,5 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0244,335860,岡山県,新庄村,municipality,D,chugoku,https://www.vill.shinjo.okayama.jp/,,,,,,rural_representative,日本一小さな村
+S0245,345458,広島県,神石高原町,municipality,D,chugoku,https://www.jinsekikogen.jp/,,,,,,rural_representative,過疎地域
+S0246,355020,山口県,阿武町,municipality,D,chugoku,https://www.town.abu.lg.jp/,,,,,,rural_representative,過疎地域
+S0247,324485,島根県,美郷町,municipality,D,chugoku,https://www.town.shimane-misato.lg.jp/,,,,,,rural_representative,過疎地域

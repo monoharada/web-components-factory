@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0161,232114,愛知県,豊田市,municipality,B,chubu,https://www.city.toyota.aichi.jp/,,,,,,core_city,中核市
+S0163,152226,新潟県,上越市,municipality,C,chubu,https://www.city.joetsu.niigata.jp/,,,,,,regional_balance,人口約18万
+S0164,162027,富山県,高岡市,municipality,C,chubu,https://www.city.takaoka.toyama.jp/,,,,,,regional_balance,人口約16万
+S0165,172031,石川県,小松市,municipality,C,chubu,https://www.city.komatsu.lg.jp/,,,,,,regional_balance,人口約10万
+S0166,172103,石川県,白山市,municipality,C,chubu,https://www.city.hakusan.ishikawa.jp/,,,,,,regional_balance,人口約11万
+S0167,182028,福井県,敦賀市,municipality,C,chubu,https://www.city.tsuruga.lg.jp/,,,,,,regional_balance,人口約6万
+S0168,192023,山梨県,富士吉田市,municipality,D,chubu,https://www.city.fujiyoshida.yamanashi.jp/,,,,,,regional_balance,人口約4万

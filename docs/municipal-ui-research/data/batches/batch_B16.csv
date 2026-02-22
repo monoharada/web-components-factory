@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0015,150002,新潟県,新潟県,prefecture,unknown,chubu,https://www.pref.niigata.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0016,160008,富山県,富山県,prefecture,unknown,chubu,https://www.pref.toyama.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0017,170003,石川県,石川県,prefecture,unknown,chubu,https://www.pref.ishikawa.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0018,180009,福井県,福井県,prefecture,unknown,chubu,https://www.pref.fukui.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0019,190004,山梨県,山梨県,prefecture,unknown,chubu,https://www.pref.yamanashi.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0020,200000,長野県,長野県,prefecture,unknown,chubu,https://www.pref.nagano.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0021,210005,岐阜県,岐阜県,prefecture,unknown,chubu,https://www.pref.gifu.lg.jp/,,,,,,prefecture_site,総務省コード一覧より

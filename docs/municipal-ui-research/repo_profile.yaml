@@ -1,0 +1,315 @@
+# WCF (Web Components Factory) リポジトリプロファイル
+# STEP01 Repo Scan 結果 - 2026-02-14 生成 / Codex Review 後修正版 (v2)
+# ソース: custom-elements.json, registry/pattern-registry.json, package.json, tsconfig.json
+
+project:
+  name: "web-components-factory-v1"
+  framework: "vanilla-web-components"  # フレームワーク非依存、Custom Elements v1
+  language: "typescript"
+  package_manager: "npm"  # bun は開発サーバー用
+  node_version: ">=18"
+  monorepo: true
+  build_tool: "vite"
+  test_runner: "vitest"
+
+routing:
+  style: "custom"  # viewer.html + クエリパラメータ
+  pages_dir: "N/A"  # SPA/MPA フレームワークなし
+  layout_components: []
+  template_output_dir: "packages/components/"
+  pattern_registry: "registry/pattern-registry.json"
+
+design_system:
+  name: "DADS (Digital Agency Design System)"
+  primitives_path: "packages/components/"
+  tokens_path: "packages/styles/"
+  token_usage_rule: "CSS custom properties only (--dads-*, --spacing-*, --color-*). ハードコードpx/rem値禁止"
+  allowed_styling: "shadow-dom-css-with-parts"  # ::part() + CSS custom properties
+  icon_system: "custom SVG (packages/utils/icons.ts)"
+
+  # ============================================================
+  # コンポーネント一覧 (custom-elements.json から自動抽出: 54 tagNames)
+  # ============================================================
+  existing_components:
+    # CEM (custom-elements.json) に登録された全54 tagNames（アルファベット順）
+    all_cem_tags:
+      - "dads-accordion-details"
+      - "dads-accordion-item-details"
+      - "dads-blockquote"
+      - "dads-breadcrumb"
+      - "dads-breadcrumb-item"
+      - "dads-button"
+      - "dads-calendar"
+      - "dads-card"
+      - "dads-carousel"
+      - "dads-checkbox"
+      - "dads-chip-label"
+      - "dads-chip-tag"
+      - "dads-code-block"
+      - "dads-date-picker"
+      - "dads-description-list"
+      - "dads-device-mock"
+      - "dads-dialog"
+      - "dads-disclosure"
+      - "dads-divider"
+      - "dads-drawer"
+      - "dads-emergency-banner"
+      - "dads-fieldset"
+      - "dads-file-upload"
+      - "dads-global-menu"
+      - "dads-global-menu-item"
+      - "dads-hamburger-menu-button"
+      - "dads-header-container"
+      - "dads-heading"
+      - "dads-input-text"
+      - "dads-language-selector"
+      - "dads-layout-aside"
+      - "dads-layout-shell"
+      - "dads-layout-sidebar"
+      - "dads-list"
+      - "dads-list-item"
+      - "dads-menu-list"
+      - "dads-menu-list-box"
+      - "dads-menu-list-item"
+      - "dads-mobile-menu"
+      - "dads-mobile-mock"
+      - "dads-notification-banner"
+      - "dads-page-navigation"
+      - "dads-radio"
+      - "dads-resource-list"
+      - "dads-search-box"
+      - "dads-select"
+      - "dads-step-navigation"
+      - "dads-step-navigation-item"
+      - "dads-switch"
+      - "dads-table"
+      - "dads-table-control"
+      - "dads-text"
+      - "dads-textarea"
+      - "dads-utility-link"
+
+    total_count: 54
+
+  # ============================================================
+  # Spacing Tokens
+  # ============================================================
+  spacing_scale: |
+    27段階: --spacing-0 (0) ~ --spacing-40 (160px)
+    3バリアント: rem版 (--spacing-N), px版 (--spacing-N-px), unitless版 (--spacing-scale-N)
+    定義: packages/styles/spacing-tokens.ts
+    主要スケール: 0, 0.5(2px), 1(4px), 1.5(6px), 2(8px), 2.5(10px), 3(12px),
+                  3.5(14px), 4(16px), 5(20px), 6(24px), 8(32px), 10(40px),
+                  12(48px), 15(60px), 16(64px), 20(80px), 24(96px), 28(112px),
+                  32(128px), 36(144px), 40(160px)
+
+  # ============================================================
+  # Typography
+  # ============================================================
+  typography_scale: |
+    フォント: "Noto Sans JP", sans-serif
+    サイズ: 15段階 (--font-size-1 ~ --font-size-15)
+      Level 1: 0.625rem (10px) ~ Level 15: 3.625rem (58px)
+    ウェイト: --font-weight-normal (400), --font-weight-bold (700)
+    行間: --line-height-none (1) ~ --line-height-relaxed (1.9)
+    定義:
+      - packages/styles/design-tokens/index.ts (font-weight, font-family, font-size, line-height)
+      - packages/styles/design-tokens/typography-tokens.ts (プリミティブ値)
+    TypographyWebComponent / TypographyFormComponent で自動適用
+
+  # ============================================================
+  # Color System
+  # ============================================================
+  color_system: |
+    DADS カラーパレット: primitive + semantic + component alias
+    プリミティブ: blue, light-blue, cyan, green, lime, yellow, orange, red, magenta, purple + neutral solid/opacity
+    セマンティック: --color-text-body, --color-text-link 等
+    コンポーネントAlias: primary, text, border, background, status
+    定義: packages/styles/design-tokens/index.ts
+    エントリーポイント: packages/styles/tokens.ts (re-export)
+
+  # ============================================================
+  # トークンファイル一覧 (packages/styles/)
+  # ============================================================
+  token_files:
+    - "packages/styles/tokens.ts"                          # 統合エントリーポイント
+    - "packages/styles/spacing-tokens.ts"                  # Spacing tokens
+    - "packages/styles/design-tokens/index.ts"             # DADS色・タイポ・影・角丸
+    - "packages/styles/design-tokens/typography-tokens.ts"  # タイポグラフィプリミティブ
+    - "packages/styles/design-tokens/button-tokens.ts"     # ボタントークン
+    - "packages/styles/design-tokens/accordion-tokens.ts"  # アコーディオントークン
+    - "packages/styles/accordion-styles.ts"                # アコーディオンスタイル
+    - "packages/styles/content-typeset.ts"                 # Light DOM typeset
+    - "packages/styles/mixins/focus-styles-official.ts"    # フォーカスMixin
+    - "packages/styles/mixins/readonly-styles.ts"          # ReadonlyMixin
+    - "packages/styles/reset-css.ts"                       # Shadow DOM Reset CSS
+
+coding_conventions:
+  lint: "eslint (.eslintrc.cjs) -- ESLint v8, @typescript-eslint/parser, ルールはほぼoff（導入段階）"
+  format: "prettier v3.3.3 (設定ファイル無し、デフォルト設定で実行)"
+  file_naming: "kebab-case"
+  import_aliases: "なし (tsconfig.jsonにpaths未設定。CLAUDE.mdの @/ 記法はドキュメント慣例のみ)"
+  testing: "vitest"
+  accessibility_libs: []  # 自前実装 (packages/utils/aria.ts)
+
+  # TypeScript 厳格ルール (CLAUDE.md規定、ただしESLint未強制)
+  typescript:
+    strict: true  # tsconfig.json strict: true
+    no_any: "CLAUDE.md規定（ESLintルールではoff）"
+    no_forEach: "CLAUDE.md規定（ESLintルールではoff）"
+    private_fields: "#prefix"
+
+  # CSS 7つの厳格ルール
+  css_rules:
+    - "!important禁止 - @layerで詳細度を管理"
+    - "::part()必須 - Shadow DOM内でクラスではなくpart属性を使用"
+    - "Div Soup禁止 - 不要なwrapper div削除、最小限のDOM構造"
+    - "変数マッピングは一度だけ - プロパティ定義は1箇所、状態変化は変数再代入"
+    - "ネスト1階層 - @layer・疑似クラス・メディアクエリを除く"
+    - "状態はHTML属性 - .is-openではなく[open]、[aria-expanded='true']"
+    - "グローバルトークン必須 - #000000ではなくvar(--color-neutral-black)"
+
+  # CSS @layer 8層構造
+  css_layers:
+    - "reset"
+    - "tokens"
+    - "base"
+    - "layout"
+    - "components"
+    - "contents"
+    - "page"
+    - "operational"
+
+  # Shadow DOM ルール
+  shadow_dom:
+    default: true
+    light_dom_note: "一部コンポーネントはshadowOptions: null (Light DOM)。フォールバック値必須: var(--spacing-6, 24px)"
+
+  # アクセシビリティ
+  accessibility:
+    standard: "WCAG 2.2 AA"
+    error_pattern: "aria-describedbyでエラー関連付け (aria-live/role=alert 禁止)"
+    form_validation: "カスタムバリデーション (ネイティブ回避)"
+    focus_style: "DADSフォーカストークン使用"
+    skip_link: true
+    keyboard_nav: true
+
+implementation_policy:
+  forbidden:
+    - "any型の使用"
+    - "Array.forEach() の使用"
+    - "CSSクラスによるShadow DOM内スタイリング"
+    - "!important の使用"
+    - "ハードコードされたpx/rem値 (spacing tokens使用)"
+    - "ハードコードされた色値 (color tokens使用)"
+    - "aria-live / role='alert' によるエラー読み上げ"
+    - "ネイティブform required属性の内部input転送"
+    - "CSSStyleSheetオブジェクトの文字列テンプレート内展開"
+    - "新規デモHTMLファイルの作成 (viewer.html使用)"
+    - "div soup (不要なwrapper要素)"
+    - "2階層以上のCSSネスト"
+
+  required:
+    - "::part() によるスタイリング"
+    - "--spacing-* トークン使用"
+    - "--color-* / --dads-* トークン使用"
+    - "ネイティブHTML要素の活用 (details/summary, dialog等)"
+    - "TypeScript strict mode"
+    - "# プレフィックスによるプライベートフィールド"
+    - "WebComponent.define() による登録"
+    - "custom-elements.json への CEM 登録"
+    - "viewer.html でのデモ確認"
+    - "vitest によるテスト"
+    - "withReset() によるリセットCSS適用"
+    - "aria-describedby でエラー関連付け"
+
+  # PR前必須ガードレール
+  pre_pr_check: "npm run agents:verify"
+  quick_check: "npm run agents:pre-pr"
+  cem_update: "npm run cem:analyze (※ npm run build ではない)"
+
+# ============================================================
+# 既存パターン (registry/pattern-registry.json から正確に転記)
+# ============================================================
+existing_patterns:
+  - id: "search-form"
+    title: "検索フォーム（最小）"
+    stability: stable
+  - id: "search-results"
+    title: "検索結果一覧"
+    stability: stable
+  - id: "table-with-pagination"
+    title: "テーブル + ページネーション"
+    stability: stable
+  - id: "card-grid"
+    title: "カードグリッド"
+    stability: stable
+  - id: "layout-website-hero-section-footer"
+    title: "レイアウト（Website: Hero + Section + Footer）"
+    stability: stable
+  - id: "layout-app-shell"
+    title: "レイアウト（App/SaaS: Header + Sidebar + Main）"
+    stability: stable
+  - id: "layout-master-detail"
+    title: "レイアウト（Master-Detail: Main + Aside）"
+    stability: stable
+  - id: "application-form-single-validation"
+    title: "申請フォーム（1ページ・検証エラー）"
+    stability: experimental
+  - id: "application-form-step-validation"
+    title: "申請フォーム（ステップ・検証エラー）"
+    stability: experimental
+  - id: "mockup-website"
+    title: "モックアップ（Website）"
+    stability: stable
+  - id: "mockup-app-shell"
+    title: "モックアップ（App Shell）"
+    stability: stable
+  - id: "mockup-mobile-form"
+    title: "モックアップ（Mobile Form）"
+    stability: stable
+
+# ============================================================
+# ビルド・検証コマンド
+# ============================================================
+build_system:
+  dev_server: "npm run dev  # = bun --watch serve.ts (serve.ts → server.ts)"
+  dev_server_alt: "bun server.ts  # 直接起動も可"
+  build: "npm run build  # = tsc && vite build"
+  test: "npm run test"
+  tdd: "npm run tdd  # = npm run test:watch"
+  type_check: "npm run type-check  # = tsc --noEmit"
+  lint: "npm run lint  # = eslint src/**/*.ts"
+  format: "npm run format  # = prettier --write src/**/*.ts"
+  ci: "npm run ci  # = type-check + test:run + build"
+  cem_analyze: "npm run cem:analyze  # CEM更新 (custom-elements.json)"
+  validate_templates: "npm run validate:templates:quick"
+  agents_verify: "npm run agents:verify  # PR前必須"
+  agents_pre_pr: "npm run agents:pre-pr  # 軽量事前チェック"
+  update_tokens: "npm run update-tokens"
+  check_tokens: "npm run check-tokens"
+
+# ============================================================
+# CLIツール
+# ============================================================
+cli_tools:
+  wcf: "scripts/wcf/cli.js"  # wcf init, wcf vendor install, wcf page create
+  dads_template: "scripts/dads-template/cli.js"  # validate templates, collect gaps, escalate gaps
+
+# ============================================================
+# 重要ファイルパス
+# ============================================================
+key_paths:
+  components: "packages/components/"
+  core: "packages/core/web-components.ts"
+  styles: "packages/styles/"
+  utils: "packages/utils/"
+  cem: "custom-elements.json"
+  cem_config: "custom-elements-manifest.config.js"
+  pattern_registry: "registry/pattern-registry.json"
+  install_registry: "registry/install-registry.json"
+  viewer: "viewer.html"
+  demos: "src/demos.ts"
+  skills: ".claude/skills/"
+  rules: "docs/rules/"
+  server: "server.ts"
+  server_wrapper: "serve.ts"

@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0081,062031,山形県,鶴岡市,municipality,C,tohoku,https://www.city.tsuruoka.lg.jp/,,,,,,regional_balance,人口約11万
+S0082,063657,山形県,大蔵村,municipality,D,tohoku,https://www.vill.ohkura.yamagata.jp/,,,,,,rural_representative,過疎地域
+S0083,072010,福島県,福島市,municipality,B,tohoku,https://www.city.fukushima.fukushima.jp/,,,,,,core_city,中核市・県庁所在地
+S0085,072044,福島県,いわき市,municipality,B,tohoku,https://www.city.iwaki.lg.jp/,,,,,,core_city,中核市
+S0087,072079,福島県,須賀川市,municipality,C,tohoku,https://www.city.sukagawa.fukushima.jp/,,,,,,regional_balance,人口約7万
+S0088,072052,福島県,白河市,municipality,C,tohoku,https://www.city.shirakawa.fukushima.jp/,,,,,,regional_balance,人口約5万
+S0089,073644,福島県,檜枝岐村,municipality,D,tohoku,https://www.vill.hinoemata.lg.jp/,,,,,,rural_representative,過疎地域

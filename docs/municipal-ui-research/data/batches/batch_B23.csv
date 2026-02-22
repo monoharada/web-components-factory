@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0024,240001,三重県,三重県,prefecture,unknown,kinki,https://www.pref.mie.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0025,250007,滋賀県,滋賀県,prefecture,unknown,kinki,https://www.pref.shiga.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0026,260002,京都府,京都府,prefecture,unknown,kinki,https://www.pref.kyoto.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0028,280003,兵庫県,兵庫県,prefecture,unknown,kinki,https://www.pref.hyogo.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0029,290009,奈良県,奈良県,prefecture,unknown,kinki,https://www.pref.nara.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0030,300004,和歌山県,和歌山県,prefecture,unknown,kinki,https://www.pref.wakayama.lg.jp/,,,,,,prefecture_site,総務省コード一覧より
+S0188,261009,京都府,京都市,municipality,A,kinki,https://www.city.kyoto.lg.jp/,,,,,,designated_city,政令指定都市

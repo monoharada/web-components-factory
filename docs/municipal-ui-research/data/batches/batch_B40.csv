@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0289,406040,福岡県,添田町,municipality,D,kyushu_okinawa,https://www.town.soeda.fukuoka.jp/,,,,,,rural_representative,過疎地域
+S0290,413879,佐賀県,玄海町,municipality,D,kyushu_okinawa,https://www.town.genkai.saga.jp/,,,,,,rural_representative,過疎地域
+S0291,422118,長崎県,五島市,municipality,D,kyushu_okinawa,https://www.city.goto.nagasaki.jp/,,,,,,island_municipality,離島・五島列島
+S0292,423831,長崎県,小値賀町,municipality,D,kyushu_okinawa,https://ojika.net/,,,,,,island_municipality,離島
+S0293,434248,熊本県,南小国町,municipality,D,kyushu_okinawa,https://www.town.minamioguni.lg.jp/,,,,,,rural_representative,過疎地域
+S0294,434841,熊本県,水上村,municipality,D,kyushu_okinawa,https://www.vill.mizukami.lg.jp/,,,,,,rural_representative,過疎地域
+S0295,443417,大分県,姫島村,municipality,D,kyushu_okinawa,https://www.himeshima.jp/,,,,,,island_municipality,離島

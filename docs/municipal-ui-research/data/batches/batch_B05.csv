@@ -1,0 +1,8 @@
+sample_id,municipality_code,prefecture,municipality_name,layer,population_category,region_block,official_site_url,top_page_url,contact_page_url,service_page_url,hub_page_url,article_page_url,selection_reason,notes
+S0074,032093,岩手県,一関市,municipality,C,tohoku,https://www.city.ichinoseki.iwate.jp/,,,,,,regional_balance,人口約10万
+S0075,034843,岩手県,田野畑村,municipality,D,tohoku,https://www.vill.tanohata.iwate.jp/,,,,,,rural_representative,過疎地域
+S0076,052019,秋田県,秋田市,municipality,B,tohoku,https://www.city.akita.lg.jp/,,,,,,core_city,中核市・県庁所在地
+S0077,052035,秋田県,横手市,municipality,C,tohoku,https://www.city.yokote.lg.jp/,,,,,,regional_balance,人口約8万
+S0078,052043,秋田県,大館市,municipality,C,tohoku,https://www.city.odate.lg.jp/,,,,,,regional_balance,人口約6万
+S0079,054640,秋田県,東成瀬村,municipality,D,tohoku,https://www.higashinaruse.com/,,,,,,rural_representative,過疎地域
+S0080,062014,山形県,山形市,municipality,B,tohoku,https://www.city.yamagata-yamagata.lg.jp/,,,,,,core_city,中核市・県庁所在地
