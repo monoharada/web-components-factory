@@ -296,7 +296,7 @@ function extractPublicCssProperties(componentDir, componentId) {
     result.push(entry);
   }
 
-  result.sort((a, b) => a.name.localeCompare(b.name));
+  result.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
   return result;
 }
 
@@ -329,7 +329,7 @@ function injectCssPropertiesFromTokens(customElementsManifest) {
       }
 
       if (added > 0) {
-        decl.cssProperties = Array.from(existing.values()).sort((a, b) => a.name.localeCompare(b.name));
+        decl.cssProperties = Array.from(existing.values()).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
         injectedCount++;
       }
     }
@@ -508,6 +508,7 @@ export default {
   globs: ['packages/**/*.ts'],
   exclude: [
     '**/*.test.ts',
+    '**/node_modules/**',
     'tests/**',
     'src/**',
     'packages/autoload/**',
