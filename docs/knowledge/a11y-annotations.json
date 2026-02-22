@@ -1054,6 +1054,160 @@
       }
     ]
   },
+  "dads-combobox": {
+    "version": 1,
+    "summary": "コンボボックス仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "入力欄は role=\"combobox\"、候補領域は role=\"listbox\" を用いて提示します。",
+        "選択支援（behavior=\"selection\"）と入力支援（behavior=\"input\"）を属性で切り替えます。",
+        "behavior=\"selection\" では、開いた候補パネル内に検索ボックス（part=\"search-box\"）を表示します。"
+      ],
+      "keyboard": [
+        "ArrowUp/ArrowDown で候補移動、Enter で確定、Escape で候補を閉じる操作をサポートします。",
+        "入力支援では no-match-behavior=\"notice|create\" で候補なし時の確定可否が変わります。",
+        "選択支援では検索入力（part=\"search-input\"）で候補を絞り込みできます。",
+        "選択済みチップの削除ボタンはキーボードフォーカス可能で、選択解除操作に使えます。"
+      ],
+      "zoom": [
+        "入力欄と候補パネルは拡大時にも情報欠落しないよう可読性を維持します。"
+      ],
+      "states": [
+        "open/disabled/error/required と、aria-expanded/aria-invalid/aria-required を同期します。",
+        "multiple では選択済みをチップ表示し、behavior=\"input\" ではチップを表示しません。"
+      ],
+      "labels": [
+        "label/support-text/error-text で入力意図と状態説明を補完します。",
+        "フォーム全体での文脈提示には fieldset/legend の併用を推奨します。"
+      ],
+      "motion": [
+        "意味を持つアニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "label",
+        "title": "ラベル領域",
+        "label": "label",
+        "description": "入力目的を示すラベルです。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      },
+      {
+        "id": "input",
+        "title": "入力欄",
+        "label": "role=\"combobox\"",
+        "description": "候補の開閉状態・アクティブ候補をARIAで表現する入力欄です。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"input\"]"
+        }
+      },
+      {
+        "id": "indicator",
+        "title": "候補開閉ボタン",
+        "label": "button",
+        "description": "候補パネルの開閉を行うトグルボタンです。",
+        "category": "keyboard",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"indicator\"]"
+        }
+      },
+      {
+        "id": "listbox",
+        "title": "候補リスト",
+        "label": "role=\"listbox\"",
+        "description": "入力値に応じて候補を提示し、確定対象を示します。",
+        "category": "semantics",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"listbox\"]"
+        }
+      },
+      {
+        "id": "search-box",
+        "title": "検索ボックス",
+        "label": "part=\"search-box\"",
+        "description": "behavior=\"selection\" で候補パネルを開いた際に表示される絞り込み領域です。",
+        "category": "semantics",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"search-box\"]"
+        }
+      },
+      {
+        "id": "search-input",
+        "title": "検索入力",
+        "label": "part=\"search-input\"",
+        "description": "選択支援モードで候補を検索する入力欄です。",
+        "category": "keyboard",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"search-input\"]"
+        }
+      },
+      {
+        "id": "chip",
+        "title": "選択済みチップ",
+        "label": "<dads-chip-tag>",
+        "description": "選択済み項目をチップとして表示します（behavior=\"input\" では非表示）。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"chip\"]"
+        }
+      },
+      {
+        "id": "chip-remove-action",
+        "title": "チップ削除ボタン",
+        "label": "part=\"action\"",
+        "description": "選択済みチップの削除ボタンです。押下で該当選択を解除します。",
+        "category": "keyboard",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "hostSelector": "[part=\"chip\"]",
+          "selector": "[part=\"action\"]"
+        }
+      },
+      {
+        "id": "support-text",
+        "title": "サポートテキスト",
+        "label": "support-text",
+        "description": "入力ルールや補助情報を示します。",
+        "category": "labels",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"support-text\"]"
+        }
+      },
+      {
+        "id": "error-text",
+        "title": "エラーテキスト",
+        "label": "error-text",
+        "description": "バリデーションエラー時に入力欄と関連付けて提示します。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"error-text\"]"
+        }
+      }
+    ]
+  },
   "dads-date-picker": {
     "version": 1,
     "summary": "日付ピッカー／カレンダーコンポーネント仕様（アクセシビリティ注釈）",

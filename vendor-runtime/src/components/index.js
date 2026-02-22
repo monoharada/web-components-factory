@@ -5,12 +5,18 @@
 export * from './accordion/index.js';
 // アノテート（アクセシビリティ注釈）
 export * from './annotate/index.js';
+// アバター
+export * from './avatar/index.js';
+// アイコン
+export * from './icon/index.js';
 // ボタン
 export * from './button/index.js';
 // カード
 export * from './card/index.js';
 // インプットテキスト
 export * from './input-text/index.js';
+// コンボボックス
+export * from './combobox/index.js';
 // ファイルアップロード
 export * from './file-upload/index.js';
 // セレクトボックス

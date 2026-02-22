@@ -8,7 +8,13 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsButton_instances, _DadsButton_handleHostClick, _DadsButton_isLink, _DadsButton_renderTemplate, _DadsButton_createTemplate, _DadsButton_initButton, _DadsButton_syncA11yAttributes, _DadsButton_handleClick, _DadsButton_handleFormAction, _DadsButton_emitClickEvent;
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var _DadsButton_instances, _DadsButton_iconStartSlot, _DadsButton_iconEndSlot, _DadsButton_labelSlot, _DadsButton_slotObserver, _DadsButton_handleHostClick, _DadsButton_isLink, _DadsButton_renderTemplate, _DadsButton_createTemplate, _DadsButton_initButton, _DadsButton_syncA11yAttributes, _DadsButton_setupIconSlots, _DadsButton_teardownIconSlots, _DadsButton_handleIconSlotChange, _DadsButton_hasAssignedContent, _DadsButton_hasAssignedText, _DadsButton_hasDefaultSlotLightDomContent, _DadsButton_hasDefaultSlotLightDomText, _DadsButton_hasDirectSlottedElement, _DadsButton_syncIconVisibility, _DadsButton_handleClick, _DadsButton_handleFormAction, _DadsButton_emitClickEvent;
 import { html, BooleanAttr, PropertyAttr, DelegatingPropertyAttr } from '../../core/web-components.js';
 import { TypographyFormComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -57,6 +63,10 @@ export class DadsButton extends TypographyFormComponent {
     constructor() {
         super(...arguments);
         _DadsButton_instances.add(this);
+        _DadsButton_iconStartSlot.set(this, null);
+        _DadsButton_iconEndSlot.set(this, null);
+        _DadsButton_labelSlot.set(this, null);
+        _DadsButton_slotObserver.set(this, null);
         /**
          * ホスト要素のクリックハンドラ
          * Shadow DOM内のbutton要素のクリックがない場合（遅延ロード中）のフォールバック
@@ -88,6 +98,9 @@ export class DadsButton extends TypographyFormComponent {
             // または遅延ロード中で内部ボタンがない場合
             __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_handleFormAction).call(this);
         });
+        _DadsButton_handleIconSlotChange.set(this, () => {
+            __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_syncIconVisibility).call(this);
+        });
         _DadsButton_handleClick.set(this, (event) => {
             // リンクモードは既存処理のみ
             if (__classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_isLink).call(this)) {
@@ -116,6 +129,7 @@ export class DadsButton extends TypographyFormComponent {
         }
         // ボタン要素の初期化
         __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_initButton).call(this);
+        __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_setupIconSlots).call(this);
         this.transferDelegatedAttributes();
         // ホスト要素へのクリックリスナー追加
         // Shadow DOM内のbutton要素に加えて、ホスト要素自体のクリックも処理
@@ -124,13 +138,16 @@ export class DadsButton extends TypographyFormComponent {
     }
     disconnectedCallback() {
         this.removeEventListener('click', __classPrivateFieldGet(this, _DadsButton_handleHostClick, "f"));
+        __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_teardownIconSlots).call(this);
     }
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
         // as属性やhref属性が変更された場合は再レンダリングが必要
         if (name === 'as' || name === 'href') {
+            __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_teardownIconSlots).call(this);
             __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_renderTemplate).call(this);
             __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_initButton).call(this);
+            __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_setupIconSlots).call(this);
             this.transferDelegatedAttributes();
             return;
         }
@@ -175,7 +192,7 @@ export class DadsButton extends TypographyFormComponent {
         }
     }
 }
-_DadsButton_handleHostClick = new WeakMap(), _DadsButton_handleClick = new WeakMap(), _DadsButton_instances = new WeakSet(), _DadsButton_isLink = function _DadsButton_isLink() {
+_DadsButton_iconStartSlot = new WeakMap(), _DadsButton_iconEndSlot = new WeakMap(), _DadsButton_labelSlot = new WeakMap(), _DadsButton_slotObserver = new WeakMap(), _DadsButton_handleHostClick = new WeakMap(), _DadsButton_handleIconSlotChange = new WeakMap(), _DadsButton_handleClick = new WeakMap(), _DadsButton_instances = new WeakSet(), _DadsButton_isLink = function _DadsButton_isLink() {
     const as = this.getAttribute('as');
     // 明示的な指定があればそれに従う
     if (as === 'link' || as === 'a')
@@ -240,6 +257,95 @@ _DadsButton_handleHostClick = new WeakMap(), _DadsButton_handleClick = new WeakM
         else
             base.removeAttribute(name);
     }
+}, _DadsButton_setupIconSlots = function _DadsButton_setupIconSlots() {
+    __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_teardownIconSlots).call(this);
+    __classPrivateFieldSet(this, _DadsButton_iconStartSlot, this.shadowRoot?.querySelector('slot[name="icon-start"]') ?? null, "f");
+    __classPrivateFieldSet(this, _DadsButton_iconEndSlot, this.shadowRoot?.querySelector('slot[name="icon-end"]') ?? null, "f");
+    __classPrivateFieldSet(this, _DadsButton_labelSlot, this.shadowRoot?.querySelector('slot:not([name])') ?? null, "f");
+    __classPrivateFieldGet(this, _DadsButton_iconStartSlot, "f")?.addEventListener('slotchange', __classPrivateFieldGet(this, _DadsButton_handleIconSlotChange, "f"));
+    __classPrivateFieldGet(this, _DadsButton_iconEndSlot, "f")?.addEventListener('slotchange', __classPrivateFieldGet(this, _DadsButton_handleIconSlotChange, "f"));
+    __classPrivateFieldGet(this, _DadsButton_labelSlot, "f")?.addEventListener('slotchange', __classPrivateFieldGet(this, _DadsButton_handleIconSlotChange, "f"));
+    __classPrivateFieldSet(this, _DadsButton_slotObserver, new MutationObserver(__classPrivateFieldGet(this, _DadsButton_handleIconSlotChange, "f")), "f");
+    __classPrivateFieldGet(this, _DadsButton_slotObserver, "f").observe(this, {
+        attributes: true,
+        attributeFilter: ['slot', 'hidden'],
+        characterData: true,
+        childList: true,
+        subtree: true,
+    });
+    __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_syncIconVisibility).call(this);
+}, _DadsButton_teardownIconSlots = function _DadsButton_teardownIconSlots() {
+    __classPrivateFieldGet(this, _DadsButton_iconStartSlot, "f")?.removeEventListener('slotchange', __classPrivateFieldGet(this, _DadsButton_handleIconSlotChange, "f"));
+    __classPrivateFieldGet(this, _DadsButton_iconEndSlot, "f")?.removeEventListener('slotchange', __classPrivateFieldGet(this, _DadsButton_handleIconSlotChange, "f"));
+    __classPrivateFieldGet(this, _DadsButton_labelSlot, "f")?.removeEventListener('slotchange', __classPrivateFieldGet(this, _DadsButton_handleIconSlotChange, "f"));
+    __classPrivateFieldGet(this, _DadsButton_slotObserver, "f")?.disconnect();
+    __classPrivateFieldSet(this, _DadsButton_slotObserver, null, "f");
+    __classPrivateFieldSet(this, _DadsButton_iconStartSlot, null, "f");
+    __classPrivateFieldSet(this, _DadsButton_iconEndSlot, null, "f");
+    __classPrivateFieldSet(this, _DadsButton_labelSlot, null, "f");
+}, _DadsButton_hasAssignedContent = function _DadsButton_hasAssignedContent(slot) {
+    if (!slot)
+        return false;
+    const assignedNodes = slot.assignedNodes({ flatten: true });
+    return assignedNodes.some((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return !!node.textContent?.trim();
+        }
+        if (node instanceof Element && node.hasAttribute('hidden'))
+            return false;
+        return true;
+    });
+}, _DadsButton_hasAssignedText = function _DadsButton_hasAssignedText(slot) {
+    if (!slot)
+        return false;
+    const assignedNodes = slot.assignedNodes({ flatten: true });
+    return assignedNodes.some((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return !!node.textContent?.trim();
+        }
+        if (!(node instanceof Element))
+            return false;
+        if (node.hasAttribute('hidden'))
+            return false;
+        if (node.getAttribute('aria-hidden') === 'true')
+            return false;
+        return !!node.textContent?.trim();
+    });
+}, _DadsButton_hasDefaultSlotLightDomContent = function _DadsButton_hasDefaultSlotLightDomContent() {
+    return Array.from(this.childNodes).some((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return !!node.textContent?.trim();
+        }
+        if (!(node instanceof Element))
+            return false;
+        if (node.hasAttribute('slot'))
+            return false;
+        return !node.hasAttribute('hidden');
+    });
+}, _DadsButton_hasDefaultSlotLightDomText = function _DadsButton_hasDefaultSlotLightDomText() {
+    return Array.from(this.childNodes).some((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return !!node.textContent?.trim();
+        }
+        if (!(node instanceof Element))
+            return false;
+        if (node.hasAttribute('slot') || node.hasAttribute('hidden'))
+            return false;
+        if (node.getAttribute('aria-hidden') === 'true')
+            return false;
+        return !!node.textContent?.trim();
+    });
+}, _DadsButton_hasDirectSlottedElement = function _DadsButton_hasDirectSlottedElement(slotName) {
+    return Array.from(this.children).some((node) => node.getAttribute('slot') === slotName && !node.hasAttribute('hidden'));
+}, _DadsButton_syncIconVisibility = function _DadsButton_syncIconVisibility() {
+    const hasStartIcon = __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_hasAssignedContent).call(this, __classPrivateFieldGet(this, _DadsButton_iconStartSlot, "f")) || __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_hasDirectSlottedElement).call(this, 'icon-start');
+    const hasEndIcon = __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_hasAssignedContent).call(this, __classPrivateFieldGet(this, _DadsButton_iconEndSlot, "f")) || __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_hasDirectSlottedElement).call(this, 'icon-end');
+    const hasDefaultSlotContent = __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_hasAssignedContent).call(this, __classPrivateFieldGet(this, _DadsButton_labelSlot, "f")) || __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_hasDefaultSlotLightDomContent).call(this);
+    const hasLabelText = __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_hasAssignedText).call(this, __classPrivateFieldGet(this, _DadsButton_labelSlot, "f")) || __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_hasDefaultSlotLightDomText).call(this);
+    const isDefaultSlotIconOnly = hasDefaultSlotContent && !hasLabelText && !hasStartIcon && !hasEndIcon;
+    this.toggleAttribute('data-has-icon-start', hasStartIcon);
+    this.toggleAttribute('data-has-icon-end', hasEndIcon);
+    this.toggleAttribute('data-icon-only', isDefaultSlotIconOnly);
 }, _DadsButton_handleFormAction = function _DadsButton_handleFormAction() {
     const form = this._internals.form;
     if (!form)

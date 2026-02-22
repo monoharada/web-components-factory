@@ -4,7 +4,7 @@
  * @version 1.0.0
  */
 
-import { html, PropertyAttr } from '../../core/web-components.js';
+import { html, BooleanAttr, PropertyAttr } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
 import { applySpacingTokens } from '../../styles/spacing-tokens.js';
@@ -33,6 +33,7 @@ import type { DadsCommandDetail } from '../../utils/command-store.js';
  * @csspart action-icon - 末尾アイコンコンテナ
  *
  * @attr {'remove' | 'none'} action - 末尾アクションの表示制御
+ * @attr {boolean} disabled - 無効状態
  * @attr {string} remove-label - 末尾アクションのaria-label
  * @attr {string} value - 任意の値（イベントdetailに含まれる）
  * @attr {string} size - サイズ (sm | md | lg)
@@ -107,6 +108,7 @@ export class DadsChipTag extends TypographyWebComponent {
     ),
     attributes: [
       PropertyAttr('action'),
+      BooleanAttr('disabled'),
       PropertyAttr('remove-label'),
       PropertyAttr('value'),
       PropertyAttr('size'),
@@ -149,7 +151,7 @@ export class DadsChipTag extends TypographyWebComponent {
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
     super.attributeChangedCallback(name, oldValue, newValue);
 
-    if (name === 'action') {
+    if (name === 'action' || name === 'disabled') {
       this.#syncActionState();
     }
 
@@ -164,20 +166,24 @@ export class DadsChipTag extends TypographyWebComponent {
 
   #syncActionState(): void {
     const isActionNone = this.getAttribute('action') === 'none';
+    const isDisabled = this.hasAttribute('disabled');
 
     if (this.#base) {
-      if (isActionNone) {
+      if (isActionNone && !isDisabled) {
         this.#base.setAttribute('role', 'button');
         this.#base.setAttribute('tabindex', '0');
       } else {
         this.#base.removeAttribute('role');
         this.#base.removeAttribute('tabindex');
       }
+      this.#base.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
     }
 
     if (this.#action) {
-      this.#action.tabIndex = isActionNone ? -1 : 0;
+      this.#action.disabled = isDisabled;
+      this.#action.tabIndex = (isActionNone || isDisabled) ? -1 : 0;
       this.#action.setAttribute('aria-hidden', isActionNone ? 'true' : 'false');
+      this.#action.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
     }
   }
 
@@ -197,6 +203,7 @@ export class DadsChipTag extends TypographyWebComponent {
   }
 
   #handleActionClick = (event: MouseEvent): void => {
+    if (this.hasAttribute('disabled')) return;
     if (this.getAttribute('action') === 'none') return;
     event.stopPropagation();
     this.#requestRemove();
@@ -204,6 +211,7 @@ export class DadsChipTag extends TypographyWebComponent {
 
   #handleDadsCommand = (event: CustomEvent<DadsCommandDetail>): void => {
     if (event.target !== this) return;
+    if (this.hasAttribute('disabled')) return;
 
     const command = event.detail?.command ?? '';
     if (command === 'remove') {
@@ -240,6 +248,7 @@ export class DadsChipTag extends TypographyWebComponent {
   }
 
   #handleBaseClick = (): void => {
+    if (this.hasAttribute('disabled')) return;
     if (this.getAttribute('action') !== 'none') return;
 
     this.dispatchEvent(
@@ -255,6 +264,7 @@ export class DadsChipTag extends TypographyWebComponent {
   };
 
   #handleBaseKeydown = (event: KeyboardEvent): void => {
+    if (this.hasAttribute('disabled')) return;
     if (this.getAttribute('action') !== 'none') return;
 
     if (event.key === 'Enter' || event.key === ' ') {

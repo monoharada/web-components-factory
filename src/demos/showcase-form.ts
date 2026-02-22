@@ -3040,6 +3040,403 @@ export const demos = {
   `,
 
 
+  combobox: () => `
+    <div style="padding: 40px; max-width: 1400px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">コンボボックス</h2>
+      <p style="color: #666; margin-bottom: 40px;">
+        選択支援（<code>behavior="selection"</code>）と入力支援（<code>behavior="input"</code>）を切り替えられるコンポーネントです。<br>
+        入力支援は single 限定の運用とし、候補なし時は <code>no-match-behavior="notice|create"</code> で挙動を切り替えます。
+      </p>
+
+      ${renderAnnotationToggleBlock()}
+
+      <section style="margin-bottom: 40px;">
+        ${renderA11ySectionHeader({ note: '※ selection と input（single）の両方を注釈対象にしています。selection では候補パネル内の検索ボックス、input では notice/create の差分、共通で Enter / Escape / Arrow 操作を確認してください。' })}
+        <a11y-annotate target-selector="dads-combobox">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-combobox
+              label="都道府県"
+              support-text="候補を入力して選択してください。"
+              value="osaka"
+            >
+              <option value="tokyo" data-search='["とうきょう","東京","t"]'>東京都</option>
+              <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
+              <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
+              <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
+            </dads-combobox>
+          </div>
+        </a11y-annotate>
+
+        <a11y-annotate target-selector="dads-combobox" style="margin-top: 20px;">
+          <div style="display: grid; place-content: center; padding: 60px 0;">
+            <dads-combobox
+              behavior="input"
+              no-match-behavior="create"
+              label="所属部署"
+              support-text="候補から選択するか、新しい部署名を入力してください。"
+            >
+              <option value="engineering">エンジニアリング部</option>
+              <option value="design">デザイン部</option>
+              <option value="marketing">マーケティング部</option>
+              <option value="sales">営業部</option>
+            </dads-combobox>
+          </div>
+        </a11y-annotate>
+      </section>
+
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">API / 操作</h3>
+        ${renderApiPanelWrapper({
+          imports: ['dads-combobox'],
+          body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; gap: 20px; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-combobox
+                  data-api-target
+                  label="都道府県"
+                  support-text="候補を入力して選択してください（ひらがな/略称は data-search で拡張）。"
+                  value="osaka"
+                  size="m"
+                >
+                  <option value="tokyo" data-search='["とうきょう","東京","t"]'>東京都</option>
+                  <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
+                  <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
+                  <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
+                </dads-combobox>
+              </div>
+
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block>
+                  <template>
+                    <dads-combobox
+                      label="都道府県"
+                      support-text="候補を入力して選択してください。"
+                      value="osaka"
+                    >
+                      <option value="tokyo" data-search='["とうきょう","東京","t"]'>東京都</option>
+                      <option value="osaka" data-search='["おおさか","大阪","o"]'>大阪府</option>
+                      <option value="fukuoka" data-search='["ふくおか","福岡","f"]'>福岡県</option>
+                      <option value="hokkaido" data-search='["ほっかいどう","北海道","h"]'>北海道</option>
+                    </dads-combobox>
+                  </template>
+                </dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>behavior</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>selection</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="behavior" data-api-attr="behavior" data-default="selection">
+                              <option value="selection" selected>selection</option>
+                              <option value="input">input</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>操作モード（input: 入力支援型）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>no-match-behavior</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>notice</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="no-match-behavior" data-api-attr="no-match-behavior" data-default="notice">
+                              <option value="notice" selected>notice</option>
+                              <option value="create">create</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>候補なし時の挙動</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>multiple</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="multiple" data-api-attr="multiple" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>複数選択</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>filterable</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>true</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="filterable" data-api-attr="filterable" data-default="true" checked>
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>入力絞り込み</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>m</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="size" data-api-attr="size" data-default="m">
+                              <option value="s">s (40px)</option>
+                              <option value="m" selected>m (48px)</option>
+                              <option value="l">l (56px)</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>ボックス高さ（s:40px / m:48px / l:56px）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>value</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>osaka</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="value" data-api-attr="value" data-default="osaka">
+                              <option value="">(empty)</option>
+                              <option value="tokyo">tokyo</option>
+                              <option value="osaka" selected>osaka</option>
+                              <option value="fukuoka">fukuoka</option>
+                              <option value="hokkaido">hokkaido</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>選択値（multipleではカンマ区切り）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>disabled</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>false</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-switch aria-label="disabled" data-api-attr="disabled" data-default="false">
+                              <span slot="label-left">Off</span>
+                              <span slot="label-right">On</span>
+                            </dads-switch>
+                          </div>
+                        </td>
+                        <td>無効状態</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+            </div>
+          `,
+        })}
+      </section>
+
+      <!-- 作例セクション（DADS カテゴリタイトルスタイル準拠） -->
+      <section style="margin-top: 56px;">
+        <h3 style="
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 0; margin: 0 0 24px;
+          font-size: 16px; font-weight: 700; line-height: 1.2;
+          color: var(--color-neutral-solid-gray-800, #333);
+          border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494);
+        ">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5Zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"/></svg>
+          作例: 入力支援 — 人名検索
+        </h3>
+        <p style="font-size: 14px; color: var(--color-neutral-solid-gray-600, #666); margin: 0 0 16px;">
+          <code>behavior="input"</code> + <code>data-meta</code> で、氏名と役職を表示する入力支援パターンです。
+        </p>
+        <div style="max-width: 480px; padding: 40px 0;">
+          <dads-combobox
+            behavior="input"
+            no-match-behavior="notice"
+            label="社員名"
+            support-text="氏名を入力して候補から選択してください。"
+            size="l"
+          >
+            <option value="dejiyama-taro" data-meta="正社員" data-search='["デジ山太郎","でじやまたろう"]'>デジ山 太郎</option>
+            <option value="dejiyama-hanako" data-meta="正社員" data-search='["デジ山花子","でじやまはなこ"]'>デジ山 花子</option>
+            <option value="dejiyama-ichiro" data-meta="正社員" data-search='["デジ山一郎","でじやまいちろう"]'>デジ山 一郎</option>
+            <option value="dejiyama-jiro" data-meta="正社員" data-search='["デジ山二郎","でじやまじろう"]'>デジ山 二郎</option>
+            <option value="dejiyama-tome" data-meta="マネージャー" data-search='["デジ山とめ","でじやまとめ"]'>デジ山 とめ</option>
+          </dads-combobox>
+        </div>
+        <div style="margin-top: 8px;">
+          <h4 style="font-size: 14px; font-weight: 700; color: #333; margin: 0 0 8px;">実装コード</h4>
+          <dads-code-block>
+            <template>
+<dads-combobox
+  behavior="input"
+  no-match-behavior="notice"
+  label="社員名"
+  support-text="氏名を入力して候補から選択してください。"
+  size="l"
+>
+  <option value="dejiyama-taro" data-meta="正社員"
+    data-search='["デジ山太郎","でじやまたろう"]'>デジ山 太郎</option>
+  <option value="dejiyama-hanako" data-meta="正社員"
+    data-search='["デジ山花子","でじやまはなこ"]'>デジ山 花子</option>
+  <option value="dejiyama-tome" data-meta="マネージャー"
+    data-search='["デジ山とめ","でじやまとめ"]'>デジ山 とめ</option>
+</dads-combobox>
+            </template>
+          </dads-code-block>
+        </div>
+      </section>
+
+      <section style="margin-top: 40px;">
+        <h3 style="
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 0; margin: 0 0 24px;
+          font-size: 16px; font-weight: 700; line-height: 1.2;
+          color: var(--color-neutral-solid-gray-800, #333);
+          border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494);
+        ">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+          作例: アイコン付きカテゴリ選択
+        </h3>
+        <p style="font-size: 14px; color: var(--color-neutral-solid-gray-600, #666); margin: 0 0 16px;">
+          <code>data-icon</code> でオプション行に先頭アイコンを表示するパターンです（Material Symbols）。
+        </p>
+        <div style="max-width: 480px; padding: 40px 0;">
+          <dads-combobox
+            label="ファイル種別"
+            support-text="種別を選択してください。"
+          >
+            <option value="document" data-icon="document">ドキュメント</option>
+            <option value="image" data-icon="image">画像</option>
+            <option value="folder" data-icon="folder">フォルダ</option>
+            <option value="person" data-icon="person">ユーザー</option>
+          </dads-combobox>
+        </div>
+        <div style="margin-top: 8px;">
+          <h4 style="font-size: 14px; font-weight: 700; color: #333; margin: 0 0 8px;">実装コード</h4>
+          <dads-code-block>
+            <template>
+<dads-combobox label="ファイル種別" support-text="種別を選択してください。">
+  <option value="document" data-icon="document">ドキュメント</option>
+  <option value="image" data-icon="image">画像</option>
+  <option value="folder" data-icon="folder">フォルダ</option>
+  <option value="person" data-icon="person">ユーザー</option>
+</dads-combobox>
+            </template>
+          </dads-code-block>
+        </div>
+      </section>
+
+      <section style="margin-top: 40px;">
+        <h3 style="
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 0; margin: 0 0 24px;
+          font-size: 16px; font-weight: 700; line-height: 1.2;
+          color: var(--color-neutral-solid-gray-800, #333);
+          border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494);
+        ">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          作例: グループ分け + アバター + サブラベル
+        </h3>
+        <p style="font-size: 14px; color: var(--color-neutral-solid-gray-600, #666); margin: 0 0 16px;">
+          <code>&lt;optgroup&gt;</code> で部署別グループ、<code>data-icon-style="avatar"</code> でアバター、<code>data-meta</code> で役職を組み合わせた統合作例です。
+        </p>
+        <div style="max-width: 480px; padding: 40px 0;">
+          <dads-combobox
+            label="メンバー選択"
+            support-text="担当メンバーを選択してください。"
+            multiple
+            size="l"
+          >
+            <optgroup label="エンジニアリング部">
+              <option value="dejiyama-taro" data-icon="太" data-icon-style="avatar" data-avatar-color="--color-primitive-blue-600" data-meta="正社員">デジ山 太郎</option>
+              <option value="dejiyama-hanako" data-icon="花" data-icon-style="avatar" data-avatar-color="--color-primitive-red-600" data-meta="正社員">デジ山 花子</option>
+              <option value="dejiyama-ichiro" data-icon="一" data-icon-style="avatar" data-avatar-color="--color-primitive-green-600" data-meta="正社員">デジ山 一郎</option>
+            </optgroup>
+            <optgroup label="マネジメント">
+              <option value="dejiyama-tome" data-icon="と" data-icon-style="avatar" data-avatar-color="--color-primitive-orange-600" data-meta="マネージャー">デジ山 とめ</option>
+            </optgroup>
+            <optgroup label="営業部">
+              <option value="dejiyama-jiro" data-icon="二" data-icon-style="avatar" data-avatar-color="--color-primitive-purple-600" data-meta="正社員">デジ山 二郎</option>
+            </optgroup>
+          </dads-combobox>
+        </div>
+        <div style="margin-top: 8px;">
+          <h4 style="font-size: 14px; font-weight: 700; color: #333; margin: 0 0 8px;">実装コード</h4>
+          <dads-code-block>
+            <template>
+<dads-combobox label="メンバー選択"
+  support-text="担当メンバーを選択してください。"
+  multiple size="l">
+  <optgroup label="エンジニアリング部">
+    <option value="dejiyama-taro"
+      data-icon="太" data-icon-style="avatar"
+      data-avatar-color="--color-primitive-blue-600"
+      data-meta="正社員">デジ山 太郎</option>
+    <option value="dejiyama-hanako"
+      data-icon="花" data-icon-style="avatar"
+      data-avatar-color="--color-primitive-red-600"
+      data-meta="正社員">デジ山 花子</option>
+  </optgroup>
+  <optgroup label="マネジメント">
+    <option value="dejiyama-tome"
+      data-icon="と" data-icon-style="avatar"
+      data-avatar-color="--color-primitive-orange-600"
+      data-meta="マネージャー">デジ山 とめ</option>
+  </optgroup>
+</dads-combobox>
+
+<!-- アイコン名指定パターン（data URIの代わり） -->
+<dads-combobox label="ファイル種別">
+  <option value="document" data-icon="document">ドキュメント</option>
+  <option value="image" data-icon="image">画像</option>
+</dads-combobox>
+            </template>
+          </dads-code-block>
+        </div>
+      </section>
+    </div>
+
+    <script type="module">
+      await Promise.all([import('dads-combobox'), import('a11y-annotate')]);
+
+      const behaviorSelect = document.querySelector('[data-api-attr="behavior"]');
+      const multipleSwitch = document.querySelector('[data-api-attr="multiple"]');
+      const noMatchSelect = document.querySelector('[data-api-attr="no-match-behavior"]');
+      if (behaviorSelect) {
+        const syncBehaviorDependents = () => {
+          const isInput = behaviorSelect.value === 'input';
+          if (multipleSwitch) {
+            multipleSwitch.disabled = isInput;
+            if (isInput && multipleSwitch.checked) {
+              multipleSwitch.checked = false;
+              multipleSwitch.dispatchEvent(new Event('dads-change', { bubbles: true }));
+            }
+          }
+          if (noMatchSelect) {
+            noMatchSelect.disabled = !isInput;
+            if (!isInput && noMatchSelect.value !== 'notice') {
+              noMatchSelect.value = 'notice';
+              noMatchSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }
+        };
+        behaviorSelect.addEventListener('change', syncBehaviorDependents);
+        syncBehaviorDependents();
+      }
+    </script>
+  `,
+
+
   select: () => `
     <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">セレクトボックス</h2>

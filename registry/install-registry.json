@@ -15,6 +15,18 @@
         "componentDir": "packages/components/accordion"
       }
     },
+    "avatar": {
+      "id": "avatar",
+      "tags": [
+        "dads-avatar"
+      ],
+      "define": "defineAvatar",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/avatar"
+      }
+    },
     "blockquote": {
       "id": "blockquote",
       "tags": [
@@ -134,6 +146,22 @@
       "deps": [],
       "source": {
         "componentDir": "packages/components/code-block"
+      }
+    },
+    "combobox": {
+      "id": "combobox",
+      "tags": [
+        "dads-combobox"
+      ],
+      "define": "defineCombobox",
+      "call": "prefix-registry",
+      "deps": [
+        "avatar",
+        "chip-tag",
+        "icon"
+      ],
+      "source": {
+        "componentDir": "packages/components/combobox"
       }
     },
     "date-picker": {
@@ -310,6 +338,18 @@
       "deps": [],
       "source": {
         "componentDir": "packages/components/heading"
+      }
+    },
+    "icon": {
+      "id": "icon",
+      "tags": [
+        "dads-icon"
+      ],
+      "define": "defineIcon",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/icon"
       }
     },
     "input-text": {
@@ -607,6 +647,7 @@
   "tags": {
     "dads-accordion-details": "accordion",
     "dads-accordion-item-details": "accordion",
+    "dads-avatar": "avatar",
     "dads-blockquote": "blockquote",
     "dads-breadcrumb": "breadcrumb",
     "dads-breadcrumb-item": "breadcrumb",
@@ -618,6 +659,7 @@
     "dads-chip-label": "chip-label",
     "dads-chip-tag": "chip-tag",
     "dads-code-block": "code-block",
+    "dads-combobox": "combobox",
     "dads-date-picker": "date-picker",
     "dads-description-list": "description-list",
     "dads-device-mock": "device-mock",
@@ -633,6 +675,7 @@
     "dads-hamburger-menu-button": "hamburger-menu-button",
     "dads-header-container": "header-container",
     "dads-heading": "heading",
+    "dads-icon": "icon",
     "dads-input-text": "input-text",
     "dads-language-selector": "language-selector",
     "dads-layout-aside": "layout-aside",

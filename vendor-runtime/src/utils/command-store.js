@@ -136,6 +136,8 @@ export class CommandStore {
         if (!parent.addEventListener || !parent.removeEventListener)
             return () => { };
         const onClick = (event) => {
+            if (!(event instanceof MouseEvent))
+                return;
             const invoker = findInvokerFromEvent(event);
             if (!invoker)
                 return;

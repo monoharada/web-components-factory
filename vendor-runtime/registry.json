@@ -17,6 +17,12 @@
       "defineModule": "src/components/accordion/index.js",
       "defineFn": "defineDefaultAccordion"
     },
+    "avatar": {
+      "tagBase": "avatar",
+      "elementEntry": "components/avatar.js",
+      "defineModule": "src/components/avatar/index.js",
+      "defineFn": "defineDefaultAvatar"
+    },
     "blockquote": {
       "tagBase": "blockquote",
       "elementEntry": "components/blockquote.js",
@@ -82,6 +88,12 @@
       "elementEntry": "components/code-block.js",
       "defineModule": "src/components/code-block/index.js",
       "defineFn": "defineDefaultCodeBlock"
+    },
+    "combobox": {
+      "tagBase": "combobox",
+      "elementEntry": "components/combobox.js",
+      "defineModule": "src/components/combobox/index.js",
+      "defineFn": "defineCombobox"
     },
     "date-picker": {
       "tagBase": "date-picker",
@@ -172,6 +184,12 @@
       "elementEntry": "components/heading.js",
       "defineModule": "src/components/heading/index.js",
       "defineFn": "defineHeading"
+    },
+    "icon": {
+      "tagBase": "icon",
+      "elementEntry": "components/icon.js",
+      "defineModule": "src/components/icon/index.js",
+      "defineFn": "defineDefaultIcon"
     },
     "input-text": {
       "tagBase": "input-text",
