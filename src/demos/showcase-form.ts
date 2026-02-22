@@ -3041,7 +3041,7 @@ export const demos = {
 
 
   combobox: () => `
-    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+    <div style="padding: 40px; max-width: 1400px; margin: 0 auto;">
       <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">コンボボックス</h2>
       <p style="color: #666; margin-bottom: 40px;">
         選択支援（<code>behavior="selection"</code>）と入力支援（<code>behavior="input"</code>）を切り替えられるコンポーネントです。<br>
@@ -3241,6 +3241,168 @@ export const demos = {
             </div>
           `,
         })}
+      </section>
+
+      <!-- 作例セクション（DADS カテゴリタイトルスタイル準拠） -->
+      <section style="margin-top: 56px;">
+        <h3 style="
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 0; margin: 0 0 24px;
+          font-size: 16px; font-weight: 700; line-height: 1.2;
+          color: var(--color-neutral-solid-gray-800, #333);
+          border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494);
+        ">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5Zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z"/></svg>
+          作例: 入力支援 — 人名検索
+        </h3>
+        <p style="font-size: 14px; color: var(--color-neutral-solid-gray-600, #666); margin: 0 0 16px;">
+          <code>behavior="input"</code> + <code>data-meta</code> で、氏名と役職を表示する入力支援パターンです。
+        </p>
+        <div style="max-width: 480px; padding: 40px 0;">
+          <dads-combobox
+            behavior="input"
+            no-match-behavior="notice"
+            label="社員名"
+            support-text="氏名を入力して候補から選択してください。"
+            size="l"
+          >
+            <option value="dejiyama-taro" data-meta="正社員" data-search='["デジ山太郎","でじやまたろう"]'>デジ山 太郎</option>
+            <option value="dejiyama-hanako" data-meta="正社員" data-search='["デジ山花子","でじやまはなこ"]'>デジ山 花子</option>
+            <option value="dejiyama-ichiro" data-meta="正社員" data-search='["デジ山一郎","でじやまいちろう"]'>デジ山 一郎</option>
+            <option value="dejiyama-jiro" data-meta="正社員" data-search='["デジ山二郎","でじやまじろう"]'>デジ山 二郎</option>
+            <option value="dejiyama-tome" data-meta="マネージャー" data-search='["デジ山とめ","でじやまとめ"]'>デジ山 とめ</option>
+          </dads-combobox>
+        </div>
+        <div style="margin-top: 8px;">
+          <h4 style="font-size: 14px; font-weight: 700; color: #333; margin: 0 0 8px;">実装コード</h4>
+          <dads-code-block>
+            <template>
+<dads-combobox
+  behavior="input"
+  no-match-behavior="notice"
+  label="社員名"
+  support-text="氏名を入力して候補から選択してください。"
+  size="l"
+>
+  <option value="dejiyama-taro" data-meta="正社員"
+    data-search='["デジ山太郎","でじやまたろう"]'>デジ山 太郎</option>
+  <option value="dejiyama-hanako" data-meta="正社員"
+    data-search='["デジ山花子","でじやまはなこ"]'>デジ山 花子</option>
+  <option value="dejiyama-tome" data-meta="マネージャー"
+    data-search='["デジ山とめ","でじやまとめ"]'>デジ山 とめ</option>
+</dads-combobox>
+            </template>
+          </dads-code-block>
+        </div>
+      </section>
+
+      <section style="margin-top: 40px;">
+        <h3 style="
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 0; margin: 0 0 24px;
+          font-size: 16px; font-weight: 700; line-height: 1.2;
+          color: var(--color-neutral-solid-gray-800, #333);
+          border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494);
+        ">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+          作例: アイコン付きカテゴリ選択
+        </h3>
+        <p style="font-size: 14px; color: var(--color-neutral-solid-gray-600, #666); margin: 0 0 16px;">
+          <code>data-icon</code> でオプション行に先頭アイコンを表示するパターンです（Material Symbols）。
+        </p>
+        <div style="max-width: 480px; padding: 40px 0;">
+          <dads-combobox
+            label="ファイル種別"
+            support-text="種別を選択してください。"
+          >
+            <option value="document" data-icon="document">ドキュメント</option>
+            <option value="image" data-icon="image">画像</option>
+            <option value="folder" data-icon="folder">フォルダ</option>
+            <option value="person" data-icon="person">ユーザー</option>
+          </dads-combobox>
+        </div>
+        <div style="margin-top: 8px;">
+          <h4 style="font-size: 14px; font-weight: 700; color: #333; margin: 0 0 8px;">実装コード</h4>
+          <dads-code-block>
+            <template>
+<dads-combobox label="ファイル種別" support-text="種別を選択してください。">
+  <option value="document" data-icon="document">ドキュメント</option>
+  <option value="image" data-icon="image">画像</option>
+  <option value="folder" data-icon="folder">フォルダ</option>
+  <option value="person" data-icon="person">ユーザー</option>
+</dads-combobox>
+            </template>
+          </dads-code-block>
+        </div>
+      </section>
+
+      <section style="margin-top: 40px;">
+        <h3 style="
+          display: flex; align-items: center; gap: 8px;
+          padding: 8px 0; margin: 0 0 24px;
+          font-size: 16px; font-weight: 700; line-height: 1.2;
+          color: var(--color-neutral-solid-gray-800, #333);
+          border-bottom: 1px solid var(--color-neutral-solid-gray-420, #949494);
+        ">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentcolor" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          作例: グループ分け + アバター + サブラベル
+        </h3>
+        <p style="font-size: 14px; color: var(--color-neutral-solid-gray-600, #666); margin: 0 0 16px;">
+          <code>&lt;optgroup&gt;</code> で部署別グループ、<code>data-icon-style="avatar"</code> でアバター、<code>data-meta</code> で役職を組み合わせた統合作例です。
+        </p>
+        <div style="max-width: 480px; padding: 40px 0;">
+          <dads-combobox
+            label="メンバー選択"
+            support-text="担当メンバーを選択してください。"
+            multiple
+            size="l"
+          >
+            <optgroup label="エンジニアリング部">
+              <option value="dejiyama-taro" data-icon="太" data-icon-style="avatar" data-avatar-color="--color-primitive-blue-600" data-meta="正社員">デジ山 太郎</option>
+              <option value="dejiyama-hanako" data-icon="花" data-icon-style="avatar" data-avatar-color="--color-primitive-red-600" data-meta="正社員">デジ山 花子</option>
+              <option value="dejiyama-ichiro" data-icon="一" data-icon-style="avatar" data-avatar-color="--color-primitive-green-600" data-meta="正社員">デジ山 一郎</option>
+            </optgroup>
+            <optgroup label="マネジメント">
+              <option value="dejiyama-tome" data-icon="と" data-icon-style="avatar" data-avatar-color="--color-primitive-orange-600" data-meta="マネージャー">デジ山 とめ</option>
+            </optgroup>
+            <optgroup label="営業部">
+              <option value="dejiyama-jiro" data-icon="二" data-icon-style="avatar" data-avatar-color="--color-primitive-purple-600" data-meta="正社員">デジ山 二郎</option>
+            </optgroup>
+          </dads-combobox>
+        </div>
+        <div style="margin-top: 8px;">
+          <h4 style="font-size: 14px; font-weight: 700; color: #333; margin: 0 0 8px;">実装コード</h4>
+          <dads-code-block>
+            <template>
+<dads-combobox label="メンバー選択"
+  support-text="担当メンバーを選択してください。"
+  multiple size="l">
+  <optgroup label="エンジニアリング部">
+    <option value="dejiyama-taro"
+      data-icon="太" data-icon-style="avatar"
+      data-avatar-color="--color-primitive-blue-600"
+      data-meta="正社員">デジ山 太郎</option>
+    <option value="dejiyama-hanako"
+      data-icon="花" data-icon-style="avatar"
+      data-avatar-color="--color-primitive-red-600"
+      data-meta="正社員">デジ山 花子</option>
+  </optgroup>
+  <optgroup label="マネジメント">
+    <option value="dejiyama-tome"
+      data-icon="と" data-icon-style="avatar"
+      data-avatar-color="--color-primitive-orange-600"
+      data-meta="マネージャー">デジ山 とめ</option>
+  </optgroup>
+</dads-combobox>
+
+<!-- アイコン名指定パターン（data URIの代わり） -->
+<dads-combobox label="ファイル種別">
+  <option value="document" data-icon="document">ドキュメント</option>
+  <option value="image" data-icon="image">画像</option>
+</dads-combobox>
+            </template>
+          </dads-code-block>
+        </div>
       </section>
     </div>
 

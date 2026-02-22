@@ -7936,4 +7936,454 @@ ${dadsDataRows(6, 6)}
       </div>
     </div>
   `,
+
+  icon: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">アイコン</h2>
+      <p style="color: #666; margin-bottom: 24px;">
+        <code>iconPaths</code> に登録されたSVGアイコンを宣言的に表示する汎用コンポーネントです。
+        ボタンやメニューなど他コンポーネントのスロットに配置可能です。
+      </p>
+
+      <!-- API Panel -->
+      ${renderApiPanelWrapper({
+        imports: [
+          'dads-icon',
+        ],
+        body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-icon
+                  data-api-target
+                  name="search"
+                  size="24"
+                ></dads-icon>
+              </div>
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code></dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>name</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>IconName</code></td>
+                        <td>—</td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="name" data-api-attr="name" data-default="search">
+                              ${Object.keys(iconPaths).map((n) => `<option value="${n}"${n === 'search' ? ' selected' : ''}>${n}</option>`).join('\n                              ')}
+                            </select>
+                          </div>
+                        </td>
+                        <td>アイコン名</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>20</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="size" data-api-attr="size" data-default="24">
+                              <option value="16">16</option>
+                              <option value="20">20</option>
+                              <option value="24" selected>24</option>
+                              <option value="32">32</option>
+                              <option value="48">48</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>サイズ（px）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td>—</td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="label"
+                              value=""
+                              data-api-attr="label"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アクセシブルラベル（指定時: role="img"）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-icon-color</code></th>
+                        <td><code>currentColor</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-icon-color" value="" data-api-css-var="--dads-icon-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アイコン色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS Parts</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Part</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>svg</code></th>
+                        <td>SVG要素</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+            </div>
+        `,
+      })}
+
+      <!-- アイコン一覧 -->
+      <section style="margin-top: 40px; margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">利用可能なアイコン（${Object.keys(iconPaths).length}種）</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 24px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px;">
+          ${Object.keys(iconPaths).map((name) => `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+              <dads-icon name="${name}" size="24"></dads-icon>
+              <code style="font-size: 11px; color: #666;">${name}</code>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- 作例 -->
+      <section style="margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">作例</h3>
+
+        <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">サイズ</h4>
+        <div style="display: flex; align-items: end; gap: 24px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 24px;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-icon name="search" size="16"></dads-icon>
+            <code style="font-size: 11px; color: #666;">16</code>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-icon name="search" size="20"></dads-icon>
+            <code style="font-size: 11px; color: #666;">20 (default)</code>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-icon name="search" size="24"></dads-icon>
+            <code style="font-size: 11px; color: #666;">24</code>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-icon name="search" size="32"></dads-icon>
+            <code style="font-size: 11px; color: #666;">32</code>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-icon name="search" size="48"></dads-icon>
+            <code style="font-size: 11px; color: #666;">48</code>
+          </div>
+        </div>
+
+        <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">アクセシビリティ</h4>
+        <div style="display: flex; gap: 32px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 24px;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-icon name="search" size="24"></dads-icon>
+            <code style="font-size: 11px; color: #666;">装飾的（デフォルト）</code>
+            <span style="font-size: 11px; color: #999;">aria-hidden="true"</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-icon name="search" size="24" label="検索"></dads-icon>
+            <code style="font-size: 11px; color: #666;">情報的（label指定）</code>
+            <span style="font-size: 11px; color: #999;">role="img"</span>
+          </div>
+        </div>
+
+        <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">ボタン内スロット</h4>
+        <div style="display: flex; gap: 16px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px;">
+          <dads-button>
+            <dads-icon slot="icon-start" name="search"></dads-icon>
+            検索
+          </dads-button>
+          <dads-button variant="outlined">
+            <dads-icon slot="icon-start" name="add"></dads-icon>
+            追加
+          </dads-button>
+          <dads-button variant="text">
+            <dads-icon slot="icon-start" name="download"></dads-icon>
+            ダウンロード
+          </dads-button>
+        </div>
+      </section>
+    </div>
+  `,
+
+  avatar: () => `
+    <div style="padding: 40px; max-width: 1100px; margin: 0 auto;">
+      <h2 style="font-size: 28px; margin-bottom: 20px; color: #333;">アバター</h2>
+      <p style="color: #666; margin-bottom: 24px;">
+        テキストイニシャルまたは写真を円形で表示するアバターです。
+        コンボボックスの人名選択などでアイコンとして使用可能です。
+      </p>
+
+      <!-- API Panel -->
+      ${renderApiPanelWrapper({
+        imports: [
+          'dads-avatar',
+        ],
+        body: `
+            <div>
+              <h4 class="wc-api-panel__section-title">Preview</h4>
+              <div style="display: grid; place-content: center; padding: 24px; border: 1px dashed #e5e7eb; border-radius: 12px;">
+                <dads-avatar
+                  data-api-target
+                  initials="太"
+                  color="--color-primitive-blue-600"
+                  size="40"
+                ></dads-avatar>
+              </div>
+              <div style="margin-top: 16px;">
+                <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+                <dads-code-block data-api-code></dads-code-block>
+              </div>
+            </div>
+
+            <div class="wc-api-panel__tables">
+              <div>
+                <h4 class="wc-api-panel__section-title">Props / Attrs</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_PROPS_WITH_TYPE_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>src</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td>—</td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="src"
+                              value=""
+                              data-api-attr="src"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>写真URL（指定時は写真モード）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>initials</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td>—</td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="initials"
+                              value="太"
+                              data-api-attr="initials"
+                              data-default="太"
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>表示文字（1〜2文字、写真未指定時）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>color</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>--color-neutral-solid-gray-420</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="color" data-api-attr="color" data-default="--color-primitive-blue-600">
+                              <option value="--color-primitive-blue-600" selected>blue-600</option>
+                              <option value="--color-primitive-red-600">red-600</option>
+                              <option value="--color-primitive-green-600">green-600</option>
+                              <option value="--color-primitive-orange-600">orange-600</option>
+                              <option value="--color-primitive-purple-600">purple-600</option>
+                              <option value="--color-primitive-cyan-700">cyan-700</option>
+                              <option value="">（デフォルト）</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>背景色（CSSカスタムプロパティ名）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>size</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td><code>32</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <select aria-label="size" data-api-attr="size" data-default="40">
+                              <option value="24">24</option>
+                              <option value="32">32</option>
+                              <option value="40" selected>40</option>
+                              <option value="48">48</option>
+                              <option value="64">64</option>
+                            </select>
+                          </div>
+                        </td>
+                        <td>サイズ（px）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>label</code></th>
+                        <td><code>attr</code></td>
+                        <td><code>string</code></td>
+                        <td>—</td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="label"
+                              value=""
+                              data-api-attr="label"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>アクセシブルラベル（指定時: role="img"）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS vars</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    ${API_TABLE_CSS_VARS_HEADER}
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>--dads-avatar-background</code></th>
+                        <td><code>--color-neutral-solid-gray-420</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-avatar-background" value="" data-api-css-var="--dads-avatar-background" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>背景色（color未指定時のフォールバック）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>--dads-avatar-text-color</code></th>
+                        <td><code>white</code></td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text label="--dads-avatar-text-color" value="" data-api-css-var="--dads-avatar-text-color" data-default=""></dads-input-text>
+                          </div>
+                        </td>
+                        <td>テキスト色</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+                ${API_TABLE_CSS_VARS_NOTE}
+              </div>
+
+              <div>
+                <h4 class="wc-api-panel__section-title">CSS Parts</h4>
+                <dads-table>
+                  <table class="wc-api-table" data-cell-border="bottom">
+                    <thead>
+                      <tr>
+                        <th scope="col">Part</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row"><code>svg</code></th>
+                        <td>SVG要素（イニシャルモード）</td>
+                      </tr>
+                      <tr>
+                        <th scope="row"><code>img</code></th>
+                        <td>img要素（写真モード）</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </dads-table>
+              </div>
+            </div>
+        `,
+      })}
+
+      <!-- 作例 -->
+      <section style="margin-top: 40px; margin-bottom: 40px;">
+        <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">作例</h3>
+
+        <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">写真モード</h4>
+        <div style="display: flex; gap: 16px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; align-items: center; margin-bottom: 24px;">
+          <dads-avatar src="https://i.pravatar.cc/96?u=taro" size="40" label="太郎"></dads-avatar>
+          <dads-avatar src="https://i.pravatar.cc/96?u=hanako" size="40" label="花子"></dads-avatar>
+          <dads-avatar src="https://i.pravatar.cc/96?u=ichiro" size="40" label="一郎"></dads-avatar>
+          <dads-avatar src="https://i.pravatar.cc/96?u=tome" size="40" label="とめ"></dads-avatar>
+        </div>
+
+        <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">カラーバリエーション</h4>
+        <div style="display: flex; gap: 16px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; align-items: center; margin-bottom: 24px;">
+          <dads-avatar initials="太" color="--color-primitive-blue-600" size="40"></dads-avatar>
+          <dads-avatar initials="花" color="--color-primitive-red-600" size="40"></dads-avatar>
+          <dads-avatar initials="一" color="--color-primitive-green-600" size="40"></dads-avatar>
+          <dads-avatar initials="と" color="--color-primitive-orange-600" size="40"></dads-avatar>
+          <dads-avatar initials="二" color="--color-primitive-purple-600" size="40"></dads-avatar>
+          <dads-avatar initials="AB" color="--color-primitive-cyan-700" size="40"></dads-avatar>
+        </div>
+
+        <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">サイズ</h4>
+        <div style="display: flex; align-items: end; gap: 16px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; margin-bottom: 24px;">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-avatar initials="太" color="--color-primitive-blue-600" size="24"></dads-avatar>
+            <code style="font-size: 11px; color: #666;">24</code>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-avatar initials="太" color="--color-primitive-blue-600" size="32"></dads-avatar>
+            <code style="font-size: 11px; color: #666;">32 (default)</code>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-avatar initials="太" color="--color-primitive-blue-600" size="48"></dads-avatar>
+            <code style="font-size: 11px; color: #666;">48</code>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <dads-avatar initials="太" color="--color-primitive-blue-600" size="64"></dads-avatar>
+            <code style="font-size: 11px; color: #666;">64</code>
+          </div>
+        </div>
+
+        <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">デフォルト色（color未指定時）</h4>
+        <div style="display: flex; gap: 16px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; align-items: center;">
+          <dads-avatar initials="D" size="40"></dads-avatar>
+          <span style="font-size: 14px; color: #666;">--dads-avatar-background: var(--color-neutral-solid-gray-420)</span>
+        </div>
+      </section>
+    </div>
+  `,
 } as const;
