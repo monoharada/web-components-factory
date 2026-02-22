@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "meta": { "name": "invalid-id-test" },
+  "canonicalPrefix": "ext",
+  "components": {
+    "Bad_Widget": {
+      "id": "Bad_Widget",
+      "tags": ["ext-bad"],
+      "define": "defineBadWidget",
+      "deps": []
+    }
+  },
+  "tags": { "ext-bad": "Bad_Widget" },
+  "patterns": {}
+}

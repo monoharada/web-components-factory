@@ -186,6 +186,66 @@ describe('wcf vendor install', () => {
     }
   }, LONG_IO_TIMEOUT_MS);
 
+  it('resolves component deps by default when --component is specified', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      const res = await withCwd(tmp, async () => {
+        return await vendorInstall({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['file-upload'],
+        });
+      });
+
+      expect(res.components).toEqual(['button', 'checkbox', 'file-upload']);
+      expect(await exists(path.join(outDir, 'components', 'button.js'))).toBe(true);
+      expect(await exists(path.join(outDir, 'components', 'checkbox.js'))).toBe(true);
+      expect(await exists(path.join(outDir, 'components', 'file-upload.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  }, LONG_IO_TIMEOUT_MS);
+
+  it('skip dependency expansion when --no-deps is used', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      const res = await withCwd(tmp, async () => {
+        return await vendorInstall({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['file-upload'],
+          includeDeps: false,
+        });
+      });
+
+      expect(res.components).toEqual(['file-upload']);
+      expect(await exists(path.join(outDir, 'components', 'file-upload.js'))).toBe(true);
+      expect(await exists(path.join(outDir, 'components', 'button.js'))).toBe(false);
+      expect(await exists(path.join(outDir, 'components', 'checkbox.js'))).toBe(false);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  }, LONG_IO_TIMEOUT_MS);
+
+  it('print-importmap supports --no-deps for --component', async () => {
+    const text = await printImportMap({
+      prefix: 'myui',
+      dir: 'vendor/components/myui',
+      components: ['file-upload'],
+      includeDeps: false,
+      format: 'json',
+    });
+
+    const { imports } = JSON.parse(text);
+    expect(Object.keys(imports)).toContain('myui-file-upload');
+    expect(Object.keys(imports)).not.toContain('myui-button');
+    expect(Object.keys(imports)).not.toContain('myui-checkbox');
+  }, LONG_IO_TIMEOUT_MS);
+
   it('keeps rejecting unknown suffixes with E_COMPONENT_UNKNOWN', async () => {
     const tmp = await mkdtemp();
     try {
@@ -230,6 +290,29 @@ describe('wcf vendor add', () => {
       expect(res.totalComponents).toBe(2);
       expect(await exists(path.join(outDir, 'components', 'button.js'))).toBe(true);
       expect(await exists(path.join(outDir, 'components', 'card.js'))).toBe(true);
+    } finally {
+      await fs.rm(tmp, { recursive: true, force: true });
+    }
+  }, LONG_IO_TIMEOUT_MS);
+
+  it('adds component without deps when --no-deps is used', async () => {
+    const tmp = await mkdtemp();
+    const outDirRel = path.join('vendor', 'components', 'myui');
+    const outDir = path.join(tmp, outDirRel);
+    try {
+      const res = await withCwd(tmp, async () => {
+        return await vendorAdd({
+          prefix: 'myui',
+          outDir: outDirRel,
+          components: ['file-upload'],
+          includeDeps: false,
+        });
+      });
+
+      expect(res.addedComponents).toEqual(['file-upload']);
+      expect(await exists(path.join(outDir, 'components', 'file-upload.js'))).toBe(true);
+      expect(await exists(path.join(outDir, 'components', 'button.js'))).toBe(false);
+      expect(await exists(path.join(outDir, 'components', 'checkbox.js'))).toBe(false);
     } finally {
       await fs.rm(tmp, { recursive: true, force: true });
     }

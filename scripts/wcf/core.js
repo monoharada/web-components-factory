@@ -3,6 +3,14 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { contentTypesetStylesText } from '../../vendor-runtime/src/styles/content-typeset.js';
+import {
+  loadExtensionConfig,
+  loadExternalRegistry,
+  mergeRegistries,
+  detectSuffixConflicts,
+  validateDeps,
+  loadAllExtensions,
+} from './extension.js';
 
 const CLI_PATTERN_CONTRACT_MAJOR = 1;
 
@@ -225,10 +233,99 @@ function normalizeRelDirForImportMap(dir) {
   return `./${normalized}`;
 }
 
-function createCliError(code, message) {
-  const err = new Error(`${code}: ${message}`);
-  err.code = code;
-  return err;
+import { createCliError } from './errors.js';
+export { createCliError };
+
+function normalizeSuffix(value, prefix = 'dads') {
+  const normalized = String(value ?? '').trim().toLowerCase();
+  const normalizedPrefix = String(prefix ?? '').trim().toLowerCase();
+  const canonicalPrefix = normalizedPrefix ? `${normalizedPrefix}-` : '';
+  if (canonicalPrefix && normalized.startsWith(canonicalPrefix)) {
+    return normalized.slice(canonicalPrefix.length);
+  }
+  return normalized;
+}
+
+function resolveComponentClosureFromInstallRegistry({ installRegistry, requiredIds }) {
+  const installComponents = installRegistry?.components ?? {};
+  const visited = new Set();
+  const queue = [...requiredIds];
+
+  while (queue.length > 0) {
+    const nextId = String(queue.shift() ?? '').trim();
+    if (!nextId || visited.has(nextId)) continue;
+    const meta = installComponents[nextId];
+    if (!meta || typeof meta !== 'object') {
+      throw createCliError('E_COMPONENT_UNKNOWN', `Unknown component dependency: ${nextId}`);
+    }
+
+    visited.add(nextId);
+    const deps = Array.isArray(meta.deps) ? meta.deps : [];
+    for (const dep of deps) {
+      const normalized = String(dep ?? '').trim();
+      if (normalized) queue.push(normalized);
+    }
+  }
+
+  return sortStrings(visited);
+}
+
+function componentIdToSuffixes({ componentId, installRegistry }) {
+  const canonicalPrefix = String(installRegistry?.canonicalPrefix ?? 'dads').trim();
+  const installComponents = installRegistry?.components ?? {};
+  const meta = installComponents?.[componentId];
+  if (!meta || typeof meta !== 'object') {
+    throw createCliError('E_COMPONENT_UNKNOWN', `Unknown componentId "${componentId}" in install-registry`);
+  }
+
+  const tags = Array.isArray(meta.tags) ? meta.tags : [];
+  if (tags.length === 0) {
+    throw createCliError('E_COMPONENT_UNKNOWN', `Component "${componentId}" has no tags in install-registry`);
+  }
+
+  const prefix = canonicalPrefix ? `${canonicalPrefix}-` : '';
+  const suffixes = new Set();
+  for (const rawTag of tags) {
+    const tag = String(rawTag ?? '').trim().toLowerCase();
+    if (!tag) continue;
+    const suffix = tag.startsWith(prefix) ? tag.slice(prefix.length) : tag;
+    if (!suffix) continue;
+    suffixes.add(suffix);
+  }
+
+  if (suffixes.size === 0) {
+    throw createCliError('E_COMPONENT_UNKNOWN', `Component "${componentId}" has no valid tags in install-registry`);
+  }
+
+  return [...suffixes].sort((a, b) => a.localeCompare(b));
+}
+
+function buildSuffixToComponentIdMap(installRegistry) {
+  const canonicalPrefix = String(installRegistry?.canonicalPrefix ?? 'dads').trim();
+  const byTag = installRegistry?.tags ?? {};
+  const map = {};
+
+  if (byTag && typeof byTag === 'object') {
+    for (const [rawTag, componentId] of Object.entries(byTag)) {
+      const tag = String(rawTag ?? '').trim().toLowerCase();
+      const normalizedComponentId = String(componentId ?? '').trim();
+      if (!tag || !normalizedComponentId) continue;
+      map[normalizeSuffix(tag, canonicalPrefix)] = normalizedComponentId;
+    }
+    return map;
+  }
+
+  const installComponents = installRegistry?.components ?? {};
+  for (const [componentId, meta] of Object.entries(installComponents)) {
+    const tags = Array.isArray(meta?.tags) ? meta.tags : [];
+    for (const rawTag of tags) {
+      const tag = String(rawTag ?? '').trim().toLowerCase();
+      if (!tag) continue;
+      map[normalizeSuffix(tag, canonicalPrefix)] = componentId;
+    }
+  }
+
+  return map;
 }
 
 function parseContractMajor(value, defaultMajor = CLI_PATTERN_CONTRACT_MAJOR) {
@@ -276,11 +373,16 @@ function ensurePatternExists(registry, patternName) {
   return pattern;
 }
 
-function resolveSelectedSuffixes({ registry, pattern, components = [] }) {
+async function resolveSelectedSuffixes({
+  registry,
+  pattern,
+  components = [],
+  includeDeps = true,
+  includeInstallRegistry = null,
+}) {
   const selected = new Set();
   const warnings = [];
   let selectedPattern = null;
-
   if (pattern) {
     const p = ensurePatternExists(registry, pattern);
     selectedPattern = p;
@@ -288,10 +390,41 @@ function resolveSelectedSuffixes({ registry, pattern, components = [] }) {
     for (const suffix of p.components ?? []) selected.add(String(suffix));
   }
 
-  for (const raw of components) {
-    const value = String(raw ?? '').trim().toLowerCase();
-    if (!value) continue;
-    selected.add(value);
+  if (components.length > 0) {
+    if (includeDeps) {
+      const installRegistry = includeInstallRegistry ?? (await loadInstallRegistry(findPackageRoot()));
+      const canonicalPrefix = String(installRegistry?.canonicalPrefix ?? 'dads').trim();
+      const suffixToComponentId = buildSuffixToComponentIdMap(installRegistry);
+      const componentIds = [];
+
+      for (const raw of components) {
+        const suffix = normalizeSuffix(raw, canonicalPrefix);
+        if (!suffix) continue;
+        const componentId = suffixToComponentId[suffix];
+        if (!componentId) {
+          throw createCliError('E_COMPONENT_UNKNOWN', `Unknown component: ${String(raw ?? '').trim()}`);
+        }
+        componentIds.push(componentId);
+      }
+
+      const closureIds = resolveComponentClosureFromInstallRegistry({
+        installRegistry,
+        requiredIds: componentIds,
+      });
+
+      for (const componentId of closureIds) {
+        for (const suffix of componentIdToSuffixes({ componentId, installRegistry })) {
+          selected.add(suffix);
+        }
+      }
+    } else {
+      const canonicalPrefix = 'dads';
+      for (const raw of components) {
+        const value = normalizeSuffix(raw, canonicalPrefix);
+        if (!value) continue;
+        selected.add(value);
+      }
+    }
   }
 
   if (selected.size === 0) {
@@ -324,6 +457,73 @@ async function loadRegistry(pkgRoot) {
     throw createCliError('E_REGISTRY_INVALID', `Invalid registry format: ${registryPath}`);
   }
   return { registry, registryPath };
+}
+
+async function loadInstallRegistry(pkgRoot) {
+  const installRegistryPath = path.join(pkgRoot, 'registry', 'install-registry.json');
+  if (!(await pathExists(installRegistryPath))) {
+    throw new Error(`Missing install registry: ${installRegistryPath}`);
+  }
+  return readJson(installRegistryPath);
+}
+
+/**
+ * Load merged registry combining core install-registry with extensions.
+ * Returns { registry, installRegistry, merged } where merged is null if no extensions.
+ */
+export async function loadMergedRegistry(pkgRoot, { projectRoot = null, cliRegistries = [] } = {}) {
+  const { registry } = await loadRegistry(pkgRoot);
+  const installRegistry = await loadInstallRegistry(pkgRoot);
+
+  const resolvedProjectRoot = projectRoot || process.cwd();
+  let extensions = [];
+  const loadWarnings = [];
+
+  // Load extensions from .wcf/extensions.json
+  try {
+    extensions = await loadAllExtensions(resolvedProjectRoot);
+  } catch (extError) {
+    loadWarnings.push(
+      `W_EXTENSION_LOAD_FAILED: ローカル拡張設定の読み込みに失敗しました: ${extError?.message ?? extError}`,
+    );
+    extensions = [];
+  }
+
+  // Load CLI-specified registries
+  for (const source of cliRegistries) {
+    // eslint-disable-next-line no-await-in-loop
+    const { registry: extReg } = await loadExternalRegistry(source, resolvedProjectRoot);
+    const name = path.basename(source, path.extname(source)).replace(/[-_]?registry$/i, '') || source;
+    extensions.push({ name, registry: extReg });
+  }
+
+  // Fast path: no extensions → preserve existing behavior exactly
+  if (extensions.length === 0) {
+    return { registry, installRegistry, merged: null, warnings: loadWarnings.length > 0 ? loadWarnings : undefined };
+  }
+
+  const { merged, warnings } = mergeRegistries({ core: installRegistry, extensions });
+  warnings.push(...loadWarnings);
+  validateDeps(merged);
+
+  // Build a runtime-compatible registry from merged data
+  const mergedRuntime = buildMergedRuntime(merged, registry);
+
+  return { registry: mergedRuntime, installRegistry: merged, merged, warnings };
+}
+
+function buildMergedRuntime(merged, coreRegistry) {
+  const runtime = {
+    ...coreRegistry,
+    components: { ...coreRegistry.components },
+    patterns: { ...coreRegistry.patterns },
+  };
+
+  // MVP: Extension components are NOT added to runtime.
+  // Extension file copy/vendor install is planned for Phase 2.
+  // Extensions currently support merge, conflict detection, and CRUD management only.
+
+  return runtime;
 }
 
 async function copyFileEnsured(from, to) {
@@ -446,11 +646,22 @@ export async function getPattern(name) {
   };
 }
 
-export async function buildImportMap({ prefix, dir, pattern = null, components = [] }) {
+export async function buildImportMap({
+  prefix,
+  dir,
+  pattern = null,
+  components = [],
+  includeDeps = true,
+}) {
   const p = normalizePrefix(prefix);
   const pkgRoot = findPackageRoot();
   const { registry } = await loadRegistry(pkgRoot);
-  const { selected, warnings } = resolveSelectedSuffixes({ registry, pattern, components });
+  const { selected, warnings } = await resolveSelectedSuffixes({
+    registry,
+    pattern,
+    components,
+    includeDeps,
+  });
   const base = normalizeRelDirForImportMap(dir).replace(/\/$/, '');
 
   const imports = {};
@@ -465,8 +676,15 @@ export async function buildImportMap({ prefix, dir, pattern = null, components =
   };
 }
 
-export async function printImportMap({ prefix, dir, pattern = null, components = [], format = 'json' }) {
-  const map = await buildImportMap({ prefix, dir, pattern, components });
+export async function printImportMap({
+  prefix,
+  dir,
+  pattern = null,
+  components = [],
+  includeDeps = true,
+  format = 'json',
+}) {
+  const map = await buildImportMap({ prefix, dir, pattern, components, includeDeps });
   if (format === 'json') {
     return `${JSON.stringify({ imports: map.imports }, null, 2)}\n`;
   }
@@ -478,7 +696,15 @@ export async function printImportMap({ prefix, dir, pattern = null, components =
   throw new Error(`Invalid --format: ${format}`);
 }
 
-export async function vendorInstall({ prefix, outDir, pattern = null, components = [], force = false }) {
+export async function vendorInstall({
+  prefix,
+  outDir,
+  pattern = null,
+  components = [],
+  includeDeps = true,
+  force = false,
+  registries = [],
+}) {
   const p = normalizePrefix(prefix);
   const pkgRoot = findPackageRoot();
   const runtimeRoot = path.join(pkgRoot, 'vendor-runtime');
@@ -488,8 +714,49 @@ export async function vendorInstall({ prefix, outDir, pattern = null, components
     throw new Error(`Missing vendor runtime source: ${runtimeSrcRoot}. Run \`npm run vendor:build\` first.`);
   }
 
-  const { registry } = await loadRegistry(pkgRoot);
-  const { selected, warnings } = resolveSelectedSuffixes({ registry, pattern, components });
+  let registry;
+  let installRegistry;
+  let mergedData = null;
+  const mergeWarnings = [];
+
+  if (registries.length > 0) {
+    const result = await loadMergedRegistry(pkgRoot, { cliRegistries: registries });
+    registry = result.registry;
+    installRegistry = result.installRegistry;
+    mergedData = result.merged;
+    if (result.warnings) mergeWarnings.push(...result.warnings);
+  } else {
+    // Try loading with project extensions
+    try {
+      const result = await loadMergedRegistry(pkgRoot);
+      registry = result.registry;
+      installRegistry = result.installRegistry;
+      mergedData = result.merged;
+      if (result.warnings) mergeWarnings.push(...result.warnings);
+    } catch (extError) {
+      mergeWarnings.push(
+        `W_EXTENSION_LOAD_FAILED: 拡張レジストリの読み込みに失敗しました: ${extError?.message ?? extError}`,
+      );
+      const coreResult = await loadRegistry(pkgRoot);
+      registry = coreResult.registry;
+      installRegistry = null;
+      mergedData = null;
+    }
+  }
+
+  // Phase 2 suffix conflict detection when extensions are present
+  if (mergedData) {
+    detectSuffixConflicts(mergedData, p);
+  }
+
+  const { selected, warnings } = await resolveSelectedSuffixes({
+    registry,
+    pattern,
+    components,
+    includeDeps,
+    includeInstallRegistry: installRegistry,
+  });
+  warnings.push(...mergeWarnings);
 
   const outAbs = resolveVendorOutDir(outDir);
   await prepareVendorOutDir(outAbs, { force });
@@ -579,13 +846,26 @@ export async function vendorInstall({ prefix, outDir, pattern = null, components
   };
 }
 
-export async function vendorAdd({ prefix, outDir, pattern = null, components = [], force = false }) {
+export async function vendorAdd({
+  prefix,
+  outDir,
+  pattern = null,
+  components = [],
+  includeDeps = true,
+  force = false,
+  registries = [],
+}) {
   const p = normalizePrefix(prefix);
   const pkgRoot = findPackageRoot();
   const { registry } = await loadRegistry(pkgRoot);
   const outAbs = resolveVendorOutDir(outDir);
   const existing = await collectExistingManagedComponents({ outAbs, registry });
-  const { selected: requested, warnings } = resolveSelectedSuffixes({ registry, pattern, components });
+  const { selected: requested, warnings } = await resolveSelectedSuffixes({
+    registry,
+    pattern,
+    components,
+    includeDeps,
+  });
 
   const merged = sortStrings(new Set([...existing, ...requested]));
   const existingSet = new Set(existing);
@@ -600,7 +880,9 @@ export async function vendorAdd({ prefix, outDir, pattern = null, components = [
         prefix: p,
         outDir: stageCurrent,
         components: existing,
+        includeDeps,
         force: true,
+        registries,
       });
 
       const driftFiles = await detectVendorDrift({
@@ -619,7 +901,9 @@ export async function vendorAdd({ prefix, outDir, pattern = null, components = [
       prefix: p,
       outDir: stageMerged,
       components: merged,
+      includeDeps,
       force: true,
+      registries,
     });
 
     if (existing.length === 0) {
@@ -867,7 +1151,11 @@ export async function createPage({
   const pkgRoot = findPackageRoot();
   const { registry } = await loadRegistry(pkgRoot);
   const patternDef = ensurePatternExists(registry, pattern);
-  const { selected, warnings } = resolveSelectedSuffixes({ registry, pattern, components: [] });
+  const { selected, warnings } = await resolveSelectedSuffixes({
+    registry,
+    pattern,
+    components: [],
+  });
 
   await ensureDir(outputDir);
   const outFile = path.join(outputDir, file);
@@ -1176,7 +1464,7 @@ export async function initAgentKit({ prefix, outDir, pattern = 'search-results' 
   const p = normalizePrefix(prefix);
   const pkgRoot = findPackageRoot();
   const { registry } = await loadRegistry(pkgRoot);
-  const { selected, warnings } = resolveSelectedSuffixes({ registry, pattern, components: [] });
+  const { selected, warnings } = await resolveSelectedSuffixes({ registry, pattern, components: [] });
   const outAbs = path.resolve(process.cwd(), outDir);
   await ensureDir(outAbs);
 

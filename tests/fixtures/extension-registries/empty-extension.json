@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "empty-extension",
+    "version": "1.0.0"
+  },
+  "canonicalPrefix": "empty",
+  "components": {},
+  "tags": {},
+  "patterns": {}
+}

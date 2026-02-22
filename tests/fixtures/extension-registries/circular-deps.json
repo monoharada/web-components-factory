@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "name": "circular-extension",
+    "version": "1.0.0"
+  },
+  "canonicalPrefix": "circ",
+  "components": {
+    "alpha": {
+      "id": "alpha",
+      "tags": ["circ-alpha"],
+      "define": "defineAlpha",
+      "call": "prefix-registry",
+      "deps": ["beta"],
+      "source": { "componentDir": "components/alpha" }
+    },
+    "beta": {
+      "id": "beta",
+      "tags": ["circ-beta"],
+      "define": "defineBeta",
+      "call": "prefix-registry",
+      "deps": ["alpha"],
+      "source": { "componentDir": "components/beta" }
+    }
+  },
+  "tags": {
+    "circ-alpha": "alpha",
+    "circ-beta": "beta"
+  },
+  "patterns": {}
+}

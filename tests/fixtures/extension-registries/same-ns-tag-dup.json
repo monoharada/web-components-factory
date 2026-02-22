@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "meta": { "name": "same-ns-dup-test" },
+  "canonicalPrefix": "ext",
+  "components": {
+    "widget-a": {
+      "id": "widget-a",
+      "tags": ["ext-shared"],
+      "define": "defineWidgetA",
+      "deps": []
+    },
+    "widget-b": {
+      "id": "widget-b",
+      "tags": ["ext-shared"],
+      "define": "defineWidgetB",
+      "deps": []
+    }
+  },
+  "tags": { "ext-shared": "widget-a" },
+  "patterns": {}
+}
