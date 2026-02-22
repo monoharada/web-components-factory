@@ -1,4 +1,4 @@
-# @anthropic/wcf-mcp
+# @monoharada/wcf-mcp
 
 web-components-factory デザインシステム用の MCP (Model Context Protocol) サーバー。
 
@@ -9,7 +9,7 @@ web-components-factory デザインシステム用の MCP (Model Context Protoco
 ### npx で起動（クローン不要）
 
 ```bash
-npx @anthropic/wcf-mcp
+npx @monoharada/wcf-mcp
 ```
 
 ### Claude Desktop で使う
@@ -21,7 +21,7 @@ npx @anthropic/wcf-mcp
   "mcpServers": {
     "wcf": {
       "command": "npx",
-      "args": ["@anthropic/wcf-mcp"]
+      "args": ["@monoharada/wcf-mcp"]
     }
   }
 }
@@ -30,7 +30,7 @@ npx @anthropic/wcf-mcp
 ### Claude Code で使う
 
 ```bash
-claude mcp add wcf -- npx @anthropic/wcf-mcp
+claude mcp add wcf -- npx @monoharada/wcf-mcp
 ```
 
 ## 提供ツール（8個）

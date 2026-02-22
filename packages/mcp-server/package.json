@@ -1,5 +1,5 @@
 {
-  "name": "@anthropic/wcf-mcp",
+  "name": "@monoharada/wcf-mcp",
   "version": "0.1.0",
   "description": "MCP server for the web-components-factory design system. Provides component discovery, validation, and pattern-based UI composition without cloning the repository.",
   "type": "module",
