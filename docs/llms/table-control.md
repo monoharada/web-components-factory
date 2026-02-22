@@ -72,11 +72,27 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ta
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-table-control-gap` | - | Primary spacing between blocks |
 | `--dads-table-control-count-color` | - | Result count text color |
 | `--dads-table-control-divider-color` | - | Divider color for action group |
+| `--dads-table-control-focus-outline-color` | - |  |
+| `--dads-table-control-focus-outline-offset` | - |  |
+| `--dads-table-control-focus-outline-width` | - |  |
+| `--dads-table-control-focus-ring-color` | - |  |
+| `--dads-table-control-focus-ring-width` | - |  |
+| `--dads-table-control-font-family` | - |  |
+| `--dads-table-control-font-size` | - |  |
+| `--dads-table-control-font-weight-bold` | - |  |
+| `--dads-table-control-font-weight-regular` | - |  |
+| `--dads-table-control-gap` | - | Primary spacing between blocks |
 | `--dads-table-control-items-gap` | - | Gap between page size options |
+| `--dads-table-control-letter-spacing` | - |  |
+| `--dads-table-control-link-color` | - |  |
+| `--dads-table-control-link-color-hover` | - |  |
+| `--dads-table-control-option-min-width` | - |  |
 | `--dads-table-control-popular-gap` | - | Gap between search and popular areas |
+| `--dads-table-control-reset-min-width` | - |  |
+| `--dads-table-control-search-max-width` | - |  |
+| `--dads-table-control-search-min-width` | - |  |
 
 
 ## Events

@@ -265,6 +265,23 @@ None
 | `lead` | 冒頭スロット |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-blockquote-border-color` | - |  |
+| `--dads-blockquote-border-width` | - |  |
+| `--dads-blockquote-color` | - |  |
+| `--dads-blockquote-font-size` | - |  |
+| `--dads-blockquote-gap` | - |  |
+| `--dads-blockquote-line-height` | - |  |
+| `--dads-blockquote-margin-inline` | - |  |
+| `--dads-blockquote-padding-block` | - |  |
+| `--dads-blockquote-padding-inline-end` | - |  |
+| `--dads-blockquote-padding-inline-start` | - |  |
+| `--dads-blockquote-slot-display` | - |  |
+
+
 #### Usage
 
 ```html
@@ -312,6 +329,36 @@ None
 | `label` | ナビゲーションラベル |
 | `list` | パンくず一覧（p要素） |
 | `nav` | ナビゲーションルート（nav要素） |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-breadcrumb-color` | - |  |
+| `--dads-breadcrumb-current-color` | - |  |
+| `--dads-breadcrumb-current-letter-spacing` | - |  |
+| `--dads-breadcrumb-font-family` | - |  |
+| `--dads-breadcrumb-font-size` | - |  |
+| `--dads-breadcrumb-font-weight` | - |  |
+| `--dads-breadcrumb-home-icon-size` | - |  |
+| `--dads-breadcrumb-label-gap` | - |  |
+| `--dads-breadcrumb-label-suffix-gap` | - |  |
+| `--dads-breadcrumb-letter-spacing` | - |  |
+| `--dads-breadcrumb-line-height` | - |  |
+| `--dads-breadcrumb-link-color` | - |  |
+| `--dads-breadcrumb-link-color-active` | - |  |
+| `--dads-breadcrumb-link-color-hover` | - |  |
+| `--dads-breadcrumb-link-underline-offset` | - |  |
+| `--dads-breadcrumb-link-underline-thickness` | - |  |
+| `--dads-breadcrumb-link-underline-thickness-hover` | - |  |
+| `--dads-breadcrumb-list-item-gap` | - |  |
+| `--dads-breadcrumb-list-unit-gap` | - |  |
+| `--dads-breadcrumb-row-gap` | - |  |
+| `--dads-breadcrumb-separator-color` | - |  |
+| `--dads-breadcrumb-separator-gap-start` | - |  |
+| `--dads-breadcrumb-separator-margin-inline` | - |  |
+| `--dads-breadcrumb-separator-size` | - |  |
 
 
 #### Usage
@@ -365,6 +412,36 @@ None
 | `separator-text` | 区切りテキスト（slash / pipe） |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-breadcrumb-color` | - |  |
+| `--dads-breadcrumb-current-color` | - |  |
+| `--dads-breadcrumb-current-letter-spacing` | - |  |
+| `--dads-breadcrumb-font-family` | - |  |
+| `--dads-breadcrumb-font-size` | - |  |
+| `--dads-breadcrumb-font-weight` | - |  |
+| `--dads-breadcrumb-home-icon-size` | - |  |
+| `--dads-breadcrumb-label-gap` | - |  |
+| `--dads-breadcrumb-label-suffix-gap` | - |  |
+| `--dads-breadcrumb-letter-spacing` | - |  |
+| `--dads-breadcrumb-line-height` | - |  |
+| `--dads-breadcrumb-link-color` | - |  |
+| `--dads-breadcrumb-link-color-active` | - |  |
+| `--dads-breadcrumb-link-color-hover` | - |  |
+| `--dads-breadcrumb-link-underline-offset` | - |  |
+| `--dads-breadcrumb-link-underline-thickness` | - |  |
+| `--dads-breadcrumb-link-underline-thickness-hover` | - |  |
+| `--dads-breadcrumb-list-item-gap` | - |  |
+| `--dads-breadcrumb-list-unit-gap` | - |  |
+| `--dads-breadcrumb-row-gap` | - |  |
+| `--dads-breadcrumb-separator-color` | - |  |
+| `--dads-breadcrumb-separator-gap-start` | - |  |
+| `--dads-breadcrumb-separator-margin-inline` | - |  |
+| `--dads-breadcrumb-separator-size` | - |  |
+
+
 #### Usage
 
 ```html
@@ -416,6 +493,44 @@ None
 | `icon-end` | 末尾アイコンコンテナ |
 | `icon-start` | 先頭アイコンコンテナ |
 | `label` | ラベルテキストコンテナ |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-button-aspect-ratio` | - | アスペクト比 |
+| `--dads-button-background` | - | ボタンの背景色 |
+| `--dads-button-background-active` | - |  |
+| `--dads-button-background-hover` | - |  |
+| `--dads-button-border-color` | - |  |
+| `--dads-button-border-color-active` | - |  |
+| `--dads-button-border-color-hover` | - |  |
+| `--dads-button-border-radius` | - | 角丸のサイズ |
+| `--dads-button-border-width` | - |  |
+| `--dads-button-color` | - | ボタンのテキスト色 |
+| `--dads-button-color-active` | - |  |
+| `--dads-button-color-hover` | - |  |
+| `--dads-button-font-size` | - | フォントサイズ |
+| `--dads-button-font-weight` | - | フォントウェイト |
+| `--dads-button-icon-color` | - | アイコン色 |
+| `--dads-button-icon-gap` | - | アイコンとラベルの間隔 |
+| `--dads-button-icon-size` | - | アイコンサイズ |
+| `--dads-button-line-height` | - | 行の高さ |
+| `--dads-button-max-width` | - | 最大幅 |
+| `--dads-button-min-height` | - | 最小高さ |
+| `--dads-button-min-height-default` | - |  |
+| `--dads-button-min-width` | - | 最小幅 |
+| `--dads-button-opacity` | - | 無効時の不透明度 |
+| `--dads-button-padding` | - | 内側の余白 |
+| `--dads-button-tap-highlight-color` | - | タップ時のハイライト色 |
+| `--dads-button-text-align` | - | テキスト揃え |
+| `--dads-button-text-decoration` | - | テキスト装飾 |
+| `--dads-button-text-transform` | - | テキスト変換（大文字化等） |
+| `--dads-button-transition` | - |  |
+| `--dads-button-user-select` | - | テキスト選択の可否 |
+| `--dads-button-white-space` | - | テキスト折り返し制御 |
+| `--dads-button-width` | - | ボタンの幅 |
 
 
 #### Events
@@ -479,6 +594,14 @@ None
 | `year-select` | 年セレクト |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-calendar-control-size` | - |  |
+| `--dads-calendar-control-size-default` | - |  |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -534,33 +657,34 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
+| `--dads-card-` | - |  |
 | `--dads-card-background` | - | 背景色 |
 | `--dads-card-border-color` | - | 外周色 |
-| `--dads-card-border-width` | - | 外周の線幅 |
 | `--dads-card-border-radius` | - | 角丸 |
-| `--dads-card-divider-color` | - | エリア間の区切り線色（media/sub の境界） |
-| `--dads-card-divider-width` | - | エリア間の区切り線幅 |
-| `--dads-card-media-width` | - | layout="horizontal" のメディア列幅 |
-| `--dads-card-media-aspect-ratio` | - | メディア領域の aspect-ratio |
-| `--dads-card-padding-block` | - | パディング（上下） |
-| `--dads-card-padding-inline` | - | パディング（左右） |
-| `--dads-card-gap` | - | エリア内の余白 |
+| `--dads-card-border-width` | - | 外周の線幅 |
 | `--dads-card-color` | - | 本文/ラベルなどの文字色 |
-| `--dads-card-title-color` | - | タイトル（h1-h6）の文字色 |
-| `--dads-card-title-font-size` | - | タイトルのフォントサイズ |
-| `--dads-card-title-font-weight` | - | タイトルのフォントウェイト |
-| `--dads-card-title-line-height` | - | タイトルの行高 |
-| `--dads-card-title-letter-spacing` | - | タイトルの字間 |
 | `--dads-card-content-color` | - | コンテンツ（p）の文字色 |
 | `--dads-card-content-font-size` | - | コンテンツのフォントサイズ |
 | `--dads-card-content-font-weight` | - | コンテンツのフォントウェイト |
-| `--dads-card-content-line-height` | - | コンテンツの行高 |
 | `--dads-card-content-letter-spacing` | - | コンテンツの字間 |
+| `--dads-card-content-line-height` | - | コンテンツの行高 |
+| `--dads-card-divider-color` | - | エリア間の区切り線色（media/sub の境界） |
+| `--dads-card-divider-width` | - | エリア間の区切り線幅 |
 | `--dads-card-focus-outline-color` | - | フォーカスアウトライン色（委譲ON時） |
-| `--dads-card-focus-outline-width` | - | フォーカスアウトライン幅（委譲ON時） |
 | `--dads-card-focus-outline-offset` | - | フォーカスアウトラインのオフセット（委譲ON時） |
+| `--dads-card-focus-outline-width` | - | フォーカスアウトライン幅（委譲ON時） |
 | `--dads-card-focus-ring-color` | - | フォーカスリング色（委譲ON時） |
 | `--dads-card-focus-ring-width` | - | フォーカスリング幅（委譲ON時） |
+| `--dads-card-gap` | - | エリア内の余白 |
+| `--dads-card-media-aspect-ratio` | - | メディア領域の aspect-ratio |
+| `--dads-card-media-width` | - | layout="horizontal" のメディア列幅 |
+| `--dads-card-padding-block` | - | パディング（上下） |
+| `--dads-card-padding-inline` | - | パディング（左右） |
+| `--dads-card-title-color` | - | タイトル（h1-h6）の文字色 |
+| `--dads-card-title-font-size` | - | タイトルのフォントサイズ |
+| `--dads-card-title-font-weight` | - | タイトルのフォントウェイト |
+| `--dads-card-title-letter-spacing` | - | タイトルの字間 |
+| `--dads-card-title-line-height` | - | タイトルの行高 |
 
 
 #### Usage
@@ -641,6 +765,66 @@ None
 | `status` | ステータス（aria-live） |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-carousel-all-slides-content-margin-top` | - |  |
+| `--dads-carousel-all-slides-extra-gap` | - |  |
+| `--dads-carousel-all-slides-icon-color` | - |  |
+| `--dads-carousel-all-slides-margin-top` | - |  |
+| `--dads-carousel-all-slides-row-gap` | - |  |
+| `--dads-carousel-bg-blur-size` | - |  |
+| `--dads-carousel-bg-soft-light-color` | - |  |
+| `--dads-carousel-border-color` | - |  |
+| `--dads-carousel-border-width` | - |  |
+| `--dads-carousel-control-gap-desktop` | - |  |
+| `--dads-carousel-control-gap-mobile` | - |  |
+| `--dads-carousel-control-padding-block` | - |  |
+| `--dads-carousel-control-padding-bottom-expanded` | - |  |
+| `--dads-carousel-focus-outline-color` | - |  |
+| `--dads-carousel-focus-outline-offset-inner` | - |  |
+| `--dads-carousel-focus-outline-offset-outer` | - |  |
+| `--dads-carousel-focus-outline-width` | - |  |
+| `--dads-carousel-focus-ring-color` | - |  |
+| `--dads-carousel-focus-ring-width` | - |  |
+| `--dads-carousel-font-family` | - |  |
+| `--dads-carousel-font-size` | - |  |
+| `--dads-carousel-font-size-heading-default` | - |  |
+| `--dads-carousel-font-size-heading-lg` | - |  |
+| `--dads-carousel-font-size-heading-sm` | - |  |
+| `--dads-carousel-font-weight-bold` | - |  |
+| `--dads-carousel-font-weight-normal` | - |  |
+| `--dads-carousel-hit-area` | - |  |
+| `--dads-carousel-image-outline-width` | - |  |
+| `--dads-carousel-letter-spacing` | - |  |
+| `--dads-carousel-line-color` | - |  |
+| `--dads-carousel-link-color` | - |  |
+| `--dads-carousel-link-hover-color` | - |  |
+| `--dads-carousel-main-ratio` | - |  |
+| `--dads-carousel-main-ratio-key-visual` | - |  |
+| `--dads-carousel-max-width` | - |  |
+| `--dads-carousel-max-width-key-visual` | - |  |
+| `--dads-carousel-next-label-font-size` | - |  |
+| `--dads-carousel-next-label-padding` | - |  |
+| `--dads-carousel-next-padding` | - |  |
+| `--dads-carousel-next-ratio` | - |  |
+| `--dads-carousel-number-font-size` | - |  |
+| `--dads-carousel-number-size` | - |  |
+| `--dads-carousel-page-button-size` | - |  |
+| `--dads-carousel-page-nav-gap` | - |  |
+| `--dads-carousel-panel-grid-side` | - |  |
+| `--dads-carousel-radius-lg` | - |  |
+| `--dads-carousel-radius-md` | - |  |
+| `--dads-carousel-radius-sm` | - |  |
+| `--dads-carousel-side-padding` | - |  |
+| `--dads-carousel-step-gap` | - |  |
+| `--dads-carousel-summary-padding-block` | - |  |
+| `--dads-carousel-summary-padding-inline` | - |  |
+| `--dads-carousel-surface-color` | - |  |
+| `--dads-carousel-text-color` | - |  |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -718,6 +902,15 @@ None
 | `requirement` | 要否ラベル（※必須） |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-checkbox-force-border-color` | - |  |
+| `--dads-checkbox-force-fill-color` | - |  |
+| `--dads-checkbox-force-hover-bg` | - |  |
+
+
 #### Usage
 
 ```html
@@ -765,6 +958,23 @@ None
 | `base` | チップラベル本体 |
 | `icon` | アイコンスロット |
 | `label` | ラベルテキストコンテナ |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-chip-label-border-radius` | - |  |
+| `--dads-chip-label-font-size` | - |  |
+| `--dads-chip-label-font-weight` | - |  |
+| `--dads-chip-label-icon-gap` | - |  |
+| `--dads-chip-label-letter-spacing` | - |  |
+| `--dads-chip-label-line-height` | - |  |
+| `--dads-chip-label-min-height` | - |  |
+| `--dads-chip-label-padding` | - |  |
+| `--dads-chip-label-padding-block` | - |  |
+| `--dads-chip-label-padding-inline` | - |  |
+| `--dads-chip-label-padding-text` | - |  |
 
 
 #### Usage
@@ -824,27 +1034,43 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
+| `--dads-chip-tag-action-background` | - |  |
+| `--dads-chip-tag-action-background-active` | - |  |
+| `--dads-chip-tag-action-background-hover` | - |  |
+| `--dads-chip-tag-action-border-color` | - |  |
+| `--dads-chip-tag-action-border-width` | - |  |
+| `--dads-chip-tag-action-hit-area` | - | アクションのヒット領域（見た目は維持したまま拡張） |
+| `--dads-chip-tag-action-hit-padding` | - |  |
+| `--dads-chip-tag-action-icon-color` | - |  |
+| `--dads-chip-tag-action-icon-color-active` | - |  |
+| `--dads-chip-tag-action-icon-color-hover` | - |  |
+| `--dads-chip-tag-action-icon-size` | - | アクション内アイコンサイズ |
+| `--dads-chip-tag-action-size` | - |  |
 | `--dads-chip-tag-background` | - | 背景色 |
 | `--dads-chip-tag-border-color` | - | 枠線色 |
-| `--dads-chip-tag-border-width` | - | 枠線の太さ |
+| `--dads-chip-tag-border-radius` | - | 角丸 |
 | `--dads-chip-tag-border-shadow` | - | 外周の補助線 |
 | `--dads-chip-tag-border-shadow-hover` | - | hover時の外周補助線 |
-| `--dads-chip-tag-text-color` | - | テキスト色 |
-| `--dads-chip-tag-text-color-hover` | - | hover時のテキスト色 |
-| `--dads-chip-tag-text-color-active` | - | active時のテキスト色 |
-| `--dads-chip-tag-border-radius` | - | 角丸 |
+| `--dads-chip-tag-border-width` | - | 枠線の太さ |
+| `--dads-chip-tag-focus-text-element-bg` | - |  |
+| `--dads-chip-tag-font-family` | - |  |
+| `--dads-chip-tag-font-size` | - |  |
+| `--dads-chip-tag-font-weight` | - |  |
+| `--dads-chip-tag-icon-size` | - | アイコンサイズ |
+| `--dads-chip-tag-label-padding-bottom` | - | ラベルの下パディング |
+| `--dads-chip-tag-label-padding-inline` | - | ラベルの左右パディング |
+| `--dads-chip-tag-label-text-decoration` | - | ラベルの装飾線 |
+| `--dads-chip-tag-label-underline-offset` | - | ラベル下線のオフセット |
+| `--dads-chip-tag-label-underline-thickness` | - | ラベル下線の太さ |
+| `--dads-chip-tag-label-underline-thickness-hover` | - | hover/active時のラベル下線の太さ |
+| `--dads-chip-tag-letter-spacing` | - |  |
+| `--dads-chip-tag-line-height` | - |  |
 | `--dads-chip-tag-min-height` | - | 最小高さ |
 | `--dads-chip-tag-padding-block` | - | 上下パディング |
 | `--dads-chip-tag-padding-inline` | - | 左右パディング |
-| `--dads-chip-tag-label-padding-inline` | - | ラベルの左右パディング |
-| `--dads-chip-tag-label-padding-bottom` | - | ラベルの下パディング |
-| `--dads-chip-tag-label-text-decoration` | - | ラベルの装飾線 |
-| `--dads-chip-tag-label-underline-thickness` | - | ラベル下線の太さ |
-| `--dads-chip-tag-label-underline-thickness-hover` | - | hover/active時のラベル下線の太さ |
-| `--dads-chip-tag-label-underline-offset` | - | ラベル下線のオフセット |
-| `--dads-chip-tag-icon-size` | - | アイコンサイズ |
-| `--dads-chip-tag-action-hit-area` | - | アクションのヒット領域（見た目は維持したまま拡張） |
-| `--dads-chip-tag-action-icon-size` | - | アクション内アイコンサイズ |
+| `--dads-chip-tag-text-color` | - | テキスト色 |
+| `--dads-chip-tag-text-color-active` | - | active時のテキスト色 |
+| `--dads-chip-tag-text-color-hover` | - | hover時のテキスト色 |
 
 
 #### Events
@@ -987,6 +1213,49 @@ None
 | `wrapper` | 全体ラッパー |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-combobox-background` | - |  |
+| `--dads-combobox-border-color` | - |  |
+| `--dads-combobox-border-radius` | - |  |
+| `--dads-combobox-border-width` | - |  |
+| `--dads-combobox-chip-bg` | - |  |
+| `--dads-combobox-chip-border-color` | - |  |
+| `--dads-combobox-chip-color` | - |  |
+| `--dads-combobox-control-bottom` | - |  |
+| `--dads-combobox-control-height` | - |  |
+| `--dads-combobox-error-color` | - |  |
+| `--dads-combobox-font-size` | - |  |
+| `--dads-combobox-indicator-background` | - |  |
+| `--dads-combobox-indicator-border-color` | - |  |
+| `--dads-combobox-indicator-radius` | - |  |
+| `--dads-combobox-indicator-size` | - |  |
+| `--dads-combobox-label-color` | - |  |
+| `--dads-combobox-label-size` | - |  |
+| `--dads-combobox-label-weight` | - |  |
+| `--dads-combobox-list-max-height` | - |  |
+| `--dads-combobox-list-shadow` | - |  |
+| `--dads-combobox-list-z-index` | - |  |
+| `--dads-combobox-multi-check-radius` | - |  |
+| `--dads-combobox-multi-check-size` | - |  |
+| `--dads-combobox-option-active-bg` | - |  |
+| `--dads-combobox-option-divider-color` | - |  |
+| `--dads-combobox-option-hover-bg` | - |  |
+| `--dads-combobox-option-min-height` | - |  |
+| `--dads-combobox-option-padding-inline` | - |  |
+| `--dads-combobox-option-padding-y` | - |  |
+| `--dads-combobox-option-selected-bg` | - |  |
+| `--dads-combobox-option-selected-color` | - |  |
+| `--dads-combobox-padding-inline` | - |  |
+| `--dads-combobox-padding-y` | - |  |
+| `--dads-combobox-placeholder-color` | - |  |
+| `--dads-combobox-required-color` | - |  |
+| `--dads-combobox-support-color` | - |  |
+| `--dads-combobox-text-color` | - |  |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -1117,11 +1386,12 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-description-list-margin-block` | - | ブロック方向マージン |
-| `--dads-description-list-item-gap` | - | 項目間の行間 |
 | `--dads-description-list-indent` | - | dt/dd のインデント |
-| `--dads-description-list-term-font-weight` | - | 用語（dt）の文字ウェイト |
+| `--dads-description-list-item-gap` | - | 項目間の行間 |
+| `--dads-description-list-margin-block` | - | ブロック方向マージン |
+| `--dads-description-list-marker-type` | - |  |
 | `--dads-description-list-overflow-wrap` | - | 折り返し規則 |
+| `--dads-description-list-term-font-weight` | - | 用語（dt）の文字ウェイト |
 
 
 #### Usage
@@ -1180,10 +1450,26 @@ None
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
 | `--dads-dialog-backdrop-background` | - | 背景(backdrop)色 |
+| `--dads-dialog-background` | - | ダイアログの背景色 |
 | `--dads-dialog-border-color` | - | ダイアログ境界線色 |
-| `--dads-dialog-border-width` | - | ダイアログ境界線幅 |
-| `--dads-dialog-width` | - | ダイアログ幅 |
 | `--dads-dialog-border-radius` | - | ダイアログ角丸 |
+| `--dads-dialog-border-width` | - | ダイアログ境界線幅 |
+| `--dads-dialog-close-button-border-color` | - | 閉じるボタンの枠線色 |
+| `--dads-dialog-close-button-border-radius` | - | 閉じるボタンの角丸 |
+| `--dads-dialog-close-button-hover-background` | - | 閉じるボタンのホバー時背景色 |
+| `--dads-dialog-close-button-padding` | - | 閉じるボタンの内側余白 |
+| `--dads-dialog-close-button-size` | - | 閉じるボタンのサイズ |
+| `--dads-dialog-color` | - | ダイアログのテキスト色 |
+| `--dads-dialog-footer-gap` | - | フッター内のボタン間隔 |
+| `--dads-dialog-gap` | - | セクション間の間隔 |
+| `--dads-dialog-header-gap` | - | ヘッダー内の間隔 |
+| `--dads-dialog-max-height` | - | ダイアログの最大高さ |
+| `--dads-dialog-padding-block` | - | 上下の内側余白 |
+| `--dads-dialog-padding-inline` | - | 左右の内側余白 |
+| `--dads-dialog-title-line-height` | - | タイトルの行の高さ |
+| `--dads-dialog-title-size` | - | タイトルのフォントサイズ |
+| `--dads-dialog-viewport-padding` | - | ビューポート端からの余白 |
+| `--dads-dialog-width` | - | ダイアログ幅 |
 
 
 #### Events
@@ -1253,11 +1539,20 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-disclosure-gap` | - | summary内のgap |
-| `--dads-disclosure-icon-size` | - | アイコンサイズ |
-| `--dads-disclosure-icon-color` | - | アイコン色 |
-| `--dads-disclosure-content-padding-inline-start` | - | 本文のインライン開始padding |
 | `--dads-disclosure-back-link-color` | - | 戻るリンク色 |
+| `--dads-disclosure-back-link-color-active` | - |  |
+| `--dads-disclosure-back-link-color-hover` | - |  |
+| `--dads-disclosure-back-link-gap` | - |  |
+| `--dads-disclosure-back-link-underline-offset` | - |  |
+| `--dads-disclosure-back-link-underline-thickness` | - |  |
+| `--dads-disclosure-back-link-underline-thickness-hover` | - |  |
+| `--dads-disclosure-content-margin-block` | - |  |
+| `--dads-disclosure-content-padding-inline-start` | - | 本文のインライン開始padding |
+| `--dads-disclosure-focus-border-radius` | - |  |
+| `--dads-disclosure-gap` | - | summary内のgap |
+| `--dads-disclosure-icon-color` | - | アイコン色 |
+| `--dads-disclosure-icon-size` | - | アイコンサイズ |
+| `--dads-disclosure-summary-underline-offset` | - |  |
 
 
 #### Events
@@ -1381,9 +1676,28 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-drawer-width` | - | ドロワー幅 |
 | `--dads-drawer-backdrop-background` | - | 背景(backdrop)色 |
+| `--dads-drawer-background` | - |  |
+| `--dads-drawer-border-color` | - |  |
+| `--dads-drawer-border-width` | - |  |
+| `--dads-drawer-close-button-border-color` | - |  |
+| `--dads-drawer-close-button-gap` | - |  |
+| `--dads-drawer-close-button-hover-background` | - |  |
+| `--dads-drawer-close-button-icon-size` | - |  |
+| `--dads-drawer-close-button-padding-inline` | - |  |
+| `--dads-drawer-close-button-radius` | - |  |
+| `--dads-drawer-close-button-size` | - |  |
+| `--dads-drawer-color` | - |  |
+| `--dads-drawer-content-padding-block` | - |  |
+| `--dads-drawer-content-padding-inline` | - |  |
+| `--dads-drawer-header-min-height` | - |  |
+| `--dads-drawer-header-padding-inline` | - |  |
+| `--dads-drawer-max-width` | - |  |
 | `--dads-drawer-shadow` | - | ドロワー影 |
+| `--dads-drawer-title-line-height` | - |  |
+| `--dads-drawer-title-size` | - |  |
+| `--dads-drawer-width` | - | ドロワー幅 |
+| `--dads-drawer-z-index` | - |  |
 
 
 #### Events
@@ -1457,14 +1771,43 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-emergency-banner-border-color` | - | 外枠色 |
-| `--dads-emergency-banner-background` | - | 背景色 |
-| `--dads-emergency-banner-color` | - | 本文文字色 |
-| `--dads-emergency-banner-heading-color` | - | 見出し色 |
 | `--dads-emergency-banner-action-background` | - | CTA背景色 |
 | `--dads-emergency-banner-action-background-hover` | - | CTAホバー背景色 |
-| `--dads-emergency-banner-action-color` | - | CTA文字色 |
 | `--dads-emergency-banner-action-border-radius` | - | CTA角丸 |
+| `--dads-emergency-banner-action-border-width` | - |  |
+| `--dads-emergency-banner-action-color` | - | CTA文字色 |
+| `--dads-emergency-banner-action-font-size` | - |  |
+| `--dads-emergency-banner-action-font-weight` | - |  |
+| `--dads-emergency-banner-action-icon-size` | - |  |
+| `--dads-emergency-banner-action-inner-border-radius` | - |  |
+| `--dads-emergency-banner-action-inner-border-width` | - |  |
+| `--dads-emergency-banner-action-letter-spacing` | - |  |
+| `--dads-emergency-banner-action-line-height` | - |  |
+| `--dads-emergency-banner-action-min-width` | - |  |
+| `--dads-emergency-banner-action-padding` | - |  |
+| `--dads-emergency-banner-action-padding-bottom` | - |  |
+| `--dads-emergency-banner-action-padding-top` | - |  |
+| `--dads-emergency-banner-background` | - | 背景色 |
+| `--dads-emergency-banner-body-row-gap` | - |  |
+| `--dads-emergency-banner-border-color` | - | 外枠色 |
+| `--dads-emergency-banner-border-width` | - |  |
+| `--dads-emergency-banner-color` | - | 本文文字色 |
+| `--dads-emergency-banner-focus-outline-color` | - |  |
+| `--dads-emergency-banner-focus-outline-offset` | - |  |
+| `--dads-emergency-banner-focus-outline-width` | - |  |
+| `--dads-emergency-banner-focus-ring-color` | - |  |
+| `--dads-emergency-banner-focus-ring-width` | - |  |
+| `--dads-emergency-banner-font-size` | - |  |
+| `--dads-emergency-banner-header-gap` | - |  |
+| `--dads-emergency-banner-heading-color` | - | 見出し色 |
+| `--dads-emergency-banner-heading-font-size` | - |  |
+| `--dads-emergency-banner-heading-font-weight` | - |  |
+| `--dads-emergency-banner-heading-line-height` | - |  |
+| `--dads-emergency-banner-letter-spacing` | - |  |
+| `--dads-emergency-banner-line-height` | - |  |
+| `--dads-emergency-banner-padding-block` | - |  |
+| `--dads-emergency-banner-padding-inline` | - |  |
+| `--dads-emergency-banner-row-gap` | - |  |
 
 
 #### Usage
@@ -1609,6 +1952,63 @@ None
 | `wrapper` | 全体ラッパー |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-file-upload-browse-bg` | - |  |
+| `--dads-file-upload-browse-bg-active` | - |  |
+| `--dads-file-upload-browse-bg-hover` | - |  |
+| `--dads-file-upload-browse-border-color` | - |  |
+| `--dads-file-upload-browse-border-color-active` | - |  |
+| `--dads-file-upload-browse-border-color-hover` | - |  |
+| `--dads-file-upload-browse-color` | - |  |
+| `--dads-file-upload-browse-color-active` | - |  |
+| `--dads-file-upload-browse-color-hover` | - |  |
+| `--dads-file-upload-browse-text-decoration` | - |  |
+| `--dads-file-upload-button-gap` | - |  |
+| `--dads-file-upload-button-only-main-gap` | - |  |
+| `--dads-file-upload-button-only-main-min-height` | - |  |
+| `--dads-file-upload-dropzone-bg` | - |  |
+| `--dads-file-upload-dropzone-border-color` | - |  |
+| `--dads-file-upload-dropzone-border-width` | - |  |
+| `--dads-file-upload-dropzone-padding` | - |  |
+| `--dads-file-upload-dropzone-radius` | - |  |
+| `--dads-file-upload-error-color` | - |  |
+| `--dads-file-upload-expand-checkbox-base-align-items` | - |  |
+| `--dads-file-upload-expand-checkbox-label-padding-block-start` | - |  |
+| `--dads-file-upload-file-meta-color` | - |  |
+| `--dads-file-upload-file-meta-color-error` | - |  |
+| `--dads-file-upload-file-name-color` | - |  |
+| `--dads-file-upload-file-name-color-error` | - |  |
+| `--dads-file-upload-file-status-color` | - |  |
+| `--dads-file-upload-file-status-error-color` | - |  |
+| `--dads-file-upload-file-status-success-color` | - |  |
+| `--dads-file-upload-gap` | - |  |
+| `--dads-file-upload-hint-color` | - |  |
+| `--dads-file-upload-item-error-border-width` | - |  |
+| `--dads-file-upload-item-error-color` | - |  |
+| `--dads-file-upload-item-error-padding-inline-start` | - |  |
+| `--dads-file-upload-item-error-row-gap` | - |  |
+| `--dads-file-upload-label-color` | - |  |
+| `--dads-file-upload-label-size` | - |  |
+| `--dads-file-upload-label-weight` | - |  |
+| `--dads-file-upload-list-gap` | - |  |
+| `--dads-file-upload-overlay-bg` | - |  |
+| `--dads-file-upload-overlay-border-color` | - |  |
+| `--dads-file-upload-overlay-border-width` | - |  |
+| `--dads-file-upload-overlay-text-color` | - |  |
+| `--dads-file-upload-overlay-text-size` | - |  |
+| `--dads-file-upload-remove-color` | - |  |
+| `--dads-file-upload-remove-color-hover` | - |  |
+| `--dads-file-upload-requirement-color` | - |  |
+| `--dads-file-upload-selection-summary-color` | - |  |
+| `--dads-file-upload-selection-summary-margin-top` | - |  |
+| `--dads-file-upload-support-color` | - |  |
+| `--dads-file-upload-top-error-margin-top` | - |  |
+| `--dads-file-upload-top-error-margin-top-no-summary` | - |  |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -1669,6 +2069,43 @@ None
 | `nav` | ナビゲーションルート |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-global-menu-border-color` | - |  |
+| `--dads-global-menu-color` | - |  |
+| `--dads-global-menu-font-family` | - |  |
+| `--dads-global-menu-font-size` | - |  |
+| `--dads-global-menu-font-weight` | - |  |
+| `--dads-global-menu-item-chevron-margin-top` | - |  |
+| `--dads-global-menu-item-chevron-size` | - |  |
+| `--dads-global-menu-item-current-bg` | - |  |
+| `--dads-global-menu-item-current-border-color` | - |  |
+| `--dads-global-menu-item-current-border-width` | - |  |
+| `--dads-global-menu-item-current-color` | - |  |
+| `--dads-global-menu-item-current-color-hover` | - |  |
+| `--dads-global-menu-item-focus-background` | - |  |
+| `--dads-global-menu-item-focus-border-radius` | - |  |
+| `--dads-global-menu-item-focus-outline-color` | - |  |
+| `--dads-global-menu-item-focus-outline-offset` | - |  |
+| `--dads-global-menu-item-focus-outline-width` | - |  |
+| `--dads-global-menu-item-focus-ring-color` | - |  |
+| `--dads-global-menu-item-focus-ring-width` | - |  |
+| `--dads-global-menu-item-gap` | - |  |
+| `--dads-global-menu-item-hover-bg` | - |  |
+| `--dads-global-menu-item-hover-border-color` | - |  |
+| `--dads-global-menu-item-hover-border-width` | - |  |
+| `--dads-global-menu-item-min-height` | - |  |
+| `--dads-global-menu-item-padding-x` | - |  |
+| `--dads-global-menu-item-padding-y` | - |  |
+| `--dads-global-menu-item-start-icon-size` | - |  |
+| `--dads-global-menu-item-text-decoration-thickness` | - |  |
+| `--dads-global-menu-item-underline-offset` | - |  |
+| `--dads-global-menu-letter-spacing` | - |  |
+| `--dads-global-menu-line-height` | - |  |
+
+
 #### Usage
 
 ```html
@@ -1715,6 +2152,43 @@ None
 | `label` | ラベル領域 |
 | `start-icon` | 先頭アイコン領域 |
 | `trigger` | 項目本体（ボタン/リンク） |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-global-menu-border-color` | - |  |
+| `--dads-global-menu-color` | - |  |
+| `--dads-global-menu-font-family` | - |  |
+| `--dads-global-menu-font-size` | - |  |
+| `--dads-global-menu-font-weight` | - |  |
+| `--dads-global-menu-item-chevron-margin-top` | - |  |
+| `--dads-global-menu-item-chevron-size` | - |  |
+| `--dads-global-menu-item-current-bg` | - |  |
+| `--dads-global-menu-item-current-border-color` | - |  |
+| `--dads-global-menu-item-current-border-width` | - |  |
+| `--dads-global-menu-item-current-color` | - |  |
+| `--dads-global-menu-item-current-color-hover` | - |  |
+| `--dads-global-menu-item-focus-background` | - |  |
+| `--dads-global-menu-item-focus-border-radius` | - |  |
+| `--dads-global-menu-item-focus-outline-color` | - |  |
+| `--dads-global-menu-item-focus-outline-offset` | - |  |
+| `--dads-global-menu-item-focus-outline-width` | - |  |
+| `--dads-global-menu-item-focus-ring-color` | - |  |
+| `--dads-global-menu-item-focus-ring-width` | - |  |
+| `--dads-global-menu-item-gap` | - |  |
+| `--dads-global-menu-item-hover-bg` | - |  |
+| `--dads-global-menu-item-hover-border-color` | - |  |
+| `--dads-global-menu-item-hover-border-width` | - |  |
+| `--dads-global-menu-item-min-height` | - |  |
+| `--dads-global-menu-item-padding-x` | - |  |
+| `--dads-global-menu-item-padding-y` | - |  |
+| `--dads-global-menu-item-start-icon-size` | - |  |
+| `--dads-global-menu-item-text-decoration-thickness` | - |  |
+| `--dads-global-menu-item-underline-offset` | - |  |
+| `--dads-global-menu-letter-spacing` | - |  |
+| `--dads-global-menu-line-height` | - |  |
 
 
 #### Usage
@@ -1769,9 +2243,23 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-hamburger-menu-button-icon-size` | - | アイコンサイズ |
-| `--dads-hamburger-menu-button-min-height` | - | 最小高さ |
+| `--dads-hamburger-menu-button-background` | - |  |
+| `--dads-hamburger-menu-button-background-active` | - |  |
 | `--dads-hamburger-menu-button-background-hover` | - | hover背景色 |
+| `--dads-hamburger-menu-button-color` | - |  |
+| `--dads-hamburger-menu-button-gap` | - |  |
+| `--dads-hamburger-menu-button-icon-only-hover-outline-color` | - |  |
+| `--dads-hamburger-menu-button-icon-only-hover-outline-width` | - |  |
+| `--dads-hamburger-menu-button-icon-only-radius` | - |  |
+| `--dads-hamburger-menu-button-icon-only-size` | - |  |
+| `--dads-hamburger-menu-button-icon-size` | - | アイコンサイズ |
+| `--dads-hamburger-menu-button-label-line-height` | - |  |
+| `--dads-hamburger-menu-button-label-size` | - |  |
+| `--dads-hamburger-menu-button-min-height` | - | 最小高さ |
+| `--dads-hamburger-menu-button-padding-block` | - |  |
+| `--dads-hamburger-menu-button-padding-inline` | - |  |
+| `--dads-hamburger-menu-button-radius` | - |  |
+| `--dads-hamburger-menu-button-underline-offset` | - |  |
 
 
 #### Usage
@@ -1828,10 +2316,17 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-header-container-inline-padding` | - | インライン余白 |
-| `--dads-header-container-primary-min-block-size` | - | 1段目の最小高さ |
-| `--dads-header-container-global-menu-min-block-size` | - | メニュー段の最小高さ |
+| `--dads-header-container-background` | - |  |
 | `--dads-header-container-border-color` | - | 境界線色 |
+| `--dads-header-container-border-width` | - |  |
+| `--dads-header-container-color` | - |  |
+| `--dads-header-container-global-menu-min-block-size` | - | メニュー段の最小高さ |
+| `--dads-header-container-global-menu-padding-block` | - |  |
+| `--dads-header-container-inline-padding` | - | インライン余白 |
+| `--dads-header-container-primary-gap` | - |  |
+| `--dads-header-container-primary-min-block-size` | - | 1段目の最小高さ |
+| `--dads-header-container-primary-padding-block` | - |  |
+| `--dads-header-container-wide-slim-gap` | - |  |
 
 
 #### Usage
@@ -1891,23 +2386,29 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-heading-color` | - | 文字色 |
-| `--dads-heading-font-size` | - | 見出しフォントサイズ |
-| `--dads-heading-line-height` | - | 行高 |
-| `--dads-heading-letter-spacing` | - | 文字間隔 |
-| `--dads-heading-shoulder-font-size` | - | ショルダーのフォントサイズ |
-| `--dads-heading-icon-size` | - | アイコンサイズ |
-| `--dads-heading-icon-gap` | - | アイコンと本文の間隔 |
-| `--dads-heading-icon-vertical-align` | - | アイコンのベースライン補正（vertical-align） |
-| `--dads-heading-margin-block-start-base` | - | 上マージンのベース値 |
-| `--dads-heading-margin-scale` | - | 上マージンの倍率（例: compact連動） |
-| `--dads-heading-margin-block-start` | - | 上マージン |
+| `--dads-heading-chip-bottom` | - | チップの下位置 |
 | `--dads-heading-chip-color` | - | チップ色 |
-| `--dads-heading-chip-width` | - | チップの幅 |
 | `--dads-heading-chip-padding-inline` | - | チップのインライン余白 |
 | `--dads-heading-chip-top` | - | チップの上位置 |
-| `--dads-heading-chip-bottom` | - | チップの下位置 |
+| `--dads-heading-chip-width` | - | チップの幅 |
+| `--dads-heading-color` | - | 文字色 |
+| `--dads-heading-font-family` | - |  |
+| `--dads-heading-font-size` | - | 見出しフォントサイズ |
+| `--dads-heading-font-weight` | - |  |
+| `--dads-heading-icon-gap` | - | アイコンと本文の間隔 |
+| `--dads-heading-icon-size` | - | アイコンサイズ |
+| `--dads-heading-icon-vertical-align` | - | アイコンのベースライン補正（vertical-align） |
+| `--dads-heading-letter-spacing` | - | 文字間隔 |
+| `--dads-heading-line-height` | - | 行高 |
+| `--dads-heading-margin-block-start` | - | 上マージン |
+| `--dads-heading-margin-block-start-base` | - | 上マージンのベース値 |
+| `--dads-heading-margin-scale` | - | 上マージンの倍率（例: compact連動） |
 | `--dads-heading-rule-color` | - | ルール色 |
+| `--dads-heading-rule-padding` | - |  |
+| `--dads-heading-rule-width` | - |  |
+| `--dads-heading-shoulder-font-size` | - | ショルダーのフォントサイズ |
+| `--dads-heading-shoulder-letter-spacing` | - |  |
+| `--dads-heading-shoulder-line-height` | - |  |
 
 
 #### Usage
@@ -2027,6 +2528,28 @@ None
 | `wrapper` | 全体を囲むコンテナ |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-input-background` | - | 入力フィールドの背景色 |
+| `--dads-input-border-color` | - | 枠線色 |
+| `--dads-input-border-radius` | - | 角丸のサイズ |
+| `--dads-input-border-width` | - | 枠線の太さ |
+| `--dads-input-color` | - | 入力テキスト色 |
+| `--dads-input-error-color` | - | エラーメッセージの色 |
+| `--dads-input-font-size` | - | 入力テキストのフォントサイズ |
+| `--dads-input-height` | - | 入力フィールドの高さ |
+| `--dads-input-label-color` | - | ラベルの色 |
+| `--dads-input-label-size` | - | ラベルのフォントサイズ |
+| `--dads-input-label-weight` | - | ラベルのフォントウェイト |
+| `--dads-input-padding` | - | 入力フィールドの内側余白 |
+| `--dads-input-placeholder-color` | - | プレースホルダーテキスト色 |
+| `--dads-input-requirement-color` | - | 必須/任意ラベルの色 |
+| `--dads-input-support-color` | - | サポートテキストの色 |
+| `--dads-input-width` | - | 入力フィールドの幅 |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -2095,6 +2618,13 @@ None
 | `opener-icon` | opener 先頭アイコン領域 |
 | `opener-label` | opener ラベル領域 |
 | `popup` | ポップアップ領域 |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-language-selector-check-color` | - |  |
 
 
 #### Events
@@ -2317,15 +2847,23 @@ None
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
 | `--dads-list-indent` | - | インデント（depthに応じて設定） |
+| `--dads-list-item-display` | - |  |
 | `--dads-list-item-gap` | - | アイテム間隔（spacingに応じて設定） |
-| `--dads-list-marker-width` | - | マーカー列の幅（marker-widthで上書き可能） |
-| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-item-position` | - |  |
 | `--dads-list-marker-color` | - | マーカー色 |
-| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
 | `--dads-list-marker-content` | - | リストマーク（markerタイプ用、装飾用途） |
 | `--dads-list-marker-content-1` | - | マーカー種別1（depth1） |
 | `--dads-list-marker-content-2` | - | マーカー種別2（depth2-4） |
 | `--dads-list-marker-content-3` | - | マーカー種別3（depth5+） |
+| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-marker-inset-block-start` | - |  |
+| `--dads-list-marker-inset-inline-start` | - |  |
+| `--dads-list-marker-line-height` | - |  |
+| `--dads-list-marker-position` | - |  |
+| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
+| `--dads-list-marker-slot-display` | - |  |
+| `--dads-list-marker-text-align` | - |  |
+| `--dads-list-marker-width` | - | マーカー列の幅（marker-widthで上書き可能） |
 
 
 #### Usage
@@ -2374,11 +2912,24 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-list-marker-width` | - | マーカー列の幅 |
-| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-indent` | - |  |
+| `--dads-list-item-display` | - |  |
+| `--dads-list-item-gap` | - |  |
+| `--dads-list-item-position` | - |  |
 | `--dads-list-marker-color` | - | マーカー色 |
-| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
 | `--dads-list-marker-content` | - | リストマーク（markerタイプ用、装飾用途） |
+| `--dads-list-marker-content-1` | - |  |
+| `--dads-list-marker-content-2` | - |  |
+| `--dads-list-marker-content-3` | - |  |
+| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-marker-inset-block-start` | - |  |
+| `--dads-list-marker-inset-inline-start` | - |  |
+| `--dads-list-marker-line-height` | - |  |
+| `--dads-list-marker-position` | - |  |
+| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
+| `--dads-list-marker-slot-display` | - |  |
+| `--dads-list-marker-text-align` | - |  |
+| `--dads-list-marker-width` | - | マーカー列の幅 |
 
 
 #### Usage
@@ -2433,6 +2984,57 @@ None
 | `popup` | ポップアップ領域 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-menu-list-box-color` | - |  |
+| `--dads-menu-list-box-divider-color` | - |  |
+| `--dads-menu-list-box-divider-margin-block` | - |  |
+| `--dads-menu-list-box-divider-margin-inline` | - |  |
+| `--dads-menu-list-box-font-family` | - |  |
+| `--dads-menu-list-box-font-size` | - |  |
+| `--dads-menu-list-box-letter-spacing` | - |  |
+| `--dads-menu-list-box-line-height` | - |  |
+| `--dads-menu-list-box-min-width` | - |  |
+| `--dads-menu-list-box-opener-arrow-margin-left` | - |  |
+| `--dads-menu-list-box-opener-arrow-margin-top` | - |  |
+| `--dads-menu-list-box-opener-arrow-size` | - |  |
+| `--dads-menu-list-box-opener-background` | - |  |
+| `--dads-menu-list-box-opener-border-color` | - |  |
+| `--dads-menu-list-box-opener-border-radius` | - |  |
+| `--dads-menu-list-box-opener-border-width` | - |  |
+| `--dads-menu-list-box-opener-focus-background` | - |  |
+| `--dads-menu-list-box-opener-focus-outline-color` | - |  |
+| `--dads-menu-list-box-opener-focus-outline-offset` | - |  |
+| `--dads-menu-list-box-opener-focus-outline-width` | - |  |
+| `--dads-menu-list-box-opener-focus-ring-color` | - |  |
+| `--dads-menu-list-box-opener-focus-ring-width` | - |  |
+| `--dads-menu-list-box-opener-font-weight` | - |  |
+| `--dads-menu-list-box-opener-gap` | - |  |
+| `--dads-menu-list-box-opener-hover-background` | - |  |
+| `--dads-menu-list-box-opener-hover-border-color` | - |  |
+| `--dads-menu-list-box-opener-icon-size` | - |  |
+| `--dads-menu-list-box-opener-min-height` | - |  |
+| `--dads-menu-list-box-opener-padding-x` | - |  |
+| `--dads-menu-list-box-opener-padding-y` | - |  |
+| `--dads-menu-list-box-opener-underline-offset` | - |  |
+| `--dads-menu-list-box-popup-background` | - |  |
+| `--dads-menu-list-box-popup-border-color` | - |  |
+| `--dads-menu-list-box-popup-border-color-scroll` | - |  |
+| `--dads-menu-list-box-popup-border-radius` | - |  |
+| `--dads-menu-list-box-popup-item-divider` | - |  |
+| `--dads-menu-list-box-popup-item-divider-scroll` | - |  |
+| `--dads-menu-list-box-popup-max-height` | - |  |
+| `--dads-menu-list-box-popup-min-width` | - |  |
+| `--dads-menu-list-box-popup-min-width-scroll` | - |  |
+| `--dads-menu-list-box-popup-padding-x` | - |  |
+| `--dads-menu-list-box-popup-padding-y` | - |  |
+| `--dads-menu-list-box-popup-scrollbar-padding-right` | - |  |
+| `--dads-menu-list-box-popup-shadow` | - |  |
+| `--dads-menu-list-box-popup-z-index` | - |  |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -2483,6 +3085,45 @@ None
 | Part | Description |
 |------|-------------|
 | `base` | role="list" のルート |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-menu-list-color` | - |  |
+| `--dads-menu-list-font-family` | - |  |
+| `--dads-menu-list-font-size` | - |  |
+| `--dads-menu-list-indentation` | - |  |
+| `--dads-menu-list-item-background` | - |  |
+| `--dads-menu-list-item-border-radius` | - |  |
+| `--dads-menu-list-item-color` | - |  |
+| `--dads-menu-list-item-current-background` | - |  |
+| `--dads-menu-list-item-current-color` | - |  |
+| `--dads-menu-list-item-current-hover-background` | - |  |
+| `--dads-menu-list-item-current-hover-color` | - |  |
+| `--dads-menu-list-item-current-parent-background` | - |  |
+| `--dads-menu-list-item-end-icon-margin-right` | - |  |
+| `--dads-menu-list-item-end-icon-margin-top` | - |  |
+| `--dads-menu-list-item-focus-box-inset-width` | - |  |
+| `--dads-menu-list-item-focus-outline-color` | - |  |
+| `--dads-menu-list-item-focus-outline-offset-box` | - |  |
+| `--dads-menu-list-item-focus-outline-offset-standard` | - |  |
+| `--dads-menu-list-item-focus-outline-width` | - |  |
+| `--dads-menu-list-item-focus-ring-color` | - |  |
+| `--dads-menu-list-item-focus-ring-width` | - |  |
+| `--dads-menu-list-item-font-weight` | - |  |
+| `--dads-menu-list-item-gap` | - |  |
+| `--dads-menu-list-item-hover-background` | - |  |
+| `--dads-menu-list-item-line-height` | - |  |
+| `--dads-menu-list-item-min-height` | - |  |
+| `--dads-menu-list-item-padding-x` | - |  |
+| `--dads-menu-list-item-padding-y` | - |  |
+| `--dads-menu-list-item-start-icon-display-empty` | - |  |
+| `--dads-menu-list-item-start-icon-size` | - |  |
+| `--dads-menu-list-item-text-decoration-thickness` | - |  |
+| `--dads-menu-list-item-underline-offset` | - |  |
+| `--dads-menu-list-letter-spacing` | - |  |
 
 
 #### Usage
@@ -2540,6 +3181,45 @@ None
 | `tail-icon` | ラベル末尾アイコン領域 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-menu-list-color` | - |  |
+| `--dads-menu-list-font-family` | - |  |
+| `--dads-menu-list-font-size` | - |  |
+| `--dads-menu-list-indentation` | - |  |
+| `--dads-menu-list-item-background` | - |  |
+| `--dads-menu-list-item-border-radius` | - |  |
+| `--dads-menu-list-item-color` | - |  |
+| `--dads-menu-list-item-current-background` | - |  |
+| `--dads-menu-list-item-current-color` | - |  |
+| `--dads-menu-list-item-current-hover-background` | - |  |
+| `--dads-menu-list-item-current-hover-color` | - |  |
+| `--dads-menu-list-item-current-parent-background` | - |  |
+| `--dads-menu-list-item-end-icon-margin-right` | - |  |
+| `--dads-menu-list-item-end-icon-margin-top` | - |  |
+| `--dads-menu-list-item-focus-box-inset-width` | - |  |
+| `--dads-menu-list-item-focus-outline-color` | - |  |
+| `--dads-menu-list-item-focus-outline-offset-box` | - |  |
+| `--dads-menu-list-item-focus-outline-offset-standard` | - |  |
+| `--dads-menu-list-item-focus-outline-width` | - |  |
+| `--dads-menu-list-item-focus-ring-color` | - |  |
+| `--dads-menu-list-item-focus-ring-width` | - |  |
+| `--dads-menu-list-item-font-weight` | - |  |
+| `--dads-menu-list-item-gap` | - |  |
+| `--dads-menu-list-item-hover-background` | - |  |
+| `--dads-menu-list-item-line-height` | - |  |
+| `--dads-menu-list-item-min-height` | - |  |
+| `--dads-menu-list-item-padding-x` | - |  |
+| `--dads-menu-list-item-padding-y` | - |  |
+| `--dads-menu-list-item-start-icon-display-empty` | - |  |
+| `--dads-menu-list-item-start-icon-size` | - |  |
+| `--dads-menu-list-item-text-decoration-thickness` | - |  |
+| `--dads-menu-list-item-underline-offset` | - |  |
+| `--dads-menu-list-letter-spacing` | - |  |
+
+
 #### Usage
 
 ```html
@@ -2594,17 +3274,23 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-mobile-menu-width` | - | メニュー幅 |
+| `--dads-mobile-menu-back-padding-block-end` | - | 戻る行下余白 |
+| `--dads-mobile-menu-back-padding-block-start` | - | 戻る行上余白 |
+| `--dads-mobile-menu-back-padding-inline` | - | 戻る行左右余白 |
 | `--dads-mobile-menu-background` | - | 背景色 |
-| `--dads-mobile-menu-padding-block` | - | ルート上下余白 |
-| `--dads-mobile-menu-padding-inline` | - | ルート左右余白 |
 | `--dads-mobile-menu-border-color` | - | 枠線色 |
 | `--dads-mobile-menu-border-width` | - | 枠線幅 |
+| `--dads-mobile-menu-color` | - |  |
+| `--dads-mobile-menu-content-gap` | - |  |
 | `--dads-mobile-menu-divider-margin-inline` | - | 区切り線の左右余白（標準） |
 | `--dads-mobile-menu-divider-margin-inline-wide` | - | 区切り線の左右余白（ワイド） |
-| `--dads-mobile-menu-back-padding-inline` | - | 戻る行左右余白 |
-| `--dads-mobile-menu-back-padding-block-start` | - | 戻る行上余白 |
-| `--dads-mobile-menu-back-padding-block-end` | - | 戻る行下余白 |
+| `--dads-mobile-menu-font-family` | - |  |
+| `--dads-mobile-menu-font-size` | - |  |
+| `--dads-mobile-menu-letter-spacing` | - |  |
+| `--dads-mobile-menu-line-height` | - |  |
+| `--dads-mobile-menu-padding-block` | - | ルート上下余白 |
+| `--dads-mobile-menu-padding-inline` | - | ルート左右余白 |
+| `--dads-mobile-menu-width` | - | メニュー幅 |
 
 
 #### Events
@@ -2684,15 +3370,69 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-notification-banner-background` | - | 背景色 |
-| `--dads-notification-banner-color` | - | 本文文字色 |
-| `--dads-notification-banner-title-color` | - | タイトル文字色 |
-| `--dads-notification-banner-border-color` | - | 外枠色 |
-| `--dads-notification-banner-border-width` | - | 外枠線幅 |
-| `--dads-notification-banner-border-radius` | - | 角丸 |
-| `--dads-notification-banner-chip-color` | - | color-chip左帯色 |
-| `--dads-notification-banner-icon-color` | - | アイコン色 |
 | `--dads-notification-banner-action-color` | - | アクション色 |
+| `--dads-notification-banner-action-color-active` | - |  |
+| `--dads-notification-banner-action-color-hover` | - |  |
+| `--dads-notification-banner-action-gap` | - |  |
+| `--dads-notification-banner-action-outline-active-bg` | - |  |
+| `--dads-notification-banner-action-outline-hover-bg` | - |  |
+| `--dads-notification-banner-action-text-color` | - |  |
+| `--dads-notification-banner-actions-padding-inline-end` | - |  |
+| `--dads-notification-banner-background` | - | 背景色 |
+| `--dads-notification-banner-body-gap` | - |  |
+| `--dads-notification-banner-body-margin-top` | - |  |
+| `--dads-notification-banner-body-padding-block-end` | - |  |
+| `--dads-notification-banner-body-padding-inline-end` | - |  |
+| `--dads-notification-banner-border-color` | - | 外枠色 |
+| `--dads-notification-banner-border-radius` | - | 角丸 |
+| `--dads-notification-banner-border-width` | - | 外枠線幅 |
+| `--dads-notification-banner-chip-color` | - | color-chip左帯色 |
+| `--dads-notification-banner-close-color` | - |  |
+| `--dads-notification-banner-close-compact-size` | - |  |
+| `--dads-notification-banner-close-hover-bg` | - |  |
+| `--dads-notification-banner-close-icon-size` | - |  |
+| `--dads-notification-banner-color` | - | 本文文字色 |
+| `--dads-notification-banner-color-chip-border-width` | - |  |
+| `--dads-notification-banner-color-chip-inset-width` | - |  |
+| `--dads-notification-banner-color-chip-padding-inline-start` | - |  |
+| `--dads-notification-banner-color-chip-radius` | - |  |
+| `--dads-notification-banner-dense-action-gap` | - |  |
+| `--dads-notification-banner-dense-body-gap` | - |  |
+| `--dads-notification-banner-dense-body-margin-top` | - |  |
+| `--dads-notification-banner-dense-color-chip-inset-width` | - |  |
+| `--dads-notification-banner-dense-color-chip-padding-inline-start` | - |  |
+| `--dads-notification-banner-dense-gap` | - |  |
+| `--dads-notification-banner-dense-icon-padding-top` | - |  |
+| `--dads-notification-banner-dense-icon-size` | - |  |
+| `--dads-notification-banner-dense-padding-block-end` | - |  |
+| `--dads-notification-banner-dense-padding-block-start` | - |  |
+| `--dads-notification-banner-dense-padding-inline-end` | - |  |
+| `--dads-notification-banner-dense-padding-inline-start` | - |  |
+| `--dads-notification-banner-gap` | - |  |
+| `--dads-notification-banner-icon-color` | - | アイコン色 |
+| `--dads-notification-banner-icon-padding-top` | - |  |
+| `--dads-notification-banner-icon-size` | - |  |
+| `--dads-notification-banner-padding-block-end` | - |  |
+| `--dads-notification-banner-padding-block-start` | - |  |
+| `--dads-notification-banner-padding-inline-end` | - |  |
+| `--dads-notification-banner-padding-inline-start` | - |  |
+| `--dads-notification-banner-restore-button-active-bg` | - |  |
+| `--dads-notification-banner-restore-button-background` | - |  |
+| `--dads-notification-banner-restore-button-color` | - |  |
+| `--dads-notification-banner-restore-button-color-active` | - |  |
+| `--dads-notification-banner-restore-button-color-hover` | - |  |
+| `--dads-notification-banner-restore-button-hover-bg` | - |  |
+| `--dads-notification-banner-restore-button-padding-block` | - |  |
+| `--dads-notification-banner-restore-button-padding-inline` | - |  |
+| `--dads-notification-banner-restore-button-radius` | - |  |
+| `--dads-notification-banner-restore-gap` | - |  |
+| `--dads-notification-banner-restore-text-color` | - |  |
+| `--dads-notification-banner-restore-text-size` | - |  |
+| `--dads-notification-banner-title-color` | - | タイトル文字色 |
+| `--dads-notification-banner-title-font-size` | - |  |
+| `--dads-notification-banner-title-font-weight` | - |  |
+| `--dads-notification-banner-title-letter-spacing` | - |  |
+| `--dads-notification-banner-title-line-height` | - |  |
 
 
 #### Events
@@ -2770,6 +3510,42 @@ None
 | `status` | ステータス表示 |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-page-navigation-control-background` | - |  |
+| `--dads-page-navigation-control-background-active` | - |  |
+| `--dads-page-navigation-control-background-hover` | - |  |
+| `--dads-page-navigation-control-border-color` | - |  |
+| `--dads-page-navigation-control-border-color-hover` | - |  |
+| `--dads-page-navigation-control-border-radius` | - |  |
+| `--dads-page-navigation-control-border-width` | - |  |
+| `--dads-page-navigation-control-color` | - |  |
+| `--dads-page-navigation-control-color-hover` | - |  |
+| `--dads-page-navigation-control-gap` | - |  |
+| `--dads-page-navigation-control-min-height` | - |  |
+| `--dads-page-navigation-control-min-width` | - |  |
+| `--dads-page-navigation-control-padding-x` | - |  |
+| `--dads-page-navigation-control-padding-y` | - |  |
+| `--dads-page-navigation-control-size` | - |  |
+| `--dads-page-navigation-control-text-decoration` | - |  |
+| `--dads-page-navigation-font-family` | - |  |
+| `--dads-page-navigation-font-size` | - |  |
+| `--dads-page-navigation-font-weight` | - |  |
+| `--dads-page-navigation-gap` | - |  |
+| `--dads-page-navigation-icon-size` | - |  |
+| `--dads-page-navigation-justify-content` | - |  |
+| `--dads-page-navigation-letter-spacing` | - |  |
+| `--dads-page-navigation-line-height` | - |  |
+| `--dads-page-navigation-status-color` | - |  |
+| `--dads-page-navigation-status-font-size` | - |  |
+| `--dads-page-navigation-status-font-weight` | - |  |
+| `--dads-page-navigation-status-letter-spacing` | - |  |
+| `--dads-page-navigation-status-line-height` | - |  |
+| `--dads-page-navigation-width` | - |  |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -2837,6 +3613,54 @@ None
 | `label` | ラベルテキスト |
 | `radio` | ラジオ枠（背景ホバー含む） |
 | `requirement` | 要否ラベル（※必須） |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-radio-base-padding-block` | - |  |
+| `--dads-radio-border-width` | - |  |
+| `--dads-radio-error-text-color` | - |  |
+| `--dads-radio-error-text-font-size` | - |  |
+| `--dads-radio-error-text-line-height` | - |  |
+| `--dads-radio-error-text-margin-block-start` | - |  |
+| `--dads-radio-focus-outline-color` | - |  |
+| `--dads-radio-focus-outline-offset` | - |  |
+| `--dads-radio-focus-outline-width` | - |  |
+| `--dads-radio-focus-ring-color` | - |  |
+| `--dads-radio-focus-ring-width` | - |  |
+| `--dads-radio-font-family` | - |  |
+| `--dads-radio-font-weight` | - |  |
+| `--dads-radio-force-border-color` | - |  |
+| `--dads-radio-force-dot-color` | - |  |
+| `--dads-radio-force-hover-bg` | - |  |
+| `--dads-radio-gap` | - |  |
+| `--dads-radio-hover-bg` | - |  |
+| `--dads-radio-hover-bg-hover` | - |  |
+| `--dads-radio-inner-size` | - |  |
+| `--dads-radio-input-accent-color` | - |  |
+| `--dads-radio-input-accent-hover-color` | - |  |
+| `--dads-radio-input-base-color` | - |  |
+| `--dads-radio-input-border-color` | - |  |
+| `--dads-radio-input-border-hover-color` | - |  |
+| `--dads-radio-input-disabled-accent-color` | - |  |
+| `--dads-radio-input-disabled-accent-hover-color` | - |  |
+| `--dads-radio-input-disabled-base-color` | - |  |
+| `--dads-radio-input-disabled-border-color` | - |  |
+| `--dads-radio-input-disabled-border-hover-color` | - |  |
+| `--dads-radio-input-error-accent-color` | - |  |
+| `--dads-radio-input-error-accent-hover-color` | - |  |
+| `--dads-radio-input-error-border-color` | - |  |
+| `--dads-radio-input-error-border-hover-color` | - |  |
+| `--dads-radio-label-color` | - |  |
+| `--dads-radio-label-font-size` | - |  |
+| `--dads-radio-label-line-height` | - |  |
+| `--dads-radio-label-padding-top` | - |  |
+| `--dads-radio-outer-size` | - |  |
+| `--dads-radio-requirement-color` | - |  |
+| `--dads-radio-requirement-margin` | - |  |
+| `--dads-radio-target-size` | - |  |
 
 
 #### Usage
@@ -2908,20 +3732,44 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
+| `--dads-resource-list-action-width` | - | action 幅 |
 | `--dads-resource-list-background` | - | 背景色 |
-| `--dads-resource-list-background-selected` | - | 選択時背景色 |
 | `--dads-resource-list-background-disabled` | - | 無効時背景色 |
+| `--dads-resource-list-background-selected` | - | 選択時背景色 |
+| `--dads-resource-list-border-color` | - | 罫線色 |
+| `--dads-resource-list-border-color-disabled` | - | 無効時罫線色 |
+| `--dads-resource-list-border-color-selected` | - | 選択時罫線色 |
+| `--dads-resource-list-border-radius` | - |  |
 | `--dads-resource-list-color` | - | 文字色 |
 | `--dads-resource-list-color-disabled` | - | 無効時文字色 |
-| `--dads-resource-list-border-color` | - | 罫線色 |
-| `--dads-resource-list-border-color-selected` | - | 選択時罫線色 |
-| `--dads-resource-list-border-color-disabled` | - | 無効時罫線色 |
-| `--dads-resource-list-padding-block` | - | 上下余白 |
-| `--dads-resource-list-padding-inline` | - | 左右余白 |
-| `--dads-resource-list-gap` | - | body 内要素間隔 |
 | `--dads-resource-list-content-gap` | - | contents 内行間 |
 | `--dads-resource-list-control-hit-area` | - | control 領域の最小ヒットサイズ |
-| `--dads-resource-list-action-width` | - | action 幅 |
+| `--dads-resource-list-focus-outline-color` | - |  |
+| `--dads-resource-list-focus-outline-offset` | - |  |
+| `--dads-resource-list-focus-outline-width` | - |  |
+| `--dads-resource-list-focus-ring-color` | - |  |
+| `--dads-resource-list-focus-ring-width` | - |  |
+| `--dads-resource-list-font-family` | - |  |
+| `--dads-resource-list-font-size` | - |  |
+| `--dads-resource-list-gap` | - | body 内要素間隔 |
+| `--dads-resource-list-hover-background` | - |  |
+| `--dads-resource-list-hover-outline-width` | - |  |
+| `--dads-resource-list-letter-spacing` | - |  |
+| `--dads-resource-list-line-height` | - |  |
+| `--dads-resource-list-padding-block` | - | 上下余白 |
+| `--dads-resource-list-padding-inline` | - | 左右余白 |
+| `--dads-resource-list-title-color` | - |  |
+| `--dads-resource-list-title-font-size` | - |  |
+| `--dads-resource-list-title-font-weight` | - |  |
+| `--dads-resource-list-title-letter-spacing` | - |  |
+| `--dads-resource-list-title-line-height` | - |  |
+| `--dads-resource-list-title-link-color` | - |  |
+| `--dads-resource-list-title-link-color-active` | - |  |
+| `--dads-resource-list-title-link-color-hover` | - |  |
+| `--dads-resource-list-title-underline-offset` | - |  |
+| `--dads-resource-list-title-underline-thickness` | - |  |
+| `--dads-resource-list-title-underline-thickness-hover` | - |  |
+| `--dads-resource-list-whole-focus-outline-width` | - |  |
 
 
 #### Usage
@@ -3092,6 +3940,31 @@ None
 | `wrapper` | 全体を囲むコンテナ |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-select-background` | - |  |
+| `--dads-select-border-color` | - |  |
+| `--dads-select-border-radius` | - |  |
+| `--dads-select-border-width` | - |  |
+| `--dads-select-chevron-color` | - |  |
+| `--dads-select-color` | - |  |
+| `--dads-select-error-color` | - |  |
+| `--dads-select-font-size` | - |  |
+| `--dads-select-height` | - |  |
+| `--dads-select-label-color` | - |  |
+| `--dads-select-label-size` | - |  |
+| `--dads-select-label-weight` | - |  |
+| `--dads-select-letter-spacing` | - |  |
+| `--dads-select-padding-left` | - |  |
+| `--dads-select-padding-right` | - |  |
+| `--dads-select-padding-y` | - |  |
+| `--dads-select-requirement-color` | - |  |
+| `--dads-select-support-color` | - |  |
+| `--dads-select-width` | - |  |
+
+
 #### Events
 
 | Event | Type | Description |
@@ -3153,6 +4026,28 @@ None
 | `status` | 進捗文言のラッパー |
 
 
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-step-navigation-color` | - |  |
+| `--dads-step-navigation-completed-icon-check` | - |  |
+| `--dads-step-navigation-completed-icon-circle` | - |  |
+| `--dads-step-navigation-completed-number-bg` | - |  |
+| `--dads-step-navigation-connector-color` | - |  |
+| `--dads-step-navigation-editing-icon-color` | - |  |
+| `--dads-step-navigation-error-color` | - |  |
+| `--dads-step-navigation-error-icon-color` | - |  |
+| `--dads-step-navigation-focus-outline-color` | - |  |
+| `--dads-step-navigation-focus-ring-color` | - |  |
+| `--dads-step-navigation-number-bg` | - |  |
+| `--dads-step-navigation-reached-number-bg` | - |  |
+| `--dads-step-navigation-reached-number-color` | - |  |
+| `--dads-step-navigation-state-badge-bg` | - |  |
+| `--dads-step-navigation-step-min-width` | - |  |
+| `--dads-step-navigation-step-width` | - |  |
+
+
 #### Usage
 
 ```html
@@ -3210,6 +4105,28 @@ None
 | `state-label` | 状態ラベル（editing/error） |
 | `step` | ステップ要素（コネクタ線含む） |
 | `title` | タイトル |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-step-navigation-color` | - |  |
+| `--dads-step-navigation-completed-icon-check` | - |  |
+| `--dads-step-navigation-completed-icon-circle` | - |  |
+| `--dads-step-navigation-completed-number-bg` | - |  |
+| `--dads-step-navigation-connector-color` | - |  |
+| `--dads-step-navigation-editing-icon-color` | - |  |
+| `--dads-step-navigation-error-color` | - |  |
+| `--dads-step-navigation-error-icon-color` | - |  |
+| `--dads-step-navigation-focus-outline-color` | - |  |
+| `--dads-step-navigation-focus-ring-color` | - |  |
+| `--dads-step-navigation-number-bg` | - |  |
+| `--dads-step-navigation-reached-number-bg` | - |  |
+| `--dads-step-navigation-reached-number-color` | - |  |
+| `--dads-step-navigation-state-badge-bg` | - |  |
+| `--dads-step-navigation-step-min-width` | - |  |
+| `--dads-step-navigation-step-width` | - |  |
 
 
 #### Events
@@ -3270,6 +4187,18 @@ None
 | `switch` | スイッチのlabel要素 |
 | `track` | スイッチのトラック（背景） |
 | `wrapper` | 全体を囲むコンテナ |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-switch-knob-bg` | - |  |
+| `--dads-switch-knob-size` | - |  |
+| `--dads-switch-label-color` | - |  |
+| `--dads-switch-track-bg` | - |  |
+| `--dads-switch-track-height` | - |  |
+| `--dads-switch-track-width` | - |  |
 
 
 #### Events
@@ -3350,11 +4279,27 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-table-control-gap` | - | Primary spacing between blocks |
 | `--dads-table-control-count-color` | - | Result count text color |
 | `--dads-table-control-divider-color` | - | Divider color for action group |
+| `--dads-table-control-focus-outline-color` | - |  |
+| `--dads-table-control-focus-outline-offset` | - |  |
+| `--dads-table-control-focus-outline-width` | - |  |
+| `--dads-table-control-focus-ring-color` | - |  |
+| `--dads-table-control-focus-ring-width` | - |  |
+| `--dads-table-control-font-family` | - |  |
+| `--dads-table-control-font-size` | - |  |
+| `--dads-table-control-font-weight-bold` | - |  |
+| `--dads-table-control-font-weight-regular` | - |  |
+| `--dads-table-control-gap` | - | Primary spacing between blocks |
 | `--dads-table-control-items-gap` | - | Gap between page size options |
+| `--dads-table-control-letter-spacing` | - |  |
+| `--dads-table-control-link-color` | - |  |
+| `--dads-table-control-link-color-hover` | - |  |
+| `--dads-table-control-option-min-width` | - |  |
 | `--dads-table-control-popular-gap` | - | Gap between search and popular areas |
+| `--dads-table-control-reset-min-width` | - |  |
+| `--dads-table-control-search-max-width` | - |  |
+| `--dads-table-control-search-min-width` | - |  |
 
 
 #### Events
@@ -3410,6 +4355,51 @@ None
 #### CSS Parts
 
 None
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-table-block-gap` | - |  |
+| `--dads-table-body-background` | - |  |
+| `--dads-table-border-color` | - |  |
+| `--dads-table-border-color-strong` | - |  |
+| `--dads-table-cell-padding-x` | - |  |
+| `--dads-table-cell-padding-y` | - |  |
+| `--dads-table-checkbox-accent-color` | - |  |
+| `--dads-table-checkbox-accent-hover-color` | - |  |
+| `--dads-table-checkbox-border-color` | - |  |
+| `--dads-table-checkbox-border-hover-color` | - |  |
+| `--dads-table-checkbox-border-width` | - |  |
+| `--dads-table-checkbox-check-color` | - |  |
+| `--dads-table-checkbox-size` | - |  |
+| `--dads-table-control-border-radius` | - |  |
+| `--dads-table-control-focus-outline-color` | - |  |
+| `--dads-table-control-focus-outline-offset` | - |  |
+| `--dads-table-control-focus-outline-width` | - |  |
+| `--dads-table-control-focus-ring-color` | - |  |
+| `--dads-table-control-focus-ring-width` | - |  |
+| `--dads-table-font-family` | - |  |
+| `--dads-table-font-size` | - |  |
+| `--dads-table-font-weight` | - |  |
+| `--dads-table-header-background` | - |  |
+| `--dads-table-header-divider-color` | - |  |
+| `--dads-table-header-text-color` | - |  |
+| `--dads-table-letter-spacing` | - |  |
+| `--dads-table-line-height` | - |  |
+| `--dads-table-row-background` | - |  |
+| `--dads-table-row-background-hover` | - |  |
+| `--dads-table-row-background-selected` | - |  |
+| `--dads-table-row-background-selected-hover` | - |  |
+| `--dads-table-row-background-stripe` | - |  |
+| `--dads-table-scroll-shadow-color` | - |  |
+| `--dads-table-scroll-shadow-padding` | - |  |
+| `--dads-table-scroll-shadow-size` | - |  |
+| `--dads-table-selection-column-width` | - |  |
+| `--dads-table-sort-icon-gap` | - |  |
+| `--dads-table-sort-icon-size` | - |  |
+| `--dads-table-text-color` | - |  |
 
 
 #### Events
@@ -3484,6 +4474,29 @@ None
 | `textarea` | ネイティブtextarea要素 |
 | `textarea-wrapper` | テキストエリアを囲むコンテナ |
 | `wrapper` | 全体を囲むコンテナ |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-textarea-background` | - |  |
+| `--dads-textarea-border-color` | - |  |
+| `--dads-textarea-border-radius` | - |  |
+| `--dads-textarea-border-width` | - |  |
+| `--dads-textarea-color` | - |  |
+| `--dads-textarea-counter-color` | - |  |
+| `--dads-textarea-error-color` | - |  |
+| `--dads-textarea-font-size` | - |  |
+| `--dads-textarea-label-color` | - |  |
+| `--dads-textarea-label-size` | - |  |
+| `--dads-textarea-label-weight` | - |  |
+| `--dads-textarea-min-height` | - |  |
+| `--dads-textarea-padding` | - |  |
+| `--dads-textarea-placeholder-color` | - |  |
+| `--dads-textarea-requirement-color` | - |  |
+| `--dads-textarea-resize` | - |  |
+| `--dads-textarea-support-color` | - |  |
 
 
 #### Events
@@ -3599,16 +4612,28 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-utility-link-label-color` | - | ラベル色 |
-| `--dads-utility-link-label-color-hover` | - | ホバー時ラベル色 |
-| `--dads-utility-link-label-color-active` | - | アクティブ時ラベル色 |
+| `--dads-utility-link-focus-background` | - | フォーカス時背景色 |
+| `--dads-utility-link-focus-border-radius` | - |  |
+| `--dads-utility-link-focus-outline-color` | - | フォーカス時アウトライン色 |
+| `--dads-utility-link-focus-outline-offset` | - |  |
+| `--dads-utility-link-focus-outline-width` | - |  |
+| `--dads-utility-link-focus-ring-color` | - | フォーカス時リング色 |
+| `--dads-utility-link-focus-ring-width` | - |  |
+| `--dads-utility-link-font-family` | - |  |
+| `--dads-utility-link-font-size` | - |  |
+| `--dads-utility-link-font-weight` | - |  |
 | `--dads-utility-link-icon-color` | - | アイコン色 |
+| `--dads-utility-link-icon-size` | - |  |
+| `--dads-utility-link-icon-vertical-align` | - |  |
+| `--dads-utility-link-item-gap` | - |  |
+| `--dads-utility-link-label-color` | - | ラベル色 |
+| `--dads-utility-link-label-color-active` | - | アクティブ時ラベル色 |
+| `--dads-utility-link-label-color-hover` | - | ホバー時ラベル色 |
+| `--dads-utility-link-letter-spacing` | - |  |
+| `--dads-utility-link-line-height` | - |  |
+| `--dads-utility-link-underline-offset` | - | 下線オフセット |
 | `--dads-utility-link-underline-thickness` | - | 下線太さ |
 | `--dads-utility-link-underline-thickness-hover` | - | ホバー時下線太さ |
-| `--dads-utility-link-underline-offset` | - | 下線オフセット |
-| `--dads-utility-link-focus-outline-color` | - | フォーカス時アウトライン色 |
-| `--dads-utility-link-focus-ring-color` | - | フォーカス時リング色 |
-| `--dads-utility-link-focus-background` | - | フォーカス時背景色 |
 
 
 #### Usage

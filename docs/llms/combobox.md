@@ -95,6 +95,49 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component co
 | `wrapper` | 全体ラッパー |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-combobox-background` | - |  |
+| `--dads-combobox-border-color` | - |  |
+| `--dads-combobox-border-radius` | - |  |
+| `--dads-combobox-border-width` | - |  |
+| `--dads-combobox-chip-bg` | - |  |
+| `--dads-combobox-chip-border-color` | - |  |
+| `--dads-combobox-chip-color` | - |  |
+| `--dads-combobox-control-bottom` | - |  |
+| `--dads-combobox-control-height` | - |  |
+| `--dads-combobox-error-color` | - |  |
+| `--dads-combobox-font-size` | - |  |
+| `--dads-combobox-indicator-background` | - |  |
+| `--dads-combobox-indicator-border-color` | - |  |
+| `--dads-combobox-indicator-radius` | - |  |
+| `--dads-combobox-indicator-size` | - |  |
+| `--dads-combobox-label-color` | - |  |
+| `--dads-combobox-label-size` | - |  |
+| `--dads-combobox-label-weight` | - |  |
+| `--dads-combobox-list-max-height` | - |  |
+| `--dads-combobox-list-shadow` | - |  |
+| `--dads-combobox-list-z-index` | - |  |
+| `--dads-combobox-multi-check-radius` | - |  |
+| `--dads-combobox-multi-check-size` | - |  |
+| `--dads-combobox-option-active-bg` | - |  |
+| `--dads-combobox-option-divider-color` | - |  |
+| `--dads-combobox-option-hover-bg` | - |  |
+| `--dads-combobox-option-min-height` | - |  |
+| `--dads-combobox-option-padding-inline` | - |  |
+| `--dads-combobox-option-padding-y` | - |  |
+| `--dads-combobox-option-selected-bg` | - |  |
+| `--dads-combobox-option-selected-color` | - |  |
+| `--dads-combobox-padding-inline` | - |  |
+| `--dads-combobox-padding-y` | - |  |
+| `--dads-combobox-placeholder-color` | - |  |
+| `--dads-combobox-required-color` | - |  |
+| `--dads-combobox-support-color` | - |  |
+| `--dads-combobox-text-color` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

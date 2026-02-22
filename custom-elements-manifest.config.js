@@ -206,6 +206,140 @@ function applyComponentOverride(componentId, inferred) {
   return out;
 }
 
+/**
+ * Explicit prefix overrides for components whose CSS custom property naming
+ * doesn't follow the `--dads-{componentId}-*` convention.
+ *
+ * Key: componentId, Value: CSS custom property prefix to use.
+ * Add entries here instead of relying on automatic fallback detection.
+ */
+const CSS_PROPERTY_PREFIX_OVERRIDES = new Map([
+  // input-text uses --dads-input-* instead of --dads-input-text-*
+  ['input-text', '--dads-input-'],
+]);
+
+/**
+ * Extract `--dads-{component}-*` CSS custom properties from token/style files
+ * and inject them into `decl.cssProperties`.
+ *
+ * Naming convention:
+ *   `--dads-{component}-*` → public API (included in CEM)
+ *   `--{component}-*`      → internal (excluded)
+ *   `--spacing-*` etc.     → global tokens (excluded)
+ *
+ * JSDoc `@cssprop` entries take priority — tokens from files are only
+ * added when no existing entry with the same name exists.
+ */
+function extractPublicCssProperties(componentDir, componentId) {
+  const cwd = process.cwd();
+  const dirAbs = path.resolve(cwd, componentDir);
+  const candidates = [
+    path.join(dirAbs, `${componentId}-tokens.ts`),
+    path.join(dirAbs, `${componentId}-styles.ts`),
+  ];
+
+  // Deterministic prefix: explicit override or standard convention.
+  const componentPrefix = CSS_PROPERTY_PREFIX_OVERRIDES.get(componentId) ?? `--dads-${componentId}-`;
+
+  /** @type {Map<string, string>} name → description */
+  const found = new Map();
+
+  for (const filePath of candidates) {
+    if (!existsSync(filePath)) continue;
+    const text = readFileSync(filePath, 'utf-8');
+
+    // Collect all --dads-* occurrences (declarations + var() references),
+    // then filter by componentPrefix to keep only this component's tokens.
+    const varRe = /--dads-[\w-]+/g;
+    for (let m = varRe.exec(text); m; m = varRe.exec(text)) {
+      const name = m[0];
+      if (!name.startsWith(componentPrefix)) continue;
+      if (found.has(name)) continue;
+      found.set(name, '');
+    }
+
+    // Extract descriptions from same-line inline comments.
+    // Pattern 1: Token declaration — --dads-foo-bar: value; /* Description */
+    const declLineRe = /^\s*(--dads-[\w-]+)\s*:\s*[^;\n]*;[ \t]*\/\*\s*(.+?)\s*\*\//gm;
+    for (let m = declLineRe.exec(text); m; m = declLineRe.exec(text)) {
+      const name = m[1];
+      if (!name.startsWith(componentPrefix)) continue;
+      const desc = m[2]?.trim() ?? '';
+      if (desc && found.has(name) && !found.get(name)) {
+        found.set(name, desc);
+      }
+    }
+
+    // Pattern 2: Usage in var() — property: var(--dads-foo-bar, fallback); /* Description */
+    // When a line contains multiple var(--dads-*), only the first gets the description.
+    // To avoid ambiguity, put each --dads-* on its own line with its own comment.
+    const varUsageRe = /var\((--dads-[\w-]+)[^)]*\)[^;\n]*;[ \t]*\/\*\s*(.+?)\s*\*\//gm;
+    for (let m = varUsageRe.exec(text); m; m = varUsageRe.exec(text)) {
+      const name = m[1];
+      if (!name.startsWith(componentPrefix)) continue;
+      const desc = m[2]?.trim() ?? '';
+      if (desc && found.has(name) && !found.get(name)) {
+        found.set(name, desc);
+      }
+    }
+
+    // NOTE: Preceding-line comments (/* ... */ above the declaration) are NOT
+    // extracted because they often contain section headers or implementation
+    // notes rather than property descriptions. Use inline comments only.
+  }
+
+  /** @type {{ name: string, description?: string }[]} */
+  const result = [];
+  for (const [name, description] of found) {
+    const entry = { name };
+    if (description) entry.description = description;
+    result.push(entry);
+  }
+
+  result.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+  return result;
+}
+
+function injectCssPropertiesFromTokens(customElementsManifest) {
+  const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
+  let injectedCount = 0;
+
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      if (!isCustomElementDecl(decl)) continue;
+      const componentId = decl.custom?.componentId;
+      const componentDir = decl.custom?.install?.source?.componentDir;
+      if (!componentId || !componentDir) continue;
+
+      const extracted = extractPublicCssProperties(componentDir, componentId);
+      if (extracted.length === 0) continue;
+
+      // Merge: JSDoc-sourced entries take priority.
+      const existing = new Map();
+      for (const entry of (decl.cssProperties ?? [])) {
+        existing.set(entry.name, entry);
+      }
+
+      let added = 0;
+      for (const entry of extracted) {
+        if (existing.has(entry.name)) continue;
+        existing.set(entry.name, entry);
+        added++;
+      }
+
+      if (added > 0) {
+        decl.cssProperties = Array.from(existing.values()).sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+        injectedCount++;
+      }
+    }
+  }
+
+  if (injectedCount > 0) {
+    console.log(`  [wcf-css-properties-from-tokens] Injected cssProperties for ${injectedCount} declarations`);
+  }
+}
+
 function injectInstallMetadata(customElementsManifest) {
   const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
 
@@ -374,6 +508,7 @@ export default {
   globs: ['packages/**/*.ts'],
   exclude: [
     '**/*.test.ts',
+    '**/node_modules/**',
     'tests/**',
     'src/**',
     'packages/autoload/**',
@@ -419,6 +554,48 @@ export default {
       name: 'wcf-install-metadata',
       packageLinkPhase({ customElementsManifest }) {
         injectInstallMetadata(customElementsManifest);
+      },
+    },
+    {
+      name: 'wcf-css-properties-from-tokens',
+      packageLinkPhase({ customElementsManifest }) {
+        injectCssPropertiesFromTokens(customElementsManifest);
+      },
+    },
+    {
+      name: 'wcf-css-properties-coverage',
+      packageLinkPhase({ customElementsManifest }) {
+        const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
+        const warnings = [];
+        for (const mod of modules) {
+          for (const decl of (mod.declarations ?? [])) {
+            if (!isCustomElementDecl(decl)) continue;
+            const componentId = decl.custom?.componentId;
+            const componentDir = decl.custom?.install?.source?.componentDir;
+            if (!componentId || !componentDir) continue;
+
+            const dirAbs = path.resolve(process.cwd(), componentDir);
+            const tokensFile = path.join(dirAbs, `${componentId}-tokens.ts`);
+            const stylesFile = path.join(dirAbs, `${componentId}-styles.ts`);
+            const hasCssProps = Array.isArray(decl.cssProperties) && decl.cssProperties.length > 0;
+            if (hasCssProps) continue;
+
+            // Check whether the source files actually contain --dads-* declarations.
+            let sourceWithDads = '';
+            for (const f of [tokensFile, stylesFile]) {
+              if (!existsSync(f)) continue;
+              const text = readFileSync(f, 'utf-8');
+              if (/--dads-[\w-]+/.test(text)) { sourceWithDads = path.basename(f); break; }
+            }
+            if (sourceWithDads) {
+              warnings.push(`${decl.tagName}: has --dads-* in ${sourceWithDads} but no cssProperties in CEM`);
+            }
+          }
+        }
+        if (warnings.length > 0) {
+          console.warn(`  [wcf-css-properties-coverage] ${warnings.length} warning(s):`);
+          for (const w of warnings) console.warn(`    ⚠ ${w}`);
+        }
       },
     },
     cemValidatorPlugin({

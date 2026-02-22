@@ -93,6 +93,63 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component fi
 | `wrapper` | 全体ラッパー |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-file-upload-browse-bg` | - |  |
+| `--dads-file-upload-browse-bg-active` | - |  |
+| `--dads-file-upload-browse-bg-hover` | - |  |
+| `--dads-file-upload-browse-border-color` | - |  |
+| `--dads-file-upload-browse-border-color-active` | - |  |
+| `--dads-file-upload-browse-border-color-hover` | - |  |
+| `--dads-file-upload-browse-color` | - |  |
+| `--dads-file-upload-browse-color-active` | - |  |
+| `--dads-file-upload-browse-color-hover` | - |  |
+| `--dads-file-upload-browse-text-decoration` | - |  |
+| `--dads-file-upload-button-gap` | - |  |
+| `--dads-file-upload-button-only-main-gap` | - |  |
+| `--dads-file-upload-button-only-main-min-height` | - |  |
+| `--dads-file-upload-dropzone-bg` | - |  |
+| `--dads-file-upload-dropzone-border-color` | - |  |
+| `--dads-file-upload-dropzone-border-width` | - |  |
+| `--dads-file-upload-dropzone-padding` | - |  |
+| `--dads-file-upload-dropzone-radius` | - |  |
+| `--dads-file-upload-error-color` | - |  |
+| `--dads-file-upload-expand-checkbox-base-align-items` | - |  |
+| `--dads-file-upload-expand-checkbox-label-padding-block-start` | - |  |
+| `--dads-file-upload-file-meta-color` | - |  |
+| `--dads-file-upload-file-meta-color-error` | - |  |
+| `--dads-file-upload-file-name-color` | - |  |
+| `--dads-file-upload-file-name-color-error` | - |  |
+| `--dads-file-upload-file-status-color` | - |  |
+| `--dads-file-upload-file-status-error-color` | - |  |
+| `--dads-file-upload-file-status-success-color` | - |  |
+| `--dads-file-upload-gap` | - |  |
+| `--dads-file-upload-hint-color` | - |  |
+| `--dads-file-upload-item-error-border-width` | - |  |
+| `--dads-file-upload-item-error-color` | - |  |
+| `--dads-file-upload-item-error-padding-inline-start` | - |  |
+| `--dads-file-upload-item-error-row-gap` | - |  |
+| `--dads-file-upload-label-color` | - |  |
+| `--dads-file-upload-label-size` | - |  |
+| `--dads-file-upload-label-weight` | - |  |
+| `--dads-file-upload-list-gap` | - |  |
+| `--dads-file-upload-overlay-bg` | - |  |
+| `--dads-file-upload-overlay-border-color` | - |  |
+| `--dads-file-upload-overlay-border-width` | - |  |
+| `--dads-file-upload-overlay-text-color` | - |  |
+| `--dads-file-upload-overlay-text-size` | - |  |
+| `--dads-file-upload-remove-color` | - |  |
+| `--dads-file-upload-remove-color-hover` | - |  |
+| `--dads-file-upload-requirement-color` | - |  |
+| `--dads-file-upload-selection-summary-color` | - |  |
+| `--dads-file-upload-selection-summary-margin-top` | - |  |
+| `--dads-file-upload-support-color` | - |  |
+| `--dads-file-upload-top-error-margin-top` | - |  |
+| `--dads-file-upload-top-error-margin-top-no-summary` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

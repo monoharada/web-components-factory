@@ -2783,7 +2783,42 @@
                 "dads-blockquote"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-blockquote-border-color"
+            },
+            {
+              "name": "--dads-blockquote-border-width"
+            },
+            {
+              "name": "--dads-blockquote-color"
+            },
+            {
+              "name": "--dads-blockquote-font-size"
+            },
+            {
+              "name": "--dads-blockquote-gap"
+            },
+            {
+              "name": "--dads-blockquote-line-height"
+            },
+            {
+              "name": "--dads-blockquote-margin-inline"
+            },
+            {
+              "name": "--dads-blockquote-padding-block"
+            },
+            {
+              "name": "--dads-blockquote-padding-inline-end"
+            },
+            {
+              "name": "--dads-blockquote-padding-inline-start"
+            },
+            {
+              "name": "--dads-blockquote-slot-display"
+            }
+          ]
         }
       ],
       "exports": [
@@ -3465,7 +3500,81 @@
                 "dads-breadcrumb-item"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-breadcrumb-color"
+            },
+            {
+              "name": "--dads-breadcrumb-current-color"
+            },
+            {
+              "name": "--dads-breadcrumb-current-letter-spacing"
+            },
+            {
+              "name": "--dads-breadcrumb-font-family"
+            },
+            {
+              "name": "--dads-breadcrumb-font-size"
+            },
+            {
+              "name": "--dads-breadcrumb-font-weight"
+            },
+            {
+              "name": "--dads-breadcrumb-home-icon-size"
+            },
+            {
+              "name": "--dads-breadcrumb-label-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-label-suffix-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-letter-spacing"
+            },
+            {
+              "name": "--dads-breadcrumb-line-height"
+            },
+            {
+              "name": "--dads-breadcrumb-link-color"
+            },
+            {
+              "name": "--dads-breadcrumb-link-color-active"
+            },
+            {
+              "name": "--dads-breadcrumb-link-color-hover"
+            },
+            {
+              "name": "--dads-breadcrumb-link-underline-offset"
+            },
+            {
+              "name": "--dads-breadcrumb-link-underline-thickness"
+            },
+            {
+              "name": "--dads-breadcrumb-link-underline-thickness-hover"
+            },
+            {
+              "name": "--dads-breadcrumb-list-item-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-list-unit-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-row-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-separator-color"
+            },
+            {
+              "name": "--dads-breadcrumb-separator-gap-start"
+            },
+            {
+              "name": "--dads-breadcrumb-separator-margin-inline"
+            },
+            {
+              "name": "--dads-breadcrumb-separator-size"
+            }
+          ]
         },
         {
           "kind": "class",
@@ -4066,7 +4175,81 @@
                 "dads-breadcrumb-item"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-breadcrumb-color"
+            },
+            {
+              "name": "--dads-breadcrumb-current-color"
+            },
+            {
+              "name": "--dads-breadcrumb-current-letter-spacing"
+            },
+            {
+              "name": "--dads-breadcrumb-font-family"
+            },
+            {
+              "name": "--dads-breadcrumb-font-size"
+            },
+            {
+              "name": "--dads-breadcrumb-font-weight"
+            },
+            {
+              "name": "--dads-breadcrumb-home-icon-size"
+            },
+            {
+              "name": "--dads-breadcrumb-label-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-label-suffix-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-letter-spacing"
+            },
+            {
+              "name": "--dads-breadcrumb-line-height"
+            },
+            {
+              "name": "--dads-breadcrumb-link-color"
+            },
+            {
+              "name": "--dads-breadcrumb-link-color-active"
+            },
+            {
+              "name": "--dads-breadcrumb-link-color-hover"
+            },
+            {
+              "name": "--dads-breadcrumb-link-underline-offset"
+            },
+            {
+              "name": "--dads-breadcrumb-link-underline-thickness"
+            },
+            {
+              "name": "--dads-breadcrumb-link-underline-thickness-hover"
+            },
+            {
+              "name": "--dads-breadcrumb-list-item-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-list-unit-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-row-gap"
+            },
+            {
+              "name": "--dads-breadcrumb-separator-color"
+            },
+            {
+              "name": "--dads-breadcrumb-separator-gap-start"
+            },
+            {
+              "name": "--dads-breadcrumb-separator-margin-inline"
+            },
+            {
+              "name": "--dads-breadcrumb-separator-size"
+            }
+          ]
         }
       ],
       "exports": [
@@ -4942,7 +5125,127 @@
                 "dads-button"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-button-aspect-ratio",
+              "description": "アスペクト比"
+            },
+            {
+              "name": "--dads-button-background",
+              "description": "ボタンの背景色"
+            },
+            {
+              "name": "--dads-button-background-active"
+            },
+            {
+              "name": "--dads-button-background-hover"
+            },
+            {
+              "name": "--dads-button-border-color"
+            },
+            {
+              "name": "--dads-button-border-color-active"
+            },
+            {
+              "name": "--dads-button-border-color-hover"
+            },
+            {
+              "name": "--dads-button-border-radius",
+              "description": "角丸のサイズ"
+            },
+            {
+              "name": "--dads-button-border-width"
+            },
+            {
+              "name": "--dads-button-color",
+              "description": "ボタンのテキスト色"
+            },
+            {
+              "name": "--dads-button-color-active"
+            },
+            {
+              "name": "--dads-button-color-hover"
+            },
+            {
+              "name": "--dads-button-font-size",
+              "description": "フォントサイズ"
+            },
+            {
+              "name": "--dads-button-font-weight",
+              "description": "フォントウェイト"
+            },
+            {
+              "name": "--dads-button-icon-color",
+              "description": "アイコン色"
+            },
+            {
+              "name": "--dads-button-icon-gap",
+              "description": "アイコンとラベルの間隔"
+            },
+            {
+              "name": "--dads-button-icon-size",
+              "description": "アイコンサイズ"
+            },
+            {
+              "name": "--dads-button-line-height",
+              "description": "行の高さ"
+            },
+            {
+              "name": "--dads-button-max-width",
+              "description": "最大幅"
+            },
+            {
+              "name": "--dads-button-min-height",
+              "description": "最小高さ"
+            },
+            {
+              "name": "--dads-button-min-height-default"
+            },
+            {
+              "name": "--dads-button-min-width",
+              "description": "最小幅"
+            },
+            {
+              "name": "--dads-button-opacity",
+              "description": "無効時の不透明度"
+            },
+            {
+              "name": "--dads-button-padding",
+              "description": "内側の余白"
+            },
+            {
+              "name": "--dads-button-tap-highlight-color",
+              "description": "タップ時のハイライト色"
+            },
+            {
+              "name": "--dads-button-text-align",
+              "description": "テキスト揃え"
+            },
+            {
+              "name": "--dads-button-text-decoration",
+              "description": "テキスト装飾"
+            },
+            {
+              "name": "--dads-button-text-transform",
+              "description": "テキスト変換（大文字化等）"
+            },
+            {
+              "name": "--dads-button-transition"
+            },
+            {
+              "name": "--dads-button-user-select",
+              "description": "テキスト選択の可否"
+            },
+            {
+              "name": "--dads-button-white-space",
+              "description": "テキスト折り返し制御"
+            },
+            {
+              "name": "--dads-button-width",
+              "description": "ボタンの幅"
+            }
+          ]
         }
       ],
       "exports": [
@@ -6146,7 +6449,15 @@
                 "dads-calendar"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-calendar-control-size"
+            },
+            {
+              "name": "--dads-calendar-control-size-default"
+            }
+          ]
         }
       ],
       "exports": [
@@ -6187,6 +6498,9 @@
           "name": "DadsCard",
           "cssProperties": [
             {
+              "name": "--dads-card-"
+            },
+            {
               "description": "背景色",
               "name": "--dads-card-background"
             },
@@ -6195,64 +6509,16 @@
               "name": "--dads-card-border-color"
             },
             {
-              "description": "外周の線幅",
-              "name": "--dads-card-border-width"
-            },
-            {
               "description": "角丸",
               "name": "--dads-card-border-radius"
             },
             {
-              "description": "エリア間の区切り線色（media/sub の境界）",
-              "name": "--dads-card-divider-color"
-            },
-            {
-              "description": "エリア間の区切り線幅",
-              "name": "--dads-card-divider-width"
-            },
-            {
-              "description": "layout=\"horizontal\" のメディア列幅",
-              "name": "--dads-card-media-width"
-            },
-            {
-              "description": "メディア領域の aspect-ratio",
-              "name": "--dads-card-media-aspect-ratio"
-            },
-            {
-              "description": "パディング（上下）",
-              "name": "--dads-card-padding-block"
-            },
-            {
-              "description": "パディング（左右）",
-              "name": "--dads-card-padding-inline"
-            },
-            {
-              "description": "エリア内の余白",
-              "name": "--dads-card-gap"
+              "description": "外周の線幅",
+              "name": "--dads-card-border-width"
             },
             {
               "description": "本文/ラベルなどの文字色",
               "name": "--dads-card-color"
-            },
-            {
-              "description": "タイトル（h1-h6）の文字色",
-              "name": "--dads-card-title-color"
-            },
-            {
-              "description": "タイトルのフォントサイズ",
-              "name": "--dads-card-title-font-size"
-            },
-            {
-              "description": "タイトルのフォントウェイト",
-              "name": "--dads-card-title-font-weight"
-            },
-            {
-              "description": "タイトルの行高",
-              "name": "--dads-card-title-line-height"
-            },
-            {
-              "description": "タイトルの字間",
-              "name": "--dads-card-title-letter-spacing"
             },
             {
               "description": "コンテンツ（p）の文字色",
@@ -6267,24 +6533,32 @@
               "name": "--dads-card-content-font-weight"
             },
             {
+              "description": "コンテンツの字間",
+              "name": "--dads-card-content-letter-spacing"
+            },
+            {
               "description": "コンテンツの行高",
               "name": "--dads-card-content-line-height"
             },
             {
-              "description": "コンテンツの字間",
-              "name": "--dads-card-content-letter-spacing"
+              "description": "エリア間の区切り線色（media/sub の境界）",
+              "name": "--dads-card-divider-color"
+            },
+            {
+              "description": "エリア間の区切り線幅",
+              "name": "--dads-card-divider-width"
             },
             {
               "description": "フォーカスアウトライン色（委譲ON時）",
               "name": "--dads-card-focus-outline-color"
             },
             {
-              "description": "フォーカスアウトライン幅（委譲ON時）",
-              "name": "--dads-card-focus-outline-width"
-            },
-            {
               "description": "フォーカスアウトラインのオフセット（委譲ON時）",
               "name": "--dads-card-focus-outline-offset"
+            },
+            {
+              "description": "フォーカスアウトライン幅（委譲ON時）",
+              "name": "--dads-card-focus-outline-width"
             },
             {
               "description": "フォーカスリング色（委譲ON時）",
@@ -6293,6 +6567,46 @@
             {
               "description": "フォーカスリング幅（委譲ON時）",
               "name": "--dads-card-focus-ring-width"
+            },
+            {
+              "description": "エリア内の余白",
+              "name": "--dads-card-gap"
+            },
+            {
+              "description": "メディア領域の aspect-ratio",
+              "name": "--dads-card-media-aspect-ratio"
+            },
+            {
+              "description": "layout=\"horizontal\" のメディア列幅",
+              "name": "--dads-card-media-width"
+            },
+            {
+              "description": "パディング（上下）",
+              "name": "--dads-card-padding-block"
+            },
+            {
+              "description": "パディング（左右）",
+              "name": "--dads-card-padding-inline"
+            },
+            {
+              "description": "タイトル（h1-h6）の文字色",
+              "name": "--dads-card-title-color"
+            },
+            {
+              "description": "タイトルのフォントサイズ",
+              "name": "--dads-card-title-font-size"
+            },
+            {
+              "description": "タイトルのフォントウェイト",
+              "name": "--dads-card-title-font-weight"
+            },
+            {
+              "description": "タイトルの字間",
+              "name": "--dads-card-title-letter-spacing"
+            },
+            {
+              "description": "タイトルの行高",
+              "name": "--dads-card-title-line-height"
             }
           ],
           "cssParts": [
@@ -9074,7 +9388,171 @@
                 "dads-carousel"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-carousel-all-slides-content-margin-top"
+            },
+            {
+              "name": "--dads-carousel-all-slides-extra-gap"
+            },
+            {
+              "name": "--dads-carousel-all-slides-icon-color"
+            },
+            {
+              "name": "--dads-carousel-all-slides-margin-top"
+            },
+            {
+              "name": "--dads-carousel-all-slides-row-gap"
+            },
+            {
+              "name": "--dads-carousel-bg-blur-size"
+            },
+            {
+              "name": "--dads-carousel-bg-soft-light-color"
+            },
+            {
+              "name": "--dads-carousel-border-color"
+            },
+            {
+              "name": "--dads-carousel-border-width"
+            },
+            {
+              "name": "--dads-carousel-control-gap-desktop"
+            },
+            {
+              "name": "--dads-carousel-control-gap-mobile"
+            },
+            {
+              "name": "--dads-carousel-control-padding-block"
+            },
+            {
+              "name": "--dads-carousel-control-padding-bottom-expanded"
+            },
+            {
+              "name": "--dads-carousel-focus-outline-color"
+            },
+            {
+              "name": "--dads-carousel-focus-outline-offset-inner"
+            },
+            {
+              "name": "--dads-carousel-focus-outline-offset-outer"
+            },
+            {
+              "name": "--dads-carousel-focus-outline-width"
+            },
+            {
+              "name": "--dads-carousel-focus-ring-color"
+            },
+            {
+              "name": "--dads-carousel-focus-ring-width"
+            },
+            {
+              "name": "--dads-carousel-font-family"
+            },
+            {
+              "name": "--dads-carousel-font-size"
+            },
+            {
+              "name": "--dads-carousel-font-size-heading-default"
+            },
+            {
+              "name": "--dads-carousel-font-size-heading-lg"
+            },
+            {
+              "name": "--dads-carousel-font-size-heading-sm"
+            },
+            {
+              "name": "--dads-carousel-font-weight-bold"
+            },
+            {
+              "name": "--dads-carousel-font-weight-normal"
+            },
+            {
+              "name": "--dads-carousel-hit-area"
+            },
+            {
+              "name": "--dads-carousel-image-outline-width"
+            },
+            {
+              "name": "--dads-carousel-letter-spacing"
+            },
+            {
+              "name": "--dads-carousel-line-color"
+            },
+            {
+              "name": "--dads-carousel-link-color"
+            },
+            {
+              "name": "--dads-carousel-link-hover-color"
+            },
+            {
+              "name": "--dads-carousel-main-ratio"
+            },
+            {
+              "name": "--dads-carousel-main-ratio-key-visual"
+            },
+            {
+              "name": "--dads-carousel-max-width"
+            },
+            {
+              "name": "--dads-carousel-max-width-key-visual"
+            },
+            {
+              "name": "--dads-carousel-next-label-font-size"
+            },
+            {
+              "name": "--dads-carousel-next-label-padding"
+            },
+            {
+              "name": "--dads-carousel-next-padding"
+            },
+            {
+              "name": "--dads-carousel-next-ratio"
+            },
+            {
+              "name": "--dads-carousel-number-font-size"
+            },
+            {
+              "name": "--dads-carousel-number-size"
+            },
+            {
+              "name": "--dads-carousel-page-button-size"
+            },
+            {
+              "name": "--dads-carousel-page-nav-gap"
+            },
+            {
+              "name": "--dads-carousel-panel-grid-side"
+            },
+            {
+              "name": "--dads-carousel-radius-lg"
+            },
+            {
+              "name": "--dads-carousel-radius-md"
+            },
+            {
+              "name": "--dads-carousel-radius-sm"
+            },
+            {
+              "name": "--dads-carousel-side-padding"
+            },
+            {
+              "name": "--dads-carousel-step-gap"
+            },
+            {
+              "name": "--dads-carousel-summary-padding-block"
+            },
+            {
+              "name": "--dads-carousel-summary-padding-inline"
+            },
+            {
+              "name": "--dads-carousel-surface-color"
+            },
+            {
+              "name": "--dads-carousel-text-color"
+            }
+          ]
         },
         {
           "kind": "variable",
@@ -10101,7 +10579,18 @@
                 "dads-checkbox"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-checkbox-force-border-color"
+            },
+            {
+              "name": "--dads-checkbox-force-fill-color"
+            },
+            {
+              "name": "--dads-checkbox-force-hover-bg"
+            }
+          ]
         }
       ],
       "exports": [
@@ -10515,7 +11004,42 @@
                 "dads-chip-label"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-chip-label-border-radius"
+            },
+            {
+              "name": "--dads-chip-label-font-size"
+            },
+            {
+              "name": "--dads-chip-label-font-weight"
+            },
+            {
+              "name": "--dads-chip-label-icon-gap"
+            },
+            {
+              "name": "--dads-chip-label-letter-spacing"
+            },
+            {
+              "name": "--dads-chip-label-line-height"
+            },
+            {
+              "name": "--dads-chip-label-min-height"
+            },
+            {
+              "name": "--dads-chip-label-padding"
+            },
+            {
+              "name": "--dads-chip-label-padding-block"
+            },
+            {
+              "name": "--dads-chip-label-padding-inline"
+            },
+            {
+              "name": "--dads-chip-label-padding-text"
+            }
+          ]
         }
       ],
       "exports": [
@@ -10556,6 +11080,44 @@
           "name": "DadsChipTag",
           "cssProperties": [
             {
+              "name": "--dads-chip-tag-action-background"
+            },
+            {
+              "name": "--dads-chip-tag-action-background-active"
+            },
+            {
+              "name": "--dads-chip-tag-action-background-hover"
+            },
+            {
+              "name": "--dads-chip-tag-action-border-color"
+            },
+            {
+              "name": "--dads-chip-tag-action-border-width"
+            },
+            {
+              "description": "アクションのヒット領域（見た目は維持したまま拡張）",
+              "name": "--dads-chip-tag-action-hit-area"
+            },
+            {
+              "name": "--dads-chip-tag-action-hit-padding"
+            },
+            {
+              "name": "--dads-chip-tag-action-icon-color"
+            },
+            {
+              "name": "--dads-chip-tag-action-icon-color-active"
+            },
+            {
+              "name": "--dads-chip-tag-action-icon-color-hover"
+            },
+            {
+              "description": "アクション内アイコンサイズ",
+              "name": "--dads-chip-tag-action-icon-size"
+            },
+            {
+              "name": "--dads-chip-tag-action-size"
+            },
+            {
               "description": "背景色",
               "name": "--dads-chip-tag-background"
             },
@@ -10564,8 +11126,8 @@
               "name": "--dads-chip-tag-border-color"
             },
             {
-              "description": "枠線の太さ",
-              "name": "--dads-chip-tag-border-width"
+              "description": "角丸",
+              "name": "--dads-chip-tag-border-radius"
             },
             {
               "description": "外周の補助線",
@@ -10576,20 +11138,54 @@
               "name": "--dads-chip-tag-border-shadow-hover"
             },
             {
-              "description": "テキスト色",
-              "name": "--dads-chip-tag-text-color"
+              "description": "枠線の太さ",
+              "name": "--dads-chip-tag-border-width"
             },
             {
-              "description": "hover時のテキスト色",
-              "name": "--dads-chip-tag-text-color-hover"
+              "name": "--dads-chip-tag-focus-text-element-bg"
             },
             {
-              "description": "active時のテキスト色",
-              "name": "--dads-chip-tag-text-color-active"
+              "name": "--dads-chip-tag-font-family"
             },
             {
-              "description": "角丸",
-              "name": "--dads-chip-tag-border-radius"
+              "name": "--dads-chip-tag-font-size"
+            },
+            {
+              "name": "--dads-chip-tag-font-weight"
+            },
+            {
+              "description": "アイコンサイズ",
+              "name": "--dads-chip-tag-icon-size"
+            },
+            {
+              "description": "ラベルの下パディング",
+              "name": "--dads-chip-tag-label-padding-bottom"
+            },
+            {
+              "description": "ラベルの左右パディング",
+              "name": "--dads-chip-tag-label-padding-inline"
+            },
+            {
+              "description": "ラベルの装飾線",
+              "name": "--dads-chip-tag-label-text-decoration"
+            },
+            {
+              "description": "ラベル下線のオフセット",
+              "name": "--dads-chip-tag-label-underline-offset"
+            },
+            {
+              "description": "ラベル下線の太さ",
+              "name": "--dads-chip-tag-label-underline-thickness"
+            },
+            {
+              "description": "hover/active時のラベル下線の太さ",
+              "name": "--dads-chip-tag-label-underline-thickness-hover"
+            },
+            {
+              "name": "--dads-chip-tag-letter-spacing"
+            },
+            {
+              "name": "--dads-chip-tag-line-height"
             },
             {
               "description": "最小高さ",
@@ -10604,40 +11200,16 @@
               "name": "--dads-chip-tag-padding-inline"
             },
             {
-              "description": "ラベルの左右パディング",
-              "name": "--dads-chip-tag-label-padding-inline"
+              "description": "テキスト色",
+              "name": "--dads-chip-tag-text-color"
             },
             {
-              "description": "ラベルの下パディング",
-              "name": "--dads-chip-tag-label-padding-bottom"
+              "description": "active時のテキスト色",
+              "name": "--dads-chip-tag-text-color-active"
             },
             {
-              "description": "ラベルの装飾線",
-              "name": "--dads-chip-tag-label-text-decoration"
-            },
-            {
-              "description": "ラベル下線の太さ",
-              "name": "--dads-chip-tag-label-underline-thickness"
-            },
-            {
-              "description": "hover/active時のラベル下線の太さ",
-              "name": "--dads-chip-tag-label-underline-thickness-hover"
-            },
-            {
-              "description": "ラベル下線のオフセット",
-              "name": "--dads-chip-tag-label-underline-offset"
-            },
-            {
-              "description": "アイコンサイズ",
-              "name": "--dads-chip-tag-icon-size"
-            },
-            {
-              "description": "アクションのヒット領域（見た目は維持したまま拡張）",
-              "name": "--dads-chip-tag-action-hit-area"
-            },
-            {
-              "description": "アクション内アイコンサイズ",
-              "name": "--dads-chip-tag-action-icon-size"
+              "description": "hover時のテキスト色",
+              "name": "--dads-chip-tag-text-color-hover"
             }
           ],
           "cssParts": [
@@ -13836,7 +14408,120 @@
                 "dads-combobox"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-combobox-background"
+            },
+            {
+              "name": "--dads-combobox-border-color"
+            },
+            {
+              "name": "--dads-combobox-border-radius"
+            },
+            {
+              "name": "--dads-combobox-border-width"
+            },
+            {
+              "name": "--dads-combobox-chip-bg"
+            },
+            {
+              "name": "--dads-combobox-chip-border-color"
+            },
+            {
+              "name": "--dads-combobox-chip-color"
+            },
+            {
+              "name": "--dads-combobox-control-bottom"
+            },
+            {
+              "name": "--dads-combobox-control-height"
+            },
+            {
+              "name": "--dads-combobox-error-color"
+            },
+            {
+              "name": "--dads-combobox-font-size"
+            },
+            {
+              "name": "--dads-combobox-indicator-background"
+            },
+            {
+              "name": "--dads-combobox-indicator-border-color"
+            },
+            {
+              "name": "--dads-combobox-indicator-radius"
+            },
+            {
+              "name": "--dads-combobox-indicator-size"
+            },
+            {
+              "name": "--dads-combobox-label-color"
+            },
+            {
+              "name": "--dads-combobox-label-size"
+            },
+            {
+              "name": "--dads-combobox-label-weight"
+            },
+            {
+              "name": "--dads-combobox-list-max-height"
+            },
+            {
+              "name": "--dads-combobox-list-shadow"
+            },
+            {
+              "name": "--dads-combobox-list-z-index"
+            },
+            {
+              "name": "--dads-combobox-multi-check-radius"
+            },
+            {
+              "name": "--dads-combobox-multi-check-size"
+            },
+            {
+              "name": "--dads-combobox-option-active-bg"
+            },
+            {
+              "name": "--dads-combobox-option-divider-color"
+            },
+            {
+              "name": "--dads-combobox-option-hover-bg"
+            },
+            {
+              "name": "--dads-combobox-option-min-height"
+            },
+            {
+              "name": "--dads-combobox-option-padding-inline"
+            },
+            {
+              "name": "--dads-combobox-option-padding-y"
+            },
+            {
+              "name": "--dads-combobox-option-selected-bg"
+            },
+            {
+              "name": "--dads-combobox-option-selected-color"
+            },
+            {
+              "name": "--dads-combobox-padding-inline"
+            },
+            {
+              "name": "--dads-combobox-padding-y"
+            },
+            {
+              "name": "--dads-combobox-placeholder-color"
+            },
+            {
+              "name": "--dads-combobox-required-color"
+            },
+            {
+              "name": "--dads-combobox-support-color"
+            },
+            {
+              "name": "--dads-combobox-text-color"
+            }
+          ]
         }
       ],
       "exports": [
@@ -15225,24 +15910,27 @@
           "name": "DadsDescriptionList",
           "cssProperties": [
             {
-              "description": "ブロック方向マージン",
-              "name": "--dads-description-list-margin-block"
+              "description": "dt/dd のインデント",
+              "name": "--dads-description-list-indent"
             },
             {
               "description": "項目間の行間",
               "name": "--dads-description-list-item-gap"
             },
             {
-              "description": "dt/dd のインデント",
-              "name": "--dads-description-list-indent"
+              "description": "ブロック方向マージン",
+              "name": "--dads-description-list-margin-block"
             },
             {
-              "description": "用語（dt）の文字ウェイト",
-              "name": "--dads-description-list-term-font-weight"
+              "name": "--dads-description-list-marker-type"
             },
             {
               "description": "折り返し規則",
               "name": "--dads-description-list-overflow-wrap"
+            },
+            {
+              "description": "用語（dt）の文字ウェイト",
+              "name": "--dads-description-list-term-font-weight"
             }
           ],
           "slots": [
@@ -16284,20 +16972,84 @@
               "name": "--dads-dialog-backdrop-background"
             },
             {
+              "name": "--dads-dialog-background",
+              "description": "ダイアログの背景色"
+            },
+            {
               "description": "ダイアログ境界線色",
               "name": "--dads-dialog-border-color"
+            },
+            {
+              "description": "ダイアログ角丸",
+              "name": "--dads-dialog-border-radius"
             },
             {
               "description": "ダイアログ境界線幅",
               "name": "--dads-dialog-border-width"
             },
             {
-              "description": "ダイアログ幅",
-              "name": "--dads-dialog-width"
+              "name": "--dads-dialog-close-button-border-color",
+              "description": "閉じるボタンの枠線色"
             },
             {
-              "description": "ダイアログ角丸",
-              "name": "--dads-dialog-border-radius"
+              "name": "--dads-dialog-close-button-border-radius",
+              "description": "閉じるボタンの角丸"
+            },
+            {
+              "name": "--dads-dialog-close-button-hover-background",
+              "description": "閉じるボタンのホバー時背景色"
+            },
+            {
+              "name": "--dads-dialog-close-button-padding",
+              "description": "閉じるボタンの内側余白"
+            },
+            {
+              "name": "--dads-dialog-close-button-size",
+              "description": "閉じるボタンのサイズ"
+            },
+            {
+              "name": "--dads-dialog-color",
+              "description": "ダイアログのテキスト色"
+            },
+            {
+              "name": "--dads-dialog-footer-gap",
+              "description": "フッター内のボタン間隔"
+            },
+            {
+              "name": "--dads-dialog-gap",
+              "description": "セクション間の間隔"
+            },
+            {
+              "name": "--dads-dialog-header-gap",
+              "description": "ヘッダー内の間隔"
+            },
+            {
+              "name": "--dads-dialog-max-height",
+              "description": "ダイアログの最大高さ"
+            },
+            {
+              "name": "--dads-dialog-padding-block",
+              "description": "上下の内側余白"
+            },
+            {
+              "name": "--dads-dialog-padding-inline",
+              "description": "左右の内側余白"
+            },
+            {
+              "name": "--dads-dialog-title-line-height",
+              "description": "タイトルの行の高さ"
+            },
+            {
+              "name": "--dads-dialog-title-size",
+              "description": "タイトルのフォントサイズ"
+            },
+            {
+              "name": "--dads-dialog-viewport-padding",
+              "description": "ビューポート端からの余白"
+            },
+            {
+              "description": "ダイアログ幅",
+              "name": "--dads-dialog-width"
             }
           ],
           "cssParts": [
@@ -17344,24 +18096,51 @@
           "name": "DadsDisclosure",
           "cssProperties": [
             {
-              "description": "summary内のgap",
-              "name": "--dads-disclosure-gap"
+              "description": "戻るリンク色",
+              "name": "--dads-disclosure-back-link-color"
             },
             {
-              "description": "アイコンサイズ",
-              "name": "--dads-disclosure-icon-size"
+              "name": "--dads-disclosure-back-link-color-active"
             },
             {
-              "description": "アイコン色",
-              "name": "--dads-disclosure-icon-color"
+              "name": "--dads-disclosure-back-link-color-hover"
+            },
+            {
+              "name": "--dads-disclosure-back-link-gap"
+            },
+            {
+              "name": "--dads-disclosure-back-link-underline-offset"
+            },
+            {
+              "name": "--dads-disclosure-back-link-underline-thickness"
+            },
+            {
+              "name": "--dads-disclosure-back-link-underline-thickness-hover"
+            },
+            {
+              "name": "--dads-disclosure-content-margin-block"
             },
             {
               "description": "本文のインライン開始padding",
               "name": "--dads-disclosure-content-padding-inline-start"
             },
             {
-              "description": "戻るリンク色",
-              "name": "--dads-disclosure-back-link-color"
+              "name": "--dads-disclosure-focus-border-radius"
+            },
+            {
+              "description": "summary内のgap",
+              "name": "--dads-disclosure-gap"
+            },
+            {
+              "description": "アイコン色",
+              "name": "--dads-disclosure-icon-color"
+            },
+            {
+              "description": "アイコンサイズ",
+              "name": "--dads-disclosure-icon-size"
+            },
+            {
+              "name": "--dads-disclosure-summary-underline-offset"
             }
           ],
           "cssParts": [
@@ -18466,16 +19245,73 @@
           "name": "DadsDrawer",
           "cssProperties": [
             {
-              "description": "ドロワー幅",
-              "name": "--dads-drawer-width"
-            },
-            {
               "description": "背景(backdrop)色",
               "name": "--dads-drawer-backdrop-background"
             },
             {
+              "name": "--dads-drawer-background"
+            },
+            {
+              "name": "--dads-drawer-border-color"
+            },
+            {
+              "name": "--dads-drawer-border-width"
+            },
+            {
+              "name": "--dads-drawer-close-button-border-color"
+            },
+            {
+              "name": "--dads-drawer-close-button-gap"
+            },
+            {
+              "name": "--dads-drawer-close-button-hover-background"
+            },
+            {
+              "name": "--dads-drawer-close-button-icon-size"
+            },
+            {
+              "name": "--dads-drawer-close-button-padding-inline"
+            },
+            {
+              "name": "--dads-drawer-close-button-radius"
+            },
+            {
+              "name": "--dads-drawer-close-button-size"
+            },
+            {
+              "name": "--dads-drawer-color"
+            },
+            {
+              "name": "--dads-drawer-content-padding-block"
+            },
+            {
+              "name": "--dads-drawer-content-padding-inline"
+            },
+            {
+              "name": "--dads-drawer-header-min-height"
+            },
+            {
+              "name": "--dads-drawer-header-padding-inline"
+            },
+            {
+              "name": "--dads-drawer-max-width"
+            },
+            {
               "description": "ドロワー影",
               "name": "--dads-drawer-shadow"
+            },
+            {
+              "name": "--dads-drawer-title-line-height"
+            },
+            {
+              "name": "--dads-drawer-title-size"
+            },
+            {
+              "description": "ドロワー幅",
+              "name": "--dads-drawer-width"
+            },
+            {
+              "name": "--dads-drawer-z-index"
             }
           ],
           "cssParts": [
@@ -19512,22 +20348,6 @@
           "name": "DadsEmergencyBanner",
           "cssProperties": [
             {
-              "description": "外枠色",
-              "name": "--dads-emergency-banner-border-color"
-            },
-            {
-              "description": "背景色",
-              "name": "--dads-emergency-banner-background"
-            },
-            {
-              "description": "本文文字色",
-              "name": "--dads-emergency-banner-color"
-            },
-            {
-              "description": "見出し色",
-              "name": "--dads-emergency-banner-heading-color"
-            },
-            {
               "description": "CTA背景色",
               "name": "--dads-emergency-banner-action-background"
             },
@@ -19536,12 +20356,115 @@
               "name": "--dads-emergency-banner-action-background-hover"
             },
             {
+              "description": "CTA角丸",
+              "name": "--dads-emergency-banner-action-border-radius"
+            },
+            {
+              "name": "--dads-emergency-banner-action-border-width"
+            },
+            {
               "description": "CTA文字色",
               "name": "--dads-emergency-banner-action-color"
             },
             {
-              "description": "CTA角丸",
-              "name": "--dads-emergency-banner-action-border-radius"
+              "name": "--dads-emergency-banner-action-font-size"
+            },
+            {
+              "name": "--dads-emergency-banner-action-font-weight"
+            },
+            {
+              "name": "--dads-emergency-banner-action-icon-size"
+            },
+            {
+              "name": "--dads-emergency-banner-action-inner-border-radius"
+            },
+            {
+              "name": "--dads-emergency-banner-action-inner-border-width"
+            },
+            {
+              "name": "--dads-emergency-banner-action-letter-spacing"
+            },
+            {
+              "name": "--dads-emergency-banner-action-line-height"
+            },
+            {
+              "name": "--dads-emergency-banner-action-min-width"
+            },
+            {
+              "name": "--dads-emergency-banner-action-padding"
+            },
+            {
+              "name": "--dads-emergency-banner-action-padding-bottom"
+            },
+            {
+              "name": "--dads-emergency-banner-action-padding-top"
+            },
+            {
+              "description": "背景色",
+              "name": "--dads-emergency-banner-background"
+            },
+            {
+              "name": "--dads-emergency-banner-body-row-gap"
+            },
+            {
+              "description": "外枠色",
+              "name": "--dads-emergency-banner-border-color"
+            },
+            {
+              "name": "--dads-emergency-banner-border-width"
+            },
+            {
+              "description": "本文文字色",
+              "name": "--dads-emergency-banner-color"
+            },
+            {
+              "name": "--dads-emergency-banner-focus-outline-color"
+            },
+            {
+              "name": "--dads-emergency-banner-focus-outline-offset"
+            },
+            {
+              "name": "--dads-emergency-banner-focus-outline-width"
+            },
+            {
+              "name": "--dads-emergency-banner-focus-ring-color"
+            },
+            {
+              "name": "--dads-emergency-banner-focus-ring-width"
+            },
+            {
+              "name": "--dads-emergency-banner-font-size"
+            },
+            {
+              "name": "--dads-emergency-banner-header-gap"
+            },
+            {
+              "description": "見出し色",
+              "name": "--dads-emergency-banner-heading-color"
+            },
+            {
+              "name": "--dads-emergency-banner-heading-font-size"
+            },
+            {
+              "name": "--dads-emergency-banner-heading-font-weight"
+            },
+            {
+              "name": "--dads-emergency-banner-heading-line-height"
+            },
+            {
+              "name": "--dads-emergency-banner-letter-spacing"
+            },
+            {
+              "name": "--dads-emergency-banner-line-height"
+            },
+            {
+              "name": "--dads-emergency-banner-padding-block"
+            },
+            {
+              "name": "--dads-emergency-banner-padding-inline"
+            },
+            {
+              "name": "--dads-emergency-banner-row-gap"
             }
           ],
           "cssParts": [
@@ -22840,7 +23763,162 @@
                 "dads-file-upload"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-file-upload-browse-bg"
+            },
+            {
+              "name": "--dads-file-upload-browse-bg-active"
+            },
+            {
+              "name": "--dads-file-upload-browse-bg-hover"
+            },
+            {
+              "name": "--dads-file-upload-browse-border-color"
+            },
+            {
+              "name": "--dads-file-upload-browse-border-color-active"
+            },
+            {
+              "name": "--dads-file-upload-browse-border-color-hover"
+            },
+            {
+              "name": "--dads-file-upload-browse-color"
+            },
+            {
+              "name": "--dads-file-upload-browse-color-active"
+            },
+            {
+              "name": "--dads-file-upload-browse-color-hover"
+            },
+            {
+              "name": "--dads-file-upload-browse-text-decoration"
+            },
+            {
+              "name": "--dads-file-upload-button-gap"
+            },
+            {
+              "name": "--dads-file-upload-button-only-main-gap"
+            },
+            {
+              "name": "--dads-file-upload-button-only-main-min-height"
+            },
+            {
+              "name": "--dads-file-upload-dropzone-bg"
+            },
+            {
+              "name": "--dads-file-upload-dropzone-border-color"
+            },
+            {
+              "name": "--dads-file-upload-dropzone-border-width"
+            },
+            {
+              "name": "--dads-file-upload-dropzone-padding"
+            },
+            {
+              "name": "--dads-file-upload-dropzone-radius"
+            },
+            {
+              "name": "--dads-file-upload-error-color"
+            },
+            {
+              "name": "--dads-file-upload-expand-checkbox-base-align-items"
+            },
+            {
+              "name": "--dads-file-upload-expand-checkbox-label-padding-block-start"
+            },
+            {
+              "name": "--dads-file-upload-file-meta-color"
+            },
+            {
+              "name": "--dads-file-upload-file-meta-color-error"
+            },
+            {
+              "name": "--dads-file-upload-file-name-color"
+            },
+            {
+              "name": "--dads-file-upload-file-name-color-error"
+            },
+            {
+              "name": "--dads-file-upload-file-status-color"
+            },
+            {
+              "name": "--dads-file-upload-file-status-error-color"
+            },
+            {
+              "name": "--dads-file-upload-file-status-success-color"
+            },
+            {
+              "name": "--dads-file-upload-gap"
+            },
+            {
+              "name": "--dads-file-upload-hint-color"
+            },
+            {
+              "name": "--dads-file-upload-item-error-border-width"
+            },
+            {
+              "name": "--dads-file-upload-item-error-color"
+            },
+            {
+              "name": "--dads-file-upload-item-error-padding-inline-start"
+            },
+            {
+              "name": "--dads-file-upload-item-error-row-gap"
+            },
+            {
+              "name": "--dads-file-upload-label-color"
+            },
+            {
+              "name": "--dads-file-upload-label-size"
+            },
+            {
+              "name": "--dads-file-upload-label-weight"
+            },
+            {
+              "name": "--dads-file-upload-list-gap"
+            },
+            {
+              "name": "--dads-file-upload-overlay-bg"
+            },
+            {
+              "name": "--dads-file-upload-overlay-border-color"
+            },
+            {
+              "name": "--dads-file-upload-overlay-border-width"
+            },
+            {
+              "name": "--dads-file-upload-overlay-text-color"
+            },
+            {
+              "name": "--dads-file-upload-overlay-text-size"
+            },
+            {
+              "name": "--dads-file-upload-remove-color"
+            },
+            {
+              "name": "--dads-file-upload-remove-color-hover"
+            },
+            {
+              "name": "--dads-file-upload-requirement-color"
+            },
+            {
+              "name": "--dads-file-upload-selection-summary-color"
+            },
+            {
+              "name": "--dads-file-upload-selection-summary-margin-top"
+            },
+            {
+              "name": "--dads-file-upload-support-color"
+            },
+            {
+              "name": "--dads-file-upload-top-error-margin-top"
+            },
+            {
+              "name": "--dads-file-upload-top-error-margin-top-no-summary"
+            }
+          ]
         },
         {
           "kind": "variable",
@@ -23463,7 +24541,102 @@
                 "dads-global-menu-item"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-global-menu-border-color"
+            },
+            {
+              "name": "--dads-global-menu-color"
+            },
+            {
+              "name": "--dads-global-menu-font-family"
+            },
+            {
+              "name": "--dads-global-menu-font-size"
+            },
+            {
+              "name": "--dads-global-menu-font-weight"
+            },
+            {
+              "name": "--dads-global-menu-item-chevron-margin-top"
+            },
+            {
+              "name": "--dads-global-menu-item-chevron-size"
+            },
+            {
+              "name": "--dads-global-menu-item-current-bg"
+            },
+            {
+              "name": "--dads-global-menu-item-current-border-color"
+            },
+            {
+              "name": "--dads-global-menu-item-current-border-width"
+            },
+            {
+              "name": "--dads-global-menu-item-current-color"
+            },
+            {
+              "name": "--dads-global-menu-item-current-color-hover"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-background"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-border-radius"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-outline-color"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-outline-offset"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-outline-width"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-ring-color"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-ring-width"
+            },
+            {
+              "name": "--dads-global-menu-item-gap"
+            },
+            {
+              "name": "--dads-global-menu-item-hover-bg"
+            },
+            {
+              "name": "--dads-global-menu-item-hover-border-color"
+            },
+            {
+              "name": "--dads-global-menu-item-hover-border-width"
+            },
+            {
+              "name": "--dads-global-menu-item-min-height"
+            },
+            {
+              "name": "--dads-global-menu-item-padding-x"
+            },
+            {
+              "name": "--dads-global-menu-item-padding-y"
+            },
+            {
+              "name": "--dads-global-menu-item-start-icon-size"
+            },
+            {
+              "name": "--dads-global-menu-item-text-decoration-thickness"
+            },
+            {
+              "name": "--dads-global-menu-item-underline-offset"
+            },
+            {
+              "name": "--dads-global-menu-letter-spacing"
+            },
+            {
+              "name": "--dads-global-menu-line-height"
+            }
+          ]
         },
         {
           "kind": "class",
@@ -24260,7 +25433,102 @@
                 "dads-global-menu-item"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-global-menu-border-color"
+            },
+            {
+              "name": "--dads-global-menu-color"
+            },
+            {
+              "name": "--dads-global-menu-font-family"
+            },
+            {
+              "name": "--dads-global-menu-font-size"
+            },
+            {
+              "name": "--dads-global-menu-font-weight"
+            },
+            {
+              "name": "--dads-global-menu-item-chevron-margin-top"
+            },
+            {
+              "name": "--dads-global-menu-item-chevron-size"
+            },
+            {
+              "name": "--dads-global-menu-item-current-bg"
+            },
+            {
+              "name": "--dads-global-menu-item-current-border-color"
+            },
+            {
+              "name": "--dads-global-menu-item-current-border-width"
+            },
+            {
+              "name": "--dads-global-menu-item-current-color"
+            },
+            {
+              "name": "--dads-global-menu-item-current-color-hover"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-background"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-border-radius"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-outline-color"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-outline-offset"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-outline-width"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-ring-color"
+            },
+            {
+              "name": "--dads-global-menu-item-focus-ring-width"
+            },
+            {
+              "name": "--dads-global-menu-item-gap"
+            },
+            {
+              "name": "--dads-global-menu-item-hover-bg"
+            },
+            {
+              "name": "--dads-global-menu-item-hover-border-color"
+            },
+            {
+              "name": "--dads-global-menu-item-hover-border-width"
+            },
+            {
+              "name": "--dads-global-menu-item-min-height"
+            },
+            {
+              "name": "--dads-global-menu-item-padding-x"
+            },
+            {
+              "name": "--dads-global-menu-item-padding-y"
+            },
+            {
+              "name": "--dads-global-menu-item-start-icon-size"
+            },
+            {
+              "name": "--dads-global-menu-item-text-decoration-thickness"
+            },
+            {
+              "name": "--dads-global-menu-item-underline-offset"
+            },
+            {
+              "name": "--dads-global-menu-letter-spacing"
+            },
+            {
+              "name": "--dads-global-menu-line-height"
+            }
+          ]
         }
       ],
       "exports": [
@@ -24325,16 +25593,58 @@
           "name": "DadsHamburgerMenuButton",
           "cssProperties": [
             {
+              "name": "--dads-hamburger-menu-button-background"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-background-active"
+            },
+            {
+              "description": "hover背景色",
+              "name": "--dads-hamburger-menu-button-background-hover"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-color"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-gap"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-icon-only-hover-outline-color"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-icon-only-hover-outline-width"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-icon-only-radius"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-icon-only-size"
+            },
+            {
               "description": "アイコンサイズ",
               "name": "--dads-hamburger-menu-button-icon-size"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-label-line-height"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-label-size"
             },
             {
               "description": "最小高さ",
               "name": "--dads-hamburger-menu-button-min-height"
             },
             {
-              "description": "hover背景色",
-              "name": "--dads-hamburger-menu-button-background-hover"
+              "name": "--dads-hamburger-menu-button-padding-block"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-padding-inline"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-radius"
+            },
+            {
+              "name": "--dads-hamburger-menu-button-underline-offset"
             }
           ],
           "cssParts": [
@@ -24856,20 +26166,41 @@
           "name": "DadsHeaderContainer",
           "cssProperties": [
             {
-              "description": "インライン余白",
-              "name": "--dads-header-container-inline-padding"
+              "name": "--dads-header-container-background"
             },
             {
-              "description": "1段目の最小高さ",
-              "name": "--dads-header-container-primary-min-block-size"
+              "description": "境界線色",
+              "name": "--dads-header-container-border-color"
+            },
+            {
+              "name": "--dads-header-container-border-width"
+            },
+            {
+              "name": "--dads-header-container-color"
             },
             {
               "description": "メニュー段の最小高さ",
               "name": "--dads-header-container-global-menu-min-block-size"
             },
             {
-              "description": "境界線色",
-              "name": "--dads-header-container-border-color"
+              "name": "--dads-header-container-global-menu-padding-block"
+            },
+            {
+              "description": "インライン余白",
+              "name": "--dads-header-container-inline-padding"
+            },
+            {
+              "name": "--dads-header-container-primary-gap"
+            },
+            {
+              "description": "1段目の最小高さ",
+              "name": "--dads-header-container-primary-min-block-size"
+            },
+            {
+              "name": "--dads-header-container-primary-padding-block"
+            },
+            {
+              "name": "--dads-header-container-wide-slim-gap"
             }
           ],
           "cssParts": [
@@ -25508,56 +26839,12 @@
           "name": "DadsHeading",
           "cssProperties": [
             {
-              "description": "文字色",
-              "name": "--dads-heading-color"
-            },
-            {
-              "description": "見出しフォントサイズ",
-              "name": "--dads-heading-font-size"
-            },
-            {
-              "description": "行高",
-              "name": "--dads-heading-line-height"
-            },
-            {
-              "description": "文字間隔",
-              "name": "--dads-heading-letter-spacing"
-            },
-            {
-              "description": "ショルダーのフォントサイズ",
-              "name": "--dads-heading-shoulder-font-size"
-            },
-            {
-              "description": "アイコンサイズ",
-              "name": "--dads-heading-icon-size"
-            },
-            {
-              "description": "アイコンと本文の間隔",
-              "name": "--dads-heading-icon-gap"
-            },
-            {
-              "description": "アイコンのベースライン補正（vertical-align）",
-              "name": "--dads-heading-icon-vertical-align"
-            },
-            {
-              "description": "上マージンのベース値",
-              "name": "--dads-heading-margin-block-start-base"
-            },
-            {
-              "description": "上マージンの倍率（例: compact連動）",
-              "name": "--dads-heading-margin-scale"
-            },
-            {
-              "description": "上マージン",
-              "name": "--dads-heading-margin-block-start"
+              "description": "チップの下位置",
+              "name": "--dads-heading-chip-bottom"
             },
             {
               "description": "チップ色",
               "name": "--dads-heading-chip-color"
-            },
-            {
-              "description": "チップの幅",
-              "name": "--dads-heading-chip-width"
             },
             {
               "description": "チップのインライン余白",
@@ -25568,12 +26855,74 @@
               "name": "--dads-heading-chip-top"
             },
             {
-              "description": "チップの下位置",
-              "name": "--dads-heading-chip-bottom"
+              "description": "チップの幅",
+              "name": "--dads-heading-chip-width"
+            },
+            {
+              "description": "文字色",
+              "name": "--dads-heading-color"
+            },
+            {
+              "name": "--dads-heading-font-family"
+            },
+            {
+              "description": "見出しフォントサイズ",
+              "name": "--dads-heading-font-size"
+            },
+            {
+              "name": "--dads-heading-font-weight"
+            },
+            {
+              "description": "アイコンと本文の間隔",
+              "name": "--dads-heading-icon-gap"
+            },
+            {
+              "description": "アイコンサイズ",
+              "name": "--dads-heading-icon-size"
+            },
+            {
+              "description": "アイコンのベースライン補正（vertical-align）",
+              "name": "--dads-heading-icon-vertical-align"
+            },
+            {
+              "description": "文字間隔",
+              "name": "--dads-heading-letter-spacing"
+            },
+            {
+              "description": "行高",
+              "name": "--dads-heading-line-height"
+            },
+            {
+              "description": "上マージン",
+              "name": "--dads-heading-margin-block-start"
+            },
+            {
+              "description": "上マージンのベース値",
+              "name": "--dads-heading-margin-block-start-base"
+            },
+            {
+              "description": "上マージンの倍率（例: compact連動）",
+              "name": "--dads-heading-margin-scale"
             },
             {
               "description": "ルール色",
               "name": "--dads-heading-rule-color"
+            },
+            {
+              "name": "--dads-heading-rule-padding"
+            },
+            {
+              "name": "--dads-heading-rule-width"
+            },
+            {
+              "description": "ショルダーのフォントサイズ",
+              "name": "--dads-heading-shoulder-font-size"
+            },
+            {
+              "name": "--dads-heading-shoulder-letter-spacing"
+            },
+            {
+              "name": "--dads-heading-shoulder-line-height"
             }
           ],
           "cssParts": [
@@ -27683,7 +29032,73 @@
                 "dads-input-text"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-input-background",
+              "description": "入力フィールドの背景色"
+            },
+            {
+              "name": "--dads-input-border-color",
+              "description": "枠線色"
+            },
+            {
+              "name": "--dads-input-border-radius",
+              "description": "角丸のサイズ"
+            },
+            {
+              "name": "--dads-input-border-width",
+              "description": "枠線の太さ"
+            },
+            {
+              "name": "--dads-input-color",
+              "description": "入力テキスト色"
+            },
+            {
+              "name": "--dads-input-error-color",
+              "description": "エラーメッセージの色"
+            },
+            {
+              "name": "--dads-input-font-size",
+              "description": "入力テキストのフォントサイズ"
+            },
+            {
+              "name": "--dads-input-height",
+              "description": "入力フィールドの高さ"
+            },
+            {
+              "name": "--dads-input-label-color",
+              "description": "ラベルの色"
+            },
+            {
+              "name": "--dads-input-label-size",
+              "description": "ラベルのフォントサイズ"
+            },
+            {
+              "name": "--dads-input-label-weight",
+              "description": "ラベルのフォントウェイト"
+            },
+            {
+              "name": "--dads-input-padding",
+              "description": "入力フィールドの内側余白"
+            },
+            {
+              "name": "--dads-input-placeholder-color",
+              "description": "プレースホルダーテキスト色"
+            },
+            {
+              "name": "--dads-input-requirement-color",
+              "description": "必須/任意ラベルの色"
+            },
+            {
+              "name": "--dads-input-support-color",
+              "description": "サポートテキストの色"
+            },
+            {
+              "name": "--dads-input-width",
+              "description": "入力フィールドの幅"
+            }
+          ]
         }
       ],
       "exports": [
@@ -29273,7 +30688,11 @@
           "modulePath": "./packages/components/language-selector/language-selector.ts",
           "definitionPath": "./packages/components/language-selector/language-selector.ts",
           "typeDefinitionPath": "./packages/components/language-selector/language-selector.ts",
-          "cssProperties": [],
+          "cssProperties": [
+            {
+              "name": "--dads-language-selector-check-color"
+            }
+          ],
           "cssStates": [],
           "custom": {
             "a11yAnnotations": {
@@ -30744,24 +32163,18 @@
               "name": "--dads-list-indent"
             },
             {
+              "name": "--dads-list-item-display"
+            },
+            {
               "description": "アイテム間隔（spacingに応じて設定）",
               "name": "--dads-list-item-gap"
             },
             {
-              "description": "マーカー列の幅（marker-widthで上書き可能）",
-              "name": "--dads-list-marker-width"
-            },
-            {
-              "description": "マーカー列と本文列の間隔",
-              "name": "--dads-list-marker-gap"
+              "name": "--dads-list-item-position"
             },
             {
               "description": "マーカー色",
               "name": "--dads-list-marker-color"
-            },
-            {
-              "description": "マーカー記号のサイズ（markerタイプ向け）",
-              "name": "--dads-list-marker-size"
             },
             {
               "description": "リストマーク（markerタイプ用、装飾用途）",
@@ -30778,6 +32191,36 @@
             {
               "description": "マーカー種別3（depth5+）",
               "name": "--dads-list-marker-content-3"
+            },
+            {
+              "description": "マーカー列と本文列の間隔",
+              "name": "--dads-list-marker-gap"
+            },
+            {
+              "name": "--dads-list-marker-inset-block-start"
+            },
+            {
+              "name": "--dads-list-marker-inset-inline-start"
+            },
+            {
+              "name": "--dads-list-marker-line-height"
+            },
+            {
+              "name": "--dads-list-marker-position"
+            },
+            {
+              "description": "マーカー記号のサイズ（markerタイプ向け）",
+              "name": "--dads-list-marker-size"
+            },
+            {
+              "name": "--dads-list-marker-slot-display"
+            },
+            {
+              "name": "--dads-list-marker-text-align"
+            },
+            {
+              "description": "マーカー列の幅（marker-widthで上書き可能）",
+              "name": "--dads-list-marker-width"
             }
           ],
           "cssParts": [
@@ -31313,24 +32756,63 @@
           "name": "DadsListItem",
           "cssProperties": [
             {
-              "description": "マーカー列の幅",
-              "name": "--dads-list-marker-width"
+              "name": "--dads-list-indent"
             },
             {
-              "description": "マーカー列と本文列の間隔",
-              "name": "--dads-list-marker-gap"
+              "name": "--dads-list-item-display"
+            },
+            {
+              "name": "--dads-list-item-gap"
+            },
+            {
+              "name": "--dads-list-item-position"
             },
             {
               "description": "マーカー色",
               "name": "--dads-list-marker-color"
             },
             {
+              "description": "リストマーク（markerタイプ用、装飾用途）",
+              "name": "--dads-list-marker-content"
+            },
+            {
+              "name": "--dads-list-marker-content-1"
+            },
+            {
+              "name": "--dads-list-marker-content-2"
+            },
+            {
+              "name": "--dads-list-marker-content-3"
+            },
+            {
+              "description": "マーカー列と本文列の間隔",
+              "name": "--dads-list-marker-gap"
+            },
+            {
+              "name": "--dads-list-marker-inset-block-start"
+            },
+            {
+              "name": "--dads-list-marker-inset-inline-start"
+            },
+            {
+              "name": "--dads-list-marker-line-height"
+            },
+            {
+              "name": "--dads-list-marker-position"
+            },
+            {
               "description": "マーカー記号のサイズ（markerタイプ向け）",
               "name": "--dads-list-marker-size"
             },
             {
-              "description": "リストマーク（markerタイプ用、装飾用途）",
-              "name": "--dads-list-marker-content"
+              "name": "--dads-list-marker-slot-display"
+            },
+            {
+              "name": "--dads-list-marker-text-align"
+            },
+            {
+              "description": "マーカー列の幅",
+              "name": "--dads-list-marker-width"
             }
           ],
           "cssParts": [
@@ -32727,7 +34209,144 @@
                 "dads-menu-list-box"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-menu-list-box-color"
+            },
+            {
+              "name": "--dads-menu-list-box-divider-color"
+            },
+            {
+              "name": "--dads-menu-list-box-divider-margin-block"
+            },
+            {
+              "name": "--dads-menu-list-box-divider-margin-inline"
+            },
+            {
+              "name": "--dads-menu-list-box-font-family"
+            },
+            {
+              "name": "--dads-menu-list-box-font-size"
+            },
+            {
+              "name": "--dads-menu-list-box-letter-spacing"
+            },
+            {
+              "name": "--dads-menu-list-box-line-height"
+            },
+            {
+              "name": "--dads-menu-list-box-min-width"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-arrow-margin-left"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-arrow-margin-top"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-arrow-size"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-background"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-border-color"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-border-radius"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-border-width"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-focus-background"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-focus-outline-color"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-focus-outline-offset"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-focus-outline-width"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-focus-ring-color"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-focus-ring-width"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-font-weight"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-gap"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-hover-background"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-hover-border-color"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-icon-size"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-min-height"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-padding-x"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-padding-y"
+            },
+            {
+              "name": "--dads-menu-list-box-opener-underline-offset"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-background"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-border-color"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-border-color-scroll"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-border-radius"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-item-divider"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-item-divider-scroll"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-max-height"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-min-width"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-min-width-scroll"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-padding-x"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-padding-y"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-scrollbar-padding-right"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-shadow"
+            },
+            {
+              "name": "--dads-menu-list-box-popup-z-index"
+            }
+          ]
         }
       ],
       "exports": [
@@ -33107,7 +34726,108 @@
                 "dads-menu-list-item"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-menu-list-color"
+            },
+            {
+              "name": "--dads-menu-list-font-family"
+            },
+            {
+              "name": "--dads-menu-list-font-size"
+            },
+            {
+              "name": "--dads-menu-list-indentation"
+            },
+            {
+              "name": "--dads-menu-list-item-background"
+            },
+            {
+              "name": "--dads-menu-list-item-border-radius"
+            },
+            {
+              "name": "--dads-menu-list-item-color"
+            },
+            {
+              "name": "--dads-menu-list-item-current-background"
+            },
+            {
+              "name": "--dads-menu-list-item-current-color"
+            },
+            {
+              "name": "--dads-menu-list-item-current-hover-background"
+            },
+            {
+              "name": "--dads-menu-list-item-current-hover-color"
+            },
+            {
+              "name": "--dads-menu-list-item-current-parent-background"
+            },
+            {
+              "name": "--dads-menu-list-item-end-icon-margin-right"
+            },
+            {
+              "name": "--dads-menu-list-item-end-icon-margin-top"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-box-inset-width"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-outline-color"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-outline-offset-box"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-outline-offset-standard"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-outline-width"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-ring-color"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-ring-width"
+            },
+            {
+              "name": "--dads-menu-list-item-font-weight"
+            },
+            {
+              "name": "--dads-menu-list-item-gap"
+            },
+            {
+              "name": "--dads-menu-list-item-hover-background"
+            },
+            {
+              "name": "--dads-menu-list-item-line-height"
+            },
+            {
+              "name": "--dads-menu-list-item-min-height"
+            },
+            {
+              "name": "--dads-menu-list-item-padding-x"
+            },
+            {
+              "name": "--dads-menu-list-item-padding-y"
+            },
+            {
+              "name": "--dads-menu-list-item-start-icon-display-empty"
+            },
+            {
+              "name": "--dads-menu-list-item-start-icon-size"
+            },
+            {
+              "name": "--dads-menu-list-item-text-decoration-thickness"
+            },
+            {
+              "name": "--dads-menu-list-item-underline-offset"
+            },
+            {
+              "name": "--dads-menu-list-letter-spacing"
+            }
+          ]
         },
         {
           "kind": "class",
@@ -33822,7 +35542,108 @@
                 "dads-menu-list-item"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-menu-list-color"
+            },
+            {
+              "name": "--dads-menu-list-font-family"
+            },
+            {
+              "name": "--dads-menu-list-font-size"
+            },
+            {
+              "name": "--dads-menu-list-indentation"
+            },
+            {
+              "name": "--dads-menu-list-item-background"
+            },
+            {
+              "name": "--dads-menu-list-item-border-radius"
+            },
+            {
+              "name": "--dads-menu-list-item-color"
+            },
+            {
+              "name": "--dads-menu-list-item-current-background"
+            },
+            {
+              "name": "--dads-menu-list-item-current-color"
+            },
+            {
+              "name": "--dads-menu-list-item-current-hover-background"
+            },
+            {
+              "name": "--dads-menu-list-item-current-hover-color"
+            },
+            {
+              "name": "--dads-menu-list-item-current-parent-background"
+            },
+            {
+              "name": "--dads-menu-list-item-end-icon-margin-right"
+            },
+            {
+              "name": "--dads-menu-list-item-end-icon-margin-top"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-box-inset-width"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-outline-color"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-outline-offset-box"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-outline-offset-standard"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-outline-width"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-ring-color"
+            },
+            {
+              "name": "--dads-menu-list-item-focus-ring-width"
+            },
+            {
+              "name": "--dads-menu-list-item-font-weight"
+            },
+            {
+              "name": "--dads-menu-list-item-gap"
+            },
+            {
+              "name": "--dads-menu-list-item-hover-background"
+            },
+            {
+              "name": "--dads-menu-list-item-line-height"
+            },
+            {
+              "name": "--dads-menu-list-item-min-height"
+            },
+            {
+              "name": "--dads-menu-list-item-padding-x"
+            },
+            {
+              "name": "--dads-menu-list-item-padding-y"
+            },
+            {
+              "name": "--dads-menu-list-item-start-icon-display-empty"
+            },
+            {
+              "name": "--dads-menu-list-item-start-icon-size"
+            },
+            {
+              "name": "--dads-menu-list-item-text-decoration-thickness"
+            },
+            {
+              "name": "--dads-menu-list-item-underline-offset"
+            },
+            {
+              "name": "--dads-menu-list-letter-spacing"
+            }
+          ]
         }
       ],
       "exports": [
@@ -33891,20 +35712,20 @@
           "name": "DadsMobileMenu",
           "cssProperties": [
             {
-              "description": "メニュー幅",
-              "name": "--dads-mobile-menu-width"
+              "description": "戻る行下余白",
+              "name": "--dads-mobile-menu-back-padding-block-end"
+            },
+            {
+              "description": "戻る行上余白",
+              "name": "--dads-mobile-menu-back-padding-block-start"
+            },
+            {
+              "description": "戻る行左右余白",
+              "name": "--dads-mobile-menu-back-padding-inline"
             },
             {
               "description": "背景色",
               "name": "--dads-mobile-menu-background"
-            },
-            {
-              "description": "ルート上下余白",
-              "name": "--dads-mobile-menu-padding-block"
-            },
-            {
-              "description": "ルート左右余白",
-              "name": "--dads-mobile-menu-padding-inline"
             },
             {
               "description": "枠線色",
@@ -33915,6 +35736,12 @@
               "name": "--dads-mobile-menu-border-width"
             },
             {
+              "name": "--dads-mobile-menu-color"
+            },
+            {
+              "name": "--dads-mobile-menu-content-gap"
+            },
+            {
               "description": "区切り線の左右余白（標準）",
               "name": "--dads-mobile-menu-divider-margin-inline"
             },
@@ -33923,16 +35750,28 @@
               "name": "--dads-mobile-menu-divider-margin-inline-wide"
             },
             {
-              "description": "戻る行左右余白",
-              "name": "--dads-mobile-menu-back-padding-inline"
+              "name": "--dads-mobile-menu-font-family"
             },
             {
-              "description": "戻る行上余白",
-              "name": "--dads-mobile-menu-back-padding-block-start"
+              "name": "--dads-mobile-menu-font-size"
             },
             {
-              "description": "戻る行下余白",
-              "name": "--dads-mobile-menu-back-padding-block-end"
+              "name": "--dads-mobile-menu-letter-spacing"
+            },
+            {
+              "name": "--dads-mobile-menu-line-height"
+            },
+            {
+              "description": "ルート上下余白",
+              "name": "--dads-mobile-menu-padding-block"
+            },
+            {
+              "description": "ルート左右余白",
+              "name": "--dads-mobile-menu-padding-inline"
+            },
+            {
+              "description": "メニュー幅",
+              "name": "--dads-mobile-menu-width"
             }
           ],
           "cssParts": [
@@ -34557,20 +36396,21 @@
           "name": "DadsMobileMock",
           "cssProperties": [
             {
-              "description": "フレーム幅（既定: 402px）",
-              "name": "--dads-mobile-mock-frame-width"
-            },
-            {
               "description": "フレーム比率（既定: 402/856）",
               "name": "--dads-mobile-mock-aspect-ratio"
             },
             {
-              "description": "画面領域の内側余白（既定: 6px）",
-              "name": "--dads-mobile-mock-screen-inset"
+              "name": "--dads-mobile-mock-frame-corner-radius"
             },
             {
-              "description": "画面領域の角丸（既定: 24px）",
-              "name": "--dads-mobile-mock-screen-radius"
+              "name": "--dads-mobile-mock-frame-stroke-color"
+            },
+            {
+              "name": "--dads-mobile-mock-frame-stroke-width"
+            },
+            {
+              "description": "フレーム幅（既定: 402px）",
+              "name": "--dads-mobile-mock-frame-width"
             },
             {
               "description": "上部safe-area（既定: 44px）",
@@ -34579,6 +36419,14 @@
             {
               "description": "画面背景色",
               "name": "--dads-mobile-mock-screen-background"
+            },
+            {
+              "description": "画面領域の内側余白（既定: 6px）",
+              "name": "--dads-mobile-mock-screen-inset"
+            },
+            {
+              "description": "画面領域の角丸（既定: 24px）",
+              "name": "--dads-mobile-mock-screen-radius"
             }
           ],
           "cssParts": [
@@ -34895,40 +36743,202 @@
           "name": "DadsNotificationBanner",
           "cssProperties": [
             {
+              "description": "アクション色",
+              "name": "--dads-notification-banner-action-color"
+            },
+            {
+              "name": "--dads-notification-banner-action-color-active"
+            },
+            {
+              "name": "--dads-notification-banner-action-color-hover"
+            },
+            {
+              "name": "--dads-notification-banner-action-gap"
+            },
+            {
+              "name": "--dads-notification-banner-action-outline-active-bg"
+            },
+            {
+              "name": "--dads-notification-banner-action-outline-hover-bg"
+            },
+            {
+              "name": "--dads-notification-banner-action-text-color"
+            },
+            {
+              "name": "--dads-notification-banner-actions-padding-inline-end"
+            },
+            {
               "description": "背景色",
               "name": "--dads-notification-banner-background"
             },
             {
-              "description": "本文文字色",
-              "name": "--dads-notification-banner-color"
+              "name": "--dads-notification-banner-body-gap"
             },
             {
-              "description": "タイトル文字色",
-              "name": "--dads-notification-banner-title-color"
+              "name": "--dads-notification-banner-body-margin-top"
+            },
+            {
+              "name": "--dads-notification-banner-body-padding-block-end"
+            },
+            {
+              "name": "--dads-notification-banner-body-padding-inline-end"
             },
             {
               "description": "外枠色",
               "name": "--dads-notification-banner-border-color"
             },
             {
-              "description": "外枠線幅",
-              "name": "--dads-notification-banner-border-width"
-            },
-            {
               "description": "角丸",
               "name": "--dads-notification-banner-border-radius"
+            },
+            {
+              "description": "外枠線幅",
+              "name": "--dads-notification-banner-border-width"
             },
             {
               "description": "color-chip左帯色",
               "name": "--dads-notification-banner-chip-color"
             },
             {
+              "name": "--dads-notification-banner-close-color"
+            },
+            {
+              "name": "--dads-notification-banner-close-compact-size"
+            },
+            {
+              "name": "--dads-notification-banner-close-hover-bg"
+            },
+            {
+              "name": "--dads-notification-banner-close-icon-size"
+            },
+            {
+              "description": "本文文字色",
+              "name": "--dads-notification-banner-color"
+            },
+            {
+              "name": "--dads-notification-banner-color-chip-border-width"
+            },
+            {
+              "name": "--dads-notification-banner-color-chip-inset-width"
+            },
+            {
+              "name": "--dads-notification-banner-color-chip-padding-inline-start"
+            },
+            {
+              "name": "--dads-notification-banner-color-chip-radius"
+            },
+            {
+              "name": "--dads-notification-banner-dense-action-gap"
+            },
+            {
+              "name": "--dads-notification-banner-dense-body-gap"
+            },
+            {
+              "name": "--dads-notification-banner-dense-body-margin-top"
+            },
+            {
+              "name": "--dads-notification-banner-dense-color-chip-inset-width"
+            },
+            {
+              "name": "--dads-notification-banner-dense-color-chip-padding-inline-start"
+            },
+            {
+              "name": "--dads-notification-banner-dense-gap"
+            },
+            {
+              "name": "--dads-notification-banner-dense-icon-padding-top"
+            },
+            {
+              "name": "--dads-notification-banner-dense-icon-size"
+            },
+            {
+              "name": "--dads-notification-banner-dense-padding-block-end"
+            },
+            {
+              "name": "--dads-notification-banner-dense-padding-block-start"
+            },
+            {
+              "name": "--dads-notification-banner-dense-padding-inline-end"
+            },
+            {
+              "name": "--dads-notification-banner-dense-padding-inline-start"
+            },
+            {
+              "name": "--dads-notification-banner-gap"
+            },
+            {
               "description": "アイコン色",
               "name": "--dads-notification-banner-icon-color"
             },
             {
-              "description": "アクション色",
-              "name": "--dads-notification-banner-action-color"
+              "name": "--dads-notification-banner-icon-padding-top"
+            },
+            {
+              "name": "--dads-notification-banner-icon-size"
+            },
+            {
+              "name": "--dads-notification-banner-padding-block-end"
+            },
+            {
+              "name": "--dads-notification-banner-padding-block-start"
+            },
+            {
+              "name": "--dads-notification-banner-padding-inline-end"
+            },
+            {
+              "name": "--dads-notification-banner-padding-inline-start"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-active-bg"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-background"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-color"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-color-active"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-color-hover"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-hover-bg"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-padding-block"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-padding-inline"
+            },
+            {
+              "name": "--dads-notification-banner-restore-button-radius"
+            },
+            {
+              "name": "--dads-notification-banner-restore-gap"
+            },
+            {
+              "name": "--dads-notification-banner-restore-text-color"
+            },
+            {
+              "name": "--dads-notification-banner-restore-text-size"
+            },
+            {
+              "description": "タイトル文字色",
+              "name": "--dads-notification-banner-title-color"
+            },
+            {
+              "name": "--dads-notification-banner-title-font-size"
+            },
+            {
+              "name": "--dads-notification-banner-title-font-weight"
+            },
+            {
+              "name": "--dads-notification-banner-title-letter-spacing"
+            },
+            {
+              "name": "--dads-notification-banner-title-line-height"
             }
           ],
           "cssParts": [
@@ -37037,7 +39047,99 @@
                 "dads-page-navigation"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-page-navigation-control-background"
+            },
+            {
+              "name": "--dads-page-navigation-control-background-active"
+            },
+            {
+              "name": "--dads-page-navigation-control-background-hover"
+            },
+            {
+              "name": "--dads-page-navigation-control-border-color"
+            },
+            {
+              "name": "--dads-page-navigation-control-border-color-hover"
+            },
+            {
+              "name": "--dads-page-navigation-control-border-radius"
+            },
+            {
+              "name": "--dads-page-navigation-control-border-width"
+            },
+            {
+              "name": "--dads-page-navigation-control-color"
+            },
+            {
+              "name": "--dads-page-navigation-control-color-hover"
+            },
+            {
+              "name": "--dads-page-navigation-control-gap"
+            },
+            {
+              "name": "--dads-page-navigation-control-min-height"
+            },
+            {
+              "name": "--dads-page-navigation-control-min-width"
+            },
+            {
+              "name": "--dads-page-navigation-control-padding-x"
+            },
+            {
+              "name": "--dads-page-navigation-control-padding-y"
+            },
+            {
+              "name": "--dads-page-navigation-control-size"
+            },
+            {
+              "name": "--dads-page-navigation-control-text-decoration"
+            },
+            {
+              "name": "--dads-page-navigation-font-family"
+            },
+            {
+              "name": "--dads-page-navigation-font-size"
+            },
+            {
+              "name": "--dads-page-navigation-font-weight"
+            },
+            {
+              "name": "--dads-page-navigation-gap"
+            },
+            {
+              "name": "--dads-page-navigation-icon-size"
+            },
+            {
+              "name": "--dads-page-navigation-justify-content"
+            },
+            {
+              "name": "--dads-page-navigation-letter-spacing"
+            },
+            {
+              "name": "--dads-page-navigation-line-height"
+            },
+            {
+              "name": "--dads-page-navigation-status-color"
+            },
+            {
+              "name": "--dads-page-navigation-status-font-size"
+            },
+            {
+              "name": "--dads-page-navigation-status-font-weight"
+            },
+            {
+              "name": "--dads-page-navigation-status-letter-spacing"
+            },
+            {
+              "name": "--dads-page-navigation-status-line-height"
+            },
+            {
+              "name": "--dads-page-navigation-width"
+            }
+          ]
         }
       ],
       "exports": [
@@ -38177,7 +40279,135 @@
                 "dads-radio"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-radio-base-padding-block"
+            },
+            {
+              "name": "--dads-radio-border-width"
+            },
+            {
+              "name": "--dads-radio-error-text-color"
+            },
+            {
+              "name": "--dads-radio-error-text-font-size"
+            },
+            {
+              "name": "--dads-radio-error-text-line-height"
+            },
+            {
+              "name": "--dads-radio-error-text-margin-block-start"
+            },
+            {
+              "name": "--dads-radio-focus-outline-color"
+            },
+            {
+              "name": "--dads-radio-focus-outline-offset"
+            },
+            {
+              "name": "--dads-radio-focus-outline-width"
+            },
+            {
+              "name": "--dads-radio-focus-ring-color"
+            },
+            {
+              "name": "--dads-radio-focus-ring-width"
+            },
+            {
+              "name": "--dads-radio-font-family"
+            },
+            {
+              "name": "--dads-radio-font-weight"
+            },
+            {
+              "name": "--dads-radio-force-border-color"
+            },
+            {
+              "name": "--dads-radio-force-dot-color"
+            },
+            {
+              "name": "--dads-radio-force-hover-bg"
+            },
+            {
+              "name": "--dads-radio-gap"
+            },
+            {
+              "name": "--dads-radio-hover-bg"
+            },
+            {
+              "name": "--dads-radio-hover-bg-hover"
+            },
+            {
+              "name": "--dads-radio-inner-size"
+            },
+            {
+              "name": "--dads-radio-input-accent-color"
+            },
+            {
+              "name": "--dads-radio-input-accent-hover-color"
+            },
+            {
+              "name": "--dads-radio-input-base-color"
+            },
+            {
+              "name": "--dads-radio-input-border-color"
+            },
+            {
+              "name": "--dads-radio-input-border-hover-color"
+            },
+            {
+              "name": "--dads-radio-input-disabled-accent-color"
+            },
+            {
+              "name": "--dads-radio-input-disabled-accent-hover-color"
+            },
+            {
+              "name": "--dads-radio-input-disabled-base-color"
+            },
+            {
+              "name": "--dads-radio-input-disabled-border-color"
+            },
+            {
+              "name": "--dads-radio-input-disabled-border-hover-color"
+            },
+            {
+              "name": "--dads-radio-input-error-accent-color"
+            },
+            {
+              "name": "--dads-radio-input-error-accent-hover-color"
+            },
+            {
+              "name": "--dads-radio-input-error-border-color"
+            },
+            {
+              "name": "--dads-radio-input-error-border-hover-color"
+            },
+            {
+              "name": "--dads-radio-label-color"
+            },
+            {
+              "name": "--dads-radio-label-font-size"
+            },
+            {
+              "name": "--dads-radio-label-line-height"
+            },
+            {
+              "name": "--dads-radio-label-padding-top"
+            },
+            {
+              "name": "--dads-radio-outer-size"
+            },
+            {
+              "name": "--dads-radio-requirement-color"
+            },
+            {
+              "name": "--dads-radio-requirement-margin"
+            },
+            {
+              "name": "--dads-radio-target-size"
+            }
+          ]
         }
       ],
       "exports": [
@@ -38218,16 +40448,35 @@
           "name": "DadsResourceList",
           "cssProperties": [
             {
+              "description": "action 幅",
+              "name": "--dads-resource-list-action-width"
+            },
+            {
               "description": "背景色",
               "name": "--dads-resource-list-background"
+            },
+            {
+              "description": "無効時背景色",
+              "name": "--dads-resource-list-background-disabled"
             },
             {
               "description": "選択時背景色",
               "name": "--dads-resource-list-background-selected"
             },
             {
-              "description": "無効時背景色",
-              "name": "--dads-resource-list-background-disabled"
+              "description": "罫線色",
+              "name": "--dads-resource-list-border-color"
+            },
+            {
+              "description": "無効時罫線色",
+              "name": "--dads-resource-list-border-color-disabled"
+            },
+            {
+              "description": "選択時罫線色",
+              "name": "--dads-resource-list-border-color-selected"
+            },
+            {
+              "name": "--dads-resource-list-border-radius"
             },
             {
               "description": "文字色",
@@ -38238,16 +40487,49 @@
               "name": "--dads-resource-list-color-disabled"
             },
             {
-              "description": "罫線色",
-              "name": "--dads-resource-list-border-color"
+              "description": "contents 内行間",
+              "name": "--dads-resource-list-content-gap"
             },
             {
-              "description": "選択時罫線色",
-              "name": "--dads-resource-list-border-color-selected"
+              "description": "control 領域の最小ヒットサイズ",
+              "name": "--dads-resource-list-control-hit-area"
             },
             {
-              "description": "無効時罫線色",
-              "name": "--dads-resource-list-border-color-disabled"
+              "name": "--dads-resource-list-focus-outline-color"
+            },
+            {
+              "name": "--dads-resource-list-focus-outline-offset"
+            },
+            {
+              "name": "--dads-resource-list-focus-outline-width"
+            },
+            {
+              "name": "--dads-resource-list-focus-ring-color"
+            },
+            {
+              "name": "--dads-resource-list-focus-ring-width"
+            },
+            {
+              "name": "--dads-resource-list-font-family"
+            },
+            {
+              "name": "--dads-resource-list-font-size"
+            },
+            {
+              "description": "body 内要素間隔",
+              "name": "--dads-resource-list-gap"
+            },
+            {
+              "name": "--dads-resource-list-hover-background"
+            },
+            {
+              "name": "--dads-resource-list-hover-outline-width"
+            },
+            {
+              "name": "--dads-resource-list-letter-spacing"
+            },
+            {
+              "name": "--dads-resource-list-line-height"
             },
             {
               "description": "上下余白",
@@ -38258,20 +40540,40 @@
               "name": "--dads-resource-list-padding-inline"
             },
             {
-              "description": "body 内要素間隔",
-              "name": "--dads-resource-list-gap"
+              "name": "--dads-resource-list-title-color"
             },
             {
-              "description": "contents 内行間",
-              "name": "--dads-resource-list-content-gap"
+              "name": "--dads-resource-list-title-font-size"
             },
             {
-              "description": "control 領域の最小ヒットサイズ",
-              "name": "--dads-resource-list-control-hit-area"
+              "name": "--dads-resource-list-title-font-weight"
             },
             {
-              "description": "action 幅",
-              "name": "--dads-resource-list-action-width"
+              "name": "--dads-resource-list-title-letter-spacing"
+            },
+            {
+              "name": "--dads-resource-list-title-line-height"
+            },
+            {
+              "name": "--dads-resource-list-title-link-color"
+            },
+            {
+              "name": "--dads-resource-list-title-link-color-active"
+            },
+            {
+              "name": "--dads-resource-list-title-link-color-hover"
+            },
+            {
+              "name": "--dads-resource-list-title-underline-offset"
+            },
+            {
+              "name": "--dads-resource-list-title-underline-thickness"
+            },
+            {
+              "name": "--dads-resource-list-title-underline-thickness-hover"
+            },
+            {
+              "name": "--dads-resource-list-whole-focus-outline-width"
             }
           ],
           "cssParts": [
@@ -41832,7 +44134,66 @@
                 "dads-select"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-select-background"
+            },
+            {
+              "name": "--dads-select-border-color"
+            },
+            {
+              "name": "--dads-select-border-radius"
+            },
+            {
+              "name": "--dads-select-border-width"
+            },
+            {
+              "name": "--dads-select-chevron-color"
+            },
+            {
+              "name": "--dads-select-color"
+            },
+            {
+              "name": "--dads-select-error-color"
+            },
+            {
+              "name": "--dads-select-font-size"
+            },
+            {
+              "name": "--dads-select-height"
+            },
+            {
+              "name": "--dads-select-label-color"
+            },
+            {
+              "name": "--dads-select-label-size"
+            },
+            {
+              "name": "--dads-select-label-weight"
+            },
+            {
+              "name": "--dads-select-letter-spacing"
+            },
+            {
+              "name": "--dads-select-padding-left"
+            },
+            {
+              "name": "--dads-select-padding-right"
+            },
+            {
+              "name": "--dads-select-padding-y"
+            },
+            {
+              "name": "--dads-select-requirement-color"
+            },
+            {
+              "name": "--dads-select-support-color"
+            },
+            {
+              "name": "--dads-select-width"
+            }
+          ]
         }
       ],
       "exports": [
@@ -42421,7 +44782,57 @@
                 "dads-step-navigation-item"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-step-navigation-color"
+            },
+            {
+              "name": "--dads-step-navigation-completed-icon-check"
+            },
+            {
+              "name": "--dads-step-navigation-completed-icon-circle"
+            },
+            {
+              "name": "--dads-step-navigation-completed-number-bg"
+            },
+            {
+              "name": "--dads-step-navigation-connector-color"
+            },
+            {
+              "name": "--dads-step-navigation-editing-icon-color"
+            },
+            {
+              "name": "--dads-step-navigation-error-color"
+            },
+            {
+              "name": "--dads-step-navigation-error-icon-color"
+            },
+            {
+              "name": "--dads-step-navigation-focus-outline-color"
+            },
+            {
+              "name": "--dads-step-navigation-focus-ring-color"
+            },
+            {
+              "name": "--dads-step-navigation-number-bg"
+            },
+            {
+              "name": "--dads-step-navigation-reached-number-bg"
+            },
+            {
+              "name": "--dads-step-navigation-reached-number-color"
+            },
+            {
+              "name": "--dads-step-navigation-state-badge-bg"
+            },
+            {
+              "name": "--dads-step-navigation-step-min-width"
+            },
+            {
+              "name": "--dads-step-navigation-step-width"
+            }
+          ]
         },
         {
           "kind": "class",
@@ -43196,7 +45607,57 @@
                 "dads-step-navigation-item"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-step-navigation-color"
+            },
+            {
+              "name": "--dads-step-navigation-completed-icon-check"
+            },
+            {
+              "name": "--dads-step-navigation-completed-icon-circle"
+            },
+            {
+              "name": "--dads-step-navigation-completed-number-bg"
+            },
+            {
+              "name": "--dads-step-navigation-connector-color"
+            },
+            {
+              "name": "--dads-step-navigation-editing-icon-color"
+            },
+            {
+              "name": "--dads-step-navigation-error-color"
+            },
+            {
+              "name": "--dads-step-navigation-error-icon-color"
+            },
+            {
+              "name": "--dads-step-navigation-focus-outline-color"
+            },
+            {
+              "name": "--dads-step-navigation-focus-ring-color"
+            },
+            {
+              "name": "--dads-step-navigation-number-bg"
+            },
+            {
+              "name": "--dads-step-navigation-reached-number-bg"
+            },
+            {
+              "name": "--dads-step-navigation-reached-number-color"
+            },
+            {
+              "name": "--dads-step-navigation-state-badge-bg"
+            },
+            {
+              "name": "--dads-step-navigation-step-min-width"
+            },
+            {
+              "name": "--dads-step-navigation-step-width"
+            }
+          ]
         }
       ],
       "exports": [
@@ -44005,7 +46466,27 @@
                 "dads-switch"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-switch-knob-bg"
+            },
+            {
+              "name": "--dads-switch-knob-size"
+            },
+            {
+              "name": "--dads-switch-label-color"
+            },
+            {
+              "name": "--dads-switch-track-bg"
+            },
+            {
+              "name": "--dads-switch-track-height"
+            },
+            {
+              "name": "--dads-switch-track-width"
+            }
+          ]
         }
       ],
       "exports": [
@@ -44046,10 +46527,6 @@
           "name": "DadsTableControl",
           "cssProperties": [
             {
-              "description": "Primary spacing between blocks",
-              "name": "--dads-table-control-gap"
-            },
-            {
               "description": "Result count text color",
               "name": "--dads-table-control-count-color"
             },
@@ -44058,12 +46535,64 @@
               "name": "--dads-table-control-divider-color"
             },
             {
+              "name": "--dads-table-control-focus-outline-color"
+            },
+            {
+              "name": "--dads-table-control-focus-outline-offset"
+            },
+            {
+              "name": "--dads-table-control-focus-outline-width"
+            },
+            {
+              "name": "--dads-table-control-focus-ring-color"
+            },
+            {
+              "name": "--dads-table-control-focus-ring-width"
+            },
+            {
+              "name": "--dads-table-control-font-family"
+            },
+            {
+              "name": "--dads-table-control-font-size"
+            },
+            {
+              "name": "--dads-table-control-font-weight-bold"
+            },
+            {
+              "name": "--dads-table-control-font-weight-regular"
+            },
+            {
+              "description": "Primary spacing between blocks",
+              "name": "--dads-table-control-gap"
+            },
+            {
               "description": "Gap between page size options",
               "name": "--dads-table-control-items-gap"
             },
             {
+              "name": "--dads-table-control-letter-spacing"
+            },
+            {
+              "name": "--dads-table-control-link-color"
+            },
+            {
+              "name": "--dads-table-control-link-color-hover"
+            },
+            {
+              "name": "--dads-table-control-option-min-width"
+            },
+            {
               "description": "Gap between search and popular areas",
               "name": "--dads-table-control-popular-gap"
+            },
+            {
+              "name": "--dads-table-control-reset-min-width"
+            },
+            {
+              "name": "--dads-table-control-search-max-width"
+            },
+            {
+              "name": "--dads-table-control-search-min-width"
             }
           ],
           "cssParts": [
@@ -46120,7 +48649,126 @@
                 "dads-table"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-table-block-gap"
+            },
+            {
+              "name": "--dads-table-body-background"
+            },
+            {
+              "name": "--dads-table-border-color"
+            },
+            {
+              "name": "--dads-table-border-color-strong"
+            },
+            {
+              "name": "--dads-table-cell-padding-x"
+            },
+            {
+              "name": "--dads-table-cell-padding-y"
+            },
+            {
+              "name": "--dads-table-checkbox-accent-color"
+            },
+            {
+              "name": "--dads-table-checkbox-accent-hover-color"
+            },
+            {
+              "name": "--dads-table-checkbox-border-color"
+            },
+            {
+              "name": "--dads-table-checkbox-border-hover-color"
+            },
+            {
+              "name": "--dads-table-checkbox-border-width"
+            },
+            {
+              "name": "--dads-table-checkbox-check-color"
+            },
+            {
+              "name": "--dads-table-checkbox-size"
+            },
+            {
+              "name": "--dads-table-control-border-radius"
+            },
+            {
+              "name": "--dads-table-control-focus-outline-color"
+            },
+            {
+              "name": "--dads-table-control-focus-outline-offset"
+            },
+            {
+              "name": "--dads-table-control-focus-outline-width"
+            },
+            {
+              "name": "--dads-table-control-focus-ring-color"
+            },
+            {
+              "name": "--dads-table-control-focus-ring-width"
+            },
+            {
+              "name": "--dads-table-font-family"
+            },
+            {
+              "name": "--dads-table-font-size"
+            },
+            {
+              "name": "--dads-table-font-weight"
+            },
+            {
+              "name": "--dads-table-header-background"
+            },
+            {
+              "name": "--dads-table-header-divider-color"
+            },
+            {
+              "name": "--dads-table-header-text-color"
+            },
+            {
+              "name": "--dads-table-letter-spacing"
+            },
+            {
+              "name": "--dads-table-line-height"
+            },
+            {
+              "name": "--dads-table-row-background"
+            },
+            {
+              "name": "--dads-table-row-background-hover"
+            },
+            {
+              "name": "--dads-table-row-background-selected"
+            },
+            {
+              "name": "--dads-table-row-background-selected-hover"
+            },
+            {
+              "name": "--dads-table-row-background-stripe"
+            },
+            {
+              "name": "--dads-table-scroll-shadow-color"
+            },
+            {
+              "name": "--dads-table-scroll-shadow-padding"
+            },
+            {
+              "name": "--dads-table-scroll-shadow-size"
+            },
+            {
+              "name": "--dads-table-selection-column-width"
+            },
+            {
+              "name": "--dads-table-sort-icon-gap"
+            },
+            {
+              "name": "--dads-table-sort-icon-size"
+            },
+            {
+              "name": "--dads-table-text-color"
+            }
+          ]
         },
         {
           "kind": "variable",
@@ -47178,7 +49826,60 @@
                 "dads-textarea"
               ]
             }
-          }
+          },
+          "cssProperties": [
+            {
+              "name": "--dads-textarea-background"
+            },
+            {
+              "name": "--dads-textarea-border-color"
+            },
+            {
+              "name": "--dads-textarea-border-radius"
+            },
+            {
+              "name": "--dads-textarea-border-width"
+            },
+            {
+              "name": "--dads-textarea-color"
+            },
+            {
+              "name": "--dads-textarea-counter-color"
+            },
+            {
+              "name": "--dads-textarea-error-color"
+            },
+            {
+              "name": "--dads-textarea-font-size"
+            },
+            {
+              "name": "--dads-textarea-label-color"
+            },
+            {
+              "name": "--dads-textarea-label-size"
+            },
+            {
+              "name": "--dads-textarea-label-weight"
+            },
+            {
+              "name": "--dads-textarea-min-height"
+            },
+            {
+              "name": "--dads-textarea-padding"
+            },
+            {
+              "name": "--dads-textarea-placeholder-color"
+            },
+            {
+              "name": "--dads-textarea-requirement-color"
+            },
+            {
+              "name": "--dads-textarea-resize"
+            },
+            {
+              "name": "--dads-textarea-support-color"
+            }
+          ]
         }
       ],
       "exports": [
@@ -47688,20 +50389,72 @@
           "name": "DadsUtilityLink",
           "cssProperties": [
             {
-              "description": "ラベル色",
-              "name": "--dads-utility-link-label-color"
+              "description": "フォーカス時背景色",
+              "name": "--dads-utility-link-focus-background"
             },
             {
-              "description": "ホバー時ラベル色",
-              "name": "--dads-utility-link-label-color-hover"
+              "name": "--dads-utility-link-focus-border-radius"
+            },
+            {
+              "description": "フォーカス時アウトライン色",
+              "name": "--dads-utility-link-focus-outline-color"
+            },
+            {
+              "name": "--dads-utility-link-focus-outline-offset"
+            },
+            {
+              "name": "--dads-utility-link-focus-outline-width"
+            },
+            {
+              "description": "フォーカス時リング色",
+              "name": "--dads-utility-link-focus-ring-color"
+            },
+            {
+              "name": "--dads-utility-link-focus-ring-width"
+            },
+            {
+              "name": "--dads-utility-link-font-family"
+            },
+            {
+              "name": "--dads-utility-link-font-size"
+            },
+            {
+              "name": "--dads-utility-link-font-weight"
+            },
+            {
+              "description": "アイコン色",
+              "name": "--dads-utility-link-icon-color"
+            },
+            {
+              "name": "--dads-utility-link-icon-size"
+            },
+            {
+              "name": "--dads-utility-link-icon-vertical-align"
+            },
+            {
+              "name": "--dads-utility-link-item-gap"
+            },
+            {
+              "description": "ラベル色",
+              "name": "--dads-utility-link-label-color"
             },
             {
               "description": "アクティブ時ラベル色",
               "name": "--dads-utility-link-label-color-active"
             },
             {
-              "description": "アイコン色",
-              "name": "--dads-utility-link-icon-color"
+              "description": "ホバー時ラベル色",
+              "name": "--dads-utility-link-label-color-hover"
+            },
+            {
+              "name": "--dads-utility-link-letter-spacing"
+            },
+            {
+              "name": "--dads-utility-link-line-height"
+            },
+            {
+              "description": "下線オフセット",
+              "name": "--dads-utility-link-underline-offset"
             },
             {
               "description": "下線太さ",
@@ -47710,22 +50463,6 @@
             {
               "description": "ホバー時下線太さ",
               "name": "--dads-utility-link-underline-thickness-hover"
-            },
-            {
-              "description": "下線オフセット",
-              "name": "--dads-utility-link-underline-offset"
-            },
-            {
-              "description": "フォーカス時アウトライン色",
-              "name": "--dads-utility-link-focus-outline-color"
-            },
-            {
-              "description": "フォーカス時リング色",
-              "name": "--dads-utility-link-focus-ring-color"
-            },
-            {
-              "description": "フォーカス時背景色",
-              "name": "--dads-utility-link-focus-background"
             }
           ],
           "cssParts": [
@@ -50863,7 +53600,7 @@
         {
           "kind": "variable",
           "name": "buttonStyles",
-          "default": "css` /* ========== ホストレベル共通設定 ========== */ :host { display: inline-block; vertical-align: middle; width: var(--dads-button-width, auto); min-width: var(--dads-button-min-width, auto); max-width: var(--dads-button-max-width, none); } :host([full-width]) { display: block; width: 100%; } /* ========== ベース要素共通スタイル ========== */ [part=\"base\"] { /* すべてのバリアントで共通のプロパティ定義 */ display: inline-flex; align-items: center; justify-content: center; gap: var(--dads-button-icon-gap, 8px); /* プロパティと変数のマッピング（一度だけ定義） */ background-color: var(--dads-button-background); color: var(--dads-button-color); border: var(--dads-button-border-width, 2px) solid var(--dads-button-border-color); border-radius: var(--dads-button-border-radius, 0.5rem); padding: var(--dads-button-padding, var(--spacing-3, 12px) var(--spacing-6, 24px)); width: var(--dads-button-width, auto); min-width: var(--dads-button-min-width, auto); max-width: var(--dads-button-max-width, none); min-height: var(--dads-button-min-height, var(--dads-button-min-height-default, 48px)); aspect-ratio: var(--dads-button-aspect-ratio, auto); /* フォント設定 - グローバルトークン参照 */ font-family: var(--font-family-sans); font-size: var(--dads-button-font-size, 1rem); font-weight: var(--dads-button-font-weight, 700); line-height: var(--dads-button-line-height, 1.25); text-align: var(--dads-button-text-align, center); text-transform: var(--dads-button-text-transform, none); text-decoration: var(--dads-button-text-decoration, none); white-space: var(--dads-button-white-space, nowrap); user-select: var(--dads-button-user-select, none); -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color, transparent); /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */ position: relative; /* overflow: hidden を削除して擬似要素が見えるように */ box-sizing: border-box; appearance: none; -webkit-appearance: none; -moz-appearance: none; } /* フォーカススタイルはmixin (applyFocusStyles) で適用 */ /* Disabled時のフォーカススタイル（button要素のみ） */ :host([disabled]) button[part=\"base\"]:focus, button[part=\"base\"]:disabled:focus { outline: var(--focus-outline-width, 4px) solid var(--focus-outline-color, #000000); outline-offset: 0; } :host([disabled]) button[part=\"base\"]:focus::after, button[part=\"base\"]:disabled:focus::after { content: ''; position: absolute; inset: calc(var(--focus-outline-width, 4px) * -1); border: var(--focus-ring-width, 4px) solid var(--focus-ring-color, #ffd43d); border-radius: inherit; pointer-events: none; } /* 無効状態（button要素のみ） */ :host([disabled]) button[part=\"base\"], button[part=\"base\"]:disabled { opacity: var(--dads-button-opacity, 1); } /* アイコンスロット */ [part=\"icon-start\"], [part=\"icon-end\"] { display: none; align-items: center; justify-content: center; flex-shrink: 0; font-size: var(--dads-button-icon-size, 1.25em); color: var(--dads-button-icon-color, currentColor); } :host([data-has-icon-start]) [part=\"icon-start\"], :host([data-has-icon-end]) [part=\"icon-end\"] { display: inline-flex; } /* ラベル */ [part=\"label\"] { flex: 1 1 auto; } :host([data-icon-only]) [part=\"label\"] { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; line-height: 1; } /* ========== a要素固有のスタイル ========== */ /* a要素のデフォルトスタイルをリセット */ [part=\"base\"]:where(a) { text-decoration: none; color: inherit; /* hrefなしのa要素やJavaScript処理用 */ cursor: pointer; } /* ========== Hover / Active ========== */ :host(:not([disabled])) [part=\"base\"]:is(:hover, :active) { text-decoration: underline; text-underline-offset: 0.2em; } :host(:not([disabled])) [part=\"base\"]:hover { --dads-button-background: var(--dads-button-background-hover); --dads-button-color: var(--dads-button-color-hover); --dads-button-border-color: var(--dads-button-border-color-hover); } :host(:not([disabled])) [part=\"base\"]:active { --dads-button-background: var(--dads-button-background-active); --dads-button-color: var(--dads-button-color-active); --dads-button-border-color: var(--dads-button-border-color-active); } /* ========== Solid (Primary) バリアント ========== */ /* Solid Disabled状態 */ :host([variant=\"solid\"][disabled]) button[part=\"base\"], :host([variant=\"primary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-primary-bg); --dads-button-color: var(--button-disabled-primary-text); --dads-button-border-color: var(--button-disabled-primary-border); } /* ========== Outlined (Secondary) バリアント ========== */ /* Outlined Disabled状態 */ :host([variant=\"outlined\"][disabled]) button[part=\"base\"], :host([variant=\"secondary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-secondary-bg); --dads-button-color: var(--button-disabled-secondary-text); --dads-button-border-color: var(--button-disabled-secondary-border); } /* ========== Text（テキストのみ）バリアント ========== */ /* Text基本状態 - 下線付き */ :host([variant=\"text\"]) [part=\"base\"], :host([variant=\"tertiary\"]) [part=\"base\"] { --dads-button-border-width: 0; text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; } :host([variant=\"text\"][data-icon-only]) [part=\"base\"], :host([variant=\"tertiary\"][data-icon-only]) [part=\"base\"] { text-decoration: none; } :host([variant=\"text\"][data-icon-only]) [part=\"label\"], :host([variant=\"tertiary\"][data-icon-only]) [part=\"label\"] { border-bottom: 1px solid currentColor; padding-bottom: 0.2em; } /* hover/active で下線を太く */ :host([variant=\"text\"]:not([disabled])) [part=\"base\"]:is(:hover, :active), :host([variant=\"tertiary\"]:not([disabled])) [part=\"base\"]:is(:hover, :active) { text-decoration-thickness: 2px; } :host([variant=\"text\"]:not([disabled])[data-icon-only]) [part=\"base\"]:is(:hover, :active) [part=\"label\"], :host([variant=\"tertiary\"]:not([disabled])[data-icon-only]) [part=\"base\"]:is(:hover, :active) [part=\"label\"] { border-bottom-width: 2px; } /* Text Disabled状態 */ :host([variant=\"text\"][disabled]) button[part=\"base\"], :host([variant=\"tertiary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-tertiary-bg); --dads-button-color: var(--button-disabled-tertiary-text); --dads-button-border-color: var(--button-disabled-tertiary-border); text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; } /* ========== デフォルト（variant未指定）のDisabled状態 ========== */ :host([disabled]:not([variant])) button[part=\"base\"] { --dads-button-background: var(--button-disabled-primary-bg); --dads-button-color: var(--button-disabled-primary-text); --dads-button-border-color: var(--button-disabled-primary-border); } /* ========== 印刷対応 ========== */ @media print { [part=\"base\"] { background-color: transparent !important; color: black !important; border: 1px solid black !important; } } `"
+          "default": "css` /* ========== ホストレベル共通設定 ========== */ :host { display: inline-block; vertical-align: middle; width: var(--dads-button-width, auto); min-width: var(--dads-button-min-width, auto); max-width: var(--dads-button-max-width, none); } :host([full-width]) { display: block; width: 100%; } /* ========== ベース要素共通スタイル ========== */ [part=\"base\"] { /* すべてのバリアントで共通のプロパティ定義 */ display: inline-flex; align-items: center; justify-content: center; gap: var(--dads-button-icon-gap, 8px); /* アイコンとラベルの間隔 */ /* プロパティと変数のマッピング（一度だけ定義） */ background-color: var(--dads-button-background); /* ボタンの背景色 */ color: var(--dads-button-color); /* ボタンのテキスト色 */ border: var(--dads-button-border-width, 2px) solid var(--dads-button-border-color); border-radius: var(--dads-button-border-radius, 0.5rem); /* 角丸のサイズ */ padding: var(--dads-button-padding, var(--spacing-3, 12px) var(--spacing-6, 24px)); /* 内側の余白 */ width: var(--dads-button-width, auto); /* ボタンの幅 */ min-width: var(--dads-button-min-width, auto); /* 最小幅 */ max-width: var(--dads-button-max-width, none); /* 最大幅 */ min-height: var(--dads-button-min-height, var(--dads-button-min-height-default, 48px)); /* 最小高さ */ aspect-ratio: var(--dads-button-aspect-ratio, auto); /* アスペクト比 */ /* フォント設定 - グローバルトークン参照 */ font-family: var(--font-family-sans); font-size: var(--dads-button-font-size, 1rem); /* フォントサイズ */ font-weight: var(--dads-button-font-weight, 700); /* フォントウェイト */ line-height: var(--dads-button-line-height, 1.25); /* 行の高さ */ text-align: var(--dads-button-text-align, center); /* テキスト揃え */ text-transform: var(--dads-button-text-transform, none); /* テキスト変換（大文字化等） */ text-decoration: var(--dads-button-text-decoration, none); /* テキスト装飾 */ white-space: var(--dads-button-white-space, nowrap); /* テキスト折り返し制御 */ user-select: var(--dads-button-user-select, none); /* テキスト選択の可否 */ -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color, transparent); /* タップ時のハイライト色 */ /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */ position: relative; /* overflow: hidden を削除して擬似要素が見えるように */ box-sizing: border-box; appearance: none; -webkit-appearance: none; -moz-appearance: none; } /* フォーカススタイルはmixin (applyFocusStyles) で適用 */ /* Disabled時のフォーカススタイル（button要素のみ） */ :host([disabled]) button[part=\"base\"]:focus, button[part=\"base\"]:disabled:focus { outline: var(--focus-outline-width, 4px) solid var(--focus-outline-color, #000000); outline-offset: 0; } :host([disabled]) button[part=\"base\"]:focus::after, button[part=\"base\"]:disabled:focus::after { content: ''; position: absolute; inset: calc(var(--focus-outline-width, 4px) * -1); border: var(--focus-ring-width, 4px) solid var(--focus-ring-color, #ffd43d); border-radius: inherit; pointer-events: none; } /* 無効状態（button要素のみ） */ :host([disabled]) button[part=\"base\"], button[part=\"base\"]:disabled { opacity: var(--dads-button-opacity, 1); /* 無効時の不透明度 */ } /* アイコンスロット */ [part=\"icon-start\"], [part=\"icon-end\"] { display: none; align-items: center; justify-content: center; flex-shrink: 0; font-size: var(--dads-button-icon-size, 1.25em); /* アイコンサイズ */ color: var(--dads-button-icon-color, currentColor); /* アイコン色 */ } :host([data-has-icon-start]) [part=\"icon-start\"], :host([data-has-icon-end]) [part=\"icon-end\"] { display: inline-flex; } /* ラベル */ [part=\"label\"] { flex: 1 1 auto; } :host([data-icon-only]) [part=\"label\"] { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; line-height: 1; } /* ========== a要素固有のスタイル ========== */ /* a要素のデフォルトスタイルをリセット */ [part=\"base\"]:where(a) { text-decoration: none; color: inherit; /* hrefなしのa要素やJavaScript処理用 */ cursor: pointer; } /* ========== Hover / Active ========== */ :host(:not([disabled])) [part=\"base\"]:is(:hover, :active) { text-decoration: underline; text-underline-offset: 0.2em; } :host(:not([disabled])) [part=\"base\"]:hover { --dads-button-background: var(--dads-button-background-hover); --dads-button-color: var(--dads-button-color-hover); --dads-button-border-color: var(--dads-button-border-color-hover); } :host(:not([disabled])) [part=\"base\"]:active { --dads-button-background: var(--dads-button-background-active); --dads-button-color: var(--dads-button-color-active); --dads-button-border-color: var(--dads-button-border-color-active); } /* ========== Solid (Primary) バリアント ========== */ /* Solid Disabled状態 */ :host([variant=\"solid\"][disabled]) button[part=\"base\"], :host([variant=\"primary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-primary-bg); --dads-button-color: var(--button-disabled-primary-text); --dads-button-border-color: var(--button-disabled-primary-border); } /* ========== Outlined (Secondary) バリアント ========== */ /* Outlined Disabled状態 */ :host([variant=\"outlined\"][disabled]) button[part=\"base\"], :host([variant=\"secondary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-secondary-bg); --dads-button-color: var(--button-disabled-secondary-text); --dads-button-border-color: var(--button-disabled-secondary-border); } /* ========== Text（テキストのみ）バリアント ========== */ /* Text基本状態 - 下線付き */ :host([variant=\"text\"]) [part=\"base\"], :host([variant=\"tertiary\"]) [part=\"base\"] { --dads-button-border-width: 0; text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; } :host([variant=\"text\"][data-icon-only]) [part=\"base\"], :host([variant=\"tertiary\"][data-icon-only]) [part=\"base\"] { text-decoration: none; } :host([variant=\"text\"][data-icon-only]) [part=\"label\"], :host([variant=\"tertiary\"][data-icon-only]) [part=\"label\"] { border-bottom: 1px solid currentColor; padding-bottom: 0.2em; } /* hover/active で下線を太く */ :host([variant=\"text\"]:not([disabled])) [part=\"base\"]:is(:hover, :active), :host([variant=\"tertiary\"]:not([disabled])) [part=\"base\"]:is(:hover, :active) { text-decoration-thickness: 2px; } :host([variant=\"text\"]:not([disabled])[data-icon-only]) [part=\"base\"]:is(:hover, :active) [part=\"label\"], :host([variant=\"tertiary\"]:not([disabled])[data-icon-only]) [part=\"base\"]:is(:hover, :active) [part=\"label\"] { border-bottom-width: 2px; } /* Text Disabled状態 */ :host([variant=\"text\"][disabled]) button[part=\"base\"], :host([variant=\"tertiary\"][disabled]) button[part=\"base\"] { --dads-button-background: var(--button-disabled-tertiary-bg); --dads-button-color: var(--button-disabled-tertiary-text); --dads-button-border-color: var(--button-disabled-tertiary-border); text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; } /* ========== デフォルト（variant未指定）のDisabled状態 ========== */ :host([disabled]:not([variant])) button[part=\"base\"] { --dads-button-background: var(--button-disabled-primary-bg); --dads-button-color: var(--button-disabled-primary-text); --dads-button-border-color: var(--button-disabled-primary-border); } /* ========== 印刷対応 ========== */ @media print { [part=\"base\"] { background-color: transparent !important; color: black !important; border: 1px solid black !important; } } `"
         }
       ],
       "exports": [

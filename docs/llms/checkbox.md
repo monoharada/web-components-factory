@@ -65,6 +65,15 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ch
 | `requirement` | 要否ラベル（※必須） |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-checkbox-force-border-color` | - |  |
+| `--dads-checkbox-force-fill-color` | - |  |
+| `--dads-checkbox-force-hover-bg` | - |  |
+
+
 ## Styling
 
 ```css

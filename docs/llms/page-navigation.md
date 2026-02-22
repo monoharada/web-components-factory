@@ -66,6 +66,42 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component pa
 | `status` | ステータス表示 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-page-navigation-control-background` | - |  |
+| `--dads-page-navigation-control-background-active` | - |  |
+| `--dads-page-navigation-control-background-hover` | - |  |
+| `--dads-page-navigation-control-border-color` | - |  |
+| `--dads-page-navigation-control-border-color-hover` | - |  |
+| `--dads-page-navigation-control-border-radius` | - |  |
+| `--dads-page-navigation-control-border-width` | - |  |
+| `--dads-page-navigation-control-color` | - |  |
+| `--dads-page-navigation-control-color-hover` | - |  |
+| `--dads-page-navigation-control-gap` | - |  |
+| `--dads-page-navigation-control-min-height` | - |  |
+| `--dads-page-navigation-control-min-width` | - |  |
+| `--dads-page-navigation-control-padding-x` | - |  |
+| `--dads-page-navigation-control-padding-y` | - |  |
+| `--dads-page-navigation-control-size` | - |  |
+| `--dads-page-navigation-control-text-decoration` | - |  |
+| `--dads-page-navigation-font-family` | - |  |
+| `--dads-page-navigation-font-size` | - |  |
+| `--dads-page-navigation-font-weight` | - |  |
+| `--dads-page-navigation-gap` | - |  |
+| `--dads-page-navigation-icon-size` | - |  |
+| `--dads-page-navigation-justify-content` | - |  |
+| `--dads-page-navigation-letter-spacing` | - |  |
+| `--dads-page-navigation-line-height` | - |  |
+| `--dads-page-navigation-status-color` | - |  |
+| `--dads-page-navigation-status-font-size` | - |  |
+| `--dads-page-navigation-status-font-weight` | - |  |
+| `--dads-page-navigation-status-letter-spacing` | - |  |
+| `--dads-page-navigation-status-line-height` | - |  |
+| `--dads-page-navigation-width` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

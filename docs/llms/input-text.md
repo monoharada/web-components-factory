@@ -76,6 +76,28 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component in
 | `wrapper` | 全体を囲むコンテナ |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-input-background` | - | 入力フィールドの背景色 |
+| `--dads-input-border-color` | - | 枠線色 |
+| `--dads-input-border-radius` | - | 角丸のサイズ |
+| `--dads-input-border-width` | - | 枠線の太さ |
+| `--dads-input-color` | - | 入力テキスト色 |
+| `--dads-input-error-color` | - | エラーメッセージの色 |
+| `--dads-input-font-size` | - | 入力テキストのフォントサイズ |
+| `--dads-input-height` | - | 入力フィールドの高さ |
+| `--dads-input-label-color` | - | ラベルの色 |
+| `--dads-input-label-size` | - | ラベルのフォントサイズ |
+| `--dads-input-label-weight` | - | ラベルのフォントウェイト |
+| `--dads-input-padding` | - | 入力フィールドの内側余白 |
+| `--dads-input-placeholder-color` | - | プレースホルダーテキスト色 |
+| `--dads-input-requirement-color` | - | 必須/任意ラベルの色 |
+| `--dads-input-support-color` | - | サポートテキストの色 |
+| `--dads-input-width` | - | 入力フィールドの幅 |
+
+
 ## Events
 
 | Event | Type | Description |
