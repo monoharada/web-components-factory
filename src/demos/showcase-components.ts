@@ -8340,14 +8340,6 @@ ${dadsDataRows(6, 6)}
       <section style="margin-top: 40px; margin-bottom: 40px;">
         <h3 style="font-size: 20px; margin-bottom: 16px; color: #333;">作例</h3>
 
-        <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">写真モード</h4>
-        <div style="display: flex; gap: 16px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; align-items: center; margin-bottom: 24px;">
-          <dads-avatar src="https://i.pravatar.cc/96?u=taro" size="40" label="太郎"></dads-avatar>
-          <dads-avatar src="https://i.pravatar.cc/96?u=hanako" size="40" label="花子"></dads-avatar>
-          <dads-avatar src="https://i.pravatar.cc/96?u=ichiro" size="40" label="一郎"></dads-avatar>
-          <dads-avatar src="https://i.pravatar.cc/96?u=tome" size="40" label="とめ"></dads-avatar>
-        </div>
-
         <h4 style="font-size: 16px; margin-bottom: 12px; color: #555;">カラーバリエーション</h4>
         <div style="display: flex; gap: 16px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 12px; align-items: center; margin-bottom: 24px;">
           <dads-avatar initials="太" color="--color-primitive-blue-600" size="40"></dads-avatar>
