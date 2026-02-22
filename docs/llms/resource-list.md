@@ -72,20 +72,44 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component re
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
+| `--dads-resource-list-action-width` | - | action 幅 |
 | `--dads-resource-list-background` | - | 背景色 |
-| `--dads-resource-list-background-selected` | - | 選択時背景色 |
 | `--dads-resource-list-background-disabled` | - | 無効時背景色 |
+| `--dads-resource-list-background-selected` | - | 選択時背景色 |
+| `--dads-resource-list-border-color` | - | 罫線色 |
+| `--dads-resource-list-border-color-disabled` | - | 無効時罫線色 |
+| `--dads-resource-list-border-color-selected` | - | 選択時罫線色 |
+| `--dads-resource-list-border-radius` | - |  |
 | `--dads-resource-list-color` | - | 文字色 |
 | `--dads-resource-list-color-disabled` | - | 無効時文字色 |
-| `--dads-resource-list-border-color` | - | 罫線色 |
-| `--dads-resource-list-border-color-selected` | - | 選択時罫線色 |
-| `--dads-resource-list-border-color-disabled` | - | 無効時罫線色 |
-| `--dads-resource-list-padding-block` | - | 上下余白 |
-| `--dads-resource-list-padding-inline` | - | 左右余白 |
-| `--dads-resource-list-gap` | - | body 内要素間隔 |
 | `--dads-resource-list-content-gap` | - | contents 内行間 |
 | `--dads-resource-list-control-hit-area` | - | control 領域の最小ヒットサイズ |
-| `--dads-resource-list-action-width` | - | action 幅 |
+| `--dads-resource-list-focus-outline-color` | - |  |
+| `--dads-resource-list-focus-outline-offset` | - |  |
+| `--dads-resource-list-focus-outline-width` | - |  |
+| `--dads-resource-list-focus-ring-color` | - |  |
+| `--dads-resource-list-focus-ring-width` | - |  |
+| `--dads-resource-list-font-family` | - |  |
+| `--dads-resource-list-font-size` | - |  |
+| `--dads-resource-list-gap` | - | body 内要素間隔 |
+| `--dads-resource-list-hover-background` | - |  |
+| `--dads-resource-list-hover-outline-width` | - |  |
+| `--dads-resource-list-letter-spacing` | - |  |
+| `--dads-resource-list-line-height` | - |  |
+| `--dads-resource-list-padding-block` | - | 上下余白 |
+| `--dads-resource-list-padding-inline` | - | 左右余白 |
+| `--dads-resource-list-title-color` | - |  |
+| `--dads-resource-list-title-font-size` | - |  |
+| `--dads-resource-list-title-font-weight` | - |  |
+| `--dads-resource-list-title-letter-spacing` | - |  |
+| `--dads-resource-list-title-line-height` | - |  |
+| `--dads-resource-list-title-link-color` | - |  |
+| `--dads-resource-list-title-link-color-active` | - |  |
+| `--dads-resource-list-title-link-color-hover` | - |  |
+| `--dads-resource-list-title-underline-offset` | - |  |
+| `--dads-resource-list-title-underline-thickness` | - |  |
+| `--dads-resource-list-title-underline-thickness-hover` | - |  |
+| `--dads-resource-list-whole-focus-outline-width` | - |  |
 
 
 ## Styling

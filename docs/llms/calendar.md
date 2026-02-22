@@ -48,6 +48,14 @@ None
 | `year-select` | 年セレクト |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-calendar-control-size` | - |  |
+| `--dads-calendar-control-size-default` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

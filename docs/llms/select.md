@@ -73,6 +73,31 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component se
 | `wrapper` | 全体を囲むコンテナ |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-select-background` | - |  |
+| `--dads-select-border-color` | - |  |
+| `--dads-select-border-radius` | - |  |
+| `--dads-select-border-width` | - |  |
+| `--dads-select-chevron-color` | - |  |
+| `--dads-select-color` | - |  |
+| `--dads-select-error-color` | - |  |
+| `--dads-select-font-size` | - |  |
+| `--dads-select-height` | - |  |
+| `--dads-select-label-color` | - |  |
+| `--dads-select-label-size` | - |  |
+| `--dads-select-label-weight` | - |  |
+| `--dads-select-letter-spacing` | - |  |
+| `--dads-select-padding-left` | - |  |
+| `--dads-select-padding-right` | - |  |
+| `--dads-select-padding-y` | - |  |
+| `--dads-select-requirement-color` | - |  |
+| `--dads-select-support-color` | - |  |
+| `--dads-select-width` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

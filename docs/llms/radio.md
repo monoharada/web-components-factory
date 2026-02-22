@@ -65,6 +65,54 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ra
 | `requirement` | 要否ラベル（※必須） |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-radio-base-padding-block` | - |  |
+| `--dads-radio-border-width` | - |  |
+| `--dads-radio-error-text-color` | - |  |
+| `--dads-radio-error-text-font-size` | - |  |
+| `--dads-radio-error-text-line-height` | - |  |
+| `--dads-radio-error-text-margin-block-start` | - |  |
+| `--dads-radio-focus-outline-color` | - |  |
+| `--dads-radio-focus-outline-offset` | - |  |
+| `--dads-radio-focus-outline-width` | - |  |
+| `--dads-radio-focus-ring-color` | - |  |
+| `--dads-radio-focus-ring-width` | - |  |
+| `--dads-radio-font-family` | - |  |
+| `--dads-radio-font-weight` | - |  |
+| `--dads-radio-force-border-color` | - |  |
+| `--dads-radio-force-dot-color` | - |  |
+| `--dads-radio-force-hover-bg` | - |  |
+| `--dads-radio-gap` | - |  |
+| `--dads-radio-hover-bg` | - |  |
+| `--dads-radio-hover-bg-hover` | - |  |
+| `--dads-radio-inner-size` | - |  |
+| `--dads-radio-input-accent-color` | - |  |
+| `--dads-radio-input-accent-hover-color` | - |  |
+| `--dads-radio-input-base-color` | - |  |
+| `--dads-radio-input-border-color` | - |  |
+| `--dads-radio-input-border-hover-color` | - |  |
+| `--dads-radio-input-disabled-accent-color` | - |  |
+| `--dads-radio-input-disabled-accent-hover-color` | - |  |
+| `--dads-radio-input-disabled-base-color` | - |  |
+| `--dads-radio-input-disabled-border-color` | - |  |
+| `--dads-radio-input-disabled-border-hover-color` | - |  |
+| `--dads-radio-input-error-accent-color` | - |  |
+| `--dads-radio-input-error-accent-hover-color` | - |  |
+| `--dads-radio-input-error-border-color` | - |  |
+| `--dads-radio-input-error-border-hover-color` | - |  |
+| `--dads-radio-label-color` | - |  |
+| `--dads-radio-label-font-size` | - |  |
+| `--dads-radio-label-line-height` | - |  |
+| `--dads-radio-label-padding-top` | - |  |
+| `--dads-radio-outer-size` | - |  |
+| `--dads-radio-requirement-color` | - |  |
+| `--dads-radio-requirement-margin` | - |  |
+| `--dads-radio-target-size` | - |  |
+
+
 ## Styling
 
 ```css

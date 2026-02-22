@@ -206,6 +206,158 @@ function applyComponentOverride(componentId, inferred) {
   return out;
 }
 
+/**
+ * Extract `--dads-{component}-*` CSS custom properties from token/style files
+ * and inject them into `decl.cssProperties`.
+ *
+ * Naming convention:
+ *   `--dads-{component}-*` → public API (included in CEM)
+ *   `--{component}-*`      → internal (excluded)
+ *   `--spacing-*` etc.     → global tokens (excluded)
+ *
+ * JSDoc `@cssprop` entries take priority — tokens from files are only
+ * added when no existing entry with the same name exists.
+ */
+function extractPublicCssProperties(componentDir, componentId) {
+  const cwd = process.cwd();
+  const dirAbs = path.resolve(cwd, componentDir);
+  const candidates = [
+    path.join(dirAbs, `${componentId}-tokens.ts`),
+    path.join(dirAbs, `${componentId}-styles.ts`),
+  ];
+
+  /** @type {Map<string, string>} name → description */
+  const found = new Map();
+
+  for (const filePath of candidates) {
+    if (!existsSync(filePath)) continue;
+    const text = readFileSync(filePath, 'utf-8');
+
+    // Match lines like:
+    //   --dads-button-background: ...;
+    //   --dads-button-background: ...; /* description */
+    // Also match in var() references for :host definitions:
+    //   var(--dads-button-width, auto)
+    // We use a broad regex first, then deduplicate.
+    const varRe = /--dads-[\w-]+/g;
+    for (let m = varRe.exec(text); m; m = varRe.exec(text)) {
+      const name = m[0];
+      if (found.has(name)) continue;
+      found.set(name, '');
+    }
+
+    // Extract descriptions from same-line inline comments.
+    // Pattern 1: Token declaration — --dads-foo-bar: value; /* Description */
+    const declLineRe = /^\s*(--dads-[\w-]+)\s*:\s*[^;\n]*;[ \t]*\/\*\s*(.+?)\s*\*\//gm;
+    for (let m = declLineRe.exec(text); m; m = declLineRe.exec(text)) {
+      const name = m[1];
+      const desc = m[2]?.trim() ?? '';
+      if (desc && found.has(name) && !found.get(name)) {
+        found.set(name, desc);
+      }
+    }
+
+    // Pattern 2: Usage in var() — property: var(--dads-foo-bar, fallback); /* Description */
+    const varUsageRe = /var\((--dads-[\w-]+)[^)]*\)[^;\n]*;[ \t]*\/\*\s*(.+?)\s*\*\//gm;
+    for (let m = varUsageRe.exec(text); m; m = varUsageRe.exec(text)) {
+      const name = m[1];
+      const desc = m[2]?.trim() ?? '';
+      if (desc && found.has(name) && !found.get(name)) {
+        found.set(name, desc);
+      }
+    }
+
+    // NOTE: Preceding-line comments (/* ... */ above the declaration) are NOT
+    // extracted because they often contain section headers or implementation
+    // notes rather than property descriptions. Use inline comments only.
+  }
+
+  // Filter to only properties that start with the component-specific prefix.
+  // e.g. for componentId "button", keep only --dads-button-*
+  // Some components use a shorter prefix (e.g. "input-text" → "--dads-input-*").
+  // We try the full prefix first, then fall back to shorter segments.
+  const fullPrefix = `--dads-${componentId}-`;
+  let componentPrefix = fullPrefix;
+  const hasFullMatch = [...found.keys()].some((n) => n.startsWith(fullPrefix));
+  if (!hasFullMatch) {
+    // Try shorter prefixes: "input-text" → try "--dads-input-"
+    const segments = componentId.split('-');
+    for (let i = segments.length - 1; i >= 1; i--) {
+      const shorter = `--dads-${segments.slice(0, i).join('-')}-`;
+      if ([...found.keys()].some((n) => n.startsWith(shorter))) {
+        componentPrefix = shorter;
+        break;
+      }
+    }
+
+    // Guard: warn if the shorter prefix could match other known componentIds.
+    if (componentPrefix !== fullPrefix) {
+      const shorterBase = componentPrefix.replace('--dads-', '').replace(/-$/, '');
+      const conflicting = [...KNOWN_COMPONENT_IDS].filter(
+        (id) => id !== componentId && id.startsWith(`${shorterBase}-`),
+      );
+      if (conflicting.length > 0) {
+        console.warn(
+          `  [wcf-css-properties-from-tokens] WARNING: ${componentId} uses shorter prefix "${componentPrefix}" ` +
+            `which may conflict with: ${conflicting.join(', ')}. Consider renaming tokens to ${fullPrefix}*.`,
+        );
+      }
+    }
+  }
+
+  /** @type {{ name: string, description?: string }[]} */
+  const result = [];
+  for (const [name, description] of found) {
+    if (!name.startsWith(componentPrefix)) continue;
+    const entry = { name };
+    if (description) entry.description = description;
+    result.push(entry);
+  }
+
+  result.sort((a, b) => a.name.localeCompare(b.name));
+  return result;
+}
+
+function injectCssPropertiesFromTokens(customElementsManifest) {
+  const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
+  let injectedCount = 0;
+
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      if (!isCustomElementDecl(decl)) continue;
+      const componentId = decl.custom?.componentId;
+      const componentDir = decl.custom?.install?.source?.componentDir;
+      if (!componentId || !componentDir) continue;
+
+      const extracted = extractPublicCssProperties(componentDir, componentId);
+      if (extracted.length === 0) continue;
+
+      // Merge: JSDoc-sourced entries take priority.
+      const existing = new Map();
+      for (const entry of (decl.cssProperties ?? [])) {
+        existing.set(entry.name, entry);
+      }
+
+      let added = 0;
+      for (const entry of extracted) {
+        if (existing.has(entry.name)) continue;
+        existing.set(entry.name, entry);
+        added++;
+      }
+
+      if (added > 0) {
+        decl.cssProperties = Array.from(existing.values()).sort((a, b) => a.name.localeCompare(b.name));
+        injectedCount++;
+      }
+    }
+  }
+
+  if (injectedCount > 0) {
+    console.log(`  [wcf-css-properties-from-tokens] Injected cssProperties for ${injectedCount} declarations`);
+  }
+}
+
 function injectInstallMetadata(customElementsManifest) {
   const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
 
@@ -419,6 +571,48 @@ export default {
       name: 'wcf-install-metadata',
       packageLinkPhase({ customElementsManifest }) {
         injectInstallMetadata(customElementsManifest);
+      },
+    },
+    {
+      name: 'wcf-css-properties-from-tokens',
+      packageLinkPhase({ customElementsManifest }) {
+        injectCssPropertiesFromTokens(customElementsManifest);
+      },
+    },
+    {
+      name: 'wcf-css-properties-coverage',
+      packageLinkPhase({ customElementsManifest }) {
+        const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
+        const warnings = [];
+        for (const mod of modules) {
+          for (const decl of (mod.declarations ?? [])) {
+            if (!isCustomElementDecl(decl)) continue;
+            const componentId = decl.custom?.componentId;
+            const componentDir = decl.custom?.install?.source?.componentDir;
+            if (!componentId || !componentDir) continue;
+
+            const dirAbs = path.resolve(process.cwd(), componentDir);
+            const tokensFile = path.join(dirAbs, `${componentId}-tokens.ts`);
+            const stylesFile = path.join(dirAbs, `${componentId}-styles.ts`);
+            const hasCssProps = Array.isArray(decl.cssProperties) && decl.cssProperties.length > 0;
+            if (hasCssProps) continue;
+
+            // Check whether the source files actually contain --dads-* declarations.
+            let sourceWithDads = '';
+            for (const f of [tokensFile, stylesFile]) {
+              if (!existsSync(f)) continue;
+              const text = readFileSync(f, 'utf-8');
+              if (/--dads-[\w-]+/.test(text)) { sourceWithDads = path.basename(f); break; }
+            }
+            if (sourceWithDads) {
+              warnings.push(`${decl.tagName}: has --dads-* in ${sourceWithDads} but no cssProperties in CEM`);
+            }
+          }
+        }
+        if (warnings.length > 0) {
+          console.warn(`  [wcf-css-properties-coverage] ${warnings.length} warning(s):`);
+          for (const w of warnings) console.warn(`    ⚠ ${w}`);
+        }
       },
     },
     cemValidatorPlugin({

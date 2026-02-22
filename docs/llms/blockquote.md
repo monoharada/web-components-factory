@@ -48,6 +48,23 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component bl
 | `lead` | 冒頭スロット |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-blockquote-border-color` | - |  |
+| `--dads-blockquote-border-width` | - |  |
+| `--dads-blockquote-color` | - |  |
+| `--dads-blockquote-font-size` | - |  |
+| `--dads-blockquote-gap` | - |  |
+| `--dads-blockquote-line-height` | - |  |
+| `--dads-blockquote-margin-inline` | - |  |
+| `--dads-blockquote-padding-block` | - |  |
+| `--dads-blockquote-padding-inline-end` | - |  |
+| `--dads-blockquote-padding-inline-start` | - |  |
+| `--dads-blockquote-slot-display` | - |  |
+
+
 ## Styling
 
 ```css

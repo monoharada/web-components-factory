@@ -54,9 +54,23 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-hamburger-menu-button-icon-size` | - | アイコンサイズ |
-| `--dads-hamburger-menu-button-min-height` | - | 最小高さ |
+| `--dads-hamburger-menu-button-background` | - |  |
+| `--dads-hamburger-menu-button-background-active` | - |  |
 | `--dads-hamburger-menu-button-background-hover` | - | hover背景色 |
+| `--dads-hamburger-menu-button-color` | - |  |
+| `--dads-hamburger-menu-button-gap` | - |  |
+| `--dads-hamburger-menu-button-icon-only-hover-outline-color` | - |  |
+| `--dads-hamburger-menu-button-icon-only-hover-outline-width` | - |  |
+| `--dads-hamburger-menu-button-icon-only-radius` | - |  |
+| `--dads-hamburger-menu-button-icon-only-size` | - |  |
+| `--dads-hamburger-menu-button-icon-size` | - | アイコンサイズ |
+| `--dads-hamburger-menu-button-label-line-height` | - |  |
+| `--dads-hamburger-menu-button-label-size` | - |  |
+| `--dads-hamburger-menu-button-min-height` | - | 最小高さ |
+| `--dads-hamburger-menu-button-padding-block` | - |  |
+| `--dads-hamburger-menu-button-padding-inline` | - |  |
+| `--dads-hamburger-menu-button-radius` | - |  |
+| `--dads-hamburger-menu-button-underline-offset` | - |  |
 
 
 ## Styling

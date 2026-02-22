@@ -43,31 +43,31 @@ const dialogSemanticTokensText = `
 const dialogLocalTokensText = `
   :host {
     /* ========== ローカルトークン（公開API） ========== */
-    --dads-dialog-background: var(--dialog-background);
-    --dads-dialog-color: var(--dialog-color);
-    --dads-dialog-border-color: var(--dialog-border-color);
-    --dads-dialog-border-width: var(--dialog-border-width);
-    --dads-dialog-border-radius: var(--dialog-border-radius);
+    --dads-dialog-background: var(--dialog-background); /* ダイアログの背景色 */
+    --dads-dialog-color: var(--dialog-color); /* ダイアログのテキスト色 */
+    --dads-dialog-border-color: var(--dialog-border-color); /* 枠線色 */
+    --dads-dialog-border-width: var(--dialog-border-width); /* 枠線の太さ */
+    --dads-dialog-border-radius: var(--dialog-border-radius); /* 角丸のサイズ */
 
-    --dads-dialog-width: var(--dialog-width);
-    --dads-dialog-max-height: var(--dialog-max-height);
-    --dads-dialog-viewport-padding: var(--dialog-viewport-padding);
-    --dads-dialog-padding-inline: var(--dialog-padding-inline);
-    --dads-dialog-padding-block: var(--dialog-padding-block);
-    --dads-dialog-gap: var(--dialog-gap);
-    --dads-dialog-header-gap: var(--dialog-header-gap);
-    --dads-dialog-footer-gap: var(--dialog-footer-gap);
+    --dads-dialog-width: var(--dialog-width); /* ダイアログの幅 */
+    --dads-dialog-max-height: var(--dialog-max-height); /* ダイアログの最大高さ */
+    --dads-dialog-viewport-padding: var(--dialog-viewport-padding); /* ビューポート端からの余白 */
+    --dads-dialog-padding-inline: var(--dialog-padding-inline); /* 左右の内側余白 */
+    --dads-dialog-padding-block: var(--dialog-padding-block); /* 上下の内側余白 */
+    --dads-dialog-gap: var(--dialog-gap); /* セクション間の間隔 */
+    --dads-dialog-header-gap: var(--dialog-header-gap); /* ヘッダー内の間隔 */
+    --dads-dialog-footer-gap: var(--dialog-footer-gap); /* フッター内のボタン間隔 */
 
-    --dads-dialog-title-size: var(--dialog-title-size);
-    --dads-dialog-title-line-height: var(--dialog-title-line-height);
+    --dads-dialog-title-size: var(--dialog-title-size); /* タイトルのフォントサイズ */
+    --dads-dialog-title-line-height: var(--dialog-title-line-height); /* タイトルの行の高さ */
 
-    --dads-dialog-close-button-size: var(--dialog-close-button-size);
-    --dads-dialog-close-button-padding: var(--dialog-close-button-padding);
-    --dads-dialog-close-button-border-radius: var(--dialog-close-button-border-radius);
-    --dads-dialog-close-button-border-color: var(--dialog-close-button-border-color);
-    --dads-dialog-close-button-hover-background: var(--dialog-close-button-hover-background);
+    --dads-dialog-close-button-size: var(--dialog-close-button-size); /* 閉じるボタンのサイズ */
+    --dads-dialog-close-button-padding: var(--dialog-close-button-padding); /* 閉じるボタンの内側余白 */
+    --dads-dialog-close-button-border-radius: var(--dialog-close-button-border-radius); /* 閉じるボタンの角丸 */
+    --dads-dialog-close-button-border-color: var(--dialog-close-button-border-color); /* 閉じるボタンの枠線色 */
+    --dads-dialog-close-button-hover-background: var(--dialog-close-button-hover-background); /* 閉じるボタンのホバー時背景色 */
 
-    --dads-dialog-backdrop-background: var(--dialog-backdrop-background);
+    --dads-dialog-backdrop-background: var(--dialog-backdrop-background); /* 背景オーバーレイの色 */
   }
 
   :host([size="s"]),

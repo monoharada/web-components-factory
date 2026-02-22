@@ -60,6 +60,18 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component sw
 | `wrapper` | 全体を囲むコンテナ |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-switch-knob-bg` | - |  |
+| `--dads-switch-knob-size` | - |  |
+| `--dads-switch-label-color` | - |  |
+| `--dads-switch-track-bg` | - |  |
+| `--dads-switch-track-height` | - |  |
+| `--dads-switch-track-width` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

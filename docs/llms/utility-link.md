@@ -55,16 +55,28 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ut
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-utility-link-label-color` | - | ラベル色 |
-| `--dads-utility-link-label-color-hover` | - | ホバー時ラベル色 |
-| `--dads-utility-link-label-color-active` | - | アクティブ時ラベル色 |
+| `--dads-utility-link-focus-background` | - | フォーカス時背景色 |
+| `--dads-utility-link-focus-border-radius` | - |  |
+| `--dads-utility-link-focus-outline-color` | - | フォーカス時アウトライン色 |
+| `--dads-utility-link-focus-outline-offset` | - |  |
+| `--dads-utility-link-focus-outline-width` | - |  |
+| `--dads-utility-link-focus-ring-color` | - | フォーカス時リング色 |
+| `--dads-utility-link-focus-ring-width` | - |  |
+| `--dads-utility-link-font-family` | - |  |
+| `--dads-utility-link-font-size` | - |  |
+| `--dads-utility-link-font-weight` | - |  |
 | `--dads-utility-link-icon-color` | - | アイコン色 |
+| `--dads-utility-link-icon-size` | - |  |
+| `--dads-utility-link-icon-vertical-align` | - |  |
+| `--dads-utility-link-item-gap` | - |  |
+| `--dads-utility-link-label-color` | - | ラベル色 |
+| `--dads-utility-link-label-color-active` | - | アクティブ時ラベル色 |
+| `--dads-utility-link-label-color-hover` | - | ホバー時ラベル色 |
+| `--dads-utility-link-letter-spacing` | - |  |
+| `--dads-utility-link-line-height` | - |  |
+| `--dads-utility-link-underline-offset` | - | 下線オフセット |
 | `--dads-utility-link-underline-thickness` | - | 下線太さ |
 | `--dads-utility-link-underline-thickness-hover` | - | ホバー時下線太さ |
-| `--dads-utility-link-underline-offset` | - | 下線オフセット |
-| `--dads-utility-link-focus-outline-color` | - | フォーカス時アウトライン色 |
-| `--dads-utility-link-focus-ring-color` | - | フォーカス時リング色 |
-| `--dads-utility-link-focus-background` | - | フォーカス時背景色 |
 
 
 ## Styling

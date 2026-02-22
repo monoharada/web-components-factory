@@ -78,15 +78,69 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component no
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-notification-banner-background` | - | 背景色 |
-| `--dads-notification-banner-color` | - | 本文文字色 |
-| `--dads-notification-banner-title-color` | - | タイトル文字色 |
-| `--dads-notification-banner-border-color` | - | 外枠色 |
-| `--dads-notification-banner-border-width` | - | 外枠線幅 |
-| `--dads-notification-banner-border-radius` | - | 角丸 |
-| `--dads-notification-banner-chip-color` | - | color-chip左帯色 |
-| `--dads-notification-banner-icon-color` | - | アイコン色 |
 | `--dads-notification-banner-action-color` | - | アクション色 |
+| `--dads-notification-banner-action-color-active` | - |  |
+| `--dads-notification-banner-action-color-hover` | - |  |
+| `--dads-notification-banner-action-gap` | - |  |
+| `--dads-notification-banner-action-outline-active-bg` | - |  |
+| `--dads-notification-banner-action-outline-hover-bg` | - |  |
+| `--dads-notification-banner-action-text-color` | - |  |
+| `--dads-notification-banner-actions-padding-inline-end` | - |  |
+| `--dads-notification-banner-background` | - | 背景色 |
+| `--dads-notification-banner-body-gap` | - |  |
+| `--dads-notification-banner-body-margin-top` | - |  |
+| `--dads-notification-banner-body-padding-block-end` | - |  |
+| `--dads-notification-banner-body-padding-inline-end` | - |  |
+| `--dads-notification-banner-border-color` | - | 外枠色 |
+| `--dads-notification-banner-border-radius` | - | 角丸 |
+| `--dads-notification-banner-border-width` | - | 外枠線幅 |
+| `--dads-notification-banner-chip-color` | - | color-chip左帯色 |
+| `--dads-notification-banner-close-color` | - |  |
+| `--dads-notification-banner-close-compact-size` | - |  |
+| `--dads-notification-banner-close-hover-bg` | - |  |
+| `--dads-notification-banner-close-icon-size` | - |  |
+| `--dads-notification-banner-color` | - | 本文文字色 |
+| `--dads-notification-banner-color-chip-border-width` | - |  |
+| `--dads-notification-banner-color-chip-inset-width` | - |  |
+| `--dads-notification-banner-color-chip-padding-inline-start` | - |  |
+| `--dads-notification-banner-color-chip-radius` | - |  |
+| `--dads-notification-banner-dense-action-gap` | - |  |
+| `--dads-notification-banner-dense-body-gap` | - |  |
+| `--dads-notification-banner-dense-body-margin-top` | - |  |
+| `--dads-notification-banner-dense-color-chip-inset-width` | - |  |
+| `--dads-notification-banner-dense-color-chip-padding-inline-start` | - |  |
+| `--dads-notification-banner-dense-gap` | - |  |
+| `--dads-notification-banner-dense-icon-padding-top` | - |  |
+| `--dads-notification-banner-dense-icon-size` | - |  |
+| `--dads-notification-banner-dense-padding-block-end` | - |  |
+| `--dads-notification-banner-dense-padding-block-start` | - |  |
+| `--dads-notification-banner-dense-padding-inline-end` | - |  |
+| `--dads-notification-banner-dense-padding-inline-start` | - |  |
+| `--dads-notification-banner-gap` | - |  |
+| `--dads-notification-banner-icon-color` | - | アイコン色 |
+| `--dads-notification-banner-icon-padding-top` | - |  |
+| `--dads-notification-banner-icon-size` | - |  |
+| `--dads-notification-banner-padding-block-end` | - |  |
+| `--dads-notification-banner-padding-block-start` | - |  |
+| `--dads-notification-banner-padding-inline-end` | - |  |
+| `--dads-notification-banner-padding-inline-start` | - |  |
+| `--dads-notification-banner-restore-button-active-bg` | - |  |
+| `--dads-notification-banner-restore-button-background` | - |  |
+| `--dads-notification-banner-restore-button-color` | - |  |
+| `--dads-notification-banner-restore-button-color-active` | - |  |
+| `--dads-notification-banner-restore-button-color-hover` | - |  |
+| `--dads-notification-banner-restore-button-hover-bg` | - |  |
+| `--dads-notification-banner-restore-button-padding-block` | - |  |
+| `--dads-notification-banner-restore-button-padding-inline` | - |  |
+| `--dads-notification-banner-restore-button-radius` | - |  |
+| `--dads-notification-banner-restore-gap` | - |  |
+| `--dads-notification-banner-restore-text-color` | - |  |
+| `--dads-notification-banner-restore-text-size` | - |  |
+| `--dads-notification-banner-title-color` | - | タイトル文字色 |
+| `--dads-notification-banner-title-font-size` | - |  |
+| `--dads-notification-banner-title-font-weight` | - |  |
+| `--dads-notification-banner-title-letter-spacing` | - |  |
+| `--dads-notification-banner-title-line-height` | - |  |
 
 
 ## Events

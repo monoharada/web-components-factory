@@ -61,6 +61,13 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component la
 | `popup` | ポップアップ領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-language-selector-check-color` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

@@ -65,14 +65,43 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component em
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-emergency-banner-border-color` | - | 外枠色 |
-| `--dads-emergency-banner-background` | - | 背景色 |
-| `--dads-emergency-banner-color` | - | 本文文字色 |
-| `--dads-emergency-banner-heading-color` | - | 見出し色 |
 | `--dads-emergency-banner-action-background` | - | CTA背景色 |
 | `--dads-emergency-banner-action-background-hover` | - | CTAホバー背景色 |
-| `--dads-emergency-banner-action-color` | - | CTA文字色 |
 | `--dads-emergency-banner-action-border-radius` | - | CTA角丸 |
+| `--dads-emergency-banner-action-border-width` | - |  |
+| `--dads-emergency-banner-action-color` | - | CTA文字色 |
+| `--dads-emergency-banner-action-font-size` | - |  |
+| `--dads-emergency-banner-action-font-weight` | - |  |
+| `--dads-emergency-banner-action-icon-size` | - |  |
+| `--dads-emergency-banner-action-inner-border-radius` | - |  |
+| `--dads-emergency-banner-action-inner-border-width` | - |  |
+| `--dads-emergency-banner-action-letter-spacing` | - |  |
+| `--dads-emergency-banner-action-line-height` | - |  |
+| `--dads-emergency-banner-action-min-width` | - |  |
+| `--dads-emergency-banner-action-padding` | - |  |
+| `--dads-emergency-banner-action-padding-bottom` | - |  |
+| `--dads-emergency-banner-action-padding-top` | - |  |
+| `--dads-emergency-banner-background` | - | 背景色 |
+| `--dads-emergency-banner-body-row-gap` | - |  |
+| `--dads-emergency-banner-border-color` | - | 外枠色 |
+| `--dads-emergency-banner-border-width` | - |  |
+| `--dads-emergency-banner-color` | - | 本文文字色 |
+| `--dads-emergency-banner-focus-outline-color` | - |  |
+| `--dads-emergency-banner-focus-outline-offset` | - |  |
+| `--dads-emergency-banner-focus-outline-width` | - |  |
+| `--dads-emergency-banner-focus-ring-color` | - |  |
+| `--dads-emergency-banner-focus-ring-width` | - |  |
+| `--dads-emergency-banner-font-size` | - |  |
+| `--dads-emergency-banner-header-gap` | - |  |
+| `--dads-emergency-banner-heading-color` | - | 見出し色 |
+| `--dads-emergency-banner-heading-font-size` | - |  |
+| `--dads-emergency-banner-heading-font-weight` | - |  |
+| `--dads-emergency-banner-heading-line-height` | - |  |
+| `--dads-emergency-banner-letter-spacing` | - |  |
+| `--dads-emergency-banner-line-height` | - |  |
+| `--dads-emergency-banner-padding-block` | - |  |
+| `--dads-emergency-banner-padding-inline` | - |  |
+| `--dads-emergency-banner-row-gap` | - |  |
 
 
 ## Styling

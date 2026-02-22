@@ -81,6 +81,66 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ca
 | `status` | ステータス（aria-live） |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-carousel-all-slides-content-margin-top` | - |  |
+| `--dads-carousel-all-slides-extra-gap` | - |  |
+| `--dads-carousel-all-slides-icon-color` | - |  |
+| `--dads-carousel-all-slides-margin-top` | - |  |
+| `--dads-carousel-all-slides-row-gap` | - |  |
+| `--dads-carousel-bg-blur-size` | - |  |
+| `--dads-carousel-bg-soft-light-color` | - |  |
+| `--dads-carousel-border-color` | - |  |
+| `--dads-carousel-border-width` | - |  |
+| `--dads-carousel-control-gap-desktop` | - |  |
+| `--dads-carousel-control-gap-mobile` | - |  |
+| `--dads-carousel-control-padding-block` | - |  |
+| `--dads-carousel-control-padding-bottom-expanded` | - |  |
+| `--dads-carousel-focus-outline-color` | - |  |
+| `--dads-carousel-focus-outline-offset-inner` | - |  |
+| `--dads-carousel-focus-outline-offset-outer` | - |  |
+| `--dads-carousel-focus-outline-width` | - |  |
+| `--dads-carousel-focus-ring-color` | - |  |
+| `--dads-carousel-focus-ring-width` | - |  |
+| `--dads-carousel-font-family` | - |  |
+| `--dads-carousel-font-size` | - |  |
+| `--dads-carousel-font-size-heading-default` | - |  |
+| `--dads-carousel-font-size-heading-lg` | - |  |
+| `--dads-carousel-font-size-heading-sm` | - |  |
+| `--dads-carousel-font-weight-bold` | - |  |
+| `--dads-carousel-font-weight-normal` | - |  |
+| `--dads-carousel-hit-area` | - |  |
+| `--dads-carousel-image-outline-width` | - |  |
+| `--dads-carousel-letter-spacing` | - |  |
+| `--dads-carousel-line-color` | - |  |
+| `--dads-carousel-link-color` | - |  |
+| `--dads-carousel-link-hover-color` | - |  |
+| `--dads-carousel-main-ratio` | - |  |
+| `--dads-carousel-main-ratio-key-visual` | - |  |
+| `--dads-carousel-max-width` | - |  |
+| `--dads-carousel-max-width-key-visual` | - |  |
+| `--dads-carousel-next-label-font-size` | - |  |
+| `--dads-carousel-next-label-padding` | - |  |
+| `--dads-carousel-next-padding` | - |  |
+| `--dads-carousel-next-ratio` | - |  |
+| `--dads-carousel-number-font-size` | - |  |
+| `--dads-carousel-number-size` | - |  |
+| `--dads-carousel-page-button-size` | - |  |
+| `--dads-carousel-page-nav-gap` | - |  |
+| `--dads-carousel-panel-grid-side` | - |  |
+| `--dads-carousel-radius-lg` | - |  |
+| `--dads-carousel-radius-md` | - |  |
+| `--dads-carousel-radius-sm` | - |  |
+| `--dads-carousel-side-padding` | - |  |
+| `--dads-carousel-step-gap` | - |  |
+| `--dads-carousel-summary-padding-block` | - |  |
+| `--dads-carousel-summary-padding-inline` | - |  |
+| `--dads-carousel-surface-color` | - |  |
+| `--dads-carousel-text-color` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

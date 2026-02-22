@@ -63,6 +63,44 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component bu
 | `label` | ラベルテキストコンテナ |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-button-aspect-ratio` | - | アスペクト比 |
+| `--dads-button-background` | - | ボタンの背景色 |
+| `--dads-button-background-active` | - |  |
+| `--dads-button-background-hover` | - |  |
+| `--dads-button-border-color` | - |  |
+| `--dads-button-border-color-active` | - |  |
+| `--dads-button-border-color-hover` | - |  |
+| `--dads-button-border-radius` | - | 角丸のサイズ |
+| `--dads-button-border-width` | - |  |
+| `--dads-button-color` | - | ボタンのテキスト色 |
+| `--dads-button-color-active` | - |  |
+| `--dads-button-color-hover` | - |  |
+| `--dads-button-font-size` | - | フォントサイズ |
+| `--dads-button-font-weight` | - | フォントウェイト |
+| `--dads-button-icon-color` | - | アイコン色 |
+| `--dads-button-icon-gap` | - | アイコンとラベルの間隔 |
+| `--dads-button-icon-size` | - | アイコンサイズ |
+| `--dads-button-line-height` | - | 行の高さ |
+| `--dads-button-max-width` | - | 最大幅 |
+| `--dads-button-min-height` | - | 最小高さ |
+| `--dads-button-min-height-default` | - |  |
+| `--dads-button-min-width` | - | 最小幅 |
+| `--dads-button-opacity` | - | 無効時の不透明度 |
+| `--dads-button-padding` | - | 内側の余白 |
+| `--dads-button-tap-highlight-color` | - | タップ時のハイライト色 |
+| `--dads-button-text-align` | - | テキスト揃え |
+| `--dads-button-text-decoration` | - | テキスト装飾 |
+| `--dads-button-text-transform` | - | テキスト変換（大文字化等） |
+| `--dads-button-transition` | - |  |
+| `--dads-button-user-select` | - | テキスト選択の可否 |
+| `--dads-button-white-space` | - | テキスト折り返し制御 |
+| `--dads-button-width` | - | ボタンの幅 |
+
+
 ## Events
 
 | Event | Type | Description |

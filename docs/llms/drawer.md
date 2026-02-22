@@ -57,9 +57,28 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component dr
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-drawer-width` | - | ドロワー幅 |
 | `--dads-drawer-backdrop-background` | - | 背景(backdrop)色 |
+| `--dads-drawer-background` | - |  |
+| `--dads-drawer-border-color` | - |  |
+| `--dads-drawer-border-width` | - |  |
+| `--dads-drawer-close-button-border-color` | - |  |
+| `--dads-drawer-close-button-gap` | - |  |
+| `--dads-drawer-close-button-hover-background` | - |  |
+| `--dads-drawer-close-button-icon-size` | - |  |
+| `--dads-drawer-close-button-padding-inline` | - |  |
+| `--dads-drawer-close-button-radius` | - |  |
+| `--dads-drawer-close-button-size` | - |  |
+| `--dads-drawer-color` | - |  |
+| `--dads-drawer-content-padding-block` | - |  |
+| `--dads-drawer-content-padding-inline` | - |  |
+| `--dads-drawer-header-min-height` | - |  |
+| `--dads-drawer-header-padding-inline` | - |  |
+| `--dads-drawer-max-width` | - |  |
 | `--dads-drawer-shadow` | - | ドロワー影 |
+| `--dads-drawer-title-line-height` | - |  |
+| `--dads-drawer-title-size` | - |  |
+| `--dads-drawer-width` | - | ドロワー幅 |
+| `--dads-drawer-z-index` | - |  |
 
 
 ## Events

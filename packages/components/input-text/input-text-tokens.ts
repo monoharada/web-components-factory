@@ -96,39 +96,30 @@ const inputTextLocalTokensText = `
   :host {
     /* ========== ローカルコンポーネントトークン（カスタマイズ用） ========== */
 
-    /* 背景 */
-    --dads-input-background: var(--input-bg);
+    --dads-input-background: var(--input-bg); /* 入力フィールドの背景色 */
 
-    /* ボーダー */
-    --dads-input-border-color: var(--input-border);
-    --dads-input-border-width: var(--input-border-width);
-    --dads-input-border-radius: var(--input-border-radius);
+    --dads-input-border-color: var(--input-border); /* 枠線色 */
+    --dads-input-border-width: var(--input-border-width); /* 枠線の太さ */
+    --dads-input-border-radius: var(--input-border-radius); /* 角丸のサイズ */
 
-    /* テキスト */
-    --dads-input-color: var(--input-text);
-    --dads-input-placeholder-color: var(--input-text-placeholder);
+    --dads-input-color: var(--input-text); /* 入力テキスト色 */
+    --dads-input-placeholder-color: var(--input-text-placeholder); /* プレースホルダーテキスト色 */
 
-    /* サイズ */
-    --dads-input-padding: var(--input-padding);
-    --dads-input-font-size: var(--input-font-size-md);
-    --dads-input-height: var(--input-height-md);
+    --dads-input-padding: var(--input-padding); /* 入力フィールドの内側余白 */
+    --dads-input-font-size: var(--input-font-size-md); /* 入力テキストのフォントサイズ */
+    --dads-input-height: var(--input-height-md); /* 入力フィールドの高さ */
 
-    /* 幅 */
-    --dads-input-width: var(--input-width-full);
+    --dads-input-width: var(--input-width-full); /* 入力フィールドの幅 */
 
-    /* ラベル */
-    --dads-input-label-size: var(--input-label-size-md);
-    --dads-input-label-color: var(--input-label-color);
-    --dads-input-label-weight: var(--input-label-weight);
+    --dads-input-label-size: var(--input-label-size-md); /* ラベルのフォントサイズ */
+    --dads-input-label-color: var(--input-label-color); /* ラベルの色 */
+    --dads-input-label-weight: var(--input-label-weight); /* ラベルのフォントウェイト */
 
-    /* 要否ラベル */
-    --dads-input-requirement-color: var(--input-requirement-color);
+    --dads-input-requirement-color: var(--input-requirement-color); /* 必須/任意ラベルの色 */
 
-    /* サポートテキスト */
-    --dads-input-support-color: var(--input-support-color);
+    --dads-input-support-color: var(--input-support-color); /* サポートテキストの色 */
 
-    /* エラー */
-    --dads-input-error-color: var(--input-error-text-color);
+    --dads-input-error-color: var(--input-error-text-color); /* エラーメッセージの色 */
   }
 
   /* サイズバリアント */

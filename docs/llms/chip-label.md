@@ -48,6 +48,23 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ch
 | `label` | ラベルテキストコンテナ |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-chip-label-border-radius` | - |  |
+| `--dads-chip-label-font-size` | - |  |
+| `--dads-chip-label-font-weight` | - |  |
+| `--dads-chip-label-icon-gap` | - |  |
+| `--dads-chip-label-letter-spacing` | - |  |
+| `--dads-chip-label-line-height` | - |  |
+| `--dads-chip-label-min-height` | - |  |
+| `--dads-chip-label-padding` | - |  |
+| `--dads-chip-label-padding-block` | - |  |
+| `--dads-chip-label-padding-inline` | - |  |
+| `--dads-chip-label-padding-text` | - |  |
+
+
 ## Styling
 
 ```css

@@ -58,11 +58,20 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component di
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-disclosure-gap` | - | summary内のgap |
-| `--dads-disclosure-icon-size` | - | アイコンサイズ |
-| `--dads-disclosure-icon-color` | - | アイコン色 |
-| `--dads-disclosure-content-padding-inline-start` | - | 本文のインライン開始padding |
 | `--dads-disclosure-back-link-color` | - | 戻るリンク色 |
+| `--dads-disclosure-back-link-color-active` | - |  |
+| `--dads-disclosure-back-link-color-hover` | - |  |
+| `--dads-disclosure-back-link-gap` | - |  |
+| `--dads-disclosure-back-link-underline-offset` | - |  |
+| `--dads-disclosure-back-link-underline-thickness` | - |  |
+| `--dads-disclosure-back-link-underline-thickness-hover` | - |  |
+| `--dads-disclosure-content-margin-block` | - |  |
+| `--dads-disclosure-content-padding-inline-start` | - | 本文のインライン開始padding |
+| `--dads-disclosure-focus-border-radius` | - |  |
+| `--dads-disclosure-gap` | - | summary内のgap |
+| `--dads-disclosure-icon-color` | - | アイコン色 |
+| `--dads-disclosure-icon-size` | - | アイコンサイズ |
+| `--dads-disclosure-summary-underline-offset` | - |  |
 
 
 ## Events

@@ -48,11 +48,24 @@ None
 
 | CSS Custom Property | Default | Description |
 |---------------------|---------|-------------|
-| `--dads-list-marker-width` | - | マーカー列の幅 |
-| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-indent` | - |  |
+| `--dads-list-item-display` | - |  |
+| `--dads-list-item-gap` | - |  |
+| `--dads-list-item-position` | - |  |
 | `--dads-list-marker-color` | - | マーカー色 |
-| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
 | `--dads-list-marker-content` | - | リストマーク（markerタイプ用、装飾用途） |
+| `--dads-list-marker-content-1` | - |  |
+| `--dads-list-marker-content-2` | - |  |
+| `--dads-list-marker-content-3` | - |  |
+| `--dads-list-marker-gap` | - | マーカー列と本文列の間隔 |
+| `--dads-list-marker-inset-block-start` | - |  |
+| `--dads-list-marker-inset-inline-start` | - |  |
+| `--dads-list-marker-line-height` | - |  |
+| `--dads-list-marker-position` | - |  |
+| `--dads-list-marker-size` | - | マーカー記号のサイズ（markerタイプ向け） |
+| `--dads-list-marker-slot-display` | - |  |
+| `--dads-list-marker-text-align` | - |  |
+| `--dads-list-marker-width` | - | マーカー列の幅 |
 
 
 ## Styling

@@ -77,6 +77,29 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component te
 | `wrapper` | 全体を囲むコンテナ |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-textarea-background` | - |  |
+| `--dads-textarea-border-color` | - |  |
+| `--dads-textarea-border-radius` | - |  |
+| `--dads-textarea-border-width` | - |  |
+| `--dads-textarea-color` | - |  |
+| `--dads-textarea-counter-color` | - |  |
+| `--dads-textarea-error-color` | - |  |
+| `--dads-textarea-font-size` | - |  |
+| `--dads-textarea-label-color` | - |  |
+| `--dads-textarea-label-size` | - |  |
+| `--dads-textarea-label-weight` | - |  |
+| `--dads-textarea-min-height` | - |  |
+| `--dads-textarea-padding` | - |  |
+| `--dads-textarea-placeholder-color` | - |  |
+| `--dads-textarea-requirement-color` | - |  |
+| `--dads-textarea-resize` | - |  |
+| `--dads-textarea-support-color` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |

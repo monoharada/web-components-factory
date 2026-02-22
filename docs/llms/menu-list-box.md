@@ -60,6 +60,57 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component me
 | `popup` | ポップアップ領域 |
 
 
+## CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-menu-list-box-color` | - |  |
+| `--dads-menu-list-box-divider-color` | - |  |
+| `--dads-menu-list-box-divider-margin-block` | - |  |
+| `--dads-menu-list-box-divider-margin-inline` | - |  |
+| `--dads-menu-list-box-font-family` | - |  |
+| `--dads-menu-list-box-font-size` | - |  |
+| `--dads-menu-list-box-letter-spacing` | - |  |
+| `--dads-menu-list-box-line-height` | - |  |
+| `--dads-menu-list-box-min-width` | - |  |
+| `--dads-menu-list-box-opener-arrow-margin-left` | - |  |
+| `--dads-menu-list-box-opener-arrow-margin-top` | - |  |
+| `--dads-menu-list-box-opener-arrow-size` | - |  |
+| `--dads-menu-list-box-opener-background` | - |  |
+| `--dads-menu-list-box-opener-border-color` | - |  |
+| `--dads-menu-list-box-opener-border-radius` | - |  |
+| `--dads-menu-list-box-opener-border-width` | - |  |
+| `--dads-menu-list-box-opener-focus-background` | - |  |
+| `--dads-menu-list-box-opener-focus-outline-color` | - |  |
+| `--dads-menu-list-box-opener-focus-outline-offset` | - |  |
+| `--dads-menu-list-box-opener-focus-outline-width` | - |  |
+| `--dads-menu-list-box-opener-focus-ring-color` | - |  |
+| `--dads-menu-list-box-opener-focus-ring-width` | - |  |
+| `--dads-menu-list-box-opener-font-weight` | - |  |
+| `--dads-menu-list-box-opener-gap` | - |  |
+| `--dads-menu-list-box-opener-hover-background` | - |  |
+| `--dads-menu-list-box-opener-hover-border-color` | - |  |
+| `--dads-menu-list-box-opener-icon-size` | - |  |
+| `--dads-menu-list-box-opener-min-height` | - |  |
+| `--dads-menu-list-box-opener-padding-x` | - |  |
+| `--dads-menu-list-box-opener-padding-y` | - |  |
+| `--dads-menu-list-box-opener-underline-offset` | - |  |
+| `--dads-menu-list-box-popup-background` | - |  |
+| `--dads-menu-list-box-popup-border-color` | - |  |
+| `--dads-menu-list-box-popup-border-color-scroll` | - |  |
+| `--dads-menu-list-box-popup-border-radius` | - |  |
+| `--dads-menu-list-box-popup-item-divider` | - |  |
+| `--dads-menu-list-box-popup-item-divider-scroll` | - |  |
+| `--dads-menu-list-box-popup-max-height` | - |  |
+| `--dads-menu-list-box-popup-min-width` | - |  |
+| `--dads-menu-list-box-popup-min-width-scroll` | - |  |
+| `--dads-menu-list-box-popup-padding-x` | - |  |
+| `--dads-menu-list-box-popup-padding-y` | - |  |
+| `--dads-menu-list-box-popup-scrollbar-padding-right` | - |  |
+| `--dads-menu-list-box-popup-shadow` | - |  |
+| `--dads-menu-list-box-popup-z-index` | - |  |
+
+
 ## Events
 
 | Event | Type | Description |
