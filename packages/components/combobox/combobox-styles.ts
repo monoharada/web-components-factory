@@ -316,9 +316,38 @@ export const comboboxStyles = css`
   }
 
   [part='option-meta'] {
+    margin-inline-start: auto;
+    flex-shrink: 0;
     font-size: var(--font-size-16, 1rem);
     color: var(--color-neutral-solid-gray-600, #666666);
     line-height: var(--line-height-170);
+  }
+
+  [part='option-icon'] {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: 0 0 auto;
+    object-fit: contain;
+  }
+
+  [part='option-avatar'] {
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  [part='option-group-label'] {
+    display: block;
+    padding-block: var(--spacing-2, 0.5rem);
+    padding-inline: var(--dads-combobox-option-padding-inline);
+    font-size: var(--font-size-14, 0.875rem);
+    font-weight: var(--font-weight-700, 700);
+    color: var(--color-neutral-solid-gray-600, #666666);
+    border-bottom: 1px solid var(--dads-combobox-option-divider-color);
+    pointer-events: none;
+    user-select: none;
   }
 
   [part='option-check'] {

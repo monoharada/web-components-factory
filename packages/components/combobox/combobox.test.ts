@@ -2284,3 +2284,336 @@ describe('DadsCombobox - styles', () => {
     expect(styleSource.includes('height: var(--dads-combobox-control-height);')).toBe(true);
   });
 });
+
+describe('DadsCombobox - アイコン/アバター', () => {
+  let element: HTMLElement | null = null;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+    element = null;
+  });
+
+  it('data-icon でオプション行に img[part="option-icon"] を描画する', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="docs" data-icon="/icons/doc.svg">ドキュメント</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    expect(options.length).toBe(1);
+    const img = options[0].querySelector('[part="option-icon"]') as HTMLImageElement | null;
+    expect(img).not.toBeNull();
+    expect(img?.tagName).toBe('IMG');
+    expect(img?.getAttribute('src')).toBe('/icons/doc.svg');
+    expect(img?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('data-icon-style="avatar" で img[part="option-avatar"] を描画する', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="taro" data-icon="/photos/taro.jpg" data-icon-style="avatar">太郎</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const avatar = options[0].querySelector('[part="option-avatar"]') as HTMLImageElement | null;
+    expect(avatar).not.toBeNull();
+    expect(avatar?.tagName).toBe('IMG');
+    expect(avatar?.getAttribute('src')).toBe('/photos/taro.jpg');
+  });
+
+  it('data-icon がないオプションには img を描画しない', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="plain">プレーンオプション</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const img = options[0].querySelector('img');
+    expect(img).toBeNull();
+  });
+
+  it('アイコンURLは検索インデックスに含まれない', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" behavior="input" open>
+        <option value="docs" data-icon="/icons/doc.svg">ドキュメント</option>
+        <option value="img" data-icon="/icons/image.svg">画像</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.value = 'icons';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    expect(options.length).toBe(0);
+  });
+});
+
+describe('DadsCombobox - アイコン名指定（dads-icon統合）', () => {
+  let element: HTMLElement | null = null;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+    element = null;
+  });
+
+  it('data-icon にアイコン名を指定すると dads-icon 要素が生成される', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="docs" data-icon="document">ドキュメント</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    expect(options.length).toBe(1);
+    const icon = options[0].querySelector('[part="option-icon"]');
+    expect(icon).not.toBeNull();
+    expect(icon?.tagName.toLowerCase()).toBe('dads-icon');
+    expect(icon?.getAttribute('name')).toBe('document');
+    expect(icon?.getAttribute('size')).toBe('20');
+    expect(icon?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('data-icon にURLを指定すると従来通り img 要素が生成される（後方互換）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="docs" data-icon="https://example.com/icon.png">ドキュメント</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const img = options[0].querySelector('[part="option-icon"]');
+    expect(img).not.toBeNull();
+    expect(img?.tagName).toBe('IMG');
+  });
+
+  it('data-icon="javascript:alert(1)" は何も表示しない（セキュリティ）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="xss" data-icon="javascript:alert(1)">XSS</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const icon = options[0].querySelector('[part="option-icon"]');
+    const img = options[0].querySelector('img');
+    expect(icon).toBeNull();
+    expect(img).toBeNull();
+  });
+
+  it('data-icon="data:image/svg+xml,..." は img として生成される（許可）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="svg" data-icon="data:image/svg+xml,%3Csvg%3E%3C/svg%3E">SVG</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const img = options[0].querySelector('[part="option-icon"]');
+    expect(img).not.toBeNull();
+    expect(img?.tagName).toBe('IMG');
+  });
+
+  it('data-icon の前後空白はtrimされてアイコン名として判定される', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="docs" data-icon=" search ">検索</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const icon = options[0].querySelector('[part="option-icon"]');
+    expect(icon).not.toBeNull();
+    expect(icon?.tagName.toLowerCase()).toBe('dads-icon');
+    expect(icon?.getAttribute('name')).toBe('search');
+  });
+});
+
+describe('DadsCombobox - アバター統合（dads-avatar）', () => {
+  let element: HTMLElement | null = null;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+    element = null;
+  });
+
+  it('data-icon="太" data-icon-style="avatar" data-avatar-color="--color-primitive-blue-600" → dads-avatar 生成', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="taro" data-icon="太" data-icon-style="avatar" data-avatar-color="--color-primitive-blue-600">太郎</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const avatar = options[0].querySelector('[part="option-avatar"]');
+    expect(avatar).not.toBeNull();
+    expect(avatar?.tagName.toLowerCase()).toBe('dads-avatar');
+    expect(avatar?.getAttribute('initials')).toBe('太');
+    expect(avatar?.getAttribute('color')).toBe('--color-primitive-blue-600');
+    expect(avatar?.getAttribute('size')).toBe('32');
+    expect(avatar?.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('data-avatar-color 未指定 → color属性なしのavatar', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="taro" data-icon="太" data-icon-style="avatar">太郎</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const avatar = options[0].querySelector('[part="option-avatar"]');
+    expect(avatar).not.toBeNull();
+    expect(avatar?.tagName.toLowerCase()).toBe('dads-avatar');
+    expect(avatar?.getAttribute('initials')).toBe('太');
+    expect(avatar?.hasAttribute('color')).toBe(false);
+  });
+
+  it('data-icon="person" data-icon-style="avatar" → dads-icon のまま（後方互換）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="taro" data-icon="person" data-icon-style="avatar">太郎</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const icon = options[0].querySelector('[part="option-avatar"]');
+    expect(icon).not.toBeNull();
+    expect(icon?.tagName.toLowerCase()).toBe('dads-icon');
+    expect(icon?.getAttribute('name')).toBe('person');
+  });
+
+  it('URL + data-icon-style="avatar" → img のまま（後方互換）', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="taro" data-icon="https://example.com/photo.jpg" data-icon-style="avatar">太郎</option>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    const img = options[0].querySelector('[part="option-avatar"]');
+    expect(img).not.toBeNull();
+    expect(img?.tagName).toBe('IMG');
+  });
+});
+
+describe('DadsCombobox - optgroup グループ', () => {
+  let element: HTMLElement | null = null;
+
+  afterEach(() => {
+    if (element) cleanupTestElement(element);
+    element = null;
+  });
+
+  it('optgroup 内の option を正しく読み取る', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <optgroup label="グループA">
+          <option value="a1">アイテムA1</option>
+          <option value="a2">アイテムA2</option>
+        </optgroup>
+        <optgroup label="グループB">
+          <option value="b1">アイテムB1</option>
+        </optgroup>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    expect(options.length).toBe(3);
+  });
+
+  it('グループ見出しが描画される', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <optgroup label="エンジニアリング">
+          <option value="e1">太郎</option>
+        </optgroup>
+        <optgroup label="デザイン">
+          <option value="d1">花子</option>
+        </optgroup>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const groupLabels = Array.from(element.shadowRoot?.querySelectorAll('[part="option-group-label"]') ?? []);
+    expect(groupLabels.length).toBe(2);
+    expect(groupLabels[0].textContent).toBe('エンジニアリング');
+    expect(groupLabels[1].textContent).toBe('デザイン');
+  });
+
+  it('フィルタで空になったグループの見出しは表示されない', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" behavior="input" open>
+        <optgroup label="エンジニアリング">
+          <option value="taro">太郎</option>
+        </optgroup>
+        <optgroup label="デザイン">
+          <option value="hanako">花子</option>
+        </optgroup>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const input = getInput(element);
+    input.value = '太郎';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await waitForCustomElement(element);
+
+    const groupLabels = Array.from(element.shadowRoot?.querySelectorAll('[part="option-group-label"]') ?? []);
+    expect(groupLabels.length).toBe(1);
+    expect(groupLabels[0].textContent).toBe('エンジニアリング');
+  });
+
+  it('optgroup と直接 option の混在を処理する', async () => {
+    await defineComboboxForTest();
+    element = renderWebComponent(`
+      <dads-combobox label="テスト" open>
+        <option value="ungrouped">未グループ</option>
+        <optgroup label="グループA">
+          <option value="a1">アイテムA1</option>
+        </optgroup>
+      </dads-combobox>
+    `);
+    await waitForCustomElement(element);
+
+    const options = getOptions(element);
+    expect(options.length).toBe(2);
+
+    const groupLabels = Array.from(element.shadowRoot?.querySelectorAll('[part="option-group-label"]') ?? []);
+    expect(groupLabels.length).toBe(1);
+  });
+});

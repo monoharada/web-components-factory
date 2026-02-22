@@ -20,16 +20,29 @@ import {
   updateAriaDescribedBy,
   setupSlotChangeListeners,
 } from '../../utils/form-component-helpers.js';
+import { iconPaths } from '../../utils/icons.js';
+import { getPrefix } from '../../config.js';
 
 type ComboboxBehavior = 'selection' | 'input';
+
+type ComboboxOptionIconStyle = 'icon' | 'avatar';
+
+type ComboboxOptionGroup = {
+  label: string;
+  groupIndex: number;
+};
 
 type ComboboxOption = {
   value: string;
   label: string;
   meta: string;
+  icon: string;
+  iconStyle: ComboboxOptionIconStyle;
+  avatarColor: string;
   disabled: boolean;
   selected: boolean;
   searchIndex: string;
+  group: number;
 };
 
 type ComboboxValue = string | string[];
@@ -68,6 +81,9 @@ let comboboxIdSequence = 0;
  * @csspart option-label - 候補ラベル
  * @csspart option-match - 候補ラベル内のquery一致強調
  * @csspart option-meta - 候補補助テキスト
+ * @csspart option-icon - 候補行のアイコン画像
+ * @csspart option-avatar - 候補行のアバター画像
+ * @csspart option-group-label - グループ見出し
  * @csspart error-text - エラーテキスト
  *
  * @attr {boolean} multiple - 複数選択モード
@@ -124,6 +140,7 @@ export class DadsCombobox extends TypographyFormComponent {
   #isInputComposing = false;
   #isPointerDownOnPanel = false;
   #options: ComboboxOption[] = [];
+  #groups: ComboboxOptionGroup[] = [];
   #selectedSingle = '';
   #selectedMultiple = new Set<string>();
   #formDisabled = false;
@@ -512,10 +529,11 @@ export class DadsCombobox extends TypographyFormComponent {
     if (mutation.type === 'childList') return true;
     if (mutation.type === 'attributes') {
       const target = mutation.target;
-      return target instanceof HTMLOptionElement;
+      return target instanceof HTMLOptionElement || target instanceof HTMLOptGroupElement;
     }
     if (mutation.type === 'characterData') {
-      return mutation.target.parentElement instanceof HTMLOptionElement;
+      const parent = mutation.target.parentElement;
+      return parent instanceof HTMLOptionElement || parent instanceof HTMLOptGroupElement;
     }
     return false;
   }
@@ -531,22 +549,24 @@ export class DadsCombobox extends TypographyFormComponent {
   }
 
   #syncFromLightDomOptions(): void {
-    const optionElements = Array.from(this.children).filter((node) => node instanceof HTMLOptionElement) as HTMLOptionElement[];
+    this.#groups = [];
+    const newOptions: ComboboxOption[] = [];
 
-    this.#options = optionElements.map((option) => {
-      const value = option.value;
-      const label = option.label || option.textContent || option.value;
-      const meta = option.getAttribute('data-meta') ?? '';
-      const searchAliases = this.#parseSearchAliases(option.getAttribute('data-search'));
-      return {
-        value,
-        label,
-        meta,
-        disabled: option.disabled,
-        selected: option.selected,
-        searchIndex: this.#buildSearchIndex(label, value, meta, ...searchAliases),
-      };
-    });
+    for (const child of Array.from(this.children)) {
+      if (child instanceof HTMLOptGroupElement) {
+        const groupIndex = this.#groups.length;
+        this.#groups.push({ label: child.label || '', groupIndex });
+        for (const option of Array.from(child.children)) {
+          if (option instanceof HTMLOptionElement) {
+            newOptions.push(this.#parseOptionElement(option, groupIndex));
+          }
+        }
+      } else if (child instanceof HTMLOptionElement) {
+        newOptions.push(this.#parseOptionElement(child, -1));
+      }
+    }
+
+    this.#options = newOptions;
 
     this.#applyValueAttribute(this.getAttribute('value'));
     this.#syncSelectionForModeChange();
@@ -564,6 +584,28 @@ export class DadsCombobox extends TypographyFormComponent {
     } catch {
       return [];
     }
+  }
+
+  #parseOptionElement(option: HTMLOptionElement, group = -1): ComboboxOption {
+    const value = option.value;
+    const label = option.label || option.textContent || option.value;
+    const meta = option.getAttribute('data-meta') ?? '';
+    const icon = (option.getAttribute('data-icon') ?? '').trim();
+    const iconStyle: ComboboxOptionIconStyle = option.getAttribute('data-icon-style') === 'avatar' ? 'avatar' : 'icon';
+    const avatarColor = (option.getAttribute('data-avatar-color') ?? '').trim();
+    const searchAliases = this.#parseSearchAliases(option.getAttribute('data-search'));
+    return {
+      value,
+      label,
+      meta,
+      icon,
+      iconStyle,
+      avatarColor,
+      disabled: option.disabled,
+      selected: option.selected,
+      searchIndex: this.#buildSearchIndex(label, value, meta, ...searchAliases),
+      group,
+    };
   }
 
   #buildSearchIndex(...tokens: string[]): string {
@@ -1205,7 +1247,14 @@ export class DadsCombobox extends TypographyFormComponent {
       return;
     }
 
+    let lastRenderedGroup = -2;
     for (const index of filteredIndexes) {
+      const option = this.#options[index];
+      if (option.group >= 0 && option.group !== lastRenderedGroup) {
+        const groupData = this.#groups[option.group];
+        if (groupData) this.#listbox.appendChild(this.#createGroupHeader(groupData));
+      }
+      lastRenderedGroup = option.group;
       this.#listbox.appendChild(this.#createOptionElement(index));
     }
 
@@ -1218,10 +1267,19 @@ export class DadsCombobox extends TypographyFormComponent {
 
   #clearRenderedOptionRows(): void {
     if (!this.#listbox) return;
-    const renderedRows = this.#listbox.querySelectorAll('[part="option"], [part="empty"]');
+    const renderedRows = this.#listbox.querySelectorAll('[part="option"], [part="empty"], [part="option-group-label"]');
     for (const row of renderedRows) {
       row.remove();
     }
+  }
+
+  #createGroupHeader(group: ComboboxOptionGroup): HTMLElement {
+    const header = document.createElement('div');
+    header.setAttribute('part', 'option-group-label');
+    header.setAttribute('role', 'presentation');
+    header.setAttribute('aria-hidden', 'true');
+    header.textContent = group.label;
+    return header;
   }
 
   #createOptionElement(index: number): HTMLButtonElement {
@@ -1246,6 +1304,35 @@ export class DadsCombobox extends TypographyFormComponent {
       optionElement.appendChild(check);
     }
 
+    if (option.icon.length > 0) {
+      const partName = option.iconStyle === 'avatar' ? 'option-avatar' : 'option-icon';
+      if (option.iconStyle === 'avatar' && !this.#isIconName(option.icon) && !this.#isSafeIconUrl(option.icon)) {
+        const avatarEl = document.createElement(`${getPrefix()}-avatar`);
+        avatarEl.setAttribute('initials', option.icon);
+        if (option.avatarColor.length > 0) {
+          avatarEl.setAttribute('color', option.avatarColor);
+        }
+        avatarEl.setAttribute('size', '32');
+        avatarEl.setAttribute('part', partName);
+        avatarEl.setAttribute('aria-hidden', 'true');
+        optionElement.appendChild(avatarEl);
+      } else if (this.#isIconName(option.icon)) {
+        const iconEl = document.createElement(`${getPrefix()}-icon`);
+        iconEl.setAttribute('name', option.icon);
+        iconEl.setAttribute('size', option.iconStyle === 'avatar' ? '32' : '20');
+        iconEl.setAttribute('part', partName);
+        iconEl.setAttribute('aria-hidden', 'true');
+        optionElement.appendChild(iconEl);
+      } else if (this.#isSafeIconUrl(option.icon)) {
+        const img = document.createElement('img');
+        img.setAttribute('part', partName);
+        img.src = option.icon;
+        img.alt = '';
+        img.setAttribute('aria-hidden', 'true');
+        optionElement.appendChild(img);
+      }
+    }
+
     const label = document.createElement('span');
     label.setAttribute('part', 'option-label');
     this.#renderOptionLabel(label, option.label);
@@ -1265,6 +1352,17 @@ export class DadsCombobox extends TypographyFormComponent {
     optionElement.addEventListener('keydown', this.#handleOptionKeydown);
 
     return optionElement;
+  }
+
+  #isIconName(value: string): boolean {
+    return value in iconPaths;
+  }
+
+  #isSafeIconUrl(value: string): boolean {
+    if (/^https?:\/\//.test(value)) return true;
+    if (/^data:image\//.test(value)) return true;
+    if (/^(\/|\.\.?\/)/.test(value)) return true;
+    return false;
   }
 
   #syncListboxFloatingPosition(): void {
