@@ -28,6 +28,9 @@
     "validate:wc": "node scripts/wc/validate.mjs",
     "validate:demo-code-block": "node scripts/wc/validate-demo-code-block.mjs",
     "mcp:design-system": "node scripts/mcp/design-system-mcp.mjs",
+    "mcp:build": "node scripts/mcp/build-mcp-package.mjs",
+    "mcp:check": "node scripts/mcp/build-mcp-package.mjs --check",
+    "mcp:standalone": "node packages/mcp-server/bin.mjs",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
@@ -48,7 +51,7 @@
     "tdd": "npm run test:watch",
     "ci": "npm run type-check && npm run test:run && npm run build",
     "skills:check": "node scripts/registry/check-skills-registry.mjs",
-    "agents:pre-pr": "npm run skills:check && npm run cem:analyze && npm run contracts:check && npm run registry:generate && npm run registry:check && npm run validate:wc && node scripts/guards/check-generated-clean.mjs",
+    "agents:pre-pr": "npm run skills:check && npm run cem:analyze && npm run contracts:check && npm run registry:generate && npm run registry:check && npm run validate:wc && npm run llms:generate && npm run llms:check && npm run mcp:build && npm run mcp:check && node scripts/guards/check-generated-clean.mjs",
     "agents:verify": "npm run agents:pre-pr && npm run ci",
     "update-tokens": "node scripts/update-design-tokens.js",
     "check-tokens": "npm view @digital-go-jp/design-tokens version",
@@ -88,7 +91,9 @@
     "contracts:check": "node scripts/contracts/check-autoload.mjs && node scripts/contracts/check-install-metadata.mjs",
     "registry:generate": "node scripts/registry/generate-install-registry.mjs",
     "registry:check": "node scripts/registry/generate-install-registry.mjs --check",
-    "patterns:check": "node scripts/patterns/check-pattern-registry.mjs"
+    "patterns:check": "node scripts/patterns/check-pattern-registry.mjs",
+    "llms:generate": "node scripts/llms/generate-llms-docs.mjs",
+    "llms:check": "node scripts/llms/generate-llms-docs.mjs --check"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.11.0",

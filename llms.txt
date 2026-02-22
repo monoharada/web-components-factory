@@ -1,0 +1,155 @@
+# Web Components Factory (DADS)
+
+> A TypeScript-first Web Components library implementing Japan's Digital Agency Design System (DADS). Provides 45+ accessible, form-associated custom elements with Shadow DOM encapsulation, design tokens, and strict WCAG 2.2 AA compliance. Framework-agnostic — works with any HTML page.
+
+## Quick Start
+
+```bash
+# Install a component via CLI
+npx wcf vendor install --prefix myui --dir vendor/components/myui --component button
+
+# Or use the autoloader for lazy-loading
+import { autoload } from './packages/core/autoloader.ts';
+autoload();
+```
+
+```html
+<!-- Use in HTML -->
+<dads-button variant="solid">送信</dads-button>
+<dads-input-text label="氏名" name="name" required></dads-input-text>
+```
+
+## Architecture
+
+- **Base class**: `WebComponent` (Shadow DOM, styles, attributes) and `FormComponent` (form-associated)
+- **Template system**: `html` and `css` tagged template literals with caching
+- **Attribute system**: `PropertyAttr`, `BooleanAttr`, `TransferringPropertyAttr`, `NonReflectingPropertyAttr`
+- **Styling**: `::part()` for external customization, CSS custom properties (tokens) for theming
+- **No classes for styling** — use `part` attributes and `::part()` selectors
+- **Autoloader**: TreeWalker + IntersectionObserver for lazy registration
+
+## Components
+
+### Form
+- [dads-input-text](docs/llms/input-text.md): Text input with label, validation, counter
+- [dads-textarea](docs/llms/textarea.md): Multi-line text input
+- [dads-select](docs/llms/select.md): Native select wrapper
+- [dads-checkbox](docs/llms/checkbox.md): Checkbox with label
+- [dads-radio](docs/llms/radio.md): Radio button with label
+- [dads-switch](docs/llms/switch.md): Toggle switch
+- [dads-combobox](docs/llms/combobox.md): Autocomplete combobox (deps: avatar, chip-tag, icon)
+- [dads-date-picker](docs/llms/date-picker.md): Date picker (deps: calendar)
+- [dads-file-upload](docs/llms/file-upload.md): File upload (deps: button, checkbox)
+- [dads-fieldset](docs/llms/fieldset.md): Fieldset grouping
+- [dads-search-box](docs/llms/search-box.md): Search input (deps: button)
+
+### Actions
+- [dads-button](docs/llms/button.md): Button with variant/size
+- [dads-dialog](docs/llms/dialog.md): Modal dialog (native `<dialog>`)
+- [dads-drawer](docs/llms/drawer.md): Slide-out drawer panel
+- [dads-disclosure](docs/llms/disclosure.md): Expandable section (native `<details>`)
+- [dads-accordion-details](docs/llms/accordion-details.md): Accordion container with items
+
+### Navigation
+- [dads-breadcrumb](docs/llms/breadcrumb.md): Breadcrumb trail
+- [dads-page-navigation](docs/llms/page-navigation.md): Pagination
+- [dads-step-navigation](docs/llms/step-navigation.md): Step progress indicator
+- [dads-menu-list](docs/llms/menu-list.md): Vertical menu list
+- [dads-menu-list-box](docs/llms/menu-list-box.md): Dropdown menu (deps: divider, menu-list)
+- [dads-global-menu](docs/llms/global-menu.md): Global navigation menu (deps: menu-list-box)
+- [dads-language-selector](docs/llms/language-selector.md): Language switcher (deps: menu-list-box)
+- [dads-hamburger-menu-button](docs/llms/hamburger-menu-button.md): Hamburger toggle
+- [dads-utility-link](docs/llms/utility-link.md): Utility navigation link
+
+### Content
+- [dads-card](docs/llms/card.md): Card container (media/main/sub slots)
+- [dads-heading](docs/llms/heading.md): Semantic heading (level attribute)
+- [dads-text](docs/llms/text.md): Typography wrapper
+- [dads-blockquote](docs/llms/blockquote.md): Block quotation
+- [dads-code-block](docs/llms/code-block.md): Code display
+- [dads-divider](docs/llms/divider.md): Horizontal rule
+- [dads-list](docs/llms/list.md): Ordered/unordered list
+- [dads-description-list](docs/llms/description-list.md): Definition list
+- [dads-resource-list](docs/llms/resource-list.md): Resource link list
+- [dads-table](docs/llms/table.md): Responsive table wrapper
+- [dads-table-control](docs/llms/table-control.md): Table toolbar (deps: button, chip-tag, page-navigation, search-box)
+
+### Display
+- [dads-avatar](docs/llms/avatar.md): User avatar
+- [dads-icon](docs/llms/icon.md): SVG icon
+- [dads-chip-label](docs/llms/chip-label.md): Label chip
+- [dads-chip-tag](docs/llms/chip-tag.md): Tag chip
+- [dads-notification-banner](docs/llms/notification-banner.md): Notification banner
+- [dads-emergency-banner](docs/llms/emergency-banner.md): Emergency alert banner
+- [dads-carousel](docs/llms/carousel.md): Image carousel
+
+### Layout
+- [dads-layout-shell](docs/llms/layout-shell.md): App shell (pattern: website/app-shell/master-detail)
+- [dads-layout-sidebar](docs/llms/layout-sidebar.md): Sidebar panel
+- [dads-layout-aside](docs/llms/layout-aside.md): Aside panel
+- [dads-header-container](docs/llms/header-container.md): Header wrapper
+- [dads-mobile-menu](docs/llms/mobile-menu.md): Mobile navigation
+- [dads-calendar](docs/llms/calendar.md): Calendar grid
+
+## UI Patterns (Blocks)
+
+Pre-built compositions for common screens:
+
+- `search-form`: Heading + search box + button
+- `search-results`: Search + result cards + pagination
+- `table-with-pagination`: Table + page navigation
+- `card-grid`: Card-based grid layout
+- `layout-website-hero-section-footer`: Website hero layout
+- `layout-app-shell`: Header + sidebar + main (SaaS)
+- `layout-master-detail`: List + detail two-column
+- `application-form-single-validation`: Single-page form with validation
+- `application-form-step-validation`: Multi-step form with validation
+
+## Styling Guide
+
+```css
+/* Customize via CSS custom properties */
+dads-button {
+  --dads-button-background: var(--color-primary-solid-800);
+}
+
+/* Style internal parts via ::part() */
+dads-card::part(base) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Use spacing tokens (never hardcode px) */
+.my-layout {
+  gap: var(--spacing-4);       /* 16px */
+  padding: var(--spacing-6);   /* 24px */
+}
+```
+
+## Key Constraints
+
+- No `any` types in TypeScript
+- No `Array.forEach` — use `for...of`
+- Private fields use `#` prefix
+- Error messages in Japanese
+- `::part()` instead of classes for Shadow DOM styling
+- `@layer` for specificity management (no `!important`)
+- WCAG 2.2 AA compliance required
+- Form validation via `ElementInternals` (avoid native validation)
+
+## Detailed Documentation
+
+- [llms-full.txt](llms-full.txt): Complete API reference for all components
+- [docs/llms/](docs/llms/): Per-component AI documentation
+- [custom-elements.json](custom-elements.json): Machine-readable CEM v2.1.0 manifest
+- [registry/install-registry.json](registry/install-registry.json): Installation metadata
+- [registry/pattern-registry.json](registry/pattern-registry.json): UI pattern definitions
+
+## MCP Server
+
+An MCP server is available for AI agent integration:
+
+```bash
+npm run mcp:design-system
+```
+
+Tools: `list_components`, `get_component_api`, `generate_usage_snippet`, `get_install_recipe`, `validate_markup`, `list_patterns`, `get_pattern_recipe`, `generate_pattern_snippet`

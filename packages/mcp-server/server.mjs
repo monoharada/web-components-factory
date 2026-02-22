@@ -1,14 +1,50 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { collectCemCustomElements, validateTextAgainstCem } from '../wc/validator-core.mjs';
+import { collectCemCustomElements, validateTextAgainstCem } from './validator.mjs';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const CANONICAL_PREFIX = 'dads';
-const DEFAULT_CEM_PATH = path.resolve(process.cwd(), 'custom-elements.json');
-const DEFAULT_INSTALL_REGISTRY_PATH = path.resolve(process.cwd(), 'registry/install-registry.json');
-const DEFAULT_PATTERN_REGISTRY_PATH = path.resolve(process.cwd(), 'registry/pattern-registry.json');
+
+// ---------------------------------------------------------------------------
+// Data loading - supports both bundled (npx) and local (repo) modes
+// ---------------------------------------------------------------------------
+
+function resolveDataPath(fileName) {
+  // 1. Bundled data inside the package
+  const bundled = path.join(__dirname, 'data', fileName);
+  // 2. Repo root (when running from source)
+  const repoRoot = path.resolve(process.cwd());
+  const repoMap = {
+    'custom-elements.json': path.join(repoRoot, 'custom-elements.json'),
+    'install-registry.json': path.join(repoRoot, 'registry/install-registry.json'),
+    'pattern-registry.json': path.join(repoRoot, 'registry/pattern-registry.json'),
+  };
+  return { bundled, repo: repoMap[fileName] };
+}
+
+async function loadJsonData(fileName) {
+  const { bundled, repo } = resolveDataPath(fileName);
+  // Try bundled first, then fall back to repo
+  for (const p of [bundled, repo]) {
+    if (!p) continue;
+    try {
+      const text = await fs.readFile(p, 'utf8');
+      return JSON.parse(text);
+    } catch {
+      // Try next path
+    }
+  }
+  throw new Error(`データファイルが見つかりません: ${fileName}`);
+}
+
+// ---------------------------------------------------------------------------
+// Prefix helpers
+// ---------------------------------------------------------------------------
 
 function normalizePrefix(prefix) {
   if (typeof prefix !== 'string' || prefix.trim() === '') return CANONICAL_PREFIX;
@@ -38,6 +74,10 @@ function toCanonicalTagName(tagName, prefix) {
   return raw;
 }
 
+// ---------------------------------------------------------------------------
+// CEM helpers
+// ---------------------------------------------------------------------------
+
 function findCustomElementDeclarations(manifest) {
   const modules = Array.isArray(manifest?.modules) ? manifest.modules : [];
   const decls = [];
@@ -61,11 +101,8 @@ function findCustomElementDeclarations(manifest) {
 function buildIndexes(manifest) {
   const decls = findCustomElementDeclarations(manifest);
 
-  /** @type {Map<string, any>} */
   const byTag = new Map();
-  /** @type {Map<string, any>} */
   const byClass = new Map();
-  /** @type {Map<string, string | undefined>} */
   const modulePathByTag = new Map();
 
   for (const { decl, tagName, modulePath } of decls) {
@@ -193,26 +230,12 @@ function applyPrefixToCemIndex(cemIndex, prefix) {
   const p = normalizePrefix(prefix);
   if (p === CANONICAL_PREFIX) return cemIndex;
 
-  /** @type {Map<string, { attributes: Set<string> }>} */
   const out = new Map();
-
   for (const [tag, meta] of cemIndex.entries()) {
     const nextTag = withPrefix(tag, p);
     out.set(nextTag, meta);
   }
-
   return out;
-}
-
-async function loadCem(cemPath) {
-  const abs = path.resolve(process.cwd(), cemPath);
-  const text = await fs.readFile(abs, 'utf8');
-  return JSON.parse(text);
-}
-
-async function loadJson(absPath) {
-  const text = await fs.readFile(absPath, 'utf8');
-  return JSON.parse(text);
 }
 
 function applyPrefixToHtml(html, prefix) {
@@ -221,8 +244,6 @@ function applyPrefixToHtml(html, prefix) {
   const from = `${CANONICAL_PREFIX}-`;
   const to = `${p}-`;
 
-  // Patterns are constrained to plain HTML snippets without <script>/<style>,
-  // so a tag-level replace is sufficient and deterministic.
   return String(html ?? '').replace(
     new RegExp(`<\\s*(\\/?)\\s*${from}([a-z0-9-]+)(?=[\\s/>])`, 'gi'),
     (_m, slash, rest) => `<${slash ?? ''}${to}${String(rest).toLowerCase()}`,
@@ -256,12 +277,16 @@ function resolveComponentClosure({ installRegistry }, componentIds) {
   return [...out];
 }
 
-async function main() {
-  const manifest = await loadCem(DEFAULT_CEM_PATH);
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+export async function startServer() {
+  const manifest = await loadJsonData('custom-elements.json');
   const indexes = buildIndexes(manifest);
   const canonicalCemIndex = collectCemCustomElements(manifest);
-  const installRegistry = await loadJson(DEFAULT_INSTALL_REGISTRY_PATH);
-  const patternRegistry = await loadJson(DEFAULT_PATTERN_REGISTRY_PATH);
+  const installRegistry = await loadJsonData('install-registry.json');
+  const patternRegistry = await loadJsonData('pattern-registry.json');
   const { patterns } = loadPatternRegistryShape(patternRegistry);
 
   const server = new McpServer({
@@ -269,6 +294,9 @@ async function main() {
     version: '0.1.0',
   });
 
+  // -----------------------------------------------------------------------
+  // Tool: list_components
+  // -----------------------------------------------------------------------
   server.registerTool(
     'list_components',
     {
@@ -292,6 +320,9 @@ async function main() {
     },
   );
 
+  // -----------------------------------------------------------------------
+  // Tool: get_component_api
+  // -----------------------------------------------------------------------
   server.registerTool(
     'get_component_api',
     {
@@ -310,9 +341,7 @@ async function main() {
           content: [
             {
               type: 'text',
-              text: `Component not found (tagName=${String(tagName ?? '')}, className=${String(
-                className ?? '',
-              )})`,
+              text: `Component not found (tagName=${String(tagName ?? '')}, className=${String(className ?? '')})`,
             },
           ],
           isError: true,
@@ -329,6 +358,9 @@ async function main() {
     },
   );
 
+  // -----------------------------------------------------------------------
+  // Tool: generate_usage_snippet
+  // -----------------------------------------------------------------------
   server.registerTool(
     'generate_usage_snippet',
     {
@@ -361,6 +393,9 @@ async function main() {
     },
   );
 
+  // -----------------------------------------------------------------------
+  // Tool: get_install_recipe
+  // -----------------------------------------------------------------------
   server.registerTool(
     'get_install_recipe',
     {
@@ -400,8 +435,7 @@ async function main() {
           content: [
             {
               type: 'text',
-              text:
-                'Install metadata not found in CEM. Run `npm run cem:analyze` and ensure `decl.custom.install` is injected.',
+              text: 'Install metadata not found in CEM.',
             },
           ],
           isError: true,
@@ -450,6 +484,9 @@ async function main() {
     },
   );
 
+  // -----------------------------------------------------------------------
+  // Tool: validate_markup
+  // -----------------------------------------------------------------------
   server.registerTool(
     'validate_markup',
     {
@@ -462,9 +499,6 @@ async function main() {
     },
     async ({ html, prefix }) => {
       const p = normalizePrefix(prefix);
-      // When a prefix is specified, allow validating both:
-      // - canonical tags (dads-*)
-      // - prefixed tags (<prefix>-*)
       let cemIndex = canonicalCemIndex;
       if (p !== CANONICAL_PREFIX) {
         const combined = new Map(canonicalCemIndex);
@@ -498,13 +532,14 @@ async function main() {
     },
   );
 
+  // -----------------------------------------------------------------------
+  // Tool: list_patterns
+  // -----------------------------------------------------------------------
   server.registerTool(
     'list_patterns',
     {
-      description: 'List UI patterns (recipes) from registry/pattern-registry.json.',
-      inputSchema: {
-        // reserved for future filtering
-      },
+      description: 'List UI patterns (recipes) from the pattern registry.',
+      inputSchema: {},
     },
     async () => {
       const list = Object.values(patterns).map((p) => ({
@@ -520,6 +555,9 @@ async function main() {
     },
   );
 
+  // -----------------------------------------------------------------------
+  // Tool: get_pattern_recipe
+  // -----------------------------------------------------------------------
   server.registerTool(
     'get_pattern_recipe',
     {
@@ -589,6 +627,9 @@ async function main() {
     },
   );
 
+  // -----------------------------------------------------------------------
+  // Tool: generate_pattern_snippet
+  // -----------------------------------------------------------------------
   server.registerTool(
     'generate_pattern_snippet',
     {
@@ -615,11 +656,9 @@ async function main() {
     },
   );
 
+  // -----------------------------------------------------------------------
+  // Start
+  // -----------------------------------------------------------------------
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
