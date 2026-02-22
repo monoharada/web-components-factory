@@ -98,6 +98,7 @@ function serializeApi(decl, modulePath, prefix) {
   const slots = Array.isArray(decl?.slots) ? decl.slots : [];
   const events = Array.isArray(decl?.events) ? decl.events : [];
   const cssParts = Array.isArray(decl?.cssParts) ? decl.cssParts : [];
+  const cssProperties = Array.isArray(decl?.cssProperties) ? decl.cssProperties : [];
 
   return {
     tagName: outTag,
@@ -125,6 +126,11 @@ function serializeApi(decl, modulePath, prefix) {
     })),
     cssParts: cssParts.map((p) => ({
       name: p?.name,
+      description: p?.description,
+    })),
+    cssProperties: cssProperties.map((p) => ({
+      name: p?.name,
+      default: p?.default,
       description: p?.description,
     })),
   };
@@ -290,7 +296,7 @@ async function main() {
     'get_component_api',
     {
       description:
-        'Get a single component API (attributes/slots/events/cssParts) by tagName or className.',
+        'Get a single component API (attributes/slots/events/cssParts/cssProperties) by tagName or className.',
       inputSchema: {
         tagName: z.string().optional(),
         className: z.string().optional(),
