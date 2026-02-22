@@ -1,0 +1,29 @@
+{
+  "name": "@anthropic/wcf-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for the web-components-factory design system. Provides component discovery, validation, and pattern-based UI composition without cloning the repository.",
+  "type": "module",
+  "bin": {
+    "wcf-mcp": "./bin.mjs"
+  },
+  "files": [
+    "bin.mjs",
+    "server.mjs",
+    "validator.mjs",
+    "data/"
+  ],
+  "keywords": [
+    "mcp",
+    "web-components",
+    "design-system",
+    "claude"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^3.23.0"
+  }
+}
