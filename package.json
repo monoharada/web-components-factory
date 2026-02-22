@@ -88,7 +88,9 @@
     "contracts:check": "node scripts/contracts/check-autoload.mjs && node scripts/contracts/check-install-metadata.mjs",
     "registry:generate": "node scripts/registry/generate-install-registry.mjs",
     "registry:check": "node scripts/registry/generate-install-registry.mjs --check",
-    "patterns:check": "node scripts/patterns/check-pattern-registry.mjs"
+    "patterns:check": "node scripts/patterns/check-pattern-registry.mjs",
+    "llms:generate": "node scripts/llms/generate-llms-docs.mjs",
+    "llms:check": "node scripts/llms/generate-llms-docs.mjs --check"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "^0.11.0",

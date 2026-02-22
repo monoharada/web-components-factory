@@ -1,0 +1,3648 @@
+# Web Components Factory (DADS) — Complete API Reference
+
+> Complete API documentation for all components in the DADS Web Components library.
+> This file is optimized for consumption by LLMs and AI coding agents.
+> For a concise overview, see llms.txt.
+
+## Table of Contents
+
+### Actions
+- [dads-accordion-details](#dads-accordion-details): アコーディオンコンテナコンポーネント
+- [dads-accordion-item-details](#dads-accordion-item-details): アコーディオンアイテムコンポーネント
+- [dads-button](#dads-button): Buttonコンポーネント
+- [dads-dialog](#dads-dialog): Dialog（モーダル）コンポーネント
+- [dads-disclosure](#dads-disclosure): Disclosure（ディスクロージャー）コンポーネント
+- [dads-drawer](#dads-drawer): Drawer（ドロワー）コンポーネント
+
+### Display
+- [dads-avatar](#dads-avatar): アバターコンポーネント
+- [dads-carousel](#dads-carousel): カルーセル
+- [dads-chip-label](#dads-chip-label): チップラベルコンポーネント
+- [dads-chip-tag](#dads-chip-tag): チップタグコンポーネント
+- [dads-emergency-banner](#dads-emergency-banner): 緊急時バナーコンポーネント
+- [dads-icon](#dads-icon): アイコンコンポーネント
+- [dads-notification-banner](#dads-notification-banner): ノティフィケーションバナーコンポーネント
+
+### Content
+- [dads-blockquote](#dads-blockquote): 引用ブロックコンポーネント
+- [dads-card](#dads-card): Cardコンポーネント
+- [dads-code-block](#dads-code-block): HTMLコード表示（コピー機能つき）コンポーネント
+- [dads-description-list](#dads-description-list): 説明リストコンポーネント
+- [dads-divider](#dads-divider): ディバイダーコンポーネント
+- [dads-heading](#dads-heading): 見出しコンポーネント
+- [dads-list](#dads-list): 箇条書きリスト（コンテナ）コンポーネント
+- [dads-list-item](#dads-list-item): 箇条書きリスト（アイテム）コンポーネント
+- [dads-resource-list](#dads-resource-list): リソースリストコンポーネント
+- [dads-table-control](#dads-table-control): Table Control component.
+- [dads-table](#dads-table): テーブル（Data Table）コンポーネント
+- [dads-text](#dads-text): 基本テキストコンポーネント
+
+### Navigation
+- [dads-breadcrumb](#dads-breadcrumb): 現在位置ナビゲーション（パンくず）コンテナ
+- [dads-breadcrumb-item](#dads-breadcrumb-item): 現在位置ナビゲーション（パンくず）項目
+- [dads-global-menu](#dads-global-menu): グローバルメニュー（コンテナ）
+- [dads-global-menu-item](#dads-global-menu-item): グローバルメニュー項目
+- [dads-hamburger-menu-button](#dads-hamburger-menu-button): ハンバーガーメニューボタンコンポーネント
+- [dads-language-selector](#dads-language-selector): ランゲージセレクターコンポーネント
+- [dads-menu-list-box](#dads-menu-list-box): メニューリストボックスコンポーネント
+- [dads-menu-list](#dads-menu-list): メニューリストコンポーネント
+- [dads-menu-list-item](#dads-menu-list-item): メニューリスト項目コンポーネント
+- [dads-mobile-menu](#dads-mobile-menu): モバイルメニューコンポーネント
+- [dads-page-navigation](#dads-page-navigation): Page Navigation コンポーネント
+- [dads-step-navigation](#dads-step-navigation): Step Navigation（コンテナ）
+- [dads-step-navigation-item](#dads-step-navigation-item): Step Navigation Item（各ステップ）
+- [dads-utility-link](#dads-utility-link): Utility Link コンポーネント
+
+### Form
+- [dads-calendar](#dads-calendar): カレンダーコンポーネント
+- [dads-checkbox](#dads-checkbox): Checkboxコンポーネント
+- [dads-combobox](#dads-combobox): Comboboxコンポーネント
+- [dads-date-picker](#dads-date-picker): 日付ピッカーコンポーネント
+- [dads-fieldset](#dads-fieldset): Fieldsetコンポーネント
+- [dads-file-upload](#dads-file-upload): File Upload / Drop Area コンポーネント
+- [dads-input-text](#dads-input-text): InputTextコンポーネント
+- [dads-radio](#dads-radio): Radioコンポーネント
+- [dads-search-box](#dads-search-box): SearchBoxコンポーネント
+- [dads-select](#dads-select): Selectコンポーネント
+- [dads-switch](#dads-switch): Switchコンポーネント
+- [dads-textarea](#dads-textarea): Textareaコンポーネント
+
+### Layout
+- [dads-header-container](#dads-header-container): ヘッダーコンテナコンポーネント
+- [dads-layout-aside](#dads-layout-aside): レイアウト補助領域
+- [dads-layout-shell](#dads-layout-shell): 画面レイアウトシェル
+- [dads-layout-sidebar](#dads-layout-sidebar): レイアウトサイドバー
+
+---
+
+## Component API Reference
+
+### dads-accordion-details
+
+**アコーディオンコンテナコンポーネント**
+
+- Category: Actions
+- Class: `DadsAccordionDetails`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/accordion/accordion.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `allow-multiple` | boolean | - | 複数アイテムの同時展開を許可 |
+| `animation` | string | - | アニメーション方針（例: none） |
+| `respect-motion-preference` | boolean | - | prefers-reduced-motion に追従 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | アコーディオンアイテム（dads-accordion-item-details） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `container` | アイテムを内包するコンテナ |
+
+
+#### Usage
+
+```html
+<dads-accordion-details>...</dads-accordion-details>
+```
+
+---
+
+### dads-accordion-item-details
+
+**アコーディオンアイテムコンポーネント**
+
+- Category: Actions
+- Class: `DadsAccordionItemDetails`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/accordion/accordion.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `disabled` | boolean | - | 無効状態 |
+| `expanded` | boolean | - | 初期展開状態 |
+| `icon-position` | string | - | アイコン位置 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `content` | 本文 |
+| `header` | 見出し |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `content` | 本文領域 |
+| `content-inner` | 本文内側 |
+| `details` | <details> 要素 |
+| `header` | 見出しラッパー |
+| `icon` | 開閉状態アイコン |
+| `return-button` | 先頭に戻るリンク |
+| `return-icon` | 戻るアイコン |
+| `return-text` | 戻るテキスト |
+| `summary` | <summary> 要素 |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `toggle` | Event | 展開/折りたたみ時に発火（bubbles） |
+
+
+#### Usage
+
+```html
+<dads-accordion-item-details
+  disabled
+>
+  <div slot="content"><!-- 本文 --></div>
+  <div slot="header"><!-- 見出し --></div>
+</dads-accordion-item-details>
+```
+
+---
+
+### dads-avatar
+
+**アバターコンポーネント**
+
+- Category: Display
+- Class: `DadsAvatar`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/avatar/avatar.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `color` | string | - | 背景色（CSSカスタムプロパティ名, 例: --color-primitive-blue-600） |
+| `initials` | string | - | 表示文字（1〜2文字、写真未指定時のフォールバック） |
+| `label` | string | - | アクセシブルラベル（指定時はaria-hidden解除） |
+| `size` | string | - | サイズpx（デフォルト: '32'） |
+| `src` | string | - | 写真URL（指定時は写真モード） |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `img` | img要素（写真モード） |
+| `svg` | SVG要素（イニシャルモード） |
+
+
+#### Usage
+
+```html
+<dads-avatar
+  label=""
+  size=""
+>...</dads-avatar>
+```
+
+---
+
+### dads-blockquote
+
+**引用ブロックコンポーネント**
+
+- Category: Content
+- Class: `DadsBlockquote`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/blockquote/blockquote.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `cite` | string | - | 引用元URL |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `close` | 締め括りコンテンツ（最後の段落、出典など） |
+| `default` | 本文コンテンツ（中間の段落群） |
+| `lead` | 冒頭コンテンツ（最初の段落など） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `blockquote` | 引用ブロック要素（セマンティック・グリッドレイアウト・視覚スタイル） |
+| `body` | 本文スロット |
+| `close` | 締め括りスロット |
+| `lead` | 冒頭スロット |
+
+
+#### Usage
+
+```html
+<dads-blockquote>
+  <div slot="close"><!-- 締め括りコンテンツ（最後の段落、出典など） --></div>
+  <div slot="lead"><!-- 冒頭コンテンツ（最初の段落など） --></div>
+</dads-blockquote>
+```
+
+---
+
+### dads-breadcrumb
+
+**現在位置ナビゲーション（パンくず）コンテナ**
+
+- Category: Navigation
+- Class: `DadsBreadcrumb`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/breadcrumb/breadcrumb.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-label` | string | - | ナビゲーションのラベル |
+| `aria-labelledby` | string | - | ナビゲーションラベルの参照先ID |
+| `base-url` | string | - | 構造化データURL解決用ベースURL |
+| `separator` | 'chevron' \| 'slash' \| 'pipe' | - | 区切り表示種別 |
+| `show-label` | boolean | - | ラベルを視覚表示する |
+| `structured-data` | 'off' \| 'microdata' | - | 構造化データ出力モード |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | dads-breadcrumb-item 群 |
+| `label` | ナビゲーションラベル（デフォルト: 現在位置） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `label` | ナビゲーションラベル |
+| `list` | パンくず一覧（p要素） |
+| `nav` | ナビゲーションルート（nav要素） |
+
+
+#### Usage
+
+```html
+<dads-breadcrumb>
+  <div slot="label"><!-- ナビゲーションラベル（デフォルト: 現在位置） --></div>
+</dads-breadcrumb>
+```
+
+---
+
+### dads-breadcrumb-item
+
+**現在位置ナビゲーション（パンくず）項目**
+
+- Category: Navigation
+- Class: `DadsBreadcrumbItem`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/breadcrumb/breadcrumb.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-current` | string | - | 現在位置（page） |
+| `current` | boolean | - | 現在ページ |
+| `home` | boolean | - | ホームアイコン表示 |
+| `href` | string | - | リンク先URL |
+| `rel` | string | - | リンクrel |
+| `target` | string | - | リンクターゲット |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | 項目テキスト |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `current` | 現在項目テキスト |
+| `home-icon` | ホームアイコン |
+| `item` | アイテムルート（p要素） |
+| `link` | 非現在項目リンク |
+| `separator` | 区切り |
+| `separator-icon` | 区切りアイコン |
+| `separator-text` | 区切りテキスト（slash / pipe） |
+
+
+#### Usage
+
+```html
+<dads-breadcrumb-item>...</dads-breadcrumb-item>
+```
+
+---
+
+### dads-button
+
+**Buttonコンポーネント**
+
+- Category: Actions
+- Class: `DadsButton`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/button/button.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-describedby` | string | - | 補足説明要素ID（スペース区切り可） |
+| `aria-label` | string | - | アクセシビリティラベル |
+| `aria-labelledby` | string | - | ラベル要素ID（スペース区切り可） |
+| `command` | string | - | command-store / commandfor 用（任意、動作は外部に委ねる） |
+| `commandfor` | string | - | command-store / commandfor 用（任意、動作は外部に委ねる） |
+| `disabled` | boolean | - | 無効化状態 |
+| `full-width` | boolean | - | 幅100%表示 |
+| `size` | string | - | サイズ (x-small | small | medium | large) |
+| `type` | string | - | ボタンタイプ (button | submit | reset) |
+| `variant` | string | - | バリアント (solid | outlined | text) |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | ボタンのテキストコンテンツ |
+| `icon-end` | 末尾アイコン（オプション） |
+| `icon-start` | 先頭アイコン（オプション） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ボタン要素本体 |
+| `icon-end` | 末尾アイコンコンテナ |
+| `icon-start` | 先頭アイコンコンテナ |
+| `label` | ラベルテキストコンテナ |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `click` | CustomEvent | クリック時に発火（detail: {variant, size}） |
+
+
+#### Usage
+
+```html
+<dads-button
+  type=""
+  variant=""
+  size=""
+  disabled
+>
+  <div slot="icon-end"><!-- 末尾アイコン（オプション） --></div>
+  <div slot="icon-start"><!-- 先頭アイコン（オプション） --></div>
+</dads-button>
+```
+
+---
+
+### dads-calendar
+
+**カレンダーコンポーネント**
+
+- Category: Form
+- Class: `DadsCalendar`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/calendar/calendar-impl.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-label` | - | - |  |
+| `aria-labelledby` | - | - |  |
+| `max-date` | string | - | 最大日付（YYYY-MM-DD） |
+| `min-date` | string | - | 最小日付（YYYY-MM-DD） |
+| `range` | string | - | 範囲選択モード（値の有無で有効化） |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `controls` | 上部コントロール |
+| `date` | 日付ボタン |
+| `footer` | フッター |
+| `navigation` | 月移動ナビゲーション |
+| `range` | 期間選択表示 |
+| `table` | カレンダーテーブル（role="grid"） |
+| `year-select` | 年セレクト |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `date-range-selected` | CustomEvent | 範囲選択時に発火（detail: { startDate: Date | null, endDate: Date | null }） |
+| `date-selected` | CustomEvent | 日付選択時に発火（detail: { date: Date | null }） |
+
+
+#### Usage
+
+```html
+<dads-calendar>...</dads-calendar>
+```
+
+---
+
+### dads-card
+
+**Cardコンポーネント**
+
+- Category: Content
+- Class: `DadsCard`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/card/card.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `layout` | 'vertical' \| 'horizontal' | - | レイアウト（デフォルト: vertical） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | メインコンテンツ（デフォルトスロット、h2/p等を自由にマークアップ） |
+| `media` | イメージエリア（任意） |
+| `sub` | サブエリア（任意） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | コンテナ（overflow制御に使用） |
+| `main` | メインエリア（padding・背景のカスタマイズ） |
+| `media` | イメージエリア（背景・ボーダー等のカスタマイズ） |
+| `sub` | サブエリア（アクション領域のカスタマイズ） |
+
+
+#### Usage
+
+```html
+<dads-card>
+  <div slot="media"><!-- イメージエリア（任意） --></div>
+  <div slot="sub"><!-- サブエリア（任意） --></div>
+</dads-card>
+```
+
+---
+
+### dads-carousel
+
+**カルーセル**
+
+- Category: Display
+- Class: `DadsCarousel`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/carousel/carousel.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `all-slides-label` | string | - | 一覧展開ボタンのラベル |
+| `aria-label` | string | - | カルーセルの aria-label |
+| `breakpoint-rem` | number | - | desktop 判定のブレークポイント（rem） |
+| `current-index` | number | - | 現在スライドの 0 始まり index |
+| `image-slider` | boolean | - | イメージスライダー（幅狭コンテナ）モードを強制 |
+| `next-label` | string | - | 次ボタンのラベル |
+| `prev-label` | string | - | 前ボタンのラベル |
+| `type` | 'container'\|'key-visual' | - | 表示タイプ |
+| `unit` | string | - | スライドの単位（例: スライド） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | スライド要素（items 未指定時に利用） |
+| `heading` | 見出し（container タイプ向け） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `all-slides` | すべてのスライド領域 |
+| `all-slides-button` | すべてのスライド切替ボタン |
+| `all-slides-content` | すべてのスライド内容 |
+| `all-slides-item` | すべてのスライド項目 |
+| `controls` | コントロール領域 |
+| `image-container` | 画像コンテナ |
+| `indicator-button` | ステップボタン |
+| `indicators` | ステップナビゲーション |
+| `inner` | 内部レイアウト |
+| `main` | メインパネル領域 |
+| `main-bg` | メイン背景 |
+| `main-images` | メイン画像コンテナ |
+| `main-label` | メインラベル（スクリーンリーダー向け） |
+| `main-link` | メインリンク |
+| `main-panel` | メインパネル |
+| `next` | 次スライド領域 |
+| `next-bg` | 次スライド背景 |
+| `next-button` | 次ボタン |
+| `next-image-container` | 次スライド画像コンテナ |
+| `next-image-label` | 次スライドラベル |
+| `next-preview-button` | 次スライドプレビューボタン |
+| `number` | 番号表示 |
+| `page-nav` | ページナビゲーション |
+| `panel-number` | パネル番号（一覧展開時） |
+| `panel-set` | パネルセット |
+| `panels` | パネル領域 |
+| `prev-button` | 前ボタン |
+| `root` | ルート領域 |
+| `status` | ステータス（aria-live） |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-carousel-before-change` | Event | スライド変更直前（cancelable） |
+| `dads-carousel-change` | Event | 現在スライド変更時（ユーザー操作のみ） |
+| `dads-carousel-controls-update` | Event | controls 表示モードや状態が更新された時 |
+| `dads-carousel-index-change` | Event | スライド変更完了後（API/属性変更含む） |
+| `dads-carousel-layout-change` | Event | data-wide などレイアウト状態が変わった時 |
+| `dads-carousel-media-error` | Event | 描画対象メディアの読み込み失敗時 |
+| `dads-carousel-media-loaded` | Event | 描画対象メディアの準備完了時 |
+| `dads-carousel-slide-active` | Event | 新しいスライドがアクティブ化された時 |
+| `dads-carousel-slide-inactive` | Event | 直前スライドが非アクティブ化された時 |
+| `dads-carousel-slides-change` | Event | slides 構成（枚数/source）が変わった時 |
+| `dads-carousel-toggle-all` | Event | 一覧展開状態の変更時 |
+
+
+#### Usage
+
+```html
+<dads-carousel
+  type=""
+>
+  <div slot="heading"><!-- 見出し（container タイプ向け） --></div>
+</dads-carousel>
+```
+
+---
+
+### dads-checkbox
+
+**Checkboxコンポーネント**
+
+- Category: Form
+- Class: `DadsCheckbox`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/checkbox/checkbox.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-describedby` | string | - | 補足/エラー参照 |
+| `aria-label` | string | - | アクセシビリティラベル（ラベルなし時に推奨） |
+| `aria-labelledby` | string | - | 外部ラベル参照 |
+| `auto-validate` | boolean | - | submit時の自動バリデーション |
+| `checked` | boolean | - | 初期チェック状態（属性はデフォルト値として扱う） |
+| `disabled` | boolean | - | 無効状態 |
+| `error` | boolean | - | エラー状態（aria-invalid="true"） |
+| `error-text` | string | - | エラーメッセージ（バリデーション時に設定） |
+| `indeterminate` | boolean | - | 不確定状態 |
+| `label` | string | - | ラベルテキスト |
+| `name` | string | - | フォーム名 |
+| `required` | boolean | - | 必須（未チェックでsubmit時にinvalid） |
+| `size` | string | - | サイズ (sm | md | lg) |
+| `value` | string | - | 送信値（未指定時は "on"） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `required-error` | 必須バリデーションのカスタムエラーメッセージ（非表示） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | label相当のラッパー |
+| `checkbox` | チェックボックス枠（背景ホバー含む） |
+| `input` | ネイティブinput[type=checkbox] |
+| `label` | ラベルテキスト |
+| `requirement` | 要否ラベル（※必須） |
+
+
+#### Usage
+
+```html
+<dads-checkbox
+  label=""
+  value=""
+  name=""
+  size=""
+>
+  <div slot="required-error"><!-- 必須バリデーションのカスタムエラーメッセージ（非表示） --></div>
+</dads-checkbox>
+```
+
+---
+
+### dads-chip-label
+
+**チップラベルコンポーネント**
+
+- Category: Display
+- Class: `DadsChipLabel`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/chip-label/chip-label.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `color` | string | - | カラー (gray | blue | light-blue | cyan | green | lime | yellow | orange | red | magenta | purple) |
+| `variant` | string | - | バリアント (text | outline | filled-outline | fill) |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | ラベルテキスト |
+| `icon` | アイコン（オプション） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | チップラベル本体 |
+| `icon` | アイコンスロット |
+| `label` | ラベルテキストコンテナ |
+
+
+#### Usage
+
+```html
+<dads-chip-label
+  variant=""
+>
+  <div slot="icon"><!-- アイコン（オプション） --></div>
+</dads-chip-label>
+```
+
+---
+
+### dads-chip-tag
+
+**チップタグコンポーネント**
+
+- Category: Display
+- Class: `DadsChipTag`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/chip-tag/chip-tag.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `action` | 'remove' \| 'none' | - | 末尾アクションの表示制御 |
+| `disabled` | boolean | - | 無効状態 |
+| `remove-label` | string | - | 末尾アクションのaria-label |
+| `size` | string | - | サイズ (sm | md | lg) |
+| `value` | string | - | 任意の値（イベントdetailに含まれる） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | ラベルテキスト |
+| `end-icon` | 末尾アイコン（オプション / 削除アクション用） |
+| `start-icon` | 先頭アイコン（オプション） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `action` | 末尾アクションボタン |
+| `action-icon` | 末尾アイコンコンテナ |
+| `base` | チップタグ本体 |
+| `label` | ラベルテキストコンテナ |
+| `start-icon` | 先頭アイコンスロット |
+| `value` | value属性の表示テキスト |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-chip-tag-click` | Event | action="none"時、チップ本体押下で発火（detail: { label, value }) NOTE: Invoker API / commandfor は現時点では採用せず、CustomEvent で操作を公開します。 |
+| `dads-chip-tag-remove` | Event | 末尾アクション押下時に発火（detail: { label, value, remove() }) |
+
+
+#### Usage
+
+```html
+<dads-chip-tag
+  value=""
+  size=""
+  disabled
+>
+  <div slot="end-icon"><!-- 末尾アイコン（オプション / 削除アクション用） --></div>
+  <div slot="start-icon"><!-- 先頭アイコン（オプション） --></div>
+</dads-chip-tag>
+```
+
+---
+
+### dads-code-block
+
+**HTMLコード表示（コピー機能つき）コンポーネント**
+
+- Category: Content
+- Class: `DadsCodeBlock`
+- Extends: `WebComponent`
+- Source: `./packages/components/code-block/code-block.ts`
+
+#### Attributes
+
+None
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `label` | 左上ラベル（例: HTML） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `code` | コード要素（code） |
+| `copy-button` | Copyボタン |
+| `header` | ヘッダー（ラベル + Copyボタン） |
+| `layout` | 全体ラッパー |
+| `pre` | コード領域（pre） |
+| `status` | Copy結果の通知領域（aria-live） |
+
+
+#### Usage
+
+```html
+<dads-code-block>
+  <div slot="label"><!-- 左上ラベル（例: HTML） --></div>
+</dads-code-block>
+```
+
+---
+
+### dads-combobox
+
+**Comboboxコンポーネント**
+
+- Category: Form
+- Class: `DadsCombobox`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/combobox/combobox.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `behavior` | 'selection' \| 'input' | - | 操作モード（default: selection） |
+| `clear-on-close` | boolean | - | close時にqueryをクリア（常に実行） |
+| `disabled` | boolean | - | 無効状態 |
+| `error` | boolean | - | エラー状態 |
+| `error-text` | string | - | エラー属性フォールバック |
+| `filterable` | boolean | - | 入力絞り込みの有効化 |
+| `label` | string | - | ラベル属性フォールバック |
+| `multiple` | boolean | - | 複数選択モード |
+| `name` | string | - | フォーム名 |
+| `no-match-behavior` | 'notice' \| 'create' | - | 候補なし時挙動（default: notice） |
+| `open` | boolean | - | 開閉状態 |
+| `placeholder` | string | - | プレースホルダー |
+| `required` | boolean | - | 必須状態 |
+| `restore-on-cancel` | boolean | - | singleで未確定離脱時の復帰 |
+| `size` | 's' \| 'm' \| 'l' \| 'sm' \| 'md' \| 'lg' | - | サイズ |
+| `support-text` | string | - | サポート属性フォールバック |
+| `value` | string | - | 選択値（multiple時はカンマ区切り） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | option 要素（optionの `data-search` にJSON配列文字列を指定すると検索別名を追加可能） |
+| `error-text` | エラーテキスト |
+| `label` | ラベルテキスト |
+| `required-error` | 必須バリデーション用のカスタムメッセージ |
+| `support-text` | サポートテキスト |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `chip` | 複数選択チップ |
+| `chip-list` | 複数選択チップ群 |
+| `control` | 入力コントロール |
+| `error-text` | エラーテキスト |
+| `indicator` | ドロップダウンインジケータ |
+| `input` | 入力欄 |
+| `label` | ラベル要素 |
+| `label-text` | ラベルテキスト |
+| `listbox` | 候補リスト |
+| `option` | 候補行 |
+| `option-avatar` | 候補行のアバター画像 |
+| `option-check` | 候補行チェック領域（multiple） |
+| `option-group-label` | グループ見出し |
+| `option-icon` | 候補行のアイコン画像 |
+| `option-label` | 候補ラベル |
+| `option-match` | 候補ラベル内のquery一致強調 |
+| `option-meta` | 候補補助テキスト |
+| `panel` | フローティングパネル |
+| `requirement` | 必須表示 |
+| `search-box` | パネル内検索ラッパー |
+| `search-icon` | パネル内検索アイコン |
+| `search-input` | パネル内検索入力 |
+| `support-text` | サポートテキスト |
+| `wrapper` | 全体ラッパー |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-change` | Event | 明示確定時のみ |
+| `dads-close` | Event | ポップアップ閉時 |
+| `dads-input` | Event | query入力変化時 |
+| `dads-open` | Event | ポップアップ開時 |
+
+
+#### Usage
+
+```html
+<dads-combobox
+  label=""
+  support-text=""
+  value=""
+  name=""
+>
+  <div slot="error-text"><!-- エラーテキスト --></div>
+  <div slot="label"><!-- ラベルテキスト --></div>
+  <div slot="required-error"><!-- 必須バリデーション用のカスタムメッセージ --></div>
+  <div slot="support-text"><!-- サポートテキスト --></div>
+</dads-combobox>
+```
+
+---
+
+### dads-date-picker
+
+**日付ピッカーコンポーネント**
+
+- Category: Form
+- Class: `DadsDatePicker`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/date-picker/date-picker-impl.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-describedby` | string | - | 外部説明要素の関連付け |
+| `calendar` | boolean | - | カレンダー表示を有効化 |
+| `data-type` | string | - | 表示タイプ（consolidated | separated） |
+| `disabled` | boolean | - | 無効状態 |
+| `error` | boolean | - | エラー状態 |
+| `error-text` | string | - | エラーテキスト（スロット未使用時のフォールバック） |
+| `max-date` | string | - | 最大日付（YYYY-MM-DD） |
+| `min-date` | string | - | 最小日付（YYYY-MM-DD） |
+| `readonly` | boolean | - | 読み取り専用 |
+| `size` | string | - | サイズ（sm | md | lg） |
+| `value` | string | - | 値（YYYY-MM-DD） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `error-text` | エラーテキスト |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `calendar` | 内包カレンダー |
+| `calendar-button` | カレンダーボタン |
+| `calendar-popover` | カレンダー（role="dialog"） |
+| `error-text` | エラーテキスト領域 |
+| `input` | 入力欄 |
+| `inputs` | 入力欄グループ |
+| `root` | ルート |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-change` | Event | 値確定時に発火（detail: { value: string }） |
+| `dads-input` | Event | 入力時に発火（detail: { value: string }） |
+
+
+#### Usage
+
+```html
+<dads-date-picker
+  value=""
+  size=""
+  disabled
+>
+  <div slot="error-text"><!-- エラーテキスト --></div>
+</dads-date-picker>
+```
+
+---
+
+### dads-description-list
+
+**説明リストコンポーネント**
+
+- Category: Content
+- Class: `DadsDescriptionList`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/description-list/description-list.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `data-marker` | 'none' \| 'bullet' \| 'custom' | - | DADS HTML 互換属性（marker と同期） |
+| `marker` | 'none' \| 'bullet' \| 'custom' | - | マーカー表示種別 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | 説明リスト項目（例: div > dt + dd） |
+
+
+#### CSS Parts
+
+None
+
+
+#### Usage
+
+```html
+<dads-description-list>...</dads-description-list>
+```
+
+---
+
+### dads-dialog
+
+**Dialog（モーダル）コンポーネント**
+
+- Category: Actions
+- Class: `DadsDialog`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/dialog/dialog.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-label` | string | - | 指定時はタイトルより優先されるダイアログ名 |
+| `close-button` | boolean | - | 閉じるボタン表示 |
+| `close-label` | string | - | 閉じるボタンラベル |
+| `initial-focus` | string | - | 初期フォーカス位置 (auto | title) |
+| `open` | boolean | - | 開閉状態 |
+| `size` | string | - | サイズ (s | m | l) |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | ダイアログ本文 |
+| `footer` | フッター（操作ボタン群） |
+| `title` | ダイアログタイトル |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ルートの dialog 要素 |
+| `close-button` | 閉じるボタン（オプション） |
+| `content` | 本文領域 |
+| `footer` | フッター領域 |
+| `header` | ヘッダー領域 |
+| `panel` | ダイアログ本体 |
+| `title` | タイトル領域 |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-dialog-before-close` | Event | 閉じる前に発火（cancelable） |
+| `dads-dialog-before-open` | Event | 開く前に発火（cancelable） |
+| `dads-dialog-close` | CustomEvent | 閉じた後に発火 |
+| `dads-dialog-open` | CustomEvent | 開いた後に発火 |
+
+
+#### Usage
+
+```html
+<dads-dialog
+  size=""
+>
+  <div slot="footer"><!-- フッター（操作ボタン群） --></div>
+  <div slot="title"><!-- ダイアログタイトル --></div>
+</dads-dialog>
+```
+
+---
+
+### dads-disclosure
+
+**Disclosure（ディスクロージャー）コンポーネント**
+
+- Category: Actions
+- Class: `DadsDisclosure`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/disclosure/disclosure.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `open` | boolean | - | 開閉状態（trueでopen） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `back-link` | 先頭に戻るリンクのラベル（任意、未指定なら表示しない） |
+| `content` | 本文 |
+| `summary` | 見出し（summary内） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `back-link` | 先頭に戻るリンク（任意） |
+| `back-link-icon` | 戻るリンクのアイコン |
+| `content` | 本文領域 |
+| `details` | <details> 要素 |
+| `icon` | 開閉状態アイコン |
+| `icon-circle` | アイコン内側の円（hover時の反転用） |
+| `icon-triangle` | アイコン内の三角形（hover時の反転用） |
+| `summary` | <summary> 要素 |
+| `summary-text` | 見出しテキストラッパー |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `toggle` | Event | 開閉状態変更時に発火（bubbles） |
+
+
+#### Usage
+
+```html
+<dads-disclosure>
+  <div slot="back-link"><!-- 先頭に戻るリンクのラベル（任意、未指定なら表示しない） --></div>
+  <div slot="content"><!-- 本文 --></div>
+  <div slot="summary"><!-- 見出し（summary内） --></div>
+</dads-disclosure>
+```
+
+---
+
+### dads-divider
+
+**ディバイダーコンポーネント**
+
+- Category: Content
+- Class: `DadsDivider`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/divider/divider.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `data-color` | 'solid-gray-420' \| 'solid-gray-536' \| 'black' | - | 区切り線の色（DADS互換） |
+| `data-style` | 'solid' \| 'dashed' | - | 区切り線の線種（DADS互換） |
+| `data-width` | '1' \| '2' \| '3' \| '4' | - | 区切り線の太さ（DADS互換） |
+| `orientation` | 'horizontal' \| 'vertical' | - | 区切り方向 |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `line` | 区切り線 |
+
+
+#### Usage
+
+```html
+<dads-divider>...</dads-divider>
+```
+
+---
+
+### dads-drawer
+
+**Drawer（ドロワー）コンポーネント**
+
+- Category: Actions
+- Class: `DadsDrawer`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/drawer/drawer.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-label` | string | - | 指定時はタイトルより優先されるアクセシブル名 |
+| `close-label` | string | - | 閉じるボタンラベル |
+| `light-dismiss` | boolean | - | 背景クリックで閉じる |
+| `open` | boolean | - | 開閉状態 |
+| `placement` | 'left' \| 'right' | - | 表示位置 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | ドロワー本文 |
+| `title` | ドロワータイトル |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ルートの dialog 要素 |
+| `close-button` | 閉じるボタン |
+| `close-button-icon` | 閉じるアイコン |
+| `content` | 本文領域 |
+| `header` | ヘッダー領域 |
+| `panel` | ドロワー本体 |
+| `title` | タイトル領域 |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-drawer-before-close` | Event | 閉じる前に発火（cancelable） |
+| `dads-drawer-before-open` | Event | 開く前に発火（cancelable） |
+| `dads-drawer-close` | CustomEvent | 閉じた後に発火 |
+| `dads-drawer-open` | CustomEvent | 開いた後に発火 |
+
+
+#### Usage
+
+```html
+<dads-drawer>
+  <div slot="title"><!-- ドロワータイトル --></div>
+</dads-drawer>
+```
+
+---
+
+### dads-emergency-banner
+
+**緊急時バナーコンポーネント**
+
+- Category: Display
+- Class: `DadsEmergencyBanner`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/emergency-banner/emergency-banner.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `heading-level` | '2' \| '3' \| '4' \| '5' \| '6' | - | 見出しレベル |
+| `href` | string | - | CTAリンク先 |
+| `prefix-label` | string | - | 接頭辞テキスト |
+| `prefix-mode` | 'auto' \| 'manual' | - | 接頭辞表示モード |
+| `rel` | string | - | CTAリンクrel |
+| `target` | '_self' \| '_blank' | - | CTAリンクターゲット |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `action` | CTAラベル |
+| `default` | 本文 |
+| `heading` | 見出し本文 |
+| `timestamp` | 更新日時 |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `action` | CTAコンテナ |
+| `action-icon` | 新規タブアイコン |
+| `action-label` | CTAラベル |
+| `action-link` | CTAリンク |
+| `base` | ルート要素 |
+| `body` | 本文領域 |
+| `header` | ヘッダー領域 |
+| `heading` | 見出し領域 |
+| `prefix` | 見出し接頭辞 |
+| `timestamp` | 更新日時領域 |
+
+
+#### Usage
+
+```html
+<dads-emergency-banner>
+  <div slot="action"><!-- CTAラベル --></div>
+  <div slot="heading"><!-- 見出し本文 --></div>
+  <div slot="timestamp"><!-- 更新日時 --></div>
+</dads-emergency-banner>
+```
+
+---
+
+### dads-fieldset
+
+**Fieldsetコンポーネント**
+
+- Category: Form
+- Class: `DadsFieldset`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/fieldset/fieldset.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `disabled` | boolean | - | 無効状態（子要素に伝播） |
+| `legend` | string | - | レジェンドテキスト（フォールバック用） |
+| `required` | boolean | - | ※必須ラベルを表示 |
+| `support-text` | string | - | サポートテキスト（フォールバック用） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | デフォルト（子要素） |
+| `legend` | カスタムレジェンド |
+| `support-text` | カスタムサポートテキスト |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `content` | 子要素コンテナ |
+| `fieldset` | fieldset要素 |
+| `legend` | legend要素 |
+| `legend-fallback` | legend属性のフォールバック表示 |
+| `requirement` | 要否ラベル（※必須） |
+| `support-fallback` | support-text属性のフォールバック表示 |
+| `support-text` | サポートテキストコンテナ |
+
+
+#### Usage
+
+```html
+<dads-fieldset
+  support-text=""
+  required
+  disabled
+>
+  <div slot="legend"><!-- カスタムレジェンド --></div>
+  <div slot="support-text"><!-- カスタムサポートテキスト --></div>
+</dads-fieldset>
+```
+
+---
+
+### dads-file-upload
+
+**File Upload / Drop Area コンポーネント**
+
+- Category: Form
+- Class: `DadsFileUpload`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/file-upload/file-upload.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `accept` | string | - | 許可するファイル形式（input accept互換） |
+| `browse-label` | string | - | ファイル選択ボタン文言 |
+| `disabled` | boolean | - | 無効化 |
+| `drop-hint` | string | - | ドロップヒント文言 |
+| `empty-text` | string | - | 未選択文言 |
+| `error` | boolean | - | エラー状態 |
+| `error-text` | string | - | エラーメッセージ（slot未使用時のフォールバック） |
+| `expand-label` | string | - | 全画面ドロップ領域拡大チェック文言 |
+| `label` | string | - | ラベル（slot未使用時のフォールバック） |
+| `max-file-size` | string | - | 最大ファイルサイズ（bytes / kb / mb / gb） |
+| `max-files` | string | - | 最大ファイル数 |
+| `mode` | string | - | 表示モード（drop-area | button-only） |
+| `multiple` | boolean | - | 複数選択 |
+| `name` | string | - | フォーム名 |
+| `overlay-text` | string | - | 全画面オーバーレイ文言 |
+| `required` | boolean | - | 必須 |
+| `support-text` | string | - | サポートテキスト（slot未使用時のフォールバック） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `error-text` | エラーメッセージ |
+| `label` | ラベルテキスト |
+| `support-text` | サポートテキスト |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `browse-button` | ファイル選択ボタン |
+| `drop-hint` | ドラッグ&ドロップ案内 |
+| `drop-main` | ボタン+ヒント行 |
+| `dropzone` | ドロップエリア |
+| `empty-text` | 未選択メッセージ |
+| `error-text` | エラーメッセージ |
+| `expand-checkbox` | 全画面ドロップ領域拡大チェック |
+| `file-index` | ファイル番号 |
+| `file-item` | ファイル行 |
+| `file-item-error` | ファイル単位エラーメッセージ |
+| `file-item-error-line` | ファイル単位エラーメッセージ行 |
+| `file-list` | ファイル一覧 |
+| `file-meta` | 補足情報（サイズ） |
+| `file-name` | ファイル名 |
+| `file-status` | 状態ラベル |
+| `input` | ネイティブ input[type=file] |
+| `label` | ラベル要素 |
+| `label-text` | ラベルテキストラッパー |
+| `overlay` | 全画面ドロップオーバーレイ |
+| `overlay-text` | オーバーレイ文言 |
+| `remove-button` | 解除ボタン |
+| `requirement` | 要否ラベル（※必須） |
+| `selection-summary` | 選択中ファイル数/合計サイズ |
+| `support-text` | サポートテキスト |
+| `wrapper` | 全体ラッパー |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-file-upload-before-add` | Event | ファイル追加前（cancelable） |
+| `dads-file-upload-change` | Event | ファイル一覧変更時 |
+| `dads-file-upload-fullscreen-change` | Event | 全画面ドロップ切り替え時 |
+| `dads-file-upload-request` | Event | requestUpload() 呼び出し時 |
+| `dads-file-upload-validation-error` | Event | バリデーションエラー時 |
+
+
+#### Usage
+
+```html
+<dads-file-upload
+  label=""
+  support-text=""
+  name=""
+  required
+>
+  <div slot="error-text"><!-- エラーメッセージ --></div>
+  <div slot="label"><!-- ラベルテキスト --></div>
+  <div slot="support-text"><!-- サポートテキスト --></div>
+</dads-file-upload>
+```
+
+---
+
+### dads-global-menu
+
+**グローバルメニュー（コンテナ）**
+
+- Category: Navigation
+- Class: `DadsGlobalMenu`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/global-menu/global-menu.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-label` | string | - | ナビゲーションラベル |
+| `aria-labelledby` | string | - | ナビゲーションラベル参照先 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | dads-global-menu-item 群 |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `list` | メニュー一覧 |
+| `nav` | ナビゲーションルート |
+
+
+#### Usage
+
+```html
+<dads-global-menu>...</dads-global-menu>
+```
+
+---
+
+### dads-global-menu-item
+
+**グローバルメニュー項目**
+
+- Category: Navigation
+- Class: `DadsGlobalMenuItem`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/global-menu/global-menu.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `current` | boolean | - | 現在地 |
+| `download` | boolean | - | download属性 |
+| `expanded` | boolean | - | サブメニュー展開状態 |
+| `href` | string | - | リンクURL（submenu未指定時のみ） |
+| `rel` | string | - | リンクrel |
+| `target` | string | - | リンクターゲット |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | ラベル |
+| `start-icon` | 先頭アイコン |
+| `submenu` | サブメニュー（dads-menu-list-box） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `chevron` | サブメニュー用矢印 |
+| `label` | ラベル領域 |
+| `start-icon` | 先頭アイコン領域 |
+| `trigger` | 項目本体（ボタン/リンク） |
+
+
+#### Usage
+
+```html
+<dads-global-menu-item>
+  <div slot="start-icon"><!-- 先頭アイコン --></div>
+  <div slot="submenu"><!-- サブメニュー（dads-menu-list-box） --></div>
+</dads-global-menu-item>
+```
+
+---
+
+### dads-hamburger-menu-button
+
+**ハンバーガーメニューボタンコンポーネント**
+
+- Category: Navigation
+- Class: `DadsHamburgerMenuButton`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/hamburger-menu-button/hamburger-menu-button.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-controls` | string | - | 制御対象ID |
+| `aria-expanded` | string | - | 展開状態 |
+| `aria-label` | string | - | アクセシブル名 |
+| `command` | string | - | command-store のコマンド |
+| `commandfor` | string | - | command-store のターゲット |
+| `lang` | 'ja' \| 'en' | - | ラベル言語 |
+| `type` | 'menu' \| 'close' | - | メニュー表示/閉じる表示 |
+| `variant` | 'standard' \| 'icon' | - | 見た目バリアント |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ルートボタン |
+| `icon` | アイコン領域 |
+| `label` | ラベル領域 |
+
+
+#### Usage
+
+```html
+<dads-hamburger-menu-button
+  type=""
+  variant=""
+>...</dads-hamburger-menu-button>
+```
+
+---
+
+### dads-header-container
+
+**ヘッダーコンテナコンポーネント**
+
+- Category: Layout
+- Class: `DadsHeaderContainer`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/header-container/header-container.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-label` | string | - | ヘッダー領域のアクセシブル名 |
+| `mode` | 'auto' \| 'wide-full' \| 'wide-slim' \| 'medium' \| 'compact' | - | レイアウトモード |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `global-menu` | グローバルメニュー領域 |
+| `hamburger-menu` | ハンバーガーメニュー領域 |
+| `logo` | ロゴ領域 |
+| `utility` | 補助リンク/ユーティリティ領域 |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ルート領域 |
+| `global-menu` | グローバルメニュー領域 |
+| `hamburger-menu` | ハンバーガーメニュー領域 |
+| `logo` | ロゴ領域 |
+| `primary-row` | 1段目レイアウト領域 |
+| `utility` | 補助リンク領域 |
+
+
+#### Usage
+
+```html
+<dads-header-container>
+  <div slot="global-menu"><!-- グローバルメニュー領域 --></div>
+  <div slot="hamburger-menu"><!-- ハンバーガーメニュー領域 --></div>
+  <div slot="logo"><!-- ロゴ領域 --></div>
+  <div slot="utility"><!-- 補助リンク/ユーティリティ領域 --></div>
+</dads-header-container>
+```
+
+---
+
+### dads-heading
+
+**見出しコンポーネント**
+
+- Category: Content
+- Class: `DadsHeading`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/heading/heading.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `chip` | boolean | - | 左チップ（装飾）表示 |
+| `level` | string | - | 見出しレベル（1-6 or h1-h6） |
+| `margin` | string | - | 上マージン（none|top） |
+| `rule` | string | - | 下線の太さ（8|6|4|2） |
+| `size` | string | - | 見出しサイズ（64|57|45|36|32|28|24|20|18|16） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | 見出しテキスト |
+| `icon` | 先頭アイコン 挙動メモ: - `slot="shoulder"` と `slot="icon"` は同時に指定できます（shoulderは上、iconは見出し行の先頭）。 - slot が無い場合は該当パーツは表示されません（内部で `data-has-*` を付与して制御）。 - `chip` / `rule` は装飾（意匠）です。情報の唯一の手掛かりにしないでください。 |
+| `shoulder` | ショルダーテキスト |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `chip` | 左チップ（装飾）※ 注釈用アンカーも兼ねる |
+| `group` | 見出しグループ |
+| `heading` | 見出し本体 |
+| `icon` | アイコンラッパー |
+| `shoulder` | ショルダーテキスト |
+
+
+#### Usage
+
+```html
+<dads-heading
+  size=""
+>
+  <div slot="icon"><!-- 先頭アイコン 挙動メモ: - `slot="shoulder"` と `slot="icon"` は同時に指定できます（shoulderは上、iconは見出し行の先頭）。 - slot が無い場合は該当パーツは表示されません（内部で `data-has-*` を付与して制御）。 - `chip` / `rule` は装飾（意匠）です。情報の唯一の手掛かりにしないでください。 --></div>
+  <div slot="shoulder"><!-- ショルダーテキスト --></div>
+</dads-heading>
+```
+
+---
+
+### dads-icon
+
+**アイコンコンポーネント**
+
+- Category: Display
+- Class: `DadsIcon`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/icon/icon.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `label` | string | - | アクセシブルラベル（指定時はaria-hidden解除、role="img"、title要素追加） |
+| `name` | string | - | アイコン名（iconPathsのキー: dummy, checkmark, check, edit, delete, duplicate, download, add, subtract, search, print, update, menu, close, home, language, favorite, lock, dragIndicator, more, moreVert, mic, scanner, login, logout, settings, caret, arrowRight, arrowLeft, arrowDown, arrowUp, arrowDropUp, arrowDropDown, arrowUpward, arrowDownward, arrowForward, arrowBack, error, attention, warning, information, help, complete, checkCircle, cancel, notification, history, visibility, visibilityOff, externalLink, document, pdf, image, folder, person, location, checkbox, checkboxBlank, indeterminateCheckbox, radioChecked, radioUnchecked, circle） |
+| `size` | string | - | サイズpx（デフォルト: '20'） |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `svg` | SVG要素 |
+
+
+#### Usage
+
+```html
+<dads-icon
+  label=""
+  name=""
+  size=""
+>...</dads-icon>
+```
+
+---
+
+### dads-input-text
+
+**InputTextコンポーネント**
+
+- Category: Form
+- Class: `DadsInputText`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/input-text/input-text.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `auto-validate` | boolean | - | 自動バリデーションを有効化 |
+| `autocomplete` | string | - | オートコンプリートヒント |
+| `disabled` | boolean | - | 無効状態 |
+| `error` | boolean | - | エラー状態 |
+| `error-text` | string | - | エラーメッセージ（スロット未使用時のフォールバック） |
+| `input-width` | string | - | 幅バリアント (short | medium | full | カスタム値) |
+| `label` | string | - | ラベルテキスト（スロット未使用時のフォールバック） |
+| `name` | string | - | フォーム名 |
+| `readonly` | boolean | - | 読み取り専用 |
+| `required` | boolean | - | 必須項目 |
+| `size` | string | - | サイズ (sm | md | lg) |
+| `support-text` | string | - | サポートテキスト（スロット未使用時のフォールバック） |
+| `type` | string | - | 入力タイプ (text | email | tel) |
+| `value` | string | - | 値 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `error-text` | エラーメッセージ |
+| `label` | ラベルテキスト |
+| `required-error` | 必須バリデーションのカスタムエラーメッセージ |
+| `support-text` | サポートテキスト（ヒント） |
+| `type-mismatch-error` | タイプ不一致（email形式）バリデーションのカスタムエラーメッセージ |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `error-text` | エラーメッセージコンテナ |
+| `input` | ネイティブinput要素 |
+| `input-wrapper` | インプットを囲むコンテナ |
+| `label` | ラベル要素 |
+| `label-text` | ラベルテキストラッパー |
+| `requirement` | 要否ラベル（必須/読み取り専用） |
+| `support-text` | サポートテキストコンテナ |
+| `wrapper` | 全体を囲むコンテナ |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-change` | Event | 値変更確定時に発火 |
+| `dads-input` | Event | 入力時に発火 |
+
+
+#### Usage
+
+```html
+<dads-input-text
+  label=""
+  support-text=""
+  value=""
+  name=""
+>
+  <div slot="error-text"><!-- エラーメッセージ --></div>
+  <div slot="label"><!-- ラベルテキスト --></div>
+  <div slot="required-error"><!-- 必須バリデーションのカスタムエラーメッセージ --></div>
+  <div slot="support-text"><!-- サポートテキスト（ヒント） --></div>
+  <div slot="type-mismatch-error"><!-- タイプ不一致（email形式）バリデーションのカスタムエラーメッセージ --></div>
+</dads-input-text>
+```
+
+---
+
+### dads-language-selector
+
+**ランゲージセレクターコンポーネント**
+
+- Category: Navigation
+- Class: `DadsLanguageSelector`
+- Extends: `DadsMenuListBox`
+- Source: `./packages/components/language-selector/language-selector.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `bold` | boolean | - | 太字表示 |
+| `label` | string | - | opener ラベル（slot未使用時のフォールバック） |
+| `open` | boolean | - | 開閉状態 |
+| `opener` | 'text' \| 'icon' | - | opener 表示タイプ（text | icon） |
+| `opener-hidden` | boolean | - | opener を非表示にして外部トリガー連携する |
+| `size` | string | - | サイズ（sm=36px相当 / md=44px相当） |
+| `variant` | string | - | バリアント（text | outlined | filled） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | 言語メニュー項目（dads-menu-list-item） |
+| `icon` | opener 先頭アイコン（省略時は地球アイコン） |
+| `label` | opener ラベル（省略時は opener に応じて Language/LANG） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `menu` | role="menu" のメニュー領域 |
+| `opener` | opener ボタン |
+| `opener-arrow` | opener 末尾矢印アイコン |
+| `opener-icon` | opener 先頭アイコン領域 |
+| `opener-label` | opener ラベル領域 |
+| `popup` | ポップアップ領域 |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-change` | Event | 項目選択確定時に発火（detail: { value, selectedValue, selectedIndex, selectedItem }） |
+| `menuitemselect` | CustomEvent | 項目選択時に発火（継承） |
+
+
+#### Usage
+
+```html
+<dads-language-selector
+  label=""
+  variant=""
+  size=""
+>
+  <div slot="icon"><!-- opener 先頭アイコン（省略時は地球アイコン） --></div>
+  <div slot="label"><!-- opener ラベル（省略時は opener に応じて Language/LANG） --></div>
+</dads-language-selector>
+```
+
+---
+
+### dads-layout-aside
+
+**レイアウト補助領域**
+
+- Category: Layout
+- Class: `DadsLayoutAside`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/layout-aside/layout-aside.ts`
+
+#### Attributes
+
+None
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | 補助領域内コンテンツ |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | 補助領域 |
+
+
+#### Usage
+
+```html
+<dads-layout-aside>...</dads-layout-aside>
+```
+
+---
+
+### dads-layout-shell
+
+**画面レイアウトシェル**
+
+- Category: Layout
+- Class: `DadsLayoutShell`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/layout-shell/layout-shell.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `mobile-sidebar` | 'hidden' \| 'top' \| 'bottom' | - | app-shell + mobile 時のサイドバー配置 |
+| `mode` | 'auto' \| 'desktop' \| 'tablet' \| 'mobile' | - | レイアウトモード |
+| `pattern` | 'website' \| 'app-shell' \| 'master-detail' \| 'left-header-pane' \| 'three-pane' \| 'three-pane-shell' | - | レイアウトパターン |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `aside` | 補助情報領域 |
+| `default` | メイン領域 |
+| `footer` | フッター領域 |
+| `header` | ヘッダー領域 |
+| `sidebar` | サイドバー領域 |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `aside` | 補助情報領域 |
+| `base` | ルートレイアウト領域 |
+| `body` | 本文レイアウト領域 |
+| `footer` | フッター領域 |
+| `header` | ヘッダー領域 |
+| `main` | メイン領域 |
+| `sidebar` | サイドバー領域 |
+
+
+#### Usage
+
+```html
+<dads-layout-shell>
+  <div slot="aside"><!-- 補助情報領域 --></div>
+  <div slot="footer"><!-- フッター領域 --></div>
+  <div slot="header"><!-- ヘッダー領域 --></div>
+  <div slot="sidebar"><!-- サイドバー領域 --></div>
+</dads-layout-shell>
+```
+
+---
+
+### dads-layout-sidebar
+
+**レイアウトサイドバー**
+
+- Category: Layout
+- Class: `DadsLayoutSidebar`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/layout-sidebar/layout-sidebar.ts`
+
+#### Attributes
+
+None
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | サイドバー内コンテンツ |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | サイドバー領域 |
+
+
+#### Usage
+
+```html
+<dads-layout-sidebar>...</dads-layout-sidebar>
+```
+
+---
+
+### dads-list
+
+**箇条書きリスト（コンテナ）コンポーネント**
+
+- Category: Content
+- Class: `DadsList`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/list/list.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `marker-width` | number | - | 項番タイプのマーカー幅（全角n文字相当、CSSでは n em） |
+| `spacing` | 'lg' \| 'md' \| 'sm' | - | 項目間隔（12/8/4） |
+| `variant` | 'marker' \| 'number' | - | 表示タイプ（リストマーク / 項番） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | リスト項目（dads-list-item） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | role="list" のルート |
+
+
+#### Usage
+
+```html
+<dads-list
+  variant=""
+>...</dads-list>
+```
+
+---
+
+### dads-list-item
+
+**箇条書きリスト（アイテム）コンポーネント**
+
+- Category: Content
+- Class: `DadsListItem`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/list/list.ts`
+
+#### Attributes
+
+None
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | 本文（ネストした dads-list を含められます） |
+| `marker` | 項番（numberタイプ向け、コピー可能な“地のテキスト”） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `content` | 本文列 |
+| `item` | role="listitem" のルート |
+| `marker` | マーカー列 |
+| `marker-glyph` | 予備のマーカー記号領域（通常は非表示） |
+
+
+#### Usage
+
+```html
+<dads-list-item>
+  <div slot="marker"><!-- 項番（numberタイプ向け、コピー可能な“地のテキスト”） --></div>
+</dads-list-item>
+```
+
+---
+
+### dads-menu-list-box
+
+**メニューリストボックスコンポーネント**
+
+- Category: Navigation
+- Class: `DadsMenuListBox`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/menu-list-box/menu-list-box.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `bold` | boolean | - | 太字表示 |
+| `label` | string | - | ラベル（slot未使用時のフォールバック） |
+| `open` | boolean | - | 開閉状態 |
+| `opener-hidden` | boolean | - | opener を非表示にして外部トリガー連携する |
+| `size` | string | - | サイズ（sm | md） |
+| `variant` | string | - | バリアント（text | outlined | filled） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | メニュー項目（例: dads-menu-list-item） |
+| `icon` | opener 先頭アイコン |
+| `label` | opener ラベル |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `menu` | role="menu" のメニュー領域 |
+| `opener` | opener ボタン |
+| `opener-arrow` | 末尾矢印アイコン |
+| `opener-icon` | 先頭アイコン領域 |
+| `opener-label` | ラベル領域 |
+| `popup` | ポップアップ領域 |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `menuitemselect` | CustomEvent | 項目選択時に発火（detail: { selectedItem, selectedValue, selectedIndex }） |
+
+
+#### Usage
+
+```html
+<dads-menu-list-box
+  label=""
+  variant=""
+  size=""
+>
+  <div slot="icon"><!-- opener 先頭アイコン --></div>
+  <div slot="label"><!-- opener ラベル --></div>
+</dads-menu-list-box>
+```
+
+---
+
+### dads-menu-list
+
+**メニューリストコンポーネント**
+
+- Category: Navigation
+- Class: `DadsMenuList`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/menu-list/menu-list.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `indentation` | number | - | インデント（CSS変数 --menu-list-indentation に反映） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | メニュー項目（dads-menu-list-item） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | role="list" のルート |
+
+
+#### Usage
+
+```html
+<dads-menu-list>...</dads-menu-list>
+```
+
+---
+
+### dads-menu-list-item
+
+**メニューリスト項目コンポーネント**
+
+- Category: Navigation
+- Class: `DadsMenuListItem`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/menu-list/menu-list.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `current` | boolean | - | 現在地 |
+| `download` | boolean | - | download属性 |
+| `end-icon` | string | - | 末尾アイコン（arrow-right | caret | none） |
+| `expanded` | boolean | - | 展開状態 |
+| `href` | string | - | リンクURL（指定時は <a> として動作） |
+| `rel` | string | - | リンクrel |
+| `size` | string | - | サイズ（regular | small） |
+| `tail-icon` | string | - | ラベル末尾アイコン（new-window | none） |
+| `target` | string | - | リンクターゲット |
+| `variant` | string | - | 表示タイプ（standard | box） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `children` | 子メニュー（ネスト） |
+| `default` | ラベル |
+| `end-icon` | 末尾アイコン（arrow-right / caret） |
+| `start-icon` | 先頭アイコン |
+| `tail-icon` | ラベル末尾アイコン（デフォルト: 新規タブで開く） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ボタン/リンク本体 |
+| `end-icon` | 末尾アイコン領域 |
+| `label` | ラベル領域 |
+| `start-icon` | 先頭アイコン領域 |
+| `tail-icon` | ラベル末尾アイコン領域 |
+
+
+#### Usage
+
+```html
+<dads-menu-list-item
+  variant=""
+  size=""
+>
+  <div slot="children"><!-- 子メニュー（ネスト） --></div>
+  <div slot="end-icon"><!-- 末尾アイコン（arrow-right / caret） --></div>
+  <div slot="start-icon"><!-- 先頭アイコン --></div>
+  <div slot="tail-icon"><!-- ラベル末尾アイコン（デフォルト: 新規タブで開く） --></div>
+</dads-menu-list-item>
+```
+
+---
+
+### dads-mobile-menu
+
+**モバイルメニューコンポーネント**
+
+- Category: Navigation
+- Class: `DadsMobileMenu`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/mobile-menu/mobile-menu.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-label` | string | - | ナビゲーションラベル |
+| `aria-labelledby` | string | - | ナビゲーションラベル参照先 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `back` | 戻るリンク行（L2用途） |
+| `default` | メニュー本体 |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `back` | 戻る行コンテナ |
+| `base` | ルートの nav 要素 |
+| `content` | メニュー本文 |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-mobile-menu-toggle` | CustomEvent | セクション開閉時に発火 |
+
+
+#### Usage
+
+```html
+<dads-mobile-menu>
+  <div slot="back"><!-- 戻るリンク行（L2用途） --></div>
+</dads-mobile-menu>
+```
+
+---
+
+### dads-notification-banner
+
+**ノティフィケーションバナーコンポーネント**
+
+- Category: Display
+- Class: `DadsNotificationBanner`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/notification-banner/notification-banner.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `actions-layout` | 'vertical' \| 'horizontal' | - | アクションボタンの並び方向 |
+| `close-label` | string | - | 閉じるボタンのラベル |
+| `close-style` | 'default' \| 'compact' | - | 閉じるボタンの見た目 |
+| `dense` | boolean | - | 省スペース表示（モバイル向け） |
+| `dismiss-mode` | 'hide' \| 'collapse' | - | 閉じる押下時の挙動 |
+| `dismissible` | boolean | - | 閉じるボタンを表示 |
+| `interaction` | 'none' \| 'title-and-actions' \| 'whole' \| 'actions-only' | - | リンク委譲のクリック領域 |
+| `restore-label` | string | - | 再表示ボタンのラベル |
+| `type` | 'success' \| 'error' \| 'warning' \| 'info-1' \| 'info-2' | - | 情報タイプ |
+| `variant` | 'standard' \| 'color-chip' | - | 表示スタイル |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `actions` | アクションボタン群 |
+| `default` | バナーデスクリプション |
+| `icon` | バナーアイコン（未指定時はtypeに応じた既定アイコン） |
+| `meta` | 年月日などの補助情報 |
+| `title` | バナータイトル（必須） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `actions` | アクション領域 |
+| `base` | ルート要素 |
+| `body` | 説明領域 |
+| `close` | 閉じるボタン |
+| `close-icon` | 閉じるアイコン |
+| `close-label` | 閉じるラベル |
+| `description` | バナーデスクリプション領域 |
+| `header` | ヘッダー領域 |
+| `icon` | アイコン領域 |
+| `meta` | 年月日などの領域 |
+| `restore` | 再表示導線の領域（dismiss-mode="collapse" 時） |
+| `restore-button` | 再表示ボタン |
+| `restore-text` | 折りたたみ時の補助テキスト |
+| `title` | タイトル領域 |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-notification-banner-close` | Event | 閉じる押下時に発火（detail: { type, variant, dismissMode }） |
+| `dads-notification-banner-restore` | Event | 再表示押下時に発火（detail: { type, variant, dismissMode }） |
+
+
+#### Usage
+
+```html
+<dads-notification-banner
+  type=""
+  variant=""
+>
+  <div slot="actions"><!-- アクションボタン群 --></div>
+  <div slot="icon"><!-- バナーアイコン（未指定時はtypeに応じた既定アイコン） --></div>
+  <div slot="meta"><!-- 年月日などの補助情報 --></div>
+  <div slot="title"><!-- バナータイトル（必須） --></div>
+</dads-notification-banner>
+```
+
+---
+
+### dads-page-navigation
+
+**Page Navigation コンポーネント**
+
+- Category: Navigation
+- Class: `DadsPageNavigation`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/page-navigation/page-navigation.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-label` | string | - | ナビゲーションのラベル（デフォルト: ページナビゲーション） |
+| `as` | string | - | レンダリング要素（link | button）デフォルト: link |
+| `current` | string | - | 現在値（数値文字列） |
+| `disabled-next` | boolean | - | 次ボタン非表示（as="button" 時のみ有効） |
+| `disabled-prev` | boolean | - | 前ボタン非表示（as="button" 時のみ有効） |
+| `fill` | boolean | - | コントロールをコンテナ幅いっぱいに広げる（両側が50%ずつ） |
+| `hide-status` | boolean | - | ステータスを強制的に非表示 |
+| `next-href` | string | - | 次へリンク先（as="link" 時のみ有効） |
+| `next-label` | string | - | 次へラベル（例: 次のページ / 次の3件） |
+| `prev-href` | string | - | 前へリンク先（as="link" 時のみ有効） |
+| `prev-label` | string | - | 前へラベル（例: 前のページ / 前の3件） |
+| `size` | string | - | サイズ（arrowのみ: l | m | s | xs） |
+| `status` | string | - | ステータス文字列（slot未指定時のフォールバック） |
+| `status-separator` | string | - | current/total の区切り（デフォルト: `/`、例: ` / `） |
+| `total` | string | - | 総数（数値文字列） |
+| `type` | string | - | 表示タイプ（text | outlined | arrow） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `status` | 任意のステータス表示（例: `1/24`, `9,999 / 9,999`, `全120件 1/24`） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `control` | コントロール（a/button要素） |
+| `icon` | 矢印アイコン（svg） |
+| `label` | コントロールラベル |
+| `nav` | ナビゲーションルート（nav要素） |
+| `next` | 次へコントロール |
+| `prev` | 前へコントロール |
+| `status` | ステータス表示 |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `next` | Event | 次ボタンクリック時（as="button" 時のみ） |
+| `prev` | Event | 前ボタンクリック時（as="button" 時のみ） |
+
+
+#### Usage
+
+```html
+<dads-page-navigation
+  type=""
+  size=""
+>
+  <div slot="status"><!-- 任意のステータス表示（例: `1/24`, `9,999 / 9,999`, `全120件 1/24`） --></div>
+</dads-page-navigation>
+```
+
+---
+
+### dads-radio
+
+**Radioコンポーネント**
+
+- Category: Form
+- Class: `DadsRadio`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/radio/radio.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-describedby` | string | - | 補足/エラー参照 |
+| `aria-label` | string | - | アクセシビリティラベル（ラベルなし時に推奨） |
+| `aria-labelledby` | string | - | 外部ラベル参照 |
+| `auto-validate` | boolean | - | submit時の自動バリデーション |
+| `checked` | boolean | - | 初期チェック状態（属性はデフォルト値として扱う） |
+| `disabled` | boolean | - | 無効状態 |
+| `error` | boolean | - | エラー状態（aria-invalid="true"） |
+| `error-text` | string | - | エラーメッセージ（バリデーション時に設定） |
+| `label` | string | - | ラベルテキスト |
+| `name` | string | - | フォーム名（グループ判定に使用） |
+| `required` | boolean | - | 必須（グループ内で未選択のままsubmit時にinvalid） |
+| `size` | string | - | サイズ (sm | md | lg) |
+| `value` | string | - | 送信値（未指定時は "on"） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `required-error` | 必須バリデーションのカスタムエラーメッセージ（非表示） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | label相当のラッパー |
+| `error-text` | エラーメッセージ |
+| `input` | ネイティブinput[type=radio] |
+| `label` | ラベルテキスト |
+| `radio` | ラジオ枠（背景ホバー含む） |
+| `requirement` | 要否ラベル（※必須） |
+
+
+#### Usage
+
+```html
+<dads-radio
+  label=""
+  value=""
+  name=""
+  size=""
+>
+  <div slot="required-error"><!-- 必須バリデーションのカスタムエラーメッセージ（非表示） --></div>
+</dads-radio>
+```
+
+---
+
+### dads-resource-list
+
+**リソースリストコンポーネント**
+
+- Category: Content
+- Class: `DadsResourceList`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/resource-list/resource-list.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `data-interaction` | 'inline' \| 'whole' | - | 操作方式（DADS互換） |
+| `data-style` | 'list' \| 'frame' | - | スタイル種別（DADS互換） |
+| `download` | boolean | - | 全体リンク時のdownload属性 |
+| `href` | string | - | 全体リンク時の遷移先URL |
+| `rel` | string | - | 全体リンク時のrel属性 |
+| `target` | string | - | 全体リンク時のtarget属性 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `action` | 右端アクション |
+| `control` | チェックボックス/ラジオ等の選択コントロール |
+| `icon` | 先頭アイコン |
+| `label` | ラベル |
+| `sub` | サブラベル |
+| `support` | サポートテキスト |
+| `title` | タイトル |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `action` | 右端アクション領域 |
+| `base` | ルート領域 |
+| `body` | 本体領域（全体リンク時は <a>） |
+| `contents` | タイトル/ラベル/サポートテキスト領域 |
+| `control` | 選択コントロール領域 |
+| `icon` | 先頭アイコン領域 |
+| `label` | ラベル領域 |
+| `sub` | サブラベル領域 |
+| `support` | サポートテキスト領域 |
+| `title` | タイトル領域 |
+
+
+#### Usage
+
+```html
+<dads-resource-list>
+  <div slot="action"><!-- 右端アクション --></div>
+  <div slot="control"><!-- チェックボックス/ラジオ等の選択コントロール --></div>
+  <div slot="icon"><!-- 先頭アイコン --></div>
+  <div slot="label"><!-- ラベル --></div>
+  <div slot="sub"><!-- サブラベル --></div>
+  <div slot="support"><!-- サポートテキスト --></div>
+  <div slot="title"><!-- タイトル --></div>
+</dads-resource-list>
+```
+
+---
+
+### dads-search-box
+
+**SearchBoxコンポーネント**
+
+- Category: Form
+- Class: `DadsSearchBox`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/search-box/search-box.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-describedby` | string | - | 検索語inputへ転写（外部説明参照） |
+| `aria-label` | string | - | 検索語inputへ転写（labelの代替） |
+| `aria-labelledby` | string | - | 検索語inputへ転写（外部ラベル参照） |
+| `button-label` | string | - | 送信ボタンのラベル（デフォルト: 検索） |
+| `label` | string | - | 検索語の視覚的に非表示ラベル（デフォルト: 検索） |
+| `name` | string | - | 検索語のフォーム名（デフォルト: q） |
+| `scope-label` | string | - | 検索対象の可視ラベル（デフォルト: 検索対象） |
+| `scope-name` | string | - | 検索対象のフォーム名（デフォルト: scope） |
+| `scope-value` | string | - | 検索対象の選択値 |
+| `value` | string | - | 検索語 |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ルート（横並びコンテナ） |
+| `button` | 送信ボタン（<dads-button>） |
+| `fields` | フィールド群（scope + query） |
+| `input` | 検索語 input[type="search"] |
+| `query` | 検索語入力のラベルコンテナ |
+| `scope` | 検索対象セレクトのラベルコンテナ |
+| `scope-icon` | 検索対象セレクトの矢印アイコン |
+| `scope-label` | 検索対象ラベルテキスト |
+| `scope-select` | 検索対象セレクト |
+| `search-icon` | 虫眼鏡アイコン |
+| `visually-hidden` | スクリーンリーダー向けラベル |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-change` | Event | 値変更確定時に発火（detail: { query: string, scope: string }） |
+| `dads-input` | Event | 入力時に発火（detail: { query: string, scope: string }） |
+| `dads-search` | Event | 検索実行時に発火（detail: { query: string, scope: string }、cancelable） |
+
+
+#### Usage
+
+```html
+<dads-search-box
+  label=""
+  value=""
+  name=""
+>...</dads-search-box>
+```
+
+---
+
+### dads-select
+
+**Selectコンポーネント**
+
+- Category: Form
+- Class: `DadsSelect`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/select/select.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `aria-disabled` | string | - | 無効相当（Tab移動は許容、操作は抑止） |
+| `auto-validate` | boolean | - | 自動バリデーションを有効化 |
+| `disabled` | boolean | - | 無効状態（ネイティブdisabled） |
+| `error` | boolean | - | エラー状態 |
+| `error-text` | string | - | エラーメッセージ（スロット未使用時のフォールバック） |
+| `label` | string | - | ラベルテキスト（スロット未使用時のフォールバック） |
+| `name` | string | - | フォーム名 |
+| `required` | boolean | - | 必須項目 |
+| `size` | string | - | サイズ（sm | md | lg）+ 幅指定（例: "md 256", "sm 20ch", "lg full", "md fit-content"） |
+| `support-text` | string | - | サポートテキスト（スロット未使用時のフォールバック） |
+| `value` | string | - | 初期値 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | option / optgroup（Light DOMに配置、内部selectへ複製） |
+| `error-text` | エラーメッセージ |
+| `label` | ラベルテキスト |
+| `required-error` | 必須バリデーションのカスタムエラーメッセージ |
+| `support-text` | サポートテキスト（ヒント） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `error-text` | エラーメッセージコンテナ |
+| `label` | ラベル要素 |
+| `label-text` | ラベルテキストラッパー |
+| `requirement` | 要否ラベル（※必須） |
+| `select` | ネイティブselect要素 |
+| `select-chevron` | セレクトの矢印アイコン |
+| `select-wrapper` | selectを囲むコンテナ |
+| `support-text` | サポートテキストコンテナ |
+| `wrapper` | 全体を囲むコンテナ |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-change` | Event | 値変更確定時に発火 |
+| `dads-input` | Event | 入力時に発火 |
+
+
+#### Usage
+
+```html
+<dads-select
+  label=""
+  support-text=""
+  value=""
+  name=""
+>
+  <div slot="error-text"><!-- エラーメッセージ --></div>
+  <div slot="label"><!-- ラベルテキスト --></div>
+  <div slot="required-error"><!-- 必須バリデーションのカスタムエラーメッセージ --></div>
+  <div slot="support-text"><!-- サポートテキスト（ヒント） --></div>
+</dads-select>
+```
+
+---
+
+### dads-step-navigation
+
+**Step Navigation（コンテナ）**
+
+- Category: Navigation
+- Class: `DadsStepNavigation`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/step-navigation/step-navigation.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `orientation` | string | - | 表示方向 (horizontal | vertical) |
+| `size` | string | - | サイズ (normal | small) |
+| `status-live` | string | - | ステータスの読み上げ (off | polite | assertive) |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | dads-step-navigation-item 群 |
+| `status` | 進捗文言（スクリーンリーダー向け、visually-hidden） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `container` | ナビゲーションコンテナ |
+| `list` | ステップ一覧（リスト） |
+| `status` | 進捗文言のラッパー |
+
+
+#### Usage
+
+```html
+<dads-step-navigation
+  size=""
+>
+  <div slot="status"><!-- 進捗文言（スクリーンリーダー向け、visually-hidden） --></div>
+</dads-step-navigation>
+```
+
+---
+
+### dads-step-navigation-item
+
+**Step Navigation Item（各ステップ）**
+
+- Category: Navigation
+- Class: `DadsStepNavigationItem`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/step-navigation/step-navigation.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `href` | string | - | リンクURL（指定時のみリンク表示） |
+| `interaction` | string | - | ボタン相当のインタラクション (button) |
+| `label-completed` | string | - | スクリーンリーダー向け「完了」ラベル |
+| `label-editing` | string | - | 「編集中」ラベル |
+| `label-error` | string | - | 「エラー」ラベル |
+| `label-skipped` | string | - | スクリーンリーダー向け「スキップ」ラベル |
+| `label-step` | string | - | スクリーンリーダー向け「ステップ」ラベル |
+| `rel` | string | - | リンクrel |
+| `state` | string | - | 状態 (reached | completed | editing | error | skipped) |
+| `step` | string | - | 親が付与する表示番号（1始まり） |
+| `target` | string | - | リンクターゲット |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `description` | ステップの説明（任意） |
+| `title` | ステップのタイトル |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `description` | 説明 |
+| `header` | ヘッダー（リンクの場合は <a>） |
+| `number` | ステップ番号（円形） |
+| `state-icon` | 状態アイコン（completed/editing/error） |
+| `state-label` | 状態ラベル（editing/error） |
+| `step` | ステップ要素（コネクタ線含む） |
+| `title` | タイトル |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-step-activate` | CustomEvent | interaction="button" のアクティベート時に発火（detail: {step, state, trigger}） |
+
+
+#### Usage
+
+```html
+<dads-step-navigation-item>
+  <div slot="description"><!-- ステップの説明（任意） --></div>
+  <div slot="title"><!-- ステップのタイトル --></div>
+</dads-step-navigation-item>
+```
+
+---
+
+### dads-switch
+
+**Switchコンポーネント**
+
+- Category: Form
+- Class: `DadsSwitch`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/switch/switch.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `checked` | boolean | - | スイッチの状態 |
+| `disabled` | boolean | - | 無効状態 |
+| `name` | string | - | フォーム名 |
+| `size` | string | - | サイズ（sm / md / lg）デフォルト: md |
+| `value` | string | - | チェック時のフォーム値（デフォルト: "on"） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `label-left` | 左側ラベル |
+| `label-right` | 右側ラベル |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `checkbox` | 内部チェックボックス（visually hidden） |
+| `knob` | スイッチのノブ（つまみ） |
+| `label-left` | 左側ラベルコンテナ |
+| `label-right` | 右側ラベルコンテナ |
+| `switch` | スイッチのlabel要素 |
+| `track` | スイッチのトラック（背景） |
+| `wrapper` | 全体を囲むコンテナ |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-change` | Event | 状態変更時に発火 |
+
+
+#### Usage
+
+```html
+<dads-switch
+  value=""
+  name=""
+  size=""
+  disabled
+>
+  <div slot="label-left"><!-- 左側ラベル --></div>
+  <div slot="label-right"><!-- 右側ラベル --></div>
+</dads-switch>
+```
+
+---
+
+### dads-table-control
+
+**Table Control component.**
+
+- Category: Content
+- Class: `DadsTableControl`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/table-control/table-control.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `items-per-page` | string | - | Current page size for footer |
+| `page-size-label` | string | - | Page size label |
+| `page-size-options` | string | - | Comma separated page size options |
+| `pagination-position` | 'start' \| 'end' | - | Footer pagination alignment |
+| `popular-label` | string | - | Popular search area label |
+| `query` | string | - | Search query for header |
+| `reset-label` | string | - | Reset button label |
+| `result-count` | string | - | Result count for header |
+| `show-reset` | boolean | - | Shows reset button in header |
+| `variant` | 'header' \| 'footer' | - | Render variant |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `actions` | Header action area (e.g. print / csv / create buttons) |
+| `page-navigation` | Footer page navigation area (e.g. dads-page-navigation) |
+| `presets` | Header popular-search presets (e.g. chip tags) |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `actions` | Header actions area |
+| `base` | Root wrapper |
+| `count` | Result count label |
+| `footer` | Footer control row |
+| `header` | Header control row |
+| `items-option` | Items-per-page option button |
+| `items-per-page` | Items-per-page block |
+| `pagination` | Pagination area |
+| `popular` | Popular-search area |
+| `reset` | Reset trigger button |
+| `search` | Search control block |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-table-control-page-size-change` | Event | Fired when page size option changes |
+| `dads-table-control-reset` | Event | Fired when reset is requested |
+| `dads-table-control-search` | Event | Fired when search is requested |
+
+
+#### Usage
+
+```html
+<dads-table-control
+  variant=""
+>
+  <div slot="actions"><!-- Header action area (e.g. print / csv / create buttons) --></div>
+  <div slot="page-navigation"><!-- Footer page navigation area (e.g. dads-page-navigation) --></div>
+  <div slot="presets"><!-- Header popular-search presets (e.g. chip tags) --></div>
+</dads-table-control>
+```
+
+---
+
+### dads-table
+
+**テーブル（Data Table）コンポーネント**
+
+- Category: Content
+- Class: `DadsTable`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/table/table.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `hover` | boolean | - | 行ホバー |
+| `selectable` | boolean | - | 行選択を有効化 |
+| `size` | string | - | サイズ |
+| `sort-behavior` | string | - | ソート挙動（例: dom） |
+| `striped` | boolean | - | 交互行背景 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | テーブルマークアップ（<table> 等） |
+
+
+#### CSS Parts
+
+None
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-selection-change` | CustomEvent | 行選択変更時に発火（detail: { selectedRowIds, selectedRowIndexes, selectedCount, totalSelectableRows }） |
+| `dads-sort-change` | CustomEvent | ソート変更時に発火（detail: { columnId, columnIndex, direction }） |
+
+
+#### Usage
+
+```html
+<dads-table
+  size=""
+>...</dads-table>
+```
+
+---
+
+### dads-textarea
+
+**Textareaコンポーネント**
+
+- Category: Form
+- Class: `DadsTextarea`
+- Extends: `TypographyFormComponent`
+- Form-associated: yes
+- Source: `./packages/components/textarea/textarea.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `auto-validate` | boolean | - | 自動バリデーションを有効化 |
+| `counter-max` | number | - | カウンター用最大値（maxlength未設定時） |
+| `disabled` | boolean | - | 無効状態 |
+| `error` | boolean | - | エラー状態 |
+| `error-text` | string | - | エラーメッセージ（スロット未使用時のフォールバック） |
+| `label` | string | - | ラベルテキスト（スロット未使用時のフォールバック） |
+| `maxlength` | number | - | 最大文字数 |
+| `name` | string | - | フォーム名 |
+| `readonly` | boolean | - | 読み取り専用 |
+| `required` | boolean | - | 必須項目 |
+| `rows` | number | - | 行数（デフォルト: 3） |
+| `show-counter` | boolean | - | 文字数カウンター表示 |
+| `size` | string | - | サイズ (sm | md | lg) |
+| `support-text` | string | - | サポートテキスト（スロット未使用時のフォールバック） |
+| `value` | string | - | 値 |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `error-text` | エラーメッセージ |
+| `label` | ラベルテキスト |
+| `overflow-error` | 文字数超過バリデーションのカスタムエラーメッセージ |
+| `required-error` | 必須バリデーションのカスタムエラーメッセージ |
+| `support-text` | サポートテキスト（ヒント） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `counter` | 文字数カウンター（show-counter未設定時は:emptyで自動非表示） |
+| `error-text` | エラーメッセージコンテナ |
+| `label` | ラベル要素 |
+| `requirement` | 要否ラベル（必須/読み取り専用） |
+| `support-text` | サポートテキストコンテナ |
+| `textarea` | ネイティブtextarea要素 |
+| `textarea-wrapper` | テキストエリアを囲むコンテナ |
+| `wrapper` | 全体を囲むコンテナ |
+
+
+#### Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `dads-change` | Event | 値変更確定時に発火 |
+| `dads-input` | Event | 入力時に発火 |
+
+
+#### Usage
+
+```html
+<dads-textarea
+  label=""
+  support-text=""
+  value=""
+  name=""
+>
+  <div slot="error-text"><!-- エラーメッセージ --></div>
+  <div slot="label"><!-- ラベルテキスト --></div>
+  <div slot="overflow-error"><!-- 文字数超過バリデーションのカスタムエラーメッセージ --></div>
+  <div slot="required-error"><!-- 必須バリデーションのカスタムエラーメッセージ --></div>
+  <div slot="support-text"><!-- サポートテキスト（ヒント） --></div>
+</dads-textarea>
+```
+
+---
+
+### dads-text
+
+**基本テキストコンポーネント**
+
+- Category: Content
+- Class: `DadsText`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/typography/dads-text.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `display` | string | - | 表示（inline | block） |
+| `size` | string | - | サイズ（16 | 20 | 32） |
+| `variant` | string | - | バリアント（standard | display | dense） |
+| `weight` | string | - | 太さ（normal | bold） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | テキストコンテンツ |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `text` | テキストラッパー |
+
+
+#### Usage
+
+```html
+<dads-text
+  variant=""
+  size=""
+>...</dads-text>
+```
+
+---
+
+### dads-utility-link
+
+**Utility Link コンポーネント**
+
+- Category: Navigation
+- Class: `DadsUtilityLink`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/utility-link/utility-link.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `download` | boolean | - | download属性 |
+| `href` | string | - | リンク先URL |
+| `rel` | string | - | リンクrel |
+| `target` | string | - | リンクターゲット（download 指定時は内部リンクへは反映しない） |
+
+
+#### Slots
+
+| Slot | Description |
+|------|-------------|
+| `default` | リンクラベル |
+| `lead-icon` | 先頭アイコン（任意） |
+| `tail-icon` | 末尾アイコン（任意、指定時は自動末尾アイコンより優先） |
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | リンク本体（a要素） |
+| `label` | ラベル領域 |
+| `lead-icon` | 先頭アイコン領域 |
+| `tail-icon` | 末尾アイコン領域（tail-icon slot または target="_blank"/download フォールバックを表示） |
+
+
+#### Usage
+
+```html
+<dads-utility-link>
+  <div slot="lead-icon"><!-- 先頭アイコン（任意） --></div>
+  <div slot="tail-icon"><!-- 末尾アイコン（任意、指定時は自動末尾アイコンより優先） --></div>
+</dads-utility-link>
+```
+
+---
+
+## UI Patterns (Blocks)
+
+Pre-built compositions for common screens. Use `get_pattern_recipe` MCP tool or wcf CLI.
+
+### search-form
+
+**検索フォーム（最小）**: 見出し + 検索フォーム（検索語 + ボタン）
+
+Requires: `heading`, `search-box`, `button`
+
+```html
+<main data-dads-typeset>
+  <dads-heading level="1">検索</dads-heading>
+  <form id="search-form">
+    <dads-search-box aria-label="検索"></dads-search-box>
+    <dads-button type="submit">検索</dads-button>
+  </form>
+</main>
+```
+
+### search-results
+
+**検索結果一覧**: 見出し + 検索フォーム + 結果カード + ページネーション
+
+Requires: `heading`, `search-box`, `card`, `page-navigation`
+
+```html
+<main data-dads-typeset>
+  <dads-heading level="1">検索</dads-heading>
+  <form id="search-form">
+    <dads-search-box aria-label="検索"></dads-search-box>
+  </form>
+  <h2>結果</h2>
+  <ul>
+    <li><dads-card>ダミー結果 1</dads-card></li>
+    <li><dads-card>ダミー結果 2</dads-card></li>
+    <li><dads-card>ダミー結果 3</dads-card></li>
+  </ul>
+  <dads-page-navigation current="1" total="1"></dads-page-navigation>
+</main>
+```
+
+### table-with-pagination
+
+**テーブル + ページネーション**: テーブル一覧とページネーションの基本構成
+
+Requires: `heading`, `table`, `page-navigation`
+
+```html
+<main data-dads-typeset>
+  <dads-heading level="1">一覧</dads-heading>
+  <dads-table>
+    <table>
+      <thead>
+        <tr><th>項目</th><th>値</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>サンプル</td><td>1</td></tr>
+      </tbody>
+    </table>
+  </dads-table>
+  <dads-page-navigation current="1" total="3"></dads-page-navigation>
+</main>
+```
+
+### card-grid
+
+**カードグリッド**: カードで一覧表示する基本レイアウト
+
+Requires: `heading`, `card`, `button`
+
+```html
+<main data-dads-typeset>
+  <dads-heading level="1">お知らせ</dads-heading>
+  <section>
+    <dads-card>
+      <h2>カード1</h2>
+      <dads-button variant="outlined">詳細</dads-button>
+    </dads-card>
+    <dads-card>
+      <h2>カード2</h2>
+      <dads-button variant="outlined">詳細</dads-button>
+    </dads-card>
+  </section>
+</main>
+```
+
+### layout-website-hero-section-footer
+
+**レイアウト（Website: Hero + Section + Footer）**: コンテンツ主導の1カラムサイト向けレイアウト。
+
+Requires: `layout-shell`, `heading`, `card`, `button`
+
+```html
+<dads-layout-shell data-dads-typeset pattern="website" mode="auto">
+  <header slot="header">
+    <dads-heading level="1">くらしの手続きポータル</dads-heading>
+    <p>必要な手続きを1つの画面で確認できます。</p>
+  </header>
+  <section>
+    <dads-card>
+      <dads-heading level="2">はじめての方へ</dads-heading>
+      <p>制度の概要と申請までの流れを案内します。</p>
+      <dads-button variant="outlined">詳しく見る</dads-button>
+    </dads-card>
+  </section>
+  <footer slot="footer">© Digital Service</footer>
+</dads-layout-shell>
+```
+
+### layout-app-shell
+
+**レイアウト（App/SaaS: Header + Sidebar + Main）**: 業務アプリ向けの標準App Shellレイアウト。
+
+Requires: `layout-shell`, `layout-sidebar`, `heading`, `card`
+
+```html
+<dads-layout-shell data-dads-typeset pattern="app-shell" mode="auto">
+  <div slot="header">
+    <dads-heading level="2">業務ダッシュボード</dads-heading>
+  </div>
+  <dads-layout-sidebar slot="sidebar">
+    <ul>
+      <li>案件一覧</li>
+      <li>承認待ち</li>
+      <li>設定</li>
+    </ul>
+  </dads-layout-sidebar>
+  <section>
+    <dads-card>
+      <dads-heading level="3">進捗サマリー</dads-heading>
+      <p>主要KPIを表示します。</p>
+    </dads-card>
+  </section>
+</dads-layout-shell>
+```
+
+### layout-master-detail
+
+**レイアウト（Master-Detail: Main + Aside）**: 一覧 + 詳細を同時表示する2カラムレイアウト。
+
+Requires: `layout-shell`, `layout-aside`, `heading`, `table`
+
+```html
+<dads-layout-shell data-dads-typeset pattern="master-detail" mode="auto">
+  <section>
+    <dads-heading level="2">申請一覧</dads-heading>
+    <dads-table>
+      <table>
+        <thead>
+          <tr><th scope="col">申請ID</th><th scope="col">状態</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A-1001</td><td>審査中</td></tr>
+          <tr><td>A-1002</td><td>差戻し</td></tr>
+        </tbody>
+      </table>
+    </dads-table>
+  </section>
+  <dads-layout-aside slot="aside">
+    <dads-heading level="3">詳細情報</dads-heading>
+    <p>選択中レコードの詳細を表示します。</p>
+  </dads-layout-aside>
+</dads-layout-shell>
+```
+
+### application-form-single-validation
+
+**申請フォーム（1ページ・検証エラー）**: 必須項目を含む1ページ申請フォームとバリデーションエラー表示
+
+Requires: `heading`, `fieldset`, `input-text`, `select`, `textarea`, `button`
+
+```html
+<main data-dads-typeset>
+  <dads-heading level="1">申請フォーム</dads-heading>
+  <form id="application-form-single">
+    <dads-fieldset>
+      <legend>申請情報</legend>
+      <dads-input-text name="name" required error error-text="氏名は必須です"></dads-input-text>
+      <dads-select name="type" required></dads-select>
+      <dads-textarea name="reason" required></dads-textarea>
+    </dads-fieldset>
+    <dads-button type="submit">送信</dads-button>
+  </form>
+</main>
+```
+
+### application-form-step-validation
+
+**申請フォーム（ステップ・検証エラー）**: ステップナビゲーション付き申請フォームと検証エラー表示
+
+Requires: `heading`, `step-navigation`, `fieldset`, `input-text`, `button`
+
+```html
+<main data-dads-typeset>
+  <dads-heading level="1">申請フォーム（ステップ）</dads-heading>
+  <dads-step-navigation></dads-step-navigation>
+  <form id="application-form-step">
+    <dads-fieldset>
+      <legend>ステップ1: 申請者情報</legend>
+      <dads-input-text name="name" required error error-text="氏名は必須です"></dads-input-text>
+    </dads-fieldset>
+    <dads-button type="submit">次へ</dads-button>
+  </form>
+</main>
+```
+
+### mockup-website
+
+**モックアップ（Website）**: Webサイト向けのヒーロー + セクション構成を device-mock で確認するモックアップ。
+
+Requires: `device-mock`, `layout-shell`, `heading`, `card`, `button`
+
+```html
+<section data-dads-typeset>
+  <dads-device-mock device="desktop">
+    <dads-layout-shell pattern="website" mode="desktop">
+      <header slot="header">
+        <dads-heading level="1">公共サービス ポータル</dads-heading>
+        <p>申請・確認・問い合わせを1つの画面で行えます。</p>
+      </header>
+      <section>
+        <dads-card>
+          <dads-heading level="2">新着のお知らせ</dads-heading>
+          <p>重要なお知らせを確認してください。</p>
+          <dads-button variant="outlined">詳細</dads-button>
+        </dads-card>
+      </section>
+      <footer slot="footer">© Digital Service</footer>
+    </dads-layout-shell>
+  </dads-device-mock>
+</section>
+```
+
+### mockup-app-shell
+
+**モックアップ（App Shell）**: 業務画面向けのヘッダー + サイドバー + メイン領域を device-mock で再現するモックアップ。
+
+Requires: `device-mock`, `layout-shell`, `layout-sidebar`, `heading`, `card`
+
+```html
+<section data-dads-typeset>
+  <dads-device-mock device="desktop">
+    <dads-layout-shell pattern="app-shell" mode="desktop">
+      <div slot="header">
+        <dads-heading level="2">申請管理ダッシュボード</dads-heading>
+      </div>
+      <dads-layout-sidebar slot="sidebar">
+        <ul>
+          <li>一覧</li>
+          <li>承認待ち</li>
+          <li>設定</li>
+        </ul>
+      </dads-layout-sidebar>
+      <section>
+        <dads-card>
+          <dads-heading level="3">本日の処理件数</dads-heading>
+          <p>処理済み 128 件 / 未処理 24 件</p>
+        </dads-card>
+      </section>
+    </dads-layout-shell>
+  </dads-device-mock>
+</section>
+```
+
+### mockup-mobile-form
+
+**モックアップ（Mobile Form）**: モバイル端末上で入力フォームの配置と余白を確認するモックアップ。
+
+Requires: `device-mock`, `heading`, `fieldset`, `input-text`, `select`, `textarea`, `button`
+
+```html
+<section data-dads-typeset>
+  <dads-device-mock device="mobile" visible-height="560px">
+    <main>
+      <dads-heading level="2">申請フォーム</dads-heading>
+      <form>
+        <dads-fieldset>
+          <legend>基本情報</legend>
+          <dads-input-text name="name" required></dads-input-text>
+          <dads-select name="type" required></dads-select>
+          <dads-textarea name="detail" required></dads-textarea>
+        </dads-fieldset>
+        <dads-button type="submit">確認へ進む</dads-button>
+      </form>
+    </main>
+  </dads-device-mock>
+</section>
+```
+
+## Styling Reference
+
+### Spacing Tokens
+
+Always use spacing tokens instead of hardcoded px values:
+
+| Token | px |
+|-------|-----|
+| `--spacing-0` | 0 |
+| `--spacing-0-5` | 2px |
+| `--spacing-1` | 4px |
+| `--spacing-1-5` | 6px |
+| `--spacing-2` | 8px |
+| `--spacing-2-5` | 10px |
+| `--spacing-3` | 12px |
+| `--spacing-3-5` | 14px |
+| `--spacing-4` | 16px |
+| `--spacing-5` | 20px |
+| `--spacing-6` | 24px |
+| `--spacing-8` | 32px |
+| `--spacing-10` | 40px |
+| `--spacing-12` | 48px |
+| `--spacing-15` | 60px |
+| `--spacing-16` | 64px |
+| `--spacing-20` | 80px |
+
+### Customization Pattern
+
+```css
+/* Method 1: CSS custom properties */
+dads-button {
+  --dads-button-background: var(--color-primary-solid-800);
+}
+
+/* Method 2: ::part() selectors */
+dads-card::part(base) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+```
+
+### CSS Rules
+
+- No `!important` — use `@layer` for specificity
+- `::part()` instead of classes for Shadow DOM styling
+- State via HTML attributes (`[open]`, `[aria-expanded="true"]`), not classes
+- Max 1 level of nesting (except `@layer`, pseudo-classes, media queries)
+- Use global design tokens (e.g., `var(--color-neutral-black)`)
+
+## Installation
+
+### Via wcf CLI
+
+```bash
+# Initialize project
+npx wcf init --prefix myui --dir vendor/components/myui
+
+# Add components
+npx wcf vendor install --prefix myui --dir vendor/components/myui --component button
+npx wcf vendor install --prefix myui --dir vendor/components/myui --component input-text
+```
+
+### Component Dependencies
+
+Components that depend on others (auto-resolved by wcf CLI):
+
+| Component | Dependencies |
+|-----------|-------------|
+| `combobox` | `avatar`, `chip-tag`, `icon` |
+| `date-picker` | `calendar` |
+| `file-upload` | `button`, `checkbox` |
+| `global-menu` | `menu-list-box` |
+| `language-selector` | `menu-list-box` |
+| `menu-list-box` | `divider`, `menu-list` |
+| `search-box` | `button` |
+| `table-control` | `button`, `chip-tag`, `page-navigation`, `search-box` |
+
+## MCP Server
+
+An MCP server exposes the design system to AI agents:
+
+```bash
+npm run mcp:design-system
+```
+
+| Tool | Description |
+|------|-------------|
+| `list_components` | List all custom elements |
+| `get_component_api` | Get component API (attributes/slots/events/cssParts) |
+| `generate_usage_snippet` | Generate minimal HTML snippet |
+| `get_install_recipe` | Get install metadata and dependencies |
+| `validate_markup` | Validate HTML against CEM |
+| `list_patterns` | List UI patterns |
+| `get_pattern_recipe` | Get pattern with resolved HTML |
+| `generate_pattern_snippet` | Generate pattern HTML |
