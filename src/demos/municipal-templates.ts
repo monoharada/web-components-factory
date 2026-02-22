@@ -18,6 +18,12 @@ function renderTemplatePageDemo(pageTitle: string, samples: readonly TemplateSam
         <section data-dads-typeset aria-label="${sample.title}">
           <h2>${sample.title}</h2>
           ${sample.html}
+          <h4 class="wc-api-panel__section-title">Usage (HTML)</h4>
+          <dads-code-block data-api-code>
+            <template>
+              ${sample.html}
+            </template>
+          </dads-code-block>
         </section>
       `,
     )
