@@ -73,6 +73,11 @@
 - [dads-layout-shell](#dads-layout-shell): 画面レイアウトシェル
 - [dads-layout-sidebar](#dads-layout-sidebar): レイアウトサイドバー
 
+### Other
+- [dads-loading-icon](#dads-loading-icon): LoadingIconコンポーネント
+- [dads-progress-bar](#dads-progress-bar): Progress Barコンポーネント
+- [dads-spinner](#dads-spinner): Spinnerコンポーネント
+
 ---
 
 ## Component API Reference
@@ -2942,6 +2947,62 @@ None
 
 ---
 
+### dads-loading-icon
+
+**LoadingIconコンポーネント**
+
+- Category: Other
+- Class: `DadsLoadingIcon`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/loading-icon/loading-icon.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `composition` | 'stacked' \| 'inlined' | - | レイアウト方向 |
+| `label` | string | - | 表示ラベル兼アクセシブル名（指定時はaria-hidden解除、role="img"、title要素追加） |
+| `size` | 'sm' \| 'lg' | - | サイズ（sm: 24px, lg: 48px） |
+| `underlay` | boolean | - | カード背景表示 |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ルートコンテナ |
+| `icon` | SVGアイコン要素 |
+| `label` | ラベルテキスト |
+| `underlay` | カード背景（underlay属性時に表示） |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-loading-icon-` | - |  |
+| `--dads-loading-icon-color` | - | アイコン色 |
+| `--dads-loading-icon-label-color` | - | ラベルテキスト色 |
+| `--dads-loading-icon-underlay-bg` | - | アンダーレイ背景色 |
+| `--dads-loading-icon-underlay-border` | - | アンダーレイ枠線色 |
+
+
+#### Usage
+
+```html
+<dads-loading-icon
+  label=""
+  size=""
+>...</dads-loading-icon>
+```
+
+---
+
 ### dads-menu-list-box
 
 **メニューリストボックスコンポーネント**
@@ -3567,6 +3628,65 @@ None
 
 ---
 
+### dads-progress-bar
+
+**Progress Barコンポーネント**
+
+- Category: Other
+- Class: `DadsProgressBar`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/progress-bar/progress-bar.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `composition` | 'stacked' \| 'inlined' | - | レイアウト方向 |
+| `label` | string | - | 表示ラベル兼アクセシブル名 |
+| `max` | string | - | 最大値（デフォルト: 1、0以下は1にクランプ） |
+| `underlay` | boolean | - | カード背景表示 |
+| `value` | string | - | 進捗値（0〜max、未設定=indeterminate） |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ルートコンテナ（role="progressbar"） |
+| `indicator` | インジケーターバー（進捗表示） |
+| `label` | ラベルテキスト |
+| `track` | トラックバー（背景） |
+| `underlay` | カード背景（underlay属性時に表示） |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-progress-bar-` | - |  |
+| `--dads-progress-bar-indicator-color` | - | インジケーター色 |
+| `--dads-progress-bar-label-color` | - | ラベルテキスト色 |
+| `--dads-progress-bar-track-color` | - | トラック色 |
+| `--dads-progress-bar-underlay-bg` | - | アンダーレイ背景色 |
+| `--dads-progress-bar-underlay-border` | - | アンダーレイ枠線色 |
+
+
+#### Usage
+
+```html
+<dads-progress-bar
+  label=""
+  value=""
+>...</dads-progress-bar>
+```
+
+---
+
 ### dads-radio
 
 **Radioコンポーネント**
@@ -3987,6 +4107,65 @@ None
   <div slot="required-error"><!-- 必須バリデーションのカスタムエラーメッセージ --></div>
   <div slot="support-text"><!-- サポートテキスト（ヒント） --></div>
 </dads-select>
+```
+
+---
+
+### dads-spinner
+
+**Spinnerコンポーネント**
+
+- Category: Other
+- Class: `DadsSpinner`
+- Extends: `TypographyWebComponent`
+- Source: `./packages/components/spinner/spinner.ts`
+
+#### Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `composition` | 'stacked' \| 'inlined' | - | レイアウト方向 |
+| `label` | string | - | 表示ラベル兼アクセシブル名 |
+| `size` | 'sm' \| 'lg' | - | サイズ（sm: 24px, lg: 48px） |
+| `underlay` | boolean | - | カード背景表示 |
+
+
+#### Slots
+
+None
+
+
+#### CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `base` | ルートコンテナ（role="progressbar"） |
+| `indicator` | インジケーター円（アニメーション） |
+| `label` | ラベルテキスト |
+| `svg` | SVGコンテナ |
+| `track` | トラック円（背景） |
+| `underlay` | カード背景（underlay属性時に表示） |
+
+
+#### CSS Custom Properties
+
+| CSS Custom Property | Default | Description |
+|---------------------|---------|-------------|
+| `--dads-spinner-` | - |  |
+| `--dads-spinner-indicator-color` | - | インジケーター色 |
+| `--dads-spinner-label-color` | - | ラベルテキスト色 |
+| `--dads-spinner-track-color` | - | トラック色 |
+| `--dads-spinner-underlay-bg` | - | アンダーレイ背景色 |
+| `--dads-spinner-underlay-border` | - | アンダーレイ枠線色 |
+
+
+#### Usage
+
+```html
+<dads-spinner
+  label=""
+  size=""
+>...</dads-spinner>
 ```
 
 ---

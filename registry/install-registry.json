@@ -427,6 +427,18 @@
         "componentDir": "packages/components/list"
       }
     },
+    "loading-icon": {
+      "id": "loading-icon",
+      "tags": [
+        "dads-loading-icon"
+      ],
+      "define": "defineLoadingIcon",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/loading-icon"
+      }
+    },
     "menu-list": {
       "id": "menu-list",
       "tags": [
@@ -503,6 +515,18 @@
         "componentDir": "packages/components/page-navigation"
       }
     },
+    "progress-bar": {
+      "id": "progress-bar",
+      "tags": [
+        "dads-progress-bar"
+      ],
+      "define": "defineProgressBar",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/progress-bar"
+      }
+    },
     "radio": {
       "id": "radio",
       "tags": [
@@ -551,6 +575,18 @@
       "deps": [],
       "source": {
         "componentDir": "packages/components/select"
+      }
+    },
+    "spinner": {
+      "id": "spinner",
+      "tags": [
+        "dads-spinner"
+      ],
+      "define": "defineSpinner",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/spinner"
       }
     },
     "step-navigation": {
@@ -683,6 +719,7 @@
     "dads-layout-sidebar": "layout-sidebar",
     "dads-list": "list",
     "dads-list-item": "list",
+    "dads-loading-icon": "loading-icon",
     "dads-menu-list": "menu-list",
     "dads-menu-list-box": "menu-list-box",
     "dads-menu-list-item": "menu-list",
@@ -690,10 +727,12 @@
     "dads-mobile-mock": "mobile-mock",
     "dads-notification-banner": "notification-banner",
     "dads-page-navigation": "page-navigation",
+    "dads-progress-bar": "progress-bar",
     "dads-radio": "radio",
     "dads-resource-list": "resource-list",
     "dads-search-box": "search-box",
     "dads-select": "select",
+    "dads-spinner": "spinner",
     "dads-step-navigation": "step-navigation",
     "dads-step-navigation-item": "step-navigation",
     "dads-switch": "switch",

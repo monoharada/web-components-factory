@@ -24,33 +24,33 @@ export const buttonStyles = css `
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--dads-button-icon-gap, 8px);
-    
+    gap: var(--dads-button-icon-gap, 8px); /* アイコンとラベルの間隔 */
+
     /* プロパティと変数のマッピング（一度だけ定義） */
-    background-color: var(--dads-button-background);
-    color: var(--dads-button-color);
+    background-color: var(--dads-button-background); /* ボタンの背景色 */
+    color: var(--dads-button-color); /* ボタンのテキスト色 */
     border: var(--dads-button-border-width, 2px) solid var(--dads-button-border-color);
-    border-radius: var(--dads-button-border-radius, 0.5rem);
-    
-    padding: var(--dads-button-padding, var(--spacing-3, 12px) var(--spacing-6, 24px));
-    width: var(--dads-button-width, auto);
-    min-width: var(--dads-button-min-width, auto);
-    max-width: var(--dads-button-max-width, none);
-    min-height: var(--dads-button-min-height, var(--dads-button-min-height-default, 48px));
-    aspect-ratio: var(--dads-button-aspect-ratio, auto);
-    
+    border-radius: var(--dads-button-border-radius, 0.5rem); /* 角丸のサイズ */
+
+    padding: var(--dads-button-padding, var(--spacing-3, 12px) var(--spacing-6, 24px)); /* 内側の余白 */
+    width: var(--dads-button-width, auto); /* ボタンの幅 */
+    min-width: var(--dads-button-min-width, auto); /* 最小幅 */
+    max-width: var(--dads-button-max-width, none); /* 最大幅 */
+    min-height: var(--dads-button-min-height, var(--dads-button-min-height-default, 48px)); /* 最小高さ */
+    aspect-ratio: var(--dads-button-aspect-ratio, auto); /* アスペクト比 */
+
     /* フォント設定 - グローバルトークン参照 */
     font-family: var(--font-family-sans);
-    font-size: var(--dads-button-font-size, 1rem);
-    font-weight: var(--dads-button-font-weight, 700);
-    line-height: var(--dads-button-line-height, 1.25);
-    text-align: var(--dads-button-text-align, center);
-    text-transform: var(--dads-button-text-transform, none);
-    text-decoration: var(--dads-button-text-decoration, none);
-    white-space: var(--dads-button-white-space, nowrap);
-    
-    user-select: var(--dads-button-user-select, none);
-    -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color, transparent);
+    font-size: var(--dads-button-font-size, 1rem); /* フォントサイズ */
+    font-weight: var(--dads-button-font-weight, 700); /* フォントウェイト */
+    line-height: var(--dads-button-line-height, 1.25); /* 行の高さ */
+    text-align: var(--dads-button-text-align, center); /* テキスト揃え */
+    text-transform: var(--dads-button-text-transform, none); /* テキスト変換（大文字化等） */
+    text-decoration: var(--dads-button-text-decoration, none); /* テキスト装飾 */
+    white-space: var(--dads-button-white-space, nowrap); /* テキスト折り返し制御 */
+
+    user-select: var(--dads-button-user-select, none); /* テキスト選択の可否 */
+    -webkit-tap-highlight-color: var(--dads-button-tap-highlight-color, transparent); /* タップ時のハイライト色 */
     
     /* transition: var(--dads-button-transition); フォーカス時のアニメーション無効化 */
     position: relative;
@@ -83,7 +83,7 @@ export const buttonStyles = css `
   /* 無効状態（button要素のみ） */
   :host([disabled]) button[part="base"],
   button[part="base"]:disabled {
-    opacity: var(--dads-button-opacity, 1);
+    opacity: var(--dads-button-opacity, 1); /* 無効時の不透明度 */
   }
 
   /* アイコンスロット */
@@ -93,8 +93,8 @@ export const buttonStyles = css `
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: var(--dads-button-icon-size, 1.25em);
-    color: var(--dads-button-icon-color, currentColor);
+    font-size: var(--dads-button-icon-size, 1.25em); /* アイコンサイズ */
+    color: var(--dads-button-icon-color, currentColor); /* アイコン色 */
   }
 
   :host([data-has-icon-start]) [part="icon-start"],
