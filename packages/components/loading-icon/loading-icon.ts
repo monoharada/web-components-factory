@@ -56,7 +56,11 @@ export class DadsLoadingIcon extends TypographyWebComponent {
       <div part="base">
         <div part="underlay" aria-hidden="true"></div>
         <svg part="icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-          <path d="M14 4v4.01c0 2.12.84 4.16 2.34 5.66L22 19.33c1.1 1.1 1.1 2.9 0 4l-5.66 5.66A7.986 7.986 0 0014 34.65V40h20v-5.35c0-2.12-.84-4.16-2.34-5.66L26 23.33c-1.1-1.1-1.1-2.9 0-4l5.66-5.66A7.986 7.986 0 0034 8.01V4H14zm16 30.65V38H18v-3.35c0-1.59.63-3.12 1.76-4.24L24 26.17l4.24 4.24A5.993 5.993 0 0130 34.65zM30 8.01a5.993 5.993 0 01-1.76 4.24L24 16.49l-4.24-4.24A5.993 5.993 0 0118 8.01V6h12v2.01z" fill="currentColor"/>
+          <path d="M24 24C34.5 24 35.5 6 35.5 4.78V4M24 24C13.5 24 12.5 6 12.5 4.78V4M24 24C31 24 35.5 35.79 35.5 42.26V44M24 24C17 24 12.5 35.79 12.5 42.26V44M9 4H39M9 44H39" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M17 15C17 17.5 19.241 22 24 22C28.759 22 31 17 31 15H17Z" fill="currentColor"/>
+          <path d="M15 42C16.895 42 31.579 42 33 42C33 40.001 32 37.5 32 37.5L24 34L16 37.5C16 37.5 15 40.001 15 42Z" fill="currentColor"/>
+          <circle cx="24" cy="28" r="1" fill="currentColor"/>
+          <circle cx="24" cy="31" r="1" fill="currentColor"/>
         </svg>
         <span part="label"></span>
       </div>

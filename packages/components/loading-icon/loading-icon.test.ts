@@ -35,7 +35,7 @@ describe('DadsLoadingIcon - 基本', () => {
     expect(component.shadowRoot).toBeTruthy();
   });
 
-  it('SVGにhourglass pathが存在', async () => {
+  it('SVGにDADS砂時計pathが存在', async () => {
     const { defineDefaultLoadingIcon } = await import('./loading-icon-define');
     defineDefaultLoadingIcon();
 
@@ -48,9 +48,16 @@ describe('DadsLoadingIcon - 基本', () => {
     expect(svg).toBeInTheDocument();
     expect(svg?.tagName.toLowerCase()).toBe('svg');
 
-    const path = svg?.querySelector('path');
-    expect(path).toBeTruthy();
-    expect(path?.getAttribute('d')).toContain('M14 4v4.01');
+    const paths = svg?.querySelectorAll('path');
+    expect(paths?.length).toBe(3);
+    // フレーム（ストローク）
+    expect(paths?.[0].getAttribute('stroke')).toBe('currentColor');
+    // 上砂 + 下砂（フィル）
+    expect(paths?.[1].getAttribute('fill')).toBe('currentColor');
+    expect(paths?.[2].getAttribute('fill')).toBe('currentColor');
+    // 砂粒（circle要素）
+    const circles = svg?.querySelectorAll('circle');
+    expect(circles?.length).toBe(2);
   });
 });
 
