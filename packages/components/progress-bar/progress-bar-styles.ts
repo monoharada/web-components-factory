@@ -76,7 +76,8 @@ export const progressBarStyles = css`
     color: var(--dads-progress-bar-label-color);
   }
 
-  :host(:not([label])) [part="label"] {
+  :host(:not([label])) [part="label"],
+  :host([label=""]) [part="label"] {
     display: none;
   }
 

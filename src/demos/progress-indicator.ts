@@ -252,11 +252,13 @@ export const demos = {
             var raw = postalInput.value || '';
             var code = normalize(raw);
 
+            reqId++;
             postalStatus.textContent = '';
             postalStatus.style.color = '#666';
             postalResult.style.display = 'none';
             postalSpinnerWrap.style.display = 'none';
-            
+            postalResultArea.removeAttribute('aria-busy');
+
             if (raw.length > 0 && !/^[0-9０-９ー−―‐\\-]+$/.test(raw)) {
               postalStatus.textContent = '数字とハイフンのみ入力できます';
               postalStatus.style.color = '#c53030';
@@ -268,8 +270,6 @@ export const demos = {
               postalStatus.style.color = '#c53030';
               return;
             }
-
-            reqId++;
             var thisReq = reqId;
 
             postalInput.setAttribute('readonly', '');
@@ -576,19 +576,24 @@ export const demos = {
         var statusEl = document.querySelector('#upload-demo-status');
         var bar = document.querySelector('#upload-demo-bar');
 
+        var uploadInterval = null;
+
         if (btn && statusEl && bar) {
           btn.addEventListener('click', function() {
+            if (uploadInterval) clearInterval(uploadInterval);
+
             bar.setAttribute('value', '0');
             bar.setAttribute('label', '0%');
             bar.setAttribute('value-text', '0% アップロード完了');
             statusEl.textContent = 'アップロード中...';
 
             var progress = 0;
-            var interval = setInterval(function() {
+            uploadInterval = setInterval(function() {
               progress += 0.02 + Math.random() * 0.05;
               if (progress >= 1) {
                 progress = 1;
-                clearInterval(interval);
+                clearInterval(uploadInterval);
+                uploadInterval = null;
                 bar.setAttribute('value', '1');
                 bar.setAttribute('label', '100%');
                 bar.setAttribute('value-text', '100% アップロード完了');

@@ -101,7 +101,8 @@ export const spinnerStyles = css`
     --dads-spinner-dash-duration: 1.2s;
   }
 
-  :host(:not([label])) [part="label"] {
+  :host(:not([label])) [part="label"],
+  :host([label=""]) [part="label"] {
     display: none;
   }
 

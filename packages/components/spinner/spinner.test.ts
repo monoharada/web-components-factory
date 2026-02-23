@@ -307,6 +307,24 @@ describe('DadsSpinner - label未設定警告', () => {
     warnSpy.mockRestore();
   });
 
+  it('label=""（空文字）時にconsole.warnが出力される', async () => {
+    const { defineDefaultSpinner } = await import('./spinner-define');
+    defineDefaultSpinner();
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    renderWebComponent(`
+      <dads-spinner label=""></dads-spinner>
+    `);
+
+    await waitForComponent('dads-spinner');
+    expect(warnSpy).toHaveBeenCalledWith(
+      '[dads-spinner] label属性が未指定です。スクリーンリーダーのために label 属性を設定してください。'
+    );
+
+    warnSpy.mockRestore();
+  });
+
   it('label設定時にconsole.warnが出力されない', async () => {
     const { defineDefaultSpinner } = await import('./spinner-define');
     defineDefaultSpinner();

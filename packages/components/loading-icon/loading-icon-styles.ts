@@ -70,7 +70,8 @@ export const loadingIconStyles = css`
     color: var(--dads-loading-icon-label-color);
   }
 
-  :host(:not([label])) [part="label"] {
+  :host(:not([label])) [part="label"],
+  :host([label=""]) [part="label"] {
     display: none;
   }
 
