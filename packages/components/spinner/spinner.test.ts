@@ -121,6 +121,48 @@ describe('DadsSpinner - サイズ', () => {
   });
 });
 
+describe('DadsSpinner - 速度', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('デフォルトspeed="normal"', async () => {
+    const { defineDefaultSpinner } = await import('./spinner-define');
+    defineDefaultSpinner();
+
+    const component = renderWebComponent(`
+      <dads-spinner></dads-spinner>
+    `);
+
+    await waitForComponent('dads-spinner');
+    expect(component.getAttribute('speed')).toBe('normal');
+  });
+
+  it('speed="slow"が反映される', async () => {
+    const { defineDefaultSpinner } = await import('./spinner-define');
+    defineDefaultSpinner();
+
+    const component = renderWebComponent(`
+      <dads-spinner speed="slow"></dads-spinner>
+    `);
+
+    await waitForComponent('dads-spinner');
+    expect(component.getAttribute('speed')).toBe('slow');
+  });
+
+  it('speed="fast"が反映される', async () => {
+    const { defineDefaultSpinner } = await import('./spinner-define');
+    defineDefaultSpinner();
+
+    const component = renderWebComponent(`
+      <dads-spinner speed="fast"></dads-spinner>
+    `);
+
+    await waitForComponent('dads-spinner');
+    expect(component.getAttribute('speed')).toBe('fast');
+  });
+});
+
 describe('DadsSpinner - レイアウト', () => {
   afterEach(() => {
     cleanup();

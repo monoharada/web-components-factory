@@ -35,6 +35,7 @@ import { spinnerStyles } from './spinner-styles.js';
  *
  * @attr {'sm' | 'lg'} size - サイズ（sm: 24px, lg: 48px）
  * @attr {'stacked' | 'inlined'} composition - レイアウト方向
+ * @attr {'slow' | 'normal' | 'fast'} speed - アニメーション速度
  * @attr {boolean} underlay - カード背景表示
  * @attr {string} label - 表示ラベル兼アクセシブル名
  *
@@ -43,6 +44,8 @@ import { spinnerStyles } from './spinner-styles.js';
  * @cssprop --dads-spinner-label-color - ラベルテキスト色
  * @cssprop --dads-spinner-underlay-bg - アンダーレイ背景色
  * @cssprop --dads-spinner-underlay-border - アンダーレイ枠線色
+ * @cssprop --dads-spinner-rotate-duration - 回転アニメーション速度
+ * @cssprop --dads-spinner-dash-duration - ダッシュアニメーション速度
  *
  * @example
  * ```html
@@ -79,6 +82,7 @@ export class DadsSpinner extends TypographyWebComponent {
     attributes: [
       PropertyAttr('size'),
       PropertyAttr('composition'),
+      PropertyAttr('speed'),
       BooleanAttr('underlay'),
       PropertyAttr('label'),
     ],
@@ -86,6 +90,7 @@ export class DadsSpinner extends TypographyWebComponent {
 
   declare size: string | null;
   declare composition: string | null;
+  declare speed: string | null;
   declare underlay: boolean;
   declare label: string | null;
 
@@ -110,6 +115,9 @@ export class DadsSpinner extends TypographyWebComponent {
     }
     if (!this.hasAttribute('composition')) {
       this.setAttribute('composition', 'stacked');
+    }
+    if (!this.hasAttribute('speed')) {
+      this.setAttribute('speed', 'normal');
     }
   }
 

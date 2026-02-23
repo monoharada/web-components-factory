@@ -14,6 +14,8 @@ const spinnerSemanticTokensText = `
     --spinner-label-color: var(--color-neutral-solid-gray-900, #1a1a1a);
     --spinner-underlay-bg: var(--color-neutral-white, white);
     --spinner-underlay-border: var(--color-neutral-solid-gray-500, #7f7f7f);
+    --spinner-rotate-duration: 2.4s;
+    --spinner-dash-duration: 1.8s;
   }
 `;
 
@@ -24,6 +26,8 @@ const spinnerLocalTokensText = `
     --dads-spinner-label-color: var(--spinner-label-color);
     --dads-spinner-underlay-bg: var(--spinner-underlay-bg);
     --dads-spinner-underlay-border: var(--spinner-underlay-border);
+    --dads-spinner-rotate-duration: var(--spinner-rotate-duration);
+    --dads-spinner-dash-duration: var(--spinner-dash-duration);
   }
 `;
 

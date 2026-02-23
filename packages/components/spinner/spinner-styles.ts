@@ -54,7 +54,7 @@ export const spinnerStyles = css`
     display: block;
     width: 48px;
     height: 48px;
-    animation: spinner-rotate 2s linear infinite;
+    animation: spinner-rotate var(--dads-spinner-rotate-duration) linear infinite;
   }
 
   :host([size="sm"]) [part="svg"] {
@@ -79,7 +79,7 @@ export const spinnerStyles = css`
     stroke-dasharray: 31.42 125.66;
     stroke-dashoffset: 0;
     fill: none;
-    animation: spinner-dash 1.5s ease-in-out infinite;
+    animation: spinner-dash var(--dads-spinner-dash-duration) ease-in-out infinite;
   }
 
   [part="label"] {
@@ -89,6 +89,16 @@ export const spinnerStyles = css`
     line-height: 1.7;
     letter-spacing: 0.02em;
     color: var(--dads-spinner-label-color);
+  }
+
+  :host([speed="slow"]) {
+    --dads-spinner-rotate-duration: 3.2s;
+    --dads-spinner-dash-duration: 2.4s;
+  }
+
+  :host([speed="fast"]) {
+    --dads-spinner-rotate-duration: 1.6s;
+    --dads-spinner-dash-duration: 1.2s;
   }
 
   :host(:not([label])) [part="label"] {
