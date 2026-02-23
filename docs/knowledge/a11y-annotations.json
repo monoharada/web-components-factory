@@ -4263,5 +4263,208 @@
         }
       }
     ]
+  },
+  "dads-spinner": {
+    "version": 1,
+    "summary": "不確定状態（indeterminate）の進捗を示す円形アニメーション",
+    "categories": {
+      "semantics": [
+        "ルート要素に role=\"progressbar\" を設定し、スクリーンリーダーに進捗状態を伝えます。",
+        "indeterminate（不確定）モード専用のため、aria-valuenow / aria-valuemin / aria-valuemax は設定しません。",
+        "SVG要素は aria-hidden=\"true\" + focusable=\"false\" で装飾扱いとします。"
+      ],
+      "keyboard": [
+        "インタラクティブな操作はありません（情報表示専用）。"
+      ],
+      "zoom": [
+        "サイズは sm(24px) / lg(48px) の2段階で、relativeな単位で定義されます。",
+        "label テキストは折り返し可能で、拡大表示でも情報が欠けません。"
+      ],
+      "states": [
+        "常に不確定状態（indeterminate）として動作します（確定的な進捗表示には dads-progress-bar を使用）。",
+        "underlay 属性でカード背景を表示できます。"
+      ],
+      "labels": [
+        "label 属性で aria-label を設定し、スクリーンリーダーに目的を伝えます（例：「読み込み中」）。",
+        "label 未指定時は aria-label なし（周囲のコンテキストで補完する前提）。"
+      ],
+      "motion": [
+        "回転アニメーションとダッシュアニメーションの2種のCSSアニメーションを使用します。",
+        "speed 属性で slow / normal / fast の速度切替が可能です。",
+        "prefers-reduced-motion: reduce のユーザーにはアニメーションを停止し、静的表示にフォールバックします。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "progressbar-role",
+        "title": "role=\"progressbar\"",
+        "description": "ルート要素（part=\"base\"）に設定。indeterminate のため aria-valuenow は省略。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "svg-decorative",
+        "title": "装飾SVG",
+        "label": "aria-hidden=\"true\"",
+        "description": "SVG は純粋な視覚表現のため、スクリーンリーダーから隠します。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"svg\"]"
+        }
+      },
+      {
+        "id": "label-aria",
+        "title": "アクセシブル名",
+        "label": "aria-label",
+        "description": "label 属性の値が aria-label として設定され、スクリーンリーダーに進捗の目的を伝えます。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      }
+    ]
+  },
+  "dads-progress-bar": {
+    "version": 1,
+    "summary": "確定状態（determinate）の進捗を示す水平バー",
+    "categories": {
+      "semantics": [
+        "ルート要素に role=\"progressbar\" を設定し、スクリーンリーダーに進捗状態を伝えます。",
+        "aria-valuenow / aria-valuemin / aria-valuemax を設定し、確定的な進捗値をプログラム的に提供します。",
+        "aria-valuenow は 0〜100 の正規化された百分率で表現します。"
+      ],
+      "keyboard": [
+        "インタラクティブな操作はありません（情報表示専用）。"
+      ],
+      "zoom": [
+        "トラック・インジケーターは幅100%で相対レイアウトし、拡大表示でも情報が欠けません。",
+        "label テキストは折り返し可能です。"
+      ],
+      "states": [
+        "常に確定状態（determinate）として動作します（不確定状態には dads-spinner を使用）。",
+        "value / max 属性で進捗値を制御し、インジケーターの scaleX で視覚的に反映します。",
+        "underlay 属性でカード背景を表示できます。"
+      ],
+      "labels": [
+        "label 属性で aria-label を設定し、スクリーンリーダーに目的を伝えます（例：「50%」）。",
+        "label 未指定時は aria-label なし（周囲のコンテキストで補完する前提）。"
+      ],
+      "motion": [
+        "インジケーターの伸縮は CSS transform: scaleX() で実装し、transition で滑らかに変化します。",
+        "prefers-reduced-motion: reduce のユーザーには transition を無効化します。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "progressbar-role",
+        "title": "role=\"progressbar\"",
+        "description": "ルート要素（part=\"base\"）に設定。aria-valuenow / aria-valuemin / aria-valuemax で進捗値を公開。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"base\"]"
+        }
+      },
+      {
+        "id": "indicator-visual",
+        "title": "進捗インジケーター",
+        "label": "scaleX(progress)",
+        "description": "CSS変数 --progress を scaleX() に反映し、進捗を視覚的に表現します。",
+        "category": "states",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"indicator\"]"
+        }
+      },
+      {
+        "id": "label-aria",
+        "title": "アクセシブル名",
+        "label": "aria-label",
+        "description": "label 属性の値が aria-label として設定され、スクリーンリーダーに進捗の目的を伝えます。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      }
+    ]
+  },
+  "dads-loading-icon": {
+    "version": 1,
+    "summary": "静的な砂時計アイコンで読み込み中を表示（アニメーションなし）",
+    "categories": {
+      "semantics": [
+        "label 未指定時: SVG は aria-hidden=\"true\" で装飾扱いとし、スクリーンリーダーから隠します。",
+        "label 指定時: SVG に role=\"img\" + aria-labelledby で <title> 要素を関連付け、意味のある画像として公開します。",
+        "dads-icon のラベル/ARIAパターンを踏襲しています。"
+      ],
+      "keyboard": [
+        "インタラクティブな操作はありません（情報表示専用）。"
+      ],
+      "zoom": [
+        "サイズは sm(24px) / lg(48px) の2段階で、relativeな単位で定義されます。",
+        "label テキストは折り返し可能で、拡大表示でも情報が欠けません。"
+      ],
+      "states": [
+        "underlay 属性でカード背景を表示できます。",
+        "label の有無で SVG のアクセシビリティ属性が動的に切り替わります。"
+      ],
+      "labels": [
+        "label 属性指定時: SVG 内に <title> 要素を追加し、aria-labelledby で関連付けます。",
+        "label 属性未指定時: aria-hidden=\"true\" で装飾扱い（周囲のテキストが意味を補完する前提）。"
+      ],
+      "motion": [
+        "アニメーションは使用しません（静的アイコン）。",
+        "prefers-reduced-motion の影響を受けません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "svg-label-mode",
+        "title": "SVG アクセシビリティ切替",
+        "label": "role=\"img\" / aria-hidden",
+        "description": "label 指定時は role=\"img\" + aria-labelledby、未指定時は aria-hidden=\"true\"。",
+        "category": "semantics",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"icon\"]"
+        }
+      },
+      {
+        "id": "svg-title",
+        "title": "<title> 要素",
+        "label": "aria-labelledby",
+        "description": "label 指定時に SVG 内に <title> 要素を動的に挿入し、aria-labelledby で関連付けます。",
+        "category": "labels",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"icon\"]"
+        }
+      },
+      {
+        "id": "label-text",
+        "title": "ラベルテキスト",
+        "description": "label 属性の値が視覚的なテキストとして表示されます。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"label\"]"
+        }
+      }
+    ]
   }
 }
