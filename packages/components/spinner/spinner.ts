@@ -28,7 +28,8 @@ import { spinnerStyles } from './spinner-styles.js';
  * @csspart base - ルートコンテナ（role="progressbar"）
  * @csspart underlay - カード背景（underlay属性時に表示）
  * @csspart svg - SVGコンテナ
- * @csspart track - トラック円（背景）
+ * @csspart track - トラックリング（背景ドーナツ）
+ * @csspart border - 外周ボーダーライン
  * @csspart indicator - インジケーター円（アニメーション）
  * @csspart label - ラベルテキスト
  *
@@ -59,12 +60,12 @@ export class DadsSpinner extends TypographyWebComponent {
       <div part="base" role="progressbar">
         <div part="underlay" aria-hidden="true"></div>
         <svg part="svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-          <circle part="track" cx="24" cy="24" r="20"
-                  fill="none" stroke-width="4" />
+          <circle part="track" cx="24" cy="24" r="20" />
+          <circle part="border" cx="24" cy="24" r="22" />
           <circle part="indicator" cx="24" cy="24" r="20"
                   fill="none" stroke-width="4"
                   stroke-linecap="round"
-                  stroke-dasharray="125.66" />
+                  stroke-dasharray="31.42 125.66" />
         </svg>
         <span part="label"></span>
       </div>

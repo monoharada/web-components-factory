@@ -44,7 +44,7 @@ export const spinnerStyles = css`
     display: block;
     position: absolute;
     inset: 0;
-    border-radius: 12px;
+    border-radius: var(--spacing-3);
     border: 1px solid var(--dads-spinner-underlay-border);
     background: var(--dads-spinner-underlay-bg);
     z-index: -1;
@@ -63,14 +63,23 @@ export const spinnerStyles = css`
   }
 
   [part="track"] {
+    fill: none;
     stroke: var(--dads-spinner-track-color);
+    stroke-width: 4;
+  }
+
+  [part="border"] {
+    fill: none;
+    stroke: var(--dads-spinner-indicator-color);
+    stroke-width: 1;
   }
 
   [part="indicator"] {
     stroke: var(--dads-spinner-indicator-color);
-    stroke-dasharray: 125.66;
-    stroke-dashoffset: 113;
-    animation: spinner-dash 1.4s ease-in-out infinite;
+    stroke-dasharray: 31.42 125.66;
+    stroke-dashoffset: 0;
+    fill: none;
+    animation: spinner-dash 1.5s ease-in-out infinite;
   }
 
   [part="label"] {
@@ -96,17 +105,17 @@ export const spinnerStyles = css`
   }
 
   @keyframes spinner-dash {
-    0%, 25% {
-      stroke-dashoffset: 113;
-      transform: rotate(0deg);
+    0% {
+      stroke-dasharray: 1, 150;
+      stroke-dashoffset: 0;
     }
-    50%, 75% {
-      stroke-dashoffset: 30;
-      transform: rotate(45deg);
+    50% {
+      stroke-dasharray: 90, 150;
+      stroke-dashoffset: -35;
     }
     100% {
-      stroke-dashoffset: 113;
-      transform: rotate(360deg);
+      stroke-dasharray: 1, 150;
+      stroke-dashoffset: -125;
     }
   }
 
@@ -117,12 +126,17 @@ export const spinnerStyles = css`
 
     [part="indicator"] {
       animation: none;
-      stroke-dashoffset: 60;
+      stroke-dasharray: 31.42 125.66;
+      stroke-dashoffset: 0;
     }
   }
 
   @media (forced-colors: active) {
     [part="track"] {
+      stroke: CanvasText;
+    }
+
+    [part="border"] {
       stroke: CanvasText;
     }
 
@@ -132,6 +146,7 @@ export const spinnerStyles = css`
 
     [part="underlay"] {
       border-color: CanvasText;
+      background: Canvas;
     }
   }
 `;

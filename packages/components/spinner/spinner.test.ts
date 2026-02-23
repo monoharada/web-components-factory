@@ -49,7 +49,7 @@ describe('DadsSpinner - 基本レンダリング', () => {
     expect(svg?.tagName.toLowerCase()).toBe('svg');
   });
 
-  it('SVGにcircle(track)とcircle(indicator)が存在', async () => {
+  it('SVGにcircle(track), circle(border), circle(indicator)が存在', async () => {
     const { defineDefaultSpinner } = await import('./spinner-define');
     defineDefaultSpinner();
 
@@ -59,17 +59,22 @@ describe('DadsSpinner - 基本レンダリング', () => {
 
     await waitForComponent('dads-spinner');
     const track = getShadowElement(component, '[part="track"]');
+    const border = getShadowElement(component, '[part="border"]');
     const indicator = getShadowElement(component, '[part="indicator"]');
 
     expect(track).toBeInTheDocument();
     expect(track?.tagName.toLowerCase()).toBe('circle');
     expect(track?.getAttribute('r')).toBe('20');
-    expect(track?.getAttribute('stroke-width')).toBe('4');
+
+    expect(border).toBeInTheDocument();
+    expect(border?.tagName.toLowerCase()).toBe('circle');
+    expect(border?.getAttribute('r')).toBe('22');
 
     expect(indicator).toBeInTheDocument();
     expect(indicator?.tagName.toLowerCase()).toBe('circle');
     expect(indicator?.getAttribute('r')).toBe('20');
-    expect(indicator?.getAttribute('stroke-dasharray')).toBe('125.66');
+    expect(indicator?.getAttribute('stroke-linecap')).toBe('round');
+    expect(indicator?.getAttribute('stroke-dasharray')).toBe('31.42 125.66');
   });
 
   it('[part="base"]にrole="progressbar"が設定', async () => {
@@ -242,7 +247,7 @@ describe('DadsSpinner - CSS Parts', () => {
     cleanup();
   });
 
-  it('全6パーツが存在する', async () => {
+  it('全7パーツが存在する', async () => {
     const { defineDefaultSpinner } = await import('./spinner-define');
     defineDefaultSpinner();
 
@@ -252,7 +257,7 @@ describe('DadsSpinner - CSS Parts', () => {
 
     await waitForComponent('dads-spinner');
 
-    const parts = ['base', 'svg', 'track', 'indicator', 'label', 'underlay'];
+    const parts = ['base', 'svg', 'track', 'border', 'indicator', 'label', 'underlay'];
     for (const part of parts) {
       const el = getShadowElement(component, `[part="${part}"]`);
       expect(el, `part="${part}" should exist`).toBeInTheDocument();
