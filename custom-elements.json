@@ -33464,7 +33464,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-loading-icon', template: html` <div part=\"base\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <svg part=\"icon\" viewBox=\"0 0 48 48\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"> <path d=\"M14 4v4.01c0 2.12.84 4.16 2.34 5.66L22 19.33c1.1 1.1 1.1 2.9 0 4l-5.66 5.66A7.986 7.986 0 0014 34.65V40h20v-5.35c0-2.12-.84-4.16-2.34-5.66L26 23.33c-1.1-1.1-1.1-2.9 0-4l5.66-5.66A7.986 7.986 0 0034 8.01V4H14zm16 30.65V38H18v-3.35c0-1.59.63-3.12 1.76-4.24L24 26.17l4.24 4.24A5.993 5.993 0 0130 34.65zM30 8.01a5.993 5.993 0 01-1.76 4.24L24 16.49l-4.24-4.24A5.993 5.993 0 0118 8.01V6h12v2.01z\" fill=\"currentColor\"/> </svg> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), loadingIconTokens, loadingIconStyles, ], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('composition'), BooleanAttr('underlay'), PropertyAttr('label'), ], }",
+              "default": "{ name: 'dads-loading-icon', template: html` <div part=\"base\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <svg part=\"icon\" viewBox=\"0 0 48 48\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"> <path d=\"M24 24C34.5 24 35.5 6 35.5 4.78V4M24 24C13.5 24 12.5 6 12.5 4.78V4M24 24C31 24 35.5 35.79 35.5 42.26V44M24 24C17 24 12.5 35.79 12.5 42.26V44M9 4H39M9 44H39\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/> <path d=\"M17 15C17 17.5 19.241 22 24 22C28.759 22 31 17 31 15H17Z\" fill=\"currentColor\"/> <path d=\"M15 42C16.895 42 31.579 42 33 42C33 40.001 32 37.5 32 37.5L24 34L16 37.5C16 37.5 15 40.001 15 42Z\" fill=\"currentColor\"/> <circle cx=\"24\" cy=\"28\" r=\"1\" fill=\"currentColor\"/> <circle cx=\"24\" cy=\"31\" r=\"1\" fill=\"currentColor\"/> </svg> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), loadingIconTokens, loadingIconStyles, ], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('composition'), BooleanAttr('underlay'), PropertyAttr('label'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -33620,6 +33620,73 @@
           "definitionPath": "./packages/components/loading-icon/loading-icon.ts",
           "typeDefinitionPath": "./packages/components/loading-icon/loading-icon.ts",
           "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "静的な砂時計アイコンで読み込み中を表示（アニメーションなし）",
+              "categories": {
+                "semantics": [
+                  "label 未指定時: SVG は aria-hidden=\"true\" で装飾扱いとし、スクリーンリーダーから隠します。",
+                  "label 指定時: SVG に role=\"img\" + aria-labelledby で <title> 要素を関連付け、意味のある画像として公開します。",
+                  "dads-icon のラベル/ARIAパターンを踏襲しています。"
+                ],
+                "keyboard": [
+                  "インタラクティブな操作はありません（情報表示専用）。"
+                ],
+                "zoom": [
+                  "サイズは sm(24px) / lg(48px) の2段階で、relativeな単位で定義されます。",
+                  "label テキストは折り返し可能で、拡大表示でも情報が欠けません。"
+                ],
+                "states": [
+                  "underlay 属性でカード背景を表示できます。",
+                  "label の有無で SVG のアクセシビリティ属性が動的に切り替わります。"
+                ],
+                "labels": [
+                  "label 属性指定時: SVG 内に <title> 要素を追加し、aria-labelledby で関連付けます。",
+                  "label 属性未指定時: aria-hidden=\"true\" で装飾扱い（周囲のテキストが意味を補完する前提）。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません（静的アイコン）。",
+                  "prefers-reduced-motion の影響を受けません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "svg-label-mode",
+                  "title": "SVG アクセシビリティ切替",
+                  "label": "role=\"img\" / aria-hidden",
+                  "description": "label 指定時は role=\"img\" + aria-labelledby、未指定時は aria-hidden=\"true\"。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "svg-title",
+                  "title": "<title> 要素",
+                  "label": "aria-labelledby",
+                  "description": "label 指定時に SVG 内に <title> 要素を動的に挿入し、aria-labelledby で関連付けます。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "label-text",
+                  "title": "ラベルテキスト",
+                  "description": "label 属性の値が視覚的なテキストとして表示されます。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                }
+              ]
+            },
             "componentId": "loading-icon",
             "install": {
               "id": "loading-icon",
@@ -39637,7 +39704,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Progress Barコンポーネント\n\n水平バーで進捗状況を表示する。\nvalue属性の有無でdeterminate/indeterminateモードを自動切替する。",
+          "description": "Progress Barコンポーネント\n\n水平バーで進捗状況を表示する。\n常にdeterminate（確定値）モードで動作する。不確定状態にはSpinnerを使用する。",
           "name": "DadsProgressBar",
           "cssProperties": [
             {
@@ -40092,7 +40159,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "進捗値（0〜max、未設定=indeterminate）",
+              "description": "進捗値（0〜max）",
               "name": "value"
             }
           ],
@@ -40107,6 +40174,74 @@
           "definitionPath": "./packages/components/progress-bar/progress-bar.ts",
           "typeDefinitionPath": "./packages/components/progress-bar/progress-bar.ts",
           "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "確定状態（determinate）の進捗を示す水平バー",
+              "categories": {
+                "semantics": [
+                  "ルート要素に role=\"progressbar\" を設定し、スクリーンリーダーに進捗状態を伝えます。",
+                  "aria-valuenow / aria-valuemin / aria-valuemax を設定し、確定的な進捗値をプログラム的に提供します。",
+                  "aria-valuenow は 0〜100 の正規化された百分率で表現します。"
+                ],
+                "keyboard": [
+                  "インタラクティブな操作はありません（情報表示専用）。"
+                ],
+                "zoom": [
+                  "トラック・インジケーターは幅100%で相対レイアウトし、拡大表示でも情報が欠けません。",
+                  "label テキストは折り返し可能です。"
+                ],
+                "states": [
+                  "常に確定状態（determinate）として動作します（不確定状態には dads-spinner を使用）。",
+                  "value / max 属性で進捗値を制御し、インジケーターの scaleX で視覚的に反映します。",
+                  "underlay 属性でカード背景を表示できます。"
+                ],
+                "labels": [
+                  "label 属性で aria-label を設定し、スクリーンリーダーに目的を伝えます（例：「50%」）。",
+                  "label 未指定時は aria-label なし（周囲のコンテキストで補完する前提）。"
+                ],
+                "motion": [
+                  "インジケーターの伸縮は CSS transform: scaleX() で実装し、transition で滑らかに変化します。",
+                  "prefers-reduced-motion: reduce のユーザーには transition を無効化します。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "progressbar-role",
+                  "title": "role=\"progressbar\"",
+                  "description": "ルート要素（part=\"base\"）に設定。aria-valuenow / aria-valuemin / aria-valuemax で進捗値を公開。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "indicator-visual",
+                  "title": "進捗インジケーター",
+                  "label": "scaleX(progress)",
+                  "description": "CSS変数 --progress を scaleX() に反映し、進捗を視覚的に表現します。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"indicator\"]"
+                  }
+                },
+                {
+                  "id": "label-aria",
+                  "title": "アクセシブル名",
+                  "label": "aria-label",
+                  "description": "label 属性の値が aria-label として設定され、スクリーンリーダーに進捗の目的を伝えます。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                }
+              ]
+            },
             "componentId": "progress-bar",
             "install": {
               "id": "progress-bar",
@@ -45218,12 +45353,20 @@
               "name": "--dads-spinner-"
             },
             {
+              "description": "ダッシュアニメーション速度",
+              "name": "--dads-spinner-dash-duration"
+            },
+            {
               "description": "インジケーター色",
               "name": "--dads-spinner-indicator-color"
             },
             {
               "description": "ラベルテキスト色",
               "name": "--dads-spinner-label-color"
+            },
+            {
+              "description": "回転アニメーション速度",
+              "name": "--dads-spinner-rotate-duration"
             },
             {
               "description": "トラック色",
@@ -45244,6 +45387,10 @@
               "name": "base"
             },
             {
+              "description": "外周ボーダーライン",
+              "name": "border"
+            },
+            {
               "description": "インジケーター円（アニメーション）",
               "name": "indicator"
             },
@@ -45256,7 +45403,7 @@
               "name": "svg"
             },
             {
-              "description": "トラック円（背景）",
+              "description": "トラックリング（背景ドーナツ）",
               "name": "track"
             },
             {
@@ -45478,7 +45625,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-spinner', template: html` <div part=\"base\" role=\"progressbar\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <svg part=\"svg\" viewBox=\"0 0 48 48\" aria-hidden=\"true\" focusable=\"false\"> <circle part=\"track\" cx=\"24\" cy=\"24\" r=\"20\" fill=\"none\" stroke-width=\"4\" /> <circle part=\"indicator\" cx=\"24\" cy=\"24\" r=\"20\" fill=\"none\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-dasharray=\"125.66\" /> </svg> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), spinnerTokens, spinnerStyles, ], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('composition'), BooleanAttr('underlay'), PropertyAttr('label'), ], }",
+              "default": "{ name: 'dads-spinner', template: html` <div part=\"base\" role=\"progressbar\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <svg part=\"svg\" viewBox=\"0 0 48 48\" aria-hidden=\"true\" focusable=\"false\"> <circle part=\"track\" cx=\"24\" cy=\"24\" r=\"20\" /> <circle part=\"border\" cx=\"24\" cy=\"24\" r=\"22\" /> <circle part=\"indicator\" cx=\"24\" cy=\"24\" r=\"20\" fill=\"none\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-dasharray=\"31.42 125.66\" /> </svg> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), spinnerTokens, spinnerStyles, ], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('composition'), PropertyAttr('speed'), BooleanAttr('underlay'), PropertyAttr('label'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -45563,6 +45710,13 @@
               }
             },
             {
+              "kind": "field",
+              "name": "speed",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
               "kind": "method",
               "name": "transferDelegatedAttributes",
               "return": {
@@ -45617,6 +45771,13 @@
             },
             {
               "type": {
+                "text": "'slow' | 'normal' | 'fast'"
+              },
+              "description": "アニメーション速度",
+              "name": "speed"
+            },
+            {
+              "type": {
                 "text": "boolean"
               },
               "description": "カード背景表示",
@@ -45634,6 +45795,74 @@
           "definitionPath": "./packages/components/spinner/spinner.ts",
           "typeDefinitionPath": "./packages/components/spinner/spinner.ts",
           "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "不確定状態（indeterminate）の進捗を示す円形アニメーション",
+              "categories": {
+                "semantics": [
+                  "ルート要素に role=\"progressbar\" を設定し、スクリーンリーダーに進捗状態を伝えます。",
+                  "indeterminate（不確定）モード専用のため、aria-valuenow / aria-valuemin / aria-valuemax は設定しません。",
+                  "SVG要素は aria-hidden=\"true\" + focusable=\"false\" で装飾扱いとします。"
+                ],
+                "keyboard": [
+                  "インタラクティブな操作はありません（情報表示専用）。"
+                ],
+                "zoom": [
+                  "サイズは sm(24px) / lg(48px) の2段階で、relativeな単位で定義されます。",
+                  "label テキストは折り返し可能で、拡大表示でも情報が欠けません。"
+                ],
+                "states": [
+                  "常に不確定状態（indeterminate）として動作します（確定的な進捗表示には dads-progress-bar を使用）。",
+                  "underlay 属性でカード背景を表示できます。"
+                ],
+                "labels": [
+                  "label 属性で aria-label を設定し、スクリーンリーダーに目的を伝えます（例：「読み込み中」）。",
+                  "label 未指定時は aria-label なし（周囲のコンテキストで補完する前提）。"
+                ],
+                "motion": [
+                  "回転アニメーションとダッシュアニメーションの2種のCSSアニメーションを使用します。",
+                  "speed 属性で slow / normal / fast の速度切替が可能です。",
+                  "prefers-reduced-motion: reduce のユーザーにはアニメーションを停止し、静的表示にフォールバックします。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "progressbar-role",
+                  "title": "role=\"progressbar\"",
+                  "description": "ルート要素（part=\"base\"）に設定。indeterminate のため aria-valuenow は省略。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "svg-decorative",
+                  "title": "装飾SVG",
+                  "label": "aria-hidden=\"true\"",
+                  "description": "SVG は純粋な視覚表現のため、スクリーンリーダーから隠します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"svg\"]"
+                  }
+                },
+                {
+                  "id": "label-aria",
+                  "title": "アクセシブル名",
+                  "label": "aria-label",
+                  "description": "label 属性の値が aria-label として設定され、スクリーンリーダーに進捗の目的を伝えます。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                }
+              ]
+            },
             "componentId": "spinner",
             "install": {
               "id": "spinner",
@@ -60712,7 +60941,7 @@
         {
           "kind": "variable",
           "name": "loadingIconStyles",
-          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { min-width: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { min-width: 128px; min-height: 128px; padding: var(--spacing-4); justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: 12px; border: 1px solid var(--dads-loading-icon-underlay-border); background: var(--dads-loading-icon-underlay-bg); z-index: -1; } [part=\"icon\"] { display: block; width: 48px; height: 48px; color: var(--dads-loading-icon-color); } :host([size=\"sm\"]) [part=\"icon\"] { width: 24px; height: 24px; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-loading-icon-label-color); } :host(:not([label])) [part=\"label\"] { display: none; } @media (forced-colors: active) { [part=\"icon\"] { color: CanvasText; } [part=\"underlay\"] { border-color: CanvasText; } } `"
+          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { min-width: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { min-width: 128px; min-height: 128px; justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: var(--spacing-3); border: 1px solid var(--dads-loading-icon-underlay-border); background: var(--dads-loading-icon-underlay-bg); z-index: -1; } [part=\"icon\"] { display: block; width: 48px; height: 48px; color: var(--dads-loading-icon-color); } :host([size=\"sm\"]) [part=\"icon\"] { width: 24px; height: 24px; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-loading-icon-label-color); } :host(:not([label])) [part=\"label\"] { display: none; } @media (forced-colors: active) { [part=\"icon\"] { color: CanvasText; } [part=\"underlay\"] { border-color: CanvasText; background: Canvas; } } `"
         }
       ],
       "exports": [
@@ -61865,7 +62094,7 @@
         {
           "kind": "variable",
           "name": "progressBarStyles",
-          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; width: 100%; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { min-width: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { min-width: 128px; min-height: 128px; padding: var(--spacing-4); justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: 12px; border: 1px solid var(--dads-progress-bar-underlay-border); background: var(--dads-progress-bar-underlay-bg); z-index: -1; } [part=\"track\"] { width: 100%; height: 4px; position: relative; overflow: hidden; border-radius: 2px; background: var(--dads-progress-bar-track-color); border-bottom: 1px solid var(--dads-progress-bar-track-color); } [part=\"indicator\"] { position: absolute; inset: 0; background: var(--dads-progress-bar-indicator-color); transform: scaleX(var(--progress, 0)); transform-origin: left; transition: transform 0.3s ease; } :host(:not([data-determinate])) [part=\"indicator\"] { animation: linear-indeterminate 2s ease-in-out infinite; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-progress-bar-label-color); } :host(:not([label])) [part=\"label\"] { display: none; } @keyframes linear-indeterminate { 0% { transform: translateX(-100%) scaleX(0.4); } 50% { transform: translateX(0%) scaleX(0.6); } 100% { transform: translateX(100%) scaleX(0.4); } } @media (prefers-reduced-motion: reduce) { [part=\"indicator\"] { transition: none; } :host(:not([data-determinate])) [part=\"indicator\"] { animation: none; transform: translateX(0) scaleX(0.6); } } @media (forced-colors: active) { [part=\"track\"] { background: CanvasText; } [part=\"indicator\"] { background: Highlight; } [part=\"underlay\"] { border-color: CanvasText; } } `"
+          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; width: 100%; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { flex-shrink: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { padding: var(--spacing-6); justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: var(--spacing-3); border: 1px solid var(--dads-progress-bar-underlay-border); background: var(--dads-progress-bar-underlay-bg); z-index: -1; } [part=\"track\"] { width: 100%; height: 4px; position: relative; overflow: hidden; background: var(--dads-progress-bar-track-color); border-bottom: 1px solid var(--dads-progress-bar-indicator-color); } [part=\"indicator\"] { position: absolute; inset: 0; background: var(--dads-progress-bar-indicator-color); transform: scaleX(var(--progress, 0)); transform-origin: left; transition: transform 0.3s ease; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-progress-bar-label-color); } :host(:not([label])) [part=\"label\"] { display: none; } @media (prefers-reduced-motion: reduce) { [part=\"indicator\"] { transition: none; } } @media (forced-colors: active) { [part=\"track\"] { background: CanvasText; } [part=\"indicator\"] { background: Highlight; } [part=\"underlay\"] { border-color: CanvasText; background: Canvas; } } `"
         }
       ],
       "exports": [
@@ -63448,7 +63677,7 @@
         {
           "kind": "variable",
           "name": "spinnerStyles",
-          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { min-width: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { min-width: 128px; min-height: 128px; padding: var(--spacing-4); justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: 12px; border: 1px solid var(--dads-spinner-underlay-border); background: var(--dads-spinner-underlay-bg); z-index: -1; } [part=\"svg\"] { display: block; width: 48px; height: 48px; animation: spinner-rotate 2s linear infinite; } :host([size=\"sm\"]) [part=\"svg\"] { width: 24px; height: 24px; } [part=\"track\"] { stroke: var(--dads-spinner-track-color); } [part=\"indicator\"] { stroke: var(--dads-spinner-indicator-color); stroke-dasharray: 125.66; stroke-dashoffset: 113; animation: spinner-dash 1.4s ease-in-out infinite; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-spinner-label-color); } :host(:not([label])) [part=\"label\"] { display: none; } @keyframes spinner-rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } @keyframes spinner-dash { 0%, 25% { stroke-dashoffset: 113; transform: rotate(0deg); } 50%, 75% { stroke-dashoffset: 30; transform: rotate(45deg); } 100% { stroke-dashoffset: 113; transform: rotate(360deg); } } @media (prefers-reduced-motion: reduce) { [part=\"svg\"] { animation: none; } [part=\"indicator\"] { animation: none; stroke-dashoffset: 60; } } @media (forced-colors: active) { [part=\"track\"] { stroke: CanvasText; } [part=\"indicator\"] { stroke: Highlight; } [part=\"underlay\"] { border-color: CanvasText; } } `"
+          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { min-width: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { min-width: 128px; min-height: 128px; padding: var(--spacing-4); justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: var(--spacing-3); border: 1px solid var(--dads-spinner-underlay-border); background: var(--dads-spinner-underlay-bg); z-index: -1; } [part=\"svg\"] { display: block; width: 48px; height: 48px; animation: spinner-rotate var(--dads-spinner-rotate-duration) linear infinite; } :host([size=\"sm\"]) [part=\"svg\"] { width: 24px; height: 24px; } [part=\"track\"] { fill: none; stroke: var(--dads-spinner-track-color); stroke-width: 4; } [part=\"border\"] { fill: none; stroke: var(--dads-spinner-indicator-color); stroke-width: 1; } [part=\"indicator\"] { stroke: var(--dads-spinner-indicator-color); stroke-dasharray: 31.42 125.66; stroke-dashoffset: 0; fill: none; animation: spinner-dash var(--dads-spinner-dash-duration) ease-in-out infinite; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-spinner-label-color); } :host([speed=\"slow\"]) { --dads-spinner-rotate-duration: 3.2s; --dads-spinner-dash-duration: 2.4s; } :host([speed=\"fast\"]) { --dads-spinner-rotate-duration: 1.6s; --dads-spinner-dash-duration: 1.2s; } :host(:not([label])) [part=\"label\"] { display: none; } @keyframes spinner-rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } @keyframes spinner-dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 1, 150; stroke-dashoffset: -125; } } @media (prefers-reduced-motion: reduce) { [part=\"svg\"] { animation: none; } [part=\"indicator\"] { animation: none; stroke-dasharray: 31.42 125.66; stroke-dashoffset: 0; } } @media (forced-colors: active) { [part=\"track\"] { stroke: CanvasText; } [part=\"border\"] { stroke: CanvasText; } [part=\"indicator\"] { stroke: Highlight; } [part=\"underlay\"] { border-color: CanvasText; background: Canvas; } } `"
         }
       ],
       "exports": [

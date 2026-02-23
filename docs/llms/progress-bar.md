@@ -30,7 +30,7 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component pr
 | `label` | string | - | 表示ラベル兼アクセシブル名 |
 | `max` | string | - | 最大値（デフォルト: 1、0以下は1にクランプ） |
 | `underlay` | boolean | - | カード背景表示 |
-| `value` | string | - | 進捗値（0〜max、未設定=indeterminate） |
+| `value` | string | - | 進捗値（0〜max） |
 
 
 ## Slots
