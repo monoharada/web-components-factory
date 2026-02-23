@@ -111,6 +111,23 @@ npm run agents:verify
   - `src/demos.ts`
   - `viewer.html`
 
+### MUST: コミット前に生成物を同梱する
+
+**頻出ミス**: ソースファイル（`.ts`）だけコミットして `custom-elements.json` 等の生成物を含め忘れ、`agents:verify` が失敗する。**CSSスタイル変更（`*-styles.ts`）でも CEM に差分が出る**ことに注意。
+
+```bash
+# ソース変更後、コミット前に必ず実行:
+npm run cem:analyze && npm run llms:generate
+
+# 生成物の差分を確認:
+git diff --name-only | grep -E '(custom-elements\.json|llms-full\.txt|docs/llms/|registry/install-registry\.json)'
+
+# 差分があればソース変更と一緒にステージング:
+git add custom-elements.json llms-full.txt docs/llms/ registry/install-registry.json
+```
+
+コミット手順: **ソース変更 → `npm run agents:pre-pr` → 生成物も `git add` → コミット → push**。この順序を1コミットで完結させること。
+
 ## 🔄 Claude Code Workflow Commands
 
 ### 1. Planning Phase

@@ -233,6 +233,12 @@
       "defineModule": "src/components/list/index.js",
       "defineFn": "defineList"
     },
+    "loading-icon": {
+      "tagBase": "loading-icon",
+      "elementEntry": "components/loading-icon.js",
+      "defineModule": "src/components/loading-icon/index.js",
+      "defineFn": "defineDefaultLoadingIcon"
+    },
     "menu-list": {
       "tagBase": "menu-list",
       "elementEntry": "components/menu-list.js",
@@ -275,6 +281,12 @@
       "defineModule": "src/components/page-navigation/index.js",
       "defineFn": "defineDefaultPageNavigation"
     },
+    "progress-bar": {
+      "tagBase": "progress-bar",
+      "elementEntry": "components/progress-bar.js",
+      "defineModule": "src/components/progress-bar/index.js",
+      "defineFn": "defineDefaultProgressBar"
+    },
     "radio": {
       "tagBase": "radio",
       "elementEntry": "components/radio.js",
@@ -298,6 +310,12 @@
       "elementEntry": "components/select.js",
       "defineModule": "src/components/select/index.js",
       "defineFn": "defineSelect"
+    },
+    "spinner": {
+      "tagBase": "spinner",
+      "elementEntry": "components/spinner.js",
+      "defineModule": "src/components/spinner/index.js",
+      "defineFn": "defineDefaultSpinner"
     },
     "step-navigation": {
       "tagBase": "step-navigation",

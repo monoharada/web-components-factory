@@ -33232,6 +33232,534 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/loading-icon/loading-icon.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "LoadingIconコンポーネント\n\n砂時計形状の静的アイコンで非同期処理中を表示する。\nアニメーションなし。dads-iconのlabel/ARIAパターンを踏襲。",
+          "name": "DadsLoadingIcon",
+          "cssProperties": [
+            {
+              "name": "--dads-loading-icon-"
+            },
+            {
+              "description": "アイコン色",
+              "name": "--dads-loading-icon-color"
+            },
+            {
+              "description": "ラベルテキスト色",
+              "name": "--dads-loading-icon-label-color"
+            },
+            {
+              "description": "アンダーレイ背景色",
+              "name": "--dads-loading-icon-underlay-bg"
+            },
+            {
+              "description": "アンダーレイ枠線色",
+              "name": "--dads-loading-icon-underlay-border"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルートコンテナ",
+              "name": "base"
+            },
+            {
+              "description": "SVGアイコン要素",
+              "name": "icon"
+            },
+            {
+              "description": "ラベルテキスト",
+              "name": "label"
+            },
+            {
+              "description": "カード背景（underlay属性時に表示）",
+              "name": "underlay"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#labelEl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setDefaultAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#svg",
+              "privacy": "private",
+              "type": {
+                "text": "SVGSVGElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#syncAccessibility",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composition",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-loading-icon', template: html` <div part=\"base\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <svg part=\"icon\" viewBox=\"0 0 48 48\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"> <path d=\"M24 24C34.5 24 35.5 6 35.5 4.78V4M24 24C13.5 24 12.5 6 12.5 4.78V4M24 24C31 24 35.5 35.79 35.5 42.26V44M24 24C17 24 12.5 35.79 12.5 42.26V44M9 4H39M9 44H39\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/> <path d=\"M17 15C17 17.5 19.241 22 24 22C28.759 22 31 17 31 15H17Z\" fill=\"currentColor\"/> <path d=\"M15 42C16.895 42 31.579 42 33 42C33 40.001 32 37.5 32 37.5L24 34L16 37.5C16 37.5 15 40.001 15 42Z\" fill=\"currentColor\"/> <circle cx=\"24\" cy=\"28\" r=\"1\" fill=\"currentColor\"/> <circle cx=\"24\" cy=\"31\" r=\"1\" fill=\"currentColor\"/> </svg> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), loadingIconTokens, loadingIconStyles, ], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('composition'), BooleanAttr('underlay'), PropertyAttr('label'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "labelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "underlay",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'stacked' | 'inlined'"
+              },
+              "description": "レイアウト方向",
+              "name": "composition"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "表示ラベル兼アクセシブル名（指定時はaria-hidden解除、role=\"img\"、title要素追加）",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "'sm' | 'lg'"
+              },
+              "description": "サイズ（sm: 24px, lg: 48px）",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "カード背景表示",
+              "name": "underlay"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-loading-icon",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/loading-icon/loading-icon.ts",
+          "definitionPath": "./packages/components/loading-icon/loading-icon.ts",
+          "typeDefinitionPath": "./packages/components/loading-icon/loading-icon.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "静的な砂時計アイコンで読み込み中を表示（アニメーションなし）",
+              "categories": {
+                "semantics": [
+                  "label 未指定時: SVG は aria-hidden=\"true\" で装飾扱いとし、スクリーンリーダーから隠します。",
+                  "label 指定時: SVG に role=\"img\" + aria-labelledby で <title> 要素を関連付け、意味のある画像として公開します。",
+                  "dads-icon のラベル/ARIAパターンを踏襲しています。"
+                ],
+                "keyboard": [
+                  "インタラクティブな操作はありません（情報表示専用）。"
+                ],
+                "zoom": [
+                  "サイズは sm(24px) / lg(48px) の2段階で、relativeな単位で定義されます。",
+                  "label テキストは折り返し可能で、拡大表示でも情報が欠けません。"
+                ],
+                "states": [
+                  "underlay 属性でカード背景を表示できます。",
+                  "label の有無で SVG のアクセシビリティ属性が動的に切り替わります。"
+                ],
+                "labels": [
+                  "label 属性指定時: SVG 内に <title> 要素を追加し、aria-labelledby で関連付けます。",
+                  "label 属性未指定時: aria-hidden=\"true\" で装飾扱い（周囲のテキストが意味を補完する前提）。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません（静的アイコン）。",
+                  "prefers-reduced-motion の影響を受けません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "svg-label-mode",
+                  "title": "SVG アクセシビリティ切替",
+                  "label": "role=\"img\" / aria-hidden",
+                  "description": "label 指定時は role=\"img\" + aria-labelledby、未指定時は aria-hidden=\"true\"。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "svg-title",
+                  "title": "<title> 要素",
+                  "label": "aria-labelledby",
+                  "description": "label 指定時に SVG 内に <title> 要素を動的に挿入し、aria-labelledby で関連付けます。",
+                  "category": "labels",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"icon\"]"
+                  }
+                },
+                {
+                  "id": "label-text",
+                  "title": "ラベルテキスト",
+                  "description": "label 属性の値が視覚的なテキストとして表示されます。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "loading-icon",
+            "install": {
+              "id": "loading-icon",
+              "define": "defineLoadingIcon",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/loading-icon"
+              },
+              "tags": [
+                "dads-loading-icon"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsLoadingIcon",
+          "declaration": {
+            "name": "DadsLoadingIcon",
+            "module": "packages/components/loading-icon/loading-icon.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/loading-icon/loading-icon.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/loading-icon/loading-icon.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-loading-icon",
+          "declaration": {
+            "name": "DadsLoadingIcon",
+            "module": "./packages/components/loading-icon/loading-icon.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/menu-list-box/menu-list-box.ts",
       "declarations": [
         {
@@ -39199,6 +39727,640 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/progress-bar/progress-bar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Progress Barコンポーネント\n\n水平バーで進捗状況を表示する。\n常にdeterminate（確定値）モードで動作する。不確定状態にはSpinnerを使用する。",
+          "name": "DadsProgressBar",
+          "cssProperties": [
+            {
+              "name": "--dads-progress-bar-"
+            },
+            {
+              "description": "インジケーター色",
+              "name": "--dads-progress-bar-indicator-color"
+            },
+            {
+              "description": "ラベルテキスト色",
+              "name": "--dads-progress-bar-label-color"
+            },
+            {
+              "description": "トラック色",
+              "name": "--dads-progress-bar-track-color"
+            },
+            {
+              "description": "アンダーレイ背景色",
+              "name": "--dads-progress-bar-underlay-bg"
+            },
+            {
+              "description": "アンダーレイ枠線色",
+              "name": "--dads-progress-bar-underlay-border"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルートコンテナ（role=\"progressbar\"）",
+              "name": "base"
+            },
+            {
+              "description": "インジケーターバー（進捗表示）",
+              "name": "indicator"
+            },
+            {
+              "description": "ラベルテキスト",
+              "name": "label"
+            },
+            {
+              "description": "トラックバー（背景）",
+              "name": "track"
+            },
+            {
+              "description": "カード背景（underlay属性時に表示）",
+              "name": "underlay"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#indicator",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#labelEl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setDefaultAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncProgress",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncValueText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composition",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-progress-bar', template: html` <div part=\"base\" role=\"progressbar\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <div part=\"track\"> <div part=\"indicator\"></div> </div> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), progressBarTokens, progressBarStyles, ], 'minimal'), attributes: [ PropertyAttr('value'), PropertyAttr('max'), PropertyAttr('composition'), BooleanAttr('underlay'), PropertyAttr('label'), PropertyAttr('valueText', 'value-text'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "labelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "maxChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "underlay",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "valueChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "valueText",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "valueTextChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'stacked' | 'inlined'"
+              },
+              "description": "レイアウト方向",
+              "name": "composition"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "表示ラベル兼アクセシブル名",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "最大値（デフォルト: 1、0以下は1にクランプ）",
+              "name": "max"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "カード背景表示",
+              "name": "underlay"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "進捗値（0〜max）",
+              "name": "value"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "人間可読な進捗テキスト（aria-valuetextに反映）",
+              "name": "value-text"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-progress-bar",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/progress-bar/progress-bar.ts",
+          "definitionPath": "./packages/components/progress-bar/progress-bar.ts",
+          "typeDefinitionPath": "./packages/components/progress-bar/progress-bar.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "確定状態（determinate）の進捗を示す水平バー",
+              "categories": {
+                "semantics": [
+                  "ルート要素に role=\"progressbar\" を設定し、スクリーンリーダーに進捗状態を伝えます。",
+                  "aria-valuenow / aria-valuemin / aria-valuemax を設定し、確定的な進捗値をプログラム的に提供します。",
+                  "aria-valuenow は 0〜100 の正規化された百分率で表現します。",
+                  "value-text 属性で aria-valuetext を設定でき、人間可読な進捗テキスト（例：「50% アップロード完了」）をスクリーンリーダーに提供します。"
+                ],
+                "keyboard": [
+                  "インタラクティブな操作はありません（情報表示専用）。"
+                ],
+                "zoom": [
+                  "トラック・インジケーターは幅100%で相対レイアウトし、拡大表示でも情報が欠けません。",
+                  "label テキストは折り返し可能です。"
+                ],
+                "states": [
+                  "常に確定状態（determinate）として動作します（不確定状態には dads-spinner を使用）。",
+                  "value / max 属性で進捗値を制御し、インジケーターの scaleX で視覚的に反映します。",
+                  "underlay 属性でカード背景を表示できます。"
+                ],
+                "labels": [
+                  "label 属性で aria-label を設定し、スクリーンリーダーに目的を伝えます（例：「50%」）。",
+                  "label 未指定時は aria-label なし（周囲のコンテキストで補完する前提）。"
+                ],
+                "motion": [
+                  "インジケーターの伸縮は CSS transform: scaleX() で実装し、transition で滑らかに変化します。",
+                  "prefers-reduced-motion: reduce のユーザーには transition を無効化します。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "progressbar-role",
+                  "title": "role=\"progressbar\"",
+                  "description": "ルート要素（part=\"base\"）に設定。aria-valuenow / aria-valuemin / aria-valuemax で進捗値を公開。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "indicator-visual",
+                  "title": "進捗インジケーター",
+                  "label": "scaleX(progress)",
+                  "description": "CSS変数 --progress を scaleX() に反映し、進捗を視覚的に表現します。",
+                  "category": "states",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"indicator\"]"
+                  }
+                },
+                {
+                  "id": "label-aria",
+                  "title": "アクセシブル名",
+                  "label": "aria-label",
+                  "description": "label 属性の値が aria-label として設定され、スクリーンリーダーに進捗の目的を伝えます。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "aria-valuetext",
+                  "title": "aria-valuetext",
+                  "label": "value-text属性",
+                  "description": "value-text 属性を設定すると aria-valuetext に反映され、スクリーンリーダーが「50% アップロード完了」のように人間可読なテキストを読み上げます。数値のみの aria-valuenow を補完します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "progress-bar",
+            "install": {
+              "id": "progress-bar",
+              "define": "defineProgressBar",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/progress-bar"
+              },
+              "tags": [
+                "dads-progress-bar"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsProgressBar",
+          "declaration": {
+            "name": "DadsProgressBar",
+            "module": "packages/components/progress-bar/progress-bar.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/progress-bar/progress-bar.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/progress-bar/progress-bar.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-progress-bar",
+          "declaration": {
+            "name": "DadsProgressBar",
+            "module": "./packages/components/progress-bar/progress-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/radio/radio.ts",
       "declarations": [
         {
@@ -44247,6 +45409,585 @@
           "declaration": {
             "name": "DadsSelect",
             "module": "./packages/components/select/select.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/spinner/spinner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Spinnerコンポーネント\n\n円形の回転アニメーションで非同期処理中を表示する。\nindeterminate専用（進捗率の表示には dads-progress-bar を使用）。",
+          "name": "DadsSpinner",
+          "cssProperties": [
+            {
+              "name": "--dads-spinner-"
+            },
+            {
+              "description": "ダッシュアニメーション速度",
+              "name": "--dads-spinner-dash-duration"
+            },
+            {
+              "description": "インジケーター色",
+              "name": "--dads-spinner-indicator-color"
+            },
+            {
+              "description": "ラベルテキスト色",
+              "name": "--dads-spinner-label-color"
+            },
+            {
+              "description": "回転アニメーション速度",
+              "name": "--dads-spinner-rotate-duration"
+            },
+            {
+              "description": "トラック色",
+              "name": "--dads-spinner-track-color"
+            },
+            {
+              "description": "アンダーレイ背景色",
+              "name": "--dads-spinner-underlay-bg"
+            },
+            {
+              "description": "アンダーレイ枠線色",
+              "name": "--dads-spinner-underlay-border"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルートコンテナ（role=\"progressbar\"）",
+              "name": "base"
+            },
+            {
+              "description": "外周ボーダーライン",
+              "name": "border"
+            },
+            {
+              "description": "インジケーター円（アニメーション）",
+              "name": "indicator"
+            },
+            {
+              "description": "ラベルテキスト",
+              "name": "label"
+            },
+            {
+              "description": "SVGコンテナ",
+              "name": "svg"
+            },
+            {
+              "description": "トラックリング（背景ドーナツ）",
+              "name": "track"
+            },
+            {
+              "description": "カード背景（underlay属性時に表示）",
+              "name": "underlay"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#base",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#labelEl",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "#setDefaultAttributes",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncLabel",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composition",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-spinner', template: html` <div part=\"base\" role=\"progressbar\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <svg part=\"svg\" viewBox=\"0 0 48 48\" aria-hidden=\"true\" focusable=\"false\"> <circle part=\"track\" cx=\"24\" cy=\"24\" r=\"20\" /> <circle part=\"border\" cx=\"24\" cy=\"24\" r=\"22\" /> <circle part=\"indicator\" cx=\"24\" cy=\"24\" r=\"20\" fill=\"none\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-dasharray=\"31.42 125.66\" /> </svg> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), spinnerTokens, spinnerStyles, ], 'minimal'), attributes: [ PropertyAttr('size'), PropertyAttr('composition'), PropertyAttr('speed'), BooleanAttr('underlay'), PropertyAttr('label'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "labelChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "speed",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "underlay",
+              "type": {
+                "text": "boolean"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'1.0.0'"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'stacked' | 'inlined'"
+              },
+              "description": "レイアウト方向",
+              "name": "composition"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "表示ラベル兼アクセシブル名",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "'sm' | 'lg'"
+              },
+              "description": "サイズ（sm: 24px, lg: 48px）",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "'slow' | 'normal' | 'fast'"
+              },
+              "description": "アニメーション速度",
+              "name": "speed"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "カード背景表示",
+              "name": "underlay"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-spinner",
+          "customElement": true,
+          "events": [],
+          "modulePath": "./packages/components/spinner/spinner.ts",
+          "definitionPath": "./packages/components/spinner/spinner.ts",
+          "typeDefinitionPath": "./packages/components/spinner/spinner.ts",
+          "custom": {
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "不確定状態（indeterminate）の進捗を示す円形アニメーション",
+              "categories": {
+                "semantics": [
+                  "ルート要素に role=\"progressbar\" を設定し、スクリーンリーダーに進捗状態を伝えます。",
+                  "indeterminate（不確定）モード専用のため、aria-valuenow / aria-valuemin / aria-valuemax は設定しません。",
+                  "SVG要素は aria-hidden=\"true\" + focusable=\"false\" で装飾扱いとします。"
+                ],
+                "keyboard": [
+                  "インタラクティブな操作はありません（情報表示専用）。"
+                ],
+                "zoom": [
+                  "サイズは sm(24px) / lg(48px) の2段階で、relativeな単位で定義されます。",
+                  "label テキストは折り返し可能で、拡大表示でも情報が欠けません。"
+                ],
+                "states": [
+                  "常に不確定状態（indeterminate）として動作します（確定的な進捗表示には dads-progress-bar を使用）。",
+                  "underlay 属性でカード背景を表示できます。"
+                ],
+                "labels": [
+                  "label 属性で aria-label を設定し、スクリーンリーダーに目的を伝えます（例：「読み込み中」）。",
+                  "label 未指定時は aria-label なし（周囲のコンテキストで補完する前提）。"
+                ],
+                "motion": [
+                  "回転アニメーションとダッシュアニメーションの2種のCSSアニメーションを使用します。",
+                  "speed 属性で slow / normal / fast の速度切替が可能です。",
+                  "prefers-reduced-motion: reduce のユーザーにはアニメーションを停止し、静的表示にフォールバックします。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "progressbar-role",
+                  "title": "role=\"progressbar\"",
+                  "description": "ルート要素（part=\"base\"）に設定。indeterminate のため aria-valuenow は省略。",
+                  "category": "semantics",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                },
+                {
+                  "id": "svg-decorative",
+                  "title": "装飾SVG",
+                  "label": "aria-hidden=\"true\"",
+                  "description": "SVG は純粋な視覚表現のため、スクリーンリーダーから隠します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"svg\"]"
+                  }
+                },
+                {
+                  "id": "label-aria",
+                  "title": "アクセシブル名",
+                  "label": "aria-label",
+                  "description": "label 属性の値が aria-label として設定され、スクリーンリーダーに進捗の目的を伝えます。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "status-message-pattern",
+                  "title": "ステータスメッセージ通知",
+                  "label": "利用者側パターン",
+                  "description": "WCAG 4.1.3 準拠のため、利用者側で role=\"status\" コンテナを事前にDOMに配置し、スピナー表示/非表示時にテキストを更新してください。スピナー自体は role=\"progressbar\" のままで、ステータス通知は外部コンテナの責務です。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
+                  }
+                }
+              ]
+            },
+            "componentId": "spinner",
+            "install": {
+              "id": "spinner",
+              "define": "defineSpinner",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/spinner"
+              },
+              "tags": [
+                "dads-spinner"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsSpinner",
+          "declaration": {
+            "name": "DadsSpinner",
+            "module": "packages/components/spinner/spinner.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/spinner/spinner.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/spinner/spinner.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-spinner",
+          "declaration": {
+            "name": "DadsSpinner",
+            "module": "./packages/components/spinner/spinner.ts"
           }
         }
       ]
@@ -58127,6 +59868,30 @@
             "name": "*",
             "module": "packages/components/device-mock/index.js"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/spinner/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/progress-bar/index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/loading-icon/index.js"
+          }
         }
       ]
     },
@@ -59129,6 +60894,175 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/components/loading-icon/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsLoadingIcon",
+          "declaration": {
+            "name": "DadsLoadingIcon",
+            "module": "./loading-icon.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultLoadingIcon",
+          "declaration": {
+            "name": "defineDefaultLoadingIcon",
+            "module": "./loading-icon-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineLoadingIcon",
+          "declaration": {
+            "name": "defineLoadingIcon",
+            "module": "./loading-icon-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "loadingIconStyles",
+          "declaration": {
+            "name": "loadingIconStyles",
+            "module": "./loading-icon-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "loadingIconTokens",
+          "declaration": {
+            "name": "loadingIconTokens",
+            "module": "./loading-icon-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/loading-icon/loading-icon-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "autoDefineLoadingIcon",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultLoadingIcon",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineLoadingIcon",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-loading-icon`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "autoDefineLoadingIcon",
+          "declaration": {
+            "name": "autoDefineLoadingIcon",
+            "module": "packages/components/loading-icon/loading-icon-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultLoadingIcon",
+          "declaration": {
+            "name": "defineDefaultLoadingIcon",
+            "module": "packages/components/loading-icon/loading-icon-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineLoadingIcon",
+          "declaration": {
+            "name": "defineLoadingIcon",
+            "module": "packages/components/loading-icon/loading-icon-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/loading-icon/loading-icon-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "loadingIconStyles",
+          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { min-width: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { min-width: 128px; min-height: 128px; justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: var(--spacing-3); border: 1px solid var(--dads-loading-icon-underlay-border); background: var(--dads-loading-icon-underlay-bg); z-index: -1; } [part=\"icon\"] { display: block; width: 48px; height: 48px; color: var(--dads-loading-icon-color); } :host([size=\"sm\"]) [part=\"icon\"] { width: 24px; height: 24px; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-loading-icon-label-color); } :host(:not([label])) [part=\"label\"], :host([label=\"\"]) [part=\"label\"] { display: none; } @media (forced-colors: active) { [part=\"icon\"] { color: CanvasText; } [part=\"underlay\"] { border-color: CanvasText; background: Canvas; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "loadingIconStyles",
+          "declaration": {
+            "name": "loadingIconStyles",
+            "module": "packages/components/loading-icon/loading-icon-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/loading-icon/loading-icon-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "loadingIconTokens",
+          "default": "css`${loadingIconSemanticTokensText}${loadingIconLocalTokensText}`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "loadingIconTokens",
+          "declaration": {
+            "name": "loadingIconTokens",
+            "module": "packages/components/loading-icon/loading-icon-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/components/menu-list-box/index.ts",
       "declarations": [],
       "exports": [
@@ -60107,6 +62041,175 @@
           "declaration": {
             "name": "pageNavigationTokens",
             "module": "packages/components/page-navigation/page-navigation-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/progress-bar/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsProgressBar",
+          "declaration": {
+            "name": "DadsProgressBar",
+            "module": "./progress-bar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultProgressBar",
+          "declaration": {
+            "name": "defineDefaultProgressBar",
+            "module": "./progress-bar-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineProgressBar",
+          "declaration": {
+            "name": "defineProgressBar",
+            "module": "./progress-bar-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "progressBarStyles",
+          "declaration": {
+            "name": "progressBarStyles",
+            "module": "./progress-bar-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "progressBarTokens",
+          "declaration": {
+            "name": "progressBarTokens",
+            "module": "./progress-bar-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/progress-bar/progress-bar-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "autoDefineProgressBar",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultProgressBar",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineProgressBar",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-progress-bar`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "autoDefineProgressBar",
+          "declaration": {
+            "name": "autoDefineProgressBar",
+            "module": "packages/components/progress-bar/progress-bar-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultProgressBar",
+          "declaration": {
+            "name": "defineDefaultProgressBar",
+            "module": "packages/components/progress-bar/progress-bar-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineProgressBar",
+          "declaration": {
+            "name": "defineProgressBar",
+            "module": "packages/components/progress-bar/progress-bar-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/progress-bar/progress-bar-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "progressBarStyles",
+          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; width: 100%; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { flex-shrink: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { padding: var(--spacing-6); justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: var(--spacing-3); border: 1px solid var(--dads-progress-bar-underlay-border); background: var(--dads-progress-bar-underlay-bg); z-index: -1; } [part=\"track\"] { width: 100%; height: 4px; position: relative; overflow: hidden; background: var(--dads-progress-bar-track-color); border-bottom: 1px solid var(--dads-progress-bar-indicator-color); } [part=\"indicator\"] { position: absolute; inset: 0; background: var(--dads-progress-bar-indicator-color); transform: scaleX(var(--progress, 0)); transform-origin: left; transition: transform 0.3s ease; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-progress-bar-label-color); } :host(:not([label])) [part=\"label\"], :host([label=\"\"]) [part=\"label\"] { display: none; } @media (prefers-reduced-motion: reduce) { [part=\"indicator\"] { transition: none; } } @media (forced-colors: active) { [part=\"track\"] { background: CanvasText; } [part=\"indicator\"] { background: Highlight; } [part=\"underlay\"] { border-color: CanvasText; background: Canvas; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "progressBarStyles",
+          "declaration": {
+            "name": "progressBarStyles",
+            "module": "packages/components/progress-bar/progress-bar-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/progress-bar/progress-bar-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "progressBarTokens",
+          "default": "css`${progressBarSemanticTokensText}${progressBarLocalTokensText}`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "progressBarTokens",
+          "declaration": {
+            "name": "progressBarTokens",
+            "module": "packages/components/progress-bar/progress-bar-tokens.ts"
           }
         }
       ]
@@ -61521,6 +63624,175 @@
           "declaration": {
             "name": "selectTokens",
             "module": "packages/components/select/select-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/spinner/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsSpinner",
+          "declaration": {
+            "name": "DadsSpinner",
+            "module": "./spinner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultSpinner",
+          "declaration": {
+            "name": "defineDefaultSpinner",
+            "module": "./spinner-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineSpinner",
+          "declaration": {
+            "name": "defineSpinner",
+            "module": "./spinner-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "spinnerStyles",
+          "declaration": {
+            "name": "spinnerStyles",
+            "module": "./spinner-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "spinnerTokens",
+          "declaration": {
+            "name": "spinnerTokens",
+            "module": "./spinner-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/spinner/spinner-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "autoDefineSpinner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineDefaultSpinner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          }
+        },
+        {
+          "kind": "function",
+          "name": "defineSpinner",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-spinner`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "autoDefineSpinner",
+          "declaration": {
+            "name": "autoDefineSpinner",
+            "module": "packages/components/spinner/spinner-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultSpinner",
+          "declaration": {
+            "name": "defineDefaultSpinner",
+            "module": "packages/components/spinner/spinner-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineSpinner",
+          "declaration": {
+            "name": "defineSpinner",
+            "module": "packages/components/spinner/spinner-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/spinner/spinner-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "spinnerStyles",
+          "default": "css` :host { display: inline-flex; contain: layout paint style; } [part=\"base\"] { display: inline-flex; flex-direction: column; align-items: center; gap: var(--spacing-4); position: relative; z-index: 0; } :host([composition=\"inlined\"]) [part=\"base\"] { flex-direction: row; gap: var(--spacing-2); } :host([composition=\"inlined\"]) [part=\"label\"] { min-width: 0; white-space: nowrap; } [part=\"underlay\"] { display: none; } :host([underlay]) [part=\"base\"] { min-width: 128px; min-height: 128px; padding: var(--spacing-4); justify-content: center; box-sizing: border-box; } :host([underlay]) [part=\"underlay\"] { display: block; position: absolute; inset: 0; border-radius: var(--spacing-3); border: 1px solid var(--dads-spinner-underlay-border); background: var(--dads-spinner-underlay-bg); z-index: -1; } [part=\"svg\"] { display: block; width: 48px; height: 48px; animation: spinner-rotate var(--dads-spinner-rotate-duration) linear infinite; } :host([size=\"sm\"]) [part=\"svg\"] { width: 24px; height: 24px; } [part=\"track\"] { fill: none; stroke: var(--dads-spinner-track-color); stroke-width: 4; } [part=\"border\"] { fill: none; stroke: var(--dads-spinner-indicator-color); stroke-width: 1; } [part=\"indicator\"] { stroke: var(--dads-spinner-indicator-color); stroke-dasharray: 31.42 125.66; stroke-dashoffset: 0; fill: none; animation: spinner-dash var(--dads-spinner-dash-duration) ease-in-out infinite; } [part=\"label\"] { font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: 1.7; letter-spacing: 0.02em; color: var(--dads-spinner-label-color); } :host([speed=\"slow\"]) { --dads-spinner-rotate-duration: 3.2s; --dads-spinner-dash-duration: 2.4s; } :host([speed=\"fast\"]) { --dads-spinner-rotate-duration: 1.6s; --dads-spinner-dash-duration: 1.2s; } :host(:not([label])) [part=\"label\"], :host([label=\"\"]) [part=\"label\"] { display: none; } @keyframes spinner-rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } @keyframes spinner-dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 1, 150; stroke-dashoffset: -125; } } @media (prefers-reduced-motion: reduce) { [part=\"svg\"] { animation: none; } [part=\"indicator\"] { animation: none; stroke-dasharray: 31.42 125.66; stroke-dashoffset: 0; } } @media (forced-colors: active) { [part=\"track\"] { stroke: CanvasText; } [part=\"border\"] { stroke: CanvasText; } [part=\"indicator\"] { stroke: Highlight; } [part=\"underlay\"] { border-color: CanvasText; background: Canvas; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "spinnerStyles",
+          "declaration": {
+            "name": "spinnerStyles",
+            "module": "packages/components/spinner/spinner-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/spinner/spinner-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "spinnerTokens",
+          "default": "css`${spinnerSemanticTokensText}${spinnerLocalTokensText}`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "spinnerTokens",
+          "declaration": {
+            "name": "spinnerTokens",
+            "module": "packages/components/spinner/spinner-tokens.ts"
           }
         }
       ]

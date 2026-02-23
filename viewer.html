@@ -82,7 +82,10 @@
       "a11y-annotate": "/@components/meta/annotate.js",
       "dads-icon": "/@components/dads/icon.js",
       "dads-avatar": "/@components/dads/avatar.js",
-      "dads-code-block": "/@components/dads/code-block.js"
+      "dads-code-block": "/@components/dads/code-block.js",
+      "dads-spinner": "/@components/dads/spinner.js",
+      "dads-progress-bar": "/@components/dads/progress-bar.js",
+      "dads-loading-icon": "/@components/dads/loading-icon.js"
     }
   }
   </script>
@@ -739,6 +742,9 @@
       <option value="stepNavigation">ステップナビゲーション</option>
       <option value="icon">アイコン</option>
       <option value="avatar">アバター</option>
+      <option value="spinner">スピナー</option>
+      <option value="progressBar">プログレスバー</option>
+      <option value="loadingIcon">ローディングアイコン</option>
       <option value="resetCss">リセットCSS比較デモ（独自）</option>
     </select>
   </div>
@@ -861,6 +867,7 @@
       'ナビゲーション',
       '表示・データ',
       'フィードバック',
+      'プログレスインジケーター',
       'レイアウト',
       'その他',
     ];
@@ -912,6 +919,9 @@
       emergencyBanner: 'フィードバック',
       dialog: 'フィードバック',
       drawer: 'フィードバック',
+      spinner: 'プログレスインジケーター',
+      progressBar: 'プログレスインジケーター',
+      loadingIcon: 'プログレスインジケーター',
       headerContainer: 'レイアウト',
       layoutShell: 'レイアウト',
       resetCss: 'その他',
@@ -932,6 +942,9 @@
       '緊急時バナー': 'きんきゅうじばなー',
       'リソースリスト': 'りそーすりすと',
       'リセットCSS比較デモ（独自）': 'りせっとしーえすえすひかくでも（どくじ）',
+      'スピナー': 'すぴなー',
+      'プログレスバー': 'ぷろぐれすばー',
+      'ローディングアイコン': 'ろーでぃんぐあいこん',
     };
     const annotationVisibilityOverrides = {
       accordion: { lane: 'top' },
