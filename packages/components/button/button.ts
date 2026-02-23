@@ -63,6 +63,7 @@ export class DadsButton extends TypographyFormComponent {
 
   static definition = {
     name: 'dads-button',
+    shadowOptions: { mode: 'open' as const, delegatesFocus: true },
     template: html`
       <button 
         part="base"
@@ -131,6 +132,18 @@ export class DadsButton extends TypographyFormComponent {
   disconnectedCallback() {
     this.removeEventListener('click', this.#handleHostClick);
     this.#teardownIconSlots();
+  }
+
+  focus(options?: FocusOptions): void {
+    const base = this.shadowRoot?.querySelector('[part="base"]') as HTMLElement | null;
+    if (base) base.focus(options);
+    else super.focus(options);
+  }
+
+  blur(): void {
+    const base = this.shadowRoot?.querySelector('[part="base"]') as HTMLElement | null;
+    if (base) base.blur();
+    else super.blur();
   }
 
   /**

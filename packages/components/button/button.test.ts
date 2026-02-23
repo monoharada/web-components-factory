@@ -509,6 +509,77 @@ describe('DadsButton - commandfor デリゲーション', () => {
   });
 });
 
+// ========== Phase 9: フォーカス委譲（Safari対策） ==========
+describe('DadsButton - フォーカス委譲', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('definition に delegatesFocus: true が設定されている', async () => {
+    const { DadsButton } = await import('./button');
+    const opts = DadsButton.definition.shadowOptions;
+    expect(opts).toBeDefined();
+    expect(opts?.delegatesFocus).toBe(true);
+  });
+
+  it('focus() が内部ボタンにフォーカスを委譲する', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button>Focus test</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    component.focus();
+
+    const base = getShadowElement(component, '[part="base"]');
+    expect(component.shadowRoot?.activeElement).toBe(base);
+  });
+
+  it('blur() がフォーカスを解除する', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button>Blur test</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    component.focus();
+    component.blur();
+
+    expect(component.shadowRoot?.activeElement).toBeNull();
+  });
+
+  it('リンクモードでも focus() が動作する', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button as="link" href="/test">Link focus</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    component.focus();
+
+    const base = getShadowElement(component, '[part="base"]');
+    expect(component.shadowRoot?.activeElement).toBe(base);
+  });
+
+  it('disabled 時に focus() がエラーにならない', async () => {
+    const { defineButton } = await import('./button-define');
+    defineButton();
+
+    const component = await renderWebComponent(`
+      <dads-button disabled>Disabled focus</dads-button>
+    `);
+
+    await waitForComponent('dads-button');
+    expect(() => component.focus()).not.toThrow();
+  });
+});
+
 // ========== Phase 7: フォーム統合 ==========
 describe('DadsButton - フォーム統合', () => {
   afterEach(() => {
