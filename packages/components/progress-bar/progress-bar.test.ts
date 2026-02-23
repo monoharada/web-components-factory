@@ -109,12 +109,12 @@ describe('DadsProgressBar - Determinate', () => {
   });
 });
 
-describe('DadsProgressBar - Indeterminate', () => {
+describe('DadsProgressBar - フォールバック', () => {
   afterEach(() => {
     cleanup();
   });
 
-  it('value未設定で aria-valuenow/min/max が存在しない', async () => {
+  it('value未設定で aria-valuenow="0"（0%扱い）', async () => {
     const { defineDefaultProgressBar } = await import('./progress-bar-define');
     defineDefaultProgressBar();
 
@@ -124,12 +124,12 @@ describe('DadsProgressBar - Indeterminate', () => {
 
     await waitForComponent('dads-progress-bar');
     const base = getShadowElement(component, '[part="base"]');
-    expect(base?.getAttribute('aria-valuenow')).toBeNull();
-    expect(base?.getAttribute('aria-valuemin')).toBeNull();
-    expect(base?.getAttribute('aria-valuemax')).toBeNull();
+    expect(base?.getAttribute('aria-valuenow')).toBe('0');
+    expect(base?.getAttribute('aria-valuemin')).toBe('0');
+    expect(base?.getAttribute('aria-valuemax')).toBe('100');
   });
 
-  it('value="abc" (NaN) → indeterminate扱い', async () => {
+  it('value="abc" (NaN) → 0%扱い', async () => {
     const { defineDefaultProgressBar } = await import('./progress-bar-define');
     defineDefaultProgressBar();
 
@@ -139,9 +139,9 @@ describe('DadsProgressBar - Indeterminate', () => {
 
     await waitForComponent('dads-progress-bar');
     const base = getShadowElement(component, '[part="base"]');
-    expect(base?.getAttribute('aria-valuenow')).toBeNull();
-    expect(base?.getAttribute('aria-valuemin')).toBeNull();
-    expect(base?.getAttribute('aria-valuemax')).toBeNull();
+    expect(base?.getAttribute('aria-valuenow')).toBe('0');
+    expect(base?.getAttribute('aria-valuemin')).toBe('0');
+    expect(base?.getAttribute('aria-valuemax')).toBe('100');
   });
 });
 

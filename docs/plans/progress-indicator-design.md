@@ -144,7 +144,7 @@ DADSの公式ガイドラインは「準備中」のため、Figmaデザイン�
 | Structure | SVG circle: Background(track) + Border + Front(indicator) |
 | Track color | `--color-primitive-blue-100` |
 | Indicator color | `--color-primitive-blue-1200` |
-| Stroke width | 4px (proportional) |
+| Stroke width | Track/Border: 1px, Front(indicator): 4px |
 
 ### 4.5 Linear Building Block
 
@@ -257,22 +257,6 @@ DADSの公式ガイドラインは「準備中」のため、Figmaデザイン�
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
-/* Arc grow/shrink (chase effect): 1.4s ease-in-out infinite */
-@keyframes spinner-dash {
-  0%, 25% {
-    stroke-dashoffset: 113;   /* Small visible arc */
-    transform: rotate(0deg);
-  }
-  50%, 75% {
-    stroke-dashoffset: 30;    /* Large visible arc */
-    transform: rotate(45deg);
-  }
-  100% {
-    stroke-dashoffset: 113;   /* Return to small */
-    transform: rotate(360deg);
-  }
-}
 ```
 
 ### 7.2 SVG Structure
@@ -280,16 +264,16 @@ DADSの公式ガイドラインは「準備中」のため、Figmaデザイン�
 ```html
 <svg viewBox="0 0 48 48" part="svg">
   <circle part="track" cx="24" cy="24" r="20"
-          fill="none" stroke-width="4" />
+          stroke-width="1" />
   <circle part="indicator" cx="24" cy="24" r="20"
           fill="none" stroke-width="4"
           stroke-linecap="round"
-          stroke-dasharray="125.66" />
+          stroke-dasharray="31.42 125.66" />
 </svg>
 ```
 
 - Circumference = 2 * pi * 20 = ~125.66
-- Chase effect = container rotate(2s) + dash grow/shrink(1.4s) の非同期組み合わせ
+- Spinner = container rotate(2s linear) + fixed front arc
 
 ### 7.3 Linear Indeterminate Animation (A-007: transform-based に統一)
 
@@ -328,8 +312,7 @@ DADSの公式ガイドラインは「準備中」のため、Figmaデザイン�
     animation: none;
   }
   [part="indicator"] {
-    animation: none;
-    stroke-dashoffset: 60; /* 静的な弧（約50%表示） */
+    stroke-dasharray: 31.42 125.66;
   }
 
   /* Linear indeterminate: 静的な部分バーを表示 */

@@ -20,7 +20,7 @@ import { progressBarStyles } from './progress-bar-styles.js';
  * Progress Barコンポーネント
  *
  * 水平バーで進捗状況を表示する。
- * value属性の有無でdeterminate/indeterminateモードを自動切替する。
+ * 常にdeterminate（確定値）モードで動作する。不確定状態にはSpinnerを使用する。
  *
  * @customElement
  * @tagname dads-progress-bar
@@ -31,7 +31,7 @@ import { progressBarStyles } from './progress-bar-styles.js';
  * @csspart indicator - インジケーターバー（進捗表示）
  * @csspart label - ラベルテキスト
  *
- * @attr {string} value - 進捗値（0〜max、未設定=indeterminate）
+ * @attr {string} value - 進捗値（0〜max）
  * @attr {string} max - 最大値（デフォルト: 1、0以下は1にクランプ）
  * @attr {'stacked' | 'inlined'} composition - レイアウト方向
  * @attr {boolean} underlay - カード背景表示
@@ -47,7 +47,7 @@ import { progressBarStyles } from './progress-bar-styles.js';
  * ```html
  * <dads-progress-bar value="0.5" label="50%"></dads-progress-bar>
  * <dads-progress-bar value="3" max="10" label="30%"></dads-progress-bar>
- * <dads-progress-bar label="読み込み中"></dads-progress-bar>
+ * <!-- 不確定状態には dads-spinner を使用 -->
  * <dads-progress-bar underlay value="0.7" label="70%"></dads-progress-bar>
  * ```
  */
@@ -122,29 +122,20 @@ export class DadsProgressBar extends TypographyWebComponent {
     if (!this.#base || !this.#indicator) return;
 
     const rawValue = this.getAttribute('value');
-    const parsedValue = rawValue !== null ? Number(rawValue) : Number.NaN;
-    const isDeterminate = rawValue !== null && !Number.isNaN(parsedValue);
+    const parsedValue = rawValue !== null ? Number(rawValue) : 0;
+    const effectiveValue = Number.isNaN(parsedValue) ? 0 : parsedValue;
 
-    if (isDeterminate) {
-      const rawMax = this.getAttribute('max');
-      const parsedMax = rawMax !== null ? Number(rawMax) : 1;
-      const effectiveMax = parsedMax > 0 ? parsedMax : 1;
-      const clamped = Math.min(Math.max(0, parsedValue), effectiveMax);
-      const normalized = clamped / effectiveMax;
-      const ariaValue = Math.round(normalized * 100);
+    const rawMax = this.getAttribute('max');
+    const parsedMax = rawMax !== null ? Number(rawMax) : 1;
+    const effectiveMax = parsedMax > 0 ? parsedMax : 1;
+    const clamped = Math.min(Math.max(0, effectiveValue), effectiveMax);
+    const normalized = clamped / effectiveMax;
+    const ariaValue = Math.round(normalized * 100);
 
-      this.#indicator.style.setProperty('--progress', String(normalized));
-      this.#base.setAttribute('aria-valuenow', String(ariaValue));
-      this.#base.setAttribute('aria-valuemin', '0');
-      this.#base.setAttribute('aria-valuemax', '100');
-      this.setAttribute('data-determinate', '');
-    } else {
-      this.#indicator.style.removeProperty('--progress');
-      this.#base.removeAttribute('aria-valuenow');
-      this.#base.removeAttribute('aria-valuemin');
-      this.#base.removeAttribute('aria-valuemax');
-      this.removeAttribute('data-determinate');
-    }
+    this.#indicator.style.setProperty('--progress', String(normalized));
+    this.#base.setAttribute('aria-valuenow', String(ariaValue));
+    this.#base.setAttribute('aria-valuemin', '0');
+    this.#base.setAttribute('aria-valuemax', '100');
   }
 
   #syncLabel(): void {
