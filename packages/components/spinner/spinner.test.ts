@@ -2,7 +2,7 @@
  * DadsSpinnerコンポーネント テスト
  */
 
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   renderWebComponent,
   getShadowElement,
@@ -281,6 +281,46 @@ describe('DadsSpinner - ARIA/アクセシビリティ', () => {
     component.removeAttribute('label');
     await waitForComponent('dads-spinner');
     expect(base?.getAttribute('aria-label')).toBeNull();
+  });
+});
+
+describe('DadsSpinner - label未設定警告', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('label未設定時にconsole.warnが出力される', async () => {
+    const { defineDefaultSpinner } = await import('./spinner-define');
+    defineDefaultSpinner();
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    renderWebComponent(`
+      <dads-spinner></dads-spinner>
+    `);
+
+    await waitForComponent('dads-spinner');
+    expect(warnSpy).toHaveBeenCalledWith(
+      '[dads-spinner] label属性が未指定です。スクリーンリーダーのために label 属性を設定してください。'
+    );
+
+    warnSpy.mockRestore();
+  });
+
+  it('label設定時にconsole.warnが出力されない', async () => {
+    const { defineDefaultSpinner } = await import('./spinner-define');
+    defineDefaultSpinner();
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    renderWebComponent(`
+      <dads-spinner label="読み込み中"></dads-spinner>
+    `);
+
+    await waitForComponent('dads-spinner');
+    expect(warnSpy).not.toHaveBeenCalled();
+
+    warnSpy.mockRestore();
   });
 });
 

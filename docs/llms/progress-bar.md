@@ -31,6 +31,7 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component pr
 | `max` | string | - | 最大値（デフォルト: 1、0以下は1にクランプ） |
 | `underlay` | boolean | - | カード背景表示 |
 | `value` | string | - | 進捗値（0〜max） |
+| `value-text` | string | - | 人間可読な進捗テキスト（aria-valuetextに反映） |
 
 
 ## Slots

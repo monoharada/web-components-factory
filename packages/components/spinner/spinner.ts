@@ -103,6 +103,11 @@ export class DadsSpinner extends TypographyWebComponent {
     this.#labelEl = this.shadowRoot?.querySelector('[part="label"]') ?? null;
     this.#setDefaultAttributes();
     this.#syncLabel();
+    if (!this.hasAttribute('label')) {
+      console.warn(
+        '[dads-spinner] label属性が未指定です。スクリーンリーダーのために label 属性を設定してください。'
+      );
+    }
   }
 
   labelChanged(): void {

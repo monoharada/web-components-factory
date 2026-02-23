@@ -36,6 +36,7 @@ import { progressBarStyles } from './progress-bar-styles.js';
  * @attr {'stacked' | 'inlined'} composition - レイアウト方向
  * @attr {boolean} underlay - カード背景表示
  * @attr {string} label - 表示ラベル兼アクセシブル名
+ * @attr {string} value-text - 人間可読な進捗テキスト（aria-valuetextに反映）
  *
  * @cssprop --dads-progress-bar-track-color - トラック色
  * @cssprop --dads-progress-bar-indicator-color - インジケーター色
@@ -77,6 +78,7 @@ export class DadsProgressBar extends TypographyWebComponent {
       PropertyAttr('composition'),
       BooleanAttr('underlay'),
       PropertyAttr('label'),
+      PropertyAttr('valueText', 'value-text'),
     ],
   };
 
@@ -85,6 +87,7 @@ export class DadsProgressBar extends TypographyWebComponent {
   declare composition: string | null;
   declare underlay: boolean;
   declare label: string | null;
+  declare valueText: string | null;
 
   #base: HTMLElement | null = null;
   #indicator: HTMLElement | null = null;
@@ -98,6 +101,7 @@ export class DadsProgressBar extends TypographyWebComponent {
     this.#setDefaultAttributes();
     this.#syncProgress();
     this.#syncLabel();
+    this.#syncValueText();
   }
 
   valueChanged(): void {
@@ -110,6 +114,10 @@ export class DadsProgressBar extends TypographyWebComponent {
 
   labelChanged(): void {
     this.#syncLabel();
+  }
+
+  valueTextChanged(): void {
+    this.#syncValueText();
   }
 
   #setDefaultAttributes(): void {
@@ -136,6 +144,17 @@ export class DadsProgressBar extends TypographyWebComponent {
     this.#base.setAttribute('aria-valuenow', String(ariaValue));
     this.#base.setAttribute('aria-valuemin', '0');
     this.#base.setAttribute('aria-valuemax', '100');
+  }
+
+  #syncValueText(): void {
+    if (!this.#base) return;
+
+    const valueText = this.getAttribute('value-text');
+    if (valueText && valueText.length > 0) {
+      this.#base.setAttribute('aria-valuetext', valueText);
+    } else {
+      this.#base.removeAttribute('aria-valuetext');
+    }
   }
 
   #syncLabel(): void {

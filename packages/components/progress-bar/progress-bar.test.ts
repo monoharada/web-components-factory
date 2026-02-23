@@ -207,6 +207,36 @@ describe('DadsProgressBar - ARIA/アクセシビリティ', () => {
     expect(base?.getAttribute('aria-label')).toBeNull();
   });
 
+  it('value-text指定時にaria-valuetextが設定される', async () => {
+    const { defineDefaultProgressBar } = await import('./progress-bar-define');
+    defineDefaultProgressBar();
+
+    const component = renderWebComponent(`
+      <dads-progress-bar value="0.5" value-text="50% アップロード完了"></dads-progress-bar>
+    `);
+
+    await waitForComponent('dads-progress-bar');
+    const base = getShadowElement(component, '[part="base"]');
+    expect(base?.getAttribute('aria-valuetext')).toBe('50% アップロード完了');
+  });
+
+  it('value-text削除でaria-valuetextも削除', async () => {
+    const { defineDefaultProgressBar } = await import('./progress-bar-define');
+    defineDefaultProgressBar();
+
+    const component = renderWebComponent(`
+      <dads-progress-bar value="0.5" value-text="50% 完了"></dads-progress-bar>
+    `);
+
+    await waitForComponent('dads-progress-bar');
+    const base = getShadowElement(component, '[part="base"]');
+    expect(base?.getAttribute('aria-valuetext')).toBe('50% 完了');
+
+    component.removeAttribute('value-text');
+    await waitForComponent('dads-progress-bar');
+    expect(base?.getAttribute('aria-valuetext')).toBeNull();
+  });
+
   it('label削除でaria-labelも削除', async () => {
     const { defineDefaultProgressBar } = await import('./progress-bar-define');
     defineDefaultProgressBar();

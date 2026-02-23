@@ -245,7 +245,9 @@ export const demos = {
         var postalTown = document.querySelector('#postal-town');
         var reqId = 0;
 
-        if (postalBtn && postalInput && postalSpinnerWrap && postalStatus && postalResult && postalPref && postalCity && postalTown) {
+        var postalResultArea = document.querySelector('#postal-result-area');
+
+        if (postalBtn && postalInput && postalSpinnerWrap && postalStatus && postalResult && postalPref && postalCity && postalTown && postalResultArea) {
           postalBtn.addEventListener('click', function() {
             var raw = postalInput.value || '';
             var code = normalize(raw);
@@ -272,10 +274,12 @@ export const demos = {
 
             postalInput.setAttribute('readonly', '');
             postalBtn.setAttribute('disabled', '');
+            postalResultArea.setAttribute('aria-busy', 'true');
             postalStatus.textContent = '検索中...';
 
             function finish(data, isError) {
               postalSpinnerWrap.style.display = 'none';
+              postalResultArea.removeAttribute('aria-busy');
               postalInput.removeAttribute('readonly');
               postalBtn.removeAttribute('disabled');
               if (isError) {
@@ -451,6 +455,22 @@ export const demos = {
                         </td>
                         <td>表示ラベル兼アクセシブル名</td>
                       </tr>
+                      <tr>
+                        <th scope="row"><code>value-text</code></th>
+                        <td><code>attr</code></td>
+                        <td>—</td>
+                        <td>
+                          <div class="wc-api-control">
+                            <dads-input-text
+                              label="value-text"
+                              value=""
+                              data-api-attr="value-text"
+                              data-default=""
+                            ></dads-input-text>
+                          </div>
+                        </td>
+                        <td>人間可読な進捗テキスト（aria-valuetext）</td>
+                      </tr>
                     </tbody>
                   </table>
                 </dads-table>
@@ -560,6 +580,7 @@ export const demos = {
           btn.addEventListener('click', function() {
             bar.setAttribute('value', '0');
             bar.setAttribute('label', '0%');
+            bar.setAttribute('value-text', '0% アップロード完了');
             statusEl.textContent = 'アップロード中...';
 
             var progress = 0;
@@ -570,11 +591,13 @@ export const demos = {
                 clearInterval(interval);
                 bar.setAttribute('value', '1');
                 bar.setAttribute('label', '100%');
+                bar.setAttribute('value-text', '100% アップロード完了');
                 statusEl.textContent = 'アップロード完了';
               } else {
                 var pct = Math.round(progress * 100);
                 bar.setAttribute('value', String(progress));
                 bar.setAttribute('label', pct + '%');
+                bar.setAttribute('value-text', pct + '% アップロード完了');
               }
             }, 100);
           });

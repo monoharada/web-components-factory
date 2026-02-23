@@ -39902,6 +39902,16 @@
               }
             },
             {
+              "kind": "method",
+              "name": "#syncValueText",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
               "kind": "field",
               "name": "#view",
               "privacy": "private",
@@ -39986,7 +39996,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-progress-bar', template: html` <div part=\"base\" role=\"progressbar\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <div part=\"track\"> <div part=\"indicator\"></div> </div> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), progressBarTokens, progressBarStyles, ], 'minimal'), attributes: [ PropertyAttr('value'), PropertyAttr('max'), PropertyAttr('composition'), BooleanAttr('underlay'), PropertyAttr('label'), ], }",
+              "default": "{ name: 'dads-progress-bar', template: html` <div part=\"base\" role=\"progressbar\"> <div part=\"underlay\" aria-hidden=\"true\"></div> <div part=\"track\"> <div part=\"indicator\"></div> </div> <span part=\"label\"></span> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), progressBarTokens, progressBarStyles, ], 'minimal'), attributes: [ PropertyAttr('value'), PropertyAttr('max'), PropertyAttr('composition'), BooleanAttr('underlay'), PropertyAttr('label'), PropertyAttr('valueText', 'value-text'), ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -40117,6 +40127,22 @@
             },
             {
               "kind": "field",
+              "name": "valueText",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "valueTextChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
               "name": "version",
               "type": {
                 "text": "string"
@@ -40161,6 +40187,13 @@
               },
               "description": "進捗値（0〜max）",
               "name": "value"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "人間可読な進捗テキスト（aria-valuetextに反映）",
+              "name": "value-text"
             }
           ],
           "superclass": {
@@ -40181,7 +40214,8 @@
                 "semantics": [
                   "ルート要素に role=\"progressbar\" を設定し、スクリーンリーダーに進捗状態を伝えます。",
                   "aria-valuenow / aria-valuemin / aria-valuemax を設定し、確定的な進捗値をプログラム的に提供します。",
-                  "aria-valuenow は 0〜100 の正規化された百分率で表現します。"
+                  "aria-valuenow は 0〜100 の正規化された百分率で表現します。",
+                  "value-text 属性で aria-valuetext を設定でき、人間可読な進捗テキスト（例：「50% アップロード完了」）をスクリーンリーダーに提供します。"
                 ],
                 "keyboard": [
                   "インタラクティブな操作はありません（情報表示専用）。"
@@ -40238,6 +40272,18 @@
                   "target": {
                     "scope": "shadow",
                     "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "aria-valuetext",
+                  "title": "aria-valuetext",
+                  "label": "value-text属性",
+                  "description": "value-text 属性を設定すると aria-valuetext に反映され、スクリーンリーダーが「50% アップロード完了」のように人間可読なテキストを読み上げます。数値のみの aria-valuenow を補完します。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
                   }
                 }
               ]
@@ -45859,6 +45905,18 @@
                   "target": {
                     "scope": "shadow",
                     "selector": "[part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "status-message-pattern",
+                  "title": "ステータスメッセージ通知",
+                  "label": "利用者側パターン",
+                  "description": "WCAG 4.1.3 準拠のため、利用者側で role=\"status\" コンテナを事前にDOMに配置し、スピナー表示/非表示時にテキストを更新してください。スピナー自体は role=\"progressbar\" のままで、ステータス通知は外部コンテナの責務です。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"base\"]"
                   }
                 }
               ]
