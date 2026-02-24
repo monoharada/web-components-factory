@@ -66738,6 +66738,143 @@
     },
     {
       "kind": "javascript-module",
+      "path": "packages/figma-export/figma-post-process.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "convertImagesToDataUri",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "対象要素内の全 <img> を canvas 経由で data URI に変換する。\nflattenElementToLightDom() の前に呼び出す（ブラウザコンテキスト必須）。"
+        },
+        {
+          "kind": "function",
+          "name": "postProcessForFigma",
+          "return": {
+            "type": {
+              "text": ""
+            }
+          },
+          "parameters": [
+            {
+              "name": "el",
+              "type": {
+                "text": "HTMLElement"
+              },
+              "description": "flattenElementToLightDom() の出力"
+            },
+            {
+              "name": "state",
+              "type": {
+                "text": "FigmaState"
+              },
+              "description": "状態ラベル"
+            }
+          ],
+          "description": "フラット化済み HTML 要素に Figma 変換向けの後処理を適用する。"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "convertImagesToDataUri",
+          "declaration": {
+            "name": "convertImagesToDataUri",
+            "module": "packages/figma-export/figma-post-process.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "postProcessForFigma",
+          "declaration": {
+            "name": "postProcessForFigma",
+            "module": "packages/figma-export/figma-post-process.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/figma-export/flatten.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "flattenElementToLightDom",
+          "return": {
+            "type": {
+              "text": ""
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "Element"
+              },
+              "description": "変換対象のルート要素（通常はカスタム要素）"
+            },
+            {
+              "name": "opts",
+              "optional": true,
+              "type": {
+                "text": "FlattenOptions"
+              },
+              "description": "オプション"
+            }
+          ],
+          "description": "Shadow DOM を持つ Web Component ツリーを light DOM に変換し、\ncomputed style をインライン化する。"
+        },
+        {
+          "kind": "function",
+          "name": "serializeNode",
+          "return": {
+            "type": {
+              "text": "string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "node",
+              "type": {
+                "text": "Node"
+              }
+            }
+          ],
+          "description": "ノードを HTML 文字列にシリアライズ"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "flattenElementToLightDom",
+          "declaration": {
+            "name": "flattenElementToLightDom",
+            "module": "packages/figma-export/flatten.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "serializeNode",
+          "declaration": {
+            "name": "serializeNode",
+            "module": "packages/figma-export/flatten.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "packages/styles/accordion-styles.ts",
       "declarations": [
         {
