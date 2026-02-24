@@ -12,6 +12,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  buildOutputHtml,
   closeResources,
   findChromiumExecutable,
   launchChromium,
@@ -152,38 +153,6 @@ async function captureStates(browser) {
 }
 
 /**
- * 4 状態の HTML を 1 つのドキュメントにまとめる。
- */
-function buildOutputHtml(states) {
-  const sections = states
-    .map(
-      ({ label, html }) =>
-        `    <section data-state="${label}">\n      <h2>${label}</h2>\n      ${html}\n    </section>`,
-    )
-    .join('\n\n');
-
-  return `<!doctype html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <title>dads-button export</title>
-  <style>
-    body { font-family: sans-serif; padding: 2rem; background: #f5f5f5; }
-    h1 { margin-bottom: 1.5rem; }
-    section { margin-bottom: 2rem; padding: 1.5rem; background: #fff; border-radius: 8px; }
-    h2 { margin-top: 0; color: #666; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
-  </style>
-</head>
-<body>
-  <h1>dads-button</h1>
-
-${sections}
-</body>
-</html>
-`;
-}
-
-/**
  * メイン処理。
  */
 async function main() {
@@ -204,7 +173,7 @@ async function main() {
     const states = await captureStates(browser);
 
     await mkdir(OUTPUT_DIR, { recursive: true });
-    const html = buildOutputHtml(states);
+    const html = buildOutputHtml(states, 'dads-button');
     await writeFile(OUTPUT_FILE, html, 'utf-8');
 
     console.log(`\nExported: ${OUTPUT_FILE}`);

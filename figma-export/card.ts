@@ -4,14 +4,15 @@
  */
 import { flattenElementToLightDom } from '../packages/figma-export/flatten.js';
 import { postProcessForFigma, convertImagesToDataUri } from '../packages/figma-export/figma-post-process.js';
+import type { FigmaState } from '../packages/figma-export/figma-post-process.js';
 
 declare global {
   interface Window {
-    __WCF_EXPORT_CARD__: (stateLabel: string) => string;
+    __WCF_EXPORT_CARD__: (stateLabel: FigmaState) => string;
   }
 }
 
-window.__WCF_EXPORT_CARD__ = (stateLabel: string): string => {
+window.__WCF_EXPORT_CARD__ = (stateLabel: FigmaState): string => {
   const target = document.querySelector('#target');
   if (!target) {
     return `<!-- target element not found -->`;

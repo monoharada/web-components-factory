@@ -85,11 +85,26 @@ function copyKeptAttributes(
   dst: Element,
   patterns: string[],
 ): void {
-  for (const attr of src.attributes) {
+  for (let i = 0; i < src.attributes.length; i++) {
+    const attr = src.attributes[i];
     if (attr.name === 'style') continue; // style は別途処理
     if (attr.name === 'class') continue; // class は不要
     if (matchesAttributePattern(attr.name, patterns)) {
       dst.setAttribute(attr.name, attr.value);
+    }
+  }
+}
+
+/**
+ * keepAttributes とは独立に、HTML として機能するために必要な属性をコピー。
+ * keepAttributes のパターンマッチとは別枠で常にコピーする。
+ */
+const ESSENTIAL_HTML_ATTRS = ['type', 'href', 'target', 'rel', 'download', 'id', 'name', 'tabindex', 'disabled'];
+
+function copyEssentialHtmlAttributes(src: Element, dst: Element): void {
+  for (const attrName of ESSENTIAL_HTML_ATTRS) {
+    if (src.hasAttribute(attrName) && !dst.hasAttribute(attrName)) {
+      dst.setAttribute(attrName, src.getAttribute(attrName) ?? '');
     }
   }
 }
@@ -245,7 +260,8 @@ function flattenSVGElement(
   const clone = doc.createElementNS(SVG_NS, tagName) as SVGElement;
 
   // SVG 属性をコピー（class 以外の全属性）
-  for (const attr of el.attributes) {
+  for (let i = 0; i < el.attributes.length; i++) {
+    const attr = el.attributes[i];
     if (attr.name === 'class') continue;
     if (attr.namespaceURI) {
       clone.setAttributeNS(attr.namespaceURI, attr.name, attr.value);
@@ -286,15 +302,9 @@ function flattenHTMLElement(
   const tagName = el.tagName.toLowerCase();
   const clone = doc.createElement(tagName);
 
-  // 保持する属性をコピー
+  // 保持する属性をコピー（keepAttributes パターン + HTML 標準の必須属性）
   copyKeptAttributes(el, clone, opts.keepAttributes);
-
-  // 一部の重要な属性は常にコピー
-  for (const attrName of ['type', 'href', 'target', 'rel', 'download', 'id', 'name', 'tabindex', 'disabled']) {
-    if (el.hasAttribute(attrName)) {
-      clone.setAttribute(attrName, el.getAttribute(attrName) ?? '');
-    }
-  }
+  copyEssentialHtmlAttributes(el, clone);
 
   // computed style をインライン化
   if (opts.inlineAllComputed) {

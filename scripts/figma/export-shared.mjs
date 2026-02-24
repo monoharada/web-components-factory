@@ -108,6 +108,42 @@ export async function launchChromium(executablePath, headless = true) {
 }
 
 /**
+ * 状態別 HTML セクションを 1 つのドキュメントにまとめる。
+ *
+ * @param {{ label: string; html: string }[]} states - キャプチャ済み状態
+ * @param {string} title - ページタイトル
+ * @returns {string} 完成した HTML 文字列
+ */
+export function buildOutputHtml(states, title) {
+  const sections = states
+    .map(
+      ({ label, html }) =>
+        `    <section data-state="${label}">\n      <h2>${label}</h2>\n      ${html}\n    </section>`,
+    )
+    .join('\n\n');
+
+  return `<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>${title} export</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f5f5f5; }
+    h1 { margin-bottom: 1.5rem; }
+    section { margin-bottom: 2rem; padding: 1.5rem; background: #fff; border-radius: 8px; }
+    h2 { margin-top: 0; color: #666; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  </style>
+</head>
+<body>
+  <h1>${title}</h1>
+
+${sections}
+</body>
+</html>
+`;
+}
+
+/**
  * browser / server の終了処理を共通化する。
  */
 export async function closeResources({ browser, server, forceKillDelayMs = 2000 }) {

@@ -12,15 +12,18 @@
  * - outline + box-shadow → 新規 div (background-color) でフォーカスリングを再現
  */
 
+/** Figma Export で扱う状態ラベル */
+export type FigmaState = 'default' | 'hover' | 'focus-visible' | 'active';
+
 /**
  * フラット化済み HTML 要素に Figma 変換向けの後処理を適用する。
  *
  * @param el - flattenElementToLightDom() の出力
- * @param state - 状態ラベル（'default' | 'hover' | 'focus-visible' | 'active'）
+ * @param state - 状態ラベル
  * @returns 後処理済みの HTML 要素（元の要素が変更される場合あり）
  */
-export function postProcessForFigma(el: HTMLElement, state: string): HTMLElement {
-  // height → min-height に変換（テキスト折り返しによるオーバーフロー防止）
+export function postProcessForFigma(el: HTMLElement, state: FigmaState): HTMLElement {
+  // height 関連プロパティを除去（テキスト折り返しによるオーバーフロー防止）
   relaxFixedHeights(el);
 
   // text-decoration: underline → 下線用 div を挿入
