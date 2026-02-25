@@ -144,7 +144,7 @@ export class DadsTab extends TypographyWebComponent {
       childList: true,
       attributes: true,
       attributeFilter: ['data-tab-label', 'data-tab-disabled', 'aria-label', 'aria-labelledby'],
-      subtree: false,
+      subtree: true,
     });
 
     if (typeof ResizeObserver !== 'undefined') {
@@ -192,8 +192,43 @@ export class DadsTab extends TypographyWebComponent {
     this.#syncTabs();
   };
 
-  #handleChildMutation = (): void => {
-    this.#syncTabs();
+  #handleChildMutation = (records: MutationRecord[]): void => {
+    let shouldSyncTabs = false;
+    let shouldSyncAria = false;
+
+    for (const record of records) {
+      if (record.type === 'childList') {
+        if (record.target === this) {
+          shouldSyncTabs = true;
+        }
+        continue;
+      }
+
+      if (record.type !== 'attributes') continue;
+
+      const attrName = record.attributeName ?? '';
+      const target = record.target as HTMLElement;
+
+      if (target === this) {
+        if (attrName === 'aria-label' || attrName === 'aria-labelledby') {
+          shouldSyncAria = true;
+        }
+        continue;
+      }
+
+      if (target.parentElement !== this) continue;
+      if (attrName === 'data-tab-label' || attrName === 'data-tab-disabled') {
+        shouldSyncTabs = true;
+      }
+    }
+
+    if (shouldSyncTabs) {
+      this.#syncTabs();
+      return;
+    }
+    if (shouldSyncAria) {
+      this.#syncAriaOrientation();
+    }
   };
 
   #generateId(prefix: string): string {
@@ -348,7 +383,6 @@ export class DadsTab extends TypographyWebComponent {
 
   #handleKeyDown = (event: KeyboardEvent): void => {
     const currentTab = event.currentTarget as HTMLButtonElement;
-    const isTabKey = event.key === 'Tab';
     if (
       currentTab.getAttribute('aria-disabled') === 'true' &&
       event.key !== Keys.arrowUp &&
@@ -356,8 +390,7 @@ export class DadsTab extends TypographyWebComponent {
       event.key !== Keys.arrowLeft &&
       event.key !== Keys.arrowRight &&
       event.key !== Keys.home &&
-      event.key !== Keys.end &&
-      !isTabKey
+      event.key !== Keys.end
     ) {
       return;
     }
@@ -368,39 +401,8 @@ export class DadsTab extends TypographyWebComponent {
       ? Orientation.horizontal
       : Orientation.vertical;
 
-    if (isTabKey) {
-      const enabledTabs = this.#getEnabledTabs();
-      if (enabledTabs.length <= 1) return;
-      const currentIndex = enabledTabs.indexOf(currentTab);
-      if (currentIndex < 0) return;
-
-      const delta = event.shiftKey ? -1 : 1;
-      const nextIndex = currentIndex + delta;
-      if (nextIndex < 0 || nextIndex >= enabledTabs.length) {
-        // 端ではデフォルトの Tab 移動（タブリスト外）を許可する
-        return;
-      }
-
-      event.preventDefault();
-      enabledTabs[nextIndex].focus();
-      return;
-    }
-
-    // Enter でフォーカス中タブのパネルへ移動
-    if (event.key === Keys.enter) {
-      event.preventDefault();
-      const index = this.#tabs.indexOf(currentTab);
-      if (index < 0 || currentTab.getAttribute('aria-disabled') === 'true') return;
-
-      if (this.getAttribute('selected-index') !== String(index)) {
-        this.#selectTab(index);
-      }
-      this.#panels[index]?.focus();
-      return;
-    }
-
-    // Space は manual モード時のみ選択変更
-    if (mode === 'manual' && event.key === Keys.space) {
+    // APG: manual モードでは Enter/Space で選択確定。フォーカスは tab に留める。
+    if (mode === 'manual' && (event.key === Keys.enter || event.key === Keys.space)) {
       event.preventDefault();
       const index = this.#tabs.indexOf(currentTab);
       if (index >= 0 && currentTab.getAttribute('aria-disabled') !== 'true') {

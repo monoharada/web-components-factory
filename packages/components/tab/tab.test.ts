@@ -305,6 +305,20 @@ describe('DadsTab', () => {
         expect(p.getAttribute('tabindex')).toBe('0');
       }
     });
+
+    it('子パネルの data-tab-label 変更がタブ表示へ即時反映される', async () => {
+      const tab = createBasicTab();
+      await waitForComponent('dads-tab');
+
+      const secondPanel = tab.querySelector<HTMLElement>('div[data-tab-label="タブ2"]');
+      expect(secondPanel).not.toBeNull();
+
+      secondPanel!.setAttribute('data-tab-label', 'お知らせ');
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      const tabs = getTabs(tab);
+      expect(tabs[1].textContent).toBe('お知らせ');
+    });
   });
 
   // ============================================================
@@ -335,28 +349,26 @@ describe('DadsTab', () => {
   });
 
   describe('キーボードナビゲーション (Step 3)', () => {
-    it('Tab で次のタブへフォーカス移動する', async () => {
+    it('Tab はタブ間移動を横取りせず、デフォルト移動を許可する', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
       const tabs = getTabs(tab);
       tabs[0].focus();
-      pressKey(tabs[0], 'Tab');
+      const event = dispatchKey(tabs[0], 'Tab');
 
-      expect(document.activeElement === tabs[1] || tabs[1].matches(':focus')).toBe(true);
-      expect(tab.getAttribute('selected-index')).toBe('0');
+      expect(event.defaultPrevented).toBe(false);
     });
 
-    it('Shift+Tab で前のタブへフォーカス移動する', async () => {
+    it('Shift+Tab はタブ間移動を横取りせず、デフォルト移動を許可する', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
       const tabs = getTabs(tab);
       tabs[1].focus();
-      pressKey(tabs[1], 'Tab', { shiftKey: true });
+      const event = dispatchKey(tabs[1], 'Tab', { shiftKey: true });
 
-      expect(document.activeElement === tabs[0] || tabs[0].matches(':focus')).toBe(true);
-      expect(tab.getAttribute('selected-index')).toBe('0');
+      expect(event.defaultPrevented).toBe(false);
     });
 
     it('最後タブで Tab はリスト外移動を許可する（ループしない）', async () => {
@@ -464,19 +476,19 @@ describe('DadsTab', () => {
   });
 
   describe('auto/manual モード (Step 3, C-04)', () => {
-    it('Enter で選択タブの panel にフォーカス移動する', async () => {
+    it('auto モード: Enter は panel へフォーカス移動しない', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
       const tabs = getTabs(tab);
       const panels = getPanels(tab);
 
-      tabs[2].focus();
-      pressKey(tabs[2], 'Enter');
+      tabs[0].focus();
+      pressKey(tabs[0], 'Enter');
 
-      expect(tab.getAttribute('selected-index')).toBe('2');
-      expect(document.activeElement === panels[2] || panels[2].matches(':focus')).toBe(true);
-      expect(panels[2].hasAttribute('hidden')).toBe(false);
+      expect(tab.getAttribute('selected-index')).toBe('0');
+      expect(document.activeElement === tabs[0] || tabs[0].matches(':focus')).toBe(true);
+      expect(panels[0].hasAttribute('hidden')).toBe(false);
     });
 
     it('auto モード: Arrow でフォーカスと選択が同時に変更される', async () => {
@@ -519,6 +531,7 @@ describe('DadsTab', () => {
       pressKey(tabs[1], 'Enter');
 
       expect(tab.getAttribute('selected-index')).toBe('1');
+      expect(document.activeElement === tabs[1] || tabs[1].matches(':focus')).toBe(true);
     });
 
     it('manual モード: Space で選択変更される', async () => {

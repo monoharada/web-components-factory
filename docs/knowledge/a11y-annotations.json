@@ -3301,9 +3301,9 @@
         "aria-controls と aria-labelledby を使って、タブとパネルを1対1で関連付けます。"
       ],
       "keyboard": [
-        "Tab / Shift+Tab でタブリスト内の有効なタブ間を移動します。リスト端では外部へフォーカスが移ります。これは APG 標準の「Tab で即座にリスト外へ」とは異なる意図的な拡張です。",
+        "Tab / Shift+Tab ではタブリスト外へフォーカスを移し、タブ間移動は Arrow / Home / End を使用します。",
         "Arrow / Home / End でタブ移動できます。orientation=\"left|right\" では ArrowUp / ArrowDown を使用します。",
-        "activation-mode=\"manual\" では Enter / Space で選択を確定し、Enter でパネルへフォーカス移動できます。"
+        "activation-mode=\"manual\" では Enter / Space で選択を確定し、フォーカスはタブに留まります。"
       ],
       "zoom": [
         "orientation=\"top|bottom|left|right\" でレイアウトを切り替えます。",
