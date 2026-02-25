@@ -16,10 +16,30 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Load data the same way the server does
 // ---------------------------------------------------------------------------
 
+const REPO_FILE_MAP = {
+  'custom-elements.json': 'custom-elements.json',
+  'install-registry.json': 'registry/install-registry.json',
+  'pattern-registry.json': 'registry/pattern-registry.json',
+};
+
 async function loadBundledJson(fileName) {
-  const p = path.join(__dirname, 'data', fileName);
-  const text = await fs.readFile(p, 'utf8');
-  return JSON.parse(text);
+  // Try bundled data/ first (npx mode), then fall back to repo root (CI / dev)
+  const bundled = path.join(__dirname, 'data', fileName);
+  const repoRoot = path.resolve(__dirname, '../..');
+  const repo = REPO_FILE_MAP[fileName]
+    ? path.join(repoRoot, REPO_FILE_MAP[fileName])
+    : undefined;
+
+  for (const p of [bundled, repo]) {
+    if (!p) continue;
+    try {
+      const text = await fs.readFile(p, 'utf8');
+      return JSON.parse(text);
+    } catch {
+      // Try next path
+    }
+  }
+  throw new Error(`Data file not found: ${fileName} (tried data/ and repo root)`);
 }
 
 // ---------------------------------------------------------------------------
