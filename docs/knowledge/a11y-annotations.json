@@ -3301,9 +3301,11 @@
         "aria-controls と aria-labelledby を使って、タブとパネルを1対1で関連付けます。"
       ],
       "keyboard": [
-        "Tab / Shift+Tab ではタブリスト外へフォーカスを移し、タブ間移動は Arrow / Home / End を使用します。",
-        "Arrow / Home / End でタブ移動できます。orientation=\"left|right\" では ArrowUp / ArrowDown を使用します。",
-        "activation-mode=\"manual\" では Enter / Space で選択を確定し、フォーカスはタブに留まります。"
+        "Tab / Shift+Tab でタブ（role=\"tab\"）へフォーカス移動できます。",
+        "Arrow / Home / End でタブ間移動できます。data-tab-disabled はスキップします。orientation=\"left|right\" では ArrowUp / ArrowDown を使用します。",
+        "activation-mode=\"auto\" では Arrow によるフォーカス移動と同時に選択が変わります。",
+        "activation-mode=\"manual\" では Space で選択を確定します。",
+        "Enter で選択中タブのパネルへフォーカスを移動します（manual では選択確定後に移動）。"
       ],
       "zoom": [
         "orientation=\"top|bottom|left|right\" でレイアウトを切り替えます。",
@@ -3339,7 +3341,7 @@
         "id": "active-tab",
         "title": "選択中タブ",
         "label": "role=\"tab\"",
-        "description": "現在選択されているタブです。aria-selected=\"true\" と roving tabindex の起点を持ちます。",
+        "description": "現在選択されているタブです。aria-selected=\"true\" を持ち、対応パネルは aria-controls で関連付けられます。",
         "category": "states",
         "placement": "top-right",
         "target": {
@@ -3353,7 +3355,7 @@
         "label": "part=\"indicator\"",
         "description": "選択中タブを示す視覚インジケーターです。",
         "category": "states",
-        "placement": "top-right",
+        "placement": "bottom-left",
         "target": {
           "scope": "shadow",
           "selector": "[part=\"tab\"][aria-selected=\"true\"] [part=\"indicator\"]"
@@ -3377,7 +3379,7 @@
         "label": "role=\"tabpanel\"",
         "description": "選択中タブに対応するパネルコンテンツです。",
         "category": "semantics",
-        "placement": "bottom-left",
+        "placement": "bottom-right",
         "target": {
           "scope": "light",
           "selector": "[role=\"tabpanel\"]:not([hidden])"

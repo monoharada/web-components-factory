@@ -23,6 +23,15 @@ import { tabStyles } from './tab-styles.js';
 type TabOrientation = 'top' | 'bottom' | 'left' | 'right';
 type ActivationMode = 'auto' | 'manual';
 
+const navigationKeys: ReadonlySet<string> = new Set([
+  Keys.arrowUp,
+  Keys.arrowDown,
+  Keys.arrowLeft,
+  Keys.arrowRight,
+  Keys.home,
+  Keys.end,
+]);
+
 function normalizeOrientation(v: string | null): TabOrientation {
   if (v === 'bottom' || v === 'left' || v === 'right') return v;
   return 'top';
@@ -68,6 +77,7 @@ function isHorizontalOrientation(orientation: TabOrientation): boolean {
  * @cssprop --dads-tab-indicator-height - インジケーター高さ
  * @cssprop --dads-tab-focus-outline-color - フォーカスアウトライン色
  * @cssprop --dads-tab-focus-ring-color - フォーカスリング色
+ * @cssprop --dads-tab-focus-border-radius - フォーカスリングの角丸
  *
  * @fires dads-tab-change - タブ選択変更時（detail: { selectedIndex: number, previousIndex: number }）
  *
@@ -246,6 +256,10 @@ export class DadsTab extends TypographyWebComponent {
     return children;
   }
 
+  #getSelectedIndex(): number {
+    return Math.max(0, parseInt(this.getAttribute('selected-index') ?? '0', 10) || 0);
+  }
+
   #syncTabs(): void {
     const tablist = this.#tablist;
     if (!tablist) return;
@@ -277,6 +291,7 @@ export class DadsTab extends TypographyWebComponent {
       tab.setAttribute('role', 'tab');
       tab.setAttribute('id', tabId);
       tab.setAttribute('aria-controls', child.id);
+      tab.setAttribute('tabindex', '0');
       tab.type = 'button';
       tab.addEventListener('click', this.#handleTabClick);
       tab.addEventListener('keydown', this.#handleKeyDown);
@@ -299,7 +314,7 @@ export class DadsTab extends TypographyWebComponent {
       child.setAttribute('role', 'tabpanel');
       child.setAttribute('part', 'tabpanel');
       child.setAttribute('aria-labelledby', tabId);
-      child.setAttribute('tabindex', '0');
+      child.setAttribute('tabindex', '-1');
 
       tablist.appendChild(tab);
       this.#tabs.push(tab);
@@ -343,21 +358,17 @@ export class DadsTab extends TypographyWebComponent {
   }
 
   #syncSelection(): void {
-    const index = Math.max(0, parseInt(this.getAttribute('selected-index') ?? '0', 10) || 0);
-    const clampedIndex = Math.min(index, this.#tabs.length - 1);
+    const clampedIndex = Math.min(this.#getSelectedIndex(), this.#tabs.length - 1);
 
     for (let i = 0; i < this.#tabs.length; i++) {
-      const tab = this.#tabs[i];
-      const panel = this.#panels[i];
       const isSelected = i === clampedIndex;
 
-      tab.setAttribute('aria-selected', String(isSelected));
-      tab.setAttribute('tabindex', isSelected ? '0' : '-1');
+      this.#tabs[i].setAttribute('aria-selected', String(isSelected));
 
       if (isSelected) {
-        panel.removeAttribute('hidden');
+        this.#panels[i].removeAttribute('hidden');
       } else {
-        panel.setAttribute('hidden', '');
+        this.#panels[i].setAttribute('hidden', '');
       }
     }
   }
@@ -383,17 +394,9 @@ export class DadsTab extends TypographyWebComponent {
 
   #handleKeyDown = (event: KeyboardEvent): void => {
     const currentTab = event.currentTarget as HTMLButtonElement;
-    if (
-      currentTab.getAttribute('aria-disabled') === 'true' &&
-      event.key !== Keys.arrowUp &&
-      event.key !== Keys.arrowDown &&
-      event.key !== Keys.arrowLeft &&
-      event.key !== Keys.arrowRight &&
-      event.key !== Keys.home &&
-      event.key !== Keys.end
-    ) {
-      return;
-    }
+    const isDisabled = currentTab.getAttribute('aria-disabled') === 'true';
+
+    if (isDisabled && !navigationKeys.has(event.key)) return;
 
     const mode = normalizeActivationMode(this.getAttribute('activation-mode'));
     const orientation = normalizeOrientation(this.getAttribute('orientation'));
@@ -401,13 +404,20 @@ export class DadsTab extends TypographyWebComponent {
       ? Orientation.horizontal
       : Orientation.vertical;
 
-    // APG: manual モードでは Enter/Space で選択確定。フォーカスは tab に留める。
-    if (mode === 'manual' && (event.key === Keys.enter || event.key === Keys.space)) {
+    // Enter: タブパネルへフォーカスを移す（manual モードでは先に選択確定）
+    if (event.key === Keys.enter) {
       event.preventDefault();
-      const index = this.#tabs.indexOf(currentTab);
-      if (index >= 0 && currentTab.getAttribute('aria-disabled') !== 'true') {
-        this.#selectTab(index);
+      if (mode === 'manual') {
+        this.#activateTab(currentTab);
       }
+      this.#focusActivePanel();
+      return;
+    }
+
+    // Space: manual モードでは選択確定（フォーカスはタブに留まる）
+    if (mode === 'manual' && event.key === Keys.space) {
+      event.preventDefault();
+      this.#activateTab(currentTab);
       return;
     }
 
@@ -420,10 +430,7 @@ export class DadsTab extends TypographyWebComponent {
       (target) => {
         target.focus();
         if (mode === 'auto') {
-          const index = this.#tabs.indexOf(target);
-          if (index >= 0) {
-            this.#selectTab(index);
-          }
+          this.#activateTab(target);
         }
       },
       {
@@ -434,8 +441,23 @@ export class DadsTab extends TypographyWebComponent {
     );
   };
 
+  #focusActivePanel(): void {
+    const clampedIndex = Math.min(this.#getSelectedIndex(), this.#panels.length - 1);
+    if (clampedIndex >= 0 && this.#panels[clampedIndex]) {
+      this.#panels[clampedIndex].focus();
+    }
+  }
+
+  #activateTab(tab: HTMLButtonElement): void {
+    if (tab.getAttribute('aria-disabled') === 'true') return;
+    const index = this.#tabs.indexOf(tab);
+    if (index >= 0) {
+      this.#selectTab(index);
+    }
+  }
+
   #selectTab(index: number): void {
-    const previousIndex = parseInt(this.getAttribute('selected-index') ?? '0', 10) || 0;
+    const previousIndex = this.#getSelectedIndex();
     if (index === previousIndex) return;
 
     this.setAttribute('selected-index', String(index));

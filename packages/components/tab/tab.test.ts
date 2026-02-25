@@ -296,13 +296,13 @@ describe('DadsTab', () => {
       expect(eventDetail!.previousIndex).toBe(0);
     });
 
-    it('tabpanel に tabindex="0" が設定される', async () => {
+    it('tabpanel に tabindex="-1" が設定される（Tab 順序から除外）', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
       const panels = getPanels(tab);
       for (const p of panels) {
-        expect(p.getAttribute('tabindex')).toBe('0');
+        expect(p.getAttribute('tabindex')).toBe('-1');
       }
     });
 
@@ -324,27 +324,27 @@ describe('DadsTab', () => {
   // ============================================================
   // Step 3: キーボードモデルと roving tabindex (P-03) — C-03, C-04, C-06
   // ============================================================
-  describe('Roving tabindex (Step 3, C-03)', () => {
-    it('選択タブのみ tabindex="0"、他は "-1"', async () => {
+  describe('Tab キーモデル (Step 3, C-03)', () => {
+    it('全タブが tabindex="0" で Tab 巡回可能', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
       const tabs = getTabs(tab);
       expect(tabs[0].getAttribute('tabindex')).toBe('0');
-      expect(tabs[1].getAttribute('tabindex')).toBe('-1');
-      expect(tabs[2].getAttribute('tabindex')).toBe('-1');
+      expect(tabs[1].getAttribute('tabindex')).toBe('0');
+      expect(tabs[2].getAttribute('tabindex')).toBe('0');
     });
 
-    it('selected-index 変更後も tabindex が1つだけ "0"', async () => {
+    it('selected-index 変更後も全タブ tabindex="0"', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
       tab.setAttribute('selected-index', '1');
 
       const tabs = getTabs(tab);
-      expect(tabs[0].getAttribute('tabindex')).toBe('-1');
+      expect(tabs[0].getAttribute('tabindex')).toBe('0');
       expect(tabs[1].getAttribute('tabindex')).toBe('0');
-      expect(tabs[2].getAttribute('tabindex')).toBe('-1');
+      expect(tabs[2].getAttribute('tabindex')).toBe('0');
     });
   });
 
@@ -476,7 +476,7 @@ describe('DadsTab', () => {
   });
 
   describe('auto/manual モード (Step 3, C-04)', () => {
-    it('auto モード: Enter は panel へフォーカス移動しない', async () => {
+    it('auto モード: Enter で tabpanel へフォーカス移動する', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
@@ -487,8 +487,8 @@ describe('DadsTab', () => {
       pressKey(tabs[0], 'Enter');
 
       expect(tab.getAttribute('selected-index')).toBe('0');
-      expect(document.activeElement === tabs[0] || tabs[0].matches(':focus')).toBe(true);
       expect(panels[0].hasAttribute('hidden')).toBe(false);
+      expect(document.activeElement === panels[0] || panels[0].matches(':focus')).toBe(true);
     });
 
     it('auto モード: Arrow でフォーカスと選択が同時に変更される', async () => {
@@ -516,7 +516,7 @@ describe('DadsTab', () => {
       expect(tab.getAttribute('selected-index')).toBe('0');
     });
 
-    it('manual モード: Enter で選択変更される', async () => {
+    it('manual モード: Enter で選択変更 + tabpanel へフォーカス移動', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
@@ -530,11 +530,12 @@ describe('DadsTab', () => {
       // tabs[1] で Enter を押す
       pressKey(tabs[1], 'Enter');
 
+      const panels = getPanels(tab);
       expect(tab.getAttribute('selected-index')).toBe('1');
-      expect(document.activeElement === tabs[1] || tabs[1].matches(':focus')).toBe(true);
+      expect(document.activeElement === panels[1] || panels[1].matches(':focus')).toBe(true);
     });
 
-    it('manual モード: Space で選択変更される', async () => {
+    it('manual モード: Space で選択変更（フォーカスはタブに留まる）', async () => {
       const tab = createBasicTab();
       await waitForComponent('dads-tab');
 
@@ -546,6 +547,7 @@ describe('DadsTab', () => {
       pressKey(tabs[1], ' ');
 
       expect(tab.getAttribute('selected-index')).toBe('1');
+      expect(document.activeElement === tabs[1] || tabs[1].matches(':focus')).toBe(true);
     });
   });
 
