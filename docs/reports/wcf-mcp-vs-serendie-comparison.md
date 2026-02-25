@@ -1,9 +1,61 @@
 # wcf-mcp vs Serendie Design System MCP — 9次元比較分析レポート
 
 > **作成日**: 2026-02-25
-> **対象**: `@monoharada/wcf-mcp` v0.1.0 vs Serendie Design System MCP
+> **対象**: `@anthropic/wcf-mcp` v0.1.0 vs Serendie Design System MCP
 > **調査方法**: wcf-mcp ソースコード精読 + Serendie 公開ドキュメント + 業界15事例の横断調査（Deep Research）
 > **補足**: Serendie MCP はリモート Streamable HTTP として公開済み（[serendie.design/get-started/ai-agent/mcp-server](https://serendie.design/get-started/ai-agent/mcp-server)）
+
+---
+
+## 0. レポートの前提
+
+### 目的・読者・スコープ
+
+| 項目 | 内容 |
+|------|------|
+| **目的** | wcf-mcp の具体的改善案を、業界横断データに基づいて導出する |
+| **想定読者** | wcf-mcp のメンテナ、DS-MCP の技術選定を行うエンジニア |
+| **スコープ** | MCP ツール機能の比較（エコシステム全体・組織体制・ブランド力は対象外） |
+| **更新ポリシー** | 業界動向の変化により 3-6ヶ月で陳腐化しうる。次回更新時はスコアを再評価すること |
+
+### 採点ルーブリック（5段階）
+
+| スコア | 定義 | 証拠要件 |
+|:------:|------|----------|
+| **5** | 業界最高水準。当該次元で他の模範となる実装 | ソースコード確認 or 公式ドキュメント |
+| **4** | 業界平均を明確に上回る。実用上の不足が小さい | ソースコード確認 or 公式ドキュメント |
+| **3** | 業界平均的。基本機能はあるが改善余地あり | 公式ドキュメント or 記事ベース |
+| **2** | 業界平均を下回る。主要機能の欠落あり | 機能不在を確認 |
+| **1** | 当該次元の対応なし、または最小限 | 機能不在を確認 |
+
+### 各次元の confidence（根拠の確かさ）
+
+| 次元 | wcf-mcp | Serendie | 注記 |
+|------|:-------:|:--------:|------|
+| Developer Experience | High（ソース精読） | Medium（公式ページ） | |
+| Component Discoverability | High | Medium | |
+| Code Generation | High | Medium | |
+| Token/Style Management | High（不在を確認） | Medium（公式ページ記載） | |
+| Accessibility | High | Low（MCP 経由の検証機能は未確認） | Serendie 側は推測含む |
+| Integration Breadth | High | Medium | |
+| Performance | High | Low（HTTP 実測値なし） | Serendie 側は推測含む |
+| Documentation | High | Medium | |
+| Extensibility | High | Low（ソース非公開部分あり） | |
+
+### Serendie MCP ツール名について
+
+Serendie MCP の正式ツール名は `serendie-web/src/mcp/tools/` ディレクトリのソースコードから確認済み（全8ツール）:
+
+| 正式ツール名 | ソースファイル | 機能説明 |
+|-------------|-------------|---------|
+| `get-serendie-ui-overview` | `serendie-ui-overview.ts` | セットアップ・概要情報の取得 |
+| `get-components` | `components.ts` | コンポーネント一覧 |
+| `get-component-detail` | `components.ts` | コンポーネントのプロパティ詳細 |
+| `get-design-tokens` | `design-tokens.ts` | デザイントークン一覧 |
+| `get-design-token-detail` | `design-tokens.ts` | 個別トークン詳細 |
+| `get-symbols` | `symbols.ts` | Serendie Symbols（アイコン）一覧 |
+| `get-symbol-detail` | `symbols.ts` | 個別シンボル詳細・バリアント |
+| `search-serendie-guideline` | `search-serendie-guideline.ts` | ガイドラインの Cloudflare AI Search |
 
 ---
 
@@ -59,7 +111,7 @@ Deep Research により特定した Design System MCP 実装を、提供機能�
 | # | 名称 | 組織 | Transport | 主要データソース | ツール数 |
 |---|------|------|-----------|----------------|---------|
 | 1 | **wcf-mcp** | monoharada | stdio | CEM + レジストリ | 8 |
-| 2 | **Serendie MCP** | Mitsubishi Electric | HTTP (Streamable) | マニフェスト + AutoRAG | 6+ |
+| 2 | **Serendie MCP** | Mitsubishi Electric | HTTP (Streamable) | マニフェスト + AutoRAG | 8 |
 | 3 | **Figma MCP** | Figma | stdio/remote | Figma API | 11 |
 | 4 | **Storybook MCP** | Storybook | HTTP (addon) | Stories + Docs | 4 |
 | 5 | **Chakra UI MCP** | Chakra | stdio | ドキュメント | 6+ |
@@ -166,8 +218,8 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 | 評価軸 | wcf-mcp (3/5) | Serendie (4/5) |
 |--------|---------------|----------------|
-| **セットアップ** | `npx @monoharada/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
-| **ツール発見性** | 8ツールがフラット。呼び出し順序のガイダンスなし | `get-serendie-ui-overview` を最初に呼ぶよう description で誘導（ガードレールパターン） |
+| **セットアップ** | `npx @anthropic/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
+| **ツール発見性** | 8ツールがフラット。呼び出し順序のガイダンスなし | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
 | **エラーメッセージ** | `isError: true` + テキストメッセージ。行/列情報付き診断（validate_markup） | 構造化エラー + ガイダンスメッセージ |
 | **IDE対応** | Claude Code 向けスキルパック（4段階ワークフロー）あるが MCP 側に未統合 | ChatGPT（OpenAI Apps SDK）対応 |
 
@@ -185,8 +237,8 @@ Figma MCP                  DS MCP                    Storybook MCP
 | 評価軸 | wcf-mcp (4/5) | Serendie (4/5) |
 |--------|---------------|----------------|
 | **カタログ網羅性** | CEM ベースで全コンポーネントを自動列挙 | マニフェストベース（React コンポーネントのみ） |
-| **検索** | tagName/className/componentId の3軸検索 | セマンティック検索（AutoRAG） |
-| **段階的詳細取得** | `list_components` → `get_component_api` の2段階 | `get-serendie-ui-overview` → `get-component-details` → `get-component-code` の3段階 |
+| **取得方式** | tagName/className で個別取得（`pickDecl`）。componentId は install recipe 側で解決 | `get-components` で一覧、`get-component-detail` で個別取得 |
+| **段階的詳細取得** | `list_components` → `get_component_api` の2段階 | `get-serendie-ui-overview` → `get-components` → `get-component-detail` の3段階 |
 | **関連コンポーネント** | パターンレシピで「一緒に使うコンポーネント」を提示（BFS 依存解決） | 明示的な関連コンポーネント情報は限定的 |
 
 **業界比較**:
@@ -220,7 +272,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 | 評価軸 | wcf-mcp (2/5) | Serendie (5/5) |
 |--------|---------------|----------------|
-| **トークンカタログ** | CEM の `cssProperties` のみ。専用ツールなし | `get-design-tokens` 専用ツール |
+| **トークンカタログ** | CEM の `cssProperties` のみ。専用ツールなし | `get-design-tokens` + `get-design-token-detail` の一覧/詳細ペア |
 | **型別フィルタ** | なし | 色/スペーシング/タイポグラフィ等で分類 |
 | **テーマ別フィルタ** | なし | ライト/ダークテーマ切替対応 |
 | **セマンティック区別** | なし | プリミティブ/セマンティックの明確な階層 |
@@ -237,7 +289,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | Figma | `get_variable_defs` | 色/余白/タイポ | Figma Variables |
 | Design Tokens MCP | `list_tokens` / `search_tokens` | CSS Custom Properties解析 | CSSファイル |
 
-**Gap**: **最大の差（-3 点）**。wcf-mcp は `packages/styles/` にトークンファイルを持つが MCP 経由でアクセスする手段がない。PR TIMES の `global.css → CSS変数取得` パターンが wcf-mcp の最小実装として参考になる。
+**Gap**: **最大の差（-3 点）**。wcf-mcp は `packages/styles/design-tokens/index.ts`（DADS 公式トークン: 色・タイポグラフィ・radius・elevation）+ `packages/styles/spacing-tokens.ts`（スペーシング 20段階）にトークンを定義しているが、MCP 経由でアクセスする手段がない。PR TIMES の `global.css → CSS変数取得` パターンが wcf-mcp の最小実装として参考になる。
 
 ---
 
@@ -321,59 +373,26 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ---
 
-## 5. wcf-mcp が勝っている領域
+## 5. 優劣サマリー（各次元の詳細は §4 参照）
 
-### 5.1 HTML バリデーション（業界3/15のみ）
+### wcf-mcp が勝っている領域（3次元）
 
-`validate_markup` は **Design System MCP 市場で希少な機能**。
+| 次元 | 要点 | 業界での希少性 |
+|------|------|--------------|
+| **Code Generation (+1)** | `validate_markup` の行/列番号付き診断。LLM self-correction ループとの親和性が高い | 検証ツール: 3/15 のみ |
+| **Accessibility (+1)** | DADS 準拠の `placeholder` 禁止検出。国内 DS MCP で最も厳格な A11y 基準 | A11y 検証統合: 2/15 |
+| **Performance (+1)** | stdio + Map ベース O(1)。パターンレシピ + BFS 依存解決は**業界唯一** | パターンレシピ: 1/15 |
 
-| 事例 | 検証ツール | 検証対象 |
-|------|----------|---------|
-| **wcf-mcp** | `validate_markup` | 未知要素、未知属性、禁止属性（`placeholder`）、行/列番号付き |
-| Hopper | `validate_hopper_code` | トークン誤用、props 誤用、UNSAFE_ 使用、構造、レイアウト |
-| Panda | `get_usage_report` | 未使用トークン/レシピの利用状況監査 |
+その他の差別化: プレフィックスシステム（マルチテナント）、オフライン完結（Spindle/MFUI と同方式）
 
-wcf-mcp の検証は**生成時即座のフィードバック**に特化しており、LLM の self-correction ループとの親和性が高い。
+### Serendie が勝っている領域（4次元）
 
-### 5.2 UIパターンレシピ + BFS 依存解決（業界唯一）
-
-調査15事例中、**パターンレシピを提供するのは wcf-mcp のみ**。12パターン + BFS 依存解決 + `wcf add` コマンド生成の組み合わせは、他に類例がない。
-
-### 5.3 プレフィックスシステム
-
-動的タグ名変換（`dads-button` → `myprefix-button`）は Web Components ネイティブならではの機能。React ベースの DS MCP にはないマルチテナント対応。
-
-### 5.4 アクセシビリティ（DADS準拠）
-
-`placeholder` 禁止属性検出は、日本の公共サービスに特化した品質基準。DADS ガイドライン準拠の A11y は国内 DS MCP で最も厳格。
-
-### 5.5 オフライン完結 + 低レイテンシ
-
-stdio + npm パッケージによるローカル実行。ネットワーク依存ゼロ。Spindle, MFUI と同方式。
-
----
-
-## 6. Serendie が勝っている領域
-
-### 6.1 デザイントークン専用ツール（最大の差: -3点）
-
-wcf-mcp にはトークンカタログにアクセスする MCP ツールが存在しない。業界 10/15 事例が提供する「準必須」機能。
-
-### 6.2 ガードレールパターン
-
-`get-serendie-ui-overview` の `"MUST be called first"` 記載で LLM の呼び出し順序を制御。Storybook の `get_ui_building_instructions` と同じ設計思想。
-
-### 6.3 セマンティック検索
-
-AutoRAG によるガイドライン文書のベクトル検索。ただし wcf-mcp の規模（30-40 コンポーネント）ではメモリ内検索で十分という判断も妥当。
-
-### 6.4 マルチ AI プラットフォーム対応
-
-HTTP transport + OpenAI Apps SDK で ChatGPT にもリーチ。
-
-### 6.5 Dual Response 形式
-
-MCP 仕様の `structuredContent` + `content` 二重レスポンスで LLM/SDK 両対応。
+| 次元 | 要点 | 業界での普及度 |
+|------|------|--------------|
+| **Token/Style (-3)** | `get-design-tokens` + `get-design-token-detail` の一覧/詳細ペア。**最大のギャップ** | トークンツール: 10/15 |
+| **DX (-1)** | `get-serendie-ui-overview` ガードレール + HTTP transport の低セットアップコスト | ガードレール: 2/15 |
+| **Integration (-1)** | HTTP transport + OpenAI Apps SDK でマルチ AI プラットフォーム対応 | HTTP: 5/15 |
+| **Documentation (-1)** | `search-serendie-guideline` による Cloudflare AI Search。Dual Response 形式 | セマンティック検索: 2/15 |
 
 ---
 
@@ -439,7 +458,7 @@ server.registerTool('get_design_system_overview', {
 |------|------|
 | **影響度** | **High** |
 | **実装難易度** | Medium |
-| **対象ファイル** | `packages/mcp-server/server.mjs`（新規）, `packages/styles/spacing-tokens.ts`, `packages/styles/color-tokens.ts` |
+| **対象ファイル** | `packages/mcp-server/server.mjs`（新規）, `packages/styles/design-tokens/index.ts`（DADS公式トークン）, `packages/styles/spacing-tokens.ts` |
 | **参考実装** | Spindle `get_design_tokens`, PR TIMES `get_design_tokens`, Panda `get_tokens`/`get_semantic_tokens`, Hopper `get_design_tokens` |
 
 **設計方針（PR TIMES パターンを参考に最小実装）**:
@@ -465,7 +484,7 @@ server.registerTool('get_design_tokens', {
 |------|------|
 | **影響度** | **Medium** |
 | **実装難易度** | Medium |
-| **参考実装** | Spindle `get_accessibility_docs`, Carbon `docs_search`, Serendie `search-guidelines` |
+| **参考実装** | Spindle `get_accessibility_docs`, Carbon `docs_search`, Serendie `search-serendie-guideline` |
 
 **設計方針**:
 - `docs/knowledge/` + `docs/css-variable-pattern.md` 等をインデックス化
@@ -477,7 +496,7 @@ server.registerTool('get_design_tokens', {
 |------|------|
 | **影響度** | **Medium** |
 | **実装難易度** | Medium |
-| **参考** | MCP 仕様 2025-06-18, Serendie Dual Response |
+| **参考** | MCP 仕様 2025-11-25（`structuredContent` は 2025-06-18 draft で導入、2025-11-25 で安定化）, Serendie Dual Response |
 
 ### Phase 3: 中期（1-2ヶ月）— Integration +1点
 
@@ -505,7 +524,7 @@ server.registerTool('get_design_tokens', {
 |------|------|
 | **影響度** | **Low** |
 | **実装難易度** | Medium |
-| **参考実装** | Spindle `get_icons`/`get_icon_info`, Hopper `get_icons`, Serendie `search-icons` |
+| **参考実装** | Spindle `get_icons`/`get_icon_info`, Hopper `get_icons`, Serendie `get-symbols`/`get-symbol-detail` |
 
 #### P3-4: Progressive Disclosure 強化
 
@@ -595,13 +614,24 @@ PR TIMES:    3ツール + スラッシュコマンド
 | Ubie Vitals MCP | https://zenn.dev/ubie_dev/articles/f927aaff02d618 | Figma MCP 連携デモ |
 | PR TIMES DS MCP | https://developers.prtimes.jp/2025/11/14/design-system-mcp-figma-development/ | 3ツール, スラッシュコマンド連携 |
 
+### その他の業界事例（§2 の表で参照）
+
+| 事例 | 出典 | 確認レベル |
+|------|------|-----------|
+| Design Tokens MCP | https://lobehub.com/it/mcp/kickstartds-design-token-mcp | LobeHub 掲載（未検証表記あり） |
+| Synergy DS MCP | npm `@synergy-design-system/mcp` | npm パッケージ存在確認 |
+| Tyler Forge MCP | Tyler Technologies 社内事例（公開情報限定） | 記事ベース |
+| Serendie ソースコード | https://github.com/serendie/serendie-web/tree/main/src/mcp | ツール名の正式確認に使用 |
+
 ### ベストプラクティス
 
 | ソース | URL | 参照内容 |
 |--------|-----|----------|
-| MCP 仕様 2025-11-25 | https://modelcontextprotocol.io/specification/2025-11-25 | Resources/Prompts/Tools 定義 |
+| MCP 仕様 2025-11-25 | https://modelcontextprotocol.io/specification/2025-11-25 | Resources/Prompts/Tools 定義（安定版） |
 | MCP Best Practices | https://www.philschmid.de/mcp-best-practices | "Instructions as Context" 原則 |
 | Figma "What is MCP" | https://www.figma.com/resource-library/what-is-mcp/ | MCP の概念説明 |
+
+> **MCP 仕様バージョンについて**: 本レポートは 2025-11-25 版を基準仕様とする。`structuredContent` は 2025-06-18 draft で導入され 2025-11-25 で安定化。
 
 ### wcf-mcp 内部ドキュメント
 
@@ -631,3 +661,28 @@ PR TIMES:    3ツール + スラッシュコマンド
 **Phase 1 完了後**: 32 / 45（+2）— 業界上位層
 **Phase 2 完了後**: 36 / 45（+6）— 業界トップクラス（Hopper と同等）
 **Phase 3 完了後**: 38 / 45（+8）— Serendie を超える
+
+---
+
+## 付録: 運用モデル・リスク・KPI
+
+### 運用モデル比較
+
+| 項目 | wcf-mcp (stdio/ローカル) | Serendie (HTTP/リモート) | 判断基準 |
+|------|--------------------------|------------------------|---------|
+| **配布方式** | npm publish → `npx` で起動 | URL 共有のみ | 社内 DS → ローカル推奨（MFUI/Spindle 事例） |
+| **データ鮮度** | npm publish 時点で固定 | デプロイ時点で更新 | 頻繁な更新 → HTTP、安定版 → stdio |
+| **TCO (維持コスト)** | npm publish + CEM 生成パイプライン | Cloudflare Workers 運用 + AutoRAG 課金 | stdio は運用コスト最小 |
+| **セキュリティ** | ソースは npm パッケージ内に同梱。ローカル IPC で外部通信なし | HTTP 経由でデータ送受信。OAuth/CORS 設定必須 | 機密 DS → ローカル必須 |
+| **監査** | npm audit + ローカル実行ログ | HTTP アクセスログ + Workers Analytics | |
+| **供給網リスク** | npm registry 依存 | Cloudflare 依存 + AutoRAG SLA | |
+
+### 効果測定 KPI（改善後の定量評価用）
+
+| KPI | 測定方法 | ベースライン（改善前） | 目標（Phase 2 完了後） |
+|-----|---------|---------------------|---------------------|
+| **validate_markup 初回通過率** | `diagnostics.length === 0` の割合 | 未計測（導入時に計測開始） | 70% 以上 |
+| **LLM ターン数（UI生成タスク）** | overview → validate 完了までの MCP 呼び出し回数 | 推定 4-6 ターン | 3 ターン以内 |
+| **unknownElement 発生率** | validate_markup の `unknownElement` 診断数 / 総バリデーション回数 | 未計測 | 5% 以下 |
+| **トークン推測発生** | `get_design_tokens` 未呼び出しでハードコード値が使われた回数 | N/A（ツール未実装） | 計測開始 |
+| **パターンレシピ利用率** | `get_pattern_recipe` 呼び出し回数 / UI 生成タスク数 | 未計測 | 30% 以上 |
