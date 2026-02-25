@@ -789,6 +789,7 @@ PR TIMES:    3ツール + スラッシュコマンド
 | structuredContent（主要3ツール） | #174 (CodeGen) | #177 (Docs) | 対象: `get_component_api`, `get_design_tokens`, `search_guidelines` |
 | MCP resources (`wcf://`) | #176 (Integration) | #177 (Docs) | URI 設計は #176 で確定 |
 | Progressive Disclosure / ページネーション | #173 (Discoverability) | #178 (Performance) | `list_components` を #173 で改修、効果を #178 で計測 |
+| マルチIDE設定テンプレート | #172 (DX) | #176 (Integration) | IDE 設定スニペットの実装は #172、Figma 連携等のドキュメント統合は #176 |
 
 ### 10.5 Evidence テンプレート
 
@@ -803,6 +804,7 @@ PR TIMES:    3ツール + スラッシュコマンド
 | テストコマンド | `npm test -- ...` |
 | テスト結果 | N件パス / N件追加 |
 | 該当ファイル | `path/to/file.mjs:L123` |
+| PR / マージ SHA | PR #NNN / `abc1234` |
 | スコア変更 | X → Y |
 | 根拠 | 「...を実装し、業界比較で...を満たす」 |
 ```
