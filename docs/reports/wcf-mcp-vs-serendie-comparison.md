@@ -241,6 +241,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
 | テスト結果 | 18件パス（overview 含む） |
 | 該当ファイル | `packages/mcp-server/core.mjs:280` |
+| PR / マージ SHA | PR #169 / `5bd9469` + PR #180 / （未マージ） |
 | スコア変更 | 3 → 4 |
 | 根拠 | ガードレールパターン + description 強化で Serendie/Storybook と同等。5/5 には #172（マルチIDE + エラーリカバリ）が必要 |
 
@@ -330,6 +331,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
 | テスト結果 | 18件パス（tokens 5件追加） |
 | 該当ファイル | `packages/mcp-server/core.mjs` (get_design_tokens), `scripts/mcp/extract-design-tokens.mjs` |
+| PR / マージ SHA | PR #180 / （未マージ） |
 | スコア変更 | 2 → 4 |
 | 根拠 | 310トークン（color:179, spacing:83, typography:30, radius:9, shadow:9）を type/category/query でフィルタ可能。Spindle/PR TIMES と同等。5/5 には一覧/詳細ペア + テーマ対応が必要 |
 
@@ -385,6 +387,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
 | テスト結果 | 18件パス（HTTP transport 1件追加） |
 | 該当ファイル | `packages/mcp-server/bin.mjs` |
+| PR / マージ SHA | PR #180 / （未マージ） |
 | スコア変更 | 3 → 4 |
 | 根拠 | デュアルトランスポート（stdio + HTTP）で Serendie/Hopper と同等の接続性。5/5 には Figma 連携 + MCP resources が必要 |
 
@@ -438,6 +441,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
 | テスト結果 | 18件パス（guidelines 4件追加） |
 | 該当ファイル | `packages/mcp-server/core.mjs` (search_guidelines), `scripts/mcp/index-guidelines.mjs` |
+| PR / マージ SHA | PR #180 / （未マージ） |
 | スコア変更 | 3 → 4 |
 | 根拠 | 31ドキュメント（css:10, patterns:13, accessibility:1, all:7）をキーワード検索可能。Spindle と同等。5/5 には structuredContent + MCP resources が必要 |
 
