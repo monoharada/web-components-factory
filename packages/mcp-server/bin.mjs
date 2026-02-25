@@ -85,7 +85,7 @@ async function main() {
   }
 
   if (parsed.help) {
-    console.error(USAGE);
+    console.log(USAGE);
     return;
   }
 

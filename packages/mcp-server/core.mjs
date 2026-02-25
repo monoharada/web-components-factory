@@ -869,8 +869,8 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         query: z.string().describe('Search keywords'),
         topic: z.enum(['accessibility', 'css', 'patterns', 'all']).optional()
           .describe('Filter by topic area'),
-        maxResults: z.number().optional()
-          .describe('Maximum results to return (default: 5)'),
+        maxResults: z.number().int().min(1).max(20).optional()
+          .describe('Maximum results to return (1-20, default: 5)'),
       },
     },
     async ({ query, topic, maxResults }) => {

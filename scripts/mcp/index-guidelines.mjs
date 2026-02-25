@@ -50,8 +50,11 @@ const DIRS = [
   'docs/rules',
   'docs/adr',
   'docs',
-  'docs/knowledge',
   '.claude/skills/css-writing-rules/references',
+];
+
+const EXTRA_FILES = [
+  'docs/knowledge/accessibility-guidelines.md',
 ];
 
 async function discoverMarkdownFiles() {
@@ -68,6 +71,18 @@ async function discoverMarkdownFiles() {
       }
     } catch {
       // Directory may not exist
+    }
+  }
+
+  for (const relPath of EXTRA_FILES) {
+    const abs = path.join(ROOT, relPath);
+    try {
+      const stat = await fs.stat(abs);
+      if (stat.isFile() && relPath.endsWith('.md')) {
+        files.add(relPath);
+      }
+    } catch {
+      // File may not exist
     }
   }
 

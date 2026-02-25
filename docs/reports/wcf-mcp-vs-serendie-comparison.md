@@ -440,10 +440,10 @@ Figma MCP                  DS MCP                    Storybook MCP
 | 実装ツール / 機能 | `search_guidelines` — topic/query フィルタ、heading×3/keyword×2/snippet×1 スコアリング |
 | テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
 | テスト結果 | 18件パス（guidelines 4件追加） |
-| 該当ファイル | `packages/mcp-server/core.mjs` (search_guidelines), `scripts/mcp/index-guidelines.mjs` |
+| 該当ファイル | `packages/mcp-server/core.mjs:861` (search_guidelines), `scripts/mcp/index-guidelines.mjs:49` |
 | PR / マージ SHA | PR #180 / （未マージ） |
 | スコア変更 | 3 → 4 |
-| 根拠 | 81ドキュメント（css:10, patterns:13, accessibility:2, all:56）をキーワード検索可能。Spindle と同等。5/5 には structuredContent + MCP resources が必要 |
+| 根拠 | 32ドキュメント（css:10, patterns:13, accessibility:2, all:7）をキーワード検索可能。Spindle と同等。5/5 には structuredContent + MCP resources が必要 |
 
 **5/5 に必要な追加改善** → #177: structuredContent（#174 実装オーナーから波及） + MCP resources（#176 実装オーナーから波及） + LLM 最適化レスポンス
 
@@ -774,7 +774,7 @@ PR TIMES:    3ツール + スラッシュコマンド
 |---|---------|---------|
 | F-01 | 既存ツールの互換破壊 | `npm test -- packages/mcp-server/server.test.js` 既存テスト失敗 |
 | F-02 | `npm run agents:verify` 失敗 | CI パイプライン |
-| F-03 | 単一ツール応答 > 100KB | `npm run mcp:build` 後に代表応答をサイズ計測（CI/レビューで確認） |
+| F-03 | 単一ツール応答 > 100KB | `npm run mcp:check:response-size`（`agents:pre-pr` に組み込み済み） |
 | F-04 | 5/5 の根拠を §4 Evidence に提示できない | PR レビューで確認 |
 | F-05 | MCP SDK 非互換 | `@modelcontextprotocol/sdk` メジャーバージョンアップ時の CI 失敗 |
 
