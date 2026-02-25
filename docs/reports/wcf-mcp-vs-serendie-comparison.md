@@ -1,7 +1,7 @@
 # wcf-mcp vs Serendie Design System MCP — 9次元比較分析レポート
 
 > **作成日**: 2026-02-25
-> **対象**: `@anthropic/wcf-mcp` v0.1.0 vs Serendie Design System MCP
+> **対象**: `@anthropic/wcf-mcp` v0.1.1 vs Serendie Design System MCP
 > **調査方法**: wcf-mcp ソースコード精読 + Serendie 公開ドキュメント + 業界15事例の横断調査（Deep Research）
 > **補足**: Serendie MCP はリモート Streamable HTTP として公開済み（[serendie.design/get-started/ai-agent/mcp-server](https://serendie.design/get-started/ai-agent/mcp-server)）
 
@@ -221,7 +221,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | 評価軸 | wcf-mcp (3/5) | Serendie (4/5) |
 |--------|---------------|----------------|
 | **セットアップ** | `npx @anthropic/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
-| **ツール発見性** | 8ツールがフラット。呼び出し順序のガイダンスなし | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
+| **ツール発見性** | 11ツール。`get_design_system_overview` を先頭にしたガードレール導線あり | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
 | **エラーメッセージ** | `isError: true` + テキストメッセージ。行/列情報付き診断（validate_markup） | 構造化エラー + ガイダンスメッセージ |
 | **IDE対応** | Claude Code 向けスキルパック（4段階ワークフロー）あるが MCP 側に未統合 | ChatGPT（OpenAI Apps SDK）対応 |
 
@@ -230,7 +230,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 - Hopper: リモート URL + resources を `hopper://...` URI で体系化（高 DX）
 - Spindle: ローカルファイル読込で高速（MFUIと同方式）
 
-**Gap**: ガードレールパターンの欠如。Serendie の `get-serendie-ui-overview` と Storybook の `get_ui_building_instructions` は同じ設計思想。
+**Gap**: マルチIDE統合とエラーリカバリ提案が未実装。Serendie の ChatGPT 連携や Storybook の開発規約ガードレールに相当する補強余地がある。
 
 #### Evidence (2026-02-25) — 暫定（main 未マージ）
 
@@ -240,7 +240,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | 実装ツール / 機能 | `get_design_system_overview` ガードレール + 全ツール description に When/Returns/After 構造 |
 | テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
 | テスト結果 | 18件パス（overview 含む） |
-| 該当ファイル | `packages/mcp-server/core.mjs:280` |
+| 該当ファイル | `packages/mcp-server/core.mjs:371` |
 | PR / マージ SHA | PR #169 / `5bd9469` + PR #180 / （未マージ） |
 | スコア変更 | 3 → 4 |
 | 根拠 | ガードレールパターン + description 強化で Serendie/Storybook と同等。5/5 には #172（マルチIDE + エラーリカバリ）が必要 |
@@ -443,7 +443,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | 該当ファイル | `packages/mcp-server/core.mjs` (search_guidelines), `scripts/mcp/index-guidelines.mjs` |
 | PR / マージ SHA | PR #180 / （未マージ） |
 | スコア変更 | 3 → 4 |
-| 根拠 | 31ドキュメント（css:10, patterns:13, accessibility:1, all:7）をキーワード検索可能。Spindle と同等。5/5 には structuredContent + MCP resources が必要 |
+| 根拠 | 81ドキュメント（css:10, patterns:13, accessibility:2, all:56）をキーワード検索可能。Spindle と同等。5/5 には structuredContent + MCP resources が必要 |
 
 **5/5 に必要な追加改善** → #177: structuredContent（#174 実装オーナーから波及） + MCP resources（#176 実装オーナーから波及） + LLM 最適化レスポンス
 
@@ -690,7 +690,7 @@ PR TIMES:    3ツール + スラッシュコマンド
 
 | ソース | URL | 参照内容 |
 |--------|-----|----------|
-| wcf-mcp ソースコード | `packages/mcp-server/server.mjs` | 全8ツールの実装 |
+| wcf-mcp ソースコード | `packages/mcp-server/core.mjs` | 全11ツールの実装 |
 | wcf-mcp バリデータ | `packages/mcp-server/validator.mjs` | HTML バリデーション |
 | パターンレジストリ | `registry/pattern-registry.json` | 12 UI パターン |
 | Serendie MCP | https://serendie.design/get-started/ai-agent/mcp-server | リモート MCP Server 仕様 |
@@ -774,7 +774,7 @@ PR TIMES:    3ツール + スラッシュコマンド
 |---|---------|---------|
 | F-01 | 既存ツールの互換破壊 | `npm test -- packages/mcp-server/server.test.js` 既存テスト失敗 |
 | F-02 | `npm run agents:verify` 失敗 | CI パイプライン |
-| F-03 | 単一ツール応答 > 100KB | テストでレスポンスサイズ計測 |
+| F-03 | 単一ツール応答 > 100KB | `npm run mcp:build` 後に代表応答をサイズ計測（CI/レビューで確認） |
 | F-04 | 5/5 の根拠を §4 Evidence に提示できない | PR レビューで確認 |
 | F-05 | MCP SDK 非互換 | `@modelcontextprotocol/sdk` メジャーバージョンアップ時の CI 失敗 |
 

@@ -11,14 +11,87 @@
 import { createServer } from './server.mjs';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
-const args = process.argv.slice(2);
-const transport = args.find((a) => a.startsWith('--transport='))?.split('=')[1] ?? 'stdio';
-const port = parseInt(args.find((a) => a.startsWith('--port='))?.split('=')[1] ?? '3100', 10);
+const USAGE = [
+  'Usage:',
+  '  wcf-mcp',
+  '  wcf-mcp --transport=stdio',
+  '  wcf-mcp --transport=http [--port=3100]',
+  '  wcf-mcp --help',
+].join('\n');
+
+function parseArgs(argv) {
+  let transport = 'stdio';
+  let port = 3100;
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === '--help' || arg === '-h') {
+      return { help: true, transport, port };
+    }
+
+    if (arg === '--transport') {
+      const value = argv[index + 1];
+      if (!value || value.startsWith('--')) {
+        throw new Error('--transport requires a value (stdio|http)');
+      }
+      transport = value;
+      index += 1;
+      continue;
+    }
+
+    if (arg.startsWith('--transport=')) {
+      transport = arg.slice('--transport='.length);
+      continue;
+    }
+
+    if (arg === '--port') {
+      const value = argv[index + 1];
+      if (!value || value.startsWith('--')) {
+        throw new Error('--port requires a number between 1 and 65535');
+      }
+      port = Number(value);
+      index += 1;
+      continue;
+    }
+
+    if (arg.startsWith('--port=')) {
+      port = Number(arg.slice('--port='.length));
+      continue;
+    }
+
+    throw new Error(`Unknown argument: ${arg}`);
+  }
+
+  if (transport !== 'stdio' && transport !== 'http') {
+    throw new Error(`Invalid transport: ${transport} (expected: stdio or http)`);
+  }
+
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error(`Invalid port: ${String(port)} (expected: integer 1-65535)`);
+  }
+
+  return { help: false, transport, port };
+}
 
 async function main() {
+  let parsed;
+  try {
+    parsed = parseArgs(process.argv.slice(2));
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    console.error('');
+    console.error(USAGE);
+    process.exit(1);
+  }
+
+  if (parsed.help) {
+    console.error(USAGE);
+    return;
+  }
+
   const { server } = await createServer();
 
-  if (transport === 'http') {
+  if (parsed.transport === 'http') {
     const { StreamableHTTPServerTransport } = await import(
       '@modelcontextprotocol/sdk/server/streamableHttp.js'
     );
@@ -26,8 +99,8 @@ async function main() {
     const httpTransport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
     await server.connect(httpTransport);
     const httpServer = createHttpServer((req, res) => httpTransport.handleRequest(req, res));
-    httpServer.listen(port, '127.0.0.1', () => {
-      console.error(`MCP HTTP server listening on http://127.0.0.1:${port}/mcp`);
+    httpServer.listen(parsed.port, '127.0.0.1', () => {
+      console.error(`MCP HTTP server listening on http://127.0.0.1:${parsed.port}/mcp`);
     });
   } else {
     await server.connect(new StdioServerTransport());

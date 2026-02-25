@@ -42,6 +42,7 @@ export const CATEGORY_MAP = {
   'dads-menu-list': 'Navigation',
   'dads-menu-list-item': 'Navigation',
   'dads-menu-list-box': 'Navigation',
+  'dads-tab': 'Navigation',
   'dads-global-menu': 'Navigation',
   'dads-global-menu-item': 'Navigation',
   'dads-language-selector': 'Navigation',
@@ -360,7 +361,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
-    version: '0.1.0',
+    version: '0.1.1',
   });
 
   // -----------------------------------------------------------------------
@@ -387,7 +388,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
 
       const overview = {
         name: 'DADS Web Components (wcf)',
-        version: '0.1.0',
+        version: '0.1.1',
         prefix: CANONICAL_PREFIX,
         totalComponents: indexes.decls.length,
         componentsByCategory: categoryCount,

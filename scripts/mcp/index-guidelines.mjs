@@ -50,6 +50,7 @@ const DIRS = [
   'docs/rules',
   'docs/adr',
   'docs',
+  'docs/knowledge',
   '.claude/skills/css-writing-rules/references',
 ];
 
