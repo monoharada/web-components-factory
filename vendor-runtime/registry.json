@@ -339,7 +339,7 @@
       "tagBase": "tab",
       "elementEntry": "components/tab.js",
       "defineModule": "src/components/tab/index.js",
-      "defineFn": "defineDefaultTab"
+      "defineFn": "defineTab"
     },
     "table": {
       "tagBase": "table",

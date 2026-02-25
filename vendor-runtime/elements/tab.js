@@ -1,2 +1,2 @@
-import { defineDefaultTab } from '../src/components/tab/index.js';
-defineDefaultTab();
+import { defineTab } from '../src/components/tab/index.js';
+defineTab();
