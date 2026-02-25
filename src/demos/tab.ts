@@ -261,7 +261,7 @@ export const demos = {
                         <td>--tab-bg-default</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-background" data-api-css="--dads-tab-background"></dads-input-text>
+                            <dads-input-text label="--dads-tab-background" data-api-css-var="--dads-tab-background"></dads-input-text>
                           </div>
                         </td>
                         <td>タブ背景色</td>
@@ -271,7 +271,7 @@ export const demos = {
                         <td>--tab-bg-hover</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-background-hover" data-api-css="--dads-tab-background-hover"></dads-input-text>
+                            <dads-input-text label="--dads-tab-background-hover" data-api-css-var="--dads-tab-background-hover"></dads-input-text>
                           </div>
                         </td>
                         <td>タブホバー時背景色</td>
@@ -281,7 +281,7 @@ export const demos = {
                         <td>--tab-text-default</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-color" data-api-css="--dads-tab-color"></dads-input-text>
+                            <dads-input-text label="--dads-tab-color" data-api-css-var="--dads-tab-color"></dads-input-text>
                           </div>
                         </td>
                         <td>タブテキスト色</td>
@@ -291,7 +291,7 @@ export const demos = {
                         <td>--tab-text-selected</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-color-selected" data-api-css="--dads-tab-color-selected"></dads-input-text>
+                            <dads-input-text label="--dads-tab-color-selected" data-api-css-var="--dads-tab-color-selected"></dads-input-text>
                           </div>
                         </td>
                         <td>選択タブテキスト色</td>
@@ -301,7 +301,7 @@ export const demos = {
                         <td>--tab-text-disabled</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-color-disabled" data-api-css="--dads-tab-color-disabled"></dads-input-text>
+                            <dads-input-text label="--dads-tab-color-disabled" data-api-css-var="--dads-tab-color-disabled"></dads-input-text>
                           </div>
                         </td>
                         <td>無効タブテキスト色</td>
@@ -311,7 +311,7 @@ export const demos = {
                         <td>--tab-border-default</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-border-color" data-api-css="--dads-tab-border-color"></dads-input-text>
+                            <dads-input-text label="--dads-tab-border-color" data-api-css-var="--dads-tab-border-color"></dads-input-text>
                           </div>
                         </td>
                         <td>ボーダー色</td>
@@ -321,7 +321,7 @@ export const demos = {
                         <td>--tab-border-active</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-indicator-color" data-api-css="--dads-tab-indicator-color"></dads-input-text>
+                            <dads-input-text label="--dads-tab-indicator-color" data-api-css-var="--dads-tab-indicator-color"></dads-input-text>
                           </div>
                         </td>
                         <td>インジケーター色</td>
@@ -331,7 +331,7 @@ export const demos = {
                         <td>6px</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-indicator-height" data-api-css="--dads-tab-indicator-height"></dads-input-text>
+                            <dads-input-text label="--dads-tab-indicator-height" data-api-css-var="--dads-tab-indicator-height"></dads-input-text>
                           </div>
                         </td>
                         <td>インジケーター高さ</td>
@@ -341,7 +341,7 @@ export const demos = {
                         <td>--tab-focus-outline-color</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-focus-outline-color" data-api-css="--dads-tab-focus-outline-color"></dads-input-text>
+                            <dads-input-text label="--dads-tab-focus-outline-color" data-api-css-var="--dads-tab-focus-outline-color"></dads-input-text>
                           </div>
                         </td>
                         <td>フォーカスアウトライン色</td>
@@ -351,7 +351,7 @@ export const demos = {
                         <td>--tab-focus-ring-color</td>
                         <td>
                           <div class="wc-api-control">
-                            <dads-input-text label="--dads-tab-focus-ring-color" data-api-css="--dads-tab-focus-ring-color"></dads-input-text>
+                            <dads-input-text label="--dads-tab-focus-ring-color" data-api-css-var="--dads-tab-focus-ring-color"></dads-input-text>
                           </div>
                         </td>
                         <td>フォーカスリング色</td>
