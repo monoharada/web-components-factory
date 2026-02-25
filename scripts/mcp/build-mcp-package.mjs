@@ -35,6 +35,12 @@ const FILES = [
   },
 ];
 
+// Generated data files — checked for existence only (not copied from elsewhere)
+const GENERATED_FILES = [
+  path.join(MCP_DATA_DIR, 'design-tokens.json'),
+  path.join(MCP_DATA_DIR, 'guidelines-index.json'),
+];
+
 async function readFileSafe(p) {
   try {
     return await fs.readFile(p, 'utf8');
@@ -72,6 +78,18 @@ async function main() {
     await fs.writeFile(dest, srcContent, 'utf8');
     const sizeKb = (Buffer.byteLength(srcContent, 'utf8') / 1024).toFixed(1);
     console.log(`  ${name}: copied (${sizeKb} KB)`);
+  }
+
+  // Check generated data files exist
+  for (const genFile of GENERATED_FILES) {
+    const name = path.basename(genFile);
+    const exists = (await readFileSafe(genFile)) !== null;
+    if (exists) {
+      console.log(`  ${name}: present`);
+    } else {
+      console.error(`  ${name}: MISSING (run \`npm run mcp:extract-tokens\` and \`npm run mcp:index-guidelines\`)`);
+      allUpToDate = false;
+    }
   }
 
   if (CHECK_MODE && !allUpToDate) {
