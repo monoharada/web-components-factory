@@ -25,6 +25,7 @@ const tabSemanticTokensText = `
     /* Focus */
     --tab-focus-outline-color: var(--color-neutral-black, #000000);
     --tab-focus-ring-color: var(--color-primitive-yellow-300, #ffd43d);
+    --tab-focus-border-radius: calc(4 / 16 * 1rem);
 
     /* ========== Layout ========== */
     --tab-indicator-thickness: calc(6 / 16 * 1rem);
@@ -60,6 +61,7 @@ const tabLocalTokensText = `
     --dads-tab-indicator-height: var(--tab-indicator-thickness);
     --dads-tab-focus-outline-color: var(--tab-focus-outline-color);
     --dads-tab-focus-ring-color: var(--tab-focus-ring-color);
+    --dads-tab-focus-border-radius: var(--tab-focus-border-radius);
   }
 `;
 

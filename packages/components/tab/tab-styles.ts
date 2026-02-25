@@ -81,6 +81,7 @@ export const tabStyles = css`
 
   [part~="tab"]:focus-visible {
     z-index: 3;
+    border-radius: var(--dads-tab-focus-border-radius);
   }
 
   /* DADSフォーカスリングは維持しつつ、タブ面は塗りつぶさない */
@@ -149,9 +150,6 @@ export const tabStyles = css`
     [part~="tab"]:not([aria-selected="true"]):not([aria-disabled="true"]):hover {
       --_dads-tab-background: var(--dads-tab-background-hover);
       --_dads-tab-label-decoration: underline;
-    }
-
-    [part~="tab"]:not([aria-selected="true"]):not([aria-disabled="true"]):hover {
       --_dads-tab-indicator-color: var(--dads-tab-border-color);
     }
   }
@@ -169,6 +167,13 @@ export const tabStyles = css`
 
   ::slotted([part~="tabpanel"][hidden]) {
     display: none;
+  }
+
+  ::slotted([part~="tabpanel"]:focus-visible) {
+    outline: var(--dads-focus-outline-width) solid var(--dads-focus-outline-color);
+    outline-offset: var(--dads-focus-outline-offset);
+    box-shadow: 0 0 0 var(--dads-focus-ring-width) var(--dads-focus-ring-color);
+    border-radius: var(--dads-tab-focus-border-radius);
   }
 
   :host([orientation="bottom"]) [part="base"] {
