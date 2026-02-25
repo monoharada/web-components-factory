@@ -163,3 +163,6 @@ export * from './progress-bar/index.js';
 
 // ローディングアイコン
 export * from './loading-icon/index.js';
+
+// タブ
+export * from './tab/index.js';

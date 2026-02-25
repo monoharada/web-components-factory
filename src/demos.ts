@@ -16,6 +16,7 @@ import { demos as hamburgerMenuButton } from './demos/hamburger-menu-button.js';
 import { demos as mobileMenu } from './demos/mobile-menu.js';
 import { demos as layoutShell } from './demos/layout-shell.js';
 import { demos as progressIndicator } from './demos/progress-indicator.js';
+import { demos as tab } from './demos/tab.js';
 
 export const demos = {
   ...showcaseForm,
@@ -31,6 +32,7 @@ export const demos = {
   ...mobileMenu,
   ...layoutShell,
   ...progressIndicator,
+  ...tab,
 } as const;
 
 export type DemoName = keyof typeof demos;

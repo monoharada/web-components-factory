@@ -137,6 +137,19 @@ function serializeApi(decl, modulePath, prefix) {
 }
 
 function generateSnippet(api, prefix) {
+  // Use custom snippet if injected by CEM plugin (e.g. data-* driven components)
+  const customSnippet = api.custom?.usageSnippet;
+  if (typeof customSnippet === 'string' && customSnippet.trim()) {
+    const p = normalizePrefix(prefix);
+    if (p !== CANONICAL_PREFIX) {
+      return customSnippet.replace(
+        new RegExp(`<\\s*(\\/?)\\s*${CANONICAL_PREFIX}-([a-z0-9-]+)(?=[\\s/>])`, 'gi'),
+        (_m, slash, rest) => `<${slash ?? ''}${p}-${String(rest).toLowerCase()}`,
+      );
+    }
+    return customSnippet;
+  }
+
   const tag = api.tagName ?? withPrefix(String(api.className ?? 'dads-component'), prefix);
   const attrs = Array.isArray(api.attributes) ? api.attributes : [];
   const slots = Array.isArray(api.slots) ? api.slots : [];

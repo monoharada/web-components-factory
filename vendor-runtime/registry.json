@@ -335,6 +335,12 @@
       "defineModule": "src/components/switch/index.js",
       "defineFn": "defineSwitch"
     },
+    "tab": {
+      "tagBase": "tab",
+      "elementEntry": "components/tab.js",
+      "defineModule": "src/components/tab/index.js",
+      "defineFn": "defineDefaultTab"
+    },
     "table": {
       "tagBase": "table",
       "elementEntry": "components/table.js",

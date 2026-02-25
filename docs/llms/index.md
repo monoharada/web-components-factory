@@ -52,6 +52,7 @@
 - [dads-page-navigation](./page-navigation.md): Page Navigation コンポーネント
 - [dads-step-navigation](./step-navigation.md): Step Navigation（コンテナ）
 - [dads-step-navigation-item](./step-navigation-item.md): Step Navigation Item（各ステップ）
+- [dads-tab](./tab.md): DadsTab コンポーネント
 - [dads-utility-link](./utility-link.md): Utility Link コンポーネント
 
 ## Form

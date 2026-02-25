@@ -71,6 +71,7 @@ function extractDeclarations(cem) {
           description: e.description ?? '',
         })),
         modulePath: mod.path ?? '',
+        custom: decl.custom ?? undefined,
       });
     }
   }
@@ -114,6 +115,7 @@ const CATEGORY_MAP = {
   'dads-hamburger-menu-button': 'Navigation',
   'dads-utility-link': 'Navigation',
   'dads-mobile-menu': 'Navigation',
+  'dads-tab': 'Navigation',
   'dads-card': 'Content',
   'dads-heading': 'Content',
   'dads-text': 'Content',
@@ -194,6 +196,10 @@ function renderEventsTable(events) {
 }
 
 function generateUsageSnippet(decl) {
+  // Use custom snippet if injected by CEM plugin (e.g. data-* driven components)
+  const customSnippet = decl.custom?.usageSnippet;
+  if (typeof customSnippet === 'string' && customSnippet.trim()) return customSnippet;
+
   const tag = decl.tagName;
   const attrPriority = ['label', 'support-text', 'value', 'name', 'type', 'variant', 'size', 'required', 'disabled'];
   const attrByName = new Map(decl.attributes.map(a => [a.name, a]));

@@ -485,6 +485,32 @@ function sanitizeCustomElementsManifest(customElementsManifest) {
   }
 }
 
+/**
+ * Hardcoded usage snippets for components whose slot API cannot be inferred
+ * from the standard `attrPriority` heuristic (e.g. data-* driven patterns).
+ */
+const USAGE_SNIPPET_MAP = {
+  'dads-tab': `<dads-tab orientation="top">
+  <div data-tab-label="タブ1">タブ1の内容</div>
+  <div data-tab-label="タブ2">タブ2の内容</div>
+  <div data-tab-label="タブ3">タブ3の内容</div>
+</dads-tab>`,
+};
+
+function injectUsageSnippets(customElementsManifest) {
+  const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      if (!isCustomElementDecl(decl)) continue;
+      const tagName = typeof decl.tagName === 'string' ? decl.tagName.trim().toLowerCase() : '';
+      const snippet = USAGE_SNIPPET_MAP[tagName];
+      if (!snippet) continue;
+      decl.custom = { ...(decl.custom ?? {}), usageSnippet: snippet };
+    }
+  }
+}
+
 function injectA11yAnnotations(customElementsManifest) {
   const modules = Array.isArray(customElementsManifest?.modules) ? customElementsManifest.modules : [];
 
@@ -538,6 +564,12 @@ export default {
       },
     }),
     cemInheritancePlugin(),
+    {
+      name: 'wcf-usage-snippets',
+      packageLinkPhase({ customElementsManifest }) {
+        injectUsageSnippets(customElementsManifest);
+      },
+    },
     {
       name: 'wcf-a11y-annotations',
       packageLinkPhase({ customElementsManifest }) {
