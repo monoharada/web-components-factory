@@ -65,6 +65,7 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ta
 | `--dads-tab-indicator-height` | - | インジケーター高さ |
 | `--dads-tab-focus-outline-color` | - | フォーカスアウトライン色 |
 | `--dads-tab-focus-ring-color` | - | フォーカスリング色 |
+| `--dads-tab-focus-border-radius` | - | フォーカスリングの角丸 |
 
 
 ## Events
