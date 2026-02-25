@@ -6,6 +6,78 @@ import { z } from 'zod';
 import { collectCemCustomElements, validateTextAgainstCem } from '../wc/validator-core.mjs';
 
 const CANONICAL_PREFIX = 'dads';
+
+// ---------------------------------------------------------------------------
+// Category map — mirrors scripts/llms/generate-llms-docs.mjs
+// ---------------------------------------------------------------------------
+
+const CATEGORY_MAP = {
+  'dads-input-text': 'Form',
+  'dads-textarea': 'Form',
+  'dads-select': 'Form',
+  'dads-checkbox': 'Form',
+  'dads-radio': 'Form',
+  'dads-switch': 'Form',
+  'dads-combobox': 'Form',
+  'dads-date-picker': 'Form',
+  'dads-file-upload': 'Form',
+  'dads-fieldset': 'Form',
+  'dads-search-box': 'Form',
+  'dads-calendar': 'Form',
+  'dads-button': 'Actions',
+  'dads-dialog': 'Actions',
+  'dads-drawer': 'Actions',
+  'dads-disclosure': 'Actions',
+  'dads-accordion-details': 'Actions',
+  'dads-accordion-item-details': 'Actions',
+  'dads-breadcrumb': 'Navigation',
+  'dads-breadcrumb-item': 'Navigation',
+  'dads-page-navigation': 'Navigation',
+  'dads-step-navigation': 'Navigation',
+  'dads-step-navigation-item': 'Navigation',
+  'dads-menu-list': 'Navigation',
+  'dads-menu-list-item': 'Navigation',
+  'dads-menu-list-box': 'Navigation',
+  'dads-global-menu': 'Navigation',
+  'dads-global-menu-item': 'Navigation',
+  'dads-language-selector': 'Navigation',
+  'dads-hamburger-menu-button': 'Navigation',
+  'dads-utility-link': 'Navigation',
+  'dads-mobile-menu': 'Navigation',
+  'dads-card': 'Content',
+  'dads-heading': 'Content',
+  'dads-text': 'Content',
+  'dads-blockquote': 'Content',
+  'dads-code-block': 'Content',
+  'dads-divider': 'Content',
+  'dads-list': 'Content',
+  'dads-list-item': 'Content',
+  'dads-description-list': 'Content',
+  'dads-resource-list': 'Content',
+  'dads-table': 'Content',
+  'dads-table-control': 'Content',
+  'dads-avatar': 'Display',
+  'dads-icon': 'Display',
+  'dads-chip-label': 'Display',
+  'dads-chip-tag': 'Display',
+  'dads-notification-banner': 'Display',
+  'dads-emergency-banner': 'Display',
+  'dads-carousel': 'Display',
+  'dads-layout-shell': 'Layout',
+  'dads-layout-sidebar': 'Layout',
+  'dads-layout-aside': 'Layout',
+  'dads-header-container': 'Layout',
+  'dads-device-mock': 'Display',
+  'dads-progress-indicator': 'Display',
+  'dads-spinner': 'Display',
+  'dads-progress-bar': 'Display',
+  'dads-loading-icon': 'Display',
+};
+
+function getCategory(tagName) {
+  return CATEGORY_MAP[tagName] ?? 'Other';
+}
+
 const DEFAULT_CEM_PATH = path.resolve(process.cwd(), 'custom-elements.json');
 const DEFAULT_INSTALL_REGISTRY_PATH = path.resolve(process.cwd(), 'registry/install-registry.json');
 const DEFAULT_PATTERN_REGISTRY_PATH = path.resolve(process.cwd(), 'registry/pattern-registry.json');
@@ -282,22 +354,92 @@ async function main() {
     version: '0.1.0',
   });
 
+  // -----------------------------------------------------------------------
+  // Tool: get_design_system_overview
+  // -----------------------------------------------------------------------
+  server.registerTool(
+    'get_design_system_overview',
+    {
+      description:
+        '**MUST be called first before using any other tool.** Returns a high-level overview of the design system: name, version, component count by category, available patterns, and recommended tool workflow. Use this to understand what is available before diving into specifics.',
+      inputSchema: {},
+    },
+    async () => {
+      const categoryCount = {};
+      for (const { tagName } of indexes.decls) {
+        const cat = getCategory(tagName);
+        categoryCount[cat] = (categoryCount[cat] ?? 0) + 1;
+      }
+
+      const patternList = Object.values(patterns).map((p) => ({
+        id: p?.id,
+        title: p?.title,
+      }));
+
+      const overview = {
+        name: 'DADS Web Components (wcf)',
+        version: '0.1.0',
+        prefix: CANONICAL_PREFIX,
+        totalComponents: indexes.decls.length,
+        componentsByCategory: categoryCount,
+        totalPatterns: patternList.length,
+        patterns: patternList,
+        availableTools: [
+          { name: 'get_design_system_overview', purpose: 'This overview (start here)' },
+          { name: 'list_components', purpose: 'Browse components, optionally filter by category' },
+          { name: 'get_component_api', purpose: 'Full API surface for a single component' },
+          { name: 'generate_usage_snippet', purpose: 'Minimal HTML usage example' },
+          { name: 'get_install_recipe', purpose: 'Installation instructions and dependency tree' },
+          { name: 'validate_markup', purpose: 'Validate HTML against CEM schema' },
+          { name: 'list_patterns', purpose: 'Browse page-level UI composition patterns' },
+          { name: 'get_pattern_recipe', purpose: 'Full pattern recipe with dependencies and HTML' },
+          { name: 'generate_pattern_snippet', purpose: 'Pattern HTML snippet only' },
+        ],
+        recommendedWorkflow: [
+          '1. get_design_system_overview → understand available components & patterns',
+          '2. list_components (category filter) → find the right components',
+          '3. get_component_api → check attributes, slots, events, CSS parts',
+          '4. generate_usage_snippet or get_pattern_recipe → get code',
+          '5. validate_markup → verify your HTML is correct',
+          '6. get_install_recipe → get import/install instructions',
+        ],
+      };
+
+      return {
+        content: [{ type: 'text', text: JSON.stringify(overview, null, 2) }],
+      };
+    },
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool: list_components
+  // -----------------------------------------------------------------------
   server.registerTool(
     'list_components',
     {
-      description: 'List custom elements in the design system (from custom-elements.json).',
+      description:
+        'List custom elements in the design system. When: exploring available components or filtering by category. Returns: array of {tagName, className, description, category}. After: use get_component_api for details on a specific component.',
       inputSchema: {
+        category: z
+          .enum(['Form', 'Actions', 'Navigation', 'Content', 'Display', 'Layout', 'Other'])
+          .optional()
+          .describe('Filter by component category'),
         prefix: z.string().optional(),
       },
     },
-    async ({ prefix }) => {
+    async ({ category, prefix }) => {
       const p = normalizePrefix(prefix);
-      const list = indexes.decls.map(({ decl, tagName, modulePath }) => ({
+      let list = indexes.decls.map(({ decl, tagName, modulePath }) => ({
         tagName: withPrefix(tagName, p),
         className: typeof decl?.name === 'string' ? decl.name : undefined,
         description: typeof decl?.description === 'string' ? decl.description : undefined,
+        category: getCategory(tagName),
         modulePath,
       }));
+
+      if (category) {
+        list = list.filter((item) => item.category === category);
+      }
 
       return {
         content: [{ type: 'text', text: JSON.stringify(list, null, 2) }],
@@ -309,7 +451,7 @@ async function main() {
     'get_component_api',
     {
       description:
-        'Get a single component API (attributes/slots/events/cssParts/cssProperties) by tagName or className.',
+        'Get the full API surface of a single component (attributes, slots, events, CSS parts, CSS custom properties). When: you need detailed specs for a component. Returns: complete component specification. After: use generate_usage_snippet for a code example.',
       inputSchema: {
         tagName: z.string().optional(),
         className: z.string().optional(),
@@ -345,7 +487,8 @@ async function main() {
   server.registerTool(
     'generate_usage_snippet',
     {
-      description: 'Generate a minimal usage snippet for a component.',
+      description:
+        'Generate a minimal HTML usage example for a component. When: you need a quick code snippet to start with. Returns: ready-to-use HTML string with key attributes pre-filled.',
       inputSchema: {
         component: z.string(),
         prefix: z.string().optional(),
@@ -378,7 +521,7 @@ async function main() {
     'get_install_recipe',
     {
       description:
-        'Get an install recipe (componentId/deps/define + usage snippet) from CEM custom metadata.',
+        'Get installation instructions and dependency tree for a component. When: setting up a component in a project. Returns: componentId, dependencies, import statements, and CLI command (wcf add).',
       inputSchema: {
         component: z.string(),
         prefix: z.string().optional(),
@@ -467,7 +610,7 @@ async function main() {
     'validate_markup',
     {
       description:
-        'Validate an HTML snippet against CEM (unknownElement=error, unknownAttribute=warning).',
+        'Validate HTML against the design system Custom Elements Manifest. When: checking generated or written HTML for correctness. Returns: diagnostics array with errors (unknown elements) and warnings (unknown attributes). Use after generating HTML to catch mistakes.',
       inputSchema: {
         html: z.string(),
         prefix: z.string().optional(),
@@ -514,7 +657,8 @@ async function main() {
   server.registerTool(
     'list_patterns',
     {
-      description: 'List UI patterns (recipes) from registry/pattern-registry.json.',
+      description:
+        'List available UI composition patterns (page recipes). When: looking for pre-built page layouts or UI compositions. Returns: array of {id, title, description, requires}. After: use get_pattern_recipe for full details including dependency resolution.',
       inputSchema: {
         // reserved for future filtering
       },
@@ -537,7 +681,7 @@ async function main() {
     'get_pattern_recipe',
     {
       description:
-        'Get a pattern recipe (required componentIds + resolved HTML snippet). Use this to drive wcf installs + UI composition.',
+        'Get a complete pattern recipe with component dependencies and HTML. When: building a page layout from a pattern. Returns: dependency tree, install commands, and resolved HTML. After: use validate_markup to verify the generated HTML.',
       inputSchema: {
         patternId: z.string(),
         prefix: z.string().optional(),
@@ -605,7 +749,8 @@ async function main() {
   server.registerTool(
     'generate_pattern_snippet',
     {
-      description: 'Generate a pattern HTML snippet. (Same as get_pattern_recipe().html)',
+      description:
+        'Generate just the HTML snippet for a pattern without dependency info. When: you only need the markup. Returns: HTML string with prefix applied. For full dependency resolution, use get_pattern_recipe instead.',
       inputSchema: {
         patternId: z.string(),
         prefix: z.string().optional(),
