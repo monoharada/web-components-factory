@@ -94,7 +94,7 @@ function getDesignTokensPayload(designTokens) {
 }
 
 function pickLargestGuidelineResponse(guidelinesIndex) {
-  const queries = ['a', 'e', 'accessibility', 'design', 'component', 'token', 'ui', 'ガイド'];
+  const queries = ['', 'a', 'e', 'accessibility', 'design', 'component', 'token', 'ui', 'ガイド'];
   const topics = [undefined, 'all', 'css', 'patterns', 'accessibility'];
 
   let largest = { label: 'search_guidelines', bytes: 0 };
