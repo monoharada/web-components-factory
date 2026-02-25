@@ -210,6 +210,8 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 **業界中央値との比較**: wcf-mcp は **+5**、Serendie は **+8**。両者とも業界平均を大きく上回るが、wcf-mcp は Token/Style Management が業界中央値を下回る唯一の次元。
 
+> **注記 (2026-02-25)**: `worktree-feat-mcp-server-upgrade` ブランチ (#165/#166/#167) が main にマージされると、DX 3→4、Token 2→4、Integration 3→4、Docs 3→4 で **≈35/45** に改善される見込み。45/45 達成ロードマップは §10 を参照。
+
 ---
 
 ## 4. 各次元の詳細分析
@@ -230,6 +232,20 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 **Gap**: ガードレールパターンの欠如。Serendie の `get-serendie-ui-overview` と Storybook の `get_ui_building_instructions` は同じ設計思想。
 
+#### Evidence (2026-02-25) — 暫定（main 未マージ）
+
+| 項目 | 内容 |
+|------|------|
+| Issue | #169 (get_design_system_overview), #165/#166/#167 (description 強化) |
+| 実装ツール / 機能 | `get_design_system_overview` ガードレール + 全ツール description に When/Returns/After 構造 |
+| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
+| テスト結果 | 18件パス（overview 含む） |
+| 該当ファイル | `packages/mcp-server/core.mjs:280` |
+| スコア変更 | 3 → 4 |
+| 根拠 | ガードレールパターン + description 強化で Serendie/Storybook と同等。5/5 には #172（マルチIDE + エラーリカバリ）が必要 |
+
+**5/5 に必要な追加改善** → #172: マルチIDE設定テンプレート、validate_markup エラーリカバリ提案
+
 ---
 
 ### 4.2 Component Discoverability（コンポーネント発見性）
@@ -248,6 +264,13 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 **Gap**: `list_components` のフィルタリング欠如。Figma の Progressive Disclosure パターンが参考になる。
 
+#### Evidence
+
+| 項目 | 内容 |
+|------|------|
+| スコア | 4（変更なし） |
+| 5/5 に必要 | #173: Progressive Disclosure + `search_icons` + カテゴリ/クエリフィルタ |
+
 ---
 
 ### 4.3 Code Generation（コード生成）
@@ -265,6 +288,13 @@ Figma MCP                  DS MCP                    Storybook MCP
 - **PR TIMES**: `search_components` + `get_component_usage` + スラッシュコマンドで「推測トークン禁止」を規約として固定
 
 **wcf-mcp の独自優位**: `validate_markup` の行/列番号付き診断は、LLM の self-correction ループで極めて有効。Hopper 以外にこの粒度の検証を提供する事例はない。
+
+#### Evidence
+
+| 項目 | 内容 |
+|------|------|
+| スコア | 4（変更なし） |
+| 5/5 に必要 | #174: トークン誤用検出（ハードコード値→トークン提案） + structuredContent（実装オーナー: 主要3ツール） |
 
 ---
 
@@ -291,6 +321,20 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 **Gap**: **最大の差（-3 点）**。wcf-mcp は `packages/styles/design-tokens/index.ts`（DADS 公式トークン: 色・タイポグラフィ・radius・elevation）+ `packages/styles/spacing-tokens.ts`（スペーシング 20段階）にトークンを定義しているが、MCP 経由でアクセスする手段がない。PR TIMES の `global.css → CSS変数取得` パターンが wcf-mcp の最小実装として参考になる。
 
+#### Evidence (2026-02-25) — 暫定（main 未マージ）
+
+| 項目 | 内容 |
+|------|------|
+| Issue | #165 |
+| 実装ツール / 機能 | `get_design_tokens` — type/category/query フィルタ対応 |
+| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
+| テスト結果 | 18件パス（tokens 5件追加） |
+| 該当ファイル | `packages/mcp-server/core.mjs` (get_design_tokens), `scripts/mcp/extract-design-tokens.mjs` |
+| スコア変更 | 2 → 4 |
+| 根拠 | 310トークン（color:179, spacing:83, typography:30, radius:9, shadow:9）を type/category/query でフィルタ可能。Spindle/PR TIMES と同等。5/5 には一覧/詳細ペア + テーマ対応が必要 |
+
+**5/5 に必要な追加改善** → #170: `get_design_token_detail` + テーマ対応（API先行: `light` のみ、NG-06）+ トークン関係性マップ
+
 ---
 
 ### 4.5 Accessibility（アクセシビリティ）
@@ -309,6 +353,13 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 **wcf-mcp の独自優位**: `placeholder` 禁止属性検出は、日本の公共サービス（DADS）に特化した A11y ベストプラクティス。Spindle の `get_accessibility_docs` パターンを追加することで +1 点の改善余地がある。
 
+#### Evidence
+
+| 項目 | 内容 |
+|------|------|
+| スコア | 4（変更なし） |
+| 5/5 に必要 | #175: `get_accessibility_docs` 専用ツール + コンポーネント別 A11y チェックリスト + WCAG レベルフィルタ |
+
 ---
 
 ### 4.6 Integration Breadth（統合の広さ）
@@ -324,6 +375,20 @@ Figma MCP                  DS MCP                    Storybook MCP
 - **Figma + DS MCP 連携**は PR TIMES / Ubie / MFUI / Hopper の4事例で報告。Hopper は `generate_code_from_figma_design` prompt で Figma MCP との連携を明示的に定義
 - Serendie も「Figma MCP Server でレイヤー情報を読み取り、Serendie MCP Server で知識を引き出す」併用フローを公式ドキュメントで説明
 - **wcf-mcp は Figma MCP との併用ガイドが未整備**。prompt テンプレートの追加が低コストで効果的
+
+#### Evidence (2026-02-25) — 暫定（main 未マージ）
+
+| 項目 | 内容 |
+|------|------|
+| Issue | #167 |
+| 実装ツール / 機能 | HTTP transport（`--transport=http --port=3100`、127.0.0.1 バインド） |
+| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
+| テスト結果 | 18件パス（HTTP transport 1件追加） |
+| 該当ファイル | `packages/mcp-server/bin.mjs` |
+| スコア変更 | 3 → 4 |
+| 根拠 | デュアルトランスポート（stdio + HTTP）で Serendie/Hopper と同等の接続性。5/5 には Figma 連携 + MCP resources が必要 |
+
+**5/5 に必要な追加改善** → #176: Figma MCP prompt テンプレート + MCP resources (`wcf://`) + マルチIDE設定
 
 ---
 
@@ -342,6 +407,13 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 **「全部返す」ではなく「探索→絞り込み→詳細取得」の段階設計が業界のベストプラクティス**。wcf-mcp の `list_components` が全件返却する点は改善余地あり。
 
+#### Evidence
+
+| 項目 | 内容 |
+|------|------|
+| スコア | 4（変更なし） |
+| 5/5 に必要 | #178: Progressive Disclosure（#173 主導）+ レスポンスサイズ最適化 + ストリーミング |
+
 ---
 
 ### 4.8 Documentation（ドキュメント）
@@ -357,6 +429,20 @@ Figma MCP                  DS MCP                    Storybook MCP
 - Carbon: `docs_search` で React/Web Components 両方のドキュメントを横断検索
 - Storybook: `get_ui_building_instructions` で CSF3 等の開発規約を標準化して返却
 
+#### Evidence (2026-02-25) — 暫定（main 未マージ）
+
+| 項目 | 内容 |
+|------|------|
+| Issue | #166 (search_guidelines), #165/#167 (description 強化) |
+| 実装ツール / 機能 | `search_guidelines` — topic/query フィルタ、heading×3/keyword×2/snippet×1 スコアリング |
+| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
+| テスト結果 | 18件パス（guidelines 4件追加） |
+| 該当ファイル | `packages/mcp-server/core.mjs` (search_guidelines), `scripts/mcp/index-guidelines.mjs` |
+| スコア変更 | 3 → 4 |
+| 根拠 | 31ドキュメント（css:10, patterns:13, accessibility:1, all:7）をキーワード検索可能。Spindle と同等。5/5 には structuredContent + MCP resources が必要 |
+
+**5/5 に必要な追加改善** → #177: structuredContent（#174 実装オーナーから波及） + MCP resources（#176 実装オーナーから波及） + LLM 最適化レスポンス
+
 ---
 
 ### 4.9 Extensibility（拡張性）
@@ -370,6 +456,13 @@ Figma MCP                  DS MCP                    Storybook MCP
 **業界比較**:
 - Panda CSS: プロジェクト設定から動的にトークン/レシピ/パターンを読み取る点が柔軟
 - wcf-mcp の外部レジストリ拡張機構（`feat(extension)` PR）は業界でも珍しい先進的アプローチ
+
+#### Evidence
+
+| 項目 | 内容 |
+|------|------|
+| スコア | 3（変更なし。最大ギャップ: +2 必要） |
+| 5/5 に必要 | #171: プラグインインターフェース（`@experimental`、NG-07） + マルチソース設定 + カスタムツール登録 |
 
 ---
 
@@ -641,6 +734,92 @@ PR TIMES:    3ツール + スラッシュコマンド
 | `docs/knowledge/ai-docs-guide.md` | カテゴリ分類マップ |
 | `docs/knowledge/accessibility-guidelines.md` | DADS A11y ガイドライン |
 | `.claude/skills/` | wcf-skills-pack（4段階ワークフロー） |
+
+---
+
+## 10. 45/45 Contract — 採点運用・制約・失敗条件
+
+> **目的**: 9次元すべてを 5/5 にするロードマップ (#170〜#178) の判定基準・制約・失敗条件を1箇所に固定し、Issue 間のドリフトを防ぐ。
+
+### 10.1 採点運用
+
+| 項目 | 定義 |
+|------|------|
+| **採点 SOT (Single Source of Truth)** | 本文書 §4 の各次元 Evidence 欄 |
+| **ベースライン (main)** | 30/45（2026-02-25 時点、§3 のスコア） |
+| **暫定スコア (branch)** | `worktree-feat-mcp-server-upgrade`（#165/#166/#167 実装済み・main 未マージ）≈ 35/45 |
+| **再採点トリガー** | 対象 Issue の PR が **main にマージ**された時点で §4 Evidence を更新し再採点 |
+| **再採点者** | PR マージ実施者が Evidence を記入 → レビュアーがスコア妥当性を確認 |
+| **5/5 判定条件** | §4 の該当次元で「業界最高水準」（ルーブリック §0）の根拠を Evidence に提示できること |
+
+### 10.2 Non-goals / Constraints
+
+| # | 制約 | 理由 |
+|---|------|------|
+| NG-01 | AutoRAG / ベクトル検索は導入しない | 30-40コンポーネント規模では過剰（§7「採用しないもの」） |
+| NG-02 | OpenAI Apps SDK 対応は行わない | MCP 標準プロトコルに注力 |
+| NG-03 | 移行支援ツールは作らない | 旧バージョンが存在しない |
+| NG-04 | 既存ツールの後方互換を壊さない | `createMcpServer()` の DI インターフェースを維持 |
+| NG-05 | 1ツール応答 ≤ 100KB | MFUI の「ソース丸ごと返却」問題を回避 |
+| NG-06 | テーマ対応は API 先行（`light` のみ返却） | 実ダークテーマトークンは未導入。データ追加のみで将来対応可能な設計とする |
+| NG-07 | #171 プラグイン機構は `@experimental` | 外部公開 API 固定は現ユーザー規模に対して過剰 |
+
+### 10.3 Failure Definition
+
+| # | 失敗条件 | 検出方法 |
+|---|---------|---------|
+| F-01 | 既存ツールの互換破壊 | `npm test -- packages/mcp-server/server.test.js` 既存テスト失敗 |
+| F-02 | `npm run agents:verify` 失敗 | CI パイプライン |
+| F-03 | 単一ツール応答 > 100KB | テストでレスポンスサイズ計測 |
+| F-04 | 5/5 の根拠を §4 Evidence に提示できない | PR レビューで確認 |
+| F-05 | MCP SDK 非互換 | `@modelcontextprotocol/sdk` メジャーバージョンアップ時の CI 失敗 |
+
+### 10.4 グループ分割 (G1 / G2 / G3)
+
+| Group | テーマ | Issues | 期待獲得 |
+|-------|-------|--------|---------|
+| **G1: Protocol Compliance** | MCP 仕様準拠 + レスポンス品質 | #174, #177 | +2 |
+| **G2: Tool Completeness** | ツール追加 + データ拡充 | #170, #173, #175 | +3 |
+| **G3: Platform & Architecture** | 基盤強化 | #171, #172, #176, #178 | +5 |
+
+#### Cross-cutting オーナーシップ
+
+| 横断要素 | 実装オーナー | 記述/検証オーナー | 備考 |
+|---------|------------|----------------|------|
+| structuredContent（主要3ツール） | #174 (CodeGen) | #177 (Docs) | 対象: `get_component_api`, `get_design_tokens`, `search_guidelines` |
+| MCP resources (`wcf://`) | #176 (Integration) | #177 (Docs) | URI 設計は #176 で確定 |
+| Progressive Disclosure / ページネーション | #173 (Discoverability) | #178 (Performance) | `list_components` を #173 で改修、効果を #178 で計測 |
+
+### 10.5 Evidence テンプレート
+
+§4 の各次元に以下の形式で Evidence を追記する:
+
+```
+#### Evidence (YYYY-MM-DD)
+| 項目 | 内容 |
+|------|------|
+| Issue | #NNN |
+| 実装ツール / 機能 | `tool_name` or 機能説明 |
+| テストコマンド | `npm test -- ...` |
+| テスト結果 | N件パス / N件追加 |
+| 該当ファイル | `path/to/file.mjs:L123` |
+| スコア変更 | X → Y |
+| 根拠 | 「...を実装し、業界比較で...を満たす」 |
+```
+
+### 10.6 前提 (Dependencies)
+
+| Issue | 前提条件 |
+|-------|---------|
+| #170 | #165 (get_design_tokens) が main マージ済み |
+| #173 | なし（独立） |
+| #174 | MCP SDK が structuredContent をサポート（`@modelcontextprotocol/sdk` ≥ 1.26） |
+| #175 | なし（独立） |
+| #171 | #167 (core.mjs DI パターン) が main マージ済み |
+| #172 | #169 (get_design_system_overview) が main マージ済み |
+| #176 | #167 (HTTP transport) が main マージ済み |
+| #177 | #174 (structuredContent), #176 (MCP resources) が実装済み |
+| #178 | #173 (Progressive Disclosure) が実装済み |
 
 ---
 
