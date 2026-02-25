@@ -614,6 +614,18 @@
         "componentDir": "packages/components/switch"
       }
     },
+    "tab": {
+      "id": "tab",
+      "tags": [
+        "dads-tab"
+      ],
+      "define": "defineTab",
+      "call": "prefix-registry",
+      "deps": [],
+      "source": {
+        "componentDir": "packages/components/tab"
+      }
+    },
     "table": {
       "id": "table",
       "tags": [
@@ -736,6 +748,7 @@
     "dads-step-navigation": "step-navigation",
     "dads-step-navigation-item": "step-navigation",
     "dads-switch": "switch",
+    "dads-tab": "tab",
     "dads-table": "table",
     "dads-table-control": "table-control",
     "dads-text": "typography",

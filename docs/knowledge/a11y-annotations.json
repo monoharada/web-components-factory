@@ -3292,6 +3292,99 @@
       }
     ]
   },
+  "dads-tab": {
+    "version": 1,
+    "summary": "タブコンポーネント仕様（アクセシビリティ注釈）",
+    "categories": {
+      "semantics": [
+        "タブ見出しは role=\"tablist\" / role=\"tab\" で提供し、各パネルは role=\"tabpanel\" で関連付けます。",
+        "aria-controls と aria-labelledby を使って、タブとパネルを1対1で関連付けます。"
+      ],
+      "keyboard": [
+        "Tab / Shift+Tab ではタブリスト外へフォーカスを移し、タブ間移動は Arrow / Home / End を使用します。",
+        "Arrow / Home / End でタブ移動できます。orientation=\"left|right\" では ArrowUp / ArrowDown を使用します。",
+        "activation-mode=\"manual\" では Enter / Space で選択を確定し、フォーカスはタブに留まります。"
+      ],
+      "zoom": [
+        "orientation=\"top|bottom|left|right\" でレイアウトを切り替えます。",
+        "パネル最小高さはタブリスト高さに同期し、拡大時も内容の可読性を維持します。"
+      ],
+      "states": [
+        "selected-index で選択タブを制御し、aria-selected=\"true\" は常に1つだけになります。",
+        "data-tab-disabled を指定したタブは aria-disabled=\"true\" になり、選択や矢印移動の対象から除外されます。",
+        "選択中タブはインジケーターで視覚的に強調されます。"
+      ],
+      "labels": [
+        "各タブの表示ラベルは、対応するパネルの data-tab-label から生成されます。",
+        "tablist のアクセシブル名は aria-label または aria-labelledby で指定できます。"
+      ],
+      "motion": [
+        "アニメーションは使用しません。"
+      ]
+    },
+    "callouts": [
+      {
+        "id": "tablist",
+        "title": "タブリスト",
+        "label": "role=\"tablist\"",
+        "description": "タブ操作の起点となる領域です。orientation に応じて aria-orientation が切り替わります。",
+        "category": "semantics",
+        "placement": "top-left",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"tablist\"]"
+        }
+      },
+      {
+        "id": "active-tab",
+        "title": "選択中タブ",
+        "label": "role=\"tab\"",
+        "description": "現在選択されているタブです。aria-selected=\"true\" と roving tabindex の起点を持ちます。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"tab\"][aria-selected=\"true\"]"
+        }
+      },
+      {
+        "id": "tab-indicator",
+        "title": "選択インジケーター",
+        "label": "part=\"indicator\"",
+        "description": "選択中タブを示す視覚インジケーターです。",
+        "category": "states",
+        "placement": "top-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"tab\"][aria-selected=\"true\"] [part=\"indicator\"]"
+        }
+      },
+      {
+        "id": "tab-label",
+        "title": "タブラベル",
+        "label": "part=\"label\"",
+        "description": "data-tab-label 由来のラベルテキストが表示される領域です。",
+        "category": "labels",
+        "placement": "bottom-right",
+        "target": {
+          "scope": "shadow",
+          "selector": "[part=\"tab\"][aria-selected=\"true\"] [part=\"label\"]"
+        }
+      },
+      {
+        "id": "tabpanel",
+        "title": "タブパネル",
+        "label": "role=\"tabpanel\"",
+        "description": "選択中タブに対応するパネルコンテンツです。",
+        "category": "semantics",
+        "placement": "bottom-left",
+        "target": {
+          "scope": "light",
+          "selector": "[role=\"tabpanel\"]:not([hidden])"
+        }
+      }
+    ]
+  },
   "dads-table": {
     "version": 1,
     "summary": "テーブル／データテーブル（アクセシビリティ注釈）",

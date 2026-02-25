@@ -23,7 +23,7 @@ describe('vendor-runtime registry coverage', () => {
     const registrySuffixes = sortStrings(Object.keys(registry.components ?? {}));
 
     expect(registrySuffixes).toEqual(autoloadSuffixes);
-    expect(registrySuffixes.length).toBe(60);
+    expect(registrySuffixes.length).toBe(61);
   });
 
   it('generates one element entrypoint per runtime component', async () => {
@@ -38,6 +38,6 @@ describe('vendor-runtime registry coverage', () => {
     const elementFiles = entries.filter((entry) => entry.isFile() && entry.name.endsWith('.js'));
 
     expect(elementFiles.length).toBe(expectedCount);
-    expect(elementFiles.length).toBe(60);
+    expect(elementFiles.length).toBe(61);
   });
 });

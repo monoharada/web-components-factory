@@ -167,6 +167,74 @@ describe('bindApiControls() usage (HTML) formatting', () => {
 
 	    expect(codeBlock.textContent).toBe('<dads-button variant="solid" aria-label="ラベル">ボタン</dads-button>');
 	  });
+
+  it('sanitizes dads-tab runtime DOM attributes in fallback usage snippets', () => {
+    const root = createRoot(`
+      <div class="wc-api-panel">
+        <div class="wc-api-panel__body">
+          <dads-tab
+            data-api-target
+            orientation="top"
+            activation-mode="auto"
+            selected-index="0"
+            class="fonts-loaded"
+            style="--_dads-tab-tablist-block-size: 59px;"
+          >
+            <div
+              data-tab-label="タブ1"
+              id="dads-tab-panel-1"
+              role="tabpanel"
+              part="tabpanel"
+              aria-labelledby="dads-tab-tab-7"
+              tabindex="0"
+            >
+              タブ1のコンテンツです。
+            </div>
+            <div
+              data-tab-label="タブ2"
+              id="dads-tab-panel-3"
+              role="tabpanel"
+              part="tabpanel"
+              aria-labelledby="dads-tab-tab-8"
+              tabindex="0"
+              hidden
+            >
+              タブ2のコンテンツです。
+            </div>
+            <div
+              data-tab-label="タブ3"
+              id="dads-tab-panel-5"
+              role="tabpanel"
+              part="tabpanel"
+              aria-labelledby="dads-tab-tab-9"
+              tabindex="0"
+              hidden
+            >
+              タブ3のコンテンツです。
+            </div>
+          </dads-tab>
+
+          <dads-code-block data-api-code></dads-code-block>
+        </div>
+      </div>
+    `);
+    const codeBlock = setupCodeBlock(root);
+
+    bindApiControls(root);
+
+    const expected = [
+      '<dads-tab orientation="top" activation-mode="auto" selected-index="0">',
+      '  <div data-tab-label="タブ1">タブ1のコンテンツです。</div>',
+      '  <div data-tab-label="タブ2">タブ2のコンテンツです。</div>',
+      '  <div data-tab-label="タブ3">タブ3のコンテンツです。</div>',
+      '</dads-tab>',
+    ].join('\n');
+
+    expect(codeBlock.textContent).toBe(expected);
+    expect(codeBlock.textContent).not.toContain('role="tabpanel"');
+    expect(codeBlock.textContent).not.toContain('fonts-loaded');
+    expect(codeBlock.textContent).not.toContain('--_dads-tab-tablist-block-size');
+  });
 });
 
 describe('bindApiControls() per-control target override', () => {
@@ -195,6 +263,38 @@ describe('bindApiControls() per-control target override', () => {
     ctrl.dispatchEvent(new CustomEvent('dads-input', { detail: { value: 'new' } }));
     expect(secondary.textContent).toBe('new');
     expect(target.textContent).not.toBe('new');
+  });
+
+  it('updates nested attr target (dads-tab panel label) via data-api-target-selector', () => {
+    const root = createRoot(`
+      <div class="wc-api-panel">
+        <div class="wc-api-panel__body">
+          <dads-tab data-api-target orientation="top" activation-mode="auto" selected-index="0">
+            <div data-tab-label="タブ1">タブ1のコンテンツです。</div>
+            <div data-tab-label="タブ2">タブ2のコンテンツです。</div>
+            <div data-tab-label="タブ3">タブ3のコンテンツです。</div>
+          </dads-tab>
+
+          <dads-input-text
+            id="panel2-label"
+            data-api-attr="data-tab-label"
+            data-api-target-selector="[data-api-target] > div:nth-of-type(2)"
+            data-default="タブ2"
+          ></dads-input-text>
+
+          <dads-code-block data-api-code></dads-code-block>
+        </div>
+      </div>
+    `);
+    const codeBlock = setupCodeBlock(root);
+    const control = queryRequired<HTMLElement>(root, '#panel2-label');
+    const panel2 = queryRequired<HTMLElement>(root, '[data-api-target] > div:nth-of-type(2)');
+
+    bindApiControls(root);
+
+    control.dispatchEvent(new CustomEvent('dads-input', { detail: { value: 'お知らせ' } }));
+    expect(panel2.getAttribute('data-tab-label')).toBe('お知らせ');
+    expect(codeBlock.textContent).toContain('<div data-tab-label="お知らせ">タブ2のコンテンツです。</div>');
   });
 });
 

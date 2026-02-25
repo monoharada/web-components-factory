@@ -35,6 +35,14 @@ const STRIP_ATTRS_ATTR = 'data-api-strip-attrs';
 const STRIP_ATTR_PREFIXES = ['data-api-', 'data-has-'] as const;
 const ALWAYS_STRIP_ATTRS = new Set<string>(['data-sa-component']);
 const ALWAYS_STRIP_EXACT_ATTRS = new Set<string>(['data-api-target']);
+const TAB_RUNTIME_PANEL_ATTRS = [
+  'id',
+  'role',
+  'part',
+  'aria-labelledby',
+  'tabindex',
+  'hidden',
+] as const;
 
 interface CustomEventDetail {
   checked?: boolean;
@@ -339,6 +347,51 @@ function stripUsageAttrs(node: Node, stripAttrs: Set<string>): void {
   for (const child of Array.from(node.childNodes)) stripUsageAttrs(child, stripAttrs);
 }
 
+function stripInternalStyleVars(el: Element): void {
+  if (!(el instanceof HTMLElement)) return;
+
+  const internalVars: string[] = [];
+  for (let i = 0; i < el.style.length; i += 1) {
+    const prop = el.style.item(i);
+    if (!prop.startsWith('--_')) continue;
+    internalVars.push(prop);
+  }
+
+  for (const prop of internalVars) el.style.removeProperty(prop);
+  if ((el.getAttribute('style') ?? '').trim() === '') el.removeAttribute('style');
+}
+
+function stripClassToken(el: Element, token: string): void {
+  const raw = el.getAttribute('class');
+  if (!raw) return;
+
+  const next = raw
+    .split(/\s+/)
+    .map((item) => item.trim())
+    .filter((item) => item !== '' && item !== token);
+
+  if (next.length === 0) {
+    el.removeAttribute('class');
+    return;
+  }
+  el.setAttribute('class', next.join(' '));
+}
+
+function sanitizeComponentSpecificUsage(node: Element): void {
+  if (node.tagName.toLowerCase() !== 'dads-tab') return;
+
+  stripInternalStyleVars(node);
+  stripClassToken(node, 'fonts-loaded');
+
+  for (const child of Array.from(node.children)) {
+    if (!(child instanceof HTMLElement)) continue;
+    if (!child.hasAttribute('data-tab-label')) continue;
+
+    for (const name of TAB_RUNTIME_PANEL_ATTRS) child.removeAttribute(name);
+    stripInternalStyleVars(child);
+  }
+}
+
 function syncUsageCode(
   block: CodeBlockLike | null,
   usage: UsageModel | null,
@@ -353,7 +406,8 @@ function syncUsageCode(
       return formatHtmlNodes(Array.from(usage.fragment.childNodes));
     }
 
-    const clone = liveTarget.cloneNode(true);
+    const clone = liveTarget.cloneNode(true) as Element;
+    sanitizeComponentSpecificUsage(clone);
     stripUsageAttrs(clone, stripAttrs);
     return formatHtmlNodes([clone]);
   })();

@@ -48287,6 +48287,761 @@
     },
     {
       "kind": "javascript-module",
+      "path": "./packages/components/tab/tab.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "DadsTab コンポーネント\n\nLight DOM の子要素をタブパネルとして扱い、各子要素の `data-tab-label` 属性から\nタブラベルを動的に生成する単一コンポーネントタブ。",
+          "name": "DadsTab",
+          "cssProperties": [
+            {
+              "description": "タブ背景色",
+              "name": "--dads-tab-background"
+            },
+            {
+              "description": "タブホバー時背景色",
+              "name": "--dads-tab-background-hover"
+            },
+            {
+              "description": "タブテキスト色",
+              "name": "--dads-tab-color"
+            },
+            {
+              "description": "選択タブテキスト色",
+              "name": "--dads-tab-color-selected"
+            },
+            {
+              "description": "無効タブテキスト色",
+              "name": "--dads-tab-color-disabled"
+            },
+            {
+              "description": "ボーダー色",
+              "name": "--dads-tab-border-color"
+            },
+            {
+              "description": "インジケーター色",
+              "name": "--dads-tab-indicator-color"
+            },
+            {
+              "description": "インジケーター高さ",
+              "name": "--dads-tab-indicator-height"
+            },
+            {
+              "description": "フォーカスアウトライン色",
+              "name": "--dads-tab-focus-outline-color"
+            },
+            {
+              "description": "フォーカスリング色",
+              "name": "--dads-tab-focus-ring-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "ルートコンテナ",
+              "name": "base"
+            },
+            {
+              "description": "各タブの選択マーク",
+              "name": "indicator"
+            },
+            {
+              "description": "各タブのラベルテキスト",
+              "name": "label"
+            },
+            {
+              "description": "各タブボタン（role=\"tab\"）",
+              "name": "tab"
+            },
+            {
+              "description": "タブリスト（role=\"tablist\"）",
+              "name": "tablist"
+            },
+            {
+              "description": "各タブパネル（role=\"tabpanel\"）",
+              "name": "tabpanel"
+            }
+          ],
+          "slots": [
+            {
+              "description": "タブパネルの内容（各子要素に data-tab-label でラベル、data-tab-disabled で無効化を指定）",
+              "name": "default"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "#childObserver",
+              "privacy": "private",
+              "type": {
+                "text": "MutationObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#def",
+              "privacy": "private",
+              "type": {
+                "text": "WebComponentDefinition | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dsd",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#ensureView",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#finish",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#fontState",
+              "privacy": "private",
+              "type": {
+                "text": "FontObserverState"
+              },
+              "default": "{ observer: null }",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#generateId",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "prefix",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getEnabledTabs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLButtonElement[]"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#getPanelChildren",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLElement[]"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#handleChildMutation",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleKeyDown",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleSlotChange",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#handleTabClick",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#idCounter",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#init",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#lastTablistBlockSize",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "''"
+            },
+            {
+              "kind": "field",
+              "name": "#layoutObserver",
+              "privacy": "private",
+              "type": {
+                "text": "ResizeObserver | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#panels",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "method",
+              "name": "#selectTab",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setup",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#slot",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSlotElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#sr",
+              "privacy": "private",
+              "type": {
+                "text": "ShadowRoot | undefined"
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncAriaOrientation",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncPanelMinBlockSize",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncSelection",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#syncTabs",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#tablist",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#tabs",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#view",
+              "privacy": "private",
+              "type": {
+                "text": "View | null"
+              },
+              "default": "null",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "activationMode",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "activationModeChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "compose",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "WebComponentDefinition"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "composeWithTypography",
+              "static": true,
+              "default": "composeWithTypography",
+              "description": "スタイルにベースタイポグラフィスタイルを自動追加",
+              "inheritedFrom": {
+                "name": "TypographyWebComponent",
+                "module": "packages/core/typography/typography-web-component.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "return": {
+                "type": {
+                  "text": "typeof WebComponent"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "cfg",
+                  "optional": true,
+                  "type": {
+                    "text": "WebComponentConfig"
+                  }
+                }
+              ],
+              "description": "defineメソッドをオーバーライド\n自動的にタイポグラフィスタイルを追加",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "definition",
+              "readonly": true,
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ name: 'dads-tab', template: html` <div part=\"base\" id=\"base\"> <div part=\"tablist\" role=\"tablist\" id=\"tablist\"></div> <slot id=\"default-slot\"></slot> </div> `, styles: withReset( [ applyDADSTokens(), applySpacingTokens(), tabTokens, tabStyles, applyDADSFocusStyles(), ], 'minimal', ), attributes: [ PropertyAttr('orientation'), PropertyAttr('activationMode', 'activation-mode'), PropertyAttr('selectedIndex', 'selected-index'), ], }",
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "emitEvent",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "optional": true,
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "opts",
+                  "optional": true,
+                  "type": {
+                    "text": "CustomEventInit<T>"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "forwardEvent",
+              "parameters": [
+                {
+                  "name": "e",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "orientationChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "refs",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "selectedIndex",
+              "type": {
+                "text": "string | null"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "selectedIndexChanged",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "transferDelegatedAttributes",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              },
+              "inheritedFrom": {
+                "name": "WebComponent",
+                "module": "packages/core/web-components.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "version",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "readonly": true,
+              "default": "'0.1.0'"
+            }
+          ],
+          "events": [
+            {
+              "name": "dads-tab-change",
+              "type": {
+                "text": "CustomEvent"
+              },
+              "description": "タブ選択変更時（detail: { selectedIndex: number, previousIndex: number }）"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "'auto' | 'manual'"
+              },
+              "description": "アクティベーションモード",
+              "name": "activation-mode",
+              "default": "'auto'"
+            },
+            {
+              "type": {
+                "text": "'top' | 'bottom' | 'left' | 'right'"
+              },
+              "description": "タブリストの配置方向",
+              "name": "orientation",
+              "default": "'top'"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "選択中のタブインデックス",
+              "name": "selected-index",
+              "default": "'0'"
+            }
+          ],
+          "superclass": {
+            "name": "TypographyWebComponent",
+            "module": "/packages/core/typography/typography-web-component.js"
+          },
+          "tagName": "dads-tab",
+          "customElement": true,
+          "modulePath": "./packages/components/tab/tab.ts",
+          "definitionPath": "./packages/components/tab/tab.ts",
+          "typeDefinitionPath": "./packages/components/tab/tab.ts",
+          "custom": {
+            "usageSnippet": "<dads-tab orientation=\"top\">\n  <div data-tab-label=\"タブ1\">タブ1の内容</div>\n  <div data-tab-label=\"タブ2\">タブ2の内容</div>\n  <div data-tab-label=\"タブ3\">タブ3の内容</div>\n</dads-tab>",
+            "a11yAnnotations": {
+              "version": 1,
+              "summary": "タブコンポーネント仕様（アクセシビリティ注釈）",
+              "categories": {
+                "semantics": [
+                  "タブ見出しは role=\"tablist\" / role=\"tab\" で提供し、各パネルは role=\"tabpanel\" で関連付けます。",
+                  "aria-controls と aria-labelledby を使って、タブとパネルを1対1で関連付けます。"
+                ],
+                "keyboard": [
+                  "Tab / Shift+Tab ではタブリスト外へフォーカスを移し、タブ間移動は Arrow / Home / End を使用します。",
+                  "Arrow / Home / End でタブ移動できます。orientation=\"left|right\" では ArrowUp / ArrowDown を使用します。",
+                  "activation-mode=\"manual\" では Enter / Space で選択を確定し、フォーカスはタブに留まります。"
+                ],
+                "zoom": [
+                  "orientation=\"top|bottom|left|right\" でレイアウトを切り替えます。",
+                  "パネル最小高さはタブリスト高さに同期し、拡大時も内容の可読性を維持します。"
+                ],
+                "states": [
+                  "selected-index で選択タブを制御し、aria-selected=\"true\" は常に1つだけになります。",
+                  "data-tab-disabled を指定したタブは aria-disabled=\"true\" になり、選択や矢印移動の対象から除外されます。",
+                  "選択中タブはインジケーターで視覚的に強調されます。"
+                ],
+                "labels": [
+                  "各タブの表示ラベルは、対応するパネルの data-tab-label から生成されます。",
+                  "tablist のアクセシブル名は aria-label または aria-labelledby で指定できます。"
+                ],
+                "motion": [
+                  "アニメーションは使用しません。"
+                ]
+              },
+              "callouts": [
+                {
+                  "id": "tablist",
+                  "title": "タブリスト",
+                  "label": "role=\"tablist\"",
+                  "description": "タブ操作の起点となる領域です。orientation に応じて aria-orientation が切り替わります。",
+                  "category": "semantics",
+                  "placement": "top-left",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"tablist\"]"
+                  }
+                },
+                {
+                  "id": "active-tab",
+                  "title": "選択中タブ",
+                  "label": "role=\"tab\"",
+                  "description": "現在選択されているタブです。aria-selected=\"true\" と roving tabindex の起点を持ちます。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"tab\"][aria-selected=\"true\"]"
+                  }
+                },
+                {
+                  "id": "tab-indicator",
+                  "title": "選択インジケーター",
+                  "label": "part=\"indicator\"",
+                  "description": "選択中タブを示す視覚インジケーターです。",
+                  "category": "states",
+                  "placement": "top-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"tab\"][aria-selected=\"true\"] [part=\"indicator\"]"
+                  }
+                },
+                {
+                  "id": "tab-label",
+                  "title": "タブラベル",
+                  "label": "part=\"label\"",
+                  "description": "data-tab-label 由来のラベルテキストが表示される領域です。",
+                  "category": "labels",
+                  "placement": "bottom-right",
+                  "target": {
+                    "scope": "shadow",
+                    "selector": "[part=\"tab\"][aria-selected=\"true\"] [part=\"label\"]"
+                  }
+                },
+                {
+                  "id": "tabpanel",
+                  "title": "タブパネル",
+                  "label": "role=\"tabpanel\"",
+                  "description": "選択中タブに対応するパネルコンテンツです。",
+                  "category": "semantics",
+                  "placement": "bottom-left",
+                  "target": {
+                    "scope": "light",
+                    "selector": "[role=\"tabpanel\"]:not([hidden])"
+                  }
+                }
+              ]
+            },
+            "componentId": "tab",
+            "install": {
+              "id": "tab",
+              "define": "defineTab",
+              "call": "prefix-registry",
+              "deps": [],
+              "source": {
+                "componentDir": "packages/components/tab"
+              },
+              "tags": [
+                "dads-tab"
+              ]
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsTab",
+          "declaration": {
+            "name": "DadsTab",
+            "module": "packages/components/tab/tab.ts"
+          }
+        }
+      ],
+      "typeDefinitionPath": "./packages/components/tab/tab.ts"
+    },
+    {
+      "kind": "javascript-module",
+      "path": "./packages/components/tab/tab.ts",
+      "deprecated": false,
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "dads-tab",
+          "declaration": {
+            "name": "DadsTab",
+            "module": "./packages/components/tab/tab.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "./packages/components/table-control/table-control.ts",
       "declarations": [
         {
@@ -59892,6 +60647,14 @@
             "name": "*",
             "module": "packages/components/loading-icon/index.js"
           }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "packages/components/tab/index.js"
+          }
         }
       ]
     },
@@ -64206,6 +64969,204 @@
           "declaration": {
             "name": "switchTokens",
             "module": "packages/components/switch/switch-tokens.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/tab/index.ts",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DadsTab",
+          "declaration": {
+            "name": "DadsTab",
+            "module": "./tab.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineDefaultTab",
+          "declaration": {
+            "name": "defineDefaultTab",
+            "module": "./tab-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineTab",
+          "declaration": {
+            "name": "defineTab",
+            "module": "./tab-define.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tabLocalTokens",
+          "declaration": {
+            "name": "tabLocalTokens",
+            "module": "./tab-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tabSemanticTokens",
+          "declaration": {
+            "name": "tabSemanticTokens",
+            "module": "./tab-tokens.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tabStyles",
+          "declaration": {
+            "name": "tabStyles",
+            "module": "./tab-styles.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tabTokens",
+          "declaration": {
+            "name": "tabTokens",
+            "module": "./tab-tokens.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/tab/tab-define.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "defineDefaultTab",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "description": "デフォルト名での登録"
+        },
+        {
+          "kind": "function",
+          "name": "defineTab",
+          "return": {
+            "type": {
+              "text": "void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "prefix",
+              "optional": true,
+              "type": {
+                "text": "string"
+              },
+              "description": "コンポーネント名のプレフィックス（省略時はgetPrefix()を使用）"
+            },
+            {
+              "name": "registry",
+              "optional": true,
+              "type": {
+                "text": "CustomElementRegistry"
+              },
+              "description": "カスタムエレメントレジストリ（省略時はgetConfig()のregistryを使用）"
+            }
+          ],
+          "description": "Tab コンポーネントを定義"
+        },
+        {
+          "kind": "variable",
+          "name": "name",
+          "default": "`${effectivePrefix}-tab`"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defineDefaultTab",
+          "declaration": {
+            "name": "defineDefaultTab",
+            "module": "packages/components/tab/tab-define.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defineTab",
+          "declaration": {
+            "name": "defineTab",
+            "module": "packages/components/tab/tab-define.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/tab/tab-styles.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tabStyles",
+          "default": "css` :host { display: block; min-inline-size: 0; color: var(--dads-tab-color); font-family: var(--font-family-sans); } :host([hidden]) { display: none; } [part=\"base\"] { display: flex; flex-direction: column; min-inline-size: 0; } [part=\"tablist\"] { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: stretch; inline-size: 100%; margin: 0 0 -1px; padding: 0 1px 0 0; } #default-slot { z-index: 1; display: block; box-sizing: border-box; min-inline-size: 0; min-block-size: var(--_dads-tab-tablist-block-size, 0px); border: 1px solid var(--dads-tab-border-color); background: var(--tab-bg-panel); padding: var(--tab-panel-padding); color: var(--tab-panel-color); font-size: var(--tab-panel-font-size); font-weight: var(--tab-panel-font-weight); line-height: var(--tab-panel-line-height); letter-spacing: var(--tab-panel-letter-spacing); } [part~=\"tab\"] { --_dads-tab-background: var(--dads-tab-background); --_dads-tab-indicator-color: var(--tab-indicator-idle); --_dads-tab-label-decoration: none; position: relative; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; margin: 0 -1px 0 0; border: 1px solid var(--dads-tab-border-color); background: var(--_dads-tab-background); padding: 0; color: var(--dads-tab-color); font-family: var(--font-family-sans); font-size: var(--font-size-16, 1rem); font-weight: var(--font-weight-400, 400); line-height: var(--line-height-120, 1.2); letter-spacing: 0; white-space: nowrap; cursor: pointer; } [part~=\"tab\"]:focus { outline: none; } [part~=\"tab\"]:focus-visible { z-index: 3; } /* DADSフォーカスリングは維持しつつ、タブ面は塗りつぶさない */ :host button[part~=\"tab\"][role=\"tab\"]:focus-visible { background: var(--_dads-tab-background); } [part~=\"indicator\"] { display: block; inline-size: 100%; block-size: var(--dads-tab-indicator-height); background: var(--_dads-tab-indicator-color); flex: 0 0 auto; } [part~=\"label\"] { display: flex; align-items: center; justify-content: center; padding: var(--tab-padding-y) var(--tab-padding-x); color: inherit; font: inherit; line-height: inherit; letter-spacing: inherit; text-align: center; text-decoration: var(--_dads-tab-label-decoration); text-decoration-thickness: var(--tab-underline-thickness); text-underline-offset: var(--tab-underline-offset); } [part~=\"tab\"][aria-selected=\"true\"] { --_dads-tab-indicator-color: var(--dads-tab-indicator-color); color: var(--dads-tab-color-selected); font-weight: var(--font-weight-700, 700); z-index: 2; } :host([orientation=\"top\"]) [part~=\"tab\"][aria-selected=\"true\"] { border-top: 0; border-right: 1px solid var(--dads-tab-border-color); border-bottom: 0; border-left: 1px solid var(--dads-tab-border-color); } :host([orientation=\"top\"]) [part~=\"tab\"][aria-selected=\"true\"]::before { content: ''; position: absolute; inset-block-start: 0; inset-inline-start: -1px; inline-size: calc(100% + 2px); block-size: var(--dads-tab-indicator-height); background: var(--dads-tab-indicator-color); pointer-events: none; } :host([orientation=\"top\"]) [part~=\"tab\"][aria-selected=\"true\"] [part~=\"indicator\"] { background: transparent; } [part~=\"tab\"][aria-disabled=\"true\"] { color: var(--dads-tab-color-disabled); cursor: not-allowed; } @media (any-hover: hover) { [part~=\"tab\"]:not([aria-selected=\"true\"]):not([aria-disabled=\"true\"]):hover { --_dads-tab-background: var(--dads-tab-background-hover); --_dads-tab-label-decoration: underline; } [part~=\"tab\"]:not([aria-selected=\"true\"]):not([aria-disabled=\"true\"]):hover { --_dads-tab-indicator-color: var(--dads-tab-border-color); } } ::slotted([part~=\"tabpanel\"]) { display: block; box-sizing: border-box; margin: 0; border: 0; padding: 0; color: inherit; font: inherit; letter-spacing: inherit; } ::slotted([part~=\"tabpanel\"][hidden]) { display: none; } :host([orientation=\"bottom\"]) [part=\"base\"] { flex-direction: column-reverse; } :host([orientation=\"bottom\"]) [part=\"tablist\"] { margin: -1px 0 0; } :host([orientation=\"bottom\"]) [part~=\"tab\"] { flex-direction: column-reverse; } :host([orientation=\"bottom\"]) [part~=\"tab\"][aria-selected=\"true\"] { border-top: 0; border-right: 1px solid var(--dads-tab-border-color); border-bottom: 0; border-left: 1px solid var(--dads-tab-border-color); } :host([orientation=\"bottom\"]) [part~=\"tab\"][aria-selected=\"true\"]::after { content: ''; position: absolute; inset-block-end: 0; inset-inline-start: -1px; inline-size: calc(100% + 2px); block-size: var(--dads-tab-indicator-height); background: var(--dads-tab-indicator-color); pointer-events: none; } :host([orientation=\"bottom\"]) [part~=\"tab\"][aria-selected=\"true\"] [part~=\"indicator\"] { background: transparent; } :host([orientation=\"left\"]) [part=\"base\"] { flex-direction: row; } :host([orientation=\"left\"]) [part=\"tablist\"] { align-self: stretch; inline-size: var(--tab-vertical-list-width); flex-direction: column; flex-wrap: nowrap; margin: 0 -1px 0 0; padding: 0 0 1px; } :host([orientation=\"left\"]) [part~=\"tab\"] { inline-size: 100%; flex-direction: row; justify-content: flex-start; gap: var(--tab-label-gap-vertical); margin: 0 0 -1px; } :host([orientation=\"left\"]) [part~=\"label\"] { flex: 1 1 auto; justify-content: flex-start; text-align: left; } :host([orientation=\"left\"]) [part~=\"indicator\"] { inline-size: var(--dads-tab-indicator-height); block-size: auto; align-self: stretch; } :host([orientation=\"left\"]) [part~=\"tab\"][aria-selected=\"true\"] { border-top: 1px solid var(--dads-tab-border-color); border-right: 0; border-bottom: 1px solid var(--dads-tab-border-color); border-left: 0; } :host([orientation=\"left\"]) #default-slot { flex: 1 1 auto; min-inline-size: 0; } :host([orientation=\"right\"]) [part=\"base\"] { flex-direction: row-reverse; } :host([orientation=\"right\"]) [part=\"tablist\"] { align-self: stretch; inline-size: var(--tab-vertical-list-width); flex-direction: column; flex-wrap: nowrap; margin: 0 0 0 -1px; padding: 0 0 1px; } :host([orientation=\"right\"]) [part~=\"tab\"] { inline-size: 100%; flex-direction: row-reverse; justify-content: flex-start; gap: var(--tab-label-gap-vertical); margin: 0 0 -1px; } :host([orientation=\"right\"]) [part~=\"label\"] { flex: 1 1 auto; justify-content: flex-start; text-align: left; } :host([orientation=\"right\"]) [part~=\"indicator\"] { inline-size: var(--dads-tab-indicator-height); block-size: auto; align-self: stretch; } :host([orientation=\"right\"]) [part~=\"tab\"][aria-selected=\"true\"] { border-top: 1px solid var(--dads-tab-border-color); border-right: 0; border-bottom: 1px solid var(--dads-tab-border-color); border-left: 0; } :host([orientation=\"right\"]) #default-slot { flex: 1 1 auto; min-inline-size: 0; } @media (prefers-reduced-motion: reduce) { [part~=\"tab\"] { transition: none; } } @media (forced-colors: active) { [part~=\"tab\"] { border-color: ButtonText; color: ButtonText; } [part~=\"tab\"][aria-selected=\"true\"] [part~=\"indicator\"] { background: Highlight; } [part~=\"tab\"][aria-disabled=\"true\"] { color: GrayText; } #default-slot { border-color: ButtonText; } } `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tabStyles",
+          "declaration": {
+            "name": "tabStyles",
+            "module": "packages/components/tab/tab-styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "packages/components/tab/tab-tokens.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "tabLocalTokens",
+          "default": "css`${tabLocalTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "tabSemanticTokens",
+          "default": "css`${tabSemanticTokensText}`"
+        },
+        {
+          "kind": "variable",
+          "name": "tabTokens",
+          "default": "css` ${tabSemanticTokensText} ${tabLocalTokensText} `"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tabLocalTokens",
+          "declaration": {
+            "name": "tabLocalTokens",
+            "module": "packages/components/tab/tab-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tabSemanticTokens",
+          "declaration": {
+            "name": "tabSemanticTokens",
+            "module": "packages/components/tab/tab-tokens.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "tabTokens",
+          "declaration": {
+            "name": "tabTokens",
+            "module": "packages/components/tab/tab-tokens.ts"
           }
         }
       ]
