@@ -1,4 +1,4 @@
-# @anthropic/wcf-mcp
+# @monoharada/wcf-mcp
 
 web-components-factory デザインシステム用の MCP (Model Context Protocol) サーバー。
 
@@ -9,7 +9,7 @@ web-components-factory デザインシステム用の MCP (Model Context Protoco
 ### npx で起動（クローン不要）
 
 ```bash
-npx @anthropic/wcf-mcp
+npx @monoharada/wcf-mcp
 ```
 
 ### Claude Desktop で使う
@@ -21,7 +21,7 @@ npx @anthropic/wcf-mcp
   "mcpServers": {
     "wcf": {
       "command": "npx",
-      "args": ["@anthropic/wcf-mcp"]
+      "args": ["@monoharada/wcf-mcp"]
     }
   }
 }
@@ -30,10 +30,10 @@ npx @anthropic/wcf-mcp
 ### Claude Code で使う
 
 ```bash
-claude mcp add wcf -- npx @anthropic/wcf-mcp
+claude mcp add wcf -- npx @monoharada/wcf-mcp
 ```
 
-## 提供ツール（11個）
+## 提供ツール（12個）
 
 ### ガードレール
 
@@ -45,8 +45,9 @@ claude mcp add wcf -- npx @anthropic/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `list_components` | デザインシステム内の全カスタム要素を一覧表示 |
-| `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得 |
+| `list_components` | カテゴリ/クエリ/limit/offset でコンポーネントを段階的に取得（互換維持のため limit 未指定時は全件） |
+| `search_icons` | アイコン名をキーワード検索し、usage example を返す |
+| `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得（`relatedComponents` を含む） |
 | `generate_usage_snippet` | コンポーネントの最小限 HTML スニペットを生成 |
 | `get_install_recipe` | componentId・依存関係・define関数・インストールコマンドを取得 |
 
@@ -76,7 +77,7 @@ claude mcp add wcf -- npx @anthropic/wcf-mcp
 標準は stdio です。HTTP transport も利用できます（localhost のみ）。
 
 ```bash
-npx @anthropic/wcf-mcp --transport=http --port=3100
+npx @monoharada/wcf-mcp --transport=http --port=3100
 ```
 
 - bind: `127.0.0.1`

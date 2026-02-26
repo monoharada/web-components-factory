@@ -14,6 +14,7 @@ import { z } from 'zod';
 // ---------------------------------------------------------------------------
 
 export const CANONICAL_PREFIX = 'dads';
+export const MAX_PREFIX_LENGTH = 64;
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
@@ -89,7 +90,7 @@ export function getCategory(tagName) {
 
 export function normalizePrefix(prefix) {
   if (typeof prefix !== 'string' || prefix.trim() === '') return CANONICAL_PREFIX;
-  return prefix.trim().toLowerCase();
+  return prefix.trim().toLowerCase().slice(0, MAX_PREFIX_LENGTH);
 }
 
 export function withPrefix(tagName, prefix) {
@@ -327,6 +328,192 @@ export function resolveComponentClosure({ installRegistry }, componentIds) {
   return [...out];
 }
 
+export function buildComponentSummaries(indexes, { category, query, limit, offset, prefix } = {}) {
+  const p = normalizePrefix(prefix);
+  const q = typeof query === 'string' ? query.trim().toLowerCase() : '';
+  const pageSize = Number.isInteger(limit) ? Math.max(1, Math.min(limit, 200)) : Number.MAX_SAFE_INTEGER;
+  const pageOffset = Number.isInteger(offset) ? Math.max(0, offset) : 0;
+
+  let items = indexes.decls.map(({ decl, tagName, modulePath }) => ({
+    tagName: withPrefix(tagName, p),
+    className: typeof decl?.name === 'string' ? decl.name : undefined,
+    description: typeof decl?.description === 'string' ? decl.description : undefined,
+    category: getCategory(tagName),
+    modulePath,
+  }));
+
+  if (category) {
+    items = items.filter((item) => item.category === category);
+  }
+
+  if (q) {
+    items = items.filter((item) => {
+      const haystacks = [
+        item.tagName,
+        item.className,
+        item.description,
+        item.category,
+        item.modulePath,
+      ];
+      return haystacks.some((value) => String(value ?? '').toLowerCase().includes(q));
+    });
+  }
+
+  const total = items.length;
+  const paged = items.slice(pageOffset, pageOffset + pageSize);
+
+  return {
+    total,
+    limit: pageSize,
+    offset: pageOffset,
+    hasMore: pageOffset + paged.length < total,
+    items: paged,
+  };
+}
+
+export function parseIconNamesFromDescription(description) {
+  if (typeof description !== 'string' || description.trim() === '') return [];
+
+  const markerMatch = description.match(/iconPathsのキー[:：]\s*([^)）\n]+)/u);
+  if (!markerMatch) return [];
+
+  return [...new Set(
+    markerMatch[1]
+      .split(/[,、]/)
+      .map((name) => name.trim())
+      .map((name) => name.replace(/[`'"]/g, ''))
+      .filter(Boolean),
+  )];
+}
+
+export function parseIconNamesFromType(typeText) {
+  if (typeof typeText !== 'string' || typeText.trim() === '') return [];
+  const out = [];
+  const regex = /'([^']+)'|"([^"]+)"|`([^`]+)`/g;
+  let match;
+  while ((match = regex.exec(typeText)) !== null) {
+    const value = match[1] ?? match[2] ?? match[3];
+    if (typeof value === 'string' && value.trim() !== '') out.push(value.trim());
+  }
+  return [...new Set(out)];
+}
+
+export function extractIconNames(indexes) {
+  const decl = indexes.byTag.get('dads-icon');
+  if (!decl) return [];
+
+  const attributes = Array.isArray(decl?.attributes) ? decl.attributes : [];
+  const nameAttr = attributes.find((attr) => String(attr?.name ?? '') === 'name');
+  if (!nameAttr) return [];
+
+  const fromDescription = parseIconNamesFromDescription(nameAttr?.description);
+  const fromType = parseIconNamesFromType(nameAttr?.type?.text);
+
+  return [...new Set([...fromDescription, ...fromType])];
+}
+
+export function buildIconCatalog(indexes, prefix) {
+  const p = normalizePrefix(prefix);
+  const tag = withPrefix('dads-icon', p);
+  const names = extractIconNames(indexes).sort((left, right) => left.localeCompare(right));
+
+  return names.map((name) => ({
+    name,
+    variants: ['default'],
+    usageExample: `<${tag} name="${name}" size="20"></${tag}>`,
+  }));
+}
+
+export function searchIconCatalog(indexes, { query, limit, offset, prefix } = {}) {
+  const q = typeof query === 'string' ? query.trim().toLowerCase() : '';
+  const pageSize = Number.isInteger(limit) ? Math.max(1, Math.min(limit, 100)) : 20;
+  const pageOffset = Number.isInteger(offset) ? Math.max(0, offset) : 0;
+
+  let icons = buildIconCatalog(indexes, prefix);
+  if (q) {
+    icons = icons.filter((icon) => icon.name.toLowerCase().includes(q));
+  }
+
+  const total = icons.length;
+  const paged = icons.slice(pageOffset, pageOffset + pageSize);
+
+  return {
+    total,
+    limit: pageSize,
+    offset: pageOffset,
+    hasMore: pageOffset + paged.length < total,
+    icons: paged,
+  };
+}
+
+export function buildRelatedComponentMap(installRegistry, patterns) {
+  const components = installRegistry?.components && typeof installRegistry.components === 'object' ? installRegistry.components : {};
+  const patternList = Object.values(patterns ?? {});
+  const related = new Map();
+
+  const addRelation = (fromId, toId, via) => {
+    const from = String(fromId ?? '').trim();
+    const to = String(toId ?? '').trim();
+    if (!from || !to || from === to) return;
+
+    if (!related.has(from)) related.set(from, new Map());
+    const relMap = related.get(from);
+    if (!relMap.has(to)) relMap.set(to, new Set());
+    relMap.get(to).add(via);
+  };
+
+  for (const pattern of patternList) {
+    const patternId = String(pattern?.id ?? '').trim() || 'pattern';
+    const requires = [...new Set((Array.isArray(pattern?.requires) ? pattern.requires : []).map((id) => String(id ?? '').trim()).filter(Boolean))];
+
+    for (const fromId of requires) {
+      for (const toId of requires) {
+        addRelation(fromId, toId, patternId);
+      }
+    }
+  }
+
+  for (const [componentId, meta] of Object.entries(components)) {
+    const deps = Array.isArray(meta?.deps) ? meta.deps : [];
+    for (const dep of deps) {
+      const depId = String(dep ?? '').trim();
+      addRelation(componentId, depId, 'dependency');
+      addRelation(depId, componentId, 'dependencyOf');
+    }
+  }
+
+  return related;
+}
+
+export function getRelatedComponentsForTag({ canonicalTagName, installRegistry, relatedMap, prefix, maxResults = 12 }) {
+  const tags = installRegistry?.tags && typeof installRegistry.tags === 'object' ? installRegistry.tags : {};
+  const components = installRegistry?.components && typeof installRegistry.components === 'object' ? installRegistry.components : {};
+  const componentId = typeof canonicalTagName === 'string' ? tags[canonicalTagName] : undefined;
+  if (typeof componentId !== 'string' || componentId === '') return [];
+
+  const relMap = relatedMap?.get(componentId);
+  if (!relMap) return [];
+
+  const out = [];
+  for (const [relatedId, via] of relMap.entries()) {
+    const relatedMeta = components[relatedId];
+    if (!relatedMeta || typeof relatedMeta !== 'object') continue;
+
+    const canonicalTags = Array.isArray(relatedMeta.tags)
+      ? relatedMeta.tags.map((tag) => String(tag ?? '').toLowerCase()).filter(Boolean)
+      : [];
+
+    out.push({
+      componentId: relatedId,
+      tagNames: canonicalTags.map((tag) => withPrefix(tag, prefix)),
+      via: [...via],
+    });
+  }
+
+  out.sort((left, right) => String(left.componentId).localeCompare(String(right.componentId)));
+  return out.slice(0, Math.max(1, maxResults));
+}
+
 // ---------------------------------------------------------------------------
 // createMcpServer — builds the McpServer with all tools registered, but does
 // NOT connect a transport.  Callers choose their own transport.
@@ -343,6 +530,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
   const installRegistry = await loadJsonData('install-registry.json');
   const patternRegistry = await loadJsonData('pattern-registry.json');
   const { patterns } = loadPatternRegistryShape(patternRegistry);
+  const relatedComponentMap = buildRelatedComponentMap(installRegistry, patterns);
 
   // Load optional data files (design tokens, guidelines index)
   let designTokensData = null;
@@ -396,7 +584,8 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         patterns: patternList,
         availableTools: [
           { name: 'get_design_system_overview', purpose: 'This overview (start here)' },
-          { name: 'list_components', purpose: 'Browse components, optionally filter by category' },
+          { name: 'list_components', purpose: 'Browse components with progressive disclosure and filters' },
+          { name: 'search_icons', purpose: 'Search icon names and usage examples' },
           { name: 'get_component_api', purpose: 'Full API surface for a single component' },
           { name: 'generate_usage_snippet', purpose: 'Minimal HTML usage example' },
           { name: 'get_install_recipe', purpose: 'Installation instructions and dependency tree' },
@@ -411,11 +600,12 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           '1. get_design_system_overview → understand components, patterns & tokens',
           '2. search_guidelines → find relevant guidelines',
           '3. get_design_tokens → get correct token values',
-          '4. list_components (category filter) → find the right components',
-          '5. get_component_api → check attributes, slots, events, CSS parts',
-          '6. generate_usage_snippet or get_pattern_recipe → get code',
-          '7. validate_markup → verify your HTML is correct',
-          '8. get_install_recipe → get import/install instructions',
+          '4. list_components (category/query + pagination) → shortlist components',
+          '5. search_icons (optional) → find icon names quickly',
+          '6. get_component_api → check attributes, slots, events, CSS parts',
+          '7. generate_usage_snippet or get_pattern_recipe → get code',
+          '8. validate_markup → verify your HTML is correct',
+          '9. get_install_recipe → get import/install instructions',
         ],
       };
 
@@ -432,31 +622,45 @@ export async function createMcpServer(loadJsonData, loadValidator) {
     'list_components',
     {
       description:
-        'List custom elements in the design system. When: exploring available components or filtering by category. Returns: array of {tagName, className, description, category}. After: use get_component_api for details on a specific component.',
+        'List custom elements in the design system. When: exploring available components, searching by keyword, or paging through results. Returns: array of {tagName, className, description, category}. After: use get_component_api for details on a specific component.',
       inputSchema: {
         category: z
           .enum(['Form', 'Actions', 'Navigation', 'Content', 'Display', 'Layout', 'Other'])
           .optional()
           .describe('Filter by component category'),
+        query: z.string().optional().describe('Search by tagName/className/description/category/modulePath'),
+        limit: z.number().int().min(1).max(200).optional().describe('Maximum items to return (optional; omit for all results)'),
+        offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
         prefix: z.string().optional(),
       },
     },
-    async ({ category, prefix }) => {
-      const p = normalizePrefix(prefix);
-      let list = indexes.decls.map(({ decl, tagName, modulePath }) => ({
-        tagName: withPrefix(tagName, p),
-        className: typeof decl?.name === 'string' ? decl.name : undefined,
-        description: typeof decl?.description === 'string' ? decl.description : undefined,
-        category: getCategory(tagName),
-        modulePath,
-      }));
-
-      if (category) {
-        list = list.filter((item) => item.category === category);
-      }
-
+    async ({ category, query, limit, offset, prefix }) => {
+      const { items } = buildComponentSummaries(indexes, { category, query, limit, offset, prefix });
       return {
-        content: [{ type: 'text', text: JSON.stringify(list, null, 2) }],
+        content: [{ type: 'text', text: JSON.stringify(items, null, 2) }],
+      };
+    },
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool: search_icons
+  // -----------------------------------------------------------------------
+  server.registerTool(
+    'search_icons',
+    {
+      description:
+        'Search icon catalog by keyword. When: you need a valid icon name for dads-icon or icon-capable components. Returns: { total, limit, offset, hasMore, icons[] } with name, variants, and usageExample. After: use the icon name in generate_usage_snippet or your markup.',
+      inputSchema: {
+        query: z.string().optional().describe('Search icon names (partial match)'),
+        limit: z.number().int().min(1).max(100).optional().describe('Maximum items to return (default: 20)'),
+        offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
+        prefix: z.string().optional(),
+      },
+    },
+    async ({ query, limit, offset, prefix }) => {
+      const payload = searchIconCatalog(indexes, { query, limit, offset, prefix });
+      return {
+        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
       };
     },
   );
@@ -492,6 +696,15 @@ export async function createMcpServer(loadJsonData, loadValidator) {
       const canonicalTag = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
       const modulePath = canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined;
       const api = serializeApi(decl, modulePath, prefix);
+      const relatedComponents = getRelatedComponentsForTag({
+        canonicalTagName: canonicalTag,
+        installRegistry,
+        relatedMap: relatedComponentMap,
+        prefix,
+      });
+      if (relatedComponents.length > 0) {
+        api.relatedComponents = relatedComponents;
+      }
 
       return {
         content: [{ type: 'text', text: JSON.stringify(api, null, 2) }],

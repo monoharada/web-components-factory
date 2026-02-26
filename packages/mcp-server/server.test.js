@@ -19,8 +19,17 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import {
   CANONICAL_PREFIX,
   CATEGORY_MAP,
+  MAX_PREFIX_LENGTH,
+  buildComponentSummaries,
+  buildIndexes,
+  buildRelatedComponentMap,
+  extractIconNames,
   getCategory,
+  getRelatedComponentsForTag,
   findCustomElementDeclarations,
+  parseIconNamesFromDescription,
+  parseIconNamesFromType,
+  searchIconCatalog,
 } from './core.mjs';
 
 // ---------------------------------------------------------------------------
@@ -105,10 +114,11 @@ describe('get_design_system_overview (logic)', () => {
     }
   });
 
-  it('includes all expected tool names (11 tools)', () => {
+  it('includes all expected tool names (12 tools)', () => {
     const expectedTools = [
       'get_design_system_overview',
       'list_components',
+      'search_icons',
       'get_component_api',
       'generate_usage_snippet',
       'get_install_recipe',
@@ -120,8 +130,8 @@ describe('get_design_system_overview (logic)', () => {
       'search_guidelines',
     ];
 
-    expect(expectedTools).toHaveLength(11);
-    expect(new Set(expectedTools).size).toBe(11);
+    expect(expectedTools).toHaveLength(12);
+    expect(new Set(expectedTools).size).toBe(12);
   });
 });
 
@@ -161,6 +171,122 @@ describe('list_components category filter (logic)', () => {
     const decls = findCustomElementDeclarations(manifest);
     expect(decls.length).toBeGreaterThan(0);
   });
+
+  it('keeps backward compatibility: no limit means all items', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const decls = findCustomElementDeclarations(manifest);
+    const indexes = buildIndexes(manifest);
+    const page = buildComponentSummaries(indexes, {});
+
+    expect(page.offset).toBe(0);
+    expect(page.total).toBe(decls.length);
+    expect(page.items.length).toBe(decls.length);
+    expect(page.hasMore).toBe(false);
+  });
+
+  it('supports query filter and offset pagination', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+
+    const queryPage = buildComponentSummaries(indexes, { query: 'button', limit: 50 });
+    expect(queryPage.items.length).toBeGreaterThan(0);
+    expect(queryPage.items.some((item) => item.tagName === 'dads-button')).toBe(true);
+
+    const first = buildComponentSummaries(indexes, { limit: 5, offset: 0 });
+    const second = buildComponentSummaries(indexes, { limit: 5, offset: 5 });
+    expect(first.items).toHaveLength(5);
+    expect(second.items).toHaveLength(5);
+    expect(first.items[0].tagName).not.toBe(second.items[0].tagName);
+  });
+});
+
+describe('search_icons (logic)', () => {
+  it('parses icon names from full-width comma description and quoted types', () => {
+    expect(parseIconNamesFromDescription('iconPathsのキー: search、document、close）')).toEqual([
+      'search',
+      'document',
+      'close',
+    ]);
+    expect(parseIconNamesFromType('"search" | "document" | `close`')).toEqual([
+      'search',
+      'document',
+      'close',
+    ]);
+  });
+
+  it('extracts icon names from dads-icon metadata', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const iconNames = extractIconNames(indexes);
+
+    expect(iconNames.length).toBeGreaterThan(10);
+    expect(iconNames).toContain('search');
+    expect(iconNames).toContain('document');
+  });
+
+  it('supports query + pagination and respects prefix in usage examples', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const result = searchIconCatalog(indexes, {
+      query: 'arrow',
+      limit: 5,
+      offset: 0,
+      prefix: 'myui',
+    });
+
+    expect(result.limit).toBe(5);
+    expect(result.icons.length).toBeLessThanOrEqual(5);
+    expect(result.total).toBeGreaterThan(0);
+    expect(result.icons[0].usageExample).toContain('<myui-icon');
+  });
+
+  it('clamps very long prefix to keep output bounded', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const hugePrefix = 'x'.repeat(2000);
+    const result = searchIconCatalog(indexes, { limit: 100, prefix: hugePrefix });
+
+    expect(result.icons.length).toBeGreaterThan(0);
+    expect(result.icons[0].usageExample).toContain(`<${'x'.repeat(MAX_PREFIX_LENGTH)}-icon`);
+    expect(result.icons[0].usageExample.length).toBeLessThan(200);
+
+    const listResult = buildComponentSummaries(indexes, { prefix: hugePrefix });
+    expect(listResult.items[0].tagName.startsWith(`${'x'.repeat(MAX_PREFIX_LENGTH)}-`)).toBe(true);
+  });
+});
+
+describe('get_component_api relatedComponents (logic)', () => {
+  it('builds related component graph from patterns/deps', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const installRegistry = await loadBundledJson('install-registry.json');
+    const patternRegistry = await loadBundledJson('pattern-registry.json');
+    const indexes = buildIndexes(manifest);
+    const relatedMap = buildRelatedComponentMap(installRegistry, patternRegistry.patterns ?? {});
+
+    const related = getRelatedComponentsForTag({
+      canonicalTagName: 'dads-button',
+      installRegistry,
+      relatedMap,
+      prefix: CANONICAL_PREFIX,
+    });
+
+    expect(related.length).toBeGreaterThan(0);
+    expect(related.every((item) => item.componentId !== 'button')).toBe(true);
+    expect(related.every((item) => Array.isArray(item.tagNames))).toBe(true);
+    expect(related.every((item) => Array.isArray(item.via))).toBe(true);
+    expect(related.some((item) => item.tagNames.some((tag) => tag.startsWith('dads-')))).toBe(true);
+
+    const prefixed = getRelatedComponentsForTag({
+      canonicalTagName: 'dads-button',
+      installRegistry,
+      relatedMap,
+      prefix: 'myui',
+    });
+    expect(prefixed.some((item) => item.tagNames.some((tag) => tag.startsWith('myui-')))).toBe(true);
+
+    // sanity: helpers still expose declarations for downstream code paths
+    expect(indexes.byTag.has('dads-button')).toBe(true);
+  });
 });
 
 describe('tool descriptions', () => {
@@ -176,6 +302,7 @@ describe('tool descriptions', () => {
     // Tools that should have enhanced descriptions
     const toolNames = [
       'list_components',
+      'search_icons',
       'get_component_api',
       'generate_usage_snippet',
       'get_install_recipe',

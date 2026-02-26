@@ -1,7 +1,7 @@
 # wcf-mcp vs Serendie Design System MCP — 9次元比較分析レポート
 
 > **作成日**: 2026-02-25
-> **対象**: `@anthropic/wcf-mcp` v0.1.1 vs Serendie Design System MCP
+> **対象**: `@monoharada/wcf-mcp` v0.1.1 vs Serendie Design System MCP
 > **調査方法**: wcf-mcp ソースコード精読 + Serendie 公開ドキュメント + 業界15事例の横断調査（Deep Research）
 > **補足**: Serendie MCP はリモート Streamable HTTP として公開済み（[serendie.design/get-started/ai-agent/mcp-server](https://serendie.design/get-started/ai-agent/mcp-server)）
 
@@ -220,7 +220,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 | 評価軸 | wcf-mcp (3/5) | Serendie (4/5) |
 |--------|---------------|----------------|
-| **セットアップ** | `npx @anthropic/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
+| **セットアップ** | `npx @monoharada/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
 | **ツール発見性** | 11ツール。`get_design_system_overview` を先頭にしたガードレール導線あり | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
 | **エラーメッセージ** | `isError: true` + テキストメッセージ。行/列情報付き診断（validate_markup） | 構造化エラー + ガイダンスメッセージ |
 | **IDE対応** | Claude Code 向けスキルパック（4段階ワークフロー）あるが MCP 側に未統合 | ChatGPT（OpenAI Apps SDK）対応 |
@@ -251,7 +251,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ### 4.2 Component Discoverability（コンポーネント発見性）
 
-| 評価軸 | wcf-mcp (4/5) | Serendie (4/5) |
+| 評価軸 | wcf-mcp (5/5) | Serendie (4/5) |
 |--------|---------------|----------------|
 | **カタログ網羅性** | CEM ベースで全コンポーネントを自動列挙 | マニフェストベース（React コンポーネントのみ） |
 | **取得方式** | tagName/className で個別取得（`pickDecl`）。componentId は install recipe 側で解決 | `get-components` で一覧、`get-component-detail` で個別取得 |
@@ -263,14 +263,20 @@ Figma MCP                  DS MCP                    Storybook MCP
 - Carbon: `docs_search` + `code_search` の2ツール構成（シンプルだが効果的）
 - MFUI: `get_available_components` → `get_component_files`（ソース丸ごと返却。トークン爆増の課題あり）
 
-**Gap**: `list_components` のフィルタリング欠如。Figma の Progressive Disclosure パターンが参考になる。
+**Gap（解消済み）**: `#173` で `list_components` の query/category/ページネーション、`search_icons`、`get_component_api.relatedComponents` を追加し、Progressive Disclosure を実装。
 
-#### Evidence
+#### Evidence (2026-02-26) — 暫定（main 未マージ）
 
 | 項目 | 内容 |
 |------|------|
-| スコア | 4（変更なし） |
-| 5/5 に必要 | #173: Progressive Disclosure + `search_icons` + カテゴリ/クエリフィルタ |
+| Issue | #173 |
+| 実装ツール / 機能 | `list_components` に `query/limit/offset`（互換維持: limit未指定は全件、limit指定で段階取得）、`search_icons` 追加、`get_component_api.relatedComponents` 追加 |
+| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` / `npm run agents:verify` |
+| テスト結果 | server.test: 25 passed、response-size: 全項目 OK（`list_components(all, prefix=huge)` 22.1KB / `search_icons(limit=100, prefix=huge)` 17.3KB）、agents:verify 成功 |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.test.js`, `scripts/mcp/check-response-size.mjs`, `packages/mcp-server/README.md` |
+| PR / マージ SHA | PR TBD / main 未マージ |
+| スコア変更 | 4 → 5 |
+| 根拠 | Progressive Disclosure とアイコン検索を実装し、関連コンポーネント提案まで含めて Figma/Spindle 相当の探索導線を満たした |
 
 ---
 
