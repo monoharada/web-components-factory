@@ -17,7 +17,11 @@ MCP クライアント側からは、stdio サーバーとして次のように�
 }
 ```
 
-## 提供 tools（最小セット）
+## 提供 tools（標準セット）
+
+### `get_design_system_overview()`
+
+最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー）を返します。
 
 ### `list_components({ prefix? })`
 
@@ -62,6 +66,14 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 ### `generate_pattern_snippet({ patternId, prefix? })`
 
 HTML snippet だけを返します。
+
+### `get_design_tokens({ type?, category?, query? })`
+
+デザイントークンを type/category/query でフィルタして返します。
+
+### `search_guidelines({ query, topic?, maxResults? })`
+
+設計ガイドラインを topic/query で検索し、スコア付きで返します。
 
 ### 追加済み mockup patterns
 

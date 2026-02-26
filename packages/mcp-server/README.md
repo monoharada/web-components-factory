@@ -33,7 +33,13 @@ npx @anthropic/wcf-mcp
 claude mcp add wcf -- npx @anthropic/wcf-mcp
 ```
 
-## 提供ツール（8個）
+## 提供ツール（11個）
+
+### ガードレール
+
+| ツール | 説明 |
+|--------|------|
+| `get_design_system_overview` | 最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー）を返す |
 
 ### コンポーネント検索・API
 
@@ -57,6 +63,24 @@ claude mcp add wcf -- npx @anthropic/wcf-mcp
 | `list_patterns` | 利用可能な UI パターン（レシピ）を一覧表示 |
 | `get_pattern_recipe` | パターンの完全レシピ（必要コンポーネント・依存解決・HTML）を取得 |
 | `generate_pattern_snippet` | パターンの HTML スニペットを生成 |
+
+### トークン・ガイドライン検索
+
+| ツール | 説明 |
+|--------|------|
+| `get_design_tokens` | デザイントークンを type/category/query で検索 |
+| `search_guidelines` | ガイドライン（topic/query）をスコア付きで検索 |
+
+## transport
+
+標準は stdio です。HTTP transport も利用できます（localhost のみ）。
+
+```bash
+npx @anthropic/wcf-mcp --transport=http --port=3100
+```
+
+- bind: `127.0.0.1`
+- endpoint: `http://127.0.0.1:3100/mcp`
 
 ## prefix パラメータ
 
@@ -148,13 +172,16 @@ npm run mcp:check     # データが最新かチェック（CI用）
 ```
 packages/mcp-server/
 ├── bin.mjs          # エントリポイント (#!/usr/bin/env node)
+├── core.mjs         # ツール定義・共通ロジック
 ├── server.mjs       # MCP サーバー本体
 ├── validator.mjs    # HTML バリデーター
 ├── package.json     # npm パッケージ定義
 └── data/            # バンドルデータ (npm run mcp:build で生成)
     ├── custom-elements.json
     ├── install-registry.json
-    └── pattern-registry.json
+    ├── pattern-registry.json
+    ├── design-tokens.json
+    └── guidelines-index.json
 ```
 
 ## 要件

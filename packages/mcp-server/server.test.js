@@ -13,6 +13,17 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ---------------------------------------------------------------------------
+// Import helpers directly from core.mjs
+// ---------------------------------------------------------------------------
+
+import {
+  CANONICAL_PREFIX,
+  CATEGORY_MAP,
+  getCategory,
+  findCustomElementDeclarations,
+} from './core.mjs';
+
+// ---------------------------------------------------------------------------
 // Load data the same way the server does
 // ---------------------------------------------------------------------------
 
@@ -20,15 +31,15 @@ const REPO_FILE_MAP = {
   'custom-elements.json': 'custom-elements.json',
   'install-registry.json': 'registry/install-registry.json',
   'pattern-registry.json': 'registry/pattern-registry.json',
+  'design-tokens.json': 'design-tokens.json',
+  'guidelines-index.json': 'guidelines-index.json',
 };
 
 async function loadBundledJson(fileName) {
-  // Try bundled data/ first (npx mode), then fall back to repo root (CI / dev)
   const bundled = path.join(__dirname, 'data', fileName);
   const repoRoot = path.resolve(__dirname, '../..');
-  const repo = REPO_FILE_MAP[fileName]
-    ? path.join(repoRoot, REPO_FILE_MAP[fileName])
-    : undefined;
+  const repoRelative = REPO_FILE_MAP[fileName];
+  const repo = repoRelative ? path.join(repoRoot, repoRelative) : undefined;
 
   for (const p of [bundled, repo]) {
     if (!p) continue;
@@ -40,97 +51,6 @@ async function loadBundledJson(fileName) {
     }
   }
   throw new Error(`Data file not found: ${fileName} (tried data/ and repo root)`);
-}
-
-// ---------------------------------------------------------------------------
-// Re-import the helpers we need to test (re-implemented inline because
-// server.mjs only exports startServer — we test the logic, not the wiring)
-// ---------------------------------------------------------------------------
-
-const CANONICAL_PREFIX = 'dads';
-
-const CATEGORY_MAP = {
-  'dads-input-text': 'Form',
-  'dads-textarea': 'Form',
-  'dads-select': 'Form',
-  'dads-checkbox': 'Form',
-  'dads-radio': 'Form',
-  'dads-switch': 'Form',
-  'dads-combobox': 'Form',
-  'dads-date-picker': 'Form',
-  'dads-file-upload': 'Form',
-  'dads-fieldset': 'Form',
-  'dads-search-box': 'Form',
-  'dads-calendar': 'Form',
-  'dads-button': 'Actions',
-  'dads-dialog': 'Actions',
-  'dads-drawer': 'Actions',
-  'dads-disclosure': 'Actions',
-  'dads-accordion-details': 'Actions',
-  'dads-accordion-item-details': 'Actions',
-  'dads-breadcrumb': 'Navigation',
-  'dads-breadcrumb-item': 'Navigation',
-  'dads-page-navigation': 'Navigation',
-  'dads-step-navigation': 'Navigation',
-  'dads-step-navigation-item': 'Navigation',
-  'dads-menu-list': 'Navigation',
-  'dads-menu-list-item': 'Navigation',
-  'dads-menu-list-box': 'Navigation',
-  'dads-global-menu': 'Navigation',
-  'dads-global-menu-item': 'Navigation',
-  'dads-language-selector': 'Navigation',
-  'dads-hamburger-menu-button': 'Navigation',
-  'dads-utility-link': 'Navigation',
-  'dads-mobile-menu': 'Navigation',
-  'dads-card': 'Content',
-  'dads-heading': 'Content',
-  'dads-text': 'Content',
-  'dads-blockquote': 'Content',
-  'dads-code-block': 'Content',
-  'dads-divider': 'Content',
-  'dads-list': 'Content',
-  'dads-list-item': 'Content',
-  'dads-description-list': 'Content',
-  'dads-resource-list': 'Content',
-  'dads-table': 'Content',
-  'dads-table-control': 'Content',
-  'dads-avatar': 'Display',
-  'dads-icon': 'Display',
-  'dads-chip-label': 'Display',
-  'dads-chip-tag': 'Display',
-  'dads-notification-banner': 'Display',
-  'dads-emergency-banner': 'Display',
-  'dads-carousel': 'Display',
-  'dads-layout-shell': 'Layout',
-  'dads-layout-sidebar': 'Layout',
-  'dads-layout-aside': 'Layout',
-  'dads-header-container': 'Layout',
-  'dads-device-mock': 'Display',
-  'dads-progress-indicator': 'Display',
-  'dads-spinner': 'Display',
-  'dads-progress-bar': 'Display',
-  'dads-loading-icon': 'Display',
-};
-
-function getCategory(tagName) {
-  return CATEGORY_MAP[tagName] ?? 'Other';
-}
-
-function findCustomElementDeclarations(manifest) {
-  const modules = Array.isArray(manifest?.modules) ? manifest.modules : [];
-  const decls = [];
-  for (const mod of modules) {
-    const modulePath = typeof mod?.path === 'string' ? mod.path : undefined;
-    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
-    for (const decl of declarations) {
-      if (!decl || typeof decl !== 'object') continue;
-      const tagName = typeof decl.tagName === 'string' ? decl.tagName : undefined;
-      const isCustomElement = decl.customElement === true || decl.kind === 'custom-element';
-      if (!isCustomElement || !tagName) continue;
-      decls.push({ decl, tagName: tagName.toLowerCase(), modulePath });
-    }
-  }
-  return decls;
 }
 
 // ---------------------------------------------------------------------------
@@ -185,7 +105,7 @@ describe('get_design_system_overview (logic)', () => {
     }
   });
 
-  it('includes all expected tool names', () => {
+  it('includes all expected tool names (11 tools)', () => {
     const expectedTools = [
       'get_design_system_overview',
       'list_components',
@@ -196,11 +116,12 @@ describe('get_design_system_overview (logic)', () => {
       'list_patterns',
       'get_pattern_recipe',
       'generate_pattern_snippet',
+      'get_design_tokens',
+      'search_guidelines',
     ];
 
-    // These are hardcoded in the overview — verify they match
-    expect(expectedTools).toHaveLength(9);
-    expect(new Set(expectedTools).size).toBe(9);
+    expect(expectedTools).toHaveLength(11);
+    expect(new Set(expectedTools).size).toBe(11);
   });
 });
 
@@ -244,16 +165,13 @@ describe('list_components category filter (logic)', () => {
 
 describe('tool descriptions', () => {
   it('get_design_system_overview description contains MUST guardrail', async () => {
-    const serverSrc = await fs.readFile(path.join(__dirname, 'server.mjs'), 'utf8');
-    const overviewMatch = serverSrc.match(
-      /registerTool\(\s*'get_design_system_overview'[\s\S]*?description:\s*[`'"]([\s\S]*?)[`'"]/
-    );
-    // The description must contain "MUST be called first"
-    expect(serverSrc).toContain('MUST be called first');
+    // Tool descriptions now live in core.mjs
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
+    expect(coreSrc).toContain('MUST be called first');
   });
 
   it('all tools have When/Returns/After guidance in descriptions', async () => {
-    const serverSrc = await fs.readFile(path.join(__dirname, 'server.mjs'), 'utf8');
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
 
     // Tools that should have enhanced descriptions
     const toolNames = [
@@ -265,15 +183,200 @@ describe('tool descriptions', () => {
       'list_patterns',
       'get_pattern_recipe',
       'generate_pattern_snippet',
+      'get_design_tokens',
+      'search_guidelines',
     ];
 
     for (const name of toolNames) {
       // Each tool's description block should contain "When:" and "Returns:"
-      const toolSection = serverSrc.slice(serverSrc.indexOf(`'${name}'`));
+      const toolSection = coreSrc.slice(coreSrc.indexOf(`'${name}'`));
       const descEnd = toolSection.indexOf('inputSchema');
       const descBlock = toolSection.slice(0, descEnd);
       expect(descBlock).toContain('When:');
       expect(descBlock).toContain('Returns:');
     }
+  });
+});
+
+describe('get_design_tokens', () => {
+  it('design-tokens.json has correct shape', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      // Skip if not generated yet
+      return;
+    }
+
+    expect(data).toHaveProperty('version');
+    expect(data).toHaveProperty('tokens');
+    expect(data).toHaveProperty('summary');
+    expect(Array.isArray(data.tokens)).toBe(true);
+
+    // Verify token shape
+    if (data.tokens.length > 0) {
+      const token = data.tokens[0];
+      expect(token).toHaveProperty('name');
+      expect(token).toHaveProperty('value');
+      expect(token).toHaveProperty('type');
+      expect(token).toHaveProperty('category');
+      expect(token).toHaveProperty('cssVariable');
+    }
+  });
+
+  it('filters by type', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const colorTokens = data.tokens.filter((t) => t.type === 'color');
+    const spacingTokens = data.tokens.filter((t) => t.type === 'spacing');
+
+    expect(colorTokens.length).toBeGreaterThan(0);
+    expect(spacingTokens.length).toBeGreaterThan(0);
+
+    // Every color token name should start with --color
+    for (const t of colorTokens) {
+      expect(t.name).toMatch(/^--color/);
+    }
+  });
+
+  it('filters by category', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const primitiveTokens = data.tokens.filter((t) => t.category === 'primitive');
+    const semanticTokens = data.tokens.filter((t) => t.category === 'semantic');
+
+    expect(primitiveTokens.length).toBeGreaterThan(0);
+    expect(semanticTokens.length).toBeGreaterThan(0);
+  });
+
+  it('filters by query', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const blueTokens = data.tokens.filter((t) => t.name.toLowerCase().includes('blue'));
+    expect(blueTokens.length).toBeGreaterThan(0);
+  });
+
+  it('summary has counts for all types', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    expect(data.summary).toHaveProperty('color');
+    expect(data.summary).toHaveProperty('spacing');
+    expect(data.summary).toHaveProperty('typography');
+    expect(data.summary).toHaveProperty('radius');
+    expect(data.summary).toHaveProperty('shadow');
+
+    expect(data.summary.color).toBeGreaterThan(0);
+    expect(data.summary.spacing).toBeGreaterThan(0);
+  });
+});
+
+describe('search_guidelines', () => {
+  it('guidelines-index.json has correct shape', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('guidelines-index.json');
+    } catch {
+      return;
+    }
+
+    expect(data).toHaveProperty('version');
+    expect(data).toHaveProperty('documents');
+    expect(data).toHaveProperty('topicCounts');
+    expect(Array.isArray(data.documents)).toBe(true);
+    expect(data.documents.length).toBeGreaterThan(0);
+
+    // Verify document shape
+    const doc = data.documents[0];
+    expect(doc).toHaveProperty('id');
+    expect(doc).toHaveProperty('title');
+    expect(doc).toHaveProperty('topic');
+    expect(doc).toHaveProperty('sections');
+    expect(Array.isArray(doc.sections)).toBe(true);
+  });
+
+  it('filters by topic', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('guidelines-index.json');
+    } catch {
+      return;
+    }
+
+    const cssDocs = data.documents.filter((d) => d.topic === 'css');
+    const patternDocs = data.documents.filter((d) => d.topic === 'patterns');
+
+    expect(cssDocs.length).toBeGreaterThan(0);
+    expect(patternDocs.length).toBeGreaterThan(0);
+  });
+
+  it('contains 20+ documents', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('guidelines-index.json');
+    } catch {
+      return;
+    }
+
+    expect(data.documents.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it('keyword search returns results', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('guidelines-index.json');
+    } catch {
+      return;
+    }
+
+    // Search for a common keyword
+    const query = 'accessibility';
+    const q = query.toLowerCase();
+    let hits = 0;
+
+    for (const doc of data.documents) {
+      for (const section of doc.sections) {
+        const heading = String(section.heading ?? '').toLowerCase();
+        const keywords = Array.isArray(section.keywords) ? section.keywords : [];
+        const snippet = String(section.snippet ?? '').toLowerCase();
+
+        if (heading.includes(q) || keywords.some((kw) => String(kw).toLowerCase().includes(q)) || snippet.includes(q)) {
+          hits++;
+        }
+      }
+    }
+
+    // Should find at least some hits for "accessibility"
+    expect(hits).toBeGreaterThan(0);
+  });
+});
+
+describe('HTTP transport support', () => {
+  it('bin.mjs imports both transport types', async () => {
+    const binSrc = await fs.readFile(path.join(__dirname, 'bin.mjs'), 'utf8');
+    expect(binSrc).toContain('StdioServerTransport');
+    expect(binSrc).toContain('StreamableHTTPServerTransport');
+    expect(binSrc).toContain('--transport=');
+    expect(binSrc).toContain('--port=');
+    expect(binSrc).toContain("127.0.0.1");
   });
 });
