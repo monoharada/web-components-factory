@@ -7,6 +7,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { createMcpServer } from '../../packages/mcp-server/core.mjs';
 
@@ -20,7 +21,7 @@ const FILE_MAP = {
   'guidelines-index.json': 'packages/mcp-server/data/guidelines-index.json',
 };
 
-async function loadJsonData(fileName) {
+export async function loadJsonData(fileName) {
   const relPath = FILE_MAP[fileName];
   if (!relPath) throw new Error(`Unknown data file: ${fileName}`);
   const abs = path.join(REPO_ROOT, relPath);
@@ -28,17 +29,31 @@ async function loadJsonData(fileName) {
   return JSON.parse(text);
 }
 
-async function loadValidator() {
-  return import('../wc/validator-core.mjs');
+export async function loadValidator() {
+  const [repoValidator, mcpValidator] = await Promise.all([
+    import('../wc/validator-core.mjs'),
+    import('../../packages/mcp-server/validator.mjs'),
+  ]);
+  return {
+    ...repoValidator,
+    detectTokenMisuseInInlineStyles: mcpValidator.detectTokenMisuseInInlineStyles,
+  };
 }
 
-async function main() {
+export async function main() {
   const { server } = await createMcpServer(loadJsonData, loadValidator);
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+const directRunArg = process.argv[1];
+const isDirectRun =
+  typeof directRunArg === 'string' &&
+  pathToFileURL(path.resolve(directRunArg)).href === import.meta.url;
+
+if (isDirectRun) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

@@ -15,6 +15,8 @@ import { z } from 'zod';
 
 export const CANONICAL_PREFIX = 'dads';
 export const MAX_PREFIX_LENGTH = 64;
+export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
+export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
@@ -80,6 +82,84 @@ export const CATEGORY_MAP = {
   'dads-loading-icon': 'Display',
 };
 
+const TOKEN_MISUSE_ALLOWED_TYPES = Object.freeze(new Set(['color', 'spacing']));
+const STRUCTURED_CONTENT_DISABLE_TRUE_VALUES = Object.freeze(new Set(['1', 'true', 'yes', 'on']));
+
+export function isStructuredContentDisabled(env = process.env) {
+  const raw = String(env?.[STRUCTURED_CONTENT_DISABLE_FLAG] ?? '').trim().toLowerCase();
+  return STRUCTURED_CONTENT_DISABLE_TRUE_VALUES.has(raw);
+}
+
+export function toStructuredContent(data) {
+  return {
+    type: 'application/json',
+    data,
+  };
+}
+
+export function measureToolResultBytes(result) {
+  return Buffer.byteLength(JSON.stringify(result), 'utf8');
+}
+
+export function buildJsonToolResponse(payload, { env = process.env } = {}) {
+  const content = [{
+    type: 'text',
+    text: JSON.stringify(payload, null, 2),
+  }];
+
+  if (isStructuredContentDisabled(env)) {
+    return { content };
+  }
+
+  const withStructuredContent = {
+    content,
+    structuredContent: toStructuredContent(payload),
+  };
+
+  // Keep response size under the 100KB guardrail even when structuredContent is enabled.
+  if (measureToolResultBytes(withStructuredContent) > MAX_TOOL_RESULT_BYTES) {
+    return { content };
+  }
+
+  return withStructuredContent;
+}
+
+export function normalizeTokenValue(value) {
+  if (typeof value === 'string') return value.trim().toLowerCase().replace(/\s+/g, ' ');
+  if (typeof value === 'number') return String(value);
+  return '';
+}
+
+export function normalizeCssVariable(value) {
+  if (typeof value !== 'string') return '';
+
+  const raw = value.trim();
+  if (!raw) return '';
+  if (raw.startsWith('--')) return raw;
+
+  const varMatch = /^var\(\s*(--[^,\s)]+)\s*(?:,\s*[^)]+)?\)$/.exec(raw);
+  if (varMatch) return varMatch[1];
+
+  return '';
+}
+
+export function buildTokenSuggestionMap(designTokensData) {
+  if (!Array.isArray(designTokensData?.tokens)) return new Map();
+
+  const out = new Map();
+  for (const token of designTokensData.tokens) {
+    const type = String(token?.type ?? '').toLowerCase();
+    if (!TOKEN_MISUSE_ALLOWED_TYPES.has(type)) continue;
+
+    const cssVariable = normalizeCssVariable(token?.cssVariable);
+    if (!cssVariable) continue;
+
+    const normalized = normalizeTokenValue(token?.value);
+    if (normalized && !out.has(normalized)) out.set(normalized, cssVariable);
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers (exported for testing)
 // ---------------------------------------------------------------------------
@@ -88,9 +168,13 @@ export function getCategory(tagName) {
   return CATEGORY_MAP[tagName] ?? 'Other';
 }
 
-export function normalizePrefix(prefix) {
+function normalizePrefixRaw(prefix) {
   if (typeof prefix !== 'string' || prefix.trim() === '') return CANONICAL_PREFIX;
-  return prefix.trim().toLowerCase().slice(0, MAX_PREFIX_LENGTH);
+  return prefix.trim().toLowerCase();
+}
+
+export function normalizePrefix(prefix) {
+  return normalizePrefixRaw(prefix).slice(0, MAX_PREFIX_LENGTH);
 }
 
 export function withPrefix(tagName, prefix) {
@@ -108,9 +192,11 @@ export function toCanonicalTagName(tagName, prefix) {
   if (!raw) return undefined;
   if (raw.startsWith(`${CANONICAL_PREFIX}-`)) return raw;
 
-  const p = normalizePrefix(prefix);
-  if (p !== CANONICAL_PREFIX && raw.startsWith(`${p}-`)) {
-    return `${CANONICAL_PREFIX}-${raw.slice(p.length + 1)}`;
+  const candidates = [...new Set([normalizePrefix(prefix), normalizePrefixRaw(prefix)])];
+  for (const p of candidates) {
+    if (p !== CANONICAL_PREFIX && raw.startsWith(`${p}-`)) {
+      return `${CANONICAL_PREFIX}-${raw.slice(p.length + 1)}`;
+    }
   }
 
   return raw;
@@ -525,7 +611,11 @@ export function getRelatedComponentsForTag({ canonicalTagName, installRegistry, 
 export async function createMcpServer(loadJsonData, loadValidator) {
   const manifest = await loadJsonData('custom-elements.json');
   const indexes = buildIndexes(manifest);
-  const { collectCemCustomElements, validateTextAgainstCem } = await loadValidator();
+  const {
+    collectCemCustomElements,
+    validateTextAgainstCem,
+    detectTokenMisuseInInlineStyles = () => [],
+  } = await loadValidator();
   const canonicalCemIndex = collectCemCustomElements(manifest);
   const installRegistry = await loadJsonData('install-registry.json');
   const patternRegistry = await loadJsonData('pattern-registry.json');
@@ -546,6 +636,8 @@ export async function createMcpServer(loadJsonData, loadValidator) {
   } catch {
     // guidelines-index.json may not exist yet
   }
+
+  const tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
@@ -706,9 +798,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         api.relatedComponents = relatedComponents;
       }
 
-      return {
-        content: [{ type: 'text', text: JSON.stringify(api, null, 2) }],
-      };
+      return buildJsonToolResponse(api);
     },
   );
 
@@ -862,7 +952,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         cemIndex = combined;
       }
 
-      const diagnostics = validateTextAgainstCem({
+      const cemDiagnostics = validateTextAgainstCem({
         filePath: '<markup>',
         text: html,
         cem: cemIndex,
@@ -870,7 +960,16 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           unknownElement: 'error',
           unknownAttribute: 'warning',
         },
-      }).map((d) => ({
+      });
+
+      const tokenMisuseDiagnostics = detectTokenMisuseInInlineStyles({
+        filePath: '<markup>',
+        text: html,
+        valueToToken: tokenSuggestionMap,
+        severity: 'warning',
+      });
+
+      const diagnostics = [...cemDiagnostics, ...tokenMisuseDiagnostics].map((d) => ({
         file: d.file,
         range: d.range,
         severity: d.severity,
@@ -1054,16 +1153,13 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         tokens = tokens.filter((t) => t.name.toLowerCase().includes(q));
       }
 
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            total: tokens.length,
-            tokens,
-            summary: designTokensData.summary,
-          }, null, 2),
-        }],
+      const payload = {
+        total: tokens.length,
+        tokens,
+        summary: designTokensData.summary,
       };
+
+      return buildJsonToolResponse(payload);
     },
   );
 
@@ -1143,17 +1239,14 @@ export async function createMcpServer(loadJsonData, loadValidator) {
       results.sort((a, b) => b.score - a.score);
       const topResults = results.slice(0, max);
 
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            query,
-            topic: topic ?? 'all',
-            totalHits: results.length,
-            results: topResults,
-          }, null, 2),
-        }],
+      const payload = {
+        query,
+        topic: topic ?? 'all',
+        totalHits: results.length,
+        results: topResults,
       };
+
+      return buildJsonToolResponse(payload);
     },
   );
 

@@ -19,18 +19,27 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import {
   CANONICAL_PREFIX,
   CATEGORY_MAP,
+  MAX_TOOL_RESULT_BYTES,
   MAX_PREFIX_LENGTH,
+  STRUCTURED_CONTENT_DISABLE_FLAG,
   buildComponentSummaries,
   buildIndexes,
+  buildJsonToolResponse,
   buildRelatedComponentMap,
+  buildTokenSuggestionMap,
   extractIconNames,
   getCategory,
   getRelatedComponentsForTag,
+  isStructuredContentDisabled,
+  measureToolResultBytes,
   findCustomElementDeclarations,
+  pickDecl,
   parseIconNamesFromDescription,
   parseIconNamesFromType,
   searchIconCatalog,
+  toCanonicalTagName,
 } from './core.mjs';
+import { detectTokenMisuseInInlineStyles } from './validator.mjs';
 
 // ---------------------------------------------------------------------------
 // Load data the same way the server does
@@ -252,6 +261,24 @@ describe('search_icons (logic)', () => {
 
     const listResult = buildComponentSummaries(indexes, { prefix: hugePrefix });
     expect(listResult.items[0].tagName.startsWith(`${'x'.repeat(MAX_PREFIX_LENGTH)}-`)).toBe(true);
+  });
+});
+
+describe('prefix normalization compatibility (logic)', () => {
+  it('resolves tagName using both raw and clamped prefix forms', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const hugePrefix = 'x'.repeat(2000);
+    const clampedPrefix = 'x'.repeat(MAX_PREFIX_LENGTH);
+
+    expect(toCanonicalTagName(`${hugePrefix}-button`, hugePrefix)).toBe('dads-button');
+    expect(toCanonicalTagName(`${clampedPrefix}-button`, hugePrefix)).toBe('dads-button');
+
+    const byHugeTag = pickDecl(indexes, { tagName: `${hugePrefix}-button`, prefix: hugePrefix });
+    const byClampedTag = pickDecl(indexes, { tagName: `${clampedPrefix}-button`, prefix: hugePrefix });
+
+    expect(byHugeTag?.tagName).toBe('dads-button');
+    expect(byClampedTag?.tagName).toBe('dads-button');
   });
 });
 
@@ -494,6 +521,122 @@ describe('search_guidelines', () => {
 
     // Should find at least some hits for "accessibility"
     expect(hits).toBeGreaterThan(0);
+  });
+});
+
+describe('structuredContent helpers', () => {
+  it('returns structuredContent by default', () => {
+    const payload = {
+      query: 'button',
+      topic: 'all',
+      totalHits: 1,
+      results: [{ id: 'x' }],
+    };
+    const result = buildJsonToolResponse(payload, { env: {} });
+
+    expect(result).toHaveProperty('content');
+    expect(result.structuredContent).toEqual({
+      type: 'application/json',
+      data: payload,
+    });
+    expect(JSON.parse(result.content[0].text)).toEqual(payload);
+  });
+
+  it('disables structuredContent when rollback flag is enabled', () => {
+    const payload = { total: 1, tokens: [], summary: {} };
+    const result = buildJsonToolResponse(payload, { env: { [STRUCTURED_CONTENT_DISABLE_FLAG]: '1' } });
+
+    expect(isStructuredContentDisabled({ [STRUCTURED_CONTENT_DISABLE_FLAG]: '1' })).toBe(true);
+    expect(result.structuredContent).toBeUndefined();
+    expect(JSON.parse(result.content[0].text)).toEqual(payload);
+  });
+
+  it('builds token suggestion map from color/spacing tokens only', () => {
+    const map = buildTokenSuggestionMap({
+      tokens: [
+        { type: 'color', value: '#333', cssVariable: 'var(--color-text-body)' },
+        { type: 'spacing', value: '16px', cssVariable: '--spacing-4' },
+        { type: 'spacing', value: '8px', cssVariable: 'var(--spacing-2, 8px)' },
+        { type: 'typography', value: '14px', cssVariable: '--font-size-sm' },
+        { type: 'color', value: '#fff', cssVariable: 'color-token' },
+      ],
+    });
+
+    expect(map.get('#333')).toBe('--color-text-body');
+    expect(map.get('16px')).toBe('--spacing-4');
+    expect(map.get('8px')).toBe('--spacing-2');
+    expect(map.has('14px')).toBe(false);
+    expect(map.has('#fff')).toBe(false);
+  });
+
+  it('omits structuredContent when adding it would exceed the response size limit', () => {
+    const payload = { blob: 'x'.repeat(70 * 1024) };
+    const textOnlyResponse = buildJsonToolResponse(payload, {
+      env: { [STRUCTURED_CONTENT_DISABLE_FLAG]: '1' },
+    });
+    const structuredCandidate = {
+      ...textOnlyResponse,
+      structuredContent: {
+        type: 'application/json',
+        data: payload,
+      },
+    };
+
+    expect(measureToolResultBytes(structuredCandidate)).toBeGreaterThan(MAX_TOOL_RESULT_BYTES);
+
+    const result = buildJsonToolResponse(payload, { env: {} });
+    expect(result.structuredContent).toBeUndefined();
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+  });
+});
+
+describe('token misuse detection', () => {
+  const valueToToken = new Map([
+    ['#333', '--color-text-body'],
+    ['#ffffff', '--color-background-default'],
+    ['16px', '--spacing-4'],
+  ]);
+
+  it('detects hard-coded color and suggests token', () => {
+    const html = '<dads-text style="color: #333">Hello</dads-text>';
+    const diagnostics = detectTokenMisuseInInlineStyles({ text: html, valueToToken });
+
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('tokenMisuse');
+    expect(diagnostics[0].message).toContain('var(--color-text-body)');
+  });
+
+  it('detects hard-coded background-color and suggests token', () => {
+    const html = '<dads-card style="background-color: #ffffff">Card</dads-card>';
+    const diagnostics = detectTokenMisuseInInlineStyles({ text: html, valueToToken });
+
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].message).toContain('var(--color-background-default)');
+  });
+
+  it('detects hard-coded padding and suggests spacing token', () => {
+    const html = '<dads-button style="padding: 16px">Button</dads-button>';
+    const diagnostics = detectTokenMisuseInInlineStyles({ text: html, valueToToken });
+
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].message).toContain('var(--spacing-4)');
+  });
+
+  it('does not report var() usage or unsupported properties', () => {
+    const html = '<dads-text style="color: var(--color-text-body); margin: 16px">OK</dads-text>';
+    const diagnostics = detectTokenMisuseInInlineStyles({ text: html, valueToToken });
+    expect(diagnostics).toHaveLength(0);
+  });
+});
+
+describe('repo-local validator wiring', () => {
+  it('loadValidator from design-system-mcp provides token misuse detector', async () => {
+    const { loadValidator } = await import('../../scripts/mcp/design-system-mcp.mjs');
+    const validator = await loadValidator();
+
+    expect(typeof validator.collectCemCustomElements).toBe('function');
+    expect(typeof validator.validateTextAgainstCem).toBe('function');
+    expect(typeof validator.detectTokenMisuseInInlineStyles).toBe('function');
   });
 });
 

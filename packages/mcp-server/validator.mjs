@@ -25,6 +25,15 @@ const GLOBAL_ATTR_ALLOW_SET = Object.freeze(
 );
 
 const FORBIDDEN_ATTR_SET = Object.freeze(new Set(['placeholder']));
+const TOKEN_MISUSE_STYLE_PROPS = Object.freeze(new Set([
+  'color',
+  'background-color',
+  'padding',
+  'padding-top',
+  'padding-right',
+  'padding-bottom',
+  'padding-left',
+]));
 
 function isForbiddenAttr(attrName) {
   return FORBIDDEN_ATTR_SET.has(attrName.toLowerCase());
@@ -94,6 +103,24 @@ function makeRange(lineStarts, startIndex, endIndex) {
   const start = indexToLineCol(lineStarts, startIndex);
   const end = indexToLineCol(lineStarts, endIndex);
   return { start, end };
+}
+
+function normalizeStyleValue(value) {
+  return String(value ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function parseInlineStyleAttribute(attrChunk) {
+  const styleMatch = /\bstyle\s*=\s*("([^"]*)"|'([^']*)')/i.exec(attrChunk);
+  if (!styleMatch) return undefined;
+
+  const quoted = styleMatch[1] ?? '';
+  const styleValue = styleMatch[2] ?? styleMatch[3] ?? '';
+  if (!styleValue) return undefined;
+
+  return {
+    styleValue,
+    styleValueOffsetInAttr: styleMatch.index + quoted.indexOf(styleValue),
+  };
 }
 
 function parseAttributeNames(rawAttrs) {
@@ -232,6 +259,71 @@ export function validateTextAgainstCem({
         message: `Unknown attribute on <${tag}>: ${attrName}`,
         tagName: tag,
         attrName,
+      });
+    }
+  }
+
+  return diagnostics;
+}
+
+/**
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   valueToToken?: Map<string, string>;
+ *   severity?: string;
+ * }} params
+ */
+export function detectTokenMisuseInInlineStyles({
+  filePath = '<input>',
+  text,
+  valueToToken = new Map(),
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+  if (!(valueToToken instanceof Map) || valueToToken.size === 0) return diagnostics;
+
+  const lineStarts = computeLineIndex(text);
+  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  let m;
+
+  while ((m = tagRe.exec(text))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    const attrChunk = String(m[2] ?? '');
+    const inlineStyle = parseInlineStyleAttribute(attrChunk);
+    if (!inlineStyle) continue;
+
+    const { styleValue, styleValueOffsetInAttr } = inlineStyle;
+    const rawAttrsStart = m.index + 1 + tag.length;
+
+    const declarationRe = /([a-z-]+)\s*:\s*([^;]+)/gi;
+    let d;
+    while ((d = declarationRe.exec(styleValue))) {
+      const prop = String(d[1] ?? '').trim().toLowerCase();
+      if (!TOKEN_MISUSE_STYLE_PROPS.has(prop)) continue;
+
+      const valueRaw = String(d[2] ?? '').trim();
+      if (!valueRaw || /^var\(/i.test(valueRaw)) continue;
+
+      const normalizedValue = normalizeStyleValue(valueRaw);
+      const cssVariable = valueToToken.get(normalizedValue);
+      if (!cssVariable) continue;
+
+      const valueOffsetInDecl = d[0].indexOf(d[2]);
+      const valueOffsetInStyle = d.index + Math.max(0, valueOffsetInDecl);
+      const startIndex = rawAttrsStart + styleValueOffsetInAttr + valueOffsetInStyle;
+      const endIndex = startIndex + d[2].length;
+      const range = makeRange(lineStarts, startIndex, endIndex);
+
+      diagnostics.push({
+        file: filePath,
+        range,
+        severity,
+        code: 'tokenMisuse',
+        message: `Use var(${cssVariable}) instead of ${valueRaw} for ${prop}`,
+        tagName: tag,
+        attrName: 'style',
+        hint: `Replace ${prop}: ${valueRaw} with ${prop}: var(${cssVariable})`,
       });
     }
   }

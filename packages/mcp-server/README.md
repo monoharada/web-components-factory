@@ -83,9 +83,39 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 - bind: `127.0.0.1`
 - endpoint: `http://127.0.0.1:3100/mcp`
 
+## structuredContent rollback
+
+`get_component_api` / `get_design_tokens` / `search_guidelines` は通常 `structuredContent` を返します。
+
+- 100KB 制限を超える場合は自動的に `structuredContent` を省略し、`content` のみ返します
+- 緊急切り戻し時は環境変数 `WCF_MCP_DISABLE_STRUCTURED_CONTENT=1` を設定してください
+
+例:
+
+```bash
+WCF_MCP_DISABLE_STRUCTURED_CONTENT=1 npx @monoharada/wcf-mcp
+```
+
+Claude Desktop 設定例:
+
+```json
+{
+  "mcpServers": {
+    "wcf": {
+      "command": "npx",
+      "args": ["@monoharada/wcf-mcp"],
+      "env": {
+        "WCF_MCP_DISABLE_STRUCTURED_CONTENT": "1"
+      }
+    }
+  }
+}
+```
+
 ## prefix パラメータ
 
 全ツールで `prefix` パラメータをサポート。デフォルトは `dads`（例: `dads-button`）。
+`prefix` は最大64文字まで使用され、超過分は切り詰められます（例: 200文字指定 -> 先頭64文字を採用）。
 
 カスタム prefix を指定すると、出力のタグ名が自動変換されます:
 
