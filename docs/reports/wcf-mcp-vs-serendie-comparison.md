@@ -1,7 +1,7 @@
 # wcf-mcp vs Serendie Design System MCP — 9次元比較分析レポート
 
 > **作成日**: 2026-02-25
-> **対象**: `@anthropic/wcf-mcp` v0.1.1 vs Serendie Design System MCP
+> **対象**: `@monoharada/wcf-mcp` v0.1.1 vs Serendie Design System MCP
 > **調査方法**: wcf-mcp ソースコード精読 + Serendie 公開ドキュメント + 業界15事例の横断調査（Deep Research）
 > **補足**: Serendie MCP はリモート Streamable HTTP として公開済み（[serendie.design/get-started/ai-agent/mcp-server](https://serendie.design/get-started/ai-agent/mcp-server)）
 
@@ -220,7 +220,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 | 評価軸 | wcf-mcp (3/5) | Serendie (4/5) |
 |--------|---------------|----------------|
-| **セットアップ** | `npx @anthropic/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
+| **セットアップ** | `npx @monoharada/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
 | **ツール発見性** | 11ツール。`get_design_system_overview` を先頭にしたガードレール導線あり | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
 | **エラーメッセージ** | `isError: true` + テキストメッセージ。行/列情報付き診断（validate_markup） | 構造化エラー + ガイダンスメッセージ |
 | **IDE対応** | Claude Code 向けスキルパック（4段階ワークフロー）あるが MCP 側に未統合 | ChatGPT（OpenAI Apps SDK）対応 |
