@@ -27,9 +27,11 @@ import {
   getCategory,
   getRelatedComponentsForTag,
   findCustomElementDeclarations,
+  pickDecl,
   parseIconNamesFromDescription,
   parseIconNamesFromType,
   searchIconCatalog,
+  toCanonicalTagName,
 } from './core.mjs';
 
 // ---------------------------------------------------------------------------
@@ -252,6 +254,24 @@ describe('search_icons (logic)', () => {
 
     const listResult = buildComponentSummaries(indexes, { prefix: hugePrefix });
     expect(listResult.items[0].tagName.startsWith(`${'x'.repeat(MAX_PREFIX_LENGTH)}-`)).toBe(true);
+  });
+});
+
+describe('prefix normalization compatibility (logic)', () => {
+  it('resolves tagName using both raw and clamped prefix forms', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const hugePrefix = 'x'.repeat(2000);
+    const clampedPrefix = 'x'.repeat(MAX_PREFIX_LENGTH);
+
+    expect(toCanonicalTagName(`${hugePrefix}-button`, hugePrefix)).toBe('dads-button');
+    expect(toCanonicalTagName(`${clampedPrefix}-button`, hugePrefix)).toBe('dads-button');
+
+    const byHugeTag = pickDecl(indexes, { tagName: `${hugePrefix}-button`, prefix: hugePrefix });
+    const byClampedTag = pickDecl(indexes, { tagName: `${clampedPrefix}-button`, prefix: hugePrefix });
+
+    expect(byHugeTag?.tagName).toBe('dads-button');
+    expect(byClampedTag?.tagName).toBe('dads-button');
   });
 });
 

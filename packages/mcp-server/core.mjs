@@ -88,9 +88,13 @@ export function getCategory(tagName) {
   return CATEGORY_MAP[tagName] ?? 'Other';
 }
 
-export function normalizePrefix(prefix) {
+function normalizePrefixRaw(prefix) {
   if (typeof prefix !== 'string' || prefix.trim() === '') return CANONICAL_PREFIX;
-  return prefix.trim().toLowerCase().slice(0, MAX_PREFIX_LENGTH);
+  return prefix.trim().toLowerCase();
+}
+
+export function normalizePrefix(prefix) {
+  return normalizePrefixRaw(prefix).slice(0, MAX_PREFIX_LENGTH);
 }
 
 export function withPrefix(tagName, prefix) {
@@ -108,9 +112,11 @@ export function toCanonicalTagName(tagName, prefix) {
   if (!raw) return undefined;
   if (raw.startsWith(`${CANONICAL_PREFIX}-`)) return raw;
 
-  const p = normalizePrefix(prefix);
-  if (p !== CANONICAL_PREFIX && raw.startsWith(`${p}-`)) {
-    return `${CANONICAL_PREFIX}-${raw.slice(p.length + 1)}`;
+  const candidates = [...new Set([normalizePrefix(prefix), normalizePrefixRaw(prefix)])];
+  for (const p of candidates) {
+    if (p !== CANONICAL_PREFIX && raw.startsWith(`${p}-`)) {
+      return `${CANONICAL_PREFIX}-${raw.slice(p.length + 1)}`;
+    }
   }
 
   return raw;

@@ -86,6 +86,7 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 ## prefix パラメータ
 
 全ツールで `prefix` パラメータをサポート。デフォルトは `dads`（例: `dads-button`）。
+`prefix` は最大64文字まで使用され、超過分は切り詰められます（例: 200文字指定 -> 先頭64文字を採用）。
 
 カスタム prefix を指定すると、出力のタグ名が自動変換されます:
 
