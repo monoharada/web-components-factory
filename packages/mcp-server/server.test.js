@@ -554,15 +554,19 @@ describe('structuredContent helpers', () => {
   it('builds token suggestion map from color/spacing tokens only', () => {
     const map = buildTokenSuggestionMap({
       tokens: [
-        { type: 'color', value: '#333', cssVariable: '--color-text-body' },
+        { type: 'color', value: '#333', cssVariable: 'var(--color-text-body)' },
         { type: 'spacing', value: '16px', cssVariable: '--spacing-4' },
+        { type: 'spacing', value: '8px', cssVariable: 'var(--spacing-2, 8px)' },
         { type: 'typography', value: '14px', cssVariable: '--font-size-sm' },
+        { type: 'color', value: '#fff', cssVariable: 'color-token' },
       ],
     });
 
     expect(map.get('#333')).toBe('--color-text-body');
     expect(map.get('16px')).toBe('--spacing-4');
+    expect(map.get('8px')).toBe('--spacing-2');
     expect(map.has('14px')).toBe(false);
+    expect(map.has('#fff')).toBe(false);
   });
 
   it('omits structuredContent when adding it would exceed the response size limit', () => {

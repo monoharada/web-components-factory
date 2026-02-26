@@ -130,6 +130,19 @@ export function normalizeTokenValue(value) {
   return '';
 }
 
+export function normalizeCssVariable(value) {
+  if (typeof value !== 'string') return '';
+
+  const raw = value.trim();
+  if (!raw) return '';
+  if (raw.startsWith('--')) return raw;
+
+  const varMatch = /^var\(\s*(--[^,\s)]+)\s*(?:,\s*[^)]+)?\)$/.exec(raw);
+  if (varMatch) return varMatch[1];
+
+  return '';
+}
+
 export function buildTokenSuggestionMap(designTokensData) {
   if (!Array.isArray(designTokensData?.tokens)) return new Map();
 
@@ -138,8 +151,8 @@ export function buildTokenSuggestionMap(designTokensData) {
     const type = String(token?.type ?? '').toLowerCase();
     if (!TOKEN_MISUSE_ALLOWED_TYPES.has(type)) continue;
 
-    const cssVariable = typeof token?.cssVariable === 'string' ? token.cssVariable.trim() : '';
-    if (!cssVariable.startsWith('--')) continue;
+    const cssVariable = normalizeCssVariable(token?.cssVariable);
+    if (!cssVariable) continue;
 
     const normalized = normalizeTokenValue(token?.value);
     if (normalized && !out.has(normalized)) out.set(normalized, cssVariable);
