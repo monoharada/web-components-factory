@@ -33,7 +33,7 @@ npx @monoharada/wcf-mcp
 claude mcp add wcf -- npx @monoharada/wcf-mcp
 ```
 
-## 提供ツール（11個）
+## 提供ツール（12個）
 
 ### ガードレール
 
@@ -45,8 +45,9 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `list_components` | デザインシステム内の全カスタム要素を一覧表示 |
-| `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得 |
+| `list_components` | カテゴリ/クエリ/limit/offset でコンポーネントを段階的に取得（互換維持のため limit 未指定時は全件） |
+| `search_icons` | アイコン名をキーワード検索し、usage example を返す |
+| `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得（`relatedComponents` を含む） |
 | `generate_usage_snippet` | コンポーネントの最小限 HTML スニペットを生成 |
 | `get_install_recipe` | componentId・依存関係・define関数・インストールコマンドを取得 |
 

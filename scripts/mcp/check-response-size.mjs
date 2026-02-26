@@ -3,7 +3,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { findCustomElementDeclarations, getCategory } from '../../packages/mcp-server/core.mjs';
+import { buildComponentSummaries, buildIndexes, searchIconCatalog } from '../../packages/mcp-server/core.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
@@ -73,15 +73,29 @@ function searchGuidelinesPayload(guidelinesIndex, query, topic, maxResults) {
   };
 }
 
-function listComponentsPayload(manifest) {
-  const declarations = findCustomElementDeclarations(manifest);
-  return declarations.map(({ decl, tagName, modulePath }) => ({
-    tagName,
-    className: typeof decl?.name === 'string' ? decl.name : undefined,
-    description: typeof decl?.description === 'string' ? decl.description : undefined,
-    category: getCategory(tagName),
-    modulePath,
-  }));
+function pickLargestListComponentsResponse(manifest) {
+  const indexes = buildIndexes(manifest);
+  const hugePrefix = 'x'.repeat(2000);
+  const scenarios = [
+    { label: 'list_components(default)', args: {} },
+    { label: 'list_components(all, prefix=huge)', args: { prefix: hugePrefix } },
+    { label: 'list_components(limit=200)', args: { limit: 200 } },
+    { label: 'list_components(query="a", limit=200)', args: { query: 'a', limit: 200 } },
+    { label: 'list_components(category="Form", limit=200)', args: { category: 'Form', limit: 200 } },
+    { label: 'list_components(limit=200, prefix=huge)', args: { limit: 200, prefix: hugePrefix } },
+  ];
+
+  let largest = { label: 'list_components', bytes: 0 };
+
+  for (const scenario of scenarios) {
+    const payload = buildComponentSummaries(indexes, scenario.args).items;
+    const bytes = textResponseBytes(payload);
+    if (bytes > largest.bytes) {
+      largest = { label: scenario.label, bytes };
+    }
+  }
+
+  return largest;
 }
 
 function getDesignTokensPayload(designTokens) {
@@ -91,6 +105,30 @@ function getDesignTokensPayload(designTokens) {
     tokens,
     summary: designTokens?.summary,
   };
+}
+
+function pickLargestSearchIconsResponse(manifest) {
+  const indexes = buildIndexes(manifest);
+  const hugePrefix = 'x'.repeat(2000);
+  const scenarios = [
+    { label: 'search_icons(default)', args: {} },
+    { label: 'search_icons(limit=100)', args: { limit: 100 } },
+    { label: 'search_icons(query="a", limit=100)', args: { query: 'a', limit: 100 } },
+    { label: 'search_icons(query="arrow", limit=100)', args: { query: 'arrow', limit: 100 } },
+    { label: 'search_icons(limit=100, prefix=huge)', args: { limit: 100, prefix: hugePrefix } },
+  ];
+
+  let largest = { label: 'search_icons', bytes: 0 };
+
+  for (const scenario of scenarios) {
+    const payload = searchIconCatalog(indexes, scenario.args);
+    const bytes = textResponseBytes(payload);
+    if (bytes > largest.bytes) {
+      largest = { label: scenario.label, bytes };
+    }
+  }
+
+  return largest;
 }
 
 function pickLargestGuidelineResponse(guidelinesIndex) {
@@ -121,10 +159,8 @@ async function main() {
   ]);
 
   const checks = [
-    {
-      label: 'list_components(all)',
-      bytes: textResponseBytes(listComponentsPayload(manifest)),
-    },
+    pickLargestListComponentsResponse(manifest),
+    pickLargestSearchIconsResponse(manifest),
     {
       label: 'get_design_tokens(all)',
       bytes: textResponseBytes(getDesignTokensPayload(designTokens)),
