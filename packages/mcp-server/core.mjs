@@ -16,6 +16,7 @@ import { z } from 'zod';
 export const CANONICAL_PREFIX = 'dads';
 export const MAX_PREFIX_LENGTH = 64;
 export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
+export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
@@ -96,6 +97,10 @@ export function toStructuredContent(data) {
   };
 }
 
+export function measureToolResultBytes(result) {
+  return Buffer.byteLength(JSON.stringify(result), 'utf8');
+}
+
 export function buildJsonToolResponse(payload, { env = process.env } = {}) {
   const content = [{
     type: 'text',
@@ -106,10 +111,17 @@ export function buildJsonToolResponse(payload, { env = process.env } = {}) {
     return { content };
   }
 
-  return {
+  const withStructuredContent = {
     content,
     structuredContent: toStructuredContent(payload),
   };
+
+  // Keep response size under the 100KB guardrail even when structuredContent is enabled.
+  if (measureToolResultBytes(withStructuredContent) > MAX_TOOL_RESULT_BYTES) {
+    return { content };
+  }
+
+  return withStructuredContent;
 }
 
 export function normalizeTokenValue(value) {

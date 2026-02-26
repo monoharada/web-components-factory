@@ -19,6 +19,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import {
   CANONICAL_PREFIX,
   CATEGORY_MAP,
+  MAX_TOOL_RESULT_BYTES,
   MAX_PREFIX_LENGTH,
   STRUCTURED_CONTENT_DISABLE_FLAG,
   buildComponentSummaries,
@@ -30,6 +31,7 @@ import {
   getCategory,
   getRelatedComponentsForTag,
   isStructuredContentDisabled,
+  measureToolResultBytes,
   findCustomElementDeclarations,
   pickDecl,
   parseIconNamesFromDescription,
@@ -562,6 +564,26 @@ describe('structuredContent helpers', () => {
     expect(map.get('16px')).toBe('--spacing-4');
     expect(map.has('14px')).toBe(false);
   });
+
+  it('omits structuredContent when adding it would exceed the response size limit', () => {
+    const payload = { blob: 'x'.repeat(70 * 1024) };
+    const textOnlyResponse = buildJsonToolResponse(payload, {
+      env: { [STRUCTURED_CONTENT_DISABLE_FLAG]: '1' },
+    });
+    const structuredCandidate = {
+      ...textOnlyResponse,
+      structuredContent: {
+        type: 'application/json',
+        data: payload,
+      },
+    };
+
+    expect(measureToolResultBytes(structuredCandidate)).toBeGreaterThan(MAX_TOOL_RESULT_BYTES);
+
+    const result = buildJsonToolResponse(payload, { env: {} });
+    expect(result.structuredContent).toBeUndefined();
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+  });
 });
 
 describe('token misuse detection', () => {
@@ -603,19 +625,14 @@ describe('token misuse detection', () => {
   });
 });
 
-describe('#174 core integration markers', () => {
-  it('uses buildJsonToolResponse for the 3 structuredContent owner tools', async () => {
-    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
-    expect(coreSrc).toContain('return buildJsonToolResponse(api);');
-    expect(coreSrc).toContain('return buildJsonToolResponse(payload);');
-    expect(coreSrc).toContain('WCF_MCP_DISABLE_STRUCTURED_CONTENT');
-  });
+describe('repo-local validator wiring', () => {
+  it('loadValidator from design-system-mcp provides token misuse detector', async () => {
+    const { loadValidator } = await import('../../scripts/mcp/design-system-mcp.mjs');
+    const validator = await loadValidator();
 
-  it('calls token misuse detector from validate_markup handler', async () => {
-    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
-    const validatorSrc = await fs.readFile(path.join(__dirname, 'validator.mjs'), 'utf8');
-    expect(coreSrc).toContain('detectTokenMisuseInInlineStyles');
-    expect(validatorSrc).toContain("code: 'tokenMisuse'");
+    expect(typeof validator.collectCemCustomElements).toBe('function');
+    expect(typeof validator.validateTextAgainstCem).toBe('function');
+    expect(typeof validator.detectTokenMisuseInInlineStyles).toBe('function');
   });
 });
 

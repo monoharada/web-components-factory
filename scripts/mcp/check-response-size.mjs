@@ -3,12 +3,19 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildComponentSummaries, buildIndexes, searchIconCatalog } from '../../packages/mcp-server/core.mjs';
+import {
+  MAX_TOOL_RESULT_BYTES,
+  buildComponentSummaries,
+  buildIndexes,
+  buildJsonToolResponse,
+  measureToolResultBytes,
+  searchIconCatalog,
+} from '../../packages/mcp-server/core.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
 const DATA_DIR = path.join(ROOT, 'packages/mcp-server/data');
-const MAX_RESPONSE_BYTES = 100 * 1024;
+const MAX_RESPONSE_BYTES = MAX_TOOL_RESULT_BYTES;
 const MAX_GUIDELINE_RESULTS = 20;
 
 async function loadJson(fileName) {
@@ -17,9 +24,17 @@ async function loadJson(fileName) {
   return JSON.parse(raw);
 }
 
-function textResponseBytes(payload) {
-  const text = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
-  return Buffer.byteLength(text, 'utf8');
+function toTextToolResponse(payload) {
+  return {
+    content: [{
+      type: 'text',
+      text: typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2),
+    }],
+  };
+}
+
+function toolResponseBytes(toolResponse) {
+  return measureToolResultBytes(toolResponse);
 }
 
 function formatKb(bytes) {
@@ -89,7 +104,7 @@ function pickLargestListComponentsResponse(manifest) {
 
   for (const scenario of scenarios) {
     const payload = buildComponentSummaries(indexes, scenario.args).items;
-    const bytes = textResponseBytes(payload);
+    const bytes = toolResponseBytes(toTextToolResponse(payload));
     if (bytes > largest.bytes) {
       largest = { label: scenario.label, bytes };
     }
@@ -122,7 +137,7 @@ function pickLargestSearchIconsResponse(manifest) {
 
   for (const scenario of scenarios) {
     const payload = searchIconCatalog(indexes, scenario.args);
-    const bytes = textResponseBytes(payload);
+    const bytes = toolResponseBytes(toTextToolResponse(payload));
     if (bytes > largest.bytes) {
       largest = { label: scenario.label, bytes };
     }
@@ -140,7 +155,7 @@ function pickLargestGuidelineResponse(guidelinesIndex) {
   for (const query of queries) {
     for (const topic of topics) {
       const payload = searchGuidelinesPayload(guidelinesIndex, query, topic, MAX_GUIDELINE_RESULTS);
-      const bytes = textResponseBytes(payload);
+      const bytes = toolResponseBytes(buildJsonToolResponse(payload, { env: {} }));
       if (bytes > largest.bytes) {
         const topicLabel = topic ?? 'all';
         largest = { label: `search_guidelines(query="${query}", topic="${topicLabel}", maxResults=20)`, bytes };
@@ -163,7 +178,7 @@ async function main() {
     pickLargestSearchIconsResponse(manifest),
     {
       label: 'get_design_tokens(all)',
-      bytes: textResponseBytes(getDesignTokensPayload(designTokens)),
+      bytes: toolResponseBytes(buildJsonToolResponse(getDesignTokensPayload(designTokens), { env: {} })),
     },
     pickLargestGuidelineResponse(guidelinesIndex),
   ];
