@@ -1,0 +1,21 @@
+{
+  "verdict": "READY_FOR_IMPLEMENTATION",
+  "summary": "必須文書が揃い、#175 の scope/contract/risk/verification が整合。F-04（SDK互換）は C-11/P-09/R-08 で契約化・検証化され、HIGH リスクはすべて rollback を持つ。DoD coverage は 8/8 で実装着手可能。",
+  "checks": {
+    "scope_consistency": "pass",
+    "dependency_consistency": "pass",
+    "verification_coverage": "pass",
+    "constraint_coverage": "pass",
+    "dod_coverage": "pass"
+  },
+  "blockers": [],
+  "high_risks": [
+    "R-01: 新規ツール追加で既存契約を壊すリスク",
+    "R-02: WCAGフィルタ仕様の誤挙動リスク",
+    "R-03: A11y index 拡張による100KB超過リスク",
+    "R-04: validate_markup 追加診断で既存診断を壊すリスク",
+    "R-08: SDK非互換で追加機能が不安定化するリスク"
+  ],
+  "unknowns": [],
+  "recommended_next_action": "APPROVE PLAN を宣言し、P-01..P-09 を C-01..C-11 のゲートで実装する。"
+}

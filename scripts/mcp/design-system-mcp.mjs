@@ -37,6 +37,7 @@ export async function loadValidator() {
   return {
     ...repoValidator,
     detectTokenMisuseInInlineStyles: mcpValidator.detectTokenMisuseInInlineStyles,
+    detectAccessibilityMisuseInMarkup: mcpValidator.detectAccessibilityMisuseInMarkup,
   };
 }
 

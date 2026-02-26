@@ -84,6 +84,17 @@ export const CATEGORY_MAP = {
 
 const TOKEN_MISUSE_ALLOWED_TYPES = Object.freeze(new Set(['color', 'spacing']));
 const STRUCTURED_CONTENT_DISABLE_TRUE_VALUES = Object.freeze(new Set(['1', 'true', 'yes', 'on']));
+const WCAG_LEVELS = Object.freeze(new Set(['A', 'AA', 'AAA', 'all']));
+const A11Y_CATEGORY_LEVEL_MAP = Object.freeze({
+  semantics: 'A',
+  keyboard: 'A',
+  labels: 'A',
+  states: 'AA',
+  zoom: 'AA',
+  motion: 'AA',
+  callouts: 'AA',
+  guideline: 'A',
+});
 
 export function isStructuredContentDisabled(env = process.env) {
   const raw = String(env?.[STRUCTURED_CONTENT_DISABLE_FLAG] ?? '').trim().toLowerCase();
@@ -600,6 +611,167 @@ export function getRelatedComponentsForTag({ canonicalTagName, installRegistry, 
   return out.slice(0, Math.max(1, maxResults));
 }
 
+export function normalizeWcagLevel(level) {
+  const raw = typeof level === 'string' ? level.trim().toUpperCase() : '';
+  if (!raw) return 'all';
+  if (raw === 'ALL') return 'all';
+  return WCAG_LEVELS.has(raw) ? raw : 'all';
+}
+
+function getWcagLevelForA11yTopic(topic) {
+  const key = String(topic ?? '').trim().toLowerCase();
+  return A11Y_CATEGORY_LEVEL_MAP[key] ?? 'A';
+}
+
+function toChecklistItemsFromCategories(categories) {
+  if (!categories || typeof categories !== 'object') return [];
+
+  const out = [];
+  for (const [topic, checks] of Object.entries(categories)) {
+    if (!Array.isArray(checks)) continue;
+    const wcagLevel = getWcagLevelForA11yTopic(topic);
+    for (const check of checks) {
+      const text = String(check ?? '').trim();
+      if (!text) continue;
+      out.push({
+        topic: String(topic),
+        wcagLevel,
+        check: text,
+      });
+    }
+  }
+  return out;
+}
+
+function toChecklistItemsFromCallouts(callouts) {
+  if (!Array.isArray(callouts)) return [];
+
+  const out = [];
+  for (const callout of callouts) {
+    const parts = [
+      callout?.title,
+      callout?.label,
+      callout?.description,
+      ...(Array.isArray(callout?.highlights) ? callout.highlights : []),
+    ]
+      .map((value) => String(value ?? '').trim())
+      .filter(Boolean);
+
+    if (parts.length === 0) continue;
+    out.push({
+      topic: 'callouts',
+      wcagLevel: getWcagLevelForA11yTopic('callouts'),
+      check: parts.join(' — '),
+    });
+  }
+  return out;
+}
+
+export function extractAccessibilityChecklist(decl, { prefix } = {}) {
+  const annotations = decl?.custom?.a11yAnnotations;
+  if (!annotations || typeof annotations !== 'object') return undefined;
+
+  const items = [
+    ...toChecklistItemsFromCategories(annotations.categories),
+    ...toChecklistItemsFromCallouts(annotations.callouts),
+  ];
+  if (items.length === 0) return undefined;
+
+  const unique = new Map();
+  for (const item of items) {
+    const key = `${item.topic}|${item.wcagLevel}|${item.check}`;
+    if (!unique.has(key)) unique.set(key, item);
+  }
+
+  return {
+    summary: String(annotations.summary ?? '').trim() || 'Component accessibility checklist',
+    version: Number.isInteger(annotations.version) ? annotations.version : 1,
+    totalChecks: unique.size,
+    items: [...unique.values()],
+    componentTagName:
+      typeof decl?.tagName === 'string' ? withPrefix(decl.tagName.toLowerCase(), prefix) : undefined,
+  };
+}
+
+export function buildAccessibilityIndex(indexes, guidelinesIndexData, { prefix } = {}) {
+  const out = [];
+
+  for (const { decl, tagName } of indexes.decls) {
+    const checklist = extractAccessibilityChecklist(decl, { prefix });
+    if (!checklist) continue;
+    const className = typeof decl?.name === 'string' ? decl.name : undefined;
+
+    for (const item of checklist.items) {
+      out.push({
+        source: 'component',
+        componentTagName: withPrefix(tagName, prefix),
+        componentClassName: className,
+        topic: item.topic,
+        wcagLevel: item.wcagLevel,
+        check: item.check,
+      });
+    }
+  }
+
+  const docs = Array.isArray(guidelinesIndexData?.documents)
+    ? guidelinesIndexData.documents.filter((doc) => doc?.topic === 'accessibility')
+    : [];
+
+  for (const doc of docs) {
+    const sections = Array.isArray(doc?.sections) ? doc.sections : [];
+    for (const section of sections) {
+      const heading = String(section?.heading ?? '').trim();
+      const snippet = String(section?.snippet ?? '').trim();
+      if (!heading && !snippet) continue;
+
+      out.push({
+        source: 'guideline',
+        documentId: String(doc?.id ?? ''),
+        title: String(doc?.title ?? ''),
+        heading,
+        topic: 'guideline',
+        wcagLevel: getWcagLevelForA11yTopic('guideline'),
+        check: snippet || heading,
+      });
+    }
+  }
+
+  return out;
+}
+
+export function queryAccessibilityIndex(
+  entries,
+  { componentTagName, topic, wcagLevel, maxResults = 20 } = {},
+) {
+  const normalizedTopic = String(topic ?? '').trim().toLowerCase() || 'all';
+  const normalizedWcagLevel = normalizeWcagLevel(wcagLevel);
+  const pageSize = Number.isInteger(maxResults) ? Math.max(1, Math.min(maxResults, 100)) : 20;
+
+  let filtered = Array.isArray(entries) ? entries : [];
+
+  if (componentTagName) {
+    filtered = filtered.filter((entry) => entry.componentTagName === componentTagName);
+  }
+
+  if (normalizedTopic !== 'all') {
+    filtered = filtered.filter((entry) => String(entry.topic ?? '').toLowerCase() === normalizedTopic);
+  }
+
+  if (normalizedWcagLevel !== 'all') {
+    filtered = filtered.filter((entry) => String(entry.wcagLevel ?? '').toUpperCase() === normalizedWcagLevel);
+  }
+
+  const totalHits = filtered.length;
+  const results = filtered.slice(0, pageSize);
+
+  return {
+    topic: normalizedTopic,
+    wcagLevel: normalizedWcagLevel,
+    totalHits,
+    results,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // createMcpServer — builds the McpServer with all tools registered, but does
 // NOT connect a transport.  Callers choose their own transport.
@@ -615,6 +787,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
     collectCemCustomElements,
     validateTextAgainstCem,
     detectTokenMisuseInInlineStyles = () => [],
+    detectAccessibilityMisuseInMarkup = () => [],
   } = await loadValidator();
   const canonicalCemIndex = collectCemCustomElements(manifest);
   const installRegistry = await loadJsonData('install-registry.json');
@@ -686,18 +859,20 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           { name: 'get_pattern_recipe', purpose: 'Full pattern recipe with dependencies and HTML' },
           { name: 'generate_pattern_snippet', purpose: 'Pattern HTML snippet only' },
           { name: 'get_design_tokens', purpose: 'Query design tokens (colors, spacing, typography, radius, shadows)' },
+          { name: 'get_accessibility_docs', purpose: 'Search component-level accessibility checklist and WCAG-filtered guidance' },
           { name: 'search_guidelines', purpose: 'Search design system guidelines and best practices' },
         ],
         recommendedWorkflow: [
           '1. get_design_system_overview → understand components, patterns & tokens',
           '2. search_guidelines → find relevant guidelines',
           '3. get_design_tokens → get correct token values',
-          '4. list_components (category/query + pagination) → shortlist components',
-          '5. search_icons (optional) → find icon names quickly',
-          '6. get_component_api → check attributes, slots, events, CSS parts',
-          '7. generate_usage_snippet or get_pattern_recipe → get code',
-          '8. validate_markup → verify your HTML is correct',
-          '9. get_install_recipe → get import/install instructions',
+          '4. get_accessibility_docs → fetch component-level accessibility checklist',
+          '5. list_components (category/query + pagination) → shortlist components',
+          '6. search_icons (optional) → find icon names quickly',
+          '7. get_component_api → check attributes, slots, events, CSS parts',
+          '8. generate_usage_snippet or get_pattern_recipe → get code',
+          '9. validate_markup → verify your HTML is correct',
+          '10. get_install_recipe → get import/install instructions',
         ],
       };
 
@@ -796,6 +971,10 @@ export async function createMcpServer(loadJsonData, loadValidator) {
       });
       if (relatedComponents.length > 0) {
         api.relatedComponents = relatedComponents;
+      }
+      const accessibilityChecklist = extractAccessibilityChecklist(decl, { prefix });
+      if (accessibilityChecklist) {
+        api.accessibilityChecklist = accessibilityChecklist;
       }
 
       return buildJsonToolResponse(api);
@@ -969,7 +1148,13 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         severity: 'warning',
       });
 
-      const diagnostics = [...cemDiagnostics, ...tokenMisuseDiagnostics].map((d) => ({
+      const accessibilityDiagnostics = detectAccessibilityMisuseInMarkup({
+        filePath: '<markup>',
+        text: html,
+        severity: 'warning',
+      });
+
+      const diagnostics = [...cemDiagnostics, ...tokenMisuseDiagnostics, ...accessibilityDiagnostics].map((d) => ({
         file: d.file,
         range: d.range,
         severity: d.severity,
@@ -1157,6 +1342,74 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         total: tokens.length,
         tokens,
         summary: designTokensData.summary,
+      };
+
+      return buildJsonToolResponse(payload);
+    },
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool: get_accessibility_docs
+  // -----------------------------------------------------------------------
+  server.registerTool(
+    'get_accessibility_docs',
+    {
+      description:
+        'Get accessibility guidance and component checklist entries. ' +
+        'When: validating accessibility decisions, reviewing ARIA usage, or checking WCAG-focused implementation notes. ' +
+        'Returns: filtered checklist entries from component a11y annotations and accessibility guidelines. ' +
+        'After: apply the checks in your markup and run validate_markup.',
+      inputSchema: {
+        component: z.string().optional()
+          .describe('Filter by component tagName/className/componentId'),
+        topic: z.string().optional()
+          .describe('Filter by topic (e.g. semantics, keyboard, labels, states, zoom, motion, callouts, guideline)'),
+        wcagLevel: z.enum(['A', 'AA', 'AAA', 'all']).optional()
+          .describe('Filter by WCAG level (default: all)'),
+        maxResults: z.number().int().min(1).max(100).optional()
+          .describe('Maximum results to return (default: 20)'),
+        prefix: z.string().optional(),
+      },
+    },
+    async ({ component, topic, wcagLevel, maxResults, prefix }) => {
+      const p = normalizePrefix(prefix);
+      let componentTagName;
+
+      if (typeof component === 'string' && component.trim() !== '') {
+        const decl =
+          pickDecl(indexes, { tagName: component, prefix: p }) ??
+          pickDecl(indexes, { className: component, prefix: p }) ??
+          findDeclByComponentId(indexes, component)?.decl;
+
+        if (!decl || typeof decl?.tagName !== 'string') {
+          return {
+            content: [{
+              type: 'text',
+              text: `Component not found (component=${component})`,
+            }],
+            isError: true,
+          };
+        }
+
+        componentTagName = withPrefix(decl.tagName.toLowerCase(), p);
+      }
+
+      const entries = buildAccessibilityIndex(indexes, guidelinesIndexData, { prefix: p });
+      const result = queryAccessibilityIndex(entries, {
+        componentTagName,
+        topic,
+        wcagLevel,
+        maxResults,
+      });
+
+      const payload = {
+        query: {
+          component: componentTagName ?? null,
+          topic: result.topic,
+          wcagLevel: result.wcagLevel,
+        },
+        totalHits: result.totalHits,
+        results: result.results,
       };
 
       return buildJsonToolResponse(payload);
