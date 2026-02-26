@@ -205,13 +205,13 @@ export function validateTextAgainstCem({
 
     const tagOffset = m.index + 1;
     const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
 
     const attrNames = parseAttributeNames(attrChunk);
     for (const { name, offset } of attrNames) {
       const attrName = name.toLowerCase();
       if (!isForbiddenAttr(attrName)) continue;
 
-      const rawAttrsStart = m.index + 1 + tag.length;
       const startIndex = rawAttrsStart + offset;
       const endIndex = startIndex + attrName.length;
       const range = makeRange(lineStarts, startIndex, endIndex);
@@ -249,7 +249,6 @@ export function validateTextAgainstCem({
       if (shouldSkipAttr(attrName)) continue;
       if (meta.attributes.has(attrName)) continue;
 
-      const rawAttrsStart = m.index + 1 + tag.length;
       const startIndex = rawAttrsStart + offset;
       const endIndex = startIndex + attrName.length;
       const range = makeRange(lineStarts, startIndex, endIndex);

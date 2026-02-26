@@ -613,8 +613,7 @@ export function getRelatedComponentsForTag({ canonicalTagName, installRegistry, 
 
 export function normalizeWcagLevel(level) {
   const raw = typeof level === 'string' ? level.trim().toUpperCase() : '';
-  if (!raw) return 'all';
-  if (raw === 'ALL') return 'all';
+  if (!raw || raw === 'ALL') return 'all';
   return WCAG_LEVELS.has(raw) ? raw : 'all';
 }
 
@@ -746,23 +745,18 @@ export function queryAccessibilityIndex(
   const normalizedTopic = String(topic ?? '').trim().toLowerCase() || 'all';
   const normalizedWcagLevel = normalizeWcagLevel(wcagLevel);
   const pageSize = Number.isInteger(maxResults) ? Math.max(1, Math.min(maxResults, 100)) : 20;
+  const source = Array.isArray(entries) ? entries : [];
+  const results = [];
+  let totalHits = 0;
 
-  let filtered = Array.isArray(entries) ? entries : [];
+  for (const entry of source) {
+    if (componentTagName && entry.componentTagName !== componentTagName) continue;
+    if (normalizedTopic !== 'all' && String(entry.topic ?? '').toLowerCase() !== normalizedTopic) continue;
+    if (normalizedWcagLevel !== 'all' && String(entry.wcagLevel ?? '').toUpperCase() !== normalizedWcagLevel) continue;
 
-  if (componentTagName) {
-    filtered = filtered.filter((entry) => entry.componentTagName === componentTagName);
+    totalHits += 1;
+    if (results.length < pageSize) results.push(entry);
   }
-
-  if (normalizedTopic !== 'all') {
-    filtered = filtered.filter((entry) => String(entry.topic ?? '').toLowerCase() === normalizedTopic);
-  }
-
-  if (normalizedWcagLevel !== 'all') {
-    filtered = filtered.filter((entry) => String(entry.wcagLevel ?? '').toUpperCase() === normalizedWcagLevel);
-  }
-
-  const totalHits = filtered.length;
-  const results = filtered.slice(0, pageSize);
 
   return {
     topic: normalizedTopic,
@@ -770,6 +764,21 @@ export function queryAccessibilityIndex(
     totalHits,
     results,
   };
+}
+
+function resolveDeclByComponent(indexes, component, prefix) {
+  const byTagOrClass =
+    pickDecl(indexes, { tagName: component, prefix }) ??
+    pickDecl(indexes, { className: component, prefix });
+  if (byTagOrClass) {
+    const canonicalTag = typeof byTagOrClass.tagName === 'string' ? byTagOrClass.tagName.toLowerCase() : undefined;
+    return {
+      decl: byTagOrClass,
+      modulePath: canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined,
+    };
+  }
+
+  return findDeclByComponentId(indexes, component);
 }
 
 // ---------------------------------------------------------------------------
@@ -1032,13 +1041,8 @@ export async function createMcpServer(loadJsonData, loadValidator) {
     },
     async ({ component, prefix }) => {
       const p = normalizePrefix(prefix);
-
-      const byTagOrClass =
-        pickDecl(indexes, { tagName: component, prefix: p }) ??
-        pickDecl(indexes, { className: component, prefix: p });
-
-      const byComponentId = byTagOrClass ? undefined : findDeclByComponentId(indexes, component);
-      const decl = byTagOrClass ?? byComponentId?.decl;
+      const resolved = resolveDeclByComponent(indexes, component, p);
+      const decl = resolved?.decl;
 
       if (!decl) {
         return {
@@ -1048,8 +1052,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
       }
 
       const canonicalTag = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
-      const modulePath =
-        canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : byComponentId?.modulePath;
+      const modulePath = canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : resolved?.modulePath;
       const api = serializeApi(decl, modulePath, p);
       const usageSnippet = generateSnippet(api, p);
 
@@ -1376,10 +1379,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
       let componentTagName;
 
       if (typeof component === 'string' && component.trim() !== '') {
-        const decl =
-          pickDecl(indexes, { tagName: component, prefix: p }) ??
-          pickDecl(indexes, { className: component, prefix: p }) ??
-          findDeclByComponentId(indexes, component)?.decl;
+        const decl = resolveDeclByComponent(indexes, component, p)?.decl;
 
         if (!decl || typeof decl?.tagName !== 'string') {
           return {
