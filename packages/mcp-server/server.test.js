@@ -20,12 +20,16 @@ import {
   CANONICAL_PREFIX,
   CATEGORY_MAP,
   MAX_PREFIX_LENGTH,
+  STRUCTURED_CONTENT_DISABLE_FLAG,
   buildComponentSummaries,
   buildIndexes,
+  buildJsonToolResponse,
   buildRelatedComponentMap,
+  buildTokenSuggestionMap,
   extractIconNames,
   getCategory,
   getRelatedComponentsForTag,
+  isStructuredContentDisabled,
   findCustomElementDeclarations,
   pickDecl,
   parseIconNamesFromDescription,
@@ -33,6 +37,7 @@ import {
   searchIconCatalog,
   toCanonicalTagName,
 } from './core.mjs';
+import { detectTokenMisuseInInlineStyles } from './validator.mjs';
 
 // ---------------------------------------------------------------------------
 // Load data the same way the server does
@@ -514,6 +519,103 @@ describe('search_guidelines', () => {
 
     // Should find at least some hits for "accessibility"
     expect(hits).toBeGreaterThan(0);
+  });
+});
+
+describe('structuredContent helpers', () => {
+  it('returns structuredContent by default', () => {
+    const payload = {
+      query: 'button',
+      topic: 'all',
+      totalHits: 1,
+      results: [{ id: 'x' }],
+    };
+    const result = buildJsonToolResponse(payload, { env: {} });
+
+    expect(result).toHaveProperty('content');
+    expect(result.structuredContent).toEqual({
+      type: 'application/json',
+      data: payload,
+    });
+    expect(JSON.parse(result.content[0].text)).toEqual(payload);
+  });
+
+  it('disables structuredContent when rollback flag is enabled', () => {
+    const payload = { total: 1, tokens: [], summary: {} };
+    const result = buildJsonToolResponse(payload, { env: { [STRUCTURED_CONTENT_DISABLE_FLAG]: '1' } });
+
+    expect(isStructuredContentDisabled({ [STRUCTURED_CONTENT_DISABLE_FLAG]: '1' })).toBe(true);
+    expect(result.structuredContent).toBeUndefined();
+    expect(JSON.parse(result.content[0].text)).toEqual(payload);
+  });
+
+  it('builds token suggestion map from color/spacing tokens only', () => {
+    const map = buildTokenSuggestionMap({
+      tokens: [
+        { type: 'color', value: '#333', cssVariable: '--color-text-body' },
+        { type: 'spacing', value: '16px', cssVariable: '--spacing-4' },
+        { type: 'typography', value: '14px', cssVariable: '--font-size-sm' },
+      ],
+    });
+
+    expect(map.get('#333')).toBe('--color-text-body');
+    expect(map.get('16px')).toBe('--spacing-4');
+    expect(map.has('14px')).toBe(false);
+  });
+});
+
+describe('token misuse detection', () => {
+  const valueToToken = new Map([
+    ['#333', '--color-text-body'],
+    ['#ffffff', '--color-background-default'],
+    ['16px', '--spacing-4'],
+  ]);
+
+  it('detects hard-coded color and suggests token', () => {
+    const html = '<dads-text style="color: #333">Hello</dads-text>';
+    const diagnostics = detectTokenMisuseInInlineStyles({ text: html, valueToToken });
+
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('tokenMisuse');
+    expect(diagnostics[0].message).toContain('var(--color-text-body)');
+  });
+
+  it('detects hard-coded background-color and suggests token', () => {
+    const html = '<dads-card style="background-color: #ffffff">Card</dads-card>';
+    const diagnostics = detectTokenMisuseInInlineStyles({ text: html, valueToToken });
+
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].message).toContain('var(--color-background-default)');
+  });
+
+  it('detects hard-coded padding and suggests spacing token', () => {
+    const html = '<dads-button style="padding: 16px">Button</dads-button>';
+    const diagnostics = detectTokenMisuseInInlineStyles({ text: html, valueToToken });
+
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].message).toContain('var(--spacing-4)');
+  });
+
+  it('does not report var() usage or unsupported properties', () => {
+    const html = '<dads-text style="color: var(--color-text-body); margin: 16px">OK</dads-text>';
+    const diagnostics = detectTokenMisuseInInlineStyles({ text: html, valueToToken });
+    expect(diagnostics).toHaveLength(0);
+  });
+});
+
+describe('#174 core integration markers', () => {
+  it('uses buildJsonToolResponse for the 3 structuredContent owner tools', async () => {
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
+    expect(coreSrc).toContain('return buildJsonToolResponse(api);');
+    expect(coreSrc).toContain('return buildJsonToolResponse(payload);');
+    expect(coreSrc).toContain('WCF_MCP_DISABLE_STRUCTURED_CONTENT');
+  });
+
+  it('calls token misuse detector from validate_markup handler', async () => {
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
+    const validatorSrc = await fs.readFile(path.join(__dirname, 'validator.mjs'), 'utf8');
+    expect(coreSrc).toContain('detectTokenMisuseInInlineStyles');
+    expect(validatorSrc).toContain("code: 'tokenMisuse'");
   });
 });
 
