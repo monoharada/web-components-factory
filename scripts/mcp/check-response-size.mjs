@@ -6,9 +6,12 @@ import { fileURLToPath } from 'node:url';
 import {
   MAX_TOOL_RESULT_BYTES,
   buildComponentSummaries,
+  buildRelatedComponentMap,
   buildIndexes,
   buildJsonToolResponse,
+  getRelatedComponentsForTag,
   measureToolResultBytes,
+  serializeApi,
   searchIconCatalog,
 } from '../../packages/mcp-server/core.mjs';
 
@@ -146,6 +149,48 @@ function pickLargestSearchIconsResponse(manifest) {
   return largest;
 }
 
+function pickLargestGetComponentApiResponse(manifest, installRegistry, patternRegistry) {
+  const indexes = buildIndexes(manifest);
+  const hugePrefix = 'x'.repeat(2000);
+  const patterns =
+    patternRegistry?.patterns && typeof patternRegistry.patterns === 'object'
+      ? patternRegistry.patterns
+      : {};
+  const relatedMap = buildRelatedComponentMap(installRegistry, patterns);
+
+  let largest = { label: 'get_component_api', bytes: 0 };
+
+  for (const decl of indexes.decls) {
+    const canonicalTag = typeof decl?.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
+    if (!canonicalTag) continue;
+    const modulePath = indexes.modulePathByTag.get(canonicalTag);
+
+    for (const prefix of [undefined, hugePrefix]) {
+      const api = serializeApi(decl, modulePath, prefix);
+      const relatedComponents = getRelatedComponentsForTag({
+        canonicalTagName: canonicalTag,
+        installRegistry,
+        relatedMap,
+        prefix,
+      });
+      if (relatedComponents.length > 0) {
+        api.relatedComponents = relatedComponents;
+      }
+
+      const bytes = toolResponseBytes(buildJsonToolResponse(api, { env: {} }));
+      if (bytes > largest.bytes) {
+        const prefixLabel = prefix ? 'prefix=huge' : 'prefix=default';
+        largest = {
+          label: `get_component_api(tagName="${canonicalTag}", ${prefixLabel})`,
+          bytes,
+        };
+      }
+    }
+  }
+
+  return largest;
+}
+
 function pickLargestGuidelineResponse(guidelinesIndex) {
   const queries = ['', 'a', 'e', 'accessibility', 'design', 'component', 'token', 'ui', 'ガイド'];
   const topics = [undefined, 'all', 'css', 'patterns', 'accessibility'];
@@ -167,15 +212,18 @@ function pickLargestGuidelineResponse(guidelinesIndex) {
 }
 
 async function main() {
-  const [manifest, designTokens, guidelinesIndex] = await Promise.all([
+  const [manifest, designTokens, guidelinesIndex, installRegistry, patternRegistry] = await Promise.all([
     loadJson('custom-elements.json'),
     loadJson('design-tokens.json'),
     loadJson('guidelines-index.json'),
+    loadJson('install-registry.json'),
+    loadJson('pattern-registry.json'),
   ]);
 
   const checks = [
     pickLargestListComponentsResponse(manifest),
     pickLargestSearchIconsResponse(manifest),
+    pickLargestGetComponentApiResponse(manifest, installRegistry, patternRegistry),
     {
       label: 'get_design_tokens(all)',
       bytes: toolResponseBytes(buildJsonToolResponse(getDesignTokensPayload(designTokens), { env: {} })),
