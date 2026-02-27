@@ -549,6 +549,14 @@ describe('MCP prompts/resources contract', () => {
       expect(Array.isArray(tokensPayload.sample)).toBe(true);
     }
 
+    const guidelines = await loadBundledJsonOrNull('guidelines-index.json');
+    if (!guidelines) {
+      await expect(
+        client.readResource({ uri: 'wcf://guidelines/css' }),
+      ).rejects.toThrow(/GUIDELINES_INDEX_UNAVAILABLE/);
+      return;
+    }
+
     const guidelinesResult = await client.readResource({ uri: 'wcf://guidelines/css' });
     const guidelinesPayload = JSON.parse(String(guidelinesResult.contents?.[0]?.text ?? '{}'));
     expect(guidelinesPayload.topic).toBe('css');
