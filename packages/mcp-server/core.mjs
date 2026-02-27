@@ -6,7 +6,7 @@
  * and helper functions live in exactly one place.
  */
 
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 
 // ---------------------------------------------------------------------------
@@ -87,6 +87,8 @@ const TOKEN_MISUSE_ALLOWED_TYPES = Object.freeze(new Set(['color', 'spacing']));
 const STRUCTURED_CONTENT_DISABLE_TRUE_VALUES = Object.freeze(new Set(['1', 'true', 'yes', 'on']));
 const WCAG_LEVELS = Object.freeze(new Set(['A', 'AA', 'AAA', 'all']));
 const TOKEN_THEMES = Object.freeze(new Set(['light', 'dark', 'all']));
+const GUIDELINE_TOPICS = Object.freeze(['accessibility', 'css', 'patterns', 'all']);
+const GUIDELINE_TOPIC_SET = Object.freeze(new Set(GUIDELINE_TOPICS));
 const PLUGIN_DATA_SOURCE_KEYS = Object.freeze(new Set([
   'custom-elements.json',
   'install-registry.json',
@@ -124,6 +126,13 @@ const NPX_TEMPLATE = Object.freeze({
   command: 'npx',
   args: ['@monoharada/wcf-mcp'],
 });
+export const FIGMA_TO_WCF_PROMPT = 'figma_to_wcf';
+export const WCF_RESOURCE_URIS = Object.freeze({
+  components: 'wcf://components',
+  tokens: 'wcf://tokens',
+  guidelinesTemplate: 'wcf://guidelines/{topic}',
+  llmsFull: 'wcf://llms-full',
+});
 export const IDE_SETUP_TEMPLATES = Object.freeze([
   {
     ide: 'Claude Desktop',
@@ -146,6 +155,24 @@ export const IDE_SETUP_TEMPLATES = Object.freeze([
   {
     ide: 'Cursor',
     configPath: '.cursor/mcp.json',
+    snippet: {
+      mcpServers: {
+        wcf: NPX_TEMPLATE,
+      },
+    },
+  },
+  {
+    ide: 'VS Code (GitHub Copilot)',
+    configPath: '.vscode/mcp.json',
+    snippet: {
+      mcpServers: {
+        wcf: NPX_TEMPLATE,
+      },
+    },
+  },
+  {
+    ide: 'Windsurf',
+    configPath: '.windsurf/mcp_config.json',
     snippet: {
       mcpServers: {
         wcf: NPX_TEMPLATE,
@@ -1323,6 +1350,123 @@ export function queryAccessibilityIndex(
   };
 }
 
+function buildComponentsResourcePayload(indexes) {
+  const page = buildComponentSummaries(indexes, {});
+  const componentsByCategory = {};
+  for (const item of page.items) {
+    const category = String(item?.category ?? 'Other');
+    componentsByCategory[category] = (componentsByCategory[category] ?? 0) + 1;
+  }
+  return {
+    total: page.total,
+    componentsByCategory,
+    components: page.items,
+  };
+}
+
+function buildTokensResourcePayload(designTokensData) {
+  if (!Array.isArray(designTokensData?.tokens)) {
+    return {
+      isError: true,
+      error: {
+        code: 'DESIGN_TOKENS_DATA_UNAVAILABLE',
+        message: 'Design tokens data not available. Run: npm run mcp:extract-tokens',
+      },
+    };
+  }
+
+  const tokens = designTokensData.tokens;
+  const tokenTypes = [...new Set(tokens
+    .map((token) => String(token?.type ?? '').trim())
+    .filter(Boolean))].sort();
+  const tokenCategories = [...new Set(tokens
+    .map((token) => String(token?.category ?? '').trim())
+    .filter(Boolean))].sort();
+
+  return {
+    isError: false,
+    payload: {
+      total: tokens.length,
+      summary: designTokensData.summary ?? {},
+      themes: designTokensData.themes ?? { default: 'light', available: ['light'] },
+      tokenTypes,
+      tokenCategories,
+      sample: tokens.slice(0, 20).map(toTokenSummary),
+    },
+  };
+}
+
+function buildGuidelinesResourcePayload(guidelinesIndexData, rawTopic) {
+  const topic = String(rawTopic ?? '').trim().toLowerCase();
+  if (!GUIDELINE_TOPIC_SET.has(topic)) {
+    return {
+      isError: true,
+      error: {
+        code: 'INVALID_GUIDELINE_TOPIC',
+        message: `Unsupported topic: ${topic}. Allowed values are ${GUIDELINE_TOPICS.join(', ')}.`,
+      },
+    };
+  }
+
+  if (!Array.isArray(guidelinesIndexData?.documents)) {
+    return {
+      isError: true,
+      error: {
+        code: 'GUIDELINES_INDEX_UNAVAILABLE',
+        message: 'Guidelines index not available. Run: npm run mcp:index-guidelines',
+      },
+    };
+  }
+
+  const documents = guidelinesIndexData.documents
+    .filter((doc) => topic === 'all' || String(doc?.topic ?? '').toLowerCase() === topic)
+    .map((doc) => {
+      const sections = Array.isArray(doc?.sections) ? doc.sections : [];
+      return {
+        id: String(doc?.id ?? ''),
+        title: String(doc?.title ?? ''),
+        topic: String(doc?.topic ?? ''),
+        sectionCount: sections.length,
+        sections: sections.map((section) => ({
+          heading: String(section?.heading ?? ''),
+          startLine: Number.isInteger(section?.startLine) ? section.startLine : undefined,
+        })),
+      };
+    });
+
+  return {
+    isError: false,
+    payload: {
+      topic,
+      totalDocuments: documents.length,
+      topicCounts: guidelinesIndexData.topicCounts ?? {},
+      documents,
+    },
+  };
+}
+
+function buildFigmaToWcfPromptText({ figmaUrl, userIntent }) {
+  const url = String(figmaUrl ?? '').trim();
+  const intent = String(userIntent ?? '').trim();
+
+  return [
+    `Figma URL: ${url}`,
+    intent ? `Implementation goal: ${intent}` : 'Implementation goal: (not specified)',
+    '',
+    'Use the workflow below in this exact order:',
+    '1. get_design_system_overview',
+    '2. get_design_tokens',
+    '3. get_component_api',
+    '4. generate_usage_snippet (or get_pattern_recipe)',
+    '5. validate_markup',
+    '',
+    'Output requirements:',
+    '- Split the UI into sections before writing code.',
+    '- For each section, name concrete components and token variables.',
+    '- Provide final validation notes and required fixes.',
+  ].join('\n');
+}
+
 function resolveDeclByComponent(indexes, component, prefix) {
   const byTagOrClass =
     pickDecl(indexes, { tagName: component, prefix }) ??
@@ -1347,6 +1491,7 @@ function resolveDeclByComponent(indexes, component, prefix) {
 //   options?: {
 //     plugins?: WcfMcpPlugin[],
 //     loadJsonDataFromPath?: (path: string, fileName: string, pluginName?: string) => Promise<object>
+//     loadTextData?: (fileName: string) => Promise<string>
 //   }
 // ---------------------------------------------------------------------------
 
@@ -1356,6 +1501,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   const loadJsonDataFromPath = typeof options?.loadJsonDataFromPath === 'function'
     ? options.loadJsonDataFromPath
     : null;
+  const loadTextData = typeof options?.loadTextData === 'function'
+    ? options.loadTextData
+    : null;
 
   const loadJson = async (fileName) => {
     const override = pluginDataSourceMap.get(fileName);
@@ -1364,6 +1512,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       throw new Error(`Plugin data source override for ${fileName} requires loadJsonDataFromPath`);
     }
     return loadJsonDataFromPath(override.path, fileName, override.pluginName);
+  };
+  const loadText = async (fileName) => {
+    if (!loadTextData) throw new Error(`Text data loader not configured for ${fileName}`);
+    return loadTextData(fileName);
   };
 
   const manifest = await loadJson('custom-elements.json');
@@ -1394,6 +1546,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   } catch {
     // guidelines-index.json may not exist yet
   }
+  let llmsFullText = null;
+  try {
+    llmsFullText = await loadText('llms-full.txt');
+  } catch {
+    // llms-full.txt may not exist in local setup
+  }
 
   const tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
 
@@ -1401,6 +1559,129 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     name: 'web-components-factory-design-system',
     version: '0.1.1',
   });
+
+  server.registerPrompt(
+    FIGMA_TO_WCF_PROMPT,
+    {
+      title: 'Figma To WCF',
+      description:
+        'Guided prompt for converting a Figma URL into WCF implementation steps with a strict tool order.',
+      argsSchema: {
+        figmaUrl: z.string().trim().url().describe('Figma URL (design or board link)'),
+        userIntent: z.string().optional().describe('Optional implementation intent / screen purpose'),
+      },
+    },
+    async ({ figmaUrl, userIntent }) => ({
+      messages: [{
+        role: 'user',
+        content: {
+          type: 'text',
+          text: buildFigmaToWcfPromptText({ figmaUrl, userIntent }),
+        },
+      }],
+    }),
+  );
+
+  server.registerResource(
+    'wcf_components',
+    WCF_RESOURCE_URIS.components,
+    {
+      title: 'WCF Component Catalog',
+      description: 'Component catalog snapshot with categories and API entry points.',
+      mimeType: 'application/json',
+    },
+    async () => {
+      const payload = buildComponentsResourcePayload(indexes);
+      return {
+        contents: [{
+          uri: WCF_RESOURCE_URIS.components,
+          mimeType: 'application/json',
+          text: JSON.stringify(payload, null, 2),
+        }],
+      };
+    },
+  );
+
+  server.registerResource(
+    'wcf_tokens',
+    WCF_RESOURCE_URIS.tokens,
+    {
+      title: 'WCF Design Tokens',
+      description: 'Token summary resource for colors, spacing, typography, radius, and shadows.',
+      mimeType: 'application/json',
+    },
+    async () => {
+      const result = buildTokensResourcePayload(designTokensData);
+      const payload = result.isError ? { error: result.error } : result.payload;
+      return {
+        contents: [{
+          uri: WCF_RESOURCE_URIS.tokens,
+          mimeType: 'application/json',
+          text: JSON.stringify(payload, null, 2),
+        }],
+      };
+    },
+  );
+
+  server.registerResource(
+    'wcf_guidelines',
+    new ResourceTemplate(WCF_RESOURCE_URIS.guidelinesTemplate, {
+      list: async () => ({
+        resources: GUIDELINE_TOPICS.map((topic) => ({
+          uri: `wcf://guidelines/${topic}`,
+          name: `wcf guidelines (${topic})`,
+          description: `Guideline summary for topic=${topic}`,
+        })),
+      }),
+      complete: {
+        topic: async (value) => {
+          const query = String(value ?? '').trim().toLowerCase();
+          return GUIDELINE_TOPICS.filter((topic) => topic.startsWith(query));
+        },
+      },
+    }),
+    {
+      title: 'WCF Guidelines',
+      description: 'Topic-scoped guideline resource (accessibility|css|patterns|all).',
+      mimeType: 'application/json',
+    },
+    async (_uri, variables) => {
+      const topic = String(variables?.topic ?? '').trim().toLowerCase();
+      const result = buildGuidelinesResourcePayload(guidelinesIndexData, topic);
+      if (result.isError) {
+        throw new Error(`${result.error.code}: ${result.error.message}`);
+      }
+      return {
+        contents: [{
+          uri: `wcf://guidelines/${topic}`,
+          mimeType: 'application/json',
+          text: JSON.stringify(result.payload, null, 2),
+        }],
+      };
+    },
+  );
+
+  server.registerResource(
+    'wcf_llms_full',
+    WCF_RESOURCE_URIS.llmsFull,
+    {
+      title: 'WCF llms-full',
+      description: 'LLM reference corpus for WCF usage, generated from repository docs.',
+      mimeType: 'text/plain',
+    },
+    async () => {
+      if (typeof llmsFullText !== 'string' || llmsFullText.length === 0) {
+        throw new Error('LLMS_FULL_UNAVAILABLE: llms-full.txt is not available.');
+      }
+      return {
+        contents: [{
+          uri: WCF_RESOURCE_URIS.llmsFull,
+          mimeType: 'text/plain',
+          text: llmsFullText,
+        }],
+      };
+    },
+  );
 
   // -----------------------------------------------------------------------
   // Tool: get_design_system_overview
@@ -1433,6 +1714,30 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         totalPatterns: patternList.length,
         patterns: patternList,
         ideSetupTemplates: IDE_SETUP_TEMPLATES,
+        availablePrompts: [
+          {
+            name: FIGMA_TO_WCF_PROMPT,
+            purpose: 'Figma-to-WCF conversion workflow prompt',
+          },
+        ],
+        availableResources: [
+          {
+            uri: WCF_RESOURCE_URIS.components,
+            purpose: 'Component catalog snapshot',
+          },
+          {
+            uri: WCF_RESOURCE_URIS.tokens,
+            purpose: 'Token summary snapshot',
+          },
+          {
+            uri: WCF_RESOURCE_URIS.guidelinesTemplate,
+            purpose: 'Topic-based guideline summaries',
+          },
+          {
+            uri: WCF_RESOURCE_URIS.llmsFull,
+            purpose: 'Full LLM reference text for WCF',
+          },
+        ],
         availableTools: [
           { name: 'get_design_system_overview', purpose: 'This overview (start here)' },
           { name: 'list_components', purpose: 'Browse components with progressive disclosure and filters' },
@@ -1451,16 +1756,18 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         ],
         recommendedWorkflow: [
           '1. get_design_system_overview → understand components, patterns, tokens, and IDE setup templates',
-          '2. search_guidelines → find relevant guidelines',
-          '3. get_design_tokens → get correct token values',
-          '4. get_design_token_detail → inspect one token with references/referencedBy and usage examples',
-          '5. get_accessibility_docs → fetch component-level accessibility checklist',
-          '6. list_components (category/query + pagination) → shortlist components',
-          '7. search_icons (optional) → find icon names quickly',
-          '8. get_component_api → check attributes, slots, events, CSS parts',
-          '9. generate_usage_snippet or get_pattern_recipe → get code',
-          '10. validate_markup → verify your HTML and use suggestions to self-correct',
-          '11. get_install_recipe → get import/install instructions',
+          '2. figma_to_wcf (optional) → bootstrap the Figma-to-WCF tool sequence',
+          '3. wcf://components and wcf://tokens resources → preload catalog/token context',
+          '4. search_guidelines → find relevant guidelines',
+          '5. get_design_tokens → get correct token values',
+          '6. get_design_token_detail → inspect one token with references/referencedBy and usage examples',
+          '7. get_accessibility_docs → fetch component-level accessibility checklist',
+          '8. list_components (category/query + pagination) → shortlist components',
+          '9. search_icons (optional) → find icon names quickly',
+          '10. get_component_api → check attributes, slots, events, CSS parts',
+          '11. generate_usage_snippet or get_pattern_recipe → get code',
+          '12. validate_markup → verify your HTML and use suggestions to self-correct',
+          '13. get_install_recipe → get import/install instructions',
         ],
         experimental: {
           plugins: {

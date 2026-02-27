@@ -48,7 +48,37 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 }
 ```
 
-## 提供ツール（14個）
+### VS Code (GitHub Copilot) で使う
+
+`.vscode/mcp.json` に追加:
+
+```json
+{
+  "mcpServers": {
+    "wcf": {
+      "command": "npx",
+      "args": ["@monoharada/wcf-mcp"]
+    }
+  }
+}
+```
+
+### Windsurf で使う
+
+`.windsurf/mcp_config.json` に追加:
+
+```json
+{
+  "mcpServers": {
+    "wcf": {
+      "command": "npx",
+      "args": ["@monoharada/wcf-mcp"]
+    }
+  }
+}
+```
+
+## 提供機能（14 tools + 1 prompt + 4 resources）
 
 ### ガードレール
 
@@ -88,6 +118,21 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | `get_design_token_detail` | 単一トークンの詳細（references/referencedBy/relatedTokens/usageExamples）を取得 |
 | `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索（`topic=all` では両ソースを混在返却） |
 | `search_guidelines` | ガイドライン（topic/query）をスコア付きで検索 |
+
+### Prompt
+
+| 名前 | 説明 |
+|------|------|
+| `figma_to_wcf` | Figma URL を入力に、`overview → tokens → component api → snippet → validate` の実行順を返す |
+
+### Resources (`wcf://`)
+
+| URI | 説明 |
+|-----|------|
+| `wcf://components` | コンポーネントカタログのスナップショット |
+| `wcf://tokens` | トークン summary（type/category/themes/sample） |
+| `wcf://guidelines/{topic}` | topic 別ガイドライン要約（`accessibility`,`css`,`patterns`,`all`） |
+| `wcf://llms-full` | `llms-full.txt` の全文 |
 
 ## transport
 

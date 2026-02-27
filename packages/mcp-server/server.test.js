@@ -5,11 +5,13 @@
  * without actually starting the stdio transport.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -20,6 +22,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import {
   CANONICAL_PREFIX,
   CATEGORY_MAP,
+  FIGMA_TO_WCF_PROMPT,
   IDE_SETUP_TEMPLATES,
   MAX_TOOL_RESULT_BYTES,
   MAX_PREFIX_LENGTH,
@@ -55,6 +58,7 @@ import {
   queryAccessibilityIndex,
   searchIconCatalog,
   toCanonicalTagName,
+  WCF_RESOURCE_URIS,
 } from './core.mjs';
 import { detectAccessibilityMisuseInMarkup, detectTokenMisuseInInlineStyles } from './validator.mjs';
 import { loadWcfMcpRuntimeConfig } from './server.mjs';
@@ -69,6 +73,7 @@ const REPO_FILE_MAP = {
   'pattern-registry.json': 'registry/pattern-registry.json',
   'design-tokens.json': 'design-tokens.json',
   'guidelines-index.json': 'guidelines-index.json',
+  'llms-full.txt': 'llms-full.txt',
 };
 
 async function loadBundledJson(fileName) {
@@ -95,6 +100,23 @@ async function loadBundledJsonOrNull(fileName) {
   } catch {
     return null;
   }
+}
+
+async function loadBundledText(fileName) {
+  const bundled = path.join(__dirname, 'data', fileName);
+  const repoRoot = path.resolve(__dirname, '../..');
+  const repoRelative = REPO_FILE_MAP[fileName];
+  const repo = repoRelative ? path.join(repoRoot, repoRelative) : undefined;
+
+  for (const p of [bundled, repo]) {
+    if (!p) continue;
+    try {
+      return await fs.readFile(p, 'utf8');
+    } catch {
+      // Try next path
+    }
+  }
+  throw new Error(`Data file not found: ${fileName} (tried data/ and repo root)`);
 }
 
 // ---------------------------------------------------------------------------
@@ -390,6 +412,195 @@ describe('tool descriptions', () => {
       const descBlock = toolSection.slice(0, descEnd);
       expect(descBlock).toContain('When:');
       expect(descBlock).toContain('Returns:');
+    }
+  });
+});
+
+describe('MCP prompts/resources contract', () => {
+  let client;
+  let server;
+
+  beforeAll(async () => {
+    const created = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      { loadTextData: loadBundledText },
+    );
+    server = created.server;
+    client = new Client(
+      { name: 'wcf-mcp-test-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+  });
+
+  afterAll(async () => {
+    await Promise.allSettled([
+      client?.close?.(),
+      server?.close?.(),
+    ]);
+  });
+
+  it('registers figma_to_wcf prompt and returns ordered workflow', async () => {
+    const promptList = await client.listPrompts();
+    const figmaPrompt = promptList.prompts.find((item) => item.name === FIGMA_TO_WCF_PROMPT);
+    expect(figmaPrompt).toBeDefined();
+    expect(figmaPrompt?.arguments?.some((arg) => arg.name === 'figmaUrl' && arg.required === true)).toBe(true);
+
+    const result = await client.getPrompt({
+      name: FIGMA_TO_WCF_PROMPT,
+      arguments: {
+        figmaUrl: 'https://figma.com/design/abcd1234/MyFile?node-id=1-2',
+        userIntent: 'Build account settings screen',
+      },
+    });
+    const text = result.messages
+      .map((message) => (message.content.type === 'text' ? message.content.text : ''))
+      .join('\n');
+
+    const expectedSequence = [
+      'get_design_system_overview',
+      'get_design_tokens',
+      'get_component_api',
+      'generate_usage_snippet',
+      'validate_markup',
+    ];
+
+    let previousIndex = -1;
+    for (const step of expectedSequence) {
+      const index = text.indexOf(step);
+      expect(index).toBeGreaterThan(previousIndex);
+      previousIndex = index;
+    }
+  });
+
+  it('rejects figma_to_wcf prompt calls when figmaUrl is not a valid URL', async () => {
+    await expect(
+      client.getPrompt({
+        name: FIGMA_TO_WCF_PROMPT,
+        arguments: { figmaUrl: 'not-a-url' },
+      }),
+    ).rejects.toThrow(/Invalid arguments|validation|url/i);
+
+    await expect(
+      client.getPrompt({
+        name: FIGMA_TO_WCF_PROMPT,
+        arguments: { figmaUrl: '   ' },
+      }),
+    ).rejects.toThrow(/Invalid arguments|validation|url/i);
+  });
+
+  it('returns overview with prompt/resource discovery and 5 IDE templates', async () => {
+    const result = await client.callTool({
+      name: 'get_design_system_overview',
+      arguments: {},
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+
+    expect(Array.isArray(payload.ideSetupTemplates)).toBe(true);
+    expect(payload.ideSetupTemplates.length).toBeGreaterThanOrEqual(5);
+    expect(payload.ideSetupTemplates.some((item) => item.ide === 'VS Code (GitHub Copilot)')).toBe(true);
+    expect(payload.ideSetupTemplates.some((item) => item.ide === 'Windsurf')).toBe(true);
+
+    expect(Array.isArray(payload.availablePrompts)).toBe(true);
+    expect(payload.availablePrompts.some((item) => item.name === FIGMA_TO_WCF_PROMPT)).toBe(true);
+
+    expect(Array.isArray(payload.availableResources)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.components)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.tokens)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.guidelinesTemplate)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.llmsFull)).toBe(true);
+  });
+
+  it('exposes static resources and guidelines template resources', async () => {
+    const resourcesResult = await client.listResources();
+    const uris = resourcesResult.resources.map((resource) => resource.uri);
+    expect(uris).toContain(WCF_RESOURCE_URIS.components);
+    expect(uris).toContain(WCF_RESOURCE_URIS.tokens);
+    expect(uris).toContain(WCF_RESOURCE_URIS.llmsFull);
+    expect(uris).toContain('wcf://guidelines/accessibility');
+    expect(uris).toContain('wcf://guidelines/css');
+    expect(uris).toContain('wcf://guidelines/patterns');
+    expect(uris).toContain('wcf://guidelines/all');
+
+    const templatesResult = await client.listResourceTemplates();
+    expect(
+      templatesResult.resourceTemplates.some((template) => template.uriTemplate === WCF_RESOURCE_URIS.guidelinesTemplate),
+    ).toBe(true);
+  });
+
+  it('reads components/tokens/guidelines resources', async () => {
+    const componentsResult = await client.readResource({ uri: WCF_RESOURCE_URIS.components });
+    const componentsPayload = JSON.parse(String(componentsResult.contents?.[0]?.text ?? '{}'));
+    expect(componentsPayload.total).toBeGreaterThan(0);
+    expect(Array.isArray(componentsPayload.components)).toBe(true);
+
+    const tokensResult = await client.readResource({ uri: WCF_RESOURCE_URIS.tokens });
+    const tokensPayload = JSON.parse(String(tokensResult.contents?.[0]?.text ?? '{}'));
+    if (tokensPayload.error) {
+      expect(tokensPayload.error.code).toBe('DESIGN_TOKENS_DATA_UNAVAILABLE');
+    } else {
+      expect(tokensPayload.total).toBeGreaterThan(0);
+      expect(tokensPayload).toHaveProperty('summary');
+      expect(Array.isArray(tokensPayload.sample)).toBe(true);
+    }
+
+    const guidelines = await loadBundledJsonOrNull('guidelines-index.json');
+    if (!guidelines) {
+      await expect(
+        client.readResource({ uri: 'wcf://guidelines/css' }),
+      ).rejects.toThrow(/GUIDELINES_INDEX_UNAVAILABLE/);
+      return;
+    }
+
+    const guidelinesResult = await client.readResource({ uri: 'wcf://guidelines/css' });
+    const guidelinesPayload = JSON.parse(String(guidelinesResult.contents?.[0]?.text ?? '{}'));
+    expect(guidelinesPayload.topic).toBe('css');
+    expect(guidelinesPayload.totalDocuments).toBeGreaterThan(0);
+  });
+
+  it('returns INVALID_GUIDELINE_TOPIC for unsupported guideline topic', async () => {
+    await expect(
+      client.readResource({ uri: 'wcf://guidelines/unsupported' }),
+    ).rejects.toThrow(/INVALID_GUIDELINE_TOPIC/);
+  });
+
+  it('reads llms-full resource with source parity', async () => {
+    const result = await client.readResource({ uri: WCF_RESOURCE_URIS.llmsFull });
+    const actual = String(result.contents?.[0]?.text ?? '');
+    const expected = await loadBundledText('llms-full.txt');
+    expect(actual).toBe(expected);
+  });
+
+  it('returns LLMS_FULL_UNAVAILABLE when loadTextData is not configured', async () => {
+    const created = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+    );
+    const noTextServer = created.server;
+    const noTextClient = new Client(
+      { name: 'wcf-mcp-test-client-no-text', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      noTextServer.connect(serverTransport),
+      noTextClient.connect(clientTransport),
+    ]);
+
+    try {
+      await expect(
+        noTextClient.readResource({ uri: WCF_RESOURCE_URIS.llmsFull }),
+      ).rejects.toThrow(/LLMS_FULL_UNAVAILABLE/);
+    } finally {
+      await Promise.allSettled([
+        noTextClient.close(),
+        noTextServer.close(),
+      ]);
     }
   });
 });

@@ -23,6 +23,7 @@ const REPO_FILE_MAP = {
   'pattern-registry.json': 'registry/pattern-registry.json',
   'design-tokens.json': 'design-tokens.json',
   'guidelines-index.json': 'guidelines-index.json',
+  'llms-full.txt': 'llms-full.txt',
 };
 export const DEFAULT_WCF_MCP_CONFIG = 'wcf-mcp.config.json';
 
@@ -46,6 +47,19 @@ async function loadJsonData(fileName) {
     }
   }
   throw new Error(`データファイルが見つかりません: ${fileName}`);
+}
+
+async function loadTextData(fileName) {
+  const { bundled, repo } = resolveDataPath(fileName);
+  for (const p of [bundled, repo]) {
+    if (!p) continue;
+    try {
+      return await fs.readFile(p, 'utf8');
+    } catch {
+      // Try next path
+    }
+  }
+  throw new Error(`テキストデータファイルが見つかりません: ${fileName}`);
 }
 
 async function loadValidator() {
@@ -218,7 +232,8 @@ export async function createServer(options = {}) {
   });
   return createMcpServer(loadJsonData, loadValidator, {
     plugins: runtimeConfig.plugins,
-    loadJsonDataFromPath: async (sourcePath) => loadJsonDataFromPath(sourcePath),
+    loadJsonDataFromPath,
+    loadTextData,
   });
 }
 
