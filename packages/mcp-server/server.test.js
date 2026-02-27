@@ -478,6 +478,44 @@ describe('MCP prompts/resources contract', () => {
     }
   });
 
+  it('rejects figma_to_wcf prompt calls when figmaUrl is not a valid URL', async () => {
+    await expect(
+      client.getPrompt({
+        name: FIGMA_TO_WCF_PROMPT,
+        arguments: { figmaUrl: 'not-a-url' },
+      }),
+    ).rejects.toThrow(/Invalid arguments|validation|url/i);
+
+    await expect(
+      client.getPrompt({
+        name: FIGMA_TO_WCF_PROMPT,
+        arguments: { figmaUrl: '   ' },
+      }),
+    ).rejects.toThrow(/Invalid arguments|validation|url/i);
+  });
+
+  it('returns overview with prompt/resource discovery and 5 IDE templates', async () => {
+    const result = await client.callTool({
+      name: 'get_design_system_overview',
+      arguments: {},
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+
+    expect(Array.isArray(payload.ideSetupTemplates)).toBe(true);
+    expect(payload.ideSetupTemplates.length).toBeGreaterThanOrEqual(5);
+    expect(payload.ideSetupTemplates.some((item) => item.ide === 'VS Code (GitHub Copilot)')).toBe(true);
+    expect(payload.ideSetupTemplates.some((item) => item.ide === 'Windsurf')).toBe(true);
+
+    expect(Array.isArray(payload.availablePrompts)).toBe(true);
+    expect(payload.availablePrompts.some((item) => item.name === FIGMA_TO_WCF_PROMPT)).toBe(true);
+
+    expect(Array.isArray(payload.availableResources)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.components)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.tokens)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.guidelinesTemplate)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.llmsFull)).toBe(true);
+  });
+
   it('exposes static resources and guidelines template resources', async () => {
     const resourcesResult = await client.listResources();
     const uris = resourcesResult.resources.map((resource) => resource.uri);

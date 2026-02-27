@@ -1567,7 +1567,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       description:
         'Guided prompt for converting a Figma URL into WCF implementation steps with a strict tool order.',
       argsSchema: {
-        figmaUrl: z.string().describe('Figma URL (design or board link)'),
+        figmaUrl: z.string().trim().url().describe('Figma URL (design or board link)'),
         userIntent: z.string().optional().describe('Optional implementation intent / screen purpose'),
       },
     },
