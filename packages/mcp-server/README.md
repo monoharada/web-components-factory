@@ -185,7 +185,7 @@ prefix: "myui" → dads-button → myui-button
     {
       "severity": "warning",
       "code": "unknownAttribute",
-      "message": "Unknown attribute \"foo\" on <dads-button>",
+      "message": "Unknown attribute on <dads-button>: foo",
       "attrName": "foo"
     }
   ]
