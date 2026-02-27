@@ -55,7 +55,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `validate_markup` | HTML スニペットを CEM に照合し、未知の要素（error）・属性（warning）を検出 |
+| `validate_markup` | HTML スニペットを検証し、未知要素（error）・未知属性（warning）・禁止属性/トークン誤用/`aria-live`・`role="alert"` の誤用（warning）を検出 |
 
 ### UI パターン
 
@@ -70,7 +70,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | ツール | 説明 |
 |--------|------|
 | `get_design_tokens` | デザイントークンを type/category/query で検索 |
-| `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索 |
+| `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索（`topic=all` では両ソースを混在返却） |
 | `search_guidelines` | ガイドライン（topic/query）をスコア付きで検索 |
 
 ## transport

@@ -58,8 +58,10 @@ npm run mcp:design-system
   - 最小の usage snippet
 - `get_install_recipe({ component, prefix? })`
   - install recipe（componentId / deps / define / usageSnippet）
+- `get_accessibility_docs({ component?, topic?, wcagLevel?, maxResults?, prefix? })`
+  - コンポーネントの A11y チェックリストとガイドライン要点（topic=all では両ソース混在）
 - `validate_markup({ html, prefix? })`
-  - HTML 断片の検証（unknownElement=error, unknownAttribute=warning）
+  - HTML 断片の検証（unknownElement=error, unknownAttribute=warning, forbiddenAttribute/tokenMisuse/accessibilityMisuse=warning）
 
 ## 4) 新規コンポーネント追加時の注意
 
