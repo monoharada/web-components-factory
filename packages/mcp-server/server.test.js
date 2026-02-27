@@ -22,11 +22,13 @@ import {
   MAX_TOOL_RESULT_BYTES,
   MAX_PREFIX_LENGTH,
   STRUCTURED_CONTENT_DISABLE_FLAG,
+  buildAccessibilityIndex,
   buildComponentSummaries,
   buildIndexes,
   buildJsonToolResponse,
   buildRelatedComponentMap,
   buildTokenSuggestionMap,
+  extractAccessibilityChecklist,
   extractIconNames,
   getCategory,
   getRelatedComponentsForTag,
@@ -36,10 +38,11 @@ import {
   pickDecl,
   parseIconNamesFromDescription,
   parseIconNamesFromType,
+  queryAccessibilityIndex,
   searchIconCatalog,
   toCanonicalTagName,
 } from './core.mjs';
-import { detectTokenMisuseInInlineStyles } from './validator.mjs';
+import { detectAccessibilityMisuseInMarkup, detectTokenMisuseInInlineStyles } from './validator.mjs';
 
 // ---------------------------------------------------------------------------
 // Load data the same way the server does
@@ -69,6 +72,14 @@ async function loadBundledJson(fileName) {
     }
   }
   throw new Error(`Data file not found: ${fileName} (tried data/ and repo root)`);
+}
+
+async function loadBundledJsonOrNull(fileName) {
+  try {
+    return await loadBundledJson(fileName);
+  } catch {
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -123,7 +134,7 @@ describe('get_design_system_overview (logic)', () => {
     }
   });
 
-  it('includes all expected tool names (12 tools)', () => {
+  it('includes all expected tool names (13 tools)', () => {
     const expectedTools = [
       'get_design_system_overview',
       'list_components',
@@ -136,11 +147,12 @@ describe('get_design_system_overview (logic)', () => {
       'get_pattern_recipe',
       'generate_pattern_snippet',
       'get_design_tokens',
+      'get_accessibility_docs',
       'search_guidelines',
     ];
 
-    expect(expectedTools).toHaveLength(12);
-    expect(new Set(expectedTools).size).toBe(12);
+    expect(expectedTools).toHaveLength(13);
+    expect(new Set(expectedTools).size).toBe(13);
   });
 });
 
@@ -338,6 +350,7 @@ describe('tool descriptions', () => {
       'get_pattern_recipe',
       'generate_pattern_snippet',
       'get_design_tokens',
+      'get_accessibility_docs',
       'search_guidelines',
     ];
 
@@ -524,6 +537,65 @@ describe('search_guidelines', () => {
   });
 });
 
+describe('get_accessibility_docs (logic)', () => {
+  it('builds accessibility index with component and guideline sources', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const guidelines = await loadBundledJsonOrNull('guidelines-index.json');
+    if (!guidelines) return;
+    const indexes = buildIndexes(manifest);
+
+    const entries = buildAccessibilityIndex(indexes, guidelines, { prefix: 'dads' });
+    expect(entries.length).toBeGreaterThanOrEqual(10);
+    expect(entries.some((entry) => entry.source === 'component')).toBe(true);
+    expect(entries.some((entry) => entry.source === 'guideline')).toBe(true);
+  });
+
+  it('supports component/topic/wcagLevel filtering', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const guidelines = await loadBundledJsonOrNull('guidelines-index.json');
+    if (!guidelines) return;
+    const indexes = buildIndexes(manifest);
+    const entries = buildAccessibilityIndex(indexes, guidelines, { prefix: 'myui' });
+
+    const filtered = queryAccessibilityIndex(entries, {
+      componentTagName: 'myui-button',
+      topic: 'labels',
+      wcagLevel: 'A',
+      maxResults: 100,
+    });
+    expect(filtered.totalHits).toBeGreaterThan(0);
+    expect(filtered.results.every((entry) => entry.componentTagName === 'myui-button')).toBe(true);
+    expect(filtered.results.every((entry) => entry.topic === 'labels')).toBe(true);
+    expect(filtered.results.every((entry) => entry.wcagLevel === 'A')).toBe(true);
+  });
+
+  it('includes guideline entries in default results when available', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const guidelines = await loadBundledJsonOrNull('guidelines-index.json');
+    if (!guidelines) return;
+    const indexes = buildIndexes(manifest);
+    const entries = buildAccessibilityIndex(indexes, guidelines, { prefix: 'dads' });
+
+    const filtered = queryAccessibilityIndex(entries, {});
+    expect(filtered.totalHits).toBeGreaterThan(filtered.results.length);
+    expect(filtered.results.some((entry) => entry.source === 'guideline')).toBe(true);
+    expect(filtered.results.some((entry) => entry.source === 'component')).toBe(true);
+  });
+
+  it('extracts component-level accessibility checklist from CEM custom data', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const decl = pickDecl(indexes, { tagName: 'dads-button', prefix: 'dads' });
+
+    expect(decl).toBeDefined();
+    const checklist = extractAccessibilityChecklist(decl, { prefix: 'myui' });
+    expect(checklist).toBeDefined();
+    expect(checklist.totalChecks).toBeGreaterThan(0);
+    expect(checklist.componentTagName).toBe('myui-button');
+    expect(checklist.items.some((item) => item.topic === 'labels')).toBe(true);
+  });
+});
+
 describe('structuredContent helpers', () => {
   it('returns structuredContent by default', () => {
     const payload = {
@@ -629,6 +701,29 @@ describe('token misuse detection', () => {
   });
 });
 
+describe('accessibility misuse detection', () => {
+  it('detects aria-live and role=alert usage', () => {
+    const html = '<dads-input-text aria-live="polite" role="alert"></dads-input-text>';
+    const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
+
+    expect(diagnostics).toHaveLength(2);
+    expect(diagnostics.some((d) => d.code === 'ariaLiveNotRecommended')).toBe(true);
+    expect(diagnostics.some((d) => d.code === 'roleAlertNotRecommended')).toBe(true);
+  });
+
+  it('does not report diagnostics for markup without blocked patterns', () => {
+    const html = '<dads-input-text aria-describedby="support-text" aria-invalid="true"></dads-input-text>';
+    const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('does not mis-detect data-role as role attribute', () => {
+    const html = '<dads-input-text data-role="alert" aria-role="alert"></dads-input-text>';
+    const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
+    expect(diagnostics).toHaveLength(0);
+  });
+});
+
 describe('repo-local validator wiring', () => {
   it('loadValidator from design-system-mcp provides token misuse detector', async () => {
     const { loadValidator } = await import('../../scripts/mcp/design-system-mcp.mjs');
@@ -637,6 +732,7 @@ describe('repo-local validator wiring', () => {
     expect(typeof validator.collectCemCustomElements).toBe('function');
     expect(typeof validator.validateTextAgainstCem).toBe('function');
     expect(typeof validator.detectTokenMisuseInInlineStyles).toBe('function');
+    expect(typeof validator.detectAccessibilityMisuseInMarkup).toBe('function');
   });
 });
 

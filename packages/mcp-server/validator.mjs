@@ -3,6 +3,8 @@
  * Only includes the two functions used by the MCP server:
  *   - collectCemCustomElements
  *   - validateTextAgainstCem
+ *   - detectTokenMisuseInInlineStyles
+ *   - detectAccessibilityMisuseInMarkup
  */
 
 const GLOBAL_ATTR_ALLOW_PREFIXES = Object.freeze(['aria-', 'data-']);
@@ -203,13 +205,13 @@ export function validateTextAgainstCem({
 
     const tagOffset = m.index + 1;
     const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
 
     const attrNames = parseAttributeNames(attrChunk);
     for (const { name, offset } of attrNames) {
       const attrName = name.toLowerCase();
       if (!isForbiddenAttr(attrName)) continue;
 
-      const rawAttrsStart = m.index + 1 + tag.length;
       const startIndex = rawAttrsStart + offset;
       const endIndex = startIndex + attrName.length;
       const range = makeRange(lineStarts, startIndex, endIndex);
@@ -247,7 +249,6 @@ export function validateTextAgainstCem({
       if (shouldSkipAttr(attrName)) continue;
       if (meta.attributes.has(attrName)) continue;
 
-      const rawAttrsStart = m.index + 1 + tag.length;
       const startIndex = rawAttrsStart + offset;
       const endIndex = startIndex + attrName.length;
       const range = makeRange(lineStarts, startIndex, endIndex);
@@ -324,6 +325,72 @@ export function detectTokenMisuseInInlineStyles({
         tagName: tag,
         attrName: 'style',
         hint: `Replace ${prop}: ${valueRaw} with ${prop}: var(${cssVariable})`,
+      });
+    }
+  }
+
+  return diagnostics;
+}
+
+/**
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   severity?: string;
+ * }} params
+ */
+export function detectAccessibilityMisuseInMarkup({
+  filePath = '<input>',
+  text,
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+  const lineStarts = computeLineIndex(text);
+  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  let m;
+
+  while ((m = tagRe.exec(text))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
+
+    const attrNames = parseAttributeNames(attrChunk);
+    for (const { name, offset } of attrNames) {
+      const attrName = String(name ?? '').toLowerCase();
+      if (attrName !== 'aria-live') continue;
+
+      const startIndex = rawAttrsStart + offset;
+      const endIndex = startIndex + attrName.length;
+      const range = makeRange(lineStarts, startIndex, endIndex);
+      diagnostics.push({
+        file: filePath,
+        range,
+        severity,
+        code: 'ariaLiveNotRecommended',
+        message: 'Avoid aria-live in component markup; use static text with aria-describedby instead.',
+        tagName: tag,
+        attrName: 'aria-live',
+        hint: 'Remove aria-live and connect error/support text via aria-describedby.',
+      });
+    }
+
+    const roleMatch = /(^|[\t\n\f\r ])(role)\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(attrChunk);
+    const roleValue = String(roleMatch?.[4] ?? roleMatch?.[5] ?? roleMatch?.[6] ?? '').trim().toLowerCase();
+    if (roleMatch && roleValue === 'alert') {
+      const attrName = 'role';
+      const roleOffsetInChunk = roleMatch.index + String(roleMatch[1] ?? '').length;
+      const startIndex = rawAttrsStart + roleOffsetInChunk;
+      const endIndex = startIndex + attrName.length;
+      const range = makeRange(lineStarts, startIndex, endIndex);
+      diagnostics.push({
+        file: filePath,
+        range,
+        severity,
+        code: 'roleAlertNotRecommended',
+        message: 'Avoid role=\"alert\" in component markup; prefer static error text and aria-describedby.',
+        tagName: tag,
+        attrName,
+        hint: 'Replace role=\"alert\" with non-live text associated to the control.',
       });
     }
   }

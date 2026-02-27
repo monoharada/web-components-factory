@@ -1,0 +1,19 @@
+{
+  "verdict": "READY_FOR_IMPLEMENTATION",
+  "summary": "必須文書が揃い、Unknown は解決済み。HIGH リスクはすべて rollback を持ち、contract は C-01..C-09 で verification 付き。低リスク方針（C-05a schema固定、C-09 flag切戻し、token misuse対象プロパティ最小化）まで反映済み。",
+  "checks": {
+    "scope_consistency": "pass",
+    "dependency_consistency": "pass",
+    "verification_coverage": "pass",
+    "constraint_coverage": "pass"
+  },
+  "blockers": [],
+  "high_risks": [
+    "R-01: structuredContent 追加で既存 content 互換を壊すリスク",
+    "R-02: token misuse 誤検知過多のリスク",
+    "R-03: レスポンス 100KB 超過リスク",
+    "R-04: SDK 非互換リスク"
+  ],
+  "unknowns": [],
+  "recommended_next_action": "APPROVE PLAN を宣言し、C-01..C-09 をゲートに #174 実装フェーズへ移行する。"
+}

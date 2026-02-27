@@ -282,7 +282,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ### 4.3 Code Generation（コード生成）
 
-| 評価軸 | wcf-mcp (4/5) | Serendie (3/5) |
+| 評価軸 | wcf-mcp (5/5) | Serendie (3/5) |
 |--------|---------------|----------------|
 | **スニペット正確性** | CEM から自動生成。属性優先順位ロジック付き | テンプレートベース |
 | **DS準拠検証** | `validate_markup` で CEM 準拠を機械的に検証 | ガードレールで使用指針を伝達するが、機械的検証なし |
@@ -361,12 +361,18 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 **wcf-mcp の独自優位**: `placeholder` 禁止属性検出は、日本の公共サービス（DADS）に特化した A11y ベストプラクティス。Spindle の `get_accessibility_docs` パターンを追加することで +1 点の改善余地がある。
 
-#### Evidence
+#### Evidence (2026-02-26) — 暫定（main 未マージ）
 
 | 項目 | 内容 |
 |------|------|
-| スコア | 4（変更なし） |
-| 5/5 に必要 | #175: `get_accessibility_docs` 専用ツール + コンポーネント別 A11y チェックリスト + WCAG レベルフィルタ |
+| Issue | #175 |
+| 実装ツール / 機能 | `get_accessibility_docs` 追加（`component/topic/wcagLevel` フィルタ）、`get_component_api.accessibilityChecklist` 追加、`validate_markup` に `aria-live` / `role=\"alert\"` 診断追加 |
+| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:build` / `npm run mcp:check` / `npm run mcp:check:response-size` / `npm run agents:verify` |
+| テスト結果 | server.test: 40 passed、`mcp:build`/`mcp:check`/`mcp:check:response-size`/`agents:verify` すべて成功 |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/validator.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md`, `scripts/mcp/design-system-mcp.mjs` |
+| PR / マージ SHA | PR TBD / main 未マージ |
+| スコア変更 | 4 → 5 |
+| 根拠 | 専用 A11y ツール・component-level checklist・WCAG レベルフィルタの3要件を満たし、追加の ARIA 妥当性診断も実装したため |
 
 ---
 

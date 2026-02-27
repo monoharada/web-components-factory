@@ -5,12 +5,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   MAX_TOOL_RESULT_BYTES,
+  buildAccessibilityIndex,
   buildComponentSummaries,
   buildRelatedComponentMap,
   buildIndexes,
   buildJsonToolResponse,
+  extractAccessibilityChecklist,
   getRelatedComponentsForTag,
   measureToolResultBytes,
+  queryAccessibilityIndex,
   serializeApi,
   searchIconCatalog,
 } from '../../packages/mcp-server/core.mjs';
@@ -176,12 +179,54 @@ function pickLargestGetComponentApiResponse(manifest, installRegistry, patternRe
       if (relatedComponents.length > 0) {
         api.relatedComponents = relatedComponents;
       }
+      const accessibilityChecklist = extractAccessibilityChecklist(decl, { prefix });
+      if (accessibilityChecklist) {
+        api.accessibilityChecklist = accessibilityChecklist;
+      }
 
       const bytes = toolResponseBytes(buildJsonToolResponse(api, { env: {} }));
       if (bytes > largest.bytes) {
         const prefixLabel = prefix ? 'prefix=huge' : 'prefix=default';
         largest = {
           label: `get_component_api(tagName="${canonicalTag}", ${prefixLabel})`,
+          bytes,
+        };
+      }
+    }
+  }
+
+  return largest;
+}
+
+function pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex) {
+  const indexes = buildIndexes(manifest);
+  const hugePrefix = 'x'.repeat(2000);
+  let largest = { label: 'get_accessibility_docs', bytes: 0 };
+
+  for (const prefix of [undefined, hugePrefix]) {
+    const entries = buildAccessibilityIndex(indexes, guidelinesIndex, { prefix });
+    const scenarios = [
+      { label: 'get_accessibility_docs(default)', args: {} },
+      { label: 'get_accessibility_docs(wcagLevel=A)', args: { wcagLevel: 'A', maxResults: 100 } },
+      { label: 'get_accessibility_docs(wcagLevel=AA)', args: { wcagLevel: 'AA', maxResults: 100 } },
+      { label: 'get_accessibility_docs(topic=labels)', args: { topic: 'labels', maxResults: 100 } },
+      {
+        label: 'get_accessibility_docs(component=dads-button, wcagLevel=all)',
+        args: {
+          componentTagName: prefix ? `${prefix.slice(0, 64)}-button` : 'dads-button',
+          wcagLevel: 'all',
+          maxResults: 100,
+        },
+      },
+    ];
+
+    for (const scenario of scenarios) {
+      const payload = queryAccessibilityIndex(entries, scenario.args);
+      const bytes = toolResponseBytes(buildJsonToolResponse(payload, { env: {} }));
+      if (bytes > largest.bytes) {
+        const prefixLabel = prefix ? ', prefix=huge' : '';
+        largest = {
+          label: `${scenario.label}${prefixLabel}`,
           bytes,
         };
       }
@@ -228,6 +273,7 @@ async function main() {
       label: 'get_design_tokens(all)',
       bytes: toolResponseBytes(buildJsonToolResponse(getDesignTokensPayload(designTokens), { env: {} })),
     },
+    pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex),
     pickLargestGuidelineResponse(guidelinesIndex),
   ];
 
