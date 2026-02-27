@@ -7,6 +7,7 @@
 
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -48,11 +49,15 @@ import {
   suggestTokenNames,
   parseIconNamesFromDescription,
   parseIconNamesFromType,
+  normalizePlugins,
+  buildPluginDataSourceMap,
+  createMcpServer,
   queryAccessibilityIndex,
   searchIconCatalog,
   toCanonicalTagName,
 } from './core.mjs';
 import { detectAccessibilityMisuseInMarkup, detectTokenMisuseInInlineStyles } from './validator.mjs';
+import { loadWcfMcpRuntimeConfig } from './server.mjs';
 
 // ---------------------------------------------------------------------------
 // Load data the same way the server does
@@ -377,7 +382,10 @@ describe('tool descriptions', () => {
 
     for (const name of toolNames) {
       // Each tool's description block should contain "When:" and "Returns:"
-      const toolSection = coreSrc.slice(coreSrc.indexOf(`'${name}'`));
+      const marker = `server.registerTool(\n    '${name}'`;
+      const markerIndex = coreSrc.indexOf(marker);
+      expect(markerIndex).toBeGreaterThanOrEqual(0);
+      const toolSection = coreSrc.slice(markerIndex);
       const descEnd = toolSection.indexOf('inputSchema');
       const descBlock = toolSection.slice(0, descEnd);
       expect(descBlock).toContain('When:');
@@ -918,5 +926,173 @@ describe('HTTP transport support', () => {
     expect(binSrc).toContain('--transport=');
     expect(binSrc).toContain('--port=');
     expect(binSrc).toContain("127.0.0.1");
+  });
+});
+
+describe('plugin extensibility', () => {
+  it('normalizes plugin tools and blocks builtin tool name collisions', () => {
+    const normalized = normalizePlugins([
+      {
+        name: 'sample-plugin',
+        version: '0.1.0',
+        tools: [
+          {
+            name: 'sample_tool',
+            staticPayload: { ok: true },
+          },
+        ],
+      },
+    ]);
+    expect(normalized).toHaveLength(1);
+    expect(normalized[0].tools[0].name).toBe('sample_tool');
+    expect(normalized[0].tools[0].description).toContain('@experimental');
+
+    expect(() => normalizePlugins([
+      {
+        name: 'bad-plugin',
+        version: '0.1.0',
+        tools: [{ name: 'list_components', staticPayload: {} }],
+      },
+    ])).toThrow(/tool name collision/);
+  });
+
+  it('builds plugin data source map and rejects duplicate file overrides', () => {
+    const map = buildPluginDataSourceMap([
+      {
+        name: 'plugin-a',
+        dataSources: [{ fileName: 'guidelines-index.json', path: '/tmp/guidelines-a.json' }],
+      },
+    ]);
+
+    expect(map.get('guidelines-index.json')).toMatchObject({
+      path: '/tmp/guidelines-a.json',
+      pluginName: 'plugin-a',
+    });
+
+    expect(() => buildPluginDataSourceMap([
+      {
+        name: 'plugin-a',
+        dataSources: [{ fileName: 'guidelines-index.json', path: '/tmp/guidelines-a.json' }],
+      },
+      {
+        name: 'plugin-b',
+        dataSources: [{ fileName: 'guidelines-index.json', path: '/tmp/guidelines-b.json' }],
+      },
+    ])).toThrow(/Duplicate data source override/);
+  });
+
+  it('uses loadJsonDataFromPath when plugin data source override is configured', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-mcp-plugin-'));
+    const customGuidelinesPath = path.join(tmpDir, 'guidelines-index.override.json');
+    await fs.writeFile(customGuidelinesPath, JSON.stringify({
+      version: 1,
+      documents: [],
+      topicCounts: {},
+    }), 'utf8');
+
+    const fileLoadCalls = [];
+    const pathLoadCalls = [];
+    const loadJsonData = async (fileName) => {
+      fileLoadCalls.push(fileName);
+      return loadBundledJson(fileName);
+    };
+    const loadJsonDataFromPath = async (sourcePath, fileName, pluginName) => {
+      pathLoadCalls.push({ sourcePath, fileName, pluginName });
+      const text = await fs.readFile(sourcePath, 'utf8');
+      return JSON.parse(text);
+    };
+    const loadValidator = async () => ({
+      collectCemCustomElements: () => new Map(),
+      validateTextAgainstCem: () => [],
+      detectTokenMisuseInInlineStyles: () => [],
+      detectAccessibilityMisuseInMarkup: () => [],
+    });
+
+    try {
+      const result = await createMcpServer(loadJsonData, loadValidator, {
+        plugins: [{
+          name: 'override-plugin',
+          version: '0.1.0',
+          dataSources: [{ fileName: 'guidelines-index.json', path: customGuidelinesPath }],
+          tools: [],
+        }],
+        loadJsonDataFromPath,
+      });
+
+      expect(result.pluginRuntime).toMatchObject({
+        pluginCount: 1,
+        pluginToolCount: 0,
+      });
+      expect(pathLoadCalls.some((call) => (
+        call.fileName === 'guidelines-index.json'
+        && call.sourcePath === customGuidelinesPath
+        && call.pluginName === 'override-plugin'
+      ))).toBe(true);
+      expect(fileLoadCalls).toContain('custom-elements.json');
+      expect(fileLoadCalls).toContain('install-registry.json');
+      expect(fileLoadCalls).toContain('pattern-registry.json');
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('runtime config loader', () => {
+  it('returns empty plugins when default config is absent', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(__dirname, '.tmp-wcf-mcp-config-'));
+    try {
+      const result = await loadWcfMcpRuntimeConfig({ cwd: tmpDir });
+      expect(Array.isArray(result.plugins)).toBe(true);
+      expect(result.plugins).toHaveLength(0);
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it('loads module plugin and static plugin from config file', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(__dirname, '.tmp-wcf-mcp-config-'));
+    const pluginFile = path.join(tmpDir, 'module-plugin.mjs');
+    const configFile = path.join(tmpDir, 'wcf-mcp.config.json');
+
+    await fs.writeFile(pluginFile, `
+export default {
+  name: 'module-plugin',
+  version: '0.2.0',
+  tools: [
+    {
+      name: 'module_tool',
+      description: 'module plugin tool',
+      staticPayload: { ok: true }
+    }
+  ]
+};
+`, 'utf8');
+
+    await fs.writeFile(configFile, JSON.stringify({
+      dataSources: {
+        'guidelines-index.json': './guidelines.local.json',
+      },
+      plugins: [
+        { module: './module-plugin.mjs' },
+        {
+          name: 'static-plugin',
+          version: '0.3.0',
+          staticTools: [{ name: 'static_healthcheck', payload: { ok: true } }],
+        },
+      ],
+    }), 'utf8');
+
+    try {
+      const result = await loadWcfMcpRuntimeConfig({
+        cwd: tmpDir,
+        configPath: configFile,
+      });
+      expect(result.plugins.length).toBe(3);
+      expect(result.plugins.some((plugin) => plugin.name === 'config-data-sources')).toBe(true);
+      expect(result.plugins.some((plugin) => plugin.name === 'module-plugin')).toBe(true);
+      expect(result.plugins.some((plugin) => plugin.name === 'static-plugin')).toBe(true);
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
   });
 });

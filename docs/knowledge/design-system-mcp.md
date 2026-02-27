@@ -17,6 +17,8 @@ MCP クライアント側からは、stdio サーバーとして次のように�
 }
 ```
 
+`packages/mcp-server/wcf-mcp.config.json` を配置すると、repo-local 起動でも同じ runtime config（data source override / plugin tools）を読み込みます。
+
 ## 提供 tools（標準セット）
 
 ### `get_design_system_overview()`
@@ -95,6 +97,20 @@ HTML snippet だけを返します。
 ### `search_guidelines({ query, topic?, maxResults? })`
 
 設計ガイドラインを topic/query で検索し、スコア付きで返します。
+
+## 拡張（@experimental）
+
+`packages/mcp-server/wcf-mcp.config.json`（または npx 実行時 `--config=` 指定ファイル）で以下を拡張できます。
+
+- `dataSources`: 既定の JSON データソース差し替え
+- `plugins[].module`: ESM module plugin 読み込み
+- `plugins[].staticTools`: 固定 payload を返す軽量ツール定義
+
+制約:
+
+- plugin tool 名は組み込み14ツールと重複不可
+- data source key は `custom-elements.json` / `install-registry.json` / `pattern-registry.json` / `design-tokens.json` / `guidelines-index.json` のみ
+- 契約は `@experimental`（将来変更の可能性あり）
 
 ### 追加済み mockup patterns
 

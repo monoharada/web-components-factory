@@ -16,12 +16,14 @@ const USAGE = [
   '  wcf-mcp',
   '  wcf-mcp --transport=stdio',
   '  wcf-mcp --transport=http [--port=3100]',
+  '  wcf-mcp --config=./wcf-mcp.config.json',
   '  wcf-mcp --help',
 ].join('\n');
 
 function parseArgs(argv) {
   let transport = 'stdio';
   let port = 3100;
+  let configPath;
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -54,8 +56,23 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (arg === '--config') {
+      const value = argv[index + 1];
+      if (!value || value.startsWith('--')) {
+        throw new Error('--config requires a file path');
+      }
+      configPath = value;
+      index += 1;
+      continue;
+    }
+
     if (arg.startsWith('--port=')) {
       port = Number(arg.slice('--port='.length));
+      continue;
+    }
+
+    if (arg.startsWith('--config=')) {
+      configPath = arg.slice('--config='.length);
       continue;
     }
 
@@ -70,7 +87,7 @@ function parseArgs(argv) {
     throw new Error(`Invalid port: ${String(port)} (expected: integer 1-65535)`);
   }
 
-  return { help: false, transport, port };
+  return { help: false, transport, port, configPath };
 }
 
 async function main() {
@@ -89,7 +106,7 @@ async function main() {
     return;
   }
 
-  const { server } = await createServer();
+  const { server } = await createServer({ configPath: parsed.configPath });
 
   if (parsed.transport === 'http') {
     const { StreamableHTTPServerTransport } = await import(

@@ -100,6 +100,52 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 - bind: `127.0.0.1`
 - endpoint: `http://127.0.0.1:3100/mcp`
 
+## 設定ファイル（@experimental）
+
+`wcf-mcp.config.json` を使うと、データソース差し替えとカスタムツール追加ができます。
+
+- デフォルト探索パス: カレントディレクトリの `wcf-mcp.config.json`
+- 明示指定: `npx @monoharada/wcf-mcp --config=./wcf-mcp.config.json`
+- 互換性: 設定ファイルが無ければ従来どおり標準データで起動
+
+サンプルは `wcf-mcp.config.example.json` を参照してください。
+
+### config 例
+
+```json
+{
+  "dataSources": {
+    "guidelines-index.json": "./packages/mcp-server/data/guidelines-index.json"
+  },
+  "plugins": [
+    {
+      "module": "./packages/mcp-server/examples/plugins/custom-validation-plugin.mjs"
+    },
+    {
+      "name": "static-tools-plugin",
+      "version": "0.1.0",
+      "staticTools": [
+        {
+          "name": "plugin_healthcheck",
+          "payload": { "ok": true }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### plugin 契約（@experimental）
+
+- `plugins[].name` / `plugins[].version` は必須
+- tool 名は組み込みツール名と重複不可（例: `list_components` など）
+- `dataSources` で差し替え可能な key は次のみ
+  - `custom-elements.json`
+  - `install-registry.json`
+  - `pattern-registry.json`
+  - `design-tokens.json`
+  - `guidelines-index.json`
+
 ## structuredContent rollback
 
 `get_component_api` / `get_design_tokens` / `get_design_token_detail` / `get_accessibility_docs` / `search_guidelines` は通常 `structuredContent` を返します。
