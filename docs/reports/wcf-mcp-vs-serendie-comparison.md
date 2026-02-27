@@ -221,7 +221,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 | 評価軸 | wcf-mcp (5/5) | Serendie (4/5) |
 |--------|---------------|----------------|
 | **セットアップ** | `npx @monoharada/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
-| **ツール発見性** | 13ツール。`get_design_system_overview` を先頭にしたガードレール導線あり | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
+| **ツール発見性** | 14ツール。`get_design_system_overview` を先頭にしたガードレール導線あり | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
 | **エラーメッセージ** | `hint` 互換を維持しつつ `suggestion` による復旧提案を返却（validate_markup） | 構造化エラー + ガイダンスメッセージ |
 | **IDE対応** | `get_design_system_overview` で IDE テンプレート（Claude Desktop / Claude Code / Cursor）を返却 | ChatGPT（OpenAI Apps SDK）対応 |
 
@@ -305,12 +305,12 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ### 4.4 Token/Style Management（トークン/スタイル管理）
 
-| 評価軸 | wcf-mcp (2/5) | Serendie (5/5) |
+| 評価軸 | wcf-mcp (5/5) | Serendie (5/5) |
 |--------|---------------|----------------|
-| **トークンカタログ** | CEM の `cssProperties` のみ。専用ツールなし | `get-design-tokens` + `get-design-token-detail` の一覧/詳細ペア |
-| **型別フィルタ** | なし | 色/スペーシング/タイポグラフィ等で分類 |
-| **テーマ別フィルタ** | なし | ライト/ダークテーマ切替対応 |
-| **セマンティック区別** | なし | プリミティブ/セマンティックの明確な階層 |
+| **トークンカタログ** | `get_design_tokens` + `get_design_token_detail` の一覧/詳細ペア | `get-design-tokens` + `get-design-token-detail` の一覧/詳細ペア |
+| **型別フィルタ** | `type/category/query` で分類 | 色/スペーシング/タイポグラフィ等で分類 |
+| **テーマ別フィルタ** | API先行で `theme` 受理（現時点は `light` のみ、`dark/all` は明示エラー） | ライト/ダークテーマ切替対応 |
+| **セマンティック区別** | `relatedTokens` + `references/referencedBy` で関係性を取得可能 | プリミティブ/セマンティックの明確な階層 |
 
 **業界比較**（トークンツール提供 10/15 事例の設計パターン）:
 
@@ -324,22 +324,20 @@ Figma MCP                  DS MCP                    Storybook MCP
 | Figma | `get_variable_defs` | 色/余白/タイポ | Figma Variables |
 | Design Tokens MCP | `list_tokens` / `search_tokens` | CSS Custom Properties解析 | CSSファイル |
 
-**Gap**: **最大の差（-3 点）**。wcf-mcp は `packages/styles/design-tokens/index.ts`（DADS 公式トークン: 色・タイポグラフィ・radius・elevation）+ `packages/styles/spacing-tokens.ts`（スペーシング 20段階）にトークンを定義しているが、MCP 経由でアクセスする手段がない。PR TIMES の `global.css → CSS変数取得` パターンが wcf-mcp の最小実装として参考になる。
+**Gap（解消済み）**: #170 で一覧/詳細ペア、テーマAPI、関係性マップを追加し、Token/Style の不足項目を解消。
 
-#### Evidence (2026-02-25) — 暫定（main 未マージ）
+#### Evidence (2026-02-27) — 暫定（main 未マージ）
 
 | 項目 | 内容 |
 |------|------|
-| Issue | #165 |
-| 実装ツール / 機能 | `get_design_tokens` — type/category/query フィルタ対応 |
-| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
-| テスト結果 | 18件パス（tokens 5件追加） |
-| 該当ファイル | `packages/mcp-server/core.mjs` (get_design_tokens), `scripts/mcp/extract-design-tokens.mjs` |
-| PR / マージ SHA | PR #180 / （未マージ） |
-| スコア変更 | 2 → 4 |
-| 根拠 | 310トークン（color:179, spacing:83, typography:30, radius:9, shadow:9）を type/category/query でフィルタ可能。Spindle/PR TIMES と同等。5/5 には一覧/詳細ペア + テーマ対応が必要 |
-
-**5/5 に必要な追加改善** → #170: `get_design_token_detail` + テーマ対応（API先行: `light` のみ、NG-06）+ トークン関係性マップ
+| Issue | #170 |
+| 実装ツール / 機能 | `get_design_token_detail` 追加、`get_design_tokens.theme` 追加、`design-tokens.json` に `themes` + `relationships` 追加 |
+| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:build` / `npm run mcp:check` / `npm run mcp:check:response-size` / `npm run agents:verify` |
+| テスト結果 | mcp-server テスト pass、`mcp:build`/`mcp:check`/`mcp:check:response-size`/`agents:verify` pass |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `scripts/mcp/extract-design-tokens.mjs`, `scripts/mcp/check-response-size.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md` |
+| PR / マージ SHA | PR TBD / （未マージ） |
+| スコア変更 | 4 → 5 |
+| 根拠 | 一覧(`get_design_tokens`)と詳細(`get_design_token_detail`)のペア、トークン参照関係(`references/referencedBy`)、テーマAPI先行(`light`のみ)を提供し、§4.4 の不足要件を満たした |
 
 ---
 

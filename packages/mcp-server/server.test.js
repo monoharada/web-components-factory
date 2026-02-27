@@ -25,20 +25,27 @@ import {
   STRUCTURED_CONTENT_DISABLE_FLAG,
   buildAccessibilityIndex,
   buildComponentSummaries,
+  buildDesignTokenDetailPayload,
+  buildDesignTokensPayload,
   buildDiagnosticSuggestion,
   buildIndexes,
   buildJsonToolResponse,
   buildRelatedComponentMap,
+  buildTokenRelationshipIndex,
   buildTokenSuggestionMap,
   extractAccessibilityChecklist,
   extractIconNames,
+  extractReferencedTokenNames,
   getCategory,
   getRelatedComponentsForTag,
   isStructuredContentDisabled,
   measureToolResultBytes,
   findCustomElementDeclarations,
+  normalizeTokenIdentifier,
   pickDecl,
+  resolveTokenTheme,
   suggestUnknownElementTagName,
+  suggestTokenNames,
   parseIconNamesFromDescription,
   parseIconNamesFromType,
   queryAccessibilityIndex,
@@ -137,7 +144,7 @@ describe('get_design_system_overview (logic)', () => {
     }
   });
 
-  it('includes all expected tool names (13 tools)', () => {
+  it('includes all expected tool names (14 tools)', () => {
     const expectedTools = [
       'get_design_system_overview',
       'list_components',
@@ -150,12 +157,13 @@ describe('get_design_system_overview (logic)', () => {
       'get_pattern_recipe',
       'generate_pattern_snippet',
       'get_design_tokens',
+      'get_design_token_detail',
       'get_accessibility_docs',
       'search_guidelines',
     ];
 
-    expect(expectedTools).toHaveLength(13);
-    expect(new Set(expectedTools).size).toBe(13);
+    expect(expectedTools).toHaveLength(14);
+    expect(new Set(expectedTools).size).toBe(14);
   });
 
   it('provides at least three IDE setup templates', () => {
@@ -362,6 +370,7 @@ describe('tool descriptions', () => {
       'get_pattern_recipe',
       'generate_pattern_snippet',
       'get_design_tokens',
+      'get_design_token_detail',
       'get_accessibility_docs',
       'search_guidelines',
     ];
@@ -466,6 +475,111 @@ describe('get_design_tokens', () => {
 
     expect(data.summary.color).toBeGreaterThan(0);
     expect(data.summary.spacing).toBeGreaterThan(0);
+  });
+
+  it('has themes metadata and relationship graph', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    expect(data).toHaveProperty('themes');
+    expect(data.themes).toHaveProperty('default', 'light');
+    expect(Array.isArray(data.themes.available)).toBe(true);
+    expect(data.themes.available).toContain('light');
+    expect(data).toHaveProperty('relationships');
+    expect(data.relationships).toHaveProperty('byToken');
+    expect(typeof data.relationships.byToken).toBe('object');
+  });
+
+  it('returns INVALID_THEME error payload for dark/all at tool-contract helper level', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const darkResult = buildDesignTokensPayload(data, { theme: 'dark' });
+    expect(darkResult.isError).toBe(true);
+    expect(darkResult.payload.error.code).toBe('INVALID_THEME');
+
+    const allResult = buildDesignTokensPayload(data, { theme: 'all' });
+    expect(allResult.isError).toBe(true);
+    expect(allResult.payload.error.code).toBe('INVALID_THEME');
+  });
+});
+
+describe('token detail helpers', () => {
+  it('normalizes token identifiers from var()/bare names', () => {
+    expect(normalizeTokenIdentifier('var(--color-primary)')).toBe('--color-primary');
+    expect(normalizeTokenIdentifier('--color-primary')).toBe('--color-primary');
+    expect(normalizeTokenIdentifier('color-primary')).toBe('--color-primary');
+  });
+
+  it('extracts referenced token names from CSS values', () => {
+    const refs = extractReferencedTokenNames('var(--color-a) solid var(--color-b, #fff)');
+    expect(refs).toEqual(['--color-a', '--color-b']);
+  });
+
+  it('resolves supported and unsupported token themes', () => {
+    expect(resolveTokenTheme('light')).toMatchObject({ ok: true, resolved: 'light' });
+    expect(resolveTokenTheme(undefined)).toMatchObject({ ok: true, requested: 'light' });
+    expect(resolveTokenTheme('dark')).toMatchObject({ ok: false, errorCode: 'INVALID_THEME' });
+    expect(resolveTokenTheme('all')).toMatchObject({ ok: false, errorCode: 'INVALID_THEME' });
+  });
+
+  it('builds relationships and provides token suggestions', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const rel = buildTokenRelationshipIndex(data);
+    expect(rel).toHaveProperty('byToken');
+    const suggested = suggestTokenNames('--color-primar', data.tokens);
+    expect(Array.isArray(suggested)).toBe(true);
+    expect(suggested.length).toBeGreaterThan(0);
+  });
+
+  it('builds token detail payload for known and unknown tokens', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const knownName = data.tokens.find((token) => String(token?.name).startsWith('--color-'))?.name;
+    expect(typeof knownName).toBe('string');
+    const known = buildDesignTokenDetailPayload(data, knownName, 'light');
+    expect(known.isError).toBe(false);
+    expect(known.payload).toHaveProperty('token');
+    expect(known.payload).toHaveProperty('references');
+    expect(known.payload).toHaveProperty('referencedBy');
+    expect(known.payload).toHaveProperty('usageExamples');
+
+    const unknown = buildDesignTokenDetailPayload(data, '--unknown-token-for-test', 'light');
+    expect(unknown.isError).toBe(true);
+    expect(unknown.payload.error.code).toBe('TOKEN_NOT_FOUND');
+    expect(Array.isArray(unknown.payload.suggestions)).toBe(true);
+  });
+
+  it('returns invalid theme error in token detail payload', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const result = buildDesignTokenDetailPayload(data, '--color-primary', 'dark');
+    expect(result.isError).toBe(true);
+    expect(result.payload.error.code).toBe('INVALID_THEME');
   });
 });
 

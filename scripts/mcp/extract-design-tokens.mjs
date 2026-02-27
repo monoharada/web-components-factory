@@ -140,6 +140,51 @@ function extractTokensFromSource(source) {
   return tokens;
 }
 
+function extractReferencedTokenNames(value) {
+  if (typeof value !== 'string') return [];
+  const refs = [];
+  const re = /var\(\s*(--[^,\s)]+)\s*(?:,\s*[^)]+)?\)/g;
+  let match;
+  while ((match = re.exec(value)) !== null) {
+    refs.push(match[1]);
+  }
+  return [...new Set(refs)];
+}
+
+function buildRelationships(tokens) {
+  const byToken = {};
+  for (const token of tokens) {
+    byToken[token.name] = {
+      references: extractReferencedTokenNames(token.value),
+      referencedBy: [],
+    };
+  }
+
+  for (const [sourceName, relation] of Object.entries(byToken)) {
+    for (const targetName of relation.references) {
+      if (!byToken[targetName]) {
+        byToken[targetName] = { references: [], referencedBy: [] };
+      }
+      byToken[targetName].referencedBy.push(sourceName);
+    }
+  }
+
+  let edgeCount = 0;
+  for (const relation of Object.values(byToken)) {
+    relation.references = [...new Set(relation.references)].sort();
+    relation.referencedBy = [...new Set(relation.referencedBy)].sort();
+    edgeCount += relation.references.length;
+  }
+
+  return {
+    byToken,
+    stats: {
+      edgeCount,
+      tokenCount: Object.keys(byToken).length,
+    },
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
@@ -176,9 +221,14 @@ async function main() {
   }
 
   const output = {
-    version: '0.1.0',
+    version: '0.2.0',
     extractedAt: new Date().toISOString(),
+    themes: {
+      default: 'light',
+      available: ['light'],
+    },
     tokens: uniqueTokens,
+    relationships: buildRelationships(uniqueTokens),
     summary,
   };
 
