@@ -13,6 +13,7 @@ knowledge/
 ├── wcf-skills-pack.md           # wcf-* Skills の運用ガイド
 ├── command-store-usage.md       # commandfor / command-store の運用ガイド
 ├── 2026-02-25-tab-a11y-annotate-positioning-postflight.md # tab注釈の線ズレ/過密を解消する配置調整ナレッジ
+├── 2026-02-27-mcp-server-integration-breadth-postflight.md # #176 Integration Breadth 5/5 の postflight 学び
 ├── 2026-02-24-tab-postflight.md # tab デザイン準拠 + a11y 対応の postflight 学び
 ├── 2026-02-18-button-icon-postflight.md # button icon API対応の postflight 学び
 ├── 2026-02-12-wcf-skills-pack-v1-postflight.md # WCF Skills Pack v1 実装後の学び

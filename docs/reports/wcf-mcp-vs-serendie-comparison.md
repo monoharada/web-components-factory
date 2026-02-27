@@ -374,32 +374,31 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ### 4.6 Integration Breadth（統合の広さ）
 
-| 評価軸 | wcf-mcp (3/5) | Serendie (4/5) |
+| 評価軸 | wcf-mcp (5/5) | Serendie (4/5) |
 |--------|---------------|----------------|
-| **IDE** | Claude Code スキルパック | Claude Code + ChatGPT |
-| **Figma** | 直接統合なし | Figma ユーティリティあり |
+| **IDE** | 5 IDE テンプレート（Claude Desktop / Claude Code / Cursor / VS Code / Windsurf） | Claude Code + ChatGPT |
+| **Figma** | `figma_to_wcf` prompt で Figma URL 起点の実装順序を提供 | Figma ユーティリティあり |
+| **MCP resources** | `wcf://components` / `wcf://tokens` / `wcf://guidelines/{topic}` / `wcf://llms-full` | resources は限定的 |
 | **CI/CD** | `npm run agents:verify` | 不明 |
 | **フレームワーク** | フレームワーク非依存（Web Components） | React 専用 |
 
 **業界比較**:
 - **Figma + DS MCP 連携**は PR TIMES / Ubie / MFUI / Hopper の4事例で報告。Hopper は `generate_code_from_figma_design` prompt で Figma MCP との連携を明示的に定義
 - Serendie も「Figma MCP Server でレイヤー情報を読み取り、Serendie MCP Server で知識を引き出す」併用フローを公式ドキュメントで説明
-- **wcf-mcp は Figma MCP との併用ガイドが未整備**。prompt テンプレートの追加が低コストで効果的
+- wcf-mcp は #176 で prompt + resource + IDE 導線を追加し、Figma MCP 併用導線を整備
 
-#### Evidence (2026-02-25) — 暫定（main 未マージ）
+#### Evidence (2026-02-27) — 暫定（main 未マージ）
 
 | 項目 | 内容 |
 |------|------|
-| Issue | #167 |
-| 実装ツール / 機能 | HTTP transport（`--transport=http --port=3100`、127.0.0.1 バインド） |
-| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
-| テスト結果 | 18件パス（HTTP transport 1件追加） |
-| 該当ファイル | `packages/mcp-server/bin.mjs` |
-| PR / マージ SHA | PR #180 / （未マージ） |
-| スコア変更 | 3 → 4 |
-| 根拠 | デュアルトランスポート（stdio + HTTP）で Serendie/Hopper と同等の接続性。5/5 には Figma 連携 + MCP resources が必要 |
-
-**5/5 に必要な追加改善** → #176: Figma MCP prompt テンプレート + MCP resources (`wcf://`) + マルチIDE設定
+| Issue | #176 |
+| 実装ツール / 機能 | `figma_to_wcf` prompt、`wcf://components` / `wcf://tokens` / `wcf://guidelines/{topic}` / `wcf://llms-full` resources、`get_design_system_overview` への prompt/resource 導線統合、IDE テンプレート拡張（5 IDE） |
+| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` / `npm run agents:verify` |
+| テスト結果 | 追加契約テストを含む server.test pass、response-size pass、agents:verify pass |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.mjs`, `scripts/mcp/design-system-mcp.mjs`, `scripts/mcp/build-mcp-package.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md`, `docs/knowledge/design-system-mcp.md` |
+| PR / マージ SHA | PR TBD / （未マージ） |
+| スコア変更 | 4 → 5 |
+| 根拠 | Figma URL 起点の prompt、discoverable な `wcf://` resources、マルチIDE導線（3+）を同時に満たし、Integration Breadth の未達要件を解消 |
 
 ---
 

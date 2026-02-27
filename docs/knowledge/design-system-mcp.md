@@ -24,7 +24,9 @@ repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。
 
 ### `get_design_system_overview()`
 
-最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー）を返します。
+最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー、IDE 設定テンプレート、prompt/resource 導線）を返します。
+
+- IDE テンプレート: Claude Desktop / Claude Code / Cursor / VS Code (GitHub Copilot) / Windsurf
 
 ### `list_components({ prefix? })`
 
@@ -50,7 +52,7 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 
 - `unknownElement`: `error`
 - `unknownAttribute`: `warning`
-- `forbiddenAttribute` / `tokenMisuse` / `accessibilityMisuse`: `warning`
+- `forbiddenAttribute` / `tokenMisuse` / `ariaLiveNotRecommended` / `roleAlertNotRecommended`: `warning`
 
 ## UI パターン（レイアウト/画面レシピ）
 
@@ -98,6 +100,25 @@ HTML snippet だけを返します。
 ### `search_guidelines({ query, topic?, maxResults? })`
 
 設計ガイドラインを topic/query で検索し、スコア付きで返します。
+
+## Prompt / Resources
+
+### Prompt: `figma_to_wcf({ figmaUrl, userIntent? })`
+
+Figma URL を受け取り、以下の順序で実装を進めるプロンプトを返します。
+
+1. `get_design_system_overview`
+2. `get_design_tokens`
+3. `get_component_api`
+4. `generate_usage_snippet`（または `get_pattern_recipe`）
+5. `validate_markup`
+
+### Resources (`wcf://`)
+
+- `wcf://components`: コンポーネントカタログ（カテゴリ集計付き）
+- `wcf://tokens`: トークン summary
+- `wcf://guidelines/{topic}`: topic 別ガイドライン（`accessibility|css|patterns|all`）
+- `wcf://llms-full`: `llms-full.txt` 全文
 
 ## 拡張（@experimental）
 
