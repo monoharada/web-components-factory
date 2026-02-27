@@ -184,10 +184,9 @@ prefix: "myui" → dads-button → myui-button
   "diagnostics": [
     {
       "severity": "warning",
-      "code": "unknownElement",
-      "message": "Unknown element: dads-buton",
-      "tagName": "dads-buton",
-      "suggestion": "Did you mean \"dads-button\"?"
+      "code": "unknownAttribute",
+      "message": "Unknown attribute \"foo\" on <dads-button>",
+      "attrName": "foo"
     }
   ]
 }

@@ -734,6 +734,12 @@ describe('accessibility misuse detection', () => {
     const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
     expect(diagnostics).toHaveLength(0);
   });
+
+  it('does not mis-detect role=alert text inside another attribute value', () => {
+    const html = '<dads-input-text data-note="abc role=alert def"></dads-input-text>';
+    const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
+    expect(diagnostics).toHaveLength(0);
+  });
 });
 
 describe('diagnostic suggestion helpers', () => {
