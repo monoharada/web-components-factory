@@ -434,6 +434,42 @@ export function buildDesignTokenDetailPayload(designTokensData, name, theme) {
   };
 }
 
+export function buildDesignTokensPayload(designTokensData, { type, category, query, theme } = {}) {
+  if (!designTokensData) {
+    return buildTokenErrorPayload(
+      'DESIGN_TOKENS_DATA_UNAVAILABLE',
+      'Design tokens data not available. Run: npm run mcp:extract-tokens',
+    );
+  }
+
+  const themeInfo = resolveTokenTheme(theme);
+  if (!themeInfo.ok) {
+    return buildTokenErrorPayload(themeInfo.errorCode, themeInfo.message);
+  }
+
+  let tokens = Array.isArray(designTokensData.tokens) ? designTokensData.tokens : [];
+  if (type) tokens = tokens.filter((t) => t.type === type);
+  if (category) tokens = tokens.filter((t) => t.category === category);
+  if (query) {
+    const q = String(query).toLowerCase();
+    tokens = tokens.filter((t) => String(t.name ?? '').toLowerCase().includes(q));
+  }
+
+  return {
+    isError: false,
+    payload: {
+      total: tokens.length,
+      tokens,
+      summary: designTokensData.summary,
+      theme: {
+        requested: themeInfo.requested,
+        resolved: themeInfo.resolved,
+        available: themeInfo.available,
+      },
+    },
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Helpers (exported for testing)
 // ---------------------------------------------------------------------------
@@ -1691,45 +1727,13 @@ export async function createMcpServer(loadJsonData, loadValidator) {
       },
     },
     async ({ type, category, query, theme }) => {
-      if (!designTokensData) {
+      const { isError, payload } = buildDesignTokensPayload(designTokensData, { type, category, query, theme });
+      if (isError) {
         return {
-          content: [{ type: 'text', text: 'Design tokens data not available. Run: npm run mcp:extract-tokens' }],
+          content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
           isError: true,
         };
       }
-
-      const themeInfo = resolveTokenTheme(theme);
-      if (!themeInfo.ok) {
-        return {
-          content: [{ type: 'text', text: themeInfo.message }],
-          isError: true,
-        };
-      }
-
-      let tokens = Array.isArray(designTokensData.tokens) ? designTokensData.tokens : [];
-
-      if (type) {
-        tokens = tokens.filter((t) => t.type === type);
-      }
-      if (category) {
-        tokens = tokens.filter((t) => t.category === category);
-      }
-      if (query) {
-        const q = query.toLowerCase();
-        tokens = tokens.filter((t) => t.name.toLowerCase().includes(q));
-      }
-
-      const payload = {
-        total: tokens.length,
-        tokens,
-        summary: designTokensData.summary,
-        theme: {
-          requested: themeInfo.requested,
-          resolved: themeInfo.resolved,
-          available: themeInfo.available,
-        },
-      };
-
       return buildJsonToolResponse(payload);
     },
   );

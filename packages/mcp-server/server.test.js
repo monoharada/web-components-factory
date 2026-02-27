@@ -26,6 +26,7 @@ import {
   buildAccessibilityIndex,
   buildComponentSummaries,
   buildDesignTokenDetailPayload,
+  buildDesignTokensPayload,
   buildDiagnosticSuggestion,
   buildIndexes,
   buildJsonToolResponse,
@@ -491,6 +492,23 @@ describe('get_design_tokens', () => {
     expect(data).toHaveProperty('relationships');
     expect(data.relationships).toHaveProperty('byToken');
     expect(typeof data.relationships.byToken).toBe('object');
+  });
+
+  it('returns INVALID_THEME error payload for dark/all at tool-contract helper level', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const darkResult = buildDesignTokensPayload(data, { theme: 'dark' });
+    expect(darkResult.isError).toBe(true);
+    expect(darkResult.payload.error.code).toBe('INVALID_THEME');
+
+    const allResult = buildDesignTokensPayload(data, { theme: 'all' });
+    expect(allResult.isError).toBe(true);
+    expect(allResult.payload.error.code).toBe('INVALID_THEME');
   });
 });
 
