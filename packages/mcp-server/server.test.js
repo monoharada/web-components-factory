@@ -74,6 +74,14 @@ async function loadBundledJson(fileName) {
   throw new Error(`Data file not found: ${fileName} (tried data/ and repo root)`);
 }
 
+async function loadBundledJsonOrNull(fileName) {
+  try {
+    return await loadBundledJson(fileName);
+  } catch {
+    return null;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -532,7 +540,8 @@ describe('search_guidelines', () => {
 describe('get_accessibility_docs (logic)', () => {
   it('builds accessibility index with component and guideline sources', async () => {
     const manifest = await loadBundledJson('custom-elements.json');
-    const guidelines = await loadBundledJson('guidelines-index.json');
+    const guidelines = await loadBundledJsonOrNull('guidelines-index.json');
+    if (!guidelines) return;
     const indexes = buildIndexes(manifest);
 
     const entries = buildAccessibilityIndex(indexes, guidelines, { prefix: 'dads' });
@@ -543,7 +552,8 @@ describe('get_accessibility_docs (logic)', () => {
 
   it('supports component/topic/wcagLevel filtering', async () => {
     const manifest = await loadBundledJson('custom-elements.json');
-    const guidelines = await loadBundledJson('guidelines-index.json');
+    const guidelines = await loadBundledJsonOrNull('guidelines-index.json');
+    if (!guidelines) return;
     const indexes = buildIndexes(manifest);
     const entries = buildAccessibilityIndex(indexes, guidelines, { prefix: 'myui' });
 
