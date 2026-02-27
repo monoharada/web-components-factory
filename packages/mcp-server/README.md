@@ -127,12 +127,12 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 ### Resources (`wcf://`)
 
-| URI | 説明 |
-|-----|------|
-| `wcf://components` | コンポーネントカタログのスナップショット |
-| `wcf://tokens` | トークン summary（type/category/themes/sample） |
-| `wcf://guidelines/{topic}` | topic 別ガイドライン要約（`accessibility`,`css`,`patterns`,`all`） |
-| `wcf://llms-full` | `llms-full.txt` の全文 |
+| URI | 説明 | データソース | 更新タイミング |
+|-----|------|-------------|----------------|
+| `wcf://components` | コンポーネントカタログのスナップショット | `data/custom-elements.json` | CEM 更新後に `npm run mcp:build` 実行時 |
+| `wcf://tokens` | トークン summary（type/category/themes/sample） | `data/design-tokens.json` | トークン抽出後に `npm run mcp:build` 実行時 |
+| `wcf://guidelines/{topic}` | topic 別ガイドライン要約（`accessibility`,`css`,`patterns`,`all`） | `data/guidelines-index.json` | ガイドライン索引更新後に `npm run mcp:build` 実行時 |
+| `wcf://llms-full` | `llms-full.txt` の全文 | `data/llms-full.txt` | `npm run llms:generate` 後の `npm run mcp:build` 実行時 |
 
 ## transport
 
@@ -198,9 +198,23 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
   - `design-tokens.json`
   - `guidelines-index.json`
 
-## structuredContent rollback
+## structuredContent / summary モード
 
-`get_component_api` / `get_design_tokens` / `get_design_token_detail` / `get_accessibility_docs` / `search_guidelines` は通常 `structuredContent` を返します。
+14 tools はすべて `summary?: boolean` を受け付けます（既定: `false`）。
+
+- `summary` 未指定/`false`: 従来どおりの `content`（JSON 文字列または snippet 文字列）を返します
+- `summary=true`: `content` は Markdown 要約を返し、同時に `structuredContent` に機械可読 JSON を返します
+
+`structuredContent` のスキーマは共通です。
+
+```json
+{
+  "type": "application/json",
+  "data": { "...": "tool payload" }
+}
+```
+
+互換性と安全策:
 
 - 100KB 制限を超える場合は自動的に `structuredContent` を省略し、`content` のみ返します
 - 緊急切り戻し時は環境変数 `WCF_MCP_DISABLE_STRUCTURED_CONTENT=1` を設定してください

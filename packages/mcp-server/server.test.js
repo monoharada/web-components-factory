@@ -376,6 +376,23 @@ describe('get_component_api relatedComponents (logic)', () => {
 });
 
 describe('tool descriptions', () => {
+  const allBuiltinToolNames = [
+    'get_design_system_overview',
+    'list_components',
+    'search_icons',
+    'get_component_api',
+    'generate_usage_snippet',
+    'get_install_recipe',
+    'validate_markup',
+    'list_patterns',
+    'get_pattern_recipe',
+    'generate_pattern_snippet',
+    'get_design_tokens',
+    'get_design_token_detail',
+    'get_accessibility_docs',
+    'search_guidelines',
+  ];
+
   it('get_design_system_overview description contains MUST guardrail', async () => {
     // Tool descriptions now live in core.mjs
     const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
@@ -385,24 +402,7 @@ describe('tool descriptions', () => {
   it('all tools have When/Returns/After guidance in descriptions', async () => {
     const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
 
-    // Tools that should have enhanced descriptions
-    const toolNames = [
-      'list_components',
-      'search_icons',
-      'get_component_api',
-      'generate_usage_snippet',
-      'get_install_recipe',
-      'validate_markup',
-      'list_patterns',
-      'get_pattern_recipe',
-      'generate_pattern_snippet',
-      'get_design_tokens',
-      'get_design_token_detail',
-      'get_accessibility_docs',
-      'search_guidelines',
-    ];
-
-    for (const name of toolNames) {
+    for (const name of allBuiltinToolNames) {
       // Each tool's description block should contain "When:" and "Returns:"
       const marker = `server.registerTool(\n    '${name}'`;
       const markerIndex = coreSrc.indexOf(marker);
@@ -412,6 +412,24 @@ describe('tool descriptions', () => {
       const descBlock = toolSection.slice(0, descEnd);
       expect(descBlock).toContain('When:');
       expect(descBlock).toContain('Returns:');
+      expect(descBlock).toContain('After:');
+    }
+  });
+
+  it('all tools expose summary input flag', async () => {
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
+
+    for (const name of allBuiltinToolNames) {
+      const marker = `server.registerTool(\n    '${name}'`;
+      const markerIndex = coreSrc.indexOf(marker);
+      expect(markerIndex).toBeGreaterThanOrEqual(0);
+      const toolSection = coreSrc.slice(markerIndex);
+      const asyncStart = toolSection.indexOf('},\n    async');
+      const schemaBlock = toolSection.slice(0, asyncStart);
+      expect(
+        schemaBlock.includes('summary: summaryInputSchema()')
+        || schemaBlock.includes('summary: z.boolean().optional()'),
+      ).toBe(true);
     }
   });
 });
@@ -601,6 +619,51 @@ describe('MCP prompts/resources contract', () => {
         noTextClient.close(),
         noTextServer.close(),
       ]);
+    }
+  });
+
+  it('supports summary mode across all builtin tools', async () => {
+    const patternsResult = await client.callTool({
+      name: 'list_patterns',
+      arguments: {},
+    });
+    const patterns = JSON.parse(String(patternsResult.content?.[0]?.text ?? '[]'));
+    const firstPatternId = Array.isArray(patterns) && patterns[0]?.id ? String(patterns[0].id) : 'mockup-website';
+
+    const calls = [
+      { name: 'get_design_system_overview', arguments: {} },
+      { name: 'list_components', arguments: {} },
+      { name: 'search_icons', arguments: {} },
+      { name: 'get_component_api', arguments: { tagName: 'dads-button' } },
+      { name: 'generate_usage_snippet', arguments: { component: 'dads-button' } },
+      { name: 'get_install_recipe', arguments: { component: 'dads-button' } },
+      { name: 'validate_markup', arguments: { html: '<dads-button>Click</dads-button>' } },
+      { name: 'list_patterns', arguments: {} },
+      { name: 'get_pattern_recipe', arguments: { patternId: firstPatternId } },
+      { name: 'generate_pattern_snippet', arguments: { patternId: firstPatternId } },
+      { name: 'get_design_tokens', arguments: {} },
+      { name: 'get_design_token_detail', arguments: { name: '--color-text-body' } },
+      { name: 'get_accessibility_docs', arguments: {} },
+      { name: 'search_guidelines', arguments: { query: 'focus' } },
+    ];
+
+    for (const call of calls) {
+      const result = await client.callTool({
+        name: call.name,
+        arguments: {
+          ...call.arguments,
+          summary: true,
+        },
+      });
+
+      const text = String(result.content?.[0]?.text ?? '');
+      expect(text.length).toBeGreaterThan(0);
+
+      if (result.isError === true) continue;
+
+      expect(text.startsWith('## ')).toBe(true);
+      expect(result.structuredContent?.type).toBe('application/json');
+      expect(result.structuredContent?.data).toBeDefined();
     }
   });
 });
