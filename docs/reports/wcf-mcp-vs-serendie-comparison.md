@@ -459,11 +459,11 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ### 4.9 Extensibility（拡張性）
 
-| 評価軸 | wcf-mcp (3/5) | Serendie (3/5) |
+| 評価軸 | wcf-mcp (5/5) | Serendie (3/5) |
 |--------|---------------|----------------|
-| **プラグイン機構** | `registry/` 構造でデータソース差し替え可能 | なし |
-| **カスタムツール** | `server.registerTool()` パターン明確 | 不明 |
-| **マルチソース** | CEM + install-registry + pattern-registry の3ソース | マニフェスト + AutoRAG |
+| **プラグイン機構** | `wcf-mcp.config.json` + module/static plugin の `@experimental` 契約を実装 | なし |
+| **カスタムツール** | plugin tool（`handler` / `staticPayload`）を runtime 登録可能 | 不明 |
+| **マルチソース** | data source override（5キー限定）で CEM/registry/tokens/guidelines を差し替え可能 | マニフェスト + AutoRAG |
 
 **業界比較**:
 - Panda CSS: プロジェクト設定から動的にトークン/レシピ/パターンを読み取る点が柔軟
@@ -473,8 +473,14 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 | 項目 | 内容 |
 |------|------|
-| スコア | 3（変更なし。最大ギャップ: +2 必要） |
-| 5/5 に必要 | #171: プラグインインターフェース（`@experimental`、NG-07） + マルチソース設定 + カスタムツール登録 |
+| Issue | #171 |
+| 実装ツール / 機能 | `createMcpServer(..., options)` に plugin runtime を追加（tool registration / data source override / experimental metadata）、`server.mjs` に runtime config loader（module plugin + staticTools + dataSources）、`bin.mjs` に `--config` 追加 |
+| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` |
+| テスト結果 | plugin 正規化・衝突検知・override 経路・runtime config 読込を含む mcp-server テスト pass、response-size pass |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.mjs`, `packages/mcp-server/bin.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md`, `docs/knowledge/design-system-mcp.md` |
+| PR / マージ SHA | PR TBD / （未マージ） |
+| スコア変更 | 3 → 5 |
+| 根拠 | NG-07 要件（plugin interface + multi-source + custom tool registration）を `@experimental` 契約として満たしたため |
 
 ---
 

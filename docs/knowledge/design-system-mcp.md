@@ -17,6 +17,9 @@ MCP クライアント側からは、stdio サーバーとして次のように�
 }
 ```
 
+repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。  
+`npm run mcp:design-system` を repo root で実行する場合は、`<repo-root>/wcf-mcp.config.json` を配置してください。
+
 ## 提供 tools（標準セット）
 
 ### `get_design_system_overview()`
@@ -95,6 +98,25 @@ HTML snippet だけを返します。
 ### `search_guidelines({ query, topic?, maxResults? })`
 
 設計ガイドラインを topic/query で検索し、スコア付きで返します。
+
+## 拡張（@experimental）
+
+`cwd/wcf-mcp.config.json`（または npx 実行時 `--config=` 指定ファイル）で以下を拡張できます。
+
+- `dataSources`: 既定の JSON データソース差し替え
+- `plugins[].module`: ESM module plugin 読み込み
+- `plugins[].staticTools`: 固定 payload を返す軽量ツール定義
+
+相対パスの解決基準:
+
+- ルート `dataSources` / static plugin `dataSources`: config ファイル基準
+- module plugin が export する `dataSources`: plugin module ファイル基準
+
+制約:
+
+- plugin tool 名は組み込み14ツールと重複不可
+- data source key は `custom-elements.json` / `install-registry.json` / `pattern-registry.json` / `design-tokens.json` / `guidelines-index.json` のみ
+- 契約は `@experimental`（将来変更の可能性あり）
 
 ### 追加済み mockup patterns
 

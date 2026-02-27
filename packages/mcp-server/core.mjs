@@ -17,6 +17,7 @@ export const CANONICAL_PREFIX = 'dads';
 export const MAX_PREFIX_LENGTH = 64;
 export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
 export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
+export const EXPERIMENTAL_PLUGIN_NOTICE = '@experimental — API may change without notice.';
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
@@ -86,6 +87,29 @@ const TOKEN_MISUSE_ALLOWED_TYPES = Object.freeze(new Set(['color', 'spacing']));
 const STRUCTURED_CONTENT_DISABLE_TRUE_VALUES = Object.freeze(new Set(['1', 'true', 'yes', 'on']));
 const WCAG_LEVELS = Object.freeze(new Set(['A', 'AA', 'AAA', 'all']));
 const TOKEN_THEMES = Object.freeze(new Set(['light', 'dark', 'all']));
+const PLUGIN_DATA_SOURCE_KEYS = Object.freeze(new Set([
+  'custom-elements.json',
+  'install-registry.json',
+  'pattern-registry.json',
+  'design-tokens.json',
+  'guidelines-index.json',
+]));
+const BUILTIN_TOOL_NAMES = Object.freeze(new Set([
+  'get_design_system_overview',
+  'list_components',
+  'search_icons',
+  'get_component_api',
+  'generate_usage_snippet',
+  'get_install_recipe',
+  'validate_markup',
+  'list_patterns',
+  'get_pattern_recipe',
+  'generate_pattern_snippet',
+  'get_design_tokens',
+  'get_design_token_detail',
+  'get_accessibility_docs',
+  'search_guidelines',
+]));
 const A11Y_CATEGORY_LEVEL_MAP = Object.freeze({
   semantics: 'A',
   keyboard: 'A',
@@ -468,6 +492,142 @@ export function buildDesignTokensPayload(designTokensData, { type, category, que
       },
     },
   };
+}
+
+function isPlainObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function toPluginErrorMessage(name, reason) {
+  return `Invalid plugin (${name}): ${reason}`;
+}
+
+/**
+ * @experimental — API may change without notice.
+ * @typedef {{
+ *   fileName: string,
+ *   path: string,
+ * }} WcfMcpDataSourceConfig
+ */
+
+/**
+ * @experimental — API may change without notice.
+ * @typedef {{
+ *   name: string,
+ *   description?: string,
+ *   inputSchema?: Record<string, unknown>,
+ *   handler?: Function,
+ *   staticPayload?: unknown,
+ * }} WcfMcpPluginTool
+ */
+
+/**
+ * @experimental — API may change without notice.
+ * @typedef {{
+ *   name: string,
+ *   version: string,
+ *   tools?: WcfMcpPluginTool[],
+ *   dataSources?: WcfMcpDataSourceConfig[],
+ * }} WcfMcpPlugin
+ */
+
+function normalizePluginDataSources(pluginName, dataSources) {
+  if (!Array.isArray(dataSources)) return [];
+  const out = [];
+  for (const entry of dataSources) {
+    if (!isPlainObject(entry)) {
+      throw new Error(toPluginErrorMessage(pluginName, 'dataSources entries must be objects'));
+    }
+    const fileName = String(entry.fileName ?? '').trim();
+    const sourcePath = String(entry.path ?? '').trim();
+    if (!fileName || !sourcePath) {
+      throw new Error(toPluginErrorMessage(pluginName, 'dataSources entries require fileName and path'));
+    }
+    if (!PLUGIN_DATA_SOURCE_KEYS.has(fileName)) {
+      throw new Error(toPluginErrorMessage(pluginName, `unsupported data source key: ${fileName}`));
+    }
+    out.push({ fileName, path: sourcePath });
+  }
+  return out;
+}
+
+function normalizePluginTools(pluginName, tools) {
+  if (!Array.isArray(tools)) return [];
+  const out = [];
+  for (const rawTool of tools) {
+    if (!isPlainObject(rawTool)) {
+      throw new Error(toPluginErrorMessage(pluginName, 'tools entries must be objects'));
+    }
+    const name = String(rawTool.name ?? '').trim();
+    if (!name) throw new Error(toPluginErrorMessage(pluginName, 'tool.name is required'));
+    const hasHandler = typeof rawTool.handler === 'function';
+    const hasStaticPayload = Object.prototype.hasOwnProperty.call(rawTool, 'staticPayload');
+    if (!hasHandler && !hasStaticPayload) {
+      throw new Error(toPluginErrorMessage(pluginName, `tool "${name}" needs handler or staticPayload`));
+    }
+    if (hasHandler && hasStaticPayload) {
+      throw new Error(toPluginErrorMessage(pluginName, `tool "${name}" cannot define both handler and staticPayload`));
+    }
+    const description = String(rawTool.description ?? '').trim() ||
+      `Plugin tool provided by ${pluginName}. ${EXPERIMENTAL_PLUGIN_NOTICE}`;
+    const inputSchema = isPlainObject(rawTool.inputSchema) ? rawTool.inputSchema : {};
+    out.push({
+      name,
+      description,
+      inputSchema,
+      handler: hasHandler ? rawTool.handler : undefined,
+      staticPayload: hasStaticPayload ? rawTool.staticPayload : undefined,
+    });
+  }
+  return out;
+}
+
+export function normalizePlugins(plugins = []) {
+  if (!Array.isArray(plugins)) throw new Error('Invalid plugin configuration: plugins must be an array');
+  const normalized = [];
+  const seenPluginNames = new Set();
+  const seenToolNames = new Set(BUILTIN_TOOL_NAMES);
+
+  for (const rawPlugin of plugins) {
+    if (!isPlainObject(rawPlugin)) throw new Error('Invalid plugin configuration: each plugin must be an object');
+    const name = String(rawPlugin.name ?? '').trim();
+    const version = String(rawPlugin.version ?? '').trim();
+    if (!name || !version) throw new Error('Invalid plugin configuration: plugin.name and plugin.version are required');
+    if (seenPluginNames.has(name)) throw new Error(`Duplicate plugin name: ${name}`);
+    seenPluginNames.add(name);
+
+    const tools = normalizePluginTools(name, rawPlugin.tools);
+    for (const tool of tools) {
+      if (seenToolNames.has(tool.name)) {
+        throw new Error(toPluginErrorMessage(name, `tool name collision: ${tool.name}`));
+      }
+      seenToolNames.add(tool.name);
+    }
+
+    const dataSources = normalizePluginDataSources(name, rawPlugin.dataSources);
+    normalized.push({ name, version, tools, dataSources });
+  }
+
+  return normalized;
+}
+
+export function buildPluginDataSourceMap(plugins = []) {
+  const out = new Map();
+  for (const plugin of plugins) {
+    const pluginName = String(plugin?.name ?? 'unknown-plugin');
+    const dataSources = Array.isArray(plugin?.dataSources) ? plugin.dataSources : [];
+    for (const source of dataSources) {
+      const fileName = String(source?.fileName ?? '').trim();
+      const sourcePath = String(source?.path ?? '').trim();
+      if (!fileName || !sourcePath) continue;
+      if (out.has(fileName)) {
+        const prev = out.get(fileName);
+        throw new Error(`Duplicate data source override for ${fileName} (${prev.pluginName}, ${pluginName})`);
+      }
+      out.set(fileName, { path: sourcePath, pluginName });
+    }
+  }
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -1184,10 +1344,29 @@ function resolveDeclByComponent(indexes, component, prefix) {
 //
 //   loadJsonData(fileName: string) → Promise<object>
 //   loadValidator() → Promise<{ collectCemCustomElements, validateTextAgainstCem }>
+//   options?: {
+//     plugins?: WcfMcpPlugin[],
+//     loadJsonDataFromPath?: (path: string, fileName: string, pluginName?: string) => Promise<object>
+//   }
 // ---------------------------------------------------------------------------
 
-export async function createMcpServer(loadJsonData, loadValidator) {
-  const manifest = await loadJsonData('custom-elements.json');
+export async function createMcpServer(loadJsonData, loadValidator, options = {}) {
+  const plugins = normalizePlugins(options?.plugins ?? []);
+  const pluginDataSourceMap = buildPluginDataSourceMap(plugins);
+  const loadJsonDataFromPath = typeof options?.loadJsonDataFromPath === 'function'
+    ? options.loadJsonDataFromPath
+    : null;
+
+  const loadJson = async (fileName) => {
+    const override = pluginDataSourceMap.get(fileName);
+    if (!override) return loadJsonData(fileName);
+    if (!loadJsonDataFromPath) {
+      throw new Error(`Plugin data source override for ${fileName} requires loadJsonDataFromPath`);
+    }
+    return loadJsonDataFromPath(override.path, fileName, override.pluginName);
+  };
+
+  const manifest = await loadJson('custom-elements.json');
   const indexes = buildIndexes(manifest);
   const {
     collectCemCustomElements,
@@ -1196,22 +1375,22 @@ export async function createMcpServer(loadJsonData, loadValidator) {
     detectAccessibilityMisuseInMarkup = () => [],
   } = await loadValidator();
   const canonicalCemIndex = collectCemCustomElements(manifest);
-  const installRegistry = await loadJsonData('install-registry.json');
-  const patternRegistry = await loadJsonData('pattern-registry.json');
+  const installRegistry = await loadJson('install-registry.json');
+  const patternRegistry = await loadJson('pattern-registry.json');
   const { patterns } = loadPatternRegistryShape(patternRegistry);
   const relatedComponentMap = buildRelatedComponentMap(installRegistry, patterns);
 
   // Load optional data files (design tokens, guidelines index)
   let designTokensData = null;
   try {
-    designTokensData = await loadJsonData('design-tokens.json');
+    designTokensData = await loadJson('design-tokens.json');
   } catch {
     // design-tokens.json may not exist yet
   }
 
   let guidelinesIndexData = null;
   try {
-    guidelinesIndexData = await loadJsonData('guidelines-index.json');
+    guidelinesIndexData = await loadJson('guidelines-index.json');
   } catch {
     // guidelines-index.json may not exist yet
   }
@@ -1283,7 +1462,31 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           '10. validate_markup → verify your HTML and use suggestions to self-correct',
           '11. get_install_recipe → get import/install instructions',
         ],
+        experimental: {
+          plugins: {
+            enabled: plugins.length > 0,
+            note: EXPERIMENTAL_PLUGIN_NOTICE,
+            pluginCount: plugins.length,
+            pluginToolCount: plugins.reduce((sum, plugin) => sum + (plugin.tools?.length ?? 0), 0),
+            plugins: plugins.map((plugin) => ({
+              name: plugin.name,
+              version: plugin.version,
+              toolCount: plugin.tools?.length ?? 0,
+              dataSourceOverrides: plugin.dataSources?.map((source) => source.fileName) ?? [],
+            })),
+          },
+        },
       };
+
+      for (const plugin of plugins) {
+        const tools = Array.isArray(plugin.tools) ? plugin.tools : [];
+        for (const tool of tools) {
+          overview.availableTools.push({
+            name: tool.name,
+            purpose: `${tool.description} (plugin: ${plugin.name})`,
+          });
+        }
+      }
 
       return {
         content: [{ type: 'text', text: JSON.stringify(overview, null, 2) }],
@@ -1920,5 +2123,65 @@ export async function createMcpServer(loadJsonData, loadValidator) {
     },
   );
 
-  return { server };
+  for (const plugin of plugins) {
+    const pluginTools = Array.isArray(plugin.tools) ? plugin.tools : [];
+    for (const tool of pluginTools) {
+      server.registerTool(
+        tool.name,
+        {
+          description: tool.description,
+          inputSchema: tool.inputSchema ?? {},
+        },
+        async (args) => {
+          try {
+            if (typeof tool.handler === 'function') {
+              const result = await tool.handler(args, {
+                plugin: { name: plugin.name, version: plugin.version },
+                helpers: {
+                  buildJsonToolResponse,
+                  normalizePrefix,
+                  withPrefix,
+                  toCanonicalTagName,
+                },
+                loadJsonData: loadJson,
+              });
+              if (isPlainObject(result) && Array.isArray(result.content)) {
+                return result;
+              }
+              return buildJsonToolResponse(result ?? {});
+            }
+            return buildJsonToolResponse(tool.staticPayload ?? {});
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            return {
+              content: [{
+                type: 'text',
+                text: JSON.stringify({
+                  error: {
+                    code: 'PLUGIN_TOOL_RUNTIME_ERROR',
+                    message: `Plugin tool failed (${tool.name}): ${message}`,
+                    plugin: plugin.name,
+                  },
+                }, null, 2),
+              }],
+              isError: true,
+            };
+          }
+        },
+      );
+    }
+  }
+
+  return {
+    server,
+    pluginRuntime: {
+      pluginCount: plugins.length,
+      pluginToolCount: plugins.reduce((sum, plugin) => sum + (plugin.tools?.length ?? 0), 0),
+      dataSourceOverrides: [...pluginDataSourceMap.entries()].map(([fileName, item]) => ({
+        fileName,
+        path: item.path,
+        pluginName: item.pluginName,
+      })),
+    },
+  };
 }

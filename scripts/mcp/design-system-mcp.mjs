@@ -10,6 +10,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { createMcpServer } from '../../packages/mcp-server/core.mjs';
+import { loadWcfMcpRuntimeConfig } from '../../packages/mcp-server/server.mjs';
 
 const REPO_ROOT = path.resolve(process.cwd());
 
@@ -42,7 +43,17 @@ export async function loadValidator() {
 }
 
 export async function main() {
-  const { server } = await createMcpServer(loadJsonData, loadValidator);
+  const runtimeConfig = await loadWcfMcpRuntimeConfig({
+    cwd: REPO_ROOT,
+    configPath: process.env.WCF_MCP_CONFIG,
+  });
+  const { server } = await createMcpServer(loadJsonData, loadValidator, {
+    plugins: runtimeConfig.plugins,
+    loadJsonDataFromPath: async (sourcePath) => {
+      const text = await fs.readFile(sourcePath, 'utf8');
+      return JSON.parse(text);
+    },
+  });
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }

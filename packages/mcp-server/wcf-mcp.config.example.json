@@ -1,0 +1,24 @@
+{
+  "dataSources": {
+    "guidelines-index.json": "./packages/mcp-server/data/guidelines-index.json"
+  },
+  "plugins": [
+    {
+      "module": "./packages/mcp-server/examples/plugins/custom-validation-plugin.mjs"
+    },
+    {
+      "name": "static-tools-plugin",
+      "version": "0.1.0",
+      "staticTools": [
+        {
+          "name": "plugin_healthcheck",
+          "description": "Return plugin health information.",
+          "payload": {
+            "ok": true,
+            "source": "static-tools-plugin"
+          }
+        }
+      ]
+    }
+  ]
+}

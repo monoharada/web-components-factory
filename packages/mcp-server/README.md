@@ -100,6 +100,59 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 - bind: `127.0.0.1`
 - endpoint: `http://127.0.0.1:3100/mcp`
 
+## 設定ファイル（@experimental）
+
+`wcf-mcp.config.json` を使うと、データソース差し替えとカスタムツール追加ができます。
+
+- デフォルト探索パス: カレントディレクトリの `wcf-mcp.config.json`
+- 明示指定: `npx @monoharada/wcf-mcp --config=./wcf-mcp.config.json`
+- 互換性: 設定ファイルが無ければ従来どおり標準データで起動
+
+`dataSources` の相対パス基準:
+
+- ルート `dataSources`: config ファイルのディレクトリ基準
+- `plugins[].staticTools` を持つ static plugin の `dataSources`: config ファイルのディレクトリ基準
+- `plugins[].module` が export する plugin の `dataSources`: plugin module ファイルのディレクトリ基準
+
+### config 例
+
+```json
+{
+  "dataSources": {
+    "guidelines-index.json": "./guidelines-index.local.json"
+  },
+  "plugins": [
+    {
+      "module": "./plugins/custom-validation-plugin.mjs"
+    },
+    {
+      "name": "static-tools-plugin",
+      "version": "0.1.0",
+      "staticTools": [
+        {
+          "name": "plugin_healthcheck",
+          "payload": { "ok": true }
+        }
+      ]
+    }
+  ]
+}
+```
+
+※ `./plugins/custom-validation-plugin.mjs` は利用側プロジェクトに配置してください。  
+このリポジトリには参照用として `packages/mcp-server/examples/plugins/custom-validation-plugin.mjs` を同梱しています。
+
+### plugin 契約（@experimental）
+
+- `plugins[].name` / `plugins[].version` は必須
+- tool 名は組み込みツール名と重複不可（例: `list_components` など）
+- `dataSources` で差し替え可能な key は次のみ
+  - `custom-elements.json`
+  - `install-registry.json`
+  - `pattern-registry.json`
+  - `design-tokens.json`
+  - `guidelines-index.json`
+
 ## structuredContent rollback
 
 `get_component_api` / `get_design_tokens` / `get_design_token_detail` / `get_accessibility_docs` / `search_guidelines` は通常 `structuredContent` を返します。
