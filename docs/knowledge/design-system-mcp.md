@@ -47,6 +47,7 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 
 - `unknownElement`: `error`
 - `unknownAttribute`: `warning`
+- `forbiddenAttribute` / `tokenMisuse` / `accessibilityMisuse`: `warning`
 
 ## UI パターン（レイアウト/画面レシピ）
 
@@ -70,6 +71,15 @@ HTML snippet だけを返します。
 ### `get_design_tokens({ type?, category?, query? })`
 
 デザイントークンを type/category/query でフィルタして返します。
+
+### `get_accessibility_docs({ component?, topic?, wcagLevel?, maxResults?, prefix? })`
+
+アクセシビリティのチェックリストとガイドライン要点を返します。
+
+- `component`: tagName/className/componentId で絞り込み
+- `topic`: 例 `semantics`, `keyboard`, `labels`, `guideline`
+- `wcagLevel`: `A` / `AA` / `AAA` / `all`
+- `topic=all` かつ `component` 未指定時は、`component` と `guideline` の両ソースが結果に含まれるように返却
 
 ### `search_guidelines({ query, topic?, maxResults? })`
 

@@ -197,7 +197,7 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 | # | 次元 | wcf-mcp | Serendie | 差 | 優位 | 業界中央値 |
 |---|------|:-------:|:--------:|:--:|:----:|:--------:|
-| 1 | Developer Experience | 3 | 4 | -1 | Serendie | 3 |
+| 1 | Developer Experience | 5 | 4 | +1 | **wcf-mcp** | 3 |
 | 2 | Component Discoverability | 4 | 4 | 0 | 引分 | 3 |
 | 3 | Code Generation | 4 | 3 | +1 | **wcf-mcp** | 3 |
 | 4 | Token/Style Management | 2 | 5 | -3 | Serendie | 3 |
@@ -218,34 +218,32 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ### 4.1 Developer Experience（開発者体験）
 
-| 評価軸 | wcf-mcp (3/5) | Serendie (4/5) |
+| 評価軸 | wcf-mcp (5/5) | Serendie (4/5) |
 |--------|---------------|----------------|
 | **セットアップ** | `npx @monoharada/wcf-mcp` で即起動（Node.js 必須） | URL 設定のみ（HTTP transport）。ローカルインストール不要 |
-| **ツール発見性** | 11ツール。`get_design_system_overview` を先頭にしたガードレール導線あり | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
-| **エラーメッセージ** | `isError: true` + テキストメッセージ。行/列情報付き診断（validate_markup） | 構造化エラー + ガイダンスメッセージ |
-| **IDE対応** | Claude Code 向けスキルパック（4段階ワークフロー）あるが MCP 側に未統合 | ChatGPT（OpenAI Apps SDK）対応 |
+| **ツール発見性** | 13ツール。`get_design_system_overview` を先頭にしたガードレール導線あり | `get-serendie-ui-overview` を最初に呼ぶ設計（ガードレールパターン）。8ツールが一覧/詳細ペアで整理 |
+| **エラーメッセージ** | `hint` 互換を維持しつつ `suggestion` による復旧提案を返却（validate_markup） | 構造化エラー + ガイダンスメッセージ |
+| **IDE対応** | `get_design_system_overview` で IDE テンプレート（Claude Desktop / Claude Code / Cursor）を返却 | ChatGPT（OpenAI Apps SDK）対応 |
 
 **業界比較**:
 - Storybook MCP: `get_ui_building_instructions` で開発規約を最初に返すガードレール
 - Hopper: リモート URL + resources を `hopper://...` URI で体系化（高 DX）
 - Spindle: ローカルファイル読込で高速（MFUIと同方式）
 
-**Gap**: マルチIDE統合とエラーリカバリ提案が未実装。Serendie の ChatGPT 連携や Storybook の開発規約ガードレールに相当する補強余地がある。
+**Gap（解消済み）**: #172 でマルチIDEテンプレートとエラーリカバリ提案を追加し、DX の不足を解消。
 
-#### Evidence (2026-02-25) — 暫定（main 未マージ）
+#### Evidence (2026-02-27)
 
 | 項目 | 内容 |
 |------|------|
-| Issue | #169 (get_design_system_overview), #165/#166/#167 (description 強化) |
-| 実装ツール / 機能 | `get_design_system_overview` ガードレール + 全ツール description に When/Returns/After 構造 |
-| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
-| テスト結果 | 18件パス（overview 含む） |
-| 該当ファイル | `packages/mcp-server/core.mjs:371` |
-| PR / マージ SHA | PR #169 / `5bd9469` + PR #180 / （未マージ） |
-| スコア変更 | 3 → 4 |
-| 根拠 | ガードレールパターン + description 強化で Serendie/Storybook と同等。5/5 には #172（マルチIDE + エラーリカバリ）が必要 |
-
-**5/5 に必要な追加改善** → #172: マルチIDE設定テンプレート、validate_markup エラーリカバリ提案
+| Issue | #172 (Developer Experience 5/5) |
+| 実装ツール / 機能 | `get_design_system_overview.ideSetupTemplates` 追加、`validate_markup` の `suggestion` 追加（`hint` 維持） |
+| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` |
+| テスト結果 | overview/suggestion を含む mcp-server テスト pass、100KB 制約 pass |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md` |
+| PR / マージ SHA | PR #183 後続（#172 実装コミット） |
+| スコア変更 | 4 → 5 |
+| 根拠 | マルチIDE設定テンプレート + 診断提案により、DXの不足項目（設定導線/復旧導線）を埋めた |
 
 ---
 

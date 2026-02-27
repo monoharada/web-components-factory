@@ -19,11 +19,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 import {
   CANONICAL_PREFIX,
   CATEGORY_MAP,
+  IDE_SETUP_TEMPLATES,
   MAX_TOOL_RESULT_BYTES,
   MAX_PREFIX_LENGTH,
   STRUCTURED_CONTENT_DISABLE_FLAG,
   buildAccessibilityIndex,
   buildComponentSummaries,
+  buildDiagnosticSuggestion,
   buildIndexes,
   buildJsonToolResponse,
   buildRelatedComponentMap,
@@ -36,6 +38,7 @@ import {
   measureToolResultBytes,
   findCustomElementDeclarations,
   pickDecl,
+  suggestUnknownElementTagName,
   parseIconNamesFromDescription,
   parseIconNamesFromType,
   queryAccessibilityIndex,
@@ -153,6 +156,15 @@ describe('get_design_system_overview (logic)', () => {
 
     expect(expectedTools).toHaveLength(13);
     expect(new Set(expectedTools).size).toBe(13);
+  });
+
+  it('provides at least three IDE setup templates', () => {
+    expect(IDE_SETUP_TEMPLATES.length).toBeGreaterThanOrEqual(3);
+    expect(IDE_SETUP_TEMPLATES.some((item) => item.ide === 'Claude Desktop')).toBe(true);
+    expect(IDE_SETUP_TEMPLATES.some((item) => item.ide === 'Claude Code')).toBe(true);
+    expect(IDE_SETUP_TEMPLATES.some((item) => item.ide === 'Cursor')).toBe(true);
+    expect(IDE_SETUP_TEMPLATES.every((item) => typeof item.configPath === 'string')).toBe(true);
+    expect(IDE_SETUP_TEMPLATES.every((item) => typeof item.snippet === 'object')).toBe(true);
   });
 });
 
@@ -721,6 +733,54 @@ describe('accessibility misuse detection', () => {
     const html = '<dads-input-text data-role="alert" aria-role="alert"></dads-input-text>';
     const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
     expect(diagnostics).toHaveLength(0);
+  });
+
+  it('does not mis-detect role=alert text inside another attribute value', () => {
+    const html = '<dads-input-text data-note="abc role=alert def"></dads-input-text>';
+    const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
+    expect(diagnostics).toHaveLength(0);
+  });
+});
+
+describe('diagnostic suggestion helpers', () => {
+  it('suggests closest tag name for unknown custom element', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const decls = findCustomElementDeclarations(manifest);
+    const cemIndex = new Map(decls.map((decl) => [decl.tagName.toLowerCase(), { attributes: new Set() }]));
+
+    const suggestion = suggestUnknownElementTagName('dads-buton', cemIndex);
+    expect(suggestion).toBe('dads-button');
+
+    const diagnosticSuggestion = buildDiagnosticSuggestion({
+      diagnostic: { code: 'unknownElement', tagName: 'dads-buton' },
+      cemIndex,
+    });
+    expect(diagnosticSuggestion).toContain('"dads-button"');
+  });
+
+  it('returns fixed suggestions for forbidden and accessibility misuse diagnostics', () => {
+    expect(buildDiagnosticSuggestion({
+      diagnostic: { code: 'forbiddenAttribute', attrName: 'placeholder' },
+      cemIndex: new Map(),
+    })).toContain('aria-label');
+
+    expect(buildDiagnosticSuggestion({
+      diagnostic: { code: 'ariaLiveNotRecommended' },
+      cemIndex: new Map(),
+    })).toContain('aria-describedby');
+
+    expect(buildDiagnosticSuggestion({
+      diagnostic: { code: 'roleAlertNotRecommended' },
+      cemIndex: new Map(),
+    })).toContain('role="alert"');
+  });
+
+  it('does not force suggestion for unknownAttribute and keeps hint-compatible path', () => {
+    const suggestion = buildDiagnosticSuggestion({
+      diagnostic: { code: 'unknownAttribute', attrName: 'foo', hint: 'legacy-hint' },
+      cemIndex: new Map(),
+    });
+    expect(suggestion).toBeUndefined();
   });
 });
 

@@ -95,6 +95,39 @@ const A11Y_CATEGORY_LEVEL_MAP = Object.freeze({
   callouts: 'AA',
   guideline: 'A',
 });
+const NPX_TEMPLATE = Object.freeze({
+  command: 'npx',
+  args: ['@monoharada/wcf-mcp'],
+});
+export const IDE_SETUP_TEMPLATES = Object.freeze([
+  {
+    ide: 'Claude Desktop',
+    configPath: 'claude_desktop_config.json',
+    snippet: {
+      mcpServers: {
+        wcf: NPX_TEMPLATE,
+      },
+    },
+  },
+  {
+    ide: 'Claude Code',
+    configPath: '.mcp.json',
+    snippet: {
+      mcpServers: {
+        wcf: NPX_TEMPLATE,
+      },
+    },
+  },
+  {
+    ide: 'Cursor',
+    configPath: '.cursor/mcp.json',
+    snippet: {
+      mcpServers: {
+        wcf: NPX_TEMPLATE,
+      },
+    },
+  },
+]);
 
 export function isStructuredContentDisabled(env = process.env) {
   const raw = String(env?.[STRUCTURED_CONTENT_DISABLE_FLAG] ?? '').trim().toLowerCase();
@@ -211,6 +244,79 @@ export function toCanonicalTagName(tagName, prefix) {
   }
 
   return raw;
+}
+
+export function levenshteinDistance(left, right) {
+  const a = String(left ?? '');
+  const b = String(right ?? '');
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+
+  const prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  const curr = Array.from({ length: b.length + 1 }, () => 0);
+
+  for (let i = 1; i <= a.length; i += 1) {
+    curr[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(
+        curr[j - 1] + 1,
+        prev[j] + 1,
+        prev[j - 1] + cost,
+      );
+    }
+    for (let j = 0; j <= b.length; j += 1) prev[j] = curr[j];
+  }
+
+  return prev[b.length];
+}
+
+export function suggestUnknownElementTagName(tagName, cemIndex) {
+  const target = String(tagName ?? '').trim().toLowerCase();
+  if (!target || !target.includes('-')) return undefined;
+
+  let bestTag;
+  let bestDistance = Number.POSITIVE_INFINITY;
+  const candidateSource = cemIndex instanceof Map ? cemIndex.keys() : [];
+  for (const rawCandidate of candidateSource) {
+    const candidate = String(rawCandidate ?? '').toLowerCase();
+    if (!candidate || !candidate.includes('-') || candidate === target) continue;
+    const distance = levenshteinDistance(target, candidate);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestTag = candidate;
+    }
+  }
+
+  if (!bestTag) return undefined;
+  const maxDistance = Math.max(1, Math.ceil(target.length * 0.3));
+  if (bestDistance > maxDistance) return undefined;
+  return bestTag;
+}
+
+export function buildDiagnosticSuggestion({ diagnostic, cemIndex }) {
+  const code = String(diagnostic?.code ?? '');
+  if (!code) return undefined;
+
+  if (code === 'unknownElement') {
+    const tagName = suggestUnknownElementTagName(diagnostic?.tagName, cemIndex);
+    return tagName ? `Did you mean "${tagName}"?` : undefined;
+  }
+
+  if (code === 'forbiddenAttribute' && String(diagnostic?.attrName ?? '').toLowerCase() === 'placeholder') {
+    return 'Use aria-label or aria-describedby support text instead of placeholder.';
+  }
+
+  if (code === 'ariaLiveNotRecommended') {
+    return 'Remove aria-live and connect support or error text via aria-describedby.';
+  }
+
+  if (code === 'roleAlertNotRecommended') {
+    return 'Use role="alert" only for urgent live updates; otherwise use static text associated via aria-describedby.';
+  }
+
+  return undefined;
 }
 
 export function findCustomElementDeclarations(manifest) {
@@ -881,6 +987,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         componentsByCategory: categoryCount,
         totalPatterns: patternList.length,
         patterns: patternList,
+        ideSetupTemplates: IDE_SETUP_TEMPLATES,
         availableTools: [
           { name: 'get_design_system_overview', purpose: 'This overview (start here)' },
           { name: 'list_components', purpose: 'Browse components with progressive disclosure and filters' },
@@ -897,7 +1004,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           { name: 'search_guidelines', purpose: 'Search design system guidelines and best practices' },
         ],
         recommendedWorkflow: [
-          '1. get_design_system_overview → understand components, patterns & tokens',
+          '1. get_design_system_overview → understand components, patterns, tokens, and IDE setup templates',
           '2. search_guidelines → find relevant guidelines',
           '3. get_design_tokens → get correct token values',
           '4. get_accessibility_docs → fetch component-level accessibility checklist',
@@ -905,7 +1012,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           '6. search_icons (optional) → find icon names quickly',
           '7. get_component_api → check attributes, slots, events, CSS parts',
           '8. generate_usage_snippet or get_pattern_recipe → get code',
-          '9. validate_markup → verify your HTML is correct',
+          '9. validate_markup → verify your HTML and use suggestions to self-correct',
           '10. get_install_recipe → get import/install instructions',
         ],
       };
@@ -1143,7 +1250,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
     'validate_markup',
     {
       description:
-        'Validate HTML against the design system Custom Elements Manifest. When: checking generated or written HTML for correctness. Returns: diagnostics array with errors (unknown elements) and warnings (unknown attributes). Use after generating HTML to catch mistakes.',
+        'Validate HTML against the design system Custom Elements Manifest. When: checking generated or written HTML for correctness. Returns: diagnostics array with errors (unknown elements), warnings (unknown attributes/token misuse/accessibility misuse), and optional suggestion text for quick recovery. Use after generating HTML to catch mistakes.',
       inputSchema: {
         html: z.string(),
         prefix: z.string().optional(),
@@ -1182,16 +1289,20 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         severity: 'warning',
       });
 
-      const diagnostics = [...cemDiagnostics, ...tokenMisuseDiagnostics, ...accessibilityDiagnostics].map((d) => ({
-        file: d.file,
-        range: d.range,
-        severity: d.severity,
-        code: d.code,
-        message: d.message,
-        tagName: d.tagName,
-        attrName: d.attrName,
-        hint: d.hint,
-      }));
+      const diagnostics = [...cemDiagnostics, ...tokenMisuseDiagnostics, ...accessibilityDiagnostics].map((d) => {
+        const suggestion = buildDiagnosticSuggestion({ diagnostic: d, cemIndex });
+        return {
+          file: d.file,
+          range: d.range,
+          severity: d.severity,
+          code: d.code,
+          message: d.message,
+          tagName: d.tagName,
+          attrName: d.attrName,
+          hint: d.hint,
+          suggestion,
+        };
+      });
 
       return {
         content: [{ type: 'text', text: JSON.stringify({ diagnostics }, null, 2) }],

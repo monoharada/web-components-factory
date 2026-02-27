@@ -126,6 +126,10 @@ function parseInlineStyleAttribute(attrChunk) {
 }
 
 function parseAttributeNames(rawAttrs) {
+  return parseAttributes(rawAttrs).map(({ name, offset }) => ({ name, offset }));
+}
+
+function parseAttributes(rawAttrs) {
   /** @type {{ name: string, offset: number }[]} */
   const out = [];
 
@@ -150,9 +154,7 @@ function parseAttributeNames(rawAttrs) {
     }
 
     const name = rawAttrs.slice(nameStart, i);
-    if (name && !name.startsWith('${') && !name.includes('{') && !name.includes('}')) {
-      out.push({ name, offset: nameStart });
-    }
+    let value = '';
 
     while (i < len && isSpace(rawAttrs.charCodeAt(i))) i += 1;
 
@@ -164,15 +166,23 @@ function parseAttributeNames(rawAttrs) {
       const quote = rawAttrs[i];
       if (quote === '"' || quote === "'") {
         i += 1;
+        const valueStart = i;
         while (i < len && rawAttrs[i] !== quote) i += 1;
+        value = rawAttrs.slice(valueStart, i);
         if (i < len) i += 1;
       } else {
+        const valueStart = i;
         while (i < len) {
           const cc = rawAttrs[i];
           if (cc === '>' || cc === '/' || isSpace(rawAttrs.charCodeAt(i))) break;
           i += 1;
         }
+        value = rawAttrs.slice(valueStart, i);
       }
+    }
+
+    if (name && !name.startsWith('${') && !name.includes('{') && !name.includes('}')) {
+      out.push({ name, offset: nameStart, value });
     }
   }
 
@@ -374,11 +384,11 @@ export function detectAccessibilityMisuseInMarkup({
       });
     }
 
-    const roleMatch = /(^|[\t\n\f\r ])(role)\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(attrChunk);
-    const roleValue = String(roleMatch?.[4] ?? roleMatch?.[5] ?? roleMatch?.[6] ?? '').trim().toLowerCase();
-    if (roleMatch && roleValue === 'alert') {
+    const roleAttr = parseAttributes(attrChunk).find(({ name }) => String(name ?? '').toLowerCase() === 'role');
+    const roleValue = String(roleAttr?.value ?? '').trim().toLowerCase();
+    if (roleAttr && roleValue === 'alert') {
       const attrName = 'role';
-      const roleOffsetInChunk = roleMatch.index + String(roleMatch[1] ?? '').length;
+      const roleOffsetInChunk = roleAttr.offset;
       const startIndex = rawAttrsStart + roleOffsetInChunk;
       const endIndex = startIndex + attrName.length;
       const range = makeRange(lineStarts, startIndex, endIndex);

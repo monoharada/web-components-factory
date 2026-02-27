@@ -33,13 +33,28 @@ npx @monoharada/wcf-mcp
 claude mcp add wcf -- npx @monoharada/wcf-mcp
 ```
 
+### Cursor で使う
+
+`.cursor/mcp.json` に追加:
+
+```json
+{
+  "mcpServers": {
+    "wcf": {
+      "command": "npx",
+      "args": ["@monoharada/wcf-mcp"]
+    }
+  }
+}
+```
+
 ## 提供ツール（13個）
 
 ### ガードレール
 
 | ツール | 説明 |
 |--------|------|
-| `get_design_system_overview` | 最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー）を返す |
+| `get_design_system_overview` | 最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー、IDE設定テンプレート）を返す |
 
 ### コンポーネント検索・API
 
@@ -55,7 +70,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `validate_markup` | HTML スニペットを CEM に照合し、未知の要素（error）・属性（warning）を検出 |
+| `validate_markup` | HTML スニペットを検証し、未知要素（error）・未知属性（warning）・禁止属性/トークン誤用/`aria-live`・`role="alert"` の誤用（warning）を検出し、可能な場合は `suggestion` を返す |
 
 ### UI パターン
 
@@ -70,7 +85,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | ツール | 説明 |
 |--------|------|
 | `get_design_tokens` | デザイントークンを type/category/query で検索 |
-| `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索 |
+| `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索（`topic=all` では両ソースを混在返却） |
 | `search_guidelines` | ガイドライン（topic/query）をスコア付きで検索 |
 
 ## transport
@@ -171,7 +186,6 @@ prefix: "myui" → dads-button → myui-button
       "severity": "warning",
       "code": "unknownAttribute",
       "message": "Unknown attribute on <dads-button>: foo",
-      "tagName": "dads-button",
       "attrName": "foo"
     }
   ]
