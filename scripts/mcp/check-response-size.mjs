@@ -8,6 +8,7 @@ import {
   buildDesignTokenDetailPayload,
   buildAccessibilityIndex,
   buildComponentSummaries,
+  buildSummaryToolResponse,
   buildRelatedComponentMap,
   buildIndexes,
   buildJsonToolResponse,
@@ -283,6 +284,62 @@ function pickLargestGuidelineResponse(guidelinesIndex) {
   return largest;
 }
 
+function pickLargestSummaryResponse({
+  manifest,
+  installRegistry,
+  patternRegistry,
+  designTokens,
+  guidelinesIndex,
+}) {
+  const indexes = buildIndexes(manifest);
+  const patterns =
+    patternRegistry?.patterns && typeof patternRegistry.patterns === 'object'
+      ? patternRegistry.patterns
+      : {};
+  const relatedMap = buildRelatedComponentMap(installRegistry, patterns);
+
+  const firstDecl = indexes.decls.find((decl) => typeof decl?.tagName === 'string');
+  const canonicalTag = firstDecl?.tagName?.toLowerCase();
+  const modulePath = canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined;
+  const api = firstDecl ? serializeApi(firstDecl, modulePath, undefined) : {};
+  if (canonicalTag) {
+    const relatedComponents = getRelatedComponentsForTag({
+      canonicalTagName: canonicalTag,
+      installRegistry,
+      relatedMap,
+    });
+    if (relatedComponents.length > 0) {
+      api.relatedComponents = relatedComponents;
+    }
+    const accessibilityChecklist = extractAccessibilityChecklist(firstDecl, { prefix: undefined });
+    if (accessibilityChecklist) {
+      api.accessibilityChecklist = accessibilityChecklist;
+    }
+  }
+
+  const listComponentsPayload = buildComponentSummaries(indexes, {}).items;
+  const designTokensPayload = getDesignTokensPayload(designTokens);
+  const guidelinesPayload = searchGuidelinesPayload(guidelinesIndex, 'focus', 'all', MAX_GUIDELINE_RESULTS);
+
+  const scenarios = [
+    { label: 'list_components(summary=true)', payload: listComponentsPayload },
+    { label: 'get_component_api(summary=true)', payload: api },
+    { label: 'get_design_tokens(summary=true)', payload: designTokensPayload },
+    { label: 'search_guidelines(summary=true)', payload: guidelinesPayload },
+  ];
+
+  let largest = { label: 'summary_mode', bytes: 0 };
+  for (const scenario of scenarios) {
+    const response = buildSummaryToolResponse(scenario.label, scenario.payload, { env: {} });
+    const bytes = toolResponseBytes(response);
+    if (bytes > largest.bytes) {
+      largest = { label: scenario.label, bytes };
+    }
+  }
+
+  return largest;
+}
+
 async function main() {
   const [manifest, designTokens, guidelinesIndex, installRegistry, patternRegistry] = await Promise.all([
     loadJson('custom-elements.json'),
@@ -303,6 +360,13 @@ async function main() {
     pickLargestGetDesignTokenDetailResponse(designTokens),
     pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex),
     pickLargestGuidelineResponse(guidelinesIndex),
+    pickLargestSummaryResponse({
+      manifest,
+      installRegistry,
+      patternRegistry,
+      designTokens,
+      guidelinesIndex,
+    }),
   ];
 
   let failed = false;

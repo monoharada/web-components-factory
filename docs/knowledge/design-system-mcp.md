@@ -116,8 +116,8 @@ Figma URL を受け取り、以下の順序で実装を進めるプロンプト�
 ### Resources (`wcf://`)
 
 - `wcf://components`: コンポーネントカタログ（カテゴリ集計付き）
-  - source: `data/custom-elements.json`
-  - refresh: CEM 更新後に `npm run mcp:build`
+  - source: `custom-elements.json`（repo root, repo-local launcher）
+  - refresh: CEM 更新後に `npm run cem:analyze`
 - `wcf://tokens`: トークン summary
   - source: `data/design-tokens.json`
   - refresh: トークン抽出後に `npm run mcp:build`
