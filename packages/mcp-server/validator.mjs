@@ -374,11 +374,12 @@ export function detectAccessibilityMisuseInMarkup({
       });
     }
 
-    const roleMatch = /\brole\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(attrChunk);
-    const roleValue = String(roleMatch?.[2] ?? roleMatch?.[3] ?? roleMatch?.[4] ?? '').trim().toLowerCase();
+    const roleMatch = /(^|[\t\n\f\r ])(role)\s*=\s*("([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(attrChunk);
+    const roleValue = String(roleMatch?.[4] ?? roleMatch?.[5] ?? roleMatch?.[6] ?? '').trim().toLowerCase();
     if (roleMatch && roleValue === 'alert') {
       const attrName = 'role';
-      const startIndex = rawAttrsStart + roleMatch.index;
+      const roleOffsetInChunk = roleMatch.index + String(roleMatch[1] ?? '').length;
+      const startIndex = rawAttrsStart + roleOffsetInChunk;
       const endIndex = startIndex + attrName.length;
       const range = makeRange(lineStarts, startIndex, endIndex);
       diagnostics.push({

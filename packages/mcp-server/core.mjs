@@ -747,6 +747,10 @@ export function queryAccessibilityIndex(
   const pageSize = Number.isInteger(maxResults) ? Math.max(1, Math.min(maxResults, 100)) : 20;
   const source = Array.isArray(entries) ? entries : [];
   const results = [];
+  const shouldBalanceSources = !componentTagName && normalizedTopic === 'all';
+  const guidelineCandidates = [];
+  const componentCandidates = [];
+  const otherCandidates = [];
   let totalHits = 0;
 
   for (const entry of source) {
@@ -755,7 +759,28 @@ export function queryAccessibilityIndex(
     if (normalizedWcagLevel !== 'all' && String(entry.wcagLevel ?? '').toUpperCase() !== normalizedWcagLevel) continue;
 
     totalHits += 1;
-    if (results.length < pageSize) results.push(entry);
+    if (!shouldBalanceSources) {
+      if (results.length < pageSize) results.push(entry);
+      continue;
+    }
+
+    if (String(entry.source ?? '') === 'guideline') {
+      if (guidelineCandidates.length < pageSize) guidelineCandidates.push(entry);
+    } else if (String(entry.source ?? '') === 'component') {
+      if (componentCandidates.length < pageSize) componentCandidates.push(entry);
+    } else if (otherCandidates.length < pageSize) {
+      otherCandidates.push(entry);
+    }
+  }
+
+  if (shouldBalanceSources) {
+    while (results.length < pageSize) {
+      const beforeLength = results.length;
+      if (guidelineCandidates.length > 0) results.push(guidelineCandidates.shift());
+      if (results.length < pageSize && componentCandidates.length > 0) results.push(componentCandidates.shift());
+      if (results.length < pageSize && otherCandidates.length > 0) results.push(otherCandidates.shift());
+      if (results.length === beforeLength) break;
+    }
   }
 
   return {

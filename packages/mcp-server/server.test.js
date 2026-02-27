@@ -569,6 +569,19 @@ describe('get_accessibility_docs (logic)', () => {
     expect(filtered.results.every((entry) => entry.wcagLevel === 'A')).toBe(true);
   });
 
+  it('includes guideline entries in default results when available', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const guidelines = await loadBundledJsonOrNull('guidelines-index.json');
+    if (!guidelines) return;
+    const indexes = buildIndexes(manifest);
+    const entries = buildAccessibilityIndex(indexes, guidelines, { prefix: 'dads' });
+
+    const filtered = queryAccessibilityIndex(entries, {});
+    expect(filtered.totalHits).toBeGreaterThan(filtered.results.length);
+    expect(filtered.results.some((entry) => entry.source === 'guideline')).toBe(true);
+    expect(filtered.results.some((entry) => entry.source === 'component')).toBe(true);
+  });
+
   it('extracts component-level accessibility checklist from CEM custom data', async () => {
     const manifest = await loadBundledJson('custom-elements.json');
     const indexes = buildIndexes(manifest);
@@ -700,6 +713,12 @@ describe('accessibility misuse detection', () => {
 
   it('does not report diagnostics for markup without blocked patterns', () => {
     const html = '<dads-input-text aria-describedby="support-text" aria-invalid="true"></dads-input-text>';
+    const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('does not mis-detect data-role as role attribute', () => {
+    const html = '<dads-input-text data-role="alert" aria-role="alert"></dads-input-text>';
     const diagnostics = detectAccessibilityMisuseInMarkup({ text: html });
     expect(diagnostics).toHaveLength(0);
   });
