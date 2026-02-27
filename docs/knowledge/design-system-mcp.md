@@ -68,9 +68,20 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 
 HTML snippet だけを返します。
 
-### `get_design_tokens({ type?, category?, query? })`
+### `get_design_tokens({ type?, category?, query?, theme? })`
 
-デザイントークンを type/category/query でフィルタして返します。
+デザイントークンを type/category/query/theme でフィルタして返します。
+
+- `theme` は `light` / `dark` / `all` を受理
+- 現在は `light` のみ対応のため、`dark` / `all` はエラーを返します（NG-06）
+
+### `get_design_token_detail({ name, theme? })`
+
+単一トークンの詳細を返します。
+
+- `name`: `--color-primary` または `var(--color-primary)` 形式
+- 返却: `token`, `references`, `referencedBy`, `relatedTokens`, `usageExamples`
+- `theme` は `get_design_tokens` と同様に `light` のみ対応
 
 ### `get_accessibility_docs({ component?, topic?, wcagLevel?, maxResults?, prefix? })`
 

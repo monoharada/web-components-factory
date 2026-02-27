@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   MAX_TOOL_RESULT_BYTES,
+  buildDesignTokenDetailPayload,
   buildAccessibilityIndex,
   buildComponentSummaries,
   buildRelatedComponentMap,
@@ -125,7 +126,33 @@ function getDesignTokensPayload(designTokens) {
     total: tokens.length,
     tokens,
     summary: designTokens?.summary,
+    theme: {
+      requested: 'light',
+      resolved: 'light',
+      available: ['light'],
+    },
   };
+}
+
+function pickLargestGetDesignTokenDetailResponse(designTokens) {
+  const tokens = Array.isArray(designTokens?.tokens) ? designTokens.tokens : [];
+  let largest = { label: 'get_design_token_detail', bytes: 0 };
+  for (const token of tokens) {
+    const name = String(token?.name ?? '').trim();
+    if (!name) continue;
+    const result = buildDesignTokenDetailPayload(designTokens, name, 'light');
+    const response = result.isError
+      ? toTextToolResponse(result.payload)
+      : buildJsonToolResponse(result.payload, { env: {} });
+    const bytes = toolResponseBytes(response);
+    if (bytes > largest.bytes) {
+      largest = {
+        label: `get_design_token_detail(name="${name}", theme="light")`,
+        bytes,
+      };
+    }
+  }
+  return largest;
 }
 
 function pickLargestSearchIconsResponse(manifest) {
@@ -273,6 +300,7 @@ async function main() {
       label: 'get_design_tokens(all)',
       bytes: toolResponseBytes(buildJsonToolResponse(getDesignTokensPayload(designTokens), { env: {} })),
     },
+    pickLargestGetDesignTokenDetailResponse(designTokens),
     pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex),
     pickLargestGuidelineResponse(guidelinesIndex),
   ];

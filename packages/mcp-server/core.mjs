@@ -85,6 +85,7 @@ export const CATEGORY_MAP = {
 const TOKEN_MISUSE_ALLOWED_TYPES = Object.freeze(new Set(['color', 'spacing']));
 const STRUCTURED_CONTENT_DISABLE_TRUE_VALUES = Object.freeze(new Set(['1', 'true', 'yes', 'on']));
 const WCAG_LEVELS = Object.freeze(new Set(['A', 'AA', 'AAA', 'all']));
+const TOKEN_THEMES = Object.freeze(new Set(['light', 'dark', 'all']));
 const A11Y_CATEGORY_LEVEL_MAP = Object.freeze({
   semantics: 'A',
   keyboard: 'A',
@@ -202,6 +203,235 @@ export function buildTokenSuggestionMap(designTokensData) {
     if (normalized && !out.has(normalized)) out.set(normalized, cssVariable);
   }
   return out;
+}
+
+export function normalizeTokenIdentifier(value) {
+  const raw = String(value ?? '').trim().toLowerCase();
+  if (!raw) return '';
+  const cssVariable = normalizeCssVariable(raw);
+  if (cssVariable) return cssVariable;
+  if (raw.startsWith('--')) return raw;
+  return `--${raw.replace(/^[-]+/, '')}`;
+}
+
+export function resolveTokenTheme(theme) {
+  const requested = String(theme ?? 'light').trim().toLowerCase() || 'light';
+  if (!TOKEN_THEMES.has(requested)) {
+    return {
+      ok: false,
+      errorCode: 'INVALID_THEME',
+      message: `Unsupported theme: ${requested}. Allowed values are light, dark, all.`,
+    };
+  }
+  if (requested !== 'light') {
+    return {
+      ok: false,
+      errorCode: 'INVALID_THEME',
+      message: `Theme "${requested}" is not available yet. Use theme="light" (NG-06).`,
+    };
+  }
+  return {
+    ok: true,
+    requested,
+    resolved: 'light',
+    available: ['light'],
+  };
+}
+
+export function extractReferencedTokenNames(value) {
+  if (typeof value !== 'string') return [];
+  const refs = [];
+  const re = /var\(\s*(--[^,\s)]+)\s*(?:,\s*[^)]+)?\)/g;
+  let match;
+  while ((match = re.exec(value))) {
+    const tokenName = normalizeTokenIdentifier(match[1]);
+    if (tokenName) refs.push(tokenName);
+  }
+  return [...new Set(refs)];
+}
+
+export function buildTokenRelationshipIndex(designTokensData) {
+  const byToken = {};
+  const tokens = Array.isArray(designTokensData?.tokens) ? designTokensData.tokens : [];
+  const fromData = designTokensData?.relationships?.byToken;
+  if (fromData && typeof fromData === 'object') {
+    for (const [rawName, rawRel] of Object.entries(fromData)) {
+      const name = normalizeTokenIdentifier(rawName);
+      if (!name) continue;
+      const refs = Array.isArray(rawRel?.references)
+        ? rawRel.references.map((r) => normalizeTokenIdentifier(r)).filter(Boolean)
+        : [];
+      const referencedBy = Array.isArray(rawRel?.referencedBy)
+        ? rawRel.referencedBy.map((r) => normalizeTokenIdentifier(r)).filter(Boolean)
+        : [];
+      byToken[name] = {
+        references: [...new Set(refs)].sort(),
+        referencedBy: [...new Set(referencedBy)].sort(),
+      };
+    }
+  }
+
+  if (Object.keys(byToken).length > 0) {
+    return { byToken };
+  }
+
+  for (const token of tokens) {
+    const name = normalizeTokenIdentifier(token?.name);
+    if (!name) continue;
+    if (!byToken[name]) byToken[name] = { references: [], referencedBy: [] };
+    const refs = extractReferencedTokenNames(token?.value);
+    byToken[name].references = refs;
+  }
+
+  for (const [sourceName, relation] of Object.entries(byToken)) {
+    for (const refName of relation.references) {
+      if (!byToken[refName]) byToken[refName] = { references: [], referencedBy: [] };
+      byToken[refName].referencedBy.push(sourceName);
+    }
+  }
+
+  for (const relation of Object.values(byToken)) {
+    relation.references = [...new Set(relation.references)].sort();
+    relation.referencedBy = [...new Set(relation.referencedBy)].sort();
+  }
+
+  return { byToken };
+}
+
+function toTokenSummary(token) {
+  return {
+    name: String(token?.name ?? ''),
+    value: String(token?.value ?? ''),
+    type: String(token?.type ?? ''),
+    category: String(token?.category ?? ''),
+    cssVariable: String(token?.cssVariable ?? ''),
+  };
+}
+
+export function suggestTokenNames(targetName, tokens, maxSuggestions = 5) {
+  const target = normalizeTokenIdentifier(targetName);
+  if (!target) return [];
+  const allNames = [...new Set(tokens
+    .map((token) => normalizeTokenIdentifier(token?.name))
+    .filter(Boolean))];
+
+  const startsWith = allNames.filter((name) => name.startsWith(target));
+  if (startsWith.length >= maxSuggestions) return startsWith.slice(0, maxSuggestions);
+
+  const includes = allNames.filter((name) => name.includes(target) && !startsWith.includes(name));
+  const ranked = allNames
+    .filter((name) => !startsWith.includes(name) && !includes.includes(name))
+    .map((name) => ({ name, distance: levenshteinDistance(target, name) }))
+    .sort((left, right) => left.distance - right.distance || left.name.localeCompare(right.name))
+    .map((entry) => entry.name);
+
+  return [...startsWith, ...includes, ...ranked].slice(0, maxSuggestions);
+}
+
+function buildUsageExamples(token) {
+  const cssVar = String(token?.cssVariable ?? '');
+  const type = String(token?.type ?? '').toLowerCase();
+  if (!cssVar) return [];
+  if (type === 'color') {
+    return [
+      `.example { color: ${cssVar}; }`,
+      `.example { background-color: ${cssVar}; }`,
+    ];
+  }
+  if (type === 'spacing') {
+    return [
+      `.example { padding: ${cssVar}; }`,
+      `.example { gap: ${cssVar}; }`,
+    ];
+  }
+  if (type === 'typography') {
+    return [
+      `.example { font-size: ${cssVar}; }`,
+      `.example { line-height: ${cssVar}; }`,
+    ];
+  }
+  if (type === 'radius') {
+    return [`.example { border-radius: ${cssVar}; }`];
+  }
+  if (type === 'shadow') {
+    return [`.example { box-shadow: ${cssVar}; }`];
+  }
+  return [`.example { --token-value: ${cssVar}; }`];
+}
+
+function buildTokenErrorPayload(code, message, extra = {}) {
+  return {
+    isError: true,
+    payload: {
+      error: { code, message },
+      ...extra,
+    },
+  };
+}
+
+export function buildDesignTokenDetailPayload(designTokensData, name, theme) {
+  if (!Array.isArray(designTokensData?.tokens)) {
+    return buildTokenErrorPayload(
+      'DESIGN_TOKENS_DATA_UNAVAILABLE',
+      'Design tokens data not available. Run: npm run mcp:extract-tokens',
+    );
+  }
+
+  const themeInfo = resolveTokenTheme(theme);
+  if (!themeInfo.ok) {
+    return buildTokenErrorPayload(themeInfo.errorCode, themeInfo.message);
+  }
+
+  const normalizedName = normalizeTokenIdentifier(name);
+  if (!normalizedName) {
+    return buildTokenErrorPayload('INVALID_TOKEN_INPUT', 'Token name is required.');
+  }
+
+  const tokens = designTokensData.tokens;
+  const token = tokens.find((item) => normalizeTokenIdentifier(item?.name) === normalizedName);
+  if (!token) {
+    return buildTokenErrorPayload(
+      'TOKEN_NOT_FOUND',
+      `Token not found: ${normalizedName}`,
+      { suggestions: suggestTokenNames(normalizedName, tokens) },
+    );
+  }
+
+  const relationshipIndex = buildTokenRelationshipIndex(designTokensData);
+  const relation = relationshipIndex.byToken[normalizedName] ?? { references: [], referencedBy: [] };
+  const tokenByName = new Map(tokens
+    .map((item) => [normalizeTokenIdentifier(item?.name), item])
+    .filter(([tokenName]) => tokenName));
+  const references = relation.references
+    .map((tokenName) => tokenByName.get(tokenName))
+    .filter(Boolean)
+    .map(toTokenSummary);
+  const referencedBy = relation.referencedBy
+    .map((tokenName) => tokenByName.get(tokenName))
+    .filter(Boolean)
+    .map(toTokenSummary);
+  const relatedTokens = referencedBy
+    .filter((item) => String(item.category).toLowerCase() === 'semantic')
+    .map((item) => item.name);
+
+  return {
+    isError: false,
+    payload: {
+      token: {
+        ...toTokenSummary(token),
+        group: token?.group ?? null,
+      },
+      references,
+      referencedBy,
+      relatedTokens,
+      usageExamples: buildUsageExamples(token),
+      theme: {
+        requested: themeInfo.requested,
+        resolved: themeInfo.resolved,
+        available: themeInfo.available,
+      },
+    },
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -1000,6 +1230,7 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           { name: 'get_pattern_recipe', purpose: 'Full pattern recipe with dependencies and HTML' },
           { name: 'generate_pattern_snippet', purpose: 'Pattern HTML snippet only' },
           { name: 'get_design_tokens', purpose: 'Query design tokens (colors, spacing, typography, radius, shadows)' },
+          { name: 'get_design_token_detail', purpose: 'Get details, relationships, and usage examples for one token' },
           { name: 'get_accessibility_docs', purpose: 'Search component-level accessibility checklist and WCAG-filtered guidance' },
           { name: 'search_guidelines', purpose: 'Search design system guidelines and best practices' },
         ],
@@ -1007,13 +1238,14 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           '1. get_design_system_overview → understand components, patterns, tokens, and IDE setup templates',
           '2. search_guidelines → find relevant guidelines',
           '3. get_design_tokens → get correct token values',
-          '4. get_accessibility_docs → fetch component-level accessibility checklist',
-          '5. list_components (category/query + pagination) → shortlist components',
-          '6. search_icons (optional) → find icon names quickly',
-          '7. get_component_api → check attributes, slots, events, CSS parts',
-          '8. generate_usage_snippet or get_pattern_recipe → get code',
-          '9. validate_markup → verify your HTML and use suggestions to self-correct',
-          '10. get_install_recipe → get import/install instructions',
+          '4. get_design_token_detail → inspect one token with references/referencedBy and usage examples',
+          '5. get_accessibility_docs → fetch component-level accessibility checklist',
+          '6. list_components (category/query + pagination) → shortlist components',
+          '7. search_icons (optional) → find icon names quickly',
+          '8. get_component_api → check attributes, slots, events, CSS parts',
+          '9. generate_usage_snippet or get_pattern_recipe → get code',
+          '10. validate_markup → verify your HTML and use suggestions to self-correct',
+          '11. get_install_recipe → get import/install instructions',
         ],
       };
 
@@ -1454,12 +1686,22 @@ export async function createMcpServer(loadJsonData, loadValidator) {
           .describe('Filter by token category'),
         query: z.string().optional()
           .describe('Search token names (partial match)'),
+        theme: z.enum(['light', 'dark', 'all']).optional()
+          .describe('Theme filter (currently light only; dark/all return an error due to NG-06)'),
       },
     },
-    async ({ type, category, query }) => {
+    async ({ type, category, query, theme }) => {
       if (!designTokensData) {
         return {
           content: [{ type: 'text', text: 'Design tokens data not available. Run: npm run mcp:extract-tokens' }],
+          isError: true,
+        };
+      }
+
+      const themeInfo = resolveTokenTheme(theme);
+      if (!themeInfo.ok) {
+        return {
+          content: [{ type: 'text', text: themeInfo.message }],
           isError: true,
         };
       }
@@ -1481,8 +1723,43 @@ export async function createMcpServer(loadJsonData, loadValidator) {
         total: tokens.length,
         tokens,
         summary: designTokensData.summary,
+        theme: {
+          requested: themeInfo.requested,
+          resolved: themeInfo.resolved,
+          available: themeInfo.available,
+        },
       };
 
+      return buildJsonToolResponse(payload);
+    },
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool: get_design_token_detail
+  // -----------------------------------------------------------------------
+  server.registerTool(
+    'get_design_token_detail',
+    {
+      description:
+        'Get details for one design token. ' +
+        'When: you already found a token and need its references, referencedBy, and usage examples. ' +
+        'Returns: token detail object with relationships and example CSS snippets. ' +
+        'After: apply the cssVariable in your implementation or validate related semantic aliases.',
+      inputSchema: {
+        name: z.string()
+          .describe('Token name or css variable (e.g. --color-primary or var(--color-primary))'),
+        theme: z.enum(['light', 'dark', 'all']).optional()
+          .describe('Theme selector (currently only light is supported due to NG-06)'),
+      },
+    },
+    async ({ name, theme }) => {
+      const { isError, payload } = buildDesignTokenDetailPayload(designTokensData, name, theme);
+      if (isError) {
+        return {
+          content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
+          isError: true,
+        };
+      }
       return buildJsonToolResponse(payload);
     },
   );

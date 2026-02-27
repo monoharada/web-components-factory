@@ -48,7 +48,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 }
 ```
 
-## 提供ツール（13個）
+## 提供ツール（14個）
 
 ### ガードレール
 
@@ -84,7 +84,8 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `get_design_tokens` | デザイントークンを type/category/query で検索 |
+| `get_design_tokens` | デザイントークンを type/category/query/theme で検索（`theme=light` のみ。`dark/all` はエラー） |
+| `get_design_token_detail` | 単一トークンの詳細（references/referencedBy/relatedTokens/usageExamples）を取得 |
 | `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索（`topic=all` では両ソースを混在返却） |
 | `search_guidelines` | ガイドライン（topic/query）をスコア付きで検索 |
 
@@ -101,7 +102,7 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 
 ## structuredContent rollback
 
-`get_component_api` / `get_design_tokens` / `get_accessibility_docs` / `search_guidelines` は通常 `structuredContent` を返します。
+`get_component_api` / `get_design_tokens` / `get_design_token_detail` / `get_accessibility_docs` / `search_guidelines` は通常 `structuredContent` を返します。
 
 - 100KB 制限を超える場合は自動的に `structuredContent` を省略し、`content` のみ返します
 - 緊急切り戻し時は環境変数 `WCF_MCP_DISABLE_STRUCTURED_CONTENT=1` を設定してください
