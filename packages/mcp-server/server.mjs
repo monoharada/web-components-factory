@@ -106,7 +106,10 @@ async function loadModulePlugin(modulePath, baseDir) {
   if (!isPlainObject(plugin)) {
     throw new Error(`Invalid plugin module: ${modulePath} (expected plugin object export)`);
   }
-  return plugin;
+  return {
+    plugin,
+    moduleDir: path.dirname(absPath),
+  };
 }
 
 function normalizeStaticTools(staticTools, ownerLabel) {
@@ -167,8 +170,12 @@ export async function loadWcfMcpRuntimeConfig({ cwd = process.cwd(), configPath 
       throw new Error('Invalid config.plugins entry: expected object');
     }
     if (typeof item.module === 'string' && item.module.trim() !== '') {
-      const loadedPlugin = await loadModulePlugin(item.module, configDir);
-      const moduleDataSources = normalizeDataSourcesInput(loadedPlugin.dataSources, configDir, `plugin(${item.module})`);
+      const { plugin: loadedPlugin, moduleDir } = await loadModulePlugin(item.module, configDir);
+      const moduleDataSources = normalizeDataSourcesInput(
+        loadedPlugin.dataSources,
+        moduleDir,
+        `plugin(${item.module})`,
+      );
       plugins.push({
         ...loadedPlugin,
         dataSources: moduleDataSources,

@@ -1049,15 +1049,40 @@ describe('runtime config loader', () => {
     }
   });
 
+  it('throws when explicit config path does not exist', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(__dirname, '.tmp-wcf-mcp-config-'));
+    try {
+      await expect(loadWcfMcpRuntimeConfig({
+        cwd: tmpDir,
+        configPath: path.join(tmpDir, 'missing-config.json'),
+      })).rejects.toThrow(/Config file not found/);
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   it('loads module plugin and static plugin from config file', async () => {
     const tmpDir = await fs.mkdtemp(path.join(__dirname, '.tmp-wcf-mcp-config-'));
-    const pluginFile = path.join(tmpDir, 'module-plugin.mjs');
+    const pluginDir = path.join(tmpDir, 'plugins');
+    await fs.mkdir(pluginDir, { recursive: true });
+    const pluginFile = path.join(pluginDir, 'module-plugin.mjs');
+    const pluginGuidelinesPath = path.join(pluginDir, 'guidelines.plugin.json');
     const configFile = path.join(tmpDir, 'wcf-mcp.config.json');
+    const rootDesignTokensPath = path.join(tmpDir, 'design-tokens.local.json');
+
+    await fs.writeFile(pluginGuidelinesPath, JSON.stringify({}), 'utf8');
+    await fs.writeFile(rootDesignTokensPath, JSON.stringify({}), 'utf8');
 
     await fs.writeFile(pluginFile, `
 export default {
   name: 'module-plugin',
   version: '0.2.0',
+  dataSources: [
+    {
+      fileName: 'guidelines-index.json',
+      path: './guidelines.plugin.json'
+    }
+  ],
   tools: [
     {
       name: 'module_tool',
@@ -1070,10 +1095,10 @@ export default {
 
     await fs.writeFile(configFile, JSON.stringify({
       dataSources: {
-        'guidelines-index.json': './guidelines.local.json',
+        'design-tokens.json': './design-tokens.local.json',
       },
       plugins: [
-        { module: './module-plugin.mjs' },
+        { module: './plugins/module-plugin.mjs' },
         {
           name: 'static-plugin',
           version: '0.3.0',
@@ -1091,6 +1116,18 @@ export default {
       expect(result.plugins.some((plugin) => plugin.name === 'config-data-sources')).toBe(true);
       expect(result.plugins.some((plugin) => plugin.name === 'module-plugin')).toBe(true);
       expect(result.plugins.some((plugin) => plugin.name === 'static-plugin')).toBe(true);
+
+      const rootPlugin = result.plugins.find((plugin) => plugin.name === 'config-data-sources');
+      expect(rootPlugin?.dataSources?.[0]).toMatchObject({
+        fileName: 'design-tokens.json',
+        path: rootDesignTokensPath,
+      });
+
+      const modulePlugin = result.plugins.find((plugin) => plugin.name === 'module-plugin');
+      expect(modulePlugin?.dataSources?.[0]).toMatchObject({
+        fileName: 'guidelines-index.json',
+        path: pluginGuidelinesPath,
+      });
     } finally {
       await fs.rm(tmpDir, { recursive: true, force: true });
     }

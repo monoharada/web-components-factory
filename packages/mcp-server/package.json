@@ -11,7 +11,9 @@
     "core.mjs",
     "server.mjs",
     "validator.mjs",
-    "data/"
+    "data/",
+    "examples/",
+    "wcf-mcp.config.example.json"
   ],
   "keywords": [
     "mcp",

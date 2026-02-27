@@ -108,18 +108,22 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 - 明示指定: `npx @monoharada/wcf-mcp --config=./wcf-mcp.config.json`
 - 互換性: 設定ファイルが無ければ従来どおり標準データで起動
 
-サンプルは `wcf-mcp.config.example.json` を参照してください。
+`dataSources` の相対パス基準:
+
+- ルート `dataSources`: config ファイルのディレクトリ基準
+- `plugins[].staticTools` を持つ static plugin の `dataSources`: config ファイルのディレクトリ基準
+- `plugins[].module` が export する plugin の `dataSources`: plugin module ファイルのディレクトリ基準
 
 ### config 例
 
 ```json
 {
   "dataSources": {
-    "guidelines-index.json": "./packages/mcp-server/data/guidelines-index.json"
+    "guidelines-index.json": "./guidelines-index.local.json"
   },
   "plugins": [
     {
-      "module": "./packages/mcp-server/examples/plugins/custom-validation-plugin.mjs"
+      "module": "./plugins/custom-validation-plugin.mjs"
     },
     {
       "name": "static-tools-plugin",
@@ -134,6 +138,9 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
   ]
 }
 ```
+
+※ `./plugins/custom-validation-plugin.mjs` は利用側プロジェクトに配置してください。  
+このリポジトリには参照用として `packages/mcp-server/examples/plugins/custom-validation-plugin.mjs` を同梱しています。
 
 ### plugin 契約（@experimental）
 
