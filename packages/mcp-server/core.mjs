@@ -16,10 +16,15 @@ import { z } from 'zod';
 export const CANONICAL_PREFIX = 'dads';
 export const MAX_PREFIX_LENGTH = 64;
 export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
+export const HOT_RELOAD_ENABLE_FLAG = 'WCF_MCP_HOT_RELOAD';
+export const PERF_LOG_ENABLE_FLAG = 'WCF_MCP_PERF_LOG';
+export const TRANSPORT_NAME_ENV = 'WCF_MCP_TRANSPORT';
 export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
 export const EXPERIMENTAL_PLUGIN_NOTICE = '@experimental — API may change without notice.';
 export const SUMMARY_PREVIEW_MAX_CHARS = 2400;
 export const SUMMARY_INPUT_DESCRIPTION = 'Return markdown summary optimized for LLM reading (default: false)';
+export const LIST_COMPONENTS_PAGED_DEFAULT_LIMIT = 20;
+export const LIST_COMPONENTS_MODES = Object.freeze(['compat', 'paged']);
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
@@ -188,6 +193,18 @@ export function isStructuredContentDisabled(env = process.env) {
   return STRUCTURED_CONTENT_DISABLE_TRUE_VALUES.has(raw);
 }
 
+function isTruthyEnvValue(value) {
+  return STRUCTURED_CONTENT_DISABLE_TRUE_VALUES.has(String(value ?? '').trim().toLowerCase());
+}
+
+export function isHotReloadEnabled(env = process.env) {
+  return isTruthyEnvValue(env?.[HOT_RELOAD_ENABLE_FLAG]);
+}
+
+export function isPerfLogEnabled(env = process.env) {
+  return isTruthyEnvValue(env?.[PERF_LOG_ENABLE_FLAG]);
+}
+
 export function toStructuredContent(data) {
   return {
     type: 'application/json',
@@ -196,7 +213,8 @@ export function toStructuredContent(data) {
 }
 
 export function measureToolResultBytes(result) {
-  return Buffer.byteLength(JSON.stringify(result), 'utf8');
+  const serialized = JSON.stringify(result ?? null);
+  return Buffer.byteLength(typeof serialized === 'string' ? serialized : 'null', 'utf8');
 }
 
 export function buildStructuredToolResponse(text, payload, { env = process.env } = {}) {
@@ -224,6 +242,149 @@ export function buildStructuredToolResponse(text, payload, { env = process.env }
 
 export function buildJsonToolResponse(payload, { env = process.env } = {}) {
   return buildStructuredToolResponse(JSON.stringify(payload, null, 2), payload, { env });
+}
+
+function truncateTextToLimit(text, {
+  toolName,
+  maxBytes,
+  baseResponseWithoutText,
+}) {
+  const original = String(text ?? '');
+  const suffix = `\n\n[TRUNCATED: tool=${toolName} limitBytes=${maxBytes}]`;
+  let best = suffix;
+
+  let low = 0;
+  let high = original.length;
+
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const candidate = `${original.slice(0, mid)}${suffix}`;
+    const bytes = measureToolResultBytes({
+      ...baseResponseWithoutText,
+      content: [{ type: 'text', text: candidate }],
+    });
+    if (bytes <= maxBytes) {
+      best = candidate;
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+
+  return best;
+}
+
+export function enforceToolResultSize(result, { toolName, maxBytes = MAX_TOOL_RESULT_BYTES } = {}) {
+  const originalBytes = measureToolResultBytes(result);
+  if (originalBytes <= maxBytes) {
+    return {
+      result,
+      truncated: false,
+      originalBytes,
+      finalBytes: originalBytes,
+    };
+  }
+
+  const trimmedStructured = isPlainObject(result) && Object.prototype.hasOwnProperty.call(result, 'structuredContent')
+    ? { ...result }
+    : result;
+  if (isPlainObject(trimmedStructured) && Object.prototype.hasOwnProperty.call(trimmedStructured, 'structuredContent')) {
+    delete trimmedStructured.structuredContent;
+  }
+
+  const withoutStructuredBytes = measureToolResultBytes(trimmedStructured);
+  if (withoutStructuredBytes <= maxBytes) {
+    return {
+      result: {
+        ...trimmedStructured,
+        metadata: {
+          ...(isPlainObject(trimmedStructured?.metadata) ? trimmedStructured.metadata : {}),
+          truncation: {
+            applied: true,
+            strategy: 'dropStructuredContent',
+            originalBytes,
+            finalBytes: withoutStructuredBytes,
+            limitBytes: maxBytes,
+          },
+        },
+      },
+      truncated: true,
+      originalBytes,
+      finalBytes: withoutStructuredBytes,
+    };
+  }
+
+  const content = Array.isArray(trimmedStructured?.content) ? trimmedStructured.content : [];
+  const firstText = content.find((entry) => entry?.type === 'text' && typeof entry?.text === 'string');
+  if (!firstText) {
+    return {
+      result: trimmedStructured,
+      truncated: true,
+      originalBytes,
+      finalBytes: withoutStructuredBytes,
+    };
+  }
+
+  const baseResponse = {
+    ...(isPlainObject(trimmedStructured) ? trimmedStructured : {}),
+    content: [{ type: 'text', text: '' }],
+  };
+  const truncatedText = truncateTextToLimit(firstText.text, {
+    toolName: String(toolName ?? 'tool'),
+    maxBytes,
+    baseResponseWithoutText: baseResponse,
+  });
+
+  const nextResult = {
+    ...baseResponse,
+    content: [{ type: 'text', text: truncatedText }],
+    metadata: {
+      ...(isPlainObject(trimmedStructured?.metadata) ? trimmedStructured.metadata : {}),
+      truncation: {
+        applied: true,
+        strategy: 'truncateText',
+        originalBytes,
+        limitBytes: maxBytes,
+      },
+    },
+  };
+  let finalBytes = measureToolResultBytes(nextResult);
+  if (finalBytes > maxBytes) {
+    const adjustedText = truncateTextToLimit(firstText.text, {
+      toolName: String(toolName ?? 'tool'),
+      maxBytes,
+      baseResponseWithoutText: {
+        ...nextResult,
+        content: [{ type: 'text', text: '' }],
+      },
+    });
+    nextResult.content = [{ type: 'text', text: adjustedText }];
+    finalBytes = measureToolResultBytes(nextResult);
+  }
+  if (isPlainObject(nextResult.metadata) && isPlainObject(nextResult.metadata.truncation)) {
+    nextResult.metadata.truncation.finalBytes = finalBytes;
+  }
+
+  return {
+    result: nextResult,
+    truncated: true,
+    originalBytes,
+    finalBytes,
+  };
+}
+
+function logToolPerf(toolName, payload, { env = process.env } = {}) {
+  if (!isPerfLogEnabled(env)) return;
+  console.error(`[wcf-mcp][perf] ${JSON.stringify({
+    tool: toolName,
+    durationMs: Number(payload.durationMs.toFixed(2)),
+    bytes: payload.bytes,
+    originalBytes: payload.originalBytes,
+    truncated: payload.truncated,
+    cacheHit: payload.cacheHit ?? null,
+    transport: String(env?.[TRANSPORT_NAME_ENV] ?? 'unknown'),
+    isError: payload.isError === true,
+  })}`);
 }
 
 function buildSummaryPreviewText(payload) {
@@ -560,7 +721,14 @@ export function buildDesignTokenDetailPayload(designTokensData, name, theme) {
   };
 }
 
-export function buildDesignTokensPayload(designTokensData, { type, category, query, theme } = {}) {
+export function buildDesignTokensPayload(designTokensData, {
+  type,
+  category,
+  query,
+  theme,
+  limit,
+  offset,
+} = {}) {
   if (!designTokensData) {
     return buildTokenErrorPayload(
       'DESIGN_TOKENS_DATA_UNAVAILABLE',
@@ -581,11 +749,19 @@ export function buildDesignTokensPayload(designTokensData, { type, category, que
     tokens = tokens.filter((t) => String(t.name ?? '').toLowerCase().includes(q));
   }
 
+  const pageSize = Number.isInteger(limit) ? Math.max(1, Math.min(limit, 500)) : Number.MAX_SAFE_INTEGER;
+  const pageOffset = Number.isInteger(offset) ? Math.max(0, offset) : 0;
+  const total = tokens.length;
+  const pagedTokens = tokens.slice(pageOffset, pageOffset + pageSize);
+
   return {
     isError: false,
     payload: {
-      total: tokens.length,
-      tokens,
+      total,
+      limit: pageSize === Number.MAX_SAFE_INTEGER ? total : pageSize,
+      offset: pageOffset,
+      hasMore: pageOffset + pagedTokens.length < total,
+      tokens: pagedTokens,
       summary: designTokensData.summary,
       theme: {
         requested: themeInfo.requested,
@@ -1628,12 +1804,96 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     // llms-full.txt may not exist in local setup
   }
 
-  const tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
+  let tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
+  const hotReloadEnabled = isHotReloadEnabled();
+  const optionalDataSignatures = {
+    designTokens: JSON.stringify(designTokensData ?? null),
+    guidelines: JSON.stringify(guidelinesIndexData ?? null),
+    llmsFull: typeof llmsFullText === 'string' ? llmsFullText : '',
+  };
+
+  const refreshOptionalData = async () => {
+    if (!hotReloadEnabled) {
+      return { cacheHit: null };
+    }
+    let changed = false;
+
+    try {
+      const nextDesignTokens = await loadJson('design-tokens.json');
+      const nextSignature = JSON.stringify(nextDesignTokens ?? null);
+      if (nextSignature !== optionalDataSignatures.designTokens) {
+        optionalDataSignatures.designTokens = nextSignature;
+        designTokensData = nextDesignTokens;
+        tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
+        changed = true;
+      }
+    } catch {
+      // Keep current snapshot when data file is unavailable.
+    }
+
+    try {
+      const nextGuidelines = await loadJson('guidelines-index.json');
+      const nextSignature = JSON.stringify(nextGuidelines ?? null);
+      if (nextSignature !== optionalDataSignatures.guidelines) {
+        optionalDataSignatures.guidelines = nextSignature;
+        guidelinesIndexData = nextGuidelines;
+        changed = true;
+      }
+    } catch {
+      // Keep current snapshot when data file is unavailable.
+    }
+
+    try {
+      const nextLlmsText = await loadText('llms-full.txt');
+      if (nextLlmsText !== optionalDataSignatures.llmsFull) {
+        optionalDataSignatures.llmsFull = nextLlmsText;
+        llmsFullText = nextLlmsText;
+        changed = true;
+      }
+    } catch {
+      // Keep current snapshot when data file is unavailable.
+    }
+
+    return { cacheHit: !changed };
+  };
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
     version: '0.1.1',
   });
+
+  const registerTool = (name, config, handler) => server.registerTool(
+    name,
+    config,
+    async (args, extra) => {
+      const startedAt = process.hrtime.bigint();
+      try {
+        const rawResult = await handler(args, extra);
+        const sized = enforceToolResultSize(rawResult, { toolName: name });
+        const durationMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
+        logToolPerf(name, {
+          durationMs,
+          bytes: sized.finalBytes,
+          originalBytes: sized.originalBytes,
+          truncated: sized.truncated,
+          cacheHit: null,
+          isError: sized.result?.isError === true,
+        });
+        return sized.result;
+      } catch (error) {
+        const durationMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
+        logToolPerf(name, {
+          durationMs,
+          bytes: 0,
+          originalBytes: 0,
+          truncated: false,
+          cacheHit: null,
+          isError: true,
+        });
+        throw error;
+      }
+    },
+  );
 
   server.registerPrompt(
     FIGMA_TO_WCF_PROMPT,
@@ -1686,6 +1946,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       mimeType: 'application/json',
     },
     async () => {
+      await refreshOptionalData();
       const result = buildTokensResourcePayload(designTokensData);
       const payload = result.isError ? { error: result.error } : result.payload;
       return {
@@ -1721,6 +1982,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       mimeType: 'application/json',
     },
     async (_uri, variables) => {
+      await refreshOptionalData();
       const topic = String(variables?.topic ?? '').trim().toLowerCase();
       const result = buildGuidelinesResourcePayload(guidelinesIndexData, topic);
       if (result.isError) {
@@ -1745,6 +2007,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       mimeType: 'text/plain',
     },
     async () => {
+      await refreshOptionalData();
       if (typeof llmsFullText !== 'string' || llmsFullText.length === 0) {
         throw new Error('LLMS_FULL_UNAVAILABLE: llms-full.txt is not available.');
       }
@@ -1761,7 +2024,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_design_system_overview
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'get_design_system_overview',
     {
       description:
@@ -1888,11 +2151,11 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: list_components
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'list_components',
     {
       description:
-        'List custom elements in the design system. When: exploring available components, searching by keyword, or paging through results. Returns: array of {tagName, className, description, category}. After: use get_component_api for details on a specific component.',
+        'List custom elements in the design system. When: exploring available components, searching by keyword, or paging through results. Returns: compat mode gives array<{tagName, className, description, category}>; paged mode gives {total, limit, offset, hasMore, items}. After: use get_component_api for details on a specific component.',
       inputSchema: {
         category: z
           .enum(['Form', 'Actions', 'Navigation', 'Content', 'Display', 'Layout', 'Other'])
@@ -1901,17 +2164,32 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         query: z.string().optional().describe('Search by tagName/className/description/category/modulePath'),
         limit: z.number().int().min(1).max(200).optional().describe('Maximum items to return (optional; omit for all results)'),
         offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
+        mode: z.enum(LIST_COMPONENTS_MODES).optional().describe('Response mode (compat|paged). paged defaults to limit=20'),
         prefix: z.string().optional(),
         summary: summaryInputSchema(),
       },
     },
-    async ({ category, query, limit, offset, prefix, summary }) => {
-      const { items } = buildComponentSummaries(indexes, { category, query, limit, offset, prefix });
+    async ({ category, query, limit, offset, mode, prefix, summary }) => {
+      const responseMode = mode === 'paged' ? 'paged' : 'compat';
+      const effectiveLimit = Number.isInteger(limit)
+        ? limit
+        : (responseMode === 'paged' ? LIST_COMPONENTS_PAGED_DEFAULT_LIMIT : undefined);
+      const page = buildComponentSummaries(indexes, {
+        category,
+        query,
+        limit: effectiveLimit,
+        offset,
+        prefix,
+      });
+      const payload = responseMode === 'paged' ? page : page.items;
       if (summary === true) {
-        return buildSummaryToolResponse('list_components', items);
+        return buildSummaryToolResponse('list_components', payload);
+      }
+      if (responseMode === 'paged') {
+        return buildJsonToolResponse(payload);
       }
       return {
-        content: [{ type: 'text', text: JSON.stringify(items, null, 2) }],
+        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
       };
     },
   );
@@ -1919,7 +2197,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: search_icons
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'search_icons',
     {
       description:
@@ -1946,7 +2224,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_component_api
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'get_component_api',
     {
       description:
@@ -1999,7 +2277,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: generate_usage_snippet
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'generate_usage_snippet',
     {
       description:
@@ -2061,7 +2339,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_install_recipe
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'get_install_recipe',
     {
       description:
@@ -2152,7 +2430,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: validate_markup
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'validate_markup',
     {
       description:
@@ -2227,7 +2505,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: list_patterns
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'list_patterns',
     {
       description:
@@ -2257,7 +2535,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_pattern_recipe
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'get_pattern_recipe',
     {
       description:
@@ -2332,7 +2610,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: generate_pattern_snippet
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'generate_pattern_snippet',
     {
       description:
@@ -2386,7 +2664,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_design_tokens
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'get_design_tokens',
     {
       description:
@@ -2401,13 +2679,25 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           .describe('Filter by token category'),
         query: z.string().optional()
           .describe('Search token names (partial match)'),
+        limit: z.number().int().min(1).max(500).optional()
+          .describe('Maximum tokens to return (optional; omit for all matched tokens)'),
+        offset: z.number().int().min(0).optional()
+          .describe('Pagination offset (default: 0)'),
         theme: z.enum(['light', 'dark', 'all']).optional()
           .describe('Theme filter (currently light only; dark/all return an error due to NG-06)'),
         summary: summaryInputSchema(),
       },
     },
-    async ({ type, category, query, theme, summary }) => {
-      const { isError, payload } = buildDesignTokensPayload(designTokensData, { type, category, query, theme });
+    async ({ type, category, query, limit, offset, theme, summary }) => {
+      await refreshOptionalData();
+      const { isError, payload } = buildDesignTokensPayload(designTokensData, {
+        type,
+        category,
+        query,
+        limit,
+        offset,
+        theme,
+      });
       if (isError) {
         return {
           content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
@@ -2424,7 +2714,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_design_token_detail
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'get_design_token_detail',
     {
       description:
@@ -2441,6 +2731,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       },
     },
     async ({ name, theme, summary }) => {
+      await refreshOptionalData();
       const { isError, payload } = buildDesignTokenDetailPayload(designTokensData, name, theme);
       if (isError) {
         return {
@@ -2458,7 +2749,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_accessibility_docs
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'get_accessibility_docs',
     {
       description:
@@ -2480,6 +2771,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       },
     },
     async ({ component, topic, wcagLevel, maxResults, prefix, summary }) => {
+      await refreshOptionalData();
       const p = normalizePrefix(prefix);
       let componentTagName;
 
@@ -2527,7 +2819,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: search_guidelines
   // -----------------------------------------------------------------------
-  server.registerTool(
+  registerTool(
     'search_guidelines',
     {
       description:
@@ -2545,6 +2837,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       },
     },
     async ({ query, topic, maxResults, summary }) => {
+      await refreshOptionalData();
       if (!guidelinesIndexData) {
         return {
           content: [{ type: 'text', text: 'Guidelines index not available. Run: npm run mcp:index-guidelines' }],
@@ -2618,7 +2911,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   for (const plugin of plugins) {
     const pluginTools = Array.isArray(plugin.tools) ? plugin.tools : [];
     for (const tool of pluginTools) {
-      server.registerTool(
+      registerTool(
         tool.name,
         {
           description: tool.description,

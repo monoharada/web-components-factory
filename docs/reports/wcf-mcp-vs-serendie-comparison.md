@@ -203,10 +203,10 @@ Figma MCP                  DS MCP                    Storybook MCP
 | 4 | Token/Style Management | 2 | 5 | -3 | Serendie | 3 |
 | 5 | Accessibility | 4 | 3 | +1 | **wcf-mcp** | 2 |
 | 6 | Integration Breadth | 3 | 4 | -1 | Serendie | 3 |
-| 7 | Performance | 4 | 3 | +1 | **wcf-mcp** | 3 |
+| 7 | Performance | 5 | 3 | +2 | **wcf-mcp** | 3 |
 | 8 | Documentation | 3 | 4 | -1 | Serendie | 3 |
 | 9 | Extensibility | 3 | 3 | 0 | 引分 | 2 |
-| | **合計** | **30** | **33** | **-3** | | **25** |
+| | **合計** | **31** | **33** | **-2** | | **25** |
 
 **業界中央値との比較**: wcf-mcp は **+5**、Serendie は **+8**。両者とも業界平均を大きく上回るが、wcf-mcp は Token/Style Management が業界中央値を下回る唯一の次元。
 
@@ -404,25 +404,30 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ### 4.7 Performance（パフォーマンス）
 
-| 評価軸 | wcf-mcp (4/5) | Serendie (3/5) |
+| 評価軸 | wcf-mcp (5/5) | Serendie (3/5) |
 |--------|---------------|----------------|
-| **トークン効率** | `generate_usage_snippet` で最小限スニペット生成 | 全コンポーネント情報を返す可能性 |
+| **トークン効率** | `list_components(mode=paged)` + `get_design_tokens(limit/offset)` + 自動 truncation で応答上限を制御 | 全コンポーネント情報を返す可能性 |
 | **レイテンシ** | ローカル stdio（遅延ゼロ） | HTTP + Edge（ネットワーク依存） |
-| **キャッシュ** | Map ベース O(1) ルックアップ | CDN + Edge キャッシュ |
+| **キャッシュ** | ファイルハッシュベースキャッシュ + optional data hot-reload（env opt-in） | CDN + Edge キャッシュ |
+| **transport 検証** | `StreamableHTTPServerTransport` を実運用経路でテスト | HTTP エンドポイント中心 |
 
 **業界比較**:
 - MFUI: ソース丸ごと返却でトークン量が大きくなる課題を明記
 - Figma: `get_metadata`（疎な XML）で大きいデザインのコンテキスト削減
 - Spindle: ローカルファイル読込で高速（wcf-mcp と同方式）
 
-**「全部返す」ではなく「探索→絞り込み→詳細取得」の段階設計が業界のベストプラクティス**。wcf-mcp の `list_components` が全件返却する点は改善余地あり。
-
-#### Evidence
+#### Evidence (2026-02-28) — 暫定（main 未マージ）
 
 | 項目 | 内容 |
 |------|------|
-| スコア | 4（変更なし） |
-| 5/5 に必要 | #178: Progressive Disclosure（#173 主導）+ レスポンスサイズ最適化 + ストリーミング |
+| Issue | #178 |
+| 実装ツール / 機能 | `list_components` に `mode=paged`（default 20）を追加し互換 `mode=compat` を維持、`get_design_tokens` に `limit/offset` を追加、100KB 超過時の自動 truncation + metadata、`WCF_MCP_PERF_LOG` の実行ログ、`WCF_MCP_HOT_RELOAD` の optional data 再読込、`server.mjs` のファイルハッシュキャッシュ |
+| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` / `npm run mcp:check` / `npm run agents:verify` |
+| テスト結果 | server.test: 76 passed、response-size pass、mcp:check pass、agents:verify pass |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.mjs`, `packages/mcp-server/bin.mjs`, `packages/mcp-server/server.test.js`, `scripts/mcp/check-response-size.mjs`, `packages/mcp-server/README.md`, `docs/knowledge/design-system-mcp.md` |
+| PR / マージ SHA | PR TBD / （未マージ） |
+| スコア変更 | 4 → 5 |
+| 根拠 | Progressive Disclosure のデフォルト導線（paged mode）、サイズ上限 enforcement、HTTP transport の実運用検証、hot-reload/perf logging を揃え、Performance 次元の未達要件を解消 |
 
 ---
 

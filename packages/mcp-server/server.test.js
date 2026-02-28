@@ -5,7 +5,7 @@
  * without actually starting the stdio transport.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -24,6 +24,7 @@ import {
   CATEGORY_MAP,
   FIGMA_TO_WCF_PROMPT,
   IDE_SETUP_TEMPLATES,
+  HOT_RELOAD_ENABLE_FLAG,
   MAX_TOOL_RESULT_BYTES,
   MAX_PREFIX_LENGTH,
   STRUCTURED_CONTENT_DISABLE_FLAG,
@@ -37,6 +38,7 @@ import {
   buildRelatedComponentMap,
   buildTokenRelationshipIndex,
   buildTokenSuggestionMap,
+  enforceToolResultSize,
   extractAccessibilityChecklist,
   extractIconNames,
   extractReferencedTokenNames,
@@ -59,6 +61,7 @@ import {
   searchIconCatalog,
   toCanonicalTagName,
   WCF_RESOURCE_URIS,
+  LIST_COMPONENTS_PAGED_DEFAULT_LIMIT,
 } from './core.mjs';
 import { detectAccessibilityMisuseInMarkup, detectTokenMisuseInInlineStyles } from './validator.mjs';
 import { loadWcfMcpRuntimeConfig } from './server.mjs';
@@ -404,7 +407,7 @@ describe('tool descriptions', () => {
 
     for (const name of allBuiltinToolNames) {
       // Each tool's description block should contain "When:" and "Returns:"
-      const marker = `server.registerTool(\n    '${name}'`;
+      const marker = `registerTool(\n    '${name}'`;
       const markerIndex = coreSrc.indexOf(marker);
       expect(markerIndex).toBeGreaterThanOrEqual(0);
       const toolSection = coreSrc.slice(markerIndex);
@@ -420,7 +423,7 @@ describe('tool descriptions', () => {
     const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
 
     for (const name of allBuiltinToolNames) {
-      const marker = `server.registerTool(\n    '${name}'`;
+      const marker = `registerTool(\n    '${name}'`;
       const markerIndex = coreSrc.indexOf(marker);
       expect(markerIndex).toBeGreaterThanOrEqual(0);
       const toolSection = coreSrc.slice(markerIndex);
@@ -666,6 +669,153 @@ describe('MCP prompts/resources contract', () => {
       expect(result.structuredContent?.data).toBeDefined();
     }
   });
+
+  it('supports list_components paged mode with default limit', async () => {
+    const pagedResult = await client.callTool({
+      name: 'list_components',
+      arguments: { mode: 'paged' },
+    });
+    const pagedPayload = JSON.parse(String(pagedResult.content?.[0]?.text ?? '{}'));
+    expect(pagedPayload.limit).toBe(LIST_COMPONENTS_PAGED_DEFAULT_LIMIT);
+    expect(pagedPayload.offset).toBe(0);
+    expect(Array.isArray(pagedPayload.items)).toBe(true);
+    expect(pagedPayload.items.length).toBeLessThanOrEqual(LIST_COMPONENTS_PAGED_DEFAULT_LIMIT);
+
+    const compatResult = await client.callTool({
+      name: 'list_components',
+      arguments: {},
+    });
+    const compatPayload = JSON.parse(String(compatResult.content?.[0]?.text ?? '[]'));
+    expect(Array.isArray(compatPayload)).toBe(true);
+  });
+});
+
+describe('runtime performance behaviors', () => {
+  it('reloads optional design tokens when hot reload flag is enabled', async () => {
+    const previous = process.env[HOT_RELOAD_ENABLE_FLAG];
+    process.env[HOT_RELOAD_ENABLE_FLAG] = '1';
+
+    const firstTokens = {
+      version: 1,
+      tokens: [
+        {
+          name: '--color-a',
+          value: '#111111',
+          type: 'color',
+          category: 'primitive',
+          cssVariable: '--color-a',
+        },
+      ],
+      summary: { color: 1, spacing: 0, typography: 0, radius: 0, shadow: 0 },
+      themes: { default: 'light', available: ['light'] },
+    };
+    const secondTokens = {
+      ...firstTokens,
+      tokens: [
+        ...firstTokens.tokens,
+        {
+          name: '--color-b',
+          value: '#222222',
+          type: 'color',
+          category: 'primitive',
+          cssVariable: '--color-b',
+        },
+      ],
+      summary: { color: 2, spacing: 0, typography: 0, radius: 0, shadow: 0 },
+    };
+
+    let tokenLoadCount = 0;
+    const loadJsonData = async (fileName) => {
+      if (fileName === 'design-tokens.json') {
+        tokenLoadCount += 1;
+        return tokenLoadCount <= 2 ? firstTokens : secondTokens;
+      }
+      if (fileName === 'guidelines-index.json') {
+        return (await loadBundledJsonOrNull(fileName)) ?? { version: 1, documents: [], topicCounts: {} };
+      }
+      return loadBundledJson(fileName);
+    };
+
+    const created = await createMcpServer(
+      loadJsonData,
+      async () => import('./validator.mjs'),
+      { loadTextData: loadBundledText },
+    );
+
+    const server = created.server;
+    const client = new Client(
+      { name: 'wcf-mcp-hot-reload-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+
+    try {
+      const first = await client.callTool({
+        name: 'get_design_tokens',
+        arguments: { theme: 'light' },
+      });
+      const firstPayload = JSON.parse(String(first.content?.[0]?.text ?? '{}'));
+      expect(firstPayload.total).toBe(1);
+
+      const second = await client.callTool({
+        name: 'get_design_tokens',
+        arguments: { theme: 'light' },
+      });
+      const secondPayload = JSON.parse(String(second.content?.[0]?.text ?? '{}'));
+      expect(secondPayload.total).toBe(2);
+    } finally {
+      await Promise.allSettled([client.close(), server.close()]);
+      if (typeof previous === 'string') {
+        process.env[HOT_RELOAD_ENABLE_FLAG] = previous;
+      } else {
+        delete process.env[HOT_RELOAD_ENABLE_FLAG];
+      }
+    }
+  });
+
+  it('emits tool performance logs when WCF_MCP_PERF_LOG is enabled', async () => {
+    const previous = process.env.WCF_MCP_PERF_LOG;
+    process.env.WCF_MCP_PERF_LOG = '1';
+
+    const created = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      { loadTextData: loadBundledText },
+    );
+    const server = created.server;
+    const client = new Client(
+      { name: 'wcf-mcp-perf-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      await client.callTool({
+        name: 'list_patterns',
+        arguments: {},
+      });
+      const logs = errorSpy.mock.calls.map((entry) => String(entry[0] ?? ''));
+      expect(logs.some((line) => line.includes('[wcf-mcp][perf]'))).toBe(true);
+      expect(logs.some((line) => line.includes('"tool":"list_patterns"'))).toBe(true);
+    } finally {
+      errorSpy.mockRestore();
+      await Promise.allSettled([client.close(), server.close()]);
+      if (typeof previous === 'string') {
+        process.env.WCF_MCP_PERF_LOG = previous;
+      } else {
+        delete process.env.WCF_MCP_PERF_LOG;
+      }
+    }
+  });
 });
 
 describe('get_design_tokens', () => {
@@ -791,6 +941,28 @@ describe('get_design_tokens', () => {
     const allResult = buildDesignTokensPayload(data, { theme: 'all' });
     expect(allResult.isError).toBe(true);
     expect(allResult.payload.error.code).toBe('INVALID_THEME');
+  });
+
+  it('supports limit/offset pagination in helper payload', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const paged = buildDesignTokensPayload(data, {
+      theme: 'light',
+      limit: 7,
+      offset: 5,
+    });
+
+    expect(paged.isError).toBe(false);
+    expect(paged.payload.limit).toBe(7);
+    expect(paged.payload.offset).toBe(5);
+    expect(Array.isArray(paged.payload.tokens)).toBe(true);
+    expect(paged.payload.tokens.length).toBeLessThanOrEqual(7);
+    expect(typeof paged.payload.hasMore).toBe('boolean');
   });
 });
 
@@ -1067,6 +1239,18 @@ describe('structuredContent helpers', () => {
     const result = buildJsonToolResponse(payload, { env: {} });
     expect(result.structuredContent).toBeUndefined();
     expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+  });
+
+  it('truncates oversized text responses and appends truncation metadata', () => {
+    const oversized = {
+      content: [{ type: 'text', text: 'x'.repeat(220 * 1024) }],
+    };
+    const sized = enforceToolResultSize(oversized, { toolName: 'test_tool', maxBytes: 24 * 1024 });
+
+    expect(sized.truncated).toBe(true);
+    expect(sized.finalBytes).toBeLessThanOrEqual(24 * 1024);
+    expect(sized.result.metadata?.truncation?.applied).toBe(true);
+    expect(sized.result.metadata?.truncation?.strategy).toBe('truncateText');
   });
 });
 

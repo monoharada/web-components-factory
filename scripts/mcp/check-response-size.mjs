@@ -101,6 +101,8 @@ function pickLargestListComponentsResponse(manifest) {
   const hugePrefix = 'x'.repeat(2000);
   const scenarios = [
     { label: 'list_components(default)', args: {} },
+    { label: 'list_components(mode=paged)', args: { limit: 20 } },
+    { label: 'list_components(mode=paged, limit=200)', args: { mode: 'paged', limit: 200 } },
     { label: 'list_components(all, prefix=huge)', args: { prefix: hugePrefix } },
     { label: 'list_components(limit=200)', args: { limit: 200 } },
     { label: 'list_components(query="a", limit=200)', args: { query: 'a', limit: 200 } },
@@ -123,8 +125,12 @@ function pickLargestListComponentsResponse(manifest) {
 
 function getDesignTokensPayload(designTokens) {
   const tokens = Array.isArray(designTokens?.tokens) ? designTokens.tokens : [];
+  const total = tokens.length;
   return {
-    total: tokens.length,
+    total,
+    limit: total,
+    offset: 0,
+    hasMore: false,
     tokens,
     summary: designTokens?.summary,
     theme: {
@@ -356,6 +362,16 @@ async function main() {
     {
       label: 'get_design_tokens(all)',
       bytes: toolResponseBytes(buildJsonToolResponse(getDesignTokensPayload(designTokens), { env: {} })),
+    },
+    {
+      label: 'get_design_tokens(limit=200,offset=200)',
+      bytes: toolResponseBytes(buildJsonToolResponse({
+        ...getDesignTokensPayload(designTokens),
+        limit: 200,
+        offset: 200,
+        hasMore: true,
+        tokens: (Array.isArray(designTokens?.tokens) ? designTokens.tokens : []).slice(200, 400),
+      }, { env: {} })),
     },
     pickLargestGetDesignTokenDetailResponse(designTokens),
     pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex),
