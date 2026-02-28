@@ -42284,6 +42284,24 @@
             },
             {
               "kind": "method",
+              "name": "#isSlottedControlClick",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "path",
+                  "type": {
+                    "text": "readonly EventTarget[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#isUsablePrimaryTitleLink",
               "privacy": "private",
               "return": {
