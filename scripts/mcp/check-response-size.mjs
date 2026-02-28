@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  LIST_COMPONENTS_PAGED_DEFAULT_LIMIT,
   MAX_TOOL_RESULT_BYTES,
   buildDesignTokenDetailPayload,
   buildAccessibilityIndex,
@@ -101,7 +102,7 @@ function pickLargestListComponentsResponse(manifest) {
   const hugePrefix = 'x'.repeat(2000);
   const scenarios = [
     { label: 'list_components(default)', args: {} },
-    { label: 'list_components(mode=paged)', args: { limit: 20 } },
+    { label: 'list_components(mode=paged)', args: { mode: 'paged' } },
     { label: 'list_components(mode=paged, limit=200)', args: { mode: 'paged', limit: 200 } },
     { label: 'list_components(all, prefix=huge)', args: { prefix: hugePrefix } },
     { label: 'list_components(limit=200)', args: { limit: 200 } },
@@ -113,8 +114,22 @@ function pickLargestListComponentsResponse(manifest) {
   let largest = { label: 'list_components', bytes: 0 };
 
   for (const scenario of scenarios) {
-    const payload = buildComponentSummaries(indexes, scenario.args).items;
-    const bytes = toolResponseBytes(toTextToolResponse(payload));
+    const responseMode = scenario.args.mode === 'paged' ? 'paged' : 'compat';
+    const effectiveLimit = Number.isInteger(scenario.args.limit)
+      ? scenario.args.limit
+      : (responseMode === 'paged' ? LIST_COMPONENTS_PAGED_DEFAULT_LIMIT : undefined);
+    const page = buildComponentSummaries(indexes, {
+      category: scenario.args.category,
+      query: scenario.args.query,
+      limit: effectiveLimit,
+      offset: scenario.args.offset,
+      prefix: scenario.args.prefix,
+    });
+    const payload = responseMode === 'paged' ? page : page.items;
+    const response = responseMode === 'paged'
+      ? buildJsonToolResponse(payload, { env: {} })
+      : toTextToolResponse(payload);
+    const bytes = toolResponseBytes(response);
     if (bytes > largest.bytes) {
       largest = { label: scenario.label, bytes };
     }
@@ -232,6 +247,49 @@ function pickLargestGetComponentApiResponse(manifest, installRegistry, patternRe
   return largest;
 }
 
+function pickLargestGetComponentApiSummaryPayload(manifest, installRegistry, patternRegistry) {
+  const indexes = buildIndexes(manifest);
+  const hugePrefix = 'x'.repeat(2000);
+  const patterns =
+    patternRegistry?.patterns && typeof patternRegistry.patterns === 'object'
+      ? patternRegistry.patterns
+      : {};
+  const relatedMap = buildRelatedComponentMap(installRegistry, patterns);
+
+  let largestPayload = {};
+  let largestBytes = 0;
+
+  for (const decl of indexes.decls) {
+    const canonicalTag = typeof decl?.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
+    if (!canonicalTag) continue;
+    const modulePath = indexes.modulePathByTag.get(canonicalTag);
+
+    for (const prefix of [undefined, hugePrefix]) {
+      const payload = serializeApi(decl, modulePath, prefix);
+      const relatedComponents = getRelatedComponentsForTag({
+        canonicalTagName: canonicalTag,
+        installRegistry,
+        relatedMap,
+        prefix,
+      });
+      if (relatedComponents.length > 0) {
+        payload.relatedComponents = relatedComponents;
+      }
+      const accessibilityChecklist = extractAccessibilityChecklist(decl, { prefix });
+      if (accessibilityChecklist) {
+        payload.accessibilityChecklist = accessibilityChecklist;
+      }
+      const bytes = Buffer.byteLength(JSON.stringify(payload, null, 2), 'utf8');
+      if (bytes > largestBytes) {
+        largestBytes = bytes;
+        largestPayload = payload;
+      }
+    }
+  }
+
+  return largestPayload;
+}
+
 function pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex) {
   const indexes = buildIndexes(manifest);
   const hugePrefix = 'x'.repeat(2000);
@@ -298,30 +356,7 @@ function pickLargestSummaryResponse({
   guidelinesIndex,
 }) {
   const indexes = buildIndexes(manifest);
-  const patterns =
-    patternRegistry?.patterns && typeof patternRegistry.patterns === 'object'
-      ? patternRegistry.patterns
-      : {};
-  const relatedMap = buildRelatedComponentMap(installRegistry, patterns);
-
-  const firstDecl = indexes.decls.find((decl) => typeof decl?.tagName === 'string');
-  const canonicalTag = firstDecl?.tagName?.toLowerCase();
-  const modulePath = canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined;
-  const api = firstDecl ? serializeApi(firstDecl, modulePath, undefined) : {};
-  if (canonicalTag) {
-    const relatedComponents = getRelatedComponentsForTag({
-      canonicalTagName: canonicalTag,
-      installRegistry,
-      relatedMap,
-    });
-    if (relatedComponents.length > 0) {
-      api.relatedComponents = relatedComponents;
-    }
-    const accessibilityChecklist = extractAccessibilityChecklist(firstDecl, { prefix: undefined });
-    if (accessibilityChecklist) {
-      api.accessibilityChecklist = accessibilityChecklist;
-    }
-  }
+  const api = pickLargestGetComponentApiSummaryPayload(manifest, installRegistry, patternRegistry);
 
   const listComponentsPayload = buildComponentSummaries(indexes, {}).items;
   const designTokensPayload = getDesignTokensPayload(designTokens);
