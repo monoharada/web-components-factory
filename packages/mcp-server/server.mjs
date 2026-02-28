@@ -6,6 +6,7 @@
  */
 
 import fs from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
@@ -26,6 +27,8 @@ const REPO_FILE_MAP = {
   'llms-full.txt': 'llms-full.txt',
 };
 export const DEFAULT_WCF_MCP_CONFIG = 'wcf-mcp.config.json';
+const JSON_FILE_CACHE = new Map();
+const TEXT_FILE_CACHE = new Map();
 
 function resolveDataPath(fileName) {
   const bundled = path.join(__dirname, 'data', fileName);
@@ -41,7 +44,14 @@ async function loadJsonData(fileName) {
     if (!p) continue;
     try {
       const text = await fs.readFile(p, 'utf8');
-      return JSON.parse(text);
+      const hash = createHash('sha256').update(text).digest('hex');
+      const cached = JSON_FILE_CACHE.get(p);
+      if (cached?.hash === hash) {
+        return cached.value;
+      }
+      const value = JSON.parse(text);
+      JSON_FILE_CACHE.set(p, { hash, value });
+      return value;
     } catch {
       // Try next path
     }
@@ -54,7 +64,14 @@ async function loadTextData(fileName) {
   for (const p of [bundled, repo]) {
     if (!p) continue;
     try {
-      return await fs.readFile(p, 'utf8');
+      const text = await fs.readFile(p, 'utf8');
+      const hash = createHash('sha256').update(text).digest('hex');
+      const cached = TEXT_FILE_CACHE.get(p);
+      if (cached?.hash === hash) {
+        return cached.value;
+      }
+      TEXT_FILE_CACHE.set(p, { hash, value: text });
+      return text;
     } catch {
       // Try next path
     }

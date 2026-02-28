@@ -90,7 +90,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `list_components` | カテゴリ/クエリ/limit/offset でコンポーネントを段階的に取得（互換維持のため limit 未指定時は全件） |
+| `list_components` | カテゴリ/クエリ/limit/offset でコンポーネントを段階取得。`mode=compat` は従来互換（limit 未指定=全件）、`mode=paged` は default `limit=20` で `{total,limit,offset,hasMore,items}` を返却 |
 | `search_icons` | アイコン名をキーワード検索し、usage example を返す |
 | `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得（`relatedComponents` を含む） |
 | `generate_usage_snippet` | コンポーネントの最小限 HTML スニペットを生成 |
@@ -114,7 +114,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `get_design_tokens` | デザイントークンを type/category/query/theme で検索（`theme=light` のみ。`dark/all` はエラー） |
+| `get_design_tokens` | デザイントークンを type/category/query/theme で検索（`limit/offset` 対応、`theme=light` のみ。`dark/all` はエラー） |
 | `get_design_token_detail` | 単一トークンの詳細（references/referencedBy/relatedTokens/usageExamples）を取得 |
 | `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索（`topic=all` では両ソースを混在返却） |
 | `search_guidelines` | ガイドライン（topic/query）をスコア付きで検索 |
@@ -144,6 +144,12 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 
 - bind: `127.0.0.1`
 - endpoint: `http://127.0.0.1:3100/mcp`
+
+### パフォーマンス関連フラグ
+
+- `WCF_MCP_HOT_RELOAD=1`: `design-tokens.json` / `guidelines-index.json` / `llms-full.txt` をツール実行時に再読込（変更検出あり）
+- `WCF_MCP_PERF_LOG=1`: ツールごとの `durationMs/bytes/originalBytes/truncated/transport` を stderr に出力
+- `WCF_MCP_TRANSPORT`: `bin.mjs` が自動設定（`stdio` or `http`）
 
 ## 設定ファイル（@experimental）
 

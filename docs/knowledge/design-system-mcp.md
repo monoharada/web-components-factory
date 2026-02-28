@@ -28,11 +28,13 @@ repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。
 
 - IDE テンプレート: Claude Desktop / Claude Code / Cursor / VS Code (GitHub Copilot) / Windsurf
 
-### `list_components({ prefix? })`
+### `list_components({ category?, query?, limit?, offset?, mode?, prefix? })`
 
 コンポーネント一覧を返します。
 
 - `prefix` を指定すると、`dads-*` の tagName を `<prefix>-*` に置換した形で返します
+- `mode=compat`（既定）は従来互換で配列を返します（`limit` 未指定時は全件）
+- `mode=paged` は default `limit=20` で `{ total, limit, offset, hasMore, items }` を返します
 
 ### `get_component_api({ tagName?, className?, prefix? })`
 
@@ -73,12 +75,13 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 
 HTML snippet だけを返します。
 
-### `get_design_tokens({ type?, category?, query?, theme? })`
+### `get_design_tokens({ type?, category?, query?, limit?, offset?, theme? })`
 
 デザイントークンを type/category/query/theme でフィルタして返します。
 
 - `theme` は `light` / `dark` / `all` を受理
 - 現在は `light` のみ対応のため、`dark` / `all` はエラーを返します（NG-06）
+- `limit/offset` でページングできます（未指定時は全件）
 
 ### `get_design_token_detail({ name, theme? })`
 
@@ -148,6 +151,8 @@ Figma URL を受け取り、以下の順序で実装を進めるプロンプト�
 
 - 100KB 制限を超える場合は `structuredContent` を省略して `content` のみ返却
 - 緊急 rollback は `WCF_MCP_DISABLE_STRUCTURED_CONTENT=1`
+- `WCF_MCP_HOT_RELOAD=1` で optional データ（tokens/guidelines/llms-full）を実行時再読込
+- `WCF_MCP_PERF_LOG=1` で `durationMs/bytes/originalBytes/truncated/transport` のツール実行ログを stderr 出力
 
 ## 拡張（@experimental）
 
