@@ -428,31 +428,29 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 ### 4.8 Documentation（ドキュメント）
 
-| 評価軸 | wcf-mcp (3/5) | Serendie (4/5) |
+| 評価軸 | wcf-mcp (5/5) | Serendie (4/5) |
 |--------|---------------|----------------|
-| **スキーマ記述性** | CEM 準拠（Web Components 標準） | 独自スキーマだが description が豊富 |
-| **LLM最適化** | `llms-full.txt` 生成あり | AutoRAG でベクトル化 |
-| **ツール description** | 簡潔だがワークフロー指示なし | ガードレール指示付き |
+| **スキーマ記述性** | CEM 準拠 + `structuredContent` schema（`type`/`data`）を docs 明記 | 独自スキーマだが description が豊富 |
+| **LLM最適化** | `llms-full.txt` + 全14 tools の `summary` モード（Markdown要約 + JSON構造） | AutoRAG でベクトル化 |
+| **ツール description** | 全14 tools が `When / Returns / After` 構造 + overview の MUST ガードレール | ガードレール指示付き |
 
 **業界比較**:
 - Hopper: resources を `hopper://llms-full` 等の URI で体系化。MCP resources 機能の活用
 - Carbon: `docs_search` で React/Web Components 両方のドキュメントを横断検索
 - Storybook: `get_ui_building_instructions` で CSF3 等の開発規約を標準化して返却
 
-#### Evidence (2026-02-25) — 暫定（main 未マージ）
+#### Evidence (2026-02-27) — 暫定（main 未マージ）
 
 | 項目 | 内容 |
 |------|------|
-| Issue | #166 (search_guidelines), #165/#167 (description 強化) |
-| 実装ツール / 機能 | `search_guidelines` — topic/query フィルタ、heading×3/keyword×2/snippet×1 スコアリング |
-| テストコマンド | `npm test -- --run packages/mcp-server/server.test.js` |
-| テスト結果 | 18件パス（guidelines 4件追加） |
-| 該当ファイル | `packages/mcp-server/core.mjs:861` (search_guidelines), `scripts/mcp/index-guidelines.mjs:49` |
-| PR / マージ SHA | PR #180 / （未マージ） |
-| スコア変更 | 3 → 4 |
-| 根拠 | 32ドキュメント（css:10, patterns:13, accessibility:2, all:7）をキーワード検索可能。Spindle と同等。5/5 には structuredContent + MCP resources が必要 |
-
-**5/5 に必要な追加改善** → #177: structuredContent（#174 実装オーナーから波及） + MCP resources（#176 実装オーナーから波及） + LLM 最適化レスポンス
+| Issue | #177 |
+| 実装ツール / 機能 | 全14 tools に `summary?: boolean` を追加し、`summary=true` で Markdown 要約 + `structuredContent`（JSON）を返却。README / knowledge docs に `structuredContent` schema と `wcf://` resources の source/refresh を明記。全14 tools description を `When / Returns / After` 構造に統一 |
+| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` / `npm run mcp:check` / `npm run agents:verify` |
+| テスト結果 | #177 契約テストを含む server.test pass、response-size pass、mcp:check pass、agents:verify pass |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md`, `docs/knowledge/design-system-mcp.md`, `docs/reports/wcf-mcp-vs-serendie-comparison.md` |
+| PR / マージ SHA | PR TBD / （未マージ） |
+| スコア変更 | 4 → 5 |
+| 根拠 | #174（structuredContent）と #176（resources）を docs 契約へ統合し、LLM 向け summary モードと description 正規化まで含めて Documentation 次元の未達要件を解消 |
 
 ---
 

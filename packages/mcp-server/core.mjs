@@ -18,6 +18,8 @@ export const MAX_PREFIX_LENGTH = 64;
 export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
 export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
 export const EXPERIMENTAL_PLUGIN_NOTICE = '@experimental — API may change without notice.';
+export const SUMMARY_PREVIEW_MAX_CHARS = 2400;
+export const SUMMARY_INPUT_DESCRIPTION = 'Return markdown summary optimized for LLM reading (default: false)';
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
@@ -197,10 +199,10 @@ export function measureToolResultBytes(result) {
   return Buffer.byteLength(JSON.stringify(result), 'utf8');
 }
 
-export function buildJsonToolResponse(payload, { env = process.env } = {}) {
+export function buildStructuredToolResponse(text, payload, { env = process.env } = {}) {
   const content = [{
     type: 'text',
-    text: JSON.stringify(payload, null, 2),
+    text: String(text),
   }];
 
   if (isStructuredContentDisabled(env)) {
@@ -218,6 +220,79 @@ export function buildJsonToolResponse(payload, { env = process.env } = {}) {
   }
 
   return withStructuredContent;
+}
+
+export function buildJsonToolResponse(payload, { env = process.env } = {}) {
+  return buildStructuredToolResponse(JSON.stringify(payload, null, 2), payload, { env });
+}
+
+function buildSummaryPreviewText(payload) {
+  try {
+    const json = JSON.stringify(payload, null, 2);
+    if (json.length <= SUMMARY_PREVIEW_MAX_CHARS) return json;
+    return `${json.slice(0, SUMMARY_PREVIEW_MAX_CHARS)}\n...`;
+  } catch {
+    return String(payload);
+  }
+}
+
+function buildSummaryMetrics(payload) {
+  const metrics = [];
+
+  if (Array.isArray(payload)) {
+    metrics.push(`- items: ${payload.length}`);
+    return metrics;
+  }
+
+  if (!payload || typeof payload !== 'object') {
+    metrics.push(`- valueType: ${typeof payload}`);
+    return metrics;
+  }
+
+  const candidateCountKeys = [
+    'total',
+    'totalHits',
+    'totalDocuments',
+    'totalComponents',
+    'totalPatterns',
+  ];
+  for (const key of candidateCountKeys) {
+    if (typeof payload[key] === 'number') {
+      metrics.push(`- ${key}: ${payload[key]}`);
+    }
+  }
+
+  const arrayKeys = Object.keys(payload)
+    .filter((key) => Array.isArray(payload[key]))
+    .slice(0, 6);
+  for (const key of arrayKeys) {
+    metrics.push(`- ${key}: ${payload[key].length}`);
+  }
+
+  if (metrics.length === 0) {
+    metrics.push(`- objectKeys: ${Object.keys(payload).length}`);
+  }
+
+  return metrics;
+}
+
+export function buildSummaryMarkdown(toolName, payload) {
+  const title = String(toolName ?? 'tool').trim();
+  const lines = [`## ${title} summary`, ''];
+  lines.push(...buildSummaryMetrics(payload));
+  lines.push('', '### payload preview', '```json', buildSummaryPreviewText(payload), '```');
+  return lines.join('\n');
+}
+
+export function buildSummaryToolResponse(toolName, payload, { markdown, env = process.env } = {}) {
+  const text = typeof markdown === 'string' && markdown.trim() !== ''
+    ? markdown
+    : buildSummaryMarkdown(toolName, payload);
+  return buildStructuredToolResponse(text, payload, { env });
+}
+
+function summaryInputSchema() {
+  return z.boolean().optional().describe(SUMMARY_INPUT_DESCRIPTION);
 }
 
 export function normalizeTokenValue(value) {
@@ -1690,10 +1765,15 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     'get_design_system_overview',
     {
       description:
-        '**MUST be called first before using any other tool.** Returns a high-level overview of the design system: name, version, component count by category, available patterns, and recommended tool workflow. Use this to understand what is available before diving into specifics.',
-      inputSchema: {},
+        '**MUST be called first before using any other tool.** ' +
+        'When: starting a session and deciding which tools/resources/prompts to use next. ' +
+        'Returns: high-level overview of components, patterns, IDE templates, resources, prompts, and recommended workflow. ' +
+        'After: call list/search/detail tools in the recommended order.',
+      inputSchema: {
+        summary: summaryInputSchema(),
+      },
     },
-    async () => {
+    async ({ summary }) => {
       const categoryCount = {};
       for (const { tagName } of indexes.decls) {
         const cat = getCategory(tagName);
@@ -1795,6 +1875,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         }
       }
 
+      if (summary === true) {
+        return buildSummaryToolResponse('get_design_system_overview', overview);
+      }
+
       return {
         content: [{ type: 'text', text: JSON.stringify(overview, null, 2) }],
       };
@@ -1818,10 +1902,14 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         limit: z.number().int().min(1).max(200).optional().describe('Maximum items to return (optional; omit for all results)'),
         offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ category, query, limit, offset, prefix }) => {
+    async ({ category, query, limit, offset, prefix, summary }) => {
       const { items } = buildComponentSummaries(indexes, { category, query, limit, offset, prefix });
+      if (summary === true) {
+        return buildSummaryToolResponse('list_components', items);
+      }
       return {
         content: [{ type: 'text', text: JSON.stringify(items, null, 2) }],
       };
@@ -1841,10 +1929,14 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         limit: z.number().int().min(1).max(100).optional().describe('Maximum items to return (default: 20)'),
         offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ query, limit, offset, prefix }) => {
+    async ({ query, limit, offset, prefix, summary }) => {
       const payload = searchIconCatalog(indexes, { query, limit, offset, prefix });
+      if (summary === true) {
+        return buildSummaryToolResponse('search_icons', payload);
+      }
       return {
         content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
       };
@@ -1863,9 +1955,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         tagName: z.string().optional(),
         className: z.string().optional(),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ tagName, className, prefix }) => {
+    async ({ tagName, className, prefix, summary }) => {
       const decl = pickDecl(indexes, { tagName, className, prefix });
       if (!decl) {
         return {
@@ -1896,6 +1989,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         api.accessibilityChecklist = accessibilityChecklist;
       }
 
+      if (summary === true) {
+        return buildSummaryToolResponse('get_component_api', api);
+      }
       return buildJsonToolResponse(api);
     },
   );
@@ -1907,13 +2003,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     'generate_usage_snippet',
     {
       description:
-        'Generate a minimal HTML usage example for a component. When: you need a quick code snippet to start with. Returns: ready-to-use HTML string with key attributes pre-filled.',
+        'Generate a minimal HTML usage example for a component. ' +
+        'When: you need a quick code snippet to start with. ' +
+        'Returns: ready-to-use HTML string with key attributes pre-filled. ' +
+        'After: run validate_markup on the generated HTML.',
       inputSchema: {
         component: z.string(),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ component, prefix }) => {
+    async ({ component, prefix, summary }) => {
       const decl =
         pickDecl(indexes, { tagName: component, prefix }) ??
         pickDecl(indexes, { className: component, prefix });
@@ -1930,6 +2030,28 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const api = serializeApi(decl, modulePath, prefix);
       const snippet = generateSnippet(api, prefix);
 
+      if (summary === true) {
+        return buildSummaryToolResponse(
+          'generate_usage_snippet',
+          {
+            component: api.tagName,
+            snippet,
+          },
+          {
+            markdown: [
+              '## generate_usage_snippet summary',
+              '',
+              `- component: ${api.tagName}`,
+              '',
+              '### snippet',
+              '```html',
+              snippet,
+              '```',
+            ].join('\n'),
+          },
+        );
+      }
+
       return {
         content: [{ type: 'text', text: snippet }],
       };
@@ -1943,13 +2065,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     'get_install_recipe',
     {
       description:
-        'Get installation instructions and dependency tree for a component. When: setting up a component in a project. Returns: componentId, dependencies, import statements, and CLI command (wcf add).',
+        'Get installation instructions and dependency tree for a component. ' +
+        'When: setting up a component in a project. ' +
+        'Returns: componentId, dependencies, import statements, and CLI command (wcf add). ' +
+        'After: install dependencies and run validate_markup with the usage snippet.',
       inputSchema: {
         component: z.string(),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ component, prefix }) => {
+    async ({ component, prefix, summary }) => {
       const p = normalizePrefix(prefix);
       const resolved = resolveDeclByComponent(indexes, component, p);
       const decl = resolved?.decl;
@@ -1997,24 +2123,26 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
             .join('\n')
         : undefined;
 
+      const payload = {
+        componentId,
+        tagNames,
+        deps,
+        define,
+        defineHint,
+        source: install.source,
+        usageSnippet,
+        installHint: componentId ? `wcf add ${componentId}` : undefined,
+      };
+
+      if (summary === true) {
+        return buildSummaryToolResponse('get_install_recipe', payload);
+      }
+
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(
-              {
-                componentId,
-                tagNames,
-                deps,
-                define,
-                defineHint,
-                source: install.source,
-                usageSnippet,
-                installHint: componentId ? `wcf add ${componentId}` : undefined,
-              },
-              null,
-              2,
-            ),
+            text: JSON.stringify(payload, null, 2),
           },
         ],
       };
@@ -2028,13 +2156,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     'validate_markup',
     {
       description:
-        'Validate HTML against the design system Custom Elements Manifest. When: checking generated or written HTML for correctness. Returns: diagnostics array with errors (unknown elements), warnings (unknown attributes/token misuse/accessibility misuse), and optional suggestion text for quick recovery. Use after generating HTML to catch mistakes.',
+        'Validate HTML against the design system Custom Elements Manifest. ' +
+        'When: checking generated or written HTML for correctness. ' +
+        'Returns: diagnostics array with errors (unknown elements), warnings (unknown attributes/token misuse/accessibility misuse), and optional suggestion text for quick recovery. ' +
+        'After: apply fixes and rerun validation until diagnostics are acceptable.',
       inputSchema: {
         html: z.string(),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ html, prefix }) => {
+    async ({ html, prefix, summary }) => {
       const p = normalizePrefix(prefix);
       let cemIndex = canonicalCemIndex;
       if (p !== CANONICAL_PREFIX) {
@@ -2082,8 +2214,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         };
       });
 
+      const payload = { diagnostics };
+      if (summary === true) {
+        return buildSummaryToolResponse('validate_markup', payload);
+      }
       return {
-        content: [{ type: 'text', text: JSON.stringify({ diagnostics }, null, 2) }],
+        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
       };
     },
   );
@@ -2096,15 +2232,21 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     {
       description:
         'List available UI composition patterns (page recipes). When: looking for pre-built page layouts or UI compositions. Returns: array of {id, title, description, requires}. After: use get_pattern_recipe for full details including dependency resolution.',
-      inputSchema: {},
+      inputSchema: {
+        summary: summaryInputSchema(),
+      },
     },
-    async () => {
+    async ({ summary }) => {
       const list = Object.values(patterns).map((p) => ({
         id: p?.id,
         title: p?.title,
         description: p?.description,
         requires: p?.requires,
       }));
+
+      if (summary === true) {
+        return buildSummaryToolResponse('list_patterns', list);
+      }
 
       return {
         content: [{ type: 'text', text: JSON.stringify(list, null, 2) }],
@@ -2123,9 +2265,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       inputSchema: {
         patternId: z.string(),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ patternId, prefix }) => {
+    async ({ patternId, prefix, summary }) => {
       const id = String(patternId ?? '').trim();
       const p = normalizePrefix(prefix);
       const pat = patterns[id];
@@ -2156,28 +2299,30 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const canonicalHtml = String(pat.html ?? '');
       const html = applyPrefixToHtml(canonicalHtml, p);
 
+      const payload = {
+        pattern: {
+          id: pat.id,
+          title: pat.title,
+          description: pat.description,
+        },
+        prefix: p,
+        requires,
+        components: closure,
+        install,
+        html,
+        canonicalHtml,
+        installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
+      };
+
+      if (summary === true) {
+        return buildSummaryToolResponse('get_pattern_recipe', payload);
+      }
+
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(
-              {
-                pattern: {
-                  id: pat.id,
-                  title: pat.title,
-                  description: pat.description,
-                },
-                prefix: p,
-                requires,
-                components: closure,
-                install,
-                html,
-                canonicalHtml,
-                installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
-              },
-              null,
-              2,
-            ),
+            text: JSON.stringify(payload, null, 2),
           },
         ],
       };
@@ -2191,13 +2336,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     'generate_pattern_snippet',
     {
       description:
-        'Generate just the HTML snippet for a pattern without dependency info. When: you only need the markup. Returns: HTML string with prefix applied. For full dependency resolution, use get_pattern_recipe instead.',
+        'Generate just the HTML snippet for a pattern without dependency info. ' +
+        'When: you only need the markup. ' +
+        'Returns: HTML string with prefix applied. ' +
+        'After: use get_pattern_recipe when you also need dependency/install information.',
       inputSchema: {
         patternId: z.string(),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ patternId, prefix }) => {
+    async ({ patternId, prefix, summary }) => {
       const id = String(patternId ?? '').trim();
       const p = normalizePrefix(prefix);
       const pat = patterns[id];
@@ -2208,8 +2357,28 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         };
       }
 
+      const snippet = applyPrefixToHtml(String(pat.html ?? ''), p);
+      if (summary === true) {
+        return buildSummaryToolResponse(
+          'generate_pattern_snippet',
+          { patternId: id, prefix: p, snippet },
+          {
+            markdown: [
+              '## generate_pattern_snippet summary',
+              '',
+              `- patternId: ${id}`,
+              `- prefix: ${p}`,
+              '',
+              '### snippet',
+              '```html',
+              snippet,
+              '```',
+            ].join('\n'),
+          },
+        );
+      }
       return {
-        content: [{ type: 'text', text: applyPrefixToHtml(String(pat.html ?? ''), p) }],
+        content: [{ type: 'text', text: snippet }],
       };
     },
   );
@@ -2234,15 +2403,19 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           .describe('Search token names (partial match)'),
         theme: z.enum(['light', 'dark', 'all']).optional()
           .describe('Theme filter (currently light only; dark/all return an error due to NG-06)'),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ type, category, query, theme }) => {
+    async ({ type, category, query, theme, summary }) => {
       const { isError, payload } = buildDesignTokensPayload(designTokensData, { type, category, query, theme });
       if (isError) {
         return {
           content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
           isError: true,
         };
+      }
+      if (summary === true) {
+        return buildSummaryToolResponse('get_design_tokens', payload);
       }
       return buildJsonToolResponse(payload);
     },
@@ -2264,15 +2437,19 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           .describe('Token name or css variable (e.g. --color-primary or var(--color-primary))'),
         theme: z.enum(['light', 'dark', 'all']).optional()
           .describe('Theme selector (currently only light is supported due to NG-06)'),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ name, theme }) => {
+    async ({ name, theme, summary }) => {
       const { isError, payload } = buildDesignTokenDetailPayload(designTokensData, name, theme);
       if (isError) {
         return {
           content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
           isError: true,
         };
+      }
+      if (summary === true) {
+        return buildSummaryToolResponse('get_design_token_detail', payload);
       }
       return buildJsonToolResponse(payload);
     },
@@ -2299,9 +2476,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         maxResults: z.number().int().min(1).max(100).optional()
           .describe('Maximum results to return (default: 20)'),
         prefix: z.string().optional(),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ component, topic, wcagLevel, maxResults, prefix }) => {
+    async ({ component, topic, wcagLevel, maxResults, prefix, summary }) => {
       const p = normalizePrefix(prefix);
       let componentTagName;
 
@@ -2339,6 +2517,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         results: result.results,
       };
 
+      if (summary === true) {
+        return buildSummaryToolResponse('get_accessibility_docs', payload);
+      }
       return buildJsonToolResponse(payload);
     },
   );
@@ -2360,9 +2541,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           .describe('Filter by topic area'),
         maxResults: z.number().int().min(1).max(20).optional()
           .describe('Maximum results to return (1-20, default: 5)'),
+        summary: summaryInputSchema(),
       },
     },
-    async ({ query, topic, maxResults }) => {
+    async ({ query, topic, maxResults, summary }) => {
       if (!guidelinesIndexData) {
         return {
           content: [{ type: 'text', text: 'Guidelines index not available. Run: npm run mcp:index-guidelines' }],
@@ -2426,6 +2608,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         results: topResults,
       };
 
+      if (summary === true) {
+        return buildSummaryToolResponse('search_guidelines', payload);
+      }
       return buildJsonToolResponse(payload);
     },
   );

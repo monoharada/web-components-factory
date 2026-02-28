@@ -116,9 +116,38 @@ Figma URL を受け取り、以下の順序で実装を進めるプロンプト�
 ### Resources (`wcf://`)
 
 - `wcf://components`: コンポーネントカタログ（カテゴリ集計付き）
+  - source: `custom-elements.json`（repo root, repo-local launcher）
+  - refresh: CEM 更新後に `npm run cem:analyze`
 - `wcf://tokens`: トークン summary
+  - source: `data/design-tokens.json`
+  - refresh: トークン抽出後に `npm run mcp:build`
 - `wcf://guidelines/{topic}`: topic 別ガイドライン（`accessibility|css|patterns|all`）
+  - source: `data/guidelines-index.json`
+  - refresh: guidelines index 更新後に `npm run mcp:build`
 - `wcf://llms-full`: `llms-full.txt` 全文
+  - source: `data/llms-full.txt`
+  - refresh: `npm run llms:generate` 後に `npm run mcp:build`
+
+## レスポンス契約（structuredContent / summary）
+
+14 tools はすべて `summary?: boolean` を受け付けます（default: `false`）。
+
+- `summary=false`（既定）: 従来どおり `content` を返す（JSON or snippet text）
+- `summary=true`: `content` を Markdown 要約にし、`structuredContent` に機械可読 JSON を返す
+
+`structuredContent` 形式:
+
+```json
+{
+  "type": "application/json",
+  "data": { "...": "tool payload" }
+}
+```
+
+補足:
+
+- 100KB 制限を超える場合は `structuredContent` を省略して `content` のみ返却
+- 緊急 rollback は `WCF_MCP_DISABLE_STRUCTURED_CONTENT=1`
 
 ## 拡張（@experimental）
 
