@@ -749,16 +749,18 @@ export function buildDesignTokensPayload(designTokensData, {
     tokens = tokens.filter((t) => String(t.name ?? '').toLowerCase().includes(q));
   }
 
-  const pageSize = Number.isInteger(limit) ? Math.max(1, Math.min(limit, 500)) : Number.MAX_SAFE_INTEGER;
+  const hasLimit = Number.isInteger(limit);
+  const pageSize = hasLimit ? Math.max(1, Math.min(limit, 500)) : undefined;
   const pageOffset = Number.isInteger(offset) ? Math.max(0, offset) : 0;
   const total = tokens.length;
-  const pagedTokens = tokens.slice(pageOffset, pageOffset + pageSize);
+  const pagedTokens = tokens.slice(pageOffset, hasLimit ? pageOffset + pageSize : undefined);
+  const responseLimit = hasLimit ? pageSize : total;
 
   return {
     isError: false,
     payload: {
       total,
-      limit: pageSize === Number.MAX_SAFE_INTEGER ? total : pageSize,
+      limit: responseLimit,
       offset: pageOffset,
       hasMore: pageOffset + pagedTokens.length < total,
       tokens: pagedTokens,
