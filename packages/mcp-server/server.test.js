@@ -63,7 +63,7 @@ import {
   toCanonicalTagName,
   WCF_RESOURCE_URIS,
 } from './core.mjs';
-import { buildEnumAttributeMap, buildSlotNameMap, detectAccessibilityMisuseInMarkup, detectEmptyInteractiveElement, detectEnumValueMisuse, detectInvalidSlotName, detectMissingRequiredAttributes, detectOrphanedChildComponents, detectTokenMisuseInInlineStyles } from './validator.mjs';
+import { buildEnumAttributeMap, buildSlotNameMap, collectCemCustomElements, detectAccessibilityMisuseInMarkup, detectEmptyInteractiveElement, detectEnumValueMisuse, detectInvalidSlotName, detectMissingRequiredAttributes, detectNonLowercaseAttributes, detectOrphanedChildComponents, detectTokenMisuseInInlineStyles } from './validator.mjs';
 import { loadWcfMcpRuntimeConfig } from './server.mjs';
 
 // ---------------------------------------------------------------------------
@@ -868,6 +868,41 @@ describe('MCP prompts/resources contract', () => {
     const emptyDiag = payload.diagnostics.find((d) => d.code === 'emptyInteractiveElement');
     expect(emptyDiag).toBeUndefined();
   });
+
+  // P-03: E2E — canonical lowercase detection via validate_markup
+  it('validate_markup detects non-lowercase attribute name', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-button Variant="solid">Click</dads-button>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const lowercaseDiag = payload.diagnostics.find((d) => d.code === 'canonicalLowercaseRecommendation');
+    expect(lowercaseDiag).toBeDefined();
+    expect(lowercaseDiag.severity).toBe('warning');
+    expect(lowercaseDiag.suggestion).toContain('variant');
+  });
+
+  it('validate_markup does not flag lowercase attributes', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-button variant="solid">Click</dads-button>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const lowercaseDiag = payload.diagnostics.find((d) => d.code === 'canonicalLowercaseRecommendation');
+    expect(lowercaseDiag).toBeUndefined();
+  });
+
+  // P-03: E2E — prefix suggestion via validate_markup
+  it('validate_markup suggests prefixed tag for unprefixed custom element', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<input-text label="Name"></input-text>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const unknownDiag = payload.diagnostics.find((d) => d.code === 'unknownElement');
+    expect(unknownDiag).toBeDefined();
+    expect(unknownDiag.suggestion).toContain('dads-input-text');
+  });
 });
 
 describe('get_design_tokens', () => {
@@ -1470,7 +1505,7 @@ describe('diagnostic suggestion helpers', () => {
 });
 
 describe('repo-local validator wiring', () => {
-  it('loadValidator from design-system-mcp provides token misuse detector', async () => {
+  it('loadValidator from design-system-mcp provides all validators', async () => {
     const { loadValidator } = await import('../../scripts/mcp/design-system-mcp.mjs');
     const validator = await loadValidator();
 
@@ -1478,6 +1513,12 @@ describe('repo-local validator wiring', () => {
     expect(typeof validator.validateTextAgainstCem).toBe('function');
     expect(typeof validator.detectTokenMisuseInInlineStyles).toBe('function');
     expect(typeof validator.detectAccessibilityMisuseInMarkup).toBe('function');
+    expect(typeof validator.detectNonLowercaseAttributes).toBe('function');
+    expect(typeof validator.detectEnumValueMisuse).toBe('function');
+    expect(typeof validator.detectInvalidSlotName).toBe('function');
+    expect(typeof validator.detectMissingRequiredAttributes).toBe('function');
+    expect(typeof validator.detectOrphanedChildComponents).toBe('function');
+    expect(typeof validator.detectEmptyInteractiveElement).toBe('function');
   });
 });
 
@@ -2196,5 +2237,104 @@ describe('get_pattern_recipe contract', () => {
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// P-01: canonical lowercase attribute detection (unit tests)
+// ---------------------------------------------------------------------------
+describe('canonical lowercase attribute detection', () => {
+  let cemIndex;
+
+  beforeAll(async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    cemIndex = collectCemCustomElements(manifest);
+  });
+
+  it('flags non-lowercase known CEM attribute', () => {
+    const diagnostics = detectNonLowercaseAttributes({
+      text: '<dads-button Variant="solid">Click</dads-button>',
+      cem: cemIndex,
+    });
+    expect(diagnostics.length).toBeGreaterThanOrEqual(1);
+    const d = diagnostics.find((d) => d.code === 'canonicalLowercaseRecommendation');
+    expect(d).toBeDefined();
+    expect(d.severity).toBe('warning');
+    expect(d.attrName).toBe('Variant');
+  });
+
+  it('flags fully uppercase known CEM attribute', () => {
+    const diagnostics = detectNonLowercaseAttributes({
+      text: '<dads-input-text LABEL="Name"></dads-input-text>',
+      cem: cemIndex,
+    });
+    expect(diagnostics.length).toBeGreaterThanOrEqual(1);
+    const d = diagnostics.find((d) => d.code === 'canonicalLowercaseRecommendation');
+    expect(d).toBeDefined();
+    expect(d.attrName).toBe('LABEL');
+  });
+
+  it('does not flag already-lowercase attribute', () => {
+    const diagnostics = detectNonLowercaseAttributes({
+      text: '<dads-button variant="solid">Click</dads-button>',
+      cem: cemIndex,
+    });
+    const lowercaseDiags = diagnostics.filter((d) => d.code === 'canonicalLowercaseRecommendation');
+    expect(lowercaseDiags).toHaveLength(0);
+  });
+
+  it('does not flag global/unknown attributes', () => {
+    const diagnostics = detectNonLowercaseAttributes({
+      text: '<dads-button Class="foo" UnknownAttr="x">Click</dads-button>',
+      cem: cemIndex,
+    });
+    const lowercaseDiags = diagnostics.filter((d) => d.code === 'canonicalLowercaseRecommendation');
+    expect(lowercaseDiags).toHaveLength(0);
+  });
+
+  it('does not flag attributes on non-CEM elements', () => {
+    const diagnostics = detectNonLowercaseAttributes({
+      text: '<some-unknown-element Foo="bar"></some-unknown-element>',
+      cem: cemIndex,
+    });
+    const lowercaseDiags = diagnostics.filter((d) => d.code === 'canonicalLowercaseRecommendation');
+    expect(lowercaseDiags).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// P-02: prefix-aware unknown element suggestion (unit tests)
+// ---------------------------------------------------------------------------
+describe('prefix-aware unknown element suggestion', () => {
+  let cemIndex;
+
+  beforeAll(async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const decls = findCustomElementDeclarations(manifest);
+    cemIndex = new Map(decls.map((decl) => [decl.tagName.toLowerCase(), { attributes: new Set() }]));
+  });
+
+  it('suggests prefixed tag when unprefixed form exists in CEM', () => {
+    const suggestion = suggestUnknownElementTagName('input-text', cemIndex, 'dads');
+    expect(suggestion).toBe('dads-input-text');
+  });
+
+  it('returns undefined for single-segment tag without hyphen', () => {
+    const suggestion = suggestUnknownElementTagName('button', cemIndex, 'dads');
+    expect(suggestion).toBeUndefined();
+  });
+
+  it('still suggests via Levenshtein for typos (existing behavior)', () => {
+    const suggestion = suggestUnknownElementTagName('dads-buton', cemIndex);
+    expect(suggestion).toBe('dads-button');
+  });
+
+  it('buildDiagnosticSuggestion passes prefix to get prefixed suggestion', () => {
+    const suggestion = buildDiagnosticSuggestion({
+      diagnostic: { code: 'unknownElement', tagName: 'input-text' },
+      cemIndex,
+      prefix: 'dads',
+    });
+    expect(suggestion).toContain('dads-input-text');
   });
 });
