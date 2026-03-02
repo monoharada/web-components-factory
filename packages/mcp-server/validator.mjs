@@ -797,15 +797,17 @@ export function detectEmptyInteractiveElement({
 }
 
 /**
- * Hardcoded map of required attributes per form component (DIG-08).
- * Only `label` for form inputs.
+ * Required attributes per form component (DIG-08).
+ * Both `label` and `name` are required for components that declare them in CEM.
+ * Note: dads-date-picker and dads-file-upload use slots for labels, not attributes.
  */
 const REQUIRED_ATTRIBUTES = new Map([
-  ['dads-input-text', ['label']],
-  ['dads-textarea', ['label']],
-  ['dads-select', ['label']],
-  ['dads-checkbox', ['label']],
-  ['dads-radio', ['label']],
+  ['dads-input-text', ['label', 'name']],
+  ['dads-textarea', ['label', 'name']],
+  ['dads-select', ['label', 'name']],
+  ['dads-checkbox', ['label', 'name']],
+  ['dads-radio', ['label', 'name']],
+  ['dads-combobox', ['label', 'name']],
 ]);
 
 /**
@@ -927,6 +929,81 @@ export function detectNonLowercaseAttributes({
         hint: `Use "${lower}" instead of "${name}".`,
       });
     }
+  }
+
+  return diagnostics;
+}
+
+/**
+ * Detect CDN URLs in markup that should use local vendor paths instead.
+ */
+export function detectCdnReferences({
+  filePath = '<input>',
+  text,
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+  const lineStarts = computeLineIndex(text);
+  const cdnRe = /https?:\/\/(?:cdn\.jsdelivr\.net|unpkg\.com|cdnjs\.cloudflare\.com|esm\.sh)/g;
+  let m;
+  while ((m = cdnRe.exec(text))) {
+    const range = makeRange(lineStarts, m.index, m.index + m[0].length);
+    diagnostics.push({
+      file: filePath,
+      range,
+      severity,
+      code: 'cdnReference',
+      message: `CDN URL detected: "${m[0]}". This design system is self-hosted. Use local vendor paths instead.`,
+      tagName: '',
+      hint: 'Replace CDN URLs with local paths (e.g., ./vendor-runtime/components/...). Run `wcf init` to set up local assets.',
+    });
+  }
+
+  return diagnostics;
+}
+
+/**
+ * Detect missing importmap or boot.js in a full HTML page.
+ * Only triggers when the markup contains a full page structure (<!DOCTYPE html>).
+ */
+export function detectMissingRuntimeScaffold({
+  filePath = '<input>',
+  text,
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+
+  // Only check full HTML pages
+  if (!text.includes('<!DOCTYPE html>') && !text.includes('<!doctype html>')) {
+    return diagnostics;
+  }
+
+  const lineStarts = computeLineIndex(text);
+
+  if (!/<script\b[^>]*\btype\s*=\s*['"]importmap['"][^>]*>/i.test(text)) {
+    const range = makeRange(lineStarts, 0, Math.min(text.length, 15));
+    diagnostics.push({
+      file: filePath,
+      range,
+      severity,
+      code: 'missingImportmap',
+      message: 'Full HTML page is missing <script type="importmap">. WCF components require an import map for module resolution.',
+      tagName: '',
+      hint: 'Add <script type="importmap">{"imports":{...}}</script> in <head>. Run `wcf init` to generate one.',
+    });
+  }
+
+  if (!text.includes('boot.js')) {
+    const range = makeRange(lineStarts, 0, Math.min(text.length, 15));
+    diagnostics.push({
+      file: filePath,
+      range,
+      severity,
+      code: 'missingBootScript',
+      message: 'Full HTML page is missing boot.js script. WCF components require the boot script to initialize.',
+      tagName: '',
+      hint: 'Add <script type="module" src="./vendor-runtime/boot.js"></script> in <head>.',
+    });
   }
 
   return diagnostics;
