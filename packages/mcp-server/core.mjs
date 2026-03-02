@@ -1755,6 +1755,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
   const tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
 
+  const VENDOR_DIR = 'vendor-runtime';
+  const PREFIX_STRIP_RE = /^[^-]+-/;
+
   const server = new McpServer({
     name: 'web-components-factory-design-system',
     version: '0.5.0',
@@ -1916,7 +1919,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         setupInfo: {
           npmPackage: 'web-components-factory',
           installCommand: 'npm install web-components-factory',
-          vendorRuntimePath: 'vendor-runtime/',
+          vendorRuntimePath: `${VENDOR_DIR}/`,
           htmlBoilerplate: '<script type="module" src="vendor-runtime/src/autoload.js"></script>',
           noscriptGuidance: 'WCF components require JavaScript. Provide <noscript> fallback with static HTML equivalents for critical content.',
           noCDN: true,
@@ -2456,6 +2459,32 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Helper: buildFullPageHtml
   // -----------------------------------------------------------------------
+  function escapeHtmlTitle(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  /**
+   * Build import map entries from a component closure.
+   * @param {string[]} closure - Component IDs
+   * @param {Object} components - Component metadata (from install registry)
+   * @param {string} prefix - Tag name prefix
+   * @param {string} dir - Directory placeholder or concrete path
+   * @returns {Object} Import map entries { prefixedTag: path }
+   */
+  function buildImportMapEntries(closure, components, prefix, dir) {
+    return Object.fromEntries(
+      closure.flatMap((cid) => {
+        const meta = components[cid];
+        const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
+        return tags.map((t) => {
+          const lower = String(t).toLowerCase();
+          const suffix = lower.replace(PREFIX_STRIP_RE, '');
+          return [withPrefix(lower, prefix), `./${dir}/components/${suffix}.js`];
+        });
+      }),
+    );
+  }
+
   /**
    * Build a complete HTML5 page from pattern data, resolving scaffoldHint
    * placeholders into concrete paths.
@@ -2463,11 +2492,11 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
    * @param {string} opts.html - Pattern HTML body
    * @param {string} opts.title - Page title
    * @param {Object} opts.importMapEntries - Import map entries { tag: path }
-   * @param {string} [opts.dir='vendor-runtime'] - Directory for JS assets
+   * @param {string} [opts.dir] - Directory for JS assets
    * @param {string} [opts.lang='ja'] - HTML lang attribute
    * @returns {string} Complete HTML5 document
    */
-  function buildFullPageHtml({ html, title, importMapEntries, dir = 'vendor-runtime', lang = 'ja' }) {
+  function buildFullPageHtml({ html, title, importMapEntries, dir = VENDOR_DIR, lang = 'ja' }) {
     const importMapJson = JSON.stringify({ imports: importMapEntries }, null, 2);
     return [
       '<!DOCTYPE html>',
@@ -2475,7 +2504,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       '<head>',
       '  <meta charset="UTF-8">',
       '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
-      `  <title>${title}</title>`,
+      `  <title>${escapeHtmlTitle(title)}</title>`,
       `  <!-- distribution: selfHosted=true, strategy=vendor-importmap -->`,
       `  <!-- Do NOT replace these local paths with CDN URLs. This design system is self-hosted. -->`,
       `  <script type="importmap">`,
@@ -2538,19 +2567,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
       const entryHints = Array.isArray(pat.entryHints) ? [...pat.entryHints] : ['boot'];
 
-      const vendorDir = 'vendor-runtime';
-
-      const importMapEntries = Object.fromEntries(
-        closure.flatMap((cid) => {
-          const meta = components[cid];
-          const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
-          return tags.map((t) => {
-            const lower = String(t).toLowerCase();
-            const suffix = lower.replace(/^[^-]+-/, '');
-            return [withPrefix(lower, p), `./<dir>/components/${suffix}.js`];
-          });
-        }),
-      );
+      const importMapEntries = buildImportMapEntries(closure, components, p, '<dir>');
 
       const scaffoldHint = {
         doctype: '<!DOCTYPE html>',
@@ -2561,26 +2578,14 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       };
 
       // Build fullPageHtml when requested via include: ['fullPage']
-      const includeSet = new Set(Array.isArray(include) ? include : []);
+      const includeArr = Array.isArray(include) ? include : [];
       let fullPageHtml;
-      if (includeSet.has('fullPage')) {
-        // Resolve placeholders: replace <dir> with vendorDir
-        const resolvedImportMap = Object.fromEntries(
-          closure.flatMap((cid) => {
-            const meta = components[cid];
-            const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
-            return tags.map((t) => {
-              const lower = String(t).toLowerCase();
-              const suffix = lower.replace(/^[^-]+-/, '');
-              return [withPrefix(lower, p), `./${vendorDir}/components/${suffix}.js`];
-            });
-          }),
-        );
+      if (includeArr.includes('fullPage')) {
+        const resolvedImportMap = buildImportMapEntries(closure, components, p, VENDOR_DIR);
         fullPageHtml = buildFullPageHtml({
           html,
           title: pat.title ?? pat.id,
           importMapEntries: resolvedImportMap,
-          dir: vendorDir,
         });
       }
 
@@ -2604,7 +2609,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       if (fullPageHtml !== undefined) {
         result.fullPageHtml = fullPageHtml;
         result.vendorSetup = {
-          command: `npx web-components-factory init --prefix ${p} --dir ${vendorDir} && npx web-components-factory add ${closure.join(' ')} --prefix ${p} --out ${vendorDir}`,
+          command: `npx web-components-factory init --prefix ${p} --dir ${VENDOR_DIR} && npx web-components-factory add ${closure.join(' ')} --prefix ${p} --out ${VENDOR_DIR}`,
         };
       }
 
@@ -2851,19 +2856,22 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
             if (occurrences > 1) score += Math.min(occurrences - 1, 2);
           }
 
-          // Synonym expansion match: weight 1 (check all expanded terms, not just when score=0)
+          // Synonym expansion match: check all expanded terms, cap total synonym contribution at +2
           if (expandedTerms.length > 1) {
-            for (let i = 1; i < expandedTerms.length; i++) {
+            let synScore = 0;
+            const lowerKeywords = keywords.map((kw) => String(kw).toLowerCase());
+            for (let i = 1; i < expandedTerms.length && synScore < 2; i++) {
               const syn = expandedTerms[i];
-              if (heading.includes(syn)) { score += 1; continue; }
-              if (snippet.includes(syn) || body.includes(syn)) { score += 1; continue; }
-              for (const kw of keywords) {
-                if (String(kw).toLowerCase().includes(syn)) {
-                  score += 1;
+              if (heading.includes(syn)) { synScore += 1; continue; }
+              if (snippet.includes(syn) || body.includes(syn)) { synScore += 1; continue; }
+              for (const kw of lowerKeywords) {
+                if (kw.includes(syn)) {
+                  synScore += 1;
                   break;
                 }
               }
             }
+            score += synScore;
           }
 
           if (score > 0) {

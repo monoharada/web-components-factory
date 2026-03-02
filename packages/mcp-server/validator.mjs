@@ -939,8 +939,6 @@ export function detectNonLowercaseAttributes({
 /**
  * Detect CDN URLs in markup that should use local vendor paths instead.
  */
-const cdnRe = /https?:\/\/(?:cdn\.jsdelivr\.net|unpkg\.com|cdnjs\.cloudflare\.com|esm\.sh)/g;
-
 export function detectCdnReferences({
   filePath = '<input>',
   text,
@@ -948,17 +946,16 @@ export function detectCdnReferences({
 }) {
   const diagnostics = [];
   const lineStarts = computeLineIndex(text);
-
-  cdnRe.lastIndex = 0;
-  let cm;
-  while ((cm = cdnRe.exec(text))) {
-    const range = makeRange(lineStarts, cm.index, cm.index + cm[0].length);
+  const cdnRe = /https?:\/\/(?:cdn\.jsdelivr\.net|unpkg\.com|cdnjs\.cloudflare\.com|esm\.sh)/g;
+  let m;
+  while ((m = cdnRe.exec(text))) {
+    const range = makeRange(lineStarts, m.index, m.index + m[0].length);
     diagnostics.push({
       file: filePath,
       range,
       severity,
       code: 'cdnReference',
-      message: `CDN URL detected: "${cm[0]}". This design system is self-hosted. Use local vendor paths instead.`,
+      message: `CDN URL detected: "${m[0]}". This design system is self-hosted. Use local vendor paths instead.`,
       tagName: '',
       hint: 'Replace CDN URLs with local paths (e.g., ./vendor-runtime/components/...). Run `wcf init` to set up local assets.',
     });
