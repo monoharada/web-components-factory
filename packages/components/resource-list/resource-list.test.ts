@@ -303,32 +303,6 @@ describe('DadsResourceList - 基本', () => {
     expect(element.hasAttribute('data-selected')).toBe(true);
   });
 
-  it('inline + dads-checkbox で control host クリック時に control を切り替える', async () => {
-    const { defineDefaultResourceList } = await import('./resource-list-define.js');
-    const { defineDefaultCheckbox } = await import('../checkbox/checkbox-define.js');
-    defineDefaultResourceList();
-    defineDefaultCheckbox();
-
-    element = renderWebComponent(`
-      <dads-resource-list data-interaction="inline">
-        <dads-checkbox slot="control" aria-label="行を選択"></dads-checkbox>
-        <span slot="title">タイトル</span>
-      </dads-resource-list>
-    `);
-    await waitForCustomElement(element);
-    await waitTick();
-
-    const control = element.querySelector('dads-checkbox') as HTMLElement | null;
-    expect(control).toBeInTheDocument();
-    if (!control) return;
-
-    control.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
-    await waitTick();
-
-    expect((control as unknown as { checked?: boolean }).checked).toBe(true);
-    expect(element.hasAttribute('data-selected')).toBe(true);
-  });
-
   it('inline + control でタイトル/サポート領域クリック時に control を切り替える', async () => {
     const { defineDefaultResourceList } = await import('./resource-list-define.js');
     defineDefaultResourceList();

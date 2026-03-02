@@ -60,22 +60,6 @@ function isInteractiveElement(node: Element): boolean {
   return Boolean(node.closest('a,button,input,select,textarea,label,summary,[contenteditable="true"]'));
 }
 
-function shouldCancelControlActivationFromNode(
-  node: Element,
-  options: {
-    boundControlInput: HTMLInputElement | null;
-    boundControlHost: HTMLElement | null;
-    allowLabelClick?: boolean;
-  }
-): boolean {
-  const { boundControlInput, boundControlHost, allowLabelClick = false } = options;
-  if (node === boundControlInput) return true;
-  if (boundControlHost && node !== boundControlHost && boundControlHost.contains(node)) return true;
-  if (!isInteractiveElement(node)) return false;
-  if (allowLabelClick && node.tagName.toLowerCase() === 'label') return false;
-  return true;
-}
-
 type ControlTarget = {
   host: HTMLElement | null;
   input: HTMLInputElement | null;
@@ -818,22 +802,6 @@ export class DadsResourceList extends TypographyWebComponent {
     return false;
   }
 
-  #isSlottedControlClick(path: readonly EventTarget[]): boolean {
-    for (const node of path) {
-      if (!(node instanceof Element)) continue;
-      if (node === this.#boundControlHost) return true;
-      const slotName = node.getAttribute('slot');
-      if (slotName === 'control' && this.contains(node)) return true;
-      if (!(node instanceof HTMLElement)) continue;
-      const slottedAncestor = node.closest('[slot]');
-      if (!slottedAncestor) continue;
-      if (slottedAncestor.getAttribute('slot') === 'control' && this.contains(slottedAncestor)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   #isWholeDelegatedLinkInteraction(): boolean {
     return (
       normalizeInteraction(this.getAttribute('data-interaction')) === 'whole' &&
@@ -932,25 +900,6 @@ export class DadsResourceList extends TypographyWebComponent {
       return;
     }
 
-    const tagName = host.tagName.toLowerCase();
-    const hostControl = host as unknown as { checked?: boolean; disabled?: boolean };
-    if (
-      (tagName === 'dads-checkbox' || tagName === 'dads-radio') &&
-      typeof hostControl.checked === 'boolean' &&
-      hostControl.disabled !== true
-    ) {
-      const nextChecked = tagName === 'dads-radio' ? true : !hostControl.checked;
-      hostControl.checked = nextChecked;
-      host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
-      host.dispatchEvent(new CustomEvent('dads-change', {
-        detail: { checked: nextChecked },
-        bubbles: true,
-        composed: true,
-      }));
-      this.#queueControlStateSync();
-      return;
-    }
-
     if (typeof host.click === 'function') {
       host.click();
       this.#queueControlStateSync();
@@ -977,12 +926,9 @@ export class DadsResourceList extends TypographyWebComponent {
       const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
       for (const node of path) {
         if (!(node instanceof Element)) continue;
-        if (
-          shouldCancelControlActivationFromNode(node, {
-            boundControlInput: this.#boundControlInput,
-            boundControlHost: this.#boundControlHost,
-          })
-        ) return;
+        if (node === this.#boundControlInput || node === this.#boundControlHost) return;
+        if (this.#boundControlHost && this.#boundControlHost.contains(node)) return;
+        if (isInteractiveElement(node)) return;
       }
 
       event.preventDefault();
@@ -1000,13 +946,12 @@ export class DadsResourceList extends TypographyWebComponent {
 
       for (const node of path) {
         if (!(node instanceof Element)) continue;
-        if (
-          shouldCancelControlActivationFromNode(node, {
-            boundControlInput: this.#boundControlInput,
-            boundControlHost: this.#boundControlHost,
-            allowLabelClick: isContentsRegion,
-          })
-        ) return;
+        if (node === this.#boundControlInput || node === this.#boundControlHost) return;
+        if (this.#boundControlHost && this.#boundControlHost.contains(node)) return;
+        if (isInteractiveElement(node)) {
+          if (isContentsRegion && node.tagName.toLowerCase() === 'label') continue;
+          return;
+        }
       }
       event.preventDefault();
       this.#activateControl();
@@ -1036,19 +981,16 @@ export class DadsResourceList extends TypographyWebComponent {
 
     const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
     if (path.some((node) => node === this.#body)) return;
-    const isSlottedControl = this.#isSlottedControlClick(path);
-    const isSlottedContents = this.#isSlottedContentsClick(path);
-    if (!isSlottedControl && !isSlottedContents) return;
+    if (!this.#isSlottedContentsClick(path)) return;
 
     for (const node of path) {
       if (!(node instanceof Element)) continue;
-      if (
-        shouldCancelControlActivationFromNode(node, {
-          boundControlInput: this.#boundControlInput,
-          boundControlHost: this.#boundControlHost,
-          allowLabelClick: isSlottedContents,
-        })
-      ) return;
+      if (node === this.#boundControlInput || node === this.#boundControlHost) return;
+      if (this.#boundControlHost && this.#boundControlHost.contains(node)) return;
+      if (isInteractiveElement(node)) {
+        if (node.tagName.toLowerCase() === 'label') continue;
+        return;
+      }
     }
 
     event.preventDefault();
