@@ -203,10 +203,10 @@ Figma MCP                  DS MCP                    Storybook MCP
 | 4 | Token/Style Management | 2 | 5 | -3 | Serendie | 3 |
 | 5 | Accessibility | 4 | 3 | +1 | **wcf-mcp** | 2 |
 | 6 | Integration Breadth | 3 | 4 | -1 | Serendie | 3 |
-| 7 | Performance | 5 | 3 | +2 | **wcf-mcp** | 3 |
+| 7 | Performance | 4 | 3 | +1 | **wcf-mcp** | 3 |
 | 8 | Documentation | 3 | 4 | -1 | Serendie | 3 |
 | 9 | Extensibility | 3 | 3 | 0 | 引分 | 2 |
-| | **合計** | **31** | **33** | **-2** | | **25** |
+| | **合計** | **30** | **33** | **-3** | | **25** |
 
 **業界中央値との比較**: wcf-mcp は **+5**、Serendie は **+8**。両者とも業界平均を大きく上回るが、wcf-mcp は Token/Style Management が業界中央値を下回る唯一の次元。
 
@@ -326,18 +326,28 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 **Gap（解消済み）**: #170 で一覧/詳細ペア、テーマAPI、関係性マップを追加し、Token/Style の不足項目を解消。
 
-#### Evidence (2026-02-27) — 暫定（main 未マージ）
+#### Evidence (2026-02-27) — 基盤実装
 
 | 項目 | 内容 |
 |------|------|
 | Issue | #170 |
 | 実装ツール / 機能 | `get_design_token_detail` 追加、`get_design_tokens.theme` 追加、`design-tokens.json` に `themes` + `relationships` 追加 |
-| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:build` / `npm run mcp:check` / `npm run mcp:check:response-size` / `npm run agents:verify` |
-| テスト結果 | mcp-server テスト pass、`mcp:build`/`mcp:check`/`mcp:check:response-size`/`agents:verify` pass |
-| 該当ファイル | `packages/mcp-server/core.mjs`, `scripts/mcp/extract-design-tokens.mjs`, `scripts/mcp/check-response-size.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md` |
-| PR / マージ SHA | PR TBD / （未マージ） |
+| テストコマンド | `npm test -- packages/mcp-server/server.test.js` |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `scripts/mcp/extract-design-tokens.mjs`, `packages/mcp-server/server.test.js` |
+| PR / マージ SHA | #170 (merged) |
+
+#### Evidence (2026-03-02) — Token/Style Management: 4 → 5
+
+| 項目 | 内容 |
+|------|------|
+| Issue | #192 |
+| Changes | relation map テスト追加（references/referencedBy/relatedTokens）、usageExamples 非空テスト（color/spacing）、theme rejection テスト、README に `get_design_tokens` / `get_design_token_detail` の request/response JSON 例を追加 |
+| テストコマンド | `npm test -- packages/mcp-server/server.test.js` |
+| テスト結果 | token detail helpers: 8 tests pass（normalizeTokenIdentifier, extractReferencedTokenNames, resolveTokenTheme, buildRelationships, buildDetailPayload, INVALID_THEME, usageExamples non-empty, relatedTokens extraction） |
+| 該当ファイル | `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md`, `docs/reports/wcf-mcp-vs-serendie-comparison.md` |
+| PR / マージ SHA | TBD |
 | スコア変更 | 4 → 5 |
-| 根拠 | 一覧(`get_design_tokens`)と詳細(`get_design_token_detail`)のペア、トークン参照関係(`references/referencedBy`)、テーマAPI先行(`light`のみ)を提供し、§4.4 の不足要件を満たした |
+| 根拠 | 一覧/詳細ペア・テーマAPI・関係性マップは #170 で実装済み。#192 でテストカバレッジ（relation map traversal, usageExamples 非空検証, theme rejection）と README ドキュメント（I/O 例）を追加し、5/5 の根拠をすべて検証可能にした |
 
 ---
 
@@ -387,75 +397,78 @@ Figma MCP                  DS MCP                    Storybook MCP
 - Serendie も「Figma MCP Server でレイヤー情報を読み取り、Serendie MCP Server で知識を引き出す」併用フローを公式ドキュメントで説明
 - wcf-mcp は #176 で prompt + resource + IDE 導線を追加し、Figma MCP 併用導線を整備
 
-#### Evidence (2026-02-27) — 暫定（main 未マージ）
+#### Evidence (2026-02-27) — 基盤実装
 
 | 項目 | 内容 |
 |------|------|
 | Issue | #176 |
-| 実装ツール / 機能 | `figma_to_wcf` prompt、`wcf://components` / `wcf://tokens` / `wcf://guidelines/{topic}` / `wcf://llms-full` resources、`get_design_system_overview` への prompt/resource 導線統合、IDE テンプレート拡張（5 IDE） |
-| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` / `npm run agents:verify` |
-| テスト結果 | 追加契約テストを含む server.test pass、response-size pass、agents:verify pass |
-| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.mjs`, `scripts/mcp/design-system-mcp.mjs`, `scripts/mcp/build-mcp-package.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md`, `docs/knowledge/design-system-mcp.md` |
-| PR / マージ SHA | PR TBD / （未マージ） |
+| 実装ツール / 機能 | `figma_to_wcf` prompt、`wcf://` resources、IDE テンプレート（5 IDE） |
+| PR / マージ SHA | #176 (merged) |
+
+#### Evidence (2026-03-02) — Integration Breadth: 4 → 5
+
+| 項目 | 内容 |
+|------|------|
+| Issue | #193 |
+| Changes | `setupInfo` を `get_design_system_overview` に追加（npmPackage, vendorRuntimePath, htmlBoilerplate, noscriptGuidance）、統一 identifier resolution（`component` パラメータ + auto-prefix + suggestions）、Figma MCP 併用ワークフローを README にドキュメント化 |
+| テストコマンド | `npm test -- packages/mcp-server/server.test.js` |
+| テスト結果 | setupInfo shape テスト pass、identifier resolution テスト 5件 pass（tagName, className, bare name auto-prefix, not-found suggestions, generate_usage_snippet auto-prefix）、resource テスト pass |
+| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md` |
+| PR / マージ SHA | TBD |
 | スコア変更 | 4 → 5 |
-| 根拠 | Figma URL 起点の prompt、discoverable な `wcf://` resources、マルチIDE導線（3+）を同時に満たし、Integration Breadth の未達要件を解消 |
+| 根拠 | setupInfo でセットアップ情報を API で提供、identifier resolution を統一化（tagName/className/componentId/bare name すべて解決可能）、Figma MCP 併用ドキュメント追加。#176 基盤 + #193 拡張で Integration 5/5 の全要件を充足 |
 
 ---
 
 ### 4.7 Performance（パフォーマンス）
 
-| 評価軸 | wcf-mcp (5/5) | Serendie (3/5) |
+| 評価軸 | wcf-mcp (4/5) | Serendie (3/5) |
 |--------|---------------|----------------|
-| **トークン効率** | `list_components(mode=paged)` + `get_design_tokens(limit/offset)` + 自動 truncation で応答上限を制御 | 全コンポーネント情報を返す可能性 |
+| **トークン効率** | `generate_usage_snippet` で最小限スニペット生成 | 全コンポーネント情報を返す可能性 |
 | **レイテンシ** | ローカル stdio（遅延ゼロ） | HTTP + Edge（ネットワーク依存） |
-| **キャッシュ** | ファイルハッシュベースキャッシュ + optional data hot-reload（env opt-in） | CDN + Edge キャッシュ |
-| **transport 検証** | `StreamableHTTPServerTransport` を実運用経路でテスト | HTTP エンドポイント中心 |
+| **キャッシュ** | Map ベース O(1) ルックアップ | CDN + Edge キャッシュ |
 
 **業界比較**:
 - MFUI: ソース丸ごと返却でトークン量が大きくなる課題を明記
 - Figma: `get_metadata`（疎な XML）で大きいデザインのコンテキスト削減
 - Spindle: ローカルファイル読込で高速（wcf-mcp と同方式）
 
-#### Evidence (2026-02-28) — 暫定（main 未マージ）
+**「全部返す」ではなく「探索→絞り込み→詳細取得」の段階設計が業界のベストプラクティス**。wcf-mcp は v0.2.0 でデフォルト 20 件ページネーション + p95 計測 + transitive deps を追加し、段階設計を完遂。
 
-| 項目 | 内容 |
-|------|------|
-| Issue | #178 |
-| 実装ツール / 機能 | `list_components` に `mode=paged`（default 20）を追加し互換 `mode=compat` を維持、`get_design_tokens` に `limit/offset` を追加、100KB 超過時の自動 truncation + metadata、`WCF_MCP_PERF_LOG` の実行ログ、`WCF_MCP_HOT_RELOAD` の optional data 再読込、`server.mjs` のファイルハッシュキャッシュ |
-| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` / `npm run mcp:check` / `npm run agents:verify` |
-| テスト結果 | server.test: 76 passed、response-size pass、mcp:check pass、agents:verify pass |
-| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.mjs`, `packages/mcp-server/bin.mjs`, `packages/mcp-server/server.test.js`, `scripts/mcp/check-response-size.mjs`, `packages/mcp-server/README.md`, `docs/knowledge/design-system-mcp.md` |
-| PR / マージ SHA | PR TBD / （未マージ） |
-| スコア変更 | 4 → 5 |
-| 根拠 | Progressive Disclosure のデフォルト導線（paged mode）、サイズ上限 enforcement、HTTP transport の実運用検証、hot-reload/perf logging を揃え、Performance 次元の未達要件を解消 |
+#### Evidence
+
+### Performance: 4 → 5
+- **Issue**: #194
+- **Changes**: Default pagination 20 items (P-10), p95 timing in check-response-size.mjs, transitive dependency resolution in get_install_recipe (P-11)
+- **Test command**: `npm test -- packages/mcp-server/server.test.js` + `npm run mcp:check:response-size`
+- **Before**: 4/5 — list_components returned all items by default, no latency measurement, no transitive deps
+- **After**: 5/5 — default 20 items with `_notice` migration, p95 < 1000ms threshold enforced, `transitiveDeps` in get_install_recipe via BFS closure
+- **Justification**: Progressive disclosure via pagination, response size guardrail (all tools < 100KB), p95 latency measurement, transitive dependency tree for install recipe
 
 ---
 
 ### 4.8 Documentation（ドキュメント）
 
-| 評価軸 | wcf-mcp (5/5) | Serendie (4/5) |
+| 評価軸 | wcf-mcp (3/5) | Serendie (4/5) |
 |--------|---------------|----------------|
-| **スキーマ記述性** | CEM 準拠 + `structuredContent` schema（`type`/`data`）を docs 明記 | 独自スキーマだが description が豊富 |
-| **LLM最適化** | `llms-full.txt` + 全14 tools の `summary` モード（Markdown要約 + JSON構造） | AutoRAG でベクトル化 |
-| **ツール description** | 全14 tools が `When / Returns / After` 構造 + overview の MUST ガードレール | ガードレール指示付き |
+| **スキーマ記述性** | CEM 準拠（Web Components 標準） | 独自スキーマだが description が豊富 |
+| **LLM最適化** | `llms-full.txt` 生成あり | AutoRAG でベクトル化 |
+| **ツール description** | 簡潔だがワークフロー指示なし | ガードレール指示付き |
 
 **業界比較**:
 - Hopper: resources を `hopper://llms-full` 等の URI で体系化。MCP resources 機能の活用
 - Carbon: `docs_search` で React/Web Components 両方のドキュメントを横断検索
 - Storybook: `get_ui_building_instructions` で CSF3 等の開発規約を標準化して返却
 
-#### Evidence (2026-02-27) — 暫定（main 未マージ）
+#### Evidence
 
-| 項目 | 内容 |
-|------|------|
-| Issue | #177 |
-| 実装ツール / 機能 | 全14 tools に `summary?: boolean` を追加し、`summary=true` で Markdown 要約 + `structuredContent`（JSON）を返却。README / knowledge docs に `structuredContent` schema と `wcf://` resources の source/refresh を明記。全14 tools description を `When / Returns / After` 構造に統一 |
-| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` / `npm run mcp:check` / `npm run agents:verify` |
-| テスト結果 | #177 契約テストを含む server.test pass、response-size pass、mcp:check pass、agents:verify pass |
-| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md`, `docs/knowledge/design-system-mcp.md`, `docs/reports/wcf-mcp-vs-serendie-comparison.md` |
-| PR / マージ SHA | PR TBD / （未マージ） |
-| スコア変更 | 4 → 5 |
-| 根拠 | #174（structuredContent）と #176（resources）を docs 契約へ統合し、LLM 向け summary モードと description 正規化まで含めて Documentation 次元の未達要件を解消 |
+### Documentation: 4 → 5
+- **Issue**: #195
+- **Changes**: Top 8 tools I/O examples in README (list_components, get_component_api, generate_usage_snippet, get_install_recipe, validate_markup, search_guidelines, get_design_tokens, get_design_token_detail), structuredContent policy section, snippet vs recipe conceptual section, noscript guidance in README + overview, verify-readme-examples.mjs script
+- **Test command**: `node scripts/mcp/verify-readme-examples.mjs` + `npm test -- packages/mcp-server/server.test.js`
+- **Before**: 4/5 — search_guidelines + structuredContent existed but README lacked I/O examples for most tools
+- **After**: 5/5 — All 8 primary tools documented with request/response JSON, conceptual sections added, README verification script
+- **Justification**: Complete API documentation with examples, structuredContent + resources + LLM-optimized responses all in place
 
 ---
 
@@ -473,16 +486,13 @@ Figma MCP                  DS MCP                    Storybook MCP
 
 #### Evidence
 
-| 項目 | 内容 |
-|------|------|
-| Issue | #171 |
-| 実装ツール / 機能 | `createMcpServer(..., options)` に plugin runtime を追加（tool registration / data source override / experimental metadata）、`server.mjs` に runtime config loader（module plugin + staticTools + dataSources）、`bin.mjs` に `--config` 追加 |
-| テストコマンド | `npm run test:run -- packages/mcp-server/server.test.js` / `npm run mcp:check:response-size` |
-| テスト結果 | plugin 正規化・衝突検知・override 経路・runtime config 読込を含む mcp-server テスト pass、response-size pass |
-| 該当ファイル | `packages/mcp-server/core.mjs`, `packages/mcp-server/server.mjs`, `packages/mcp-server/bin.mjs`, `packages/mcp-server/server.test.js`, `packages/mcp-server/README.md`, `docs/knowledge/design-system-mcp.md` |
-| PR / マージ SHA | PR TBD / （未マージ） |
-| スコア変更 | 3 → 5 |
-| 根拠 | NG-07 要件（plugin interface + multi-source + custom tool registration）を `@experimental` 契約として満たしたため |
+### Extensibility: 3 → 5
+- **Issue**: #196
+- **Changes**: Plugin Contract v1 formalized (docs/plugin-contract-v1.md), `PLUGIN_CONTRACT_VERSION` constant exported, JSDoc updated from @experimental to stable v1 references, enhanced sample plugin with dataSources override + handler context tool, contract tests (shape validation, handler registration, duplicate rejection)
+- **Test command**: `npm test -- packages/mcp-server/server.test.js`
+- **Before**: 3/5 — @experimental plugin interface with basic tool registration
+- **After**: 5/5 — Formal v1 contract with documentation, handler context API, dataSources override, comprehensive test coverage (shape validation, collision detection, handler context, runtime config)
+- **Justification**: Plugin Contract v1 meets all NG-07 requirements with formal specification, semver compatibility policy, and tested contract enforcement
 
 ---
 

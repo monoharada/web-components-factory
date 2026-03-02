@@ -106,7 +106,6 @@ async function main() {
     return;
   }
 
-  process.env.WCF_MCP_TRANSPORT = parsed.transport;
   const { server } = await createServer({ configPath: parsed.configPath });
 
   if (parsed.transport === 'http') {

@@ -91,6 +91,130 @@ export function collectCemCustomElements(manifest) {
   return byTag;
 }
 
+/**
+ * Parse a CEM type.text union like "'solid' | 'outlined' | 'text'" into a Set of valid values.
+ * Only handles string literal unions. Returns undefined for non-enum types.
+ * @param {string} typeText
+ * @returns {Set<string> | undefined}
+ */
+function parseEnumTypeText(typeText) {
+  if (typeof typeText !== 'string' || !typeText) return undefined;
+  // Must contain at least one single-quoted value
+  const literals = typeText.match(/'([^']*)'/g);
+  if (!literals || literals.length === 0) return undefined;
+  // All parts separated by | must be quoted literals (allow whitespace)
+  const parts = typeText.split('|').map((s) => s.trim());
+  for (const part of parts) {
+    if (!/^'[^']*'$/.test(part)) return undefined;
+  }
+  const values = new Set();
+  for (const lit of literals) {
+    values.add(lit.slice(1, -1));
+  }
+  return values.size > 0 ? values : undefined;
+}
+
+/**
+ * Build a map of enum attributes from the CEM manifest.
+ * Returns Map<tagName, Map<attrName, Set<validValues>>>
+ * @param {object} manifest
+ * @returns {Map<string, Map<string, Set<string>>>}
+ */
+export function buildEnumAttributeMap(manifest) {
+  const result = new Map();
+
+  const modules = Array.isArray(manifest?.modules) ? manifest.modules : [];
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      const tagName = decl?.tagName;
+      const isCustomElement = decl?.customElement === true || decl?.kind === 'custom-element';
+      if (!isCustomElement || typeof tagName !== 'string' || !tagName) continue;
+      const tag = tagName.toLowerCase();
+
+      const attrEnums = new Map();
+      const declAttrs = Array.isArray(decl?.attributes) ? decl.attributes : [];
+      for (const a of declAttrs) {
+        if (typeof a?.name !== 'string' || !a.name) continue;
+        const typeText = a?.type?.text;
+        const enumValues = parseEnumTypeText(typeText);
+        if (enumValues) {
+          attrEnums.set(a.name.toLowerCase(), enumValues);
+        }
+      }
+
+      if (attrEnums.size > 0) {
+        result.set(tag, attrEnums);
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Detect enum value misuse in HTML markup.
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   enumMap: Map<string, Map<string, Set<string>>>;
+ *   severity?: string;
+ * }} params
+ */
+export function detectEnumValueMisuse({
+  filePath = '<input>',
+  text,
+  enumMap,
+  severity = 'error',
+}) {
+  const diagnostics = [];
+  if (!(enumMap instanceof Map) || enumMap.size === 0) return diagnostics;
+
+  const lineStarts = computeLineIndex(text);
+  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  let m;
+
+  while ((m = tagRe.exec(text))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    if (!tag.includes('-')) continue;
+
+    const attrEnums = enumMap.get(tag);
+    if (!attrEnums) continue;
+
+    const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
+    const attrs = parseAttributes(attrChunk);
+
+    for (const { name, offset, value } of attrs) {
+      const attrName = name.toLowerCase();
+      const validValues = attrEnums.get(attrName);
+      if (!validValues) continue;
+
+      // Skip empty values (boolean-style attributes)
+      if (value === undefined || value === '') continue;
+
+      if (!validValues.has(value)) {
+        const startIndex = rawAttrsStart + offset;
+        const endIndex = startIndex + name.length;
+        const range = makeRange(lineStarts, startIndex, endIndex);
+        const validList = [...validValues].map((v) => `'${v}'`).join(' | ');
+        diagnostics.push({
+          file: filePath,
+          range,
+          severity,
+          code: 'invalidEnumValue',
+          message: `Invalid value "${value}" for attribute "${attrName}" on <${tag}>. Valid values: ${validList}`,
+          tagName: tag,
+          attrName,
+          hint: `Use one of: ${validList}`,
+        });
+      }
+    }
+  }
+
+  return diagnostics;
+}
+
 function shouldSkipAttr(attrName) {
   const name = attrName.toLowerCase();
   if (GLOBAL_ATTR_ALLOW_SET.has(name)) return true;
@@ -402,6 +526,341 @@ export function detectAccessibilityMisuseInMarkup({
         attrName,
         hint: 'Replace role=\"alert\" with non-live text associated to the control.',
       });
+    }
+  }
+
+  return diagnostics;
+}
+
+/**
+ * Build a map of slot names per component from the CEM manifest.
+ * Returns Map<tagName, Set<validSlotNames>>
+ * @param {object} manifest
+ * @returns {Map<string, Set<string>>}
+ */
+export function buildSlotNameMap(manifest) {
+  const result = new Map();
+
+  const modules = Array.isArray(manifest?.modules) ? manifest.modules : [];
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      const tagName = decl?.tagName;
+      const isCustomElement = decl?.customElement === true || decl?.kind === 'custom-element';
+      if (!isCustomElement || typeof tagName !== 'string' || !tagName) continue;
+      const tag = tagName.toLowerCase();
+
+      const slotNames = new Set();
+      const declSlots = Array.isArray(decl?.slots) ? decl.slots : [];
+      for (const s of declSlots) {
+        if (typeof s?.name !== 'string') continue;
+        slotNames.add(s.name);
+      }
+
+      if (slotNames.size > 0) {
+        result.set(tag, slotNames);
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Detect invalid slot names in HTML markup.
+ * Checks if `slot="name"` values match any known slot across the design system.
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   slotMap: Map<string, Set<string>>;
+ *   severity?: string;
+ * }} params
+ */
+export function detectInvalidSlotName({
+  filePath = '<input>',
+  text,
+  slotMap,
+  severity = 'error',
+}) {
+  const diagnostics = [];
+  if (!(slotMap instanceof Map) || slotMap.size === 0) return diagnostics;
+
+  // Build global slot vocabulary (all valid slot names across all components)
+  const globalSlotNames = new Set();
+  for (const slotNames of slotMap.values()) {
+    for (const name of slotNames) globalSlotNames.add(name);
+  }
+
+  const lineStarts = computeLineIndex(text);
+  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  let m;
+
+  while ((m = tagRe.exec(text))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
+    const attrs = parseAttributes(attrChunk);
+
+    for (const { name, offset, value } of attrs) {
+      const attrName = name.toLowerCase();
+      if (attrName !== 'slot') continue;
+      if (value === undefined || value === '') continue;
+
+      // 'default' is always valid (unnamed slot)
+      if (value === 'default') continue;
+
+      if (!globalSlotNames.has(value)) {
+        const startIndex = rawAttrsStart + offset;
+        const endIndex = startIndex + name.length;
+        const range = makeRange(lineStarts, startIndex, endIndex);
+        diagnostics.push({
+          file: filePath,
+          range,
+          severity,
+          code: 'invalidSlotName',
+          message: `Unknown slot name "${value}". No component in the design system defines this slot.`,
+          tagName: tag,
+          attrName: 'slot',
+          hint: `Check the parent component's API for available slot names.`,
+        });
+      }
+    }
+  }
+
+  return diagnostics;
+}
+
+/**
+ * Parent-child constraints: child → expected parent.
+ * If a child tag appears without its parent wrapping it, emit a warning.
+ */
+const PARENT_CHILD_CONSTRAINTS = new Map([
+  ['dads-accordion-item-details', 'dads-accordion-details'],
+  ['dads-breadcrumb-item', 'dads-breadcrumb'],
+  ['dads-list-item', 'dads-list'],
+  ['dads-step-navigation-item', 'dads-step-navigation'],
+  ['dads-global-menu-item', 'dads-global-menu'],
+  ['dads-menu-list-item', 'dads-menu-list'],
+]);
+
+/**
+ * Detect orphaned child components (child appears without expected parent).
+ * Uses regex/text scan (DIG-13) — lower confidence, severity: warning.
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   prefix?: string;
+ *   severity?: string;
+ * }} params
+ */
+export function detectOrphanedChildComponents({
+  filePath = '<input>',
+  text,
+  prefix = 'dads',
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+  const lineStarts = computeLineIndex(text);
+  const p = prefix.toLowerCase();
+  const canonicalPrefix = 'dads';
+
+  // Build prefix-aware constraint map
+  const constraints = new Map();
+  for (const [child, parent] of PARENT_CHILD_CONSTRAINTS.entries()) {
+    const mappedChild = p !== canonicalPrefix ? child.replace(canonicalPrefix, p) : child;
+    const mappedParent = p !== canonicalPrefix ? parent.replace(canonicalPrefix, p) : parent;
+    constraints.set(mappedChild, mappedParent);
+  }
+
+  const textLower = text.toLowerCase();
+
+  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  let m;
+
+  while ((m = tagRe.exec(text))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    const expectedParent = constraints.get(tag);
+    if (!expectedParent) continue;
+
+    // Check if the expected parent tag appears before this child in the text
+    const precedingText = textLower.slice(0, m.index);
+    const parentOpenPattern = `<${expectedParent}`;
+    const parentClosePattern = `</${expectedParent}`;
+
+    const lastParentOpen = precedingText.lastIndexOf(parentOpenPattern);
+    const lastParentClose = precedingText.lastIndexOf(parentClosePattern);
+
+    if (lastParentOpen === -1 || lastParentClose > lastParentOpen) {
+      const tagOffset = m.index + 1;
+      const range = makeRange(lineStarts, tagOffset, tagOffset + tag.length);
+      diagnostics.push({
+        file: filePath,
+        range,
+        severity,
+        code: 'orphanedChildComponent',
+        message: `<${tag}> should be a child of <${expectedParent}>.`,
+        tagName: tag,
+        hint: `Wrap <${tag}> inside <${expectedParent}>...</${expectedParent}>.`,
+      });
+    }
+  }
+
+  return diagnostics;
+}
+
+/**
+ * Interactive elements that should have content (text or slotted content).
+ */
+const INTERACTIVE_ELEMENTS = new Set([
+  'dads-button',
+]);
+
+/**
+ * Detect empty interactive elements (e.g., button with no text content).
+ * Severity: warning (DIG-04).
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   prefix?: string;
+ *   severity?: string;
+ * }} params
+ */
+export function detectEmptyInteractiveElement({
+  filePath = '<input>',
+  text,
+  prefix = 'dads',
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+  const lineStarts = computeLineIndex(text);
+  const p = prefix.toLowerCase();
+  const canonicalPrefix = 'dads';
+
+  const elements = new Set();
+  for (const el of INTERACTIVE_ELEMENTS) {
+    elements.add(p !== canonicalPrefix ? el.replace(canonicalPrefix, p) : el);
+  }
+
+  // Match self-closing tags: <dads-button ... />
+  const selfClosingRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)\/>/gi;
+  let m;
+
+  while ((m = selfClosingRe.exec(text))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    if (!elements.has(tag)) continue;
+
+    // Check if aria-label is present
+    const attrChunk = String(m[2] ?? '');
+    const attrs = parseAttributes(attrChunk);
+    const hasAriaLabel = attrs.some(({ name }) => name.toLowerCase() === 'aria-label');
+    if (hasAriaLabel) continue;
+
+    const tagOffset = m.index + 1;
+    const range = makeRange(lineStarts, tagOffset, tagOffset + tag.length);
+    diagnostics.push({
+      file: filePath,
+      range,
+      severity,
+      code: 'emptyInteractiveElement',
+      message: `<${tag}> appears empty. Add text content or aria-label for accessibility.`,
+      tagName: tag,
+      hint: `Add visible text or aria-label="..." to <${tag}>.`,
+    });
+  }
+
+  // Match open+close with no content: <dads-button ...></dads-button>
+  for (const tag of elements) {
+    const emptyRe = new RegExp(`<(${tag})\\b([^<>]*?)>\\s*</${tag}>`, 'gi');
+    let em;
+    while ((em = emptyRe.exec(text))) {
+      const matchedTag = String(em[1] ?? '').toLowerCase();
+      const attrChunk = String(em[2] ?? '');
+      const attrs = parseAttributes(attrChunk);
+      const hasAriaLabel = attrs.some(({ name }) => name.toLowerCase() === 'aria-label');
+      if (hasAriaLabel) continue;
+
+      const tagOffset = em.index + 1;
+      const range = makeRange(lineStarts, tagOffset, tagOffset + matchedTag.length);
+      diagnostics.push({
+        file: filePath,
+        range,
+        severity,
+        code: 'emptyInteractiveElement',
+        message: `<${matchedTag}> appears empty. Add text content or aria-label for accessibility.`,
+        tagName: matchedTag,
+        hint: `Add visible text or aria-label="..." to <${matchedTag}>.`,
+      });
+    }
+  }
+
+  return diagnostics;
+}
+
+/**
+ * Hardcoded map of required attributes per form component (DIG-08).
+ * Only `label` for form inputs.
+ */
+const REQUIRED_ATTRIBUTES = new Map([
+  ['dads-input-text', ['label']],
+  ['dads-textarea', ['label']],
+  ['dads-select', ['label']],
+  ['dads-checkbox', ['label']],
+  ['dads-radio', ['label']],
+]);
+
+/**
+ * Detect missing required attributes on form elements.
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   prefix?: string;
+ *   severity?: string;
+ * }} params
+ */
+export function detectMissingRequiredAttributes({
+  filePath = '<input>',
+  text,
+  prefix = 'dads',
+  severity = 'error',
+}) {
+  const diagnostics = [];
+  const lineStarts = computeLineIndex(text);
+  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  let m;
+
+  // Build prefix-aware required map
+  const requiredMap = new Map();
+  for (const [tag, attrs] of REQUIRED_ATTRIBUTES.entries()) {
+    const p = prefix.toLowerCase();
+    const canonicalPrefix = 'dads';
+    const mappedTag = p !== canonicalPrefix ? tag.replace(canonicalPrefix, p) : tag;
+    requiredMap.set(mappedTag, attrs);
+  }
+
+  while ((m = tagRe.exec(text))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    const requiredAttrs = requiredMap.get(tag);
+    if (!requiredAttrs) continue;
+
+    const attrChunk = String(m[2] ?? '');
+    const attrs = parseAttributes(attrChunk);
+    const presentAttrs = new Set(attrs.map(({ name }) => name.toLowerCase()));
+
+    for (const required of requiredAttrs) {
+      if (!presentAttrs.has(required)) {
+        const tagOffset = m.index + 1;
+        const range = makeRange(lineStarts, tagOffset, tagOffset + tag.length);
+        diagnostics.push({
+          file: filePath,
+          range,
+          severity,
+          code: 'missingRequiredAttribute',
+          message: `<${tag}> requires attribute "${required}" for accessibility.`,
+          tagName: tag,
+          attrName: required,
+          hint: `Add ${required}="..." to <${tag}>.`,
+        });
+      }
     }
   }
 

@@ -2,14 +2,13 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 import {
-  LIST_COMPONENTS_PAGED_DEFAULT_LIMIT,
   MAX_TOOL_RESULT_BYTES,
   buildDesignTokenDetailPayload,
   buildAccessibilityIndex,
   buildComponentSummaries,
-  buildSummaryToolResponse,
   buildRelatedComponentMap,
   buildIndexes,
   buildJsonToolResponse,
@@ -26,6 +25,21 @@ const ROOT = path.resolve(__dirname, '../..');
 const DATA_DIR = path.join(ROOT, 'packages/mcp-server/data');
 const MAX_RESPONSE_BYTES = MAX_TOOL_RESULT_BYTES;
 const MAX_GUIDELINE_RESULTS = 20;
+const P95_THRESHOLD_MS = 1000;
+
+function timed(fn) {
+  const start = performance.now();
+  const result = fn();
+  const elapsed = performance.now() - start;
+  return { ...result, elapsedMs: elapsed };
+}
+
+function computeP95(values) {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const idx = Math.ceil(sorted.length * 0.95) - 1;
+  return sorted[Math.max(0, idx)];
+}
 
 async function loadJson(fileName) {
   const filePath = path.join(DATA_DIR, fileName);
@@ -102,8 +116,6 @@ function pickLargestListComponentsResponse(manifest) {
   const hugePrefix = 'x'.repeat(2000);
   const scenarios = [
     { label: 'list_components(default)', args: {} },
-    { label: 'list_components(mode=paged)', args: { mode: 'paged' } },
-    { label: 'list_components(mode=paged, limit=200)', args: { mode: 'paged', limit: 200 } },
     { label: 'list_components(all, prefix=huge)', args: { prefix: hugePrefix } },
     { label: 'list_components(limit=200)', args: { limit: 200 } },
     { label: 'list_components(query="a", limit=200)', args: { query: 'a', limit: 200 } },
@@ -114,22 +126,8 @@ function pickLargestListComponentsResponse(manifest) {
   let largest = { label: 'list_components', bytes: 0 };
 
   for (const scenario of scenarios) {
-    const responseMode = scenario.args.mode === 'paged' ? 'paged' : 'compat';
-    const effectiveLimit = Number.isInteger(scenario.args.limit)
-      ? scenario.args.limit
-      : (responseMode === 'paged' ? LIST_COMPONENTS_PAGED_DEFAULT_LIMIT : undefined);
-    const page = buildComponentSummaries(indexes, {
-      category: scenario.args.category,
-      query: scenario.args.query,
-      limit: effectiveLimit,
-      offset: scenario.args.offset,
-      prefix: scenario.args.prefix,
-    });
-    const payload = responseMode === 'paged' ? page : page.items;
-    const response = responseMode === 'paged'
-      ? buildJsonToolResponse(payload, { env: {} })
-      : toTextToolResponse(payload);
-    const bytes = toolResponseBytes(response);
+    const payload = buildComponentSummaries(indexes, scenario.args).items;
+    const bytes = toolResponseBytes(toTextToolResponse(payload));
     if (bytes > largest.bytes) {
       largest = { label: scenario.label, bytes };
     }
@@ -140,12 +138,8 @@ function pickLargestListComponentsResponse(manifest) {
 
 function getDesignTokensPayload(designTokens) {
   const tokens = Array.isArray(designTokens?.tokens) ? designTokens.tokens : [];
-  const total = tokens.length;
   return {
-    total,
-    limit: total,
-    offset: 0,
-    hasMore: false,
+    total: tokens.length,
     tokens,
     summary: designTokens?.summary,
     theme: {
@@ -247,49 +241,6 @@ function pickLargestGetComponentApiResponse(manifest, installRegistry, patternRe
   return largest;
 }
 
-function pickLargestGetComponentApiSummaryPayload(manifest, installRegistry, patternRegistry) {
-  const indexes = buildIndexes(manifest);
-  const hugePrefix = 'x'.repeat(2000);
-  const patterns =
-    patternRegistry?.patterns && typeof patternRegistry.patterns === 'object'
-      ? patternRegistry.patterns
-      : {};
-  const relatedMap = buildRelatedComponentMap(installRegistry, patterns);
-
-  let largestPayload = {};
-  let largestBytes = 0;
-
-  for (const decl of indexes.decls) {
-    const canonicalTag = typeof decl?.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
-    if (!canonicalTag) continue;
-    const modulePath = indexes.modulePathByTag.get(canonicalTag);
-
-    for (const prefix of [undefined, hugePrefix]) {
-      const payload = serializeApi(decl, modulePath, prefix);
-      const relatedComponents = getRelatedComponentsForTag({
-        canonicalTagName: canonicalTag,
-        installRegistry,
-        relatedMap,
-        prefix,
-      });
-      if (relatedComponents.length > 0) {
-        payload.relatedComponents = relatedComponents;
-      }
-      const accessibilityChecklist = extractAccessibilityChecklist(decl, { prefix });
-      if (accessibilityChecklist) {
-        payload.accessibilityChecklist = accessibilityChecklist;
-      }
-      const bytes = Buffer.byteLength(JSON.stringify(payload, null, 2), 'utf8');
-      if (bytes > largestBytes) {
-        largestBytes = bytes;
-        largestPayload = payload;
-      }
-    }
-  }
-
-  return largestPayload;
-}
-
 function pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex) {
   const indexes = buildIndexes(manifest);
   const hugePrefix = 'x'.repeat(2000);
@@ -348,39 +299,6 @@ function pickLargestGuidelineResponse(guidelinesIndex) {
   return largest;
 }
 
-function pickLargestSummaryResponse({
-  manifest,
-  installRegistry,
-  patternRegistry,
-  designTokens,
-  guidelinesIndex,
-}) {
-  const indexes = buildIndexes(manifest);
-  const api = pickLargestGetComponentApiSummaryPayload(manifest, installRegistry, patternRegistry);
-
-  const listComponentsPayload = buildComponentSummaries(indexes, {}).items;
-  const designTokensPayload = getDesignTokensPayload(designTokens);
-  const guidelinesPayload = searchGuidelinesPayload(guidelinesIndex, 'focus', 'all', MAX_GUIDELINE_RESULTS);
-
-  const scenarios = [
-    { label: 'list_components(summary=true)', payload: listComponentsPayload },
-    { label: 'get_component_api(summary=true)', payload: api },
-    { label: 'get_design_tokens(summary=true)', payload: designTokensPayload },
-    { label: 'search_guidelines(summary=true)', payload: guidelinesPayload },
-  ];
-
-  let largest = { label: 'summary_mode', bytes: 0 };
-  for (const scenario of scenarios) {
-    const response = buildSummaryToolResponse(scenario.label, scenario.payload, { env: {} });
-    const bytes = toolResponseBytes(response);
-    if (bytes > largest.bytes) {
-      largest = { label: scenario.label, bytes };
-    }
-  }
-
-  return largest;
-}
-
 async function main() {
   const [manifest, designTokens, guidelinesIndex, installRegistry, patternRegistry] = await Promise.all([
     loadJson('custom-elements.json'),
@@ -391,48 +309,40 @@ async function main() {
   ]);
 
   const checks = [
-    pickLargestListComponentsResponse(manifest),
-    pickLargestSearchIconsResponse(manifest),
-    pickLargestGetComponentApiResponse(manifest, installRegistry, patternRegistry),
-    {
+    timed(() => pickLargestListComponentsResponse(manifest)),
+    timed(() => pickLargestSearchIconsResponse(manifest)),
+    timed(() => pickLargestGetComponentApiResponse(manifest, installRegistry, patternRegistry)),
+    timed(() => ({
       label: 'get_design_tokens(all)',
       bytes: toolResponseBytes(buildJsonToolResponse(getDesignTokensPayload(designTokens), { env: {} })),
-    },
-    {
-      label: 'get_design_tokens(limit=200,offset=200)',
-      bytes: toolResponseBytes(buildJsonToolResponse({
-        ...getDesignTokensPayload(designTokens),
-        limit: 200,
-        offset: 200,
-        hasMore: true,
-        tokens: (Array.isArray(designTokens?.tokens) ? designTokens.tokens : []).slice(200, 400),
-      }, { env: {} })),
-    },
-    pickLargestGetDesignTokenDetailResponse(designTokens),
-    pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex),
-    pickLargestGuidelineResponse(guidelinesIndex),
-    pickLargestSummaryResponse({
-      manifest,
-      installRegistry,
-      patternRegistry,
-      designTokens,
-      guidelinesIndex,
-    }),
+    })),
+    timed(() => pickLargestGetDesignTokenDetailResponse(designTokens)),
+    timed(() => pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex)),
+    timed(() => pickLargestGuidelineResponse(guidelinesIndex)),
   ];
 
   let failed = false;
+
+  // Size checks
   for (const check of checks) {
     const status = check.bytes > MAX_RESPONSE_BYTES ? 'NG' : 'OK';
-    console.log(`${status} ${check.label}: ${formatKb(check.bytes)} (${check.bytes} bytes)`);
+    console.log(`${status} ${check.label}: ${formatKb(check.bytes)} (${check.bytes} bytes) [${check.elapsedMs.toFixed(1)}ms]`);
     if (status === 'NG') failed = true;
   }
 
+  // p95 latency check
+  const timings = checks.map((c) => c.elapsedMs);
+  const p95 = computeP95(timings);
+  const p95Status = p95 > P95_THRESHOLD_MS ? 'NG' : 'OK';
+  console.log(`\n${p95Status} p95 latency: ${p95.toFixed(1)}ms (threshold: ${P95_THRESHOLD_MS}ms)`);
+  if (p95Status === 'NG') failed = true;
+
   if (failed) {
-    console.error(`\nResponse size check failed: limit is ${MAX_RESPONSE_BYTES} bytes (100KB).`);
+    console.error(`\nResponse size/performance check failed.`);
     process.exit(1);
   }
 
-  console.log('\nResponse size check passed.');
+  console.log('\nResponse size and performance check passed.');
 }
 
 main().catch((error) => {

@@ -16,15 +16,9 @@ import { z } from 'zod';
 export const CANONICAL_PREFIX = 'dads';
 export const MAX_PREFIX_LENGTH = 64;
 export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
-export const HOT_RELOAD_ENABLE_FLAG = 'WCF_MCP_HOT_RELOAD';
-export const PERF_LOG_ENABLE_FLAG = 'WCF_MCP_PERF_LOG';
-export const TRANSPORT_NAME_ENV = 'WCF_MCP_TRANSPORT';
 export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
 export const EXPERIMENTAL_PLUGIN_NOTICE = '@experimental — API may change without notice.';
-export const SUMMARY_PREVIEW_MAX_CHARS = 2400;
-export const SUMMARY_INPUT_DESCRIPTION = 'Return markdown summary optimized for LLM reading (default: false)';
-export const LIST_COMPONENTS_PAGED_DEFAULT_LIMIT = 20;
-export const LIST_COMPONENTS_MODES = Object.freeze(['compat', 'paged']);
+export const PLUGIN_CONTRACT_VERSION = '1.0.0';
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
@@ -140,6 +134,33 @@ export const WCF_RESOURCE_URIS = Object.freeze({
   guidelinesTemplate: 'wcf://guidelines/{topic}',
   llmsFull: 'wcf://llms-full',
 });
+
+// Unidirectional synonym table: key → expands to include these terms (DIG-09)
+// Searching "keyboard" also matches "focus", "tab" etc. but NOT reverse.
+const SYNONYM_TABLE = new Map([
+  ['aria-live', ['role=alert', 'aria-describedby', 'live region', 'error text']],
+  ['keyboard', ['focus', 'tab', 'tabindex', 'key event', 'focus trap']],
+  ['contrast', ['color', 'wcag', 'color contrast']],
+  ['spacing', ['margin', 'padding', 'gap', 'spacing token']],
+  ['skip-navigation', ['skip-link', 'landmark', 'skip nav']],
+  ['heading', ['heading hierarchy', 'h1', 'heading level']],
+  ['form', ['input', 'validation', 'required', 'label']],
+]);
+
+export function expandQueryWithSynonyms(query) {
+  const q = String(query ?? '').toLowerCase().trim();
+  if (!q) return [q];
+  const terms = [q];
+  for (const [key, synonyms] of SYNONYM_TABLE) {
+    if (q.includes(key)) {
+      for (const syn of synonyms) {
+        if (!terms.includes(syn)) terms.push(syn);
+      }
+    }
+  }
+  return terms;
+}
+
 export const IDE_SETUP_TEMPLATES = Object.freeze([
   {
     ide: 'Claude Desktop',
@@ -193,18 +214,6 @@ export function isStructuredContentDisabled(env = process.env) {
   return STRUCTURED_CONTENT_DISABLE_TRUE_VALUES.has(raw);
 }
 
-function isTruthyEnvValue(value) {
-  return STRUCTURED_CONTENT_DISABLE_TRUE_VALUES.has(String(value ?? '').trim().toLowerCase());
-}
-
-export function isHotReloadEnabled(env = process.env) {
-  return isTruthyEnvValue(env?.[HOT_RELOAD_ENABLE_FLAG]);
-}
-
-export function isPerfLogEnabled(env = process.env) {
-  return isTruthyEnvValue(env?.[PERF_LOG_ENABLE_FLAG]);
-}
-
 export function toStructuredContent(data) {
   return {
     type: 'application/json',
@@ -213,14 +222,13 @@ export function toStructuredContent(data) {
 }
 
 export function measureToolResultBytes(result) {
-  const serialized = JSON.stringify(result ?? null);
-  return Buffer.byteLength(typeof serialized === 'string' ? serialized : 'null', 'utf8');
+  return Buffer.byteLength(JSON.stringify(result), 'utf8');
 }
 
-export function buildStructuredToolResponse(text, payload, { env = process.env } = {}) {
+export function buildJsonToolResponse(payload, { env = process.env } = {}) {
   const content = [{
     type: 'text',
-    text: String(text),
+    text: JSON.stringify(payload, null, 2),
   }];
 
   if (isStructuredContentDisabled(env)) {
@@ -238,222 +246,6 @@ export function buildStructuredToolResponse(text, payload, { env = process.env }
   }
 
   return withStructuredContent;
-}
-
-export function buildJsonToolResponse(payload, { env = process.env } = {}) {
-  return buildStructuredToolResponse(JSON.stringify(payload, null, 2), payload, { env });
-}
-
-function truncateTextToLimit(text, {
-  toolName,
-  maxBytes,
-  baseResponseWithoutText,
-}) {
-  const original = String(text ?? '');
-  const suffix = `\n\n[TRUNCATED: tool=${toolName} limitBytes=${maxBytes}]`;
-  let best = suffix;
-
-  let low = 0;
-  let high = original.length;
-
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2);
-    const candidate = `${original.slice(0, mid)}${suffix}`;
-    const bytes = measureToolResultBytes({
-      ...baseResponseWithoutText,
-      content: [{ type: 'text', text: candidate }],
-    });
-    if (bytes <= maxBytes) {
-      best = candidate;
-      low = mid + 1;
-    } else {
-      high = mid - 1;
-    }
-  }
-
-  return best;
-}
-
-export function enforceToolResultSize(result, { toolName, maxBytes = MAX_TOOL_RESULT_BYTES } = {}) {
-  const originalBytes = measureToolResultBytes(result);
-  if (originalBytes <= maxBytes) {
-    return {
-      result,
-      truncated: false,
-      originalBytes,
-      finalBytes: originalBytes,
-    };
-  }
-
-  const trimmedStructured = isPlainObject(result) && Object.prototype.hasOwnProperty.call(result, 'structuredContent')
-    ? { ...result }
-    : result;
-  if (isPlainObject(trimmedStructured) && Object.prototype.hasOwnProperty.call(trimmedStructured, 'structuredContent')) {
-    delete trimmedStructured.structuredContent;
-  }
-
-  const withoutStructuredBytes = measureToolResultBytes(trimmedStructured);
-  if (withoutStructuredBytes <= maxBytes) {
-    return {
-      result: {
-        ...trimmedStructured,
-        metadata: {
-          ...(isPlainObject(trimmedStructured?.metadata) ? trimmedStructured.metadata : {}),
-          truncation: {
-            applied: true,
-            strategy: 'dropStructuredContent',
-            originalBytes,
-            finalBytes: withoutStructuredBytes,
-            limitBytes: maxBytes,
-          },
-        },
-      },
-      truncated: true,
-      originalBytes,
-      finalBytes: withoutStructuredBytes,
-    };
-  }
-
-  const content = Array.isArray(trimmedStructured?.content) ? trimmedStructured.content : [];
-  const firstText = content.find((entry) => entry?.type === 'text' && typeof entry?.text === 'string');
-  if (!firstText) {
-    return {
-      result: trimmedStructured,
-      truncated: true,
-      originalBytes,
-      finalBytes: withoutStructuredBytes,
-    };
-  }
-
-  const baseResponse = {
-    ...(isPlainObject(trimmedStructured) ? trimmedStructured : {}),
-    content: [{ type: 'text', text: '' }],
-  };
-  const truncatedText = truncateTextToLimit(firstText.text, {
-    toolName: String(toolName ?? 'tool'),
-    maxBytes,
-    baseResponseWithoutText: baseResponse,
-  });
-
-  const nextResult = {
-    ...baseResponse,
-    content: [{ type: 'text', text: truncatedText }],
-    metadata: {
-      ...(isPlainObject(trimmedStructured?.metadata) ? trimmedStructured.metadata : {}),
-      truncation: {
-        applied: true,
-        strategy: 'truncateText',
-        originalBytes,
-        limitBytes: maxBytes,
-      },
-    },
-  };
-  let finalBytes = measureToolResultBytes(nextResult);
-  if (finalBytes > maxBytes) {
-    const adjustedText = truncateTextToLimit(firstText.text, {
-      toolName: String(toolName ?? 'tool'),
-      maxBytes,
-      baseResponseWithoutText: {
-        ...nextResult,
-        content: [{ type: 'text', text: '' }],
-      },
-    });
-    nextResult.content = [{ type: 'text', text: adjustedText }];
-    finalBytes = measureToolResultBytes(nextResult);
-  }
-  if (isPlainObject(nextResult.metadata) && isPlainObject(nextResult.metadata.truncation)) {
-    nextResult.metadata.truncation.finalBytes = finalBytes;
-  }
-
-  return {
-    result: nextResult,
-    truncated: true,
-    originalBytes,
-    finalBytes,
-  };
-}
-
-function logToolPerf(toolName, payload, { env = process.env } = {}) {
-  if (!isPerfLogEnabled(env)) return;
-  console.error(`[wcf-mcp][perf] ${JSON.stringify({
-    tool: toolName,
-    durationMs: Number(payload.durationMs.toFixed(2)),
-    bytes: payload.bytes,
-    originalBytes: payload.originalBytes,
-    truncated: payload.truncated,
-    cacheHit: payload.cacheHit ?? null,
-    transport: String(env?.[TRANSPORT_NAME_ENV] ?? 'unknown'),
-    isError: payload.isError === true,
-  })}`);
-}
-
-function buildSummaryPreviewText(payload) {
-  try {
-    const json = JSON.stringify(payload, null, 2);
-    if (json.length <= SUMMARY_PREVIEW_MAX_CHARS) return json;
-    return `${json.slice(0, SUMMARY_PREVIEW_MAX_CHARS)}\n...`;
-  } catch {
-    return String(payload);
-  }
-}
-
-function buildSummaryMetrics(payload) {
-  const metrics = [];
-
-  if (Array.isArray(payload)) {
-    metrics.push(`- items: ${payload.length}`);
-    return metrics;
-  }
-
-  if (!payload || typeof payload !== 'object') {
-    metrics.push(`- valueType: ${typeof payload}`);
-    return metrics;
-  }
-
-  const candidateCountKeys = [
-    'total',
-    'totalHits',
-    'totalDocuments',
-    'totalComponents',
-    'totalPatterns',
-  ];
-  for (const key of candidateCountKeys) {
-    if (typeof payload[key] === 'number') {
-      metrics.push(`- ${key}: ${payload[key]}`);
-    }
-  }
-
-  const arrayKeys = Object.keys(payload)
-    .filter((key) => Array.isArray(payload[key]))
-    .slice(0, 6);
-  for (const key of arrayKeys) {
-    metrics.push(`- ${key}: ${payload[key].length}`);
-  }
-
-  if (metrics.length === 0) {
-    metrics.push(`- objectKeys: ${Object.keys(payload).length}`);
-  }
-
-  return metrics;
-}
-
-export function buildSummaryMarkdown(toolName, payload) {
-  const title = String(toolName ?? 'tool').trim();
-  const lines = [`## ${title} summary`, ''];
-  lines.push(...buildSummaryMetrics(payload));
-  lines.push('', '### payload preview', '```json', buildSummaryPreviewText(payload), '```');
-  return lines.join('\n');
-}
-
-export function buildSummaryToolResponse(toolName, payload, { markdown, env = process.env } = {}) {
-  const text = typeof markdown === 'string' && markdown.trim() !== ''
-    ? markdown
-    : buildSummaryMarkdown(toolName, payload);
-  return buildStructuredToolResponse(text, payload, { env });
-}
-
-function summaryInputSchema() {
-  return z.boolean().optional().describe(SUMMARY_INPUT_DESCRIPTION);
 }
 
 export function normalizeTokenValue(value) {
@@ -721,14 +513,7 @@ export function buildDesignTokenDetailPayload(designTokensData, name, theme) {
   };
 }
 
-export function buildDesignTokensPayload(designTokensData, {
-  type,
-  category,
-  query,
-  theme,
-  limit,
-  offset,
-} = {}) {
+export function buildDesignTokensPayload(designTokensData, { type, category, query, theme } = {}) {
   if (!designTokensData) {
     return buildTokenErrorPayload(
       'DESIGN_TOKENS_DATA_UNAVAILABLE',
@@ -749,21 +534,11 @@ export function buildDesignTokensPayload(designTokensData, {
     tokens = tokens.filter((t) => String(t.name ?? '').toLowerCase().includes(q));
   }
 
-  const hasLimit = Number.isInteger(limit);
-  const pageSize = hasLimit ? Math.max(1, Math.min(limit, 500)) : undefined;
-  const pageOffset = Number.isInteger(offset) ? Math.max(0, offset) : 0;
-  const total = tokens.length;
-  const pagedTokens = tokens.slice(pageOffset, hasLimit ? pageOffset + pageSize : undefined);
-  const responseLimit = hasLimit ? pageSize : total;
-
   return {
     isError: false,
     payload: {
-      total,
-      limit: responseLimit,
-      offset: pageOffset,
-      hasMore: pageOffset + pagedTokens.length < total,
-      tokens: pagedTokens,
+      total: tokens.length,
+      tokens,
       summary: designTokensData.summary,
       theme: {
         requested: themeInfo.requested,
@@ -783,7 +558,7 @@ function toPluginErrorMessage(name, reason) {
 }
 
 /**
- * @experimental — API may change without notice.
+ * Plugin contract v1 — stable interface. See docs/plugin-contract-v1.md.
  * @typedef {{
  *   fileName: string,
  *   path: string,
@@ -791,18 +566,18 @@ function toPluginErrorMessage(name, reason) {
  */
 
 /**
- * @experimental — API may change without notice.
+ * Plugin contract v1 — stable interface. See docs/plugin-contract-v1.md.
  * @typedef {{
  *   name: string,
  *   description?: string,
  *   inputSchema?: Record<string, unknown>,
- *   handler?: Function,
+ *   handler?: (args: Record<string, unknown>, context: { plugin: { name: string, version: string }, helpers: { loadJsonData: Function } }) => unknown,
  *   staticPayload?: unknown,
  * }} WcfMcpPluginTool
  */
 
 /**
- * @experimental — API may change without notice.
+ * Plugin contract v1 — stable interface. See docs/plugin-contract-v1.md.
  * @typedef {{
  *   name: string,
  *   version: string,
@@ -1186,16 +961,27 @@ export function findDeclByComponentId(indexes, componentIdRaw) {
   return undefined;
 }
 
-export function applyPrefixToCemIndex(cemIndex, prefix) {
+/**
+ * Generic helper: remap tag-keyed Map to a different prefix.
+ * Used by validate_markup to build prefix-aware CEM/enum/slot maps.
+ */
+export function applyPrefixToTagMap(map, prefix) {
   const p = normalizePrefix(prefix);
-  if (p === CANONICAL_PREFIX) return cemIndex;
+  if (p === CANONICAL_PREFIX) return map;
 
   const out = new Map();
-  for (const [tag, meta] of cemIndex.entries()) {
-    const nextTag = withPrefix(tag, p);
-    out.set(nextTag, meta);
+  for (const [tag, value] of map.entries()) {
+    out.set(withPrefix(tag, p), value);
   }
   return out;
+}
+
+function mergeWithPrefixed(canonicalMap, prefix) {
+  const prefixed = applyPrefixToTagMap(canonicalMap, prefix);
+  if (prefixed === canonicalMap) return canonicalMap;
+  const combined = new Map(canonicalMap);
+  for (const [k, v] of prefixed.entries()) combined.set(k, v);
+  return combined;
 }
 
 export function applyPrefixToHtml(html, prefix) {
@@ -1240,7 +1026,8 @@ export function resolveComponentClosure({ installRegistry }, componentIds) {
 export function buildComponentSummaries(indexes, { category, query, limit, offset, prefix } = {}) {
   const p = normalizePrefix(prefix);
   const q = typeof query === 'string' ? query.trim().toLowerCase() : '';
-  const pageSize = Number.isInteger(limit) ? Math.max(1, Math.min(limit, 200)) : Number.MAX_SAFE_INTEGER;
+  const limitExplicit = Number.isInteger(limit);
+  const pageSize = limitExplicit ? Math.max(1, Math.min(limit, 200)) : 20;
   const pageOffset = Number.isInteger(offset) ? Math.max(0, offset) : 0;
 
   let items = indexes.decls.map(({ decl, tagName, modulePath }) => ({
@@ -1271,13 +1058,20 @@ export function buildComponentSummaries(indexes, { category, query, limit, offse
   const total = items.length;
   const paged = items.slice(pageOffset, pageOffset + pageSize);
 
-  return {
+  const result = {
     total,
     limit: pageSize,
     offset: pageOffset,
     hasMore: pageOffset + paged.length < total,
     items: paged,
   };
+
+  // DIG-19: Add migration notice when limit is not explicitly provided
+  if (!limitExplicit && total > pageSize) {
+    result._notice = 'Default pagination changed to 20 items. Set limit:200 for all results.';
+  }
+
+  return result;
 }
 
 export function parseIconNamesFromDescription(description) {
@@ -1604,7 +1398,7 @@ export function queryAccessibilityIndex(
 }
 
 function buildComponentsResourcePayload(indexes) {
-  const page = buildComponentSummaries(indexes, {});
+  const page = buildComponentSummaries(indexes, { limit: 200 });
   const componentsByCategory = {};
   for (const item of page.items) {
     const category = String(item?.category ?? 'Other');
@@ -1732,7 +1526,50 @@ function resolveDeclByComponent(indexes, component, prefix) {
     };
   }
 
-  return findDeclByComponentId(indexes, component);
+  const byComponentId = findDeclByComponentId(indexes, component);
+  if (byComponentId) return byComponentId;
+
+  // Auto-prefix: try with canonical prefix if bare name was given (DIG-15)
+  const comp = typeof component === 'string' ? component.trim().toLowerCase() : '';
+  const p = normalizePrefix(prefix);
+  if (comp && !comp.startsWith(p)) {
+    const prefixed = `${p}-${comp}`;
+    const byPrefixed = pickDecl(indexes, { tagName: prefixed, prefix: p });
+    if (byPrefixed) {
+      const canonicalTag = typeof byPrefixed.tagName === 'string' ? byPrefixed.tagName.toLowerCase() : undefined;
+      return {
+        decl: byPrefixed,
+        modulePath: canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined,
+      };
+    }
+  }
+
+  return undefined;
+}
+
+function buildComponentNotFoundError(component, indexes, prefix) {
+  const comp = typeof component === 'string' ? component.trim() : '';
+  const p = normalizePrefix(prefix);
+  const suggestions = [];
+
+  // Try suggesting with prefix
+  if (comp && !comp.toLowerCase().startsWith(p)) {
+    const prefixed = `${p}-${comp.toLowerCase()}`;
+    if (indexes.byTag.has(prefixed)) {
+      suggestions.push(prefixed);
+    }
+  }
+
+  // Levenshtein-based suggestion
+  const suggested = suggestUnknownElementTagName(comp.includes('-') ? comp : `${p}${comp}`, indexes.byTag);
+  if (suggested && !suggestions.includes(suggested)) {
+    suggestions.push(suggested);
+  }
+
+  const msg = suggestions.length > 0
+    ? `Component not found: ${comp}. Did you mean: ${suggestions.join(', ')}?`
+    : `Component not found: ${comp}`;
+  return { content: [{ type: 'text', text: msg }], isError: true };
 }
 
 // ---------------------------------------------------------------------------
@@ -1778,8 +1615,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     validateTextAgainstCem,
     detectTokenMisuseInInlineStyles = () => [],
     detectAccessibilityMisuseInMarkup = () => [],
+    buildEnumAttributeMap = () => new Map(),
+    detectEnumValueMisuse = () => [],
+    buildSlotNameMap = () => new Map(),
+    detectInvalidSlotName = () => [],
+    detectMissingRequiredAttributes = () => [],
+    detectOrphanedChildComponents = () => [],
+    detectEmptyInteractiveElement = () => [],
   } = await loadValidator();
   const canonicalCemIndex = collectCemCustomElements(manifest);
+  const canonicalEnumMap = buildEnumAttributeMap(manifest);
+  const canonicalSlotMap = buildSlotNameMap(manifest);
   const installRegistry = await loadJson('install-registry.json');
   const patternRegistry = await loadJson('pattern-registry.json');
   const { patterns } = loadPatternRegistryShape(patternRegistry);
@@ -1806,96 +1652,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     // llms-full.txt may not exist in local setup
   }
 
-  let tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
-  const hotReloadEnabled = isHotReloadEnabled();
-  const optionalDataSignatures = {
-    designTokens: JSON.stringify(designTokensData ?? null),
-    guidelines: JSON.stringify(guidelinesIndexData ?? null),
-    llmsFull: typeof llmsFullText === 'string' ? llmsFullText : '',
-  };
-
-  const refreshOptionalData = async () => {
-    if (!hotReloadEnabled) {
-      return { cacheHit: null };
-    }
-    let changed = false;
-
-    try {
-      const nextDesignTokens = await loadJson('design-tokens.json');
-      const nextSignature = JSON.stringify(nextDesignTokens ?? null);
-      if (nextSignature !== optionalDataSignatures.designTokens) {
-        optionalDataSignatures.designTokens = nextSignature;
-        designTokensData = nextDesignTokens;
-        tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
-        changed = true;
-      }
-    } catch {
-      // Keep current snapshot when data file is unavailable.
-    }
-
-    try {
-      const nextGuidelines = await loadJson('guidelines-index.json');
-      const nextSignature = JSON.stringify(nextGuidelines ?? null);
-      if (nextSignature !== optionalDataSignatures.guidelines) {
-        optionalDataSignatures.guidelines = nextSignature;
-        guidelinesIndexData = nextGuidelines;
-        changed = true;
-      }
-    } catch {
-      // Keep current snapshot when data file is unavailable.
-    }
-
-    try {
-      const nextLlmsText = await loadText('llms-full.txt');
-      if (nextLlmsText !== optionalDataSignatures.llmsFull) {
-        optionalDataSignatures.llmsFull = nextLlmsText;
-        llmsFullText = nextLlmsText;
-        changed = true;
-      }
-    } catch {
-      // Keep current snapshot when data file is unavailable.
-    }
-
-    return { cacheHit: !changed };
-  };
+  const tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
-    version: '0.1.1',
+    version: '0.2.0',
   });
-
-  const registerTool = (name, config, handler) => server.registerTool(
-    name,
-    config,
-    async (args, extra) => {
-      const startedAt = process.hrtime.bigint();
-      try {
-        const rawResult = await handler(args, extra);
-        const sized = enforceToolResultSize(rawResult, { toolName: name });
-        const durationMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
-        logToolPerf(name, {
-          durationMs,
-          bytes: sized.finalBytes,
-          originalBytes: sized.originalBytes,
-          truncated: sized.truncated,
-          cacheHit: null,
-          isError: sized.result?.isError === true,
-        });
-        return sized.result;
-      } catch (error) {
-        const durationMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
-        logToolPerf(name, {
-          durationMs,
-          bytes: 0,
-          originalBytes: 0,
-          truncated: false,
-          cacheHit: null,
-          isError: true,
-        });
-        throw error;
-      }
-    },
-  );
 
   server.registerPrompt(
     FIGMA_TO_WCF_PROMPT,
@@ -1948,7 +1710,6 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       mimeType: 'application/json',
     },
     async () => {
-      await refreshOptionalData();
       const result = buildTokensResourcePayload(designTokensData);
       const payload = result.isError ? { error: result.error } : result.payload;
       return {
@@ -1984,7 +1745,6 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       mimeType: 'application/json',
     },
     async (_uri, variables) => {
-      await refreshOptionalData();
       const topic = String(variables?.topic ?? '').trim().toLowerCase();
       const result = buildGuidelinesResourcePayload(guidelinesIndexData, topic);
       if (result.isError) {
@@ -2009,7 +1769,6 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       mimeType: 'text/plain',
     },
     async () => {
-      await refreshOptionalData();
       if (typeof llmsFullText !== 'string' || llmsFullText.length === 0) {
         throw new Error('LLMS_FULL_UNAVAILABLE: llms-full.txt is not available.');
       }
@@ -2026,19 +1785,14 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_design_system_overview
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'get_design_system_overview',
     {
       description:
-        '**MUST be called first before using any other tool.** ' +
-        'When: starting a session and deciding which tools/resources/prompts to use next. ' +
-        'Returns: high-level overview of components, patterns, IDE templates, resources, prompts, and recommended workflow. ' +
-        'After: call list/search/detail tools in the recommended order.',
-      inputSchema: {
-        summary: summaryInputSchema(),
-      },
+        '**MUST be called first before using any other tool.** Returns a high-level overview of the design system: name, version, component count by category, available patterns, and recommended tool workflow. Use this to understand what is available before diving into specifics.',
+      inputSchema: {},
     },
-    async ({ summary }) => {
+    async () => {
       const categoryCount = {};
       for (const { tagName } of indexes.decls) {
         const cat = getCategory(tagName);
@@ -2052,12 +1806,19 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
       const overview = {
         name: 'DADS Web Components (wcf)',
-        version: '0.1.1',
+        version: '0.2.0',
         prefix: CANONICAL_PREFIX,
         totalComponents: indexes.decls.length,
         componentsByCategory: categoryCount,
         totalPatterns: patternList.length,
         patterns: patternList,
+        setupInfo: {
+          npmPackage: 'web-components-factory',
+          installCommand: 'npm install web-components-factory',
+          vendorRuntimePath: 'vendor-runtime/',
+          htmlBoilerplate: '<script type="module" src="vendor-runtime/src/autoload.js"></script>',
+          noscriptGuidance: 'WCF components require JavaScript. Provide <noscript> fallback with static HTML equivalents for critical content.',
+        },
         ideSetupTemplates: IDE_SETUP_TEMPLATES,
         availablePrompts: [
           {
@@ -2140,10 +1901,6 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         }
       }
 
-      if (summary === true) {
-        return buildSummaryToolResponse('get_design_system_overview', overview);
-      }
-
       return {
         content: [{ type: 'text', text: JSON.stringify(overview, null, 2) }],
       };
@@ -2153,43 +1910,32 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: list_components
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'list_components',
     {
       description:
-        'List custom elements in the design system. When: exploring available components, searching by keyword, or paging through results. Returns: compat mode gives array<{tagName, className, description, category}>; paged mode gives {total, limit, offset, hasMore, items}. After: use get_component_api for details on a specific component.',
+        'List custom elements in the design system. When: exploring available components, searching by keyword, or paging through results. Returns: array of {tagName, className, description, category}. After: use get_component_api for details on a specific component.',
       inputSchema: {
         category: z
           .enum(['Form', 'Actions', 'Navigation', 'Content', 'Display', 'Layout', 'Other'])
           .optional()
           .describe('Filter by component category'),
         query: z.string().optional().describe('Search by tagName/className/description/category/modulePath'),
-        limit: z.number().int().min(1).max(200).optional().describe('Maximum items to return (optional; omit for all results)'),
+        limit: z.number().int().min(1).max(200).optional().describe('Maximum items to return (default: 20; set 200 for all results)'),
         offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
-        mode: z.enum(LIST_COMPONENTS_MODES).optional().describe('Response mode (compat|paged). paged defaults to limit=20'),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ category, query, limit, offset, mode, prefix, summary }) => {
-      const responseMode = mode === 'paged' ? 'paged' : 'compat';
-      const effectiveLimit = Number.isInteger(limit)
-        ? limit
-        : (responseMode === 'paged' ? LIST_COMPONENTS_PAGED_DEFAULT_LIMIT : undefined);
-      const page = buildComponentSummaries(indexes, {
-        category,
-        query,
-        limit: effectiveLimit,
-        offset,
-        prefix,
-      });
-      const payload = responseMode === 'paged' ? page : page.items;
-      if (summary === true) {
-        return buildSummaryToolResponse('list_components', payload);
-      }
-      if (responseMode === 'paged') {
-        return buildJsonToolResponse(payload);
-      }
+    async ({ category, query, limit, offset, prefix }) => {
+      const page = buildComponentSummaries(indexes, { category, query, limit, offset, prefix });
+      const payload = {
+        items: page.items,
+        total: page.total,
+        limit: page.limit,
+        offset: page.offset,
+        hasMore: page.hasMore,
+      };
+      if (page._notice) payload._notice = page._notice;
       return {
         content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
       };
@@ -2199,7 +1945,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: search_icons
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'search_icons',
     {
       description:
@@ -2209,14 +1955,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         limit: z.number().int().min(1).max(100).optional().describe('Maximum items to return (default: 20)'),
         offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ query, limit, offset, prefix, summary }) => {
+    async ({ query, limit, offset, prefix }) => {
       const payload = searchIconCatalog(indexes, { query, limit, offset, prefix });
-      if (summary === true) {
-        return buildSummaryToolResponse('search_icons', payload);
-      }
       return {
         content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
       };
@@ -2226,34 +1968,40 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_component_api
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'get_component_api',
     {
       description:
         'Get the full API surface of a single component (attributes, slots, events, CSS parts, CSS custom properties). When: you need detailed specs for a component. Returns: complete component specification. After: use generate_usage_snippet for a code example.',
       inputSchema: {
-        tagName: z.string().optional(),
-        className: z.string().optional(),
+        tagName: z.string().optional().describe('Tag name (e.g., "dads-button")'),
+        className: z.string().optional().describe('Class name (e.g., "DadsButton")'),
+        component: z.string().optional().describe('Any identifier: tagName, className, or bare name (e.g., "button")'),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ tagName, className, prefix, summary }) => {
-      const decl = pickDecl(indexes, { tagName, className, prefix });
+    async ({ tagName, className, component, prefix }) => {
+      const p = normalizePrefix(prefix);
+      let decl;
+      let modulePath;
+
+      if (component) {
+        const resolved = resolveDeclByComponent(indexes, component, p);
+        decl = resolved?.decl;
+        modulePath = resolved?.modulePath;
+      } else {
+        decl = pickDecl(indexes, { tagName, className, prefix: p });
+      }
+
       if (!decl) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `Component not found (tagName=${String(tagName ?? '')}, className=${String(className ?? '')})`,
-            },
-          ],
-          isError: true,
-        };
+        const identifier = component || tagName || className || '';
+        return buildComponentNotFoundError(identifier, indexes, p);
       }
 
       const canonicalTag = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
-      const modulePath = canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined;
+      if (!modulePath) {
+        modulePath = canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined;
+      }
       const api = serializeApi(decl, modulePath, prefix);
       const relatedComponents = getRelatedComponentsForTag({
         canonicalTagName: canonicalTag,
@@ -2269,9 +2017,6 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         api.accessibilityChecklist = accessibilityChecklist;
       }
 
-      if (summary === true) {
-        return buildSummaryToolResponse('get_component_api', api);
-      }
       return buildJsonToolResponse(api);
     },
   );
@@ -2279,58 +2024,29 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: generate_usage_snippet
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'generate_usage_snippet',
     {
       description:
-        'Generate a minimal HTML usage example for a component. ' +
-        'When: you need a quick code snippet to start with. ' +
-        'Returns: ready-to-use HTML string with key attributes pre-filled. ' +
-        'After: run validate_markup on the generated HTML.',
+        'Generate a minimal HTML usage example for a component. When: you need a quick code snippet to start with. Returns: ready-to-use HTML string with key attributes pre-filled.',
       inputSchema: {
         component: z.string(),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ component, prefix, summary }) => {
-      const decl =
-        pickDecl(indexes, { tagName: component, prefix }) ??
-        pickDecl(indexes, { className: component, prefix });
+    async ({ component, prefix }) => {
+      const p = normalizePrefix(prefix);
+      const resolved = resolveDeclByComponent(indexes, component, p);
+      const decl = resolved?.decl;
 
       if (!decl) {
-        return {
-          content: [{ type: 'text', text: `Component not found: ${component}` }],
-          isError: true,
-        };
+        return buildComponentNotFoundError(component, indexes, p);
       }
 
       const canonicalTag = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
-      const modulePath = canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined;
+      const modulePath = resolved?.modulePath ?? (canonicalTag ? indexes.modulePathByTag.get(canonicalTag) : undefined);
       const api = serializeApi(decl, modulePath, prefix);
       const snippet = generateSnippet(api, prefix);
-
-      if (summary === true) {
-        return buildSummaryToolResponse(
-          'generate_usage_snippet',
-          {
-            component: api.tagName,
-            snippet,
-          },
-          {
-            markdown: [
-              '## generate_usage_snippet summary',
-              '',
-              `- component: ${api.tagName}`,
-              '',
-              '### snippet',
-              '```html',
-              snippet,
-              '```',
-            ].join('\n'),
-          },
-        );
-      }
 
       return {
         content: [{ type: 'text', text: snippet }],
@@ -2341,21 +2057,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_install_recipe
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'get_install_recipe',
     {
       description:
-        'Get installation instructions and dependency tree for a component. ' +
-        'When: setting up a component in a project. ' +
-        'Returns: componentId, dependencies, import statements, and CLI command (wcf add). ' +
-        'After: install dependencies and run validate_markup with the usage snippet.',
+        'Get installation instructions and dependency tree for a component. When: setting up a component in a project. Returns: componentId, dependencies, import statements, and CLI command (wcf add).',
       inputSchema: {
         component: z.string(),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ component, prefix, summary }) => {
+    async ({ component, prefix }) => {
       const p = normalizePrefix(prefix);
       const resolved = resolveDeclByComponent(indexes, component, p);
       const decl = resolved?.decl;
@@ -2390,6 +2102,11 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const deps = Array.isArray(install.deps) ? install.deps : [];
       const tags = Array.isArray(install.tags) ? install.tags : [];
 
+      // Resolve transitive dependencies via BFS
+      const transitiveDeps = componentId
+        ? resolveComponentClosure({ installRegistry }, [componentId]).filter((id) => id !== componentId)
+        : [];
+
       const tagNames =
         tags.length > 0 ? tags.map((t) => withPrefix(String(t).toLowerCase(), p)) : [api.tagName];
 
@@ -2403,26 +2120,25 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
             .join('\n')
         : undefined;
 
-      const payload = {
-        componentId,
-        tagNames,
-        deps,
-        define,
-        defineHint,
-        source: install.source,
-        usageSnippet,
-        installHint: componentId ? `wcf add ${componentId}` : undefined,
-      };
-
-      if (summary === true) {
-        return buildSummaryToolResponse('get_install_recipe', payload);
-      }
-
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(payload, null, 2),
+            text: JSON.stringify(
+              {
+                componentId,
+                tagNames,
+                deps,
+                transitiveDeps,
+                define,
+                defineHint,
+                source: install.source,
+                usageSnippet,
+                installHint: componentId ? `wcf add ${componentId}` : undefined,
+              },
+              null,
+              2,
+            ),
           },
         ],
       };
@@ -2432,28 +2148,25 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: validate_markup
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'validate_markup',
     {
       description:
-        'Validate HTML against the design system Custom Elements Manifest. ' +
-        'When: checking generated or written HTML for correctness. ' +
-        'Returns: diagnostics array with errors (unknown elements), warnings (unknown attributes/token misuse/accessibility misuse), and optional suggestion text for quick recovery. ' +
-        'After: apply fixes and rerun validation until diagnostics are acceptable.',
+        'Validate HTML against the design system Custom Elements Manifest. When: checking generated or written HTML for correctness. Returns: diagnostics array with errors (unknown elements/invalid enum values/invalid slot names/missing required attributes), warnings (unknown attributes/token misuse/accessibility misuse/orphaned children/empty interactive elements), and optional suggestion text for quick recovery. Use after generating HTML to catch mistakes.',
       inputSchema: {
         html: z.string(),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ html, prefix, summary }) => {
+    async ({ html, prefix }) => {
       const p = normalizePrefix(prefix);
       let cemIndex = canonicalCemIndex;
+      let enumMap = canonicalEnumMap;
+      let slotMap = canonicalSlotMap;
       if (p !== CANONICAL_PREFIX) {
-        const combined = new Map(canonicalCemIndex);
-        const prefixed = applyPrefixToCemIndex(canonicalCemIndex, p);
-        for (const [tag, meta] of prefixed.entries()) combined.set(tag, meta);
-        cemIndex = combined;
+        cemIndex = mergeWithPrefixed(canonicalCemIndex, p);
+        enumMap = mergeWithPrefixed(canonicalEnumMap, p);
+        slotMap = mergeWithPrefixed(canonicalSlotMap, p);
       }
 
       const cemDiagnostics = validateTextAgainstCem({
@@ -2464,6 +2177,13 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           unknownElement: 'error',
           unknownAttribute: 'warning',
         },
+      });
+
+      const enumDiagnostics = detectEnumValueMisuse({
+        filePath: '<markup>',
+        text: html,
+        enumMap,
+        severity: 'error',
       });
 
       const tokenMisuseDiagnostics = detectTokenMisuseInInlineStyles({
@@ -2479,7 +2199,35 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         severity: 'warning',
       });
 
-      const diagnostics = [...cemDiagnostics, ...tokenMisuseDiagnostics, ...accessibilityDiagnostics].map((d) => {
+      const slotDiagnostics = detectInvalidSlotName({
+        filePath: '<markup>',
+        text: html,
+        slotMap,
+        severity: 'error',
+      });
+
+      const requiredAttrDiagnostics = detectMissingRequiredAttributes({
+        filePath: '<markup>',
+        text: html,
+        prefix: p,
+        severity: 'error',
+      });
+
+      const orphanDiagnostics = detectOrphanedChildComponents({
+        filePath: '<markup>',
+        text: html,
+        prefix: p,
+        severity: 'warning',
+      });
+
+      const emptyInteractiveDiagnostics = detectEmptyInteractiveElement({
+        filePath: '<markup>',
+        text: html,
+        prefix: p,
+        severity: 'warning',
+      });
+
+      const diagnostics = [...cemDiagnostics, ...enumDiagnostics, ...slotDiagnostics, ...requiredAttrDiagnostics, ...orphanDiagnostics, ...emptyInteractiveDiagnostics, ...tokenMisuseDiagnostics, ...accessibilityDiagnostics].map((d) => {
         const suggestion = buildDiagnosticSuggestion({ diagnostic: d, cemIndex });
         return {
           file: d.file,
@@ -2494,12 +2242,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         };
       });
 
-      const payload = { diagnostics };
-      if (summary === true) {
-        return buildSummaryToolResponse('validate_markup', payload);
-      }
       return {
-        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
+        content: [{ type: 'text', text: JSON.stringify({ diagnostics }, null, 2) }],
       };
     },
   );
@@ -2507,26 +2251,20 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: list_patterns
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'list_patterns',
     {
       description:
         'List available UI composition patterns (page recipes). When: looking for pre-built page layouts or UI compositions. Returns: array of {id, title, description, requires}. After: use get_pattern_recipe for full details including dependency resolution.',
-      inputSchema: {
-        summary: summaryInputSchema(),
-      },
+      inputSchema: {},
     },
-    async ({ summary }) => {
+    async () => {
       const list = Object.values(patterns).map((p) => ({
         id: p?.id,
         title: p?.title,
         description: p?.description,
         requires: p?.requires,
       }));
-
-      if (summary === true) {
-        return buildSummaryToolResponse('list_patterns', list);
-      }
 
       return {
         content: [{ type: 'text', text: JSON.stringify(list, null, 2) }],
@@ -2537,7 +2275,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_pattern_recipe
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'get_pattern_recipe',
     {
       description:
@@ -2545,10 +2283,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       inputSchema: {
         patternId: z.string(),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ patternId, prefix, summary }) => {
+    async ({ patternId, prefix }) => {
       const id = String(patternId ?? '').trim();
       const p = normalizePrefix(prefix);
       const pat = patterns[id];
@@ -2579,30 +2316,28 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const canonicalHtml = String(pat.html ?? '');
       const html = applyPrefixToHtml(canonicalHtml, p);
 
-      const payload = {
-        pattern: {
-          id: pat.id,
-          title: pat.title,
-          description: pat.description,
-        },
-        prefix: p,
-        requires,
-        components: closure,
-        install,
-        html,
-        canonicalHtml,
-        installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
-      };
-
-      if (summary === true) {
-        return buildSummaryToolResponse('get_pattern_recipe', payload);
-      }
-
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(payload, null, 2),
+            text: JSON.stringify(
+              {
+                pattern: {
+                  id: pat.id,
+                  title: pat.title,
+                  description: pat.description,
+                },
+                prefix: p,
+                requires,
+                components: closure,
+                install,
+                html,
+                canonicalHtml,
+                installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
+              },
+              null,
+              2,
+            ),
           },
         ],
       };
@@ -2612,21 +2347,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: generate_pattern_snippet
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'generate_pattern_snippet',
     {
       description:
-        'Generate just the HTML snippet for a pattern without dependency info. ' +
-        'When: you only need the markup. ' +
-        'Returns: HTML string with prefix applied. ' +
-        'After: use get_pattern_recipe when you also need dependency/install information.',
+        'Generate just the HTML snippet for a pattern without dependency info. When: you only need the markup. Returns: HTML string with prefix applied. For full dependency resolution, use get_pattern_recipe instead.',
       inputSchema: {
         patternId: z.string(),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ patternId, prefix, summary }) => {
+    async ({ patternId, prefix }) => {
       const id = String(patternId ?? '').trim();
       const p = normalizePrefix(prefix);
       const pat = patterns[id];
@@ -2637,28 +2368,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         };
       }
 
-      const snippet = applyPrefixToHtml(String(pat.html ?? ''), p);
-      if (summary === true) {
-        return buildSummaryToolResponse(
-          'generate_pattern_snippet',
-          { patternId: id, prefix: p, snippet },
-          {
-            markdown: [
-              '## generate_pattern_snippet summary',
-              '',
-              `- patternId: ${id}`,
-              `- prefix: ${p}`,
-              '',
-              '### snippet',
-              '```html',
-              snippet,
-              '```',
-            ].join('\n'),
-          },
-        );
-      }
       return {
-        content: [{ type: 'text', text: snippet }],
+        content: [{ type: 'text', text: applyPrefixToHtml(String(pat.html ?? ''), p) }],
       };
     },
   );
@@ -2666,7 +2377,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_design_tokens
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'get_design_tokens',
     {
       description:
@@ -2681,33 +2392,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           .describe('Filter by token category'),
         query: z.string().optional()
           .describe('Search token names (partial match)'),
-        limit: z.number().int().min(1).max(500).optional()
-          .describe('Maximum tokens to return (optional; omit for all matched tokens)'),
-        offset: z.number().int().min(0).optional()
-          .describe('Pagination offset (default: 0)'),
         theme: z.enum(['light', 'dark', 'all']).optional()
           .describe('Theme filter (currently light only; dark/all return an error due to NG-06)'),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ type, category, query, limit, offset, theme, summary }) => {
-      await refreshOptionalData();
-      const { isError, payload } = buildDesignTokensPayload(designTokensData, {
-        type,
-        category,
-        query,
-        limit,
-        offset,
-        theme,
-      });
+    async ({ type, category, query, theme }) => {
+      const { isError, payload } = buildDesignTokensPayload(designTokensData, { type, category, query, theme });
       if (isError) {
         return {
           content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
           isError: true,
         };
-      }
-      if (summary === true) {
-        return buildSummaryToolResponse('get_design_tokens', payload);
       }
       return buildJsonToolResponse(payload);
     },
@@ -2716,7 +2411,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_design_token_detail
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'get_design_token_detail',
     {
       description:
@@ -2729,20 +2424,15 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           .describe('Token name or css variable (e.g. --color-primary or var(--color-primary))'),
         theme: z.enum(['light', 'dark', 'all']).optional()
           .describe('Theme selector (currently only light is supported due to NG-06)'),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ name, theme, summary }) => {
-      await refreshOptionalData();
+    async ({ name, theme }) => {
       const { isError, payload } = buildDesignTokenDetailPayload(designTokensData, name, theme);
       if (isError) {
         return {
           content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
           isError: true,
         };
-      }
-      if (summary === true) {
-        return buildSummaryToolResponse('get_design_token_detail', payload);
       }
       return buildJsonToolResponse(payload);
     },
@@ -2751,7 +2441,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: get_accessibility_docs
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'get_accessibility_docs',
     {
       description:
@@ -2769,11 +2459,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         maxResults: z.number().int().min(1).max(100).optional()
           .describe('Maximum results to return (default: 20)'),
         prefix: z.string().optional(),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ component, topic, wcagLevel, maxResults, prefix, summary }) => {
-      await refreshOptionalData();
+    async ({ component, topic, wcagLevel, maxResults, prefix }) => {
       const p = normalizePrefix(prefix);
       let componentTagName;
 
@@ -2811,9 +2499,6 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         results: result.results,
       };
 
-      if (summary === true) {
-        return buildSummaryToolResponse('get_accessibility_docs', payload);
-      }
       return buildJsonToolResponse(payload);
     },
   );
@@ -2821,7 +2506,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   // -----------------------------------------------------------------------
   // Tool: search_guidelines
   // -----------------------------------------------------------------------
-  registerTool(
+  server.registerTool(
     'search_guidelines',
     {
       description:
@@ -2835,11 +2520,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           .describe('Filter by topic area'),
         maxResults: z.number().int().min(1).max(20).optional()
           .describe('Maximum results to return (1-20, default: 5)'),
-        summary: summaryInputSchema(),
       },
     },
-    async ({ query, topic, maxResults, summary }) => {
-      await refreshOptionalData();
+    async ({ query, topic, maxResults }) => {
       if (!guidelinesIndexData) {
         return {
           content: [{ type: 'text', text: 'Guidelines index not available. Run: npm run mcp:index-guidelines' }],
@@ -2850,6 +2533,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const max = maxResults ?? 5;
       const documents = Array.isArray(guidelinesIndexData.documents) ? guidelinesIndexData.documents : [];
       const q = query.toLowerCase();
+      const expandedTerms = expandQueryWithSynonyms(q);
 
       // Score and rank sections
       const results = [];
@@ -2863,6 +2547,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           const heading = String(section.heading ?? '').toLowerCase();
           const keywords = Array.isArray(section.keywords) ? section.keywords : [];
           const snippet = String(section.snippet ?? '').toLowerCase();
+          const body = String(section.body ?? '').toLowerCase();
 
           // Heading match: weight 3
           if (heading.includes(q)) score += 3;
@@ -2877,6 +2562,27 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
           // Snippet match: weight 1
           if (snippet.includes(q)) score += 1;
+
+          // Body text match: weight 1
+          if (body && body.includes(q)) score += 1;
+
+          // Synonym expansion match: weight 1 (only for expanded terms, not the original)
+          if (score === 0 && expandedTerms.length > 1) {
+            for (let i = 1; i < expandedTerms.length; i++) {
+              const syn = expandedTerms[i];
+              if (heading.includes(syn) || snippet.includes(syn) || body.includes(syn)) {
+                score += 1;
+                break;
+              }
+              for (const kw of keywords) {
+                if (String(kw).toLowerCase().includes(syn)) {
+                  score += 1;
+                  break;
+                }
+              }
+              if (score > 0) break;
+            }
+          }
 
           if (score > 0) {
             results.push({
@@ -2903,9 +2609,18 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         results: topResults,
       };
 
-      if (summary === true) {
-        return buildSummaryToolResponse('search_guidelines', payload);
+      // Zero-result fallback: suggest alternative queries and tools
+      if (results.length === 0) {
+        const synonymExpansions = expandedTerms.filter((t) => t !== q);
+        payload.suggestions = {
+          alternativeQueries: synonymExpansions.length > 0 ? synonymExpansions : [],
+          alternativeTools: [
+            { tool: 'get_accessibility_docs', hint: 'For component-specific a11y checks' },
+            { tool: 'get_component_api', hint: 'For component API details' },
+          ],
+        };
       }
+
       return buildJsonToolResponse(payload);
     },
   );
@@ -2913,7 +2628,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   for (const plugin of plugins) {
     const pluginTools = Array.isArray(plugin.tools) ? plugin.tools : [];
     for (const tool of pluginTools) {
-      registerTool(
+      server.registerTool(
         tool.name,
         {
           description: tool.description,
