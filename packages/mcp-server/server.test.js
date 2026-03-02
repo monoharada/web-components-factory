@@ -1040,6 +1040,37 @@ describe('MCP prompts/resources contract', () => {
     expect(importmapDiag).toBeUndefined();
   });
 
+  it('validate_markup accepts single-quoted importmap type attribute', async () => {
+    const html = "<!DOCTYPE html><html><head><script type='importmap'>{\"imports\":{}}</script><script type=\"module\" src=\"./vendor-runtime/boot.js\"></script></head><body><dads-button>OK</dads-button></body></html>";
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const importmapDiag = payload.diagnostics.find((d) => d.code === 'missingImportmap');
+    expect(importmapDiag).toBeUndefined();
+  });
+
+  it('validate_markup does NOT flag date-picker missing label/name (not in CEM)', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-date-picker></dads-date-picker>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const requiredDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute');
+    expect(requiredDiag).toBeUndefined();
+  });
+
+  it('validate_markup does NOT flag file-upload missing label/name (not in CEM)', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-file-upload></dads-file-upload>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const requiredDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute');
+    expect(requiredDiag).toBeUndefined();
+  });
+
   // P-03 v0.5.0: extended required tags (combobox)
   it('validate_markup detects missing name on combobox', async () => {
     const result = await client.callTool({

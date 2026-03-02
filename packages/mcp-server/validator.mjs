@@ -808,8 +808,6 @@ const REQUIRED_ATTRIBUTES = new Map([
   ['dads-checkbox', ['label', 'name']],
   ['dads-radio', ['label', 'name']],
   ['dads-combobox', ['label', 'name']],
-  ['dads-date-picker', ['label', 'name']],
-  ['dads-file-upload', ['label', 'name']],
 ]);
 
 /**
