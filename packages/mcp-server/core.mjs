@@ -145,7 +145,96 @@ const SYNONYM_TABLE = new Map([
   ['skip-navigation', ['skip-link', 'landmark', 'skip nav']],
   ['heading', ['heading hierarchy', 'h1', 'heading level']],
   ['form', ['input', 'validation', 'required', 'label']],
+  ['layout', ['grid', 'flexbox', 'layout-shell', 'responsive', 'breakpoint']],
+  ['responsive', ['media query', 'breakpoint', 'viewport', 'mobile']],
+  ['error', ['validation', 'aria-invalid', 'aria-describedby', 'error text']],
+  ['focus', ['focus-visible', 'focus ring', 'outline', 'tabindex', 'keyboard']],
+  ['token', ['design token', 'css variable', 'custom property', 'spacing token']],
 ]);
+
+// Interaction examples for form components (P-04 / #206)
+const INTERACTION_EXAMPLES_MAP = Object.freeze({
+  'dads-input-text': [
+    { scenario: 'Set value programmatically', trigger: 'property', code: 'el.value = "hello";' },
+    { scenario: 'Show validation error', trigger: 'attribute', code: 'el.error = true; el.errorText = "この項目は入力が必須です";' },
+    { scenario: 'Clear validation error', trigger: 'attribute', code: 'el.error = false; el.errorText = "";' },
+    { scenario: 'Listen to value change', trigger: 'event', code: "el.addEventListener('change', (e) => { console.log(e.target.value); });" },
+  ],
+  'dads-textarea': [
+    { scenario: 'Set value programmatically', trigger: 'property', code: 'el.value = "long text...";' },
+    { scenario: 'Show validation error', trigger: 'attribute', code: 'el.error = true; el.errorText = "入力できる文字数を超えています";' },
+    { scenario: 'Listen to input event', trigger: 'event', code: "el.addEventListener('input', (e) => { console.log(e.target.value); });" },
+  ],
+  'dads-select': [
+    { scenario: 'Set selected value', trigger: 'property', code: 'el.value = "option1";' },
+    { scenario: 'Show validation error', trigger: 'attribute', code: 'el.error = true; el.errorText = "この項目は入力が必須です";' },
+    { scenario: 'Listen to change event', trigger: 'event', code: "el.addEventListener('change', (e) => { console.log(e.target.value); });" },
+  ],
+  'dads-checkbox': [
+    { scenario: 'Set checked state', trigger: 'property', code: 'el.checked = true;' },
+    { scenario: 'Show validation error', trigger: 'attribute', code: 'el.error = true; el.errorText = "この項目は入力が必須です";' },
+    { scenario: 'Listen to change event', trigger: 'event', code: "el.addEventListener('change', (e) => { console.log(e.target.checked); });" },
+  ],
+  'dads-radio': [
+    { scenario: 'Set checked state', trigger: 'property', code: 'el.checked = true;' },
+    { scenario: 'Listen to change event', trigger: 'event', code: "el.addEventListener('change', (e) => { console.log(e.target.value); });" },
+  ],
+  'dads-combobox': [
+    { scenario: 'Set value programmatically', trigger: 'property', code: 'el.value = "selected-option";' },
+    { scenario: 'Show validation error', trigger: 'attribute', code: 'el.error = true; el.errorText = "この項目は入力が必須です";' },
+    { scenario: 'Listen to change event', trigger: 'event', code: "el.addEventListener('change', (e) => { console.log(e.target.value); });" },
+  ],
+  'dads-date-picker': [
+    { scenario: 'Set date value', trigger: 'property', code: 'el.value = "2024-01-15";' },
+    { scenario: 'Show validation error', trigger: 'attribute', code: 'el.error = true; el.errorText = "この項目は入力が必須です";' },
+    { scenario: 'Listen to change event', trigger: 'event', code: "el.addEventListener('change', (e) => { console.log(e.target.value); });" },
+  ],
+  'dads-file-upload': [
+    { scenario: 'Listen to file selection', trigger: 'event', code: "el.addEventListener('change', (e) => { console.log(e.target.files); });" },
+    { scenario: 'Show validation error', trigger: 'attribute', code: 'el.error = true; el.errorText = "この項目は入力が必須です";' },
+  ],
+});
+
+// Layout behavior metadata for layout/display components (P-05 / #207)
+const LAYOUT_BEHAVIOR_MAP = Object.freeze({
+  'dads-layout-shell': {
+    responsive: {
+      breakpoints: { desktop: '80rem', tablet: '48rem' },
+      modes: ['auto', 'desktop', 'tablet', 'mobile'],
+      defaultMode: 'auto',
+      description: 'Automatically switches between desktop/tablet/mobile layouts based on viewport width when mode="auto".',
+    },
+    overflow: {
+      strategy: 'slot-driven',
+      description: 'Slots (header, sidebar, aside, footer) are auto-hidden when empty. Sidebar collapses to rail on tablet.',
+    },
+    constraints: {
+      patterns: ['website', 'app-shell', 'master-detail', 'left-header-pane', 'three-pane', 'three-pane-shell'],
+      defaultPattern: 'app-shell',
+      mobileSidebarOptions: ['hidden', 'top', 'bottom'],
+      description: 'Choose a pattern attribute to control layout structure. Pair with mode and mobile-sidebar for full control.',
+    },
+  },
+  'dads-layout-sidebar': {
+    responsive: {
+      description: 'Designed to be placed inside dads-layout-shell sidebar slot. Width is controlled by the parent shell.',
+    },
+    constraints: {
+      description: 'Simple container for sidebar content. Use inside dads-layout-shell for responsive behavior.',
+    },
+  },
+  'dads-device-mock': {
+    responsive: {
+      devices: ['desktop', 'tablet', 'mobile'],
+      defaultDevice: 'mobile',
+      description: 'Renders a device frame (desktop/tablet/mobile) around slotted content. Set device attribute to switch.',
+    },
+    constraints: {
+      visibleHeight: 'Use visible-height attribute to clip the mock to a specific height (e.g. "220px").',
+      description: 'Display-only component for previewing content in device frames. Not a layout container.',
+    },
+  },
+});
 
 export function expandQueryWithSynonyms(query) {
   const q = String(query ?? '').toLowerCase().trim();
@@ -1632,6 +1721,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     detectOrphanedChildComponents = () => [],
     detectEmptyInteractiveElement = () => [],
     detectNonLowercaseAttributes = () => [],
+    detectCdnReferences = () => [],
+    detectMissingRuntimeScaffold = () => [],
   } = await loadValidator();
   const canonicalCemIndex = collectCemCustomElements(manifest);
   const canonicalEnumMap = buildEnumAttributeMap(manifest);
@@ -1666,7 +1757,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
-    version: '0.3.0',
+    version: '0.5.0',
   });
 
   server.registerPrompt(
@@ -1816,7 +1907,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
       const overview = {
         name: 'DADS Web Components (wcf)',
-        version: '0.3.0',
+        version: '0.5.0',
         prefix: CANONICAL_PREFIX,
         totalComponents: indexes.decls.length,
         componentsByCategory: categoryCount,
@@ -1830,6 +1921,14 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           noscriptGuidance: 'WCF components require JavaScript. Provide <noscript> fallback with static HTML equivalents for critical content.',
           noCDN: true,
           deliveryModel: 'vendor-local',
+          distribution: {
+            selfHosted: true,
+            cdn: false,
+            strategy: 'vendor-importmap',
+            quickStart: 'npx web-components-factory init --prefix <prefix> --dir <dir>',
+            description:
+              'Components are installed locally via the wcf CLI. No CDN is available. All assets are served from the project directory using import maps and a boot script.',
+          },
           importMapHint: 'WCF uses <script type="importmap"> for module resolution. Each component tag name maps to a local JS file: { "<prefix>-<component>": "./<dir>/components/<component>.js" }. The wcf CLI generates importmap.snippet.json automatically via `wcf init`.',
           bootScript: '<dir>/boot.js — sets the component prefix via setConfig(), then loads wc-autoloader.js which scans the DOM for custom element tags and dynamically imports them via the import map.',
           vendorSetup: {
@@ -2045,6 +2144,14 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const accessibilityChecklist = extractAccessibilityChecklist(decl, { prefix });
       if (accessibilityChecklist) {
         api.accessibilityChecklist = accessibilityChecklist;
+      }
+      const interactionExamples = canonicalTag ? INTERACTION_EXAMPLES_MAP[canonicalTag] : undefined;
+      if (interactionExamples) {
+        api.interactionExamples = interactionExamples;
+      }
+      const layoutBehavior = canonicalTag ? LAYOUT_BEHAVIOR_MAP[canonicalTag] : undefined;
+      if (layoutBehavior) {
+        api.layoutBehavior = layoutBehavior;
       }
 
       return buildJsonToolResponse(api);
@@ -2276,6 +2383,18 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         severity: 'warning',
       });
 
+      const cdnDiagnostics = detectCdnReferences({
+        filePath: '<markup>',
+        text: html,
+        severity: 'warning',
+      });
+
+      const scaffoldDiagnostics = detectMissingRuntimeScaffold({
+        filePath: '<markup>',
+        text: html,
+        severity: 'warning',
+      });
+
       const allRawDiagnostics = [
         ...cemDiagnostics,
         ...enumDiagnostics,
@@ -2286,6 +2405,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         ...lowercaseDiagnostics,
         ...tokenMisuseDiagnostics,
         ...accessibilityDiagnostics,
+        ...cdnDiagnostics,
+        ...scaffoldDiagnostics,
       ];
       const diagnostics = allRawDiagnostics.map((d) => {
         const suggestion = buildDiagnosticSuggestion({ diagnostic: d, cemIndex, prefix: p });
@@ -2333,19 +2454,58 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   );
 
   // -----------------------------------------------------------------------
+  // Helper: buildFullPageHtml
+  // -----------------------------------------------------------------------
+  /**
+   * Build a complete HTML5 page from pattern data, resolving scaffoldHint
+   * placeholders into concrete paths.
+   * @param {Object} opts
+   * @param {string} opts.html - Pattern HTML body
+   * @param {string} opts.title - Page title
+   * @param {Object} opts.importMapEntries - Import map entries { tag: path }
+   * @param {string} [opts.dir='vendor-runtime'] - Directory for JS assets
+   * @param {string} [opts.lang='ja'] - HTML lang attribute
+   * @returns {string} Complete HTML5 document
+   */
+  function buildFullPageHtml({ html, title, importMapEntries, dir = 'vendor-runtime', lang = 'ja' }) {
+    const importMapJson = JSON.stringify({ imports: importMapEntries }, null, 2);
+    return [
+      '<!DOCTYPE html>',
+      `<html lang="${lang}">`,
+      '<head>',
+      '  <meta charset="UTF-8">',
+      '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+      `  <title>${title}</title>`,
+      `  <!-- distribution: selfHosted=true, strategy=vendor-importmap -->`,
+      `  <!-- Do NOT replace these local paths with CDN URLs. This design system is self-hosted. -->`,
+      `  <script type="importmap">`,
+      `${importMapJson}`,
+      `  </script>`,
+      `  <script type="module" src="./${dir}/boot.js"></script>`,
+      '</head>',
+      '<body>',
+      `  <noscript>このページの機能にはJavaScriptが必要です。</noscript>`,
+      `  ${html}`,
+      '</body>',
+      '</html>',
+    ].join('\n');
+  }
+
+  // -----------------------------------------------------------------------
   // Tool: get_pattern_recipe
   // -----------------------------------------------------------------------
   server.registerTool(
     'get_pattern_recipe',
     {
       description:
-        'Get a complete pattern recipe with component dependencies and HTML. When: building a page layout from a pattern. Returns: dependency tree, install commands, and resolved HTML. After: use validate_markup to verify the generated HTML.',
+        'Get a complete pattern recipe with component dependencies and HTML. When: building a page layout from a pattern. Returns: dependency tree, install commands, and resolved HTML. After: use validate_markup to verify the generated HTML. Use include: ["fullPage"] to get a complete HTML5 page ready for browser rendering.',
       inputSchema: {
         patternId: z.string(),
         prefix: z.string().optional(),
+        include: z.array(z.enum(['fullPage'])).optional(),
       },
     },
-    async ({ patternId, prefix }) => {
+    async ({ patternId, prefix, include }) => {
       const id = String(patternId ?? '').trim();
       const p = normalizePrefix(prefix);
       const pat = patterns[id];
@@ -2378,6 +2538,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
       const entryHints = Array.isArray(pat.entryHints) ? [...pat.entryHints] : ['boot'];
 
+      const vendorDir = 'vendor-runtime';
+
       const importMapEntries = Object.fromEntries(
         closure.flatMap((cid) => {
           const meta = components[cid];
@@ -2398,30 +2560,59 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         serveOverHttp: 'Import maps require HTTP/HTTPS. Use a local dev server (e.g. npx serve .) instead of opening the HTML file directly via file:// protocol.',
       };
 
+      // Build fullPageHtml when requested via include: ['fullPage']
+      const includeSet = new Set(Array.isArray(include) ? include : []);
+      let fullPageHtml;
+      if (includeSet.has('fullPage')) {
+        // Resolve placeholders: replace <dir> with vendorDir
+        const resolvedImportMap = Object.fromEntries(
+          closure.flatMap((cid) => {
+            const meta = components[cid];
+            const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
+            return tags.map((t) => {
+              const lower = String(t).toLowerCase();
+              const suffix = lower.replace(/^[^-]+-/, '');
+              return [withPrefix(lower, p), `./${vendorDir}/components/${suffix}.js`];
+            });
+          }),
+        );
+        fullPageHtml = buildFullPageHtml({
+          html,
+          title: pat.title ?? pat.id,
+          importMapEntries: resolvedImportMap,
+          dir: vendorDir,
+        });
+      }
+
+      const result = {
+        pattern: {
+          id: pat.id,
+          title: pat.title,
+          description: pat.description,
+        },
+        prefix: p,
+        requires,
+        components: closure,
+        install,
+        html,
+        canonicalHtml,
+        installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
+        entryHints,
+        scaffoldHint,
+      };
+
+      if (fullPageHtml !== undefined) {
+        result.fullPageHtml = fullPageHtml;
+        result.vendorSetup = {
+          command: `npx web-components-factory init --prefix ${p} --dir ${vendorDir} && npx web-components-factory add ${closure.join(' ')} --prefix ${p} --out ${vendorDir}`,
+        };
+      }
+
       return {
         content: [
           {
             type: 'text',
-            text: JSON.stringify(
-              {
-                pattern: {
-                  id: pat.id,
-                  title: pat.title,
-                  description: pat.description,
-                },
-                prefix: p,
-                requires,
-                components: closure,
-                install,
-                html,
-                canonicalHtml,
-                installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
-                entryHints,
-                scaffoldHint,
-              },
-              null,
-              2,
-            ),
+            text: JSON.stringify(result, null, 2),
           },
         ],
       };
@@ -2647,24 +2838,31 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           // Snippet match: weight 1
           if (snippet.includes(q)) score += 1;
 
-          // Body text match: weight 1
-          if (body && body.includes(q)) score += 1;
+          // Body text match: weight 1, plus boost for multiple occurrences
+          if (body && body.includes(q)) {
+            score += 1;
+            // Count additional occurrences in body for boost (cap at +2)
+            let idx = body.indexOf(q);
+            let occurrences = 0;
+            while (idx !== -1 && occurrences < 3) {
+              occurrences++;
+              idx = body.indexOf(q, idx + q.length);
+            }
+            if (occurrences > 1) score += Math.min(occurrences - 1, 2);
+          }
 
-          // Synonym expansion match: weight 1 (only for expanded terms, not the original)
-          if (score === 0 && expandedTerms.length > 1) {
+          // Synonym expansion match: weight 1 (check all expanded terms, not just when score=0)
+          if (expandedTerms.length > 1) {
             for (let i = 1; i < expandedTerms.length; i++) {
               const syn = expandedTerms[i];
-              if (heading.includes(syn) || snippet.includes(syn) || body.includes(syn)) {
-                score += 1;
-                break;
-              }
+              if (heading.includes(syn)) { score += 1; continue; }
+              if (snippet.includes(syn) || body.includes(syn)) { score += 1; continue; }
               for (const kw of keywords) {
                 if (String(kw).toLowerCase().includes(syn)) {
                   score += 1;
                   break;
                 }
               }
-              if (score > 0) break;
             }
           }
 

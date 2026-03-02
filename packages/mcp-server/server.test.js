@@ -548,6 +548,14 @@ describe('MCP prompts/resources contract', () => {
     // Backward compatibility: htmlBoilerplate must remain unchanged
     expect(payload.setupInfo.htmlBoilerplate).toContain('vendor-runtime/src/autoload.js');
 
+    // Tier 2: distribution field (v0.5.0)
+    expect(payload.setupInfo.distribution).toBeDefined();
+    expect(payload.setupInfo.distribution.selfHosted).toBe(true);
+    expect(payload.setupInfo.distribution.cdn).toBe(false);
+    expect(payload.setupInfo.distribution.strategy).toBe('vendor-importmap');
+    expect(payload.setupInfo.distribution.quickStart).toContain('web-components-factory init');
+    expect(typeof payload.setupInfo.distribution.description).toBe('string');
+
     expect(Array.isArray(payload.availablePrompts)).toBe(true);
     expect(payload.availablePrompts.some((item) => item.name === FIGMA_TO_WCF_PROMPT)).toBe(true);
 
@@ -696,6 +704,78 @@ describe('MCP prompts/resources contract', () => {
     expect(text).toContain('dads-button');
   });
 
+  it('get_component_api returns interactionExamples for form components', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'input-text' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(Array.isArray(payload.interactionExamples)).toBe(true);
+    expect(payload.interactionExamples.length).toBeGreaterThan(0);
+    for (const ex of payload.interactionExamples) {
+      expect(ex).toHaveProperty('scenario');
+      expect(ex).toHaveProperty('code');
+      expect(ex).toHaveProperty('trigger');
+    }
+  });
+
+  it('get_component_api does NOT return interactionExamples for non-form components', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'button' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.interactionExamples).toBeUndefined();
+  });
+
+  it('get_component_api returns layoutBehavior for layout-shell', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'layout-shell' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.layoutBehavior).toBeDefined();
+    expect(payload.layoutBehavior.responsive).toBeDefined();
+    expect(payload.layoutBehavior.responsive.breakpoints).toBeDefined();
+    expect(payload.layoutBehavior.constraints).toBeDefined();
+    expect(payload.layoutBehavior.constraints.patterns).toContain('app-shell');
+  });
+
+  it('get_component_api returns layoutBehavior for device-mock', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'device-mock' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.layoutBehavior).toBeDefined();
+    expect(payload.layoutBehavior.responsive.devices).toContain('mobile');
+  });
+
+  it('get_component_api returns layoutBehavior for layout-sidebar', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'layout-sidebar' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.layoutBehavior).toBeDefined();
+    expect(payload.layoutBehavior.responsive).toBeDefined();
+  });
+
+  it('get_component_api does NOT return layoutBehavior for non-layout components', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'button' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.layoutBehavior).toBeUndefined();
+  });
+
   it('generate_usage_snippet resolves by bare name via auto-prefix', async () => {
     const result = await client.callTool({
       name: 'generate_usage_snippet',
@@ -815,10 +895,10 @@ describe('MCP prompts/resources contract', () => {
     expect(reqDiag.attrName).toBe('label');
   });
 
-  it('validate_markup passes when label is present on form input', async () => {
+  it('validate_markup passes when label and name are present on form input', async () => {
     const result = await client.callTool({
       name: 'validate_markup',
-      arguments: { html: '<dads-input-text label="Name"></dads-input-text>' },
+      arguments: { html: '<dads-input-text label="Name" name="username"></dads-input-text>' },
     });
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
     const reqDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute');
@@ -902,6 +982,73 @@ describe('MCP prompts/resources contract', () => {
     const unknownDiag = payload.diagnostics.find((d) => d.code === 'unknownElement');
     expect(unknownDiag).toBeDefined();
     expect(unknownDiag.suggestion).toContain('dads-input-text');
+  });
+
+  // P-03 v0.5.0: name attribute required on form elements
+  it('validate_markup detects missing name on form input', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-input-text label="Name"></dads-input-text>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const nameDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute' && d.attrName === 'name');
+    expect(nameDiag).toBeDefined();
+    expect(nameDiag.tagName).toBe('dads-input-text');
+  });
+
+  it('validate_markup passes when both label and name are present', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-input-text label="Name" name="username"></dads-input-text>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const nameDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute' && d.attrName === 'name');
+    expect(nameDiag).toBeUndefined();
+  });
+
+  // P-03 v0.5.0: CDN reference detection
+  it('validate_markup warns on CDN URL in markup', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<script src="https://cdn.jsdelivr.net/npm/some-package"></script>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const cdnDiag = payload.diagnostics.find((d) => d.code === 'cdnReference');
+    expect(cdnDiag).toBeDefined();
+  });
+
+  // P-03 v0.5.0: missing importmap detection on full pages
+  it('validate_markup warns on full page without importmap', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<!DOCTYPE html><html><head></head><body><dads-button>OK</dads-button></body></html>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const importmapDiag = payload.diagnostics.find((d) => d.code === 'missingImportmap');
+    expect(importmapDiag).toBeDefined();
+    const bootDiag = payload.diagnostics.find((d) => d.code === 'missingBootScript');
+    expect(bootDiag).toBeDefined();
+  });
+
+  it('validate_markup does not warn on snippet without DOCTYPE', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-button>OK</dads-button>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const importmapDiag = payload.diagnostics.find((d) => d.code === 'missingImportmap');
+    expect(importmapDiag).toBeUndefined();
+  });
+
+  // P-03 v0.5.0: extended required tags (combobox)
+  it('validate_markup detects missing name on combobox', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-combobox label="Search"></dads-combobox>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const nameDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute' && d.attrName === 'name');
+    expect(nameDiag).toBeDefined();
   });
 });
 
@@ -1235,6 +1382,39 @@ describe('search_guidelines', () => {
   it('synonym expansion does not expand unrelated terms', () => {
     const expanded = expandQueryWithSynonyms('button');
     expect(expanded).toEqual(['button']);
+  });
+
+  it('synonym expansion: "layout" → includes grid, flexbox, responsive', () => {
+    const expanded = expandQueryWithSynonyms('layout');
+    expect(expanded).toContain('layout');
+    expect(expanded).toContain('grid');
+    expect(expanded).toContain('flexbox');
+    expect(expanded).toContain('responsive');
+  });
+
+  it('synonym expansion: "responsive" → includes media query, breakpoint', () => {
+    const expanded = expandQueryWithSynonyms('responsive');
+    expect(expanded).toContain('media query');
+    expect(expanded).toContain('breakpoint');
+  });
+
+  it('synonym expansion: "error" → includes validation, aria-invalid', () => {
+    const expanded = expandQueryWithSynonyms('error');
+    expect(expanded).toContain('validation');
+    expect(expanded).toContain('aria-invalid');
+    expect(expanded).toContain('aria-describedby');
+  });
+
+  it('SYNONYM_TABLE has 10+ entries', () => {
+    // expandQueryWithSynonyms uses SYNONYM_TABLE internally;
+    // verify by checking that 12 distinct keys produce expansions
+    const keys = ['aria-live', 'keyboard', 'contrast', 'spacing', 'skip-navigation',
+      'heading', 'form', 'layout', 'responsive', 'error', 'focus', 'token'];
+    let expandedCount = 0;
+    for (const key of keys) {
+      if (expandQueryWithSynonyms(key).length > 1) expandedCount++;
+    }
+    expect(expandedCount).toBeGreaterThanOrEqual(10);
   });
 
   it('body field is present in guidelines-index sections', async () => {
@@ -1613,19 +1793,20 @@ describe('slot and required attribute validation', () => {
     expect(diagnostics).toHaveLength(0);
   });
 
-  it('detectMissingRequiredAttributes flags missing label on form input', () => {
+  it('detectMissingRequiredAttributes flags missing label and name on form input', () => {
     const diagnostics = detectMissingRequiredAttributes({
       text: '<dads-input-text></dads-input-text>',
     });
-    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics).toHaveLength(2);
+    expect(diagnostics.some((d) => d.attrName === 'label')).toBe(true);
+    expect(diagnostics.some((d) => d.attrName === 'name')).toBe(true);
     expect(diagnostics[0].code).toBe('missingRequiredAttribute');
-    expect(diagnostics[0].attrName).toBe('label');
     expect(diagnostics[0].tagName).toBe('dads-input-text');
   });
 
-  it('detectMissingRequiredAttributes passes when label is present', () => {
+  it('detectMissingRequiredAttributes passes when label and name are present', () => {
     const diagnostics = detectMissingRequiredAttributes({
-      text: '<dads-input-text label="Name"></dads-input-text>',
+      text: '<dads-input-text label="Name" name="username"></dads-input-text>',
     });
     expect(diagnostics).toHaveLength(0);
   });
@@ -1635,7 +1816,7 @@ describe('slot and required attribute validation', () => {
       text: '<myui-input-text></myui-input-text>',
       prefix: 'myui',
     });
-    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics).toHaveLength(2);
     expect(diagnostics[0].tagName).toBe('myui-input-text');
   });
 });
@@ -1991,7 +2172,7 @@ export default {
         { module: './plugins/module-plugin.mjs' },
         {
           name: 'static-plugin',
-          version: '0.3.0',
+          version: '0.5.0',
           staticTools: [{ name: 'static_healthcheck', payload: { ok: true } }],
         },
       ],
@@ -2234,6 +2415,200 @@ describe('get_pattern_recipe contract', () => {
       expect(payload.scaffoldHint.bootScript).toContain('boot.js');
       expect(payload.scaffoldHint.noscript).toContain('noscript');
       expect(payload.scaffoldHint.serveOverHttp).toContain('HTTP');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('returns no fullPageHtml when include is not specified (backward compat)', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form' } });
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      expect(payload.fullPageHtml).toBeUndefined();
+      expect(payload.vendorSetup).toBeUndefined();
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('returns fullPageHtml with valid HTML5 structure when include: ["fullPage"]', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'get_pattern_recipe',
+        arguments: { patternId: 'search-form', include: ['fullPage'] },
+      });
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+
+      expect(payload.fullPageHtml).toBeDefined();
+      expect(typeof payload.fullPageHtml).toBe('string');
+      expect(payload.fullPageHtml).toContain('<!DOCTYPE html>');
+      expect(payload.fullPageHtml).toContain('<html lang="ja">');
+      expect(payload.fullPageHtml).toContain('<meta charset="UTF-8">');
+      expect(payload.fullPageHtml).toContain('<script type="importmap">');
+      expect(payload.fullPageHtml).toContain('boot.js');
+      expect(payload.fullPageHtml).toContain('<body>');
+      expect(payload.fullPageHtml).toContain('</html>');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('fullPageHtml import map entries match pattern dependencies (no placeholders)', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'get_pattern_recipe',
+        arguments: { patternId: 'search-form', include: ['fullPage'] },
+      });
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+
+      // No placeholder <dir> in fullPageHtml
+      expect(payload.fullPageHtml).not.toContain('./<dir>/');
+      expect(payload.fullPageHtml).not.toContain('<dir>');
+
+      // Import map uses vendor-runtime directory
+      expect(payload.fullPageHtml).toContain('./vendor-runtime/');
+      expect(payload.fullPageHtml).toContain('./vendor-runtime/boot.js');
+
+      // The import map should contain entries for pattern components
+      // Parse the import map from the fullPageHtml
+      const importMapMatch = payload.fullPageHtml.match(/<script type="importmap">\s*([\s\S]*?)\s*<\/script>/);
+      expect(importMapMatch).toBeTruthy();
+      const importMap = JSON.parse(importMapMatch[1]);
+      expect(Object.keys(importMap.imports).length).toBeGreaterThan(0);
+      // All import map paths should use vendor-runtime directory
+      for (const importPath of Object.values(importMap.imports)) {
+        expect(importPath).toContain('./vendor-runtime/');
+      }
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('fullPageHtml includes distribution info (self-contained)', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'get_pattern_recipe',
+        arguments: { patternId: 'search-form', include: ['fullPage'] },
+      });
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+
+      expect(payload.fullPageHtml).toContain('selfHosted');
+      expect(payload.fullPageHtml).toContain('vendor-importmap');
+      expect(payload.fullPageHtml).toContain('Do NOT replace these local paths with CDN URLs');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('fullPageHtml includes vendorSetup command', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'get_pattern_recipe',
+        arguments: { patternId: 'search-form', include: ['fullPage'] },
+      });
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+
+      expect(payload.vendorSetup).toBeDefined();
+      expect(payload.vendorSetup.command).toContain('web-components-factory');
+      expect(payload.vendorSetup.command).toContain('init');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('fullPageHtml response size is under 100KB for all patterns', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      // Get all patterns
+      const listResult = await client.callTool({ name: 'list_patterns', arguments: {} });
+      const listPayload = JSON.parse(listResult.content?.[0]?.text ?? '[]');
+      const patternIds = listPayload.map((item) => item.id);
+
+      expect(patternIds.length).toBeGreaterThan(0);
+
+      for (const pid of patternIds) {
+        const result = await client.callTool({
+          name: 'get_pattern_recipe',
+          arguments: { patternId: pid, include: ['fullPage'] },
+        });
+        const text = result.content?.[0]?.text ?? '';
+        expect(text.length).toBeLessThan(MAX_TOOL_RESULT_BYTES);
+      }
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// P-07: Backward compatibility integration tests
+// ---------------------------------------------------------------------------
+describe('v0.5.0 backward compatibility', () => {
+  it('get_pattern_recipe without include returns no fullPageHtml (old-call compat)', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form' } });
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      expect(payload.fullPageHtml).toBeUndefined();
+      expect(payload.html).toBeDefined();
+      expect(payload.install).toBeDefined();
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('get_component_api returns stable base fields without new optional fields for non-form/non-layout', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_component_api', arguments: { component: 'button' } });
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      // Base fields present
+      expect(payload.tagName).toBeDefined();
+      expect(payload.className).toBeDefined();
+      expect(Array.isArray(payload.attributes)).toBe(true);
+      // New optional fields absent for non-form/non-layout
+      expect(payload.interactionExamples).toBeUndefined();
+      expect(payload.layoutBehavior).toBeUndefined();
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('get_design_system_overview returns distribution alongside existing setupInfo', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_design_system_overview', arguments: {} });
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      // Existing fields
+      expect(payload.setupInfo).toBeDefined();
+      expect(Array.isArray(payload.ideSetupTemplates)).toBe(true);
+      // New field
+      expect(payload.setupInfo.distribution).toBeDefined();
+      expect(payload.setupInfo.distribution.selfHosted).toBe(true);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('validate_markup old-style call (snippet without DOCTYPE) works unchanged', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'validate_markup',
+        arguments: { html: '<dads-button>Click</dads-button>' },
+      });
+      expect(result.isError).toBeFalsy();
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      expect(Array.isArray(payload.diagnostics)).toBe(true);
+      // Snippet without DOCTYPE should NOT trigger missingImportmap/missingBootScript
+      const codes = payload.diagnostics.map((d) => d.code);
+      expect(codes).not.toContain('missingImportmap');
+      expect(codes).not.toContain('missingBootScript');
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
