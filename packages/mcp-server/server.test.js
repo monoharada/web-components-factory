@@ -2043,20 +2043,7 @@ describe('resolveComponentClosure and transitive deps', () => {
   });
 
   it('get_install_recipe returns vendorHint and usageContext fields', async () => {
-    const { server } = await createMcpServer(
-      loadBundledJson,
-      async () => import('./validator.mjs'),
-      { loadTextData: loadBundledText },
-    );
-    const client = new Client(
-      { name: 'wcf-mcp-test-client', version: '0.0.0' },
-      { capabilities: {} },
-    );
-    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-    await Promise.all([
-      server.connect(serverTransport),
-      client.connect(clientTransport),
-    ]);
+    const { client, server } = await createTestPair();
     try {
       const result = await client.callTool({ name: 'get_install_recipe', arguments: { component: 'dads-button' } });
       const text = result.content?.[0]?.text;
@@ -2105,30 +2092,32 @@ describe('resolveComponentClosure and transitive deps', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Shared helper — creates an MCP client/server pair for tool-level tests
+// ---------------------------------------------------------------------------
+async function createTestPair() {
+  const { server } = await createMcpServer(
+    loadBundledJson,
+    async () => import('./validator.mjs'),
+    { loadTextData: loadBundledText },
+  );
+  const client = new Client(
+    { name: 'wcf-mcp-test-client', version: '0.0.0' },
+    { capabilities: {} },
+  );
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  await Promise.all([
+    server.connect(serverTransport),
+    client.connect(clientTransport),
+  ]);
+  return { client, server };
+}
+
+// ---------------------------------------------------------------------------
 // get_pattern_recipe contract and new fields
 // ---------------------------------------------------------------------------
 describe('get_pattern_recipe contract', () => {
-  /** Helper to create an MCP client/server pair for pattern tests */
-  async function createPatternTestPair() {
-    const { server } = await createMcpServer(
-      loadBundledJson,
-      async () => import('./validator.mjs'),
-      { loadTextData: loadBundledText },
-    );
-    const client = new Client(
-      { name: 'wcf-mcp-test-client', version: '0.0.0' },
-      { capabilities: {} },
-    );
-    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-    await Promise.all([
-      server.connect(serverTransport),
-      client.connect(clientTransport),
-    ]);
-    return { client, server };
-  }
-
   it('returns all base contract fields for a valid pattern', async () => {
-    const { client, server } = await createPatternTestPair();
+    const { client, server } = await createTestPair();
     try {
       const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form' } });
       const text = result.content?.[0]?.text;
@@ -2149,7 +2138,7 @@ describe('get_pattern_recipe contract', () => {
   });
 
   it('applies prefix to tag names when prefix is specified', async () => {
-    const { client, server } = await createPatternTestPair();
+    const { client, server } = await createTestPair();
     try {
       const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form', prefix: 'myui' } });
       const text = result.content?.[0]?.text;
@@ -2163,7 +2152,7 @@ describe('get_pattern_recipe contract', () => {
   });
 
   it('returns isError for invalid pattern ID', async () => {
-    const { client, server } = await createPatternTestPair();
+    const { client, server } = await createTestPair();
     try {
       const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'nonexistent-pattern-xyz' } });
       expect(result.isError).toBe(true);
@@ -2173,7 +2162,7 @@ describe('get_pattern_recipe contract', () => {
   });
 
   it('returns entryHints array containing "boot"', async () => {
-    const { client, server } = await createPatternTestPair();
+    const { client, server } = await createTestPair();
     try {
       const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form' } });
       const text = result.content?.[0]?.text;
@@ -2187,7 +2176,7 @@ describe('get_pattern_recipe contract', () => {
   });
 
   it('returns scaffoldHint with all 5 keys', async () => {
-    const { client, server } = await createPatternTestPair();
+    const { client, server } = await createTestPair();
     try {
       const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form' } });
       const text = result.content?.[0]?.text;

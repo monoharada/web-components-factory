@@ -1819,8 +1819,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           noscriptGuidance: 'WCF components require JavaScript. Provide <noscript> fallback with static HTML equivalents for critical content.',
           noCDN: true,
           deliveryModel: 'vendor-local',
-          importMapHint: 'WCF uses <script type="importmap"> for module resolution. Each component tag name maps to a local JS file: { "<prefix>-<component>": "./<vendorDir>/components/<component>.js" }. The wcf CLI generates importmap.snippet.json automatically via `wcf init`.',
-          bootScript: '<vendorDir>/boot.js — sets the component prefix via setConfig(), then loads wc-autoloader.js which scans the DOM for custom element tags and dynamically imports them via the import map.',
+          importMapHint: 'WCF uses <script type="importmap"> for module resolution. Each component tag name maps to a local JS file: { "<prefix>-<component>": "./<dir>/components/<component>.js" }. The wcf CLI generates importmap.snippet.json automatically via `wcf init`.',
+          bootScript: '<dir>/boot.js — sets the component prefix via setConfig(), then loads wc-autoloader.js which scans the DOM for custom element tags and dynamically imports them via the import map.',
           vendorSetup: {
             init: 'wcf init --prefix <prefix> --dir <dir>',
             add: 'wcf add <componentId> --prefix <prefix> --out <dir>',
@@ -1830,12 +1830,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
             '<script type="importmap">',
             '{',
             '  "imports": {',
-            '    "<prefix>-button": "./<vendorDir>/components/button.js",',
-            '    "<prefix>-card": "./<vendorDir>/components/card.js"',
+            '    "<prefix>-button": "./<dir>/components/button.js",',
+            '    "<prefix>-card": "./<dir>/components/card.js"',
             '  }',
             '}',
             '</script>',
-            '<script type="module" src="./<vendorDir>/boot.js"></script>',
+            '<script type="module" src="./<dir>/boot.js"></script>',
           ].join('\n'),
         },
         ideSetupTemplates: IDE_SETUP_TEMPLATES,
@@ -2158,7 +2158,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
                 vendorHint: {
                   install: componentId ? `wcf add ${componentId} --prefix <prefix> --out <dir>` : undefined,
                   importmap: tagNames.length > 0
-                    ? JSON.stringify({ imports: Object.fromEntries(tagNames.map((t) => [t, `./<dir>/components/${t.replace(/^[^-]+-/, '')}.js`])) }, null, 2)
+                    ? JSON.stringify({ imports: Object.fromEntries(tagNames.map((t) => [t, `./<dir>/components/${t.replace(/^[^-]+-/, '')}.js`])) })
                     : undefined,
                   boot: '<dir>/boot.js -- loads autoloader that registers components via import map',
                 },
@@ -2346,11 +2346,14 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const entryHints = Array.isArray(pat.entryHints) ? [...pat.entryHints] : ['boot'];
 
       const importMapEntries = Object.fromEntries(
-        closure.map((cid) => {
+        closure.flatMap((cid) => {
           const meta = components[cid];
           const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
-          return tags.map((t) => [withPrefix(String(t).toLowerCase(), p), `./<dir>/components/${String(t).toLowerCase()}.js`]);
-        }).flat(),
+          return tags.map((t) => {
+            const lower = String(t).toLowerCase();
+            return [withPrefix(lower, p), `./<dir>/components/${lower}.js`];
+          });
+        }),
       );
 
       const scaffoldHint = {

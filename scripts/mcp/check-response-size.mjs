@@ -383,11 +383,14 @@ function getPatternRecipePayload(installRegistry, patternRegistry) {
     );
     const entryHints = Array.isArray(pat.entryHints) ? [...pat.entryHints] : ['boot'];
     const importMapEntries = Object.fromEntries(
-      closure.map((cid) => {
+      closure.flatMap((cid) => {
         const meta = components[cid];
         const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
-        return tags.map((t) => [String(t).toLowerCase(), `./<dir>/components/${String(t).toLowerCase()}.js`]);
-      }).flat(),
+        return tags.map((t) => {
+          const lower = String(t).toLowerCase();
+          return [lower, `./<dir>/components/${lower}.js`];
+        });
+      }),
     );
     const payload = {
       pattern: { id: pat.id, title: pat.title, description: pat.description },
