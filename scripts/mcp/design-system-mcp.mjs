@@ -39,15 +39,7 @@ export async function loadTextData(fileName) {
 }
 
 export async function loadValidator() {
-  const [repoValidator, mcpValidator] = await Promise.all([
-    import('../wc/validator-core.mjs'),
-    import('../../packages/mcp-server/validator.mjs'),
-  ]);
-  return {
-    ...repoValidator,
-    detectTokenMisuseInInlineStyles: mcpValidator.detectTokenMisuseInInlineStyles,
-    detectAccessibilityMisuseInMarkup: mcpValidator.detectAccessibilityMisuseInMarkup,
-  };
+  return import('../../packages/mcp-server/validator.mjs');
 }
 
 export async function main() {

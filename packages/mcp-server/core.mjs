@@ -752,9 +752,15 @@ export function levenshteinDistance(left, right) {
   return prev[b.length];
 }
 
-export function suggestUnknownElementTagName(tagName, cemIndex) {
+export function suggestUnknownElementTagName(tagName, cemIndex, prefix) {
   const target = String(tagName ?? '').trim().toLowerCase();
   if (!target || !target.includes('-')) return undefined;
+
+  // Try prefix-prepend before Levenshtein (e.g. input-text → dads-input-text)
+  if (prefix && cemIndex instanceof Map) {
+    const prefixed = `${String(prefix).toLowerCase()}-${target}`;
+    if (cemIndex.has(prefixed)) return prefixed;
+  }
 
   let bestTag;
   let bestDistance = Number.POSITIVE_INFINITY;
@@ -775,13 +781,17 @@ export function suggestUnknownElementTagName(tagName, cemIndex) {
   return bestTag;
 }
 
-export function buildDiagnosticSuggestion({ diagnostic, cemIndex }) {
+export function buildDiagnosticSuggestion({ diagnostic, cemIndex, prefix }) {
   const code = String(diagnostic?.code ?? '');
   if (!code) return undefined;
 
   if (code === 'unknownElement') {
-    const tagName = suggestUnknownElementTagName(diagnostic?.tagName, cemIndex);
+    const tagName = suggestUnknownElementTagName(diagnostic?.tagName, cemIndex, prefix);
     return tagName ? `Did you mean "${tagName}"?` : undefined;
+  }
+
+  if (code === 'canonicalLowercaseRecommendation') {
+    return diagnostic?.hint ?? undefined;
   }
 
   if (code === 'forbiddenAttribute' && String(diagnostic?.attrName ?? '').toLowerCase() === 'placeholder') {
@@ -1621,6 +1631,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     detectMissingRequiredAttributes = () => [],
     detectOrphanedChildComponents = () => [],
     detectEmptyInteractiveElement = () => [],
+    detectNonLowercaseAttributes = () => [],
   } = await loadValidator();
   const canonicalCemIndex = collectCemCustomElements(manifest);
   const canonicalEnumMap = buildEnumAttributeMap(manifest);
@@ -2258,8 +2269,26 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         severity: 'warning',
       });
 
-      const diagnostics = [...cemDiagnostics, ...enumDiagnostics, ...slotDiagnostics, ...requiredAttrDiagnostics, ...orphanDiagnostics, ...emptyInteractiveDiagnostics, ...tokenMisuseDiagnostics, ...accessibilityDiagnostics].map((d) => {
-        const suggestion = buildDiagnosticSuggestion({ diagnostic: d, cemIndex });
+      const lowercaseDiagnostics = detectNonLowercaseAttributes({
+        filePath: '<markup>',
+        text: html,
+        cem: cemIndex,
+        severity: 'warning',
+      });
+
+      const allRawDiagnostics = [
+        ...cemDiagnostics,
+        ...enumDiagnostics,
+        ...slotDiagnostics,
+        ...requiredAttrDiagnostics,
+        ...orphanDiagnostics,
+        ...emptyInteractiveDiagnostics,
+        ...lowercaseDiagnostics,
+        ...tokenMisuseDiagnostics,
+        ...accessibilityDiagnostics,
+      ];
+      const diagnostics = allRawDiagnostics.map((d) => {
+        const suggestion = buildDiagnosticSuggestion({ diagnostic: d, cemIndex, prefix: p });
         return {
           file: d.file,
           range: d.range,

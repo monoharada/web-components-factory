@@ -100,7 +100,24 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `validate_markup` | HTML スニペットを検証し、未知要素・不正enum値・不正スロット名・必須属性欠落（error）、未知属性・トークン誤用・`aria-live`/`role="alert"` 誤用・親子関係違反・空インタラクティブ要素（warning）を検出し、`suggestion` を返す |
+| `validate_markup` | HTML スニペットを検証し、セマンティック検証（下表）で `suggestion` 付き診断を返す |
+
+#### validate_markup 検出コード一覧
+
+| Code | Severity | 説明 | 例 |
+|------|----------|------|----|
+| `unknownElement` | error | CEM に未登録のカスタム要素。prefix 補完提案あり | `<input-text>` → `dads-input-text` |
+| `unknownAttribute` | warning | CEM に未登録の属性 | `<dads-button foo="x">` |
+| `invalidEnumValue` | error | enum 属性に不正な値 | `type="banana"` |
+| `invalidSlotName` | error | CEM に未登録のスロット名 | `slot="nonexistent"` |
+| `missingRequiredAttribute` | error | フォーム要素の必須属性欠落 | `<dads-input-text>` without `label` |
+| `orphanedChildComponent` | warning | 親要素なしの子コンポーネント | `<dads-breadcrumb-item>` without `<dads-breadcrumb>` |
+| `emptyInteractiveElement` | warning | accessible name が空の操作要素 | `<dads-button></dads-button>` |
+| `canonicalLowercaseRecommendation` | warning | 大文字を含む属性名（lowercase が canonical） | `Variant="solid"` → `variant` |
+| `tokenMisuse` | warning | inline style でのトークン誤用 | `color: #000` → `var(--color-*)` |
+| `ariaLiveNotRecommended` | warning | `aria-live` の使用（DADS 非推奨） | `aria-live="polite"` |
+| `roleAlertNotRecommended` | warning | `role="alert"` の使用（DADS 非推奨） | `role="alert"` |
+| `forbiddenAttribute` | warning | 禁止属性 | `placeholder` |
 
 ### UI パターン
 

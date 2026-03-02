@@ -866,3 +866,68 @@ export function detectMissingRequiredAttributes({
 
   return diagnostics;
 }
+
+/**
+ * Detect attributes written in non-lowercase on known custom elements.
+ * HTML attributes are case-insensitive, but WCF uses lowercase canonically.
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   cem: Map<string, { attributes: Set<string> }>;
+ *   severity?: string;
+ * }} params
+ */
+export function detectNonLowercaseAttributes({
+  filePath = '<input>',
+  text,
+  cem,
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+  if (!(cem instanceof Map) || cem.size === 0) return diagnostics;
+
+  const lineStarts = computeLineIndex(text);
+  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  let m;
+
+  while ((m = tagRe.exec(text))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    if (!tag.includes('-')) continue;
+
+    const meta = cem.get(tag);
+    if (!meta) continue;
+
+    const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
+    const attrs = parseAttributes(attrChunk);
+
+    for (const { name, offset } of attrs) {
+      // Check if attribute has non-lowercase characters BEFORE normalizing
+      if (name === name.toLowerCase()) continue;
+
+      const lower = name.toLowerCase();
+
+      // Skip global attributes and event handlers
+      if (shouldSkipAttr(lower)) continue;
+
+      // Only flag if the lowercase form is a known CEM attribute
+      if (!meta.attributes.has(lower)) continue;
+
+      const startIndex = rawAttrsStart + offset;
+      const endIndex = startIndex + name.length;
+      const range = makeRange(lineStarts, startIndex, endIndex);
+      diagnostics.push({
+        file: filePath,
+        range,
+        severity,
+        code: 'canonicalLowercaseRecommendation',
+        message: `Attribute "${name}" should be lowercase: "${lower}".`,
+        tagName: tag,
+        attrName: name,
+        hint: `Use "${lower}" instead of "${name}".`,
+      });
+    }
+  }
+
+  return diagnostics;
+}
