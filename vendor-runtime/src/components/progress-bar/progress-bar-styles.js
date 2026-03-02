@@ -24,7 +24,7 @@ export const progressBarStyles = css `
   }
 
   :host([composition="inlined"]) [part="label"] {
-    min-width: 0;
+    flex-shrink: 0;
     white-space: nowrap;
   }
 
@@ -33,9 +33,7 @@ export const progressBarStyles = css `
   }
 
   :host([underlay]) [part="base"] {
-    min-width: 128px;
-    min-height: 128px;
-    padding: var(--spacing-4);
+    padding: var(--spacing-6);
     justify-content: center;
     box-sizing: border-box;
   }
@@ -44,7 +42,7 @@ export const progressBarStyles = css `
     display: block;
     position: absolute;
     inset: 0;
-    border-radius: 12px;
+    border-radius: var(--spacing-3);
     border: 1px solid var(--dads-progress-bar-underlay-border);
     background: var(--dads-progress-bar-underlay-bg);
     z-index: -1;
@@ -55,9 +53,8 @@ export const progressBarStyles = css `
     height: 4px;
     position: relative;
     overflow: hidden;
-    border-radius: 2px;
     background: var(--dads-progress-bar-track-color);
-    border-bottom: 1px solid var(--dads-progress-bar-track-color);
+    border-bottom: 1px solid var(--dads-progress-bar-indicator-color);
   }
 
   [part="indicator"] {
@@ -69,10 +66,6 @@ export const progressBarStyles = css `
     transition: transform 0.3s ease;
   }
 
-  :host(:not([data-determinate])) [part="indicator"] {
-    animation: linear-indeterminate 2s ease-in-out infinite;
-  }
-
   [part="label"] {
     font-family: var(--font-family-sans);
     font-size: var(--font-size-16, 1rem);
@@ -82,30 +75,14 @@ export const progressBarStyles = css `
     color: var(--dads-progress-bar-label-color);
   }
 
-  :host(:not([label])) [part="label"] {
+  :host(:not([label])) [part="label"],
+  :host([label=""]) [part="label"] {
     display: none;
-  }
-
-  @keyframes linear-indeterminate {
-    0% {
-      transform: translateX(-100%) scaleX(0.4);
-    }
-    50% {
-      transform: translateX(0%) scaleX(0.6);
-    }
-    100% {
-      transform: translateX(100%) scaleX(0.4);
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     [part="indicator"] {
       transition: none;
-    }
-
-    :host(:not([data-determinate])) [part="indicator"] {
-      animation: none;
-      transform: translateX(0) scaleX(0.6);
     }
   }
 
@@ -120,6 +97,7 @@ export const progressBarStyles = css `
 
     [part="underlay"] {
       border-color: CanvasText;
+      background: Canvas;
     }
   }
 `;

@@ -14,7 +14,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsProgressBar_instances, _DadsProgressBar_base, _DadsProgressBar_indicator, _DadsProgressBar_labelEl, _DadsProgressBar_setDefaultAttributes, _DadsProgressBar_syncProgress, _DadsProgressBar_syncLabel;
+var _DadsProgressBar_instances, _DadsProgressBar_base, _DadsProgressBar_indicator, _DadsProgressBar_labelEl, _DadsProgressBar_setDefaultAttributes, _DadsProgressBar_syncProgress, _DadsProgressBar_syncValueText, _DadsProgressBar_syncLabel;
 import { html, PropertyAttr, BooleanAttr, } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -26,7 +26,7 @@ import { progressBarStyles } from './progress-bar-styles.js';
  * Progress Barコンポーネント
  *
  * 水平バーで進捗状況を表示する。
- * value属性の有無でdeterminate/indeterminateモードを自動切替する。
+ * 常にdeterminate（確定値）モードで動作する。不確定状態にはSpinnerを使用する。
  *
  * @customElement
  * @tagname dads-progress-bar
@@ -37,11 +37,12 @@ import { progressBarStyles } from './progress-bar-styles.js';
  * @csspart indicator - インジケーターバー（進捗表示）
  * @csspart label - ラベルテキスト
  *
- * @attr {string} value - 進捗値（0〜max、未設定=indeterminate）
+ * @attr {string} value - 進捗値（0〜max）
  * @attr {string} max - 最大値（デフォルト: 1、0以下は1にクランプ）
  * @attr {'stacked' | 'inlined'} composition - レイアウト方向
  * @attr {boolean} underlay - カード背景表示
  * @attr {string} label - 表示ラベル兼アクセシブル名
+ * @attr {string} value-text - 人間可読な進捗テキスト（aria-valuetextに反映）
  *
  * @cssprop --dads-progress-bar-track-color - トラック色
  * @cssprop --dads-progress-bar-indicator-color - インジケーター色
@@ -53,7 +54,7 @@ import { progressBarStyles } from './progress-bar-styles.js';
  * ```html
  * <dads-progress-bar value="0.5" label="50%"></dads-progress-bar>
  * <dads-progress-bar value="3" max="10" label="30%"></dads-progress-bar>
- * <dads-progress-bar label="読み込み中"></dads-progress-bar>
+ * <!-- 不確定状態には dads-spinner を使用 -->
  * <dads-progress-bar underlay value="0.7" label="70%"></dads-progress-bar>
  * ```
  */
@@ -73,6 +74,7 @@ export class DadsProgressBar extends TypographyWebComponent {
         __classPrivateFieldGet(this, _DadsProgressBar_instances, "m", _DadsProgressBar_setDefaultAttributes).call(this);
         __classPrivateFieldGet(this, _DadsProgressBar_instances, "m", _DadsProgressBar_syncProgress).call(this);
         __classPrivateFieldGet(this, _DadsProgressBar_instances, "m", _DadsProgressBar_syncLabel).call(this);
+        __classPrivateFieldGet(this, _DadsProgressBar_instances, "m", _DadsProgressBar_syncValueText).call(this);
     }
     valueChanged() {
         __classPrivateFieldGet(this, _DadsProgressBar_instances, "m", _DadsProgressBar_syncProgress).call(this);
@@ -83,6 +85,9 @@ export class DadsProgressBar extends TypographyWebComponent {
     labelChanged() {
         __classPrivateFieldGet(this, _DadsProgressBar_instances, "m", _DadsProgressBar_syncLabel).call(this);
     }
+    valueTextChanged() {
+        __classPrivateFieldGet(this, _DadsProgressBar_instances, "m", _DadsProgressBar_syncValueText).call(this);
+    }
 }
 _DadsProgressBar_base = new WeakMap(), _DadsProgressBar_indicator = new WeakMap(), _DadsProgressBar_labelEl = new WeakMap(), _DadsProgressBar_instances = new WeakSet(), _DadsProgressBar_setDefaultAttributes = function _DadsProgressBar_setDefaultAttributes() {
     if (!this.hasAttribute('composition')) {
@@ -92,27 +97,27 @@ _DadsProgressBar_base = new WeakMap(), _DadsProgressBar_indicator = new WeakMap(
     if (!__classPrivateFieldGet(this, _DadsProgressBar_base, "f") || !__classPrivateFieldGet(this, _DadsProgressBar_indicator, "f"))
         return;
     const rawValue = this.getAttribute('value');
-    const parsedValue = rawValue !== null ? Number(rawValue) : Number.NaN;
-    const isDeterminate = rawValue !== null && !Number.isNaN(parsedValue);
-    if (isDeterminate) {
-        const rawMax = this.getAttribute('max');
-        const parsedMax = rawMax !== null ? Number(rawMax) : 1;
-        const effectiveMax = parsedMax > 0 ? parsedMax : 1;
-        const clamped = Math.min(Math.max(0, parsedValue), effectiveMax);
-        const normalized = clamped / effectiveMax;
-        const ariaValue = Math.round(normalized * 100);
-        __classPrivateFieldGet(this, _DadsProgressBar_indicator, "f").style.setProperty('--progress', String(normalized));
-        __classPrivateFieldGet(this, _DadsProgressBar_base, "f").setAttribute('aria-valuenow', String(ariaValue));
-        __classPrivateFieldGet(this, _DadsProgressBar_base, "f").setAttribute('aria-valuemin', '0');
-        __classPrivateFieldGet(this, _DadsProgressBar_base, "f").setAttribute('aria-valuemax', '100');
-        this.setAttribute('data-determinate', '');
+    const parsedValue = rawValue !== null ? Number(rawValue) : 0;
+    const effectiveValue = Number.isNaN(parsedValue) ? 0 : parsedValue;
+    const rawMax = this.getAttribute('max');
+    const parsedMax = rawMax !== null ? Number(rawMax) : 1;
+    const effectiveMax = parsedMax > 0 ? parsedMax : 1;
+    const clamped = Math.min(Math.max(0, effectiveValue), effectiveMax);
+    const normalized = clamped / effectiveMax;
+    const ariaValue = Math.round(normalized * 100);
+    __classPrivateFieldGet(this, _DadsProgressBar_indicator, "f").style.setProperty('--progress', String(normalized));
+    __classPrivateFieldGet(this, _DadsProgressBar_base, "f").setAttribute('aria-valuenow', String(ariaValue));
+    __classPrivateFieldGet(this, _DadsProgressBar_base, "f").setAttribute('aria-valuemin', '0');
+    __classPrivateFieldGet(this, _DadsProgressBar_base, "f").setAttribute('aria-valuemax', '100');
+}, _DadsProgressBar_syncValueText = function _DadsProgressBar_syncValueText() {
+    if (!__classPrivateFieldGet(this, _DadsProgressBar_base, "f"))
+        return;
+    const valueText = this.getAttribute('value-text');
+    if (valueText && valueText.length > 0) {
+        __classPrivateFieldGet(this, _DadsProgressBar_base, "f").setAttribute('aria-valuetext', valueText);
     }
     else {
-        __classPrivateFieldGet(this, _DadsProgressBar_indicator, "f").style.removeProperty('--progress');
-        __classPrivateFieldGet(this, _DadsProgressBar_base, "f").removeAttribute('aria-valuenow');
-        __classPrivateFieldGet(this, _DadsProgressBar_base, "f").removeAttribute('aria-valuemin');
-        __classPrivateFieldGet(this, _DadsProgressBar_base, "f").removeAttribute('aria-valuemax');
-        this.removeAttribute('data-determinate');
+        __classPrivateFieldGet(this, _DadsProgressBar_base, "f").removeAttribute('aria-valuetext');
     }
 }, _DadsProgressBar_syncLabel = function _DadsProgressBar_syncLabel() {
     if (!__classPrivateFieldGet(this, _DadsProgressBar_base, "f") || !__classPrivateFieldGet(this, _DadsProgressBar_labelEl, "f"))
@@ -151,5 +156,6 @@ DadsProgressBar.definition = {
         PropertyAttr('composition'),
         BooleanAttr('underlay'),
         PropertyAttr('label'),
+        PropertyAttr('valueText', 'value-text'),
     ],
 };

@@ -13,6 +13,10 @@ export const buttonStyles = css `
     max-width: var(--dads-button-max-width, none);
   }
 
+  :host(:focus-visible) {
+    outline: none;
+  }
+
   :host([full-width]) {
     display: block;
     width: 100%;
@@ -62,7 +66,7 @@ export const buttonStyles = css `
   }
 
   /* フォーカススタイルはmixin (applyFocusStyles) で適用 */
-  
+
   /* Disabled時のフォーカススタイル（button要素のみ） */
   :host([disabled]) button[part="base"]:focus,
   button[part="base"]:disabled:focus {
