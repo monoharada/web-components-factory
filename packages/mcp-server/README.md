@@ -377,7 +377,7 @@ v0.3.0 では、AI エージェントが CDN 非対応の vendor-local 配信モ
 | フィールド | 型 | 説明 |
 |-----------|-----|------|
 | `usageContext` | `"body-only"` | `usageSnippet` が body 用 HTML であることを明示 |
-| `vendorHint` | `object` | `install`（CLI コマンド）、`importmap`（テンプレート）、`boot`（ブートスクリプト説明） |
+| `vendorHint` | `object` | `install`（CLI コマンド）、`importMap`（テンプレート）、`boot`（ブートスクリプト説明）。`importmap`（小文字 m）は非推奨エイリアス — v1.0 で削除予定 |
 
 ### `get_pattern_recipe` — 新フィールド
 

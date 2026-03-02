@@ -354,11 +354,15 @@ function getInstallRecipePayload(_manifest, installRegistry) {
       usageSnippet: `<dads-${componentId}>...</dads-${componentId}>`,
       usageContext: 'body-only',
       installHint: `wcf add ${componentId}`,
-      vendorHint: {
-        install: `wcf add ${componentId} --prefix <prefix> --out <dir>`,
-        importmap: JSON.stringify({ imports: Object.fromEntries(tags.map((t) => [t, `./<dir>/components/${t}.js`])) }),
-        boot: '<dir>/boot.js',
-      },
+      vendorHint: (() => {
+        const im = JSON.stringify({ imports: Object.fromEntries(tags.map((t) => [t, `./<dir>/components/${t.replace(/^[^-]+-/, '')}.js`])) });
+        return {
+          install: `wcf add ${componentId} --prefix <prefix> --out <dir>`,
+          importMap: im,
+          importmap: im,
+          boot: '<dir>/boot.js',
+        };
+      })(),
     };
     const bytes = toolResponseBytes(toTextToolResponse(payload));
     if (bytes > largest.bytes) {
@@ -388,7 +392,8 @@ function getPatternRecipePayload(installRegistry, patternRegistry) {
         const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
         return tags.map((t) => {
           const lower = String(t).toLowerCase();
-          return [lower, `./<dir>/components/${lower}.js`];
+          const suffix = lower.replace(/^[^-]+-/, '');
+          return [lower, `./<dir>/components/${suffix}.js`];
         });
       }),
     );

@@ -2055,8 +2055,10 @@ describe('resolveComponentClosure and transitive deps', () => {
       expect(payload.vendorHint).toBeDefined();
       expect(typeof payload.vendorHint.install).toBe('string');
       expect(payload.vendorHint.install).toContain('wcf add');
-      expect(typeof payload.vendorHint.importmap).toBe('string');
-      expect(payload.vendorHint.importmap).toContain('imports');
+      expect(typeof payload.vendorHint.importMap).toBe('string');
+      expect(payload.vendorHint.importMap).toContain('imports');
+      // importmap (deprecated) is kept as alias for backward compat
+      expect(payload.vendorHint.importmap).toBe(payload.vendorHint.importMap);
       expect(typeof payload.vendorHint.boot).toBe('string');
       expect(payload.vendorHint.boot).toContain('boot.js');
     } finally {
@@ -2185,6 +2187,9 @@ describe('get_pattern_recipe contract', () => {
       expect(payload.scaffoldHint).toBeDefined();
       expect(payload.scaffoldHint.doctype).toBe('<!DOCTYPE html>');
       expect(payload.scaffoldHint.importMap).toContain('importmap');
+      // importMap paths must use prefix-stripped suffix (e.g. button.js, not dads-button.js)
+      expect(payload.scaffoldHint.importMap).toContain('/button.js');
+      expect(payload.scaffoldHint.importMap).not.toMatch(/\/dads-button\.js/);
       expect(payload.scaffoldHint.bootScript).toContain('boot.js');
       expect(payload.scaffoldHint.noscript).toContain('noscript');
       expect(payload.scaffoldHint.serveOverHttp).toContain('HTTP');

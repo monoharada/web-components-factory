@@ -2155,13 +2155,17 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
                 usageSnippet,
                 usageContext: 'body-only',
                 installHint: componentId ? `wcf add ${componentId}` : undefined,
-                vendorHint: {
-                  install: componentId ? `wcf add ${componentId} --prefix <prefix> --out <dir>` : undefined,
-                  importmap: tagNames.length > 0
+                vendorHint: (() => {
+                  const im = tagNames.length > 0
                     ? JSON.stringify({ imports: Object.fromEntries(tagNames.map((t) => [t, `./<dir>/components/${t.replace(/^[^-]+-/, '')}.js`])) })
-                    : undefined,
-                  boot: '<dir>/boot.js -- loads autoloader that registers components via import map',
-                },
+                    : undefined;
+                  return {
+                    install: componentId ? `wcf add ${componentId} --prefix <prefix> --out <dir>` : undefined,
+                    importMap: im,
+                    importmap: im, // @deprecated — use importMap; will be removed in v1.0
+                    boot: '<dir>/boot.js -- loads autoloader that registers components via import map',
+                  };
+                })(),
               },
               null,
               2,
@@ -2351,7 +2355,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
           return tags.map((t) => {
             const lower = String(t).toLowerCase();
-            return [withPrefix(lower, p), `./<dir>/components/${lower}.js`];
+            const suffix = lower.replace(/^[^-]+-/, '');
+            return [withPrefix(lower, p), `./<dir>/components/${suffix}.js`];
           });
         }),
       );
