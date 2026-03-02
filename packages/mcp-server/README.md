@@ -90,7 +90,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `list_components` | カテゴリ/クエリ/limit/offset でコンポーネントを段階取得。`mode=compat` は従来互換（limit 未指定=全件）、`mode=paged` は default `limit=20` で `{total,limit,offset,hasMore,items}` を返却 |
+| `list_components` | カテゴリ/クエリ/limit/offset でコンポーネントを段階的に取得（デフォルト20件。全件取得は `limit: 200`） |
 | `search_icons` | アイコン名をキーワード検索し、usage example を返す |
 | `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得（`relatedComponents` を含む） |
 | `generate_usage_snippet` | コンポーネントの最小限 HTML スニペットを生成 |
@@ -100,7 +100,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `validate_markup` | HTML スニペットを検証し、未知要素（error）・未知属性（warning）・禁止属性/トークン誤用/`aria-live`・`role="alert"` の誤用（warning）を検出し、可能な場合は `suggestion` を返す |
+| `validate_markup` | HTML スニペットを検証し、未知要素・不正enum値・不正スロット名・必須属性欠落（error）、未知属性・トークン誤用・`aria-live`/`role="alert"` 誤用・親子関係違反・空インタラクティブ要素（warning）を検出し、`suggestion` を返す |
 
 ### UI パターン
 
@@ -114,10 +114,93 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `get_design_tokens` | デザイントークンを type/category/query/theme で検索（`limit/offset` 対応、`theme=light` のみ。`dark/all` はエラー） |
+| `get_design_tokens` | デザイントークンを type/category/query/theme で検索（`theme=light` のみ。`dark/all` はエラー） |
 | `get_design_token_detail` | 単一トークンの詳細（references/referencedBy/relatedTokens/usageExamples）を取得 |
 | `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索（`topic=all` では両ソースを混在返却） |
 | `search_guidelines` | ガイドライン（topic/query）をスコア付きで検索 |
+
+#### `get_design_tokens` の使用例
+
+**リクエスト:**
+```json
+{
+  "name": "get_design_tokens",
+  "arguments": {
+    "type": "color",
+    "category": "semantic",
+    "theme": "light"
+  }
+}
+```
+
+**レスポンス（抜粋）:**
+```json
+{
+  "summary": {
+    "totalCount": 42,
+    "types": { "color": 42 }
+  },
+  "tokens": [
+    {
+      "name": "--color-primary",
+      "type": "color",
+      "category": "semantic",
+      "value": "#0017C1",
+      "cssVariable": "var(--color-primary)"
+    }
+  ],
+  "themes": {
+    "requested": "light",
+    "resolved": "light",
+    "available": ["light"]
+  }
+}
+```
+
+#### `get_design_token_detail` の使用例
+
+**リクエスト:**
+```json
+{
+  "name": "get_design_token_detail",
+  "arguments": {
+    "name": "--color-primary",
+    "theme": "light"
+  }
+}
+```
+
+**レスポンス（抜粋）:**
+```json
+{
+  "token": {
+    "name": "--color-primary",
+    "type": "color",
+    "category": "semantic",
+    "value": "#0017C1",
+    "cssVariable": "var(--color-primary)",
+    "group": "color"
+  },
+  "references": [
+    { "name": "--primitive-blue-700", "type": "color", "category": "primitive" }
+  ],
+  "referencedBy": [
+    { "name": "--button-primary-bg", "type": "color", "category": "semantic" }
+  ],
+  "relatedTokens": ["--button-primary-bg"],
+  "usageExamples": [
+    ".example { color: var(--color-primary); }",
+    ".example { background-color: var(--color-primary); }"
+  ],
+  "theme": {
+    "requested": "light",
+    "resolved": "light",
+    "available": ["light"]
+  }
+}
+```
+
+> **注意**: `theme` は `"light"` のみサポート。`"dark"` や `"all"` を指定すると `INVALID_THEME` エラーが返ります。
 
 ### Prompt
 
@@ -127,12 +210,44 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 ### Resources (`wcf://`)
 
-| URI | 説明 | データソース | 更新タイミング |
-|-----|------|-------------|----------------|
-| `wcf://components` | コンポーネントカタログのスナップショット | `data/custom-elements.json` | CEM 更新後に `npm run mcp:build` 実行時 |
-| `wcf://tokens` | トークン summary（type/category/themes/sample） | `data/design-tokens.json` | トークン抽出後に `npm run mcp:build` 実行時 |
-| `wcf://guidelines/{topic}` | topic 別ガイドライン要約（`accessibility`,`css`,`patterns`,`all`） | `data/guidelines-index.json` | ガイドライン索引更新後に `npm run mcp:build` 実行時 |
-| `wcf://llms-full` | `llms-full.txt` の全文 | `data/llms-full.txt` | `npm run llms:generate` 後の `npm run mcp:build` 実行時 |
+| URI | 説明 |
+|-----|------|
+| `wcf://components` | コンポーネントカタログのスナップショット |
+| `wcf://tokens` | トークン summary（type/category/themes/sample） |
+| `wcf://guidelines/{topic}` | topic 別ガイドライン要約（`accessibility`,`css`,`patterns`,`all`） |
+| `wcf://llms-full` | `llms-full.txt` の全文 |
+
+### Figma MCP との併用
+
+Figma Dev Mode MCP Server (`@anthropic/figma-dev-mode-mcp-server`) と wcf-mcp を並行で利用すると、Figma デザインから WCF コンポーネントへの変換ワークフローが実現できます。
+
+**推奨ワークフロー:**
+
+1. **Figma MCP** → `get_design_context` でデザインの構造・カラー・スペーシングを取得
+2. **wcf-mcp** → `get_design_system_overview` で利用可能なコンポーネントを確認
+3. **wcf-mcp** → `get_design_tokens` で Figma カラー値に対応するトークンを検索
+4. **wcf-mcp** → `get_component_api` でコンポーネント仕様を取得
+5. **wcf-mcp** → `generate_usage_snippet` でコード生成
+6. **wcf-mcp** → `validate_markup` で生成コードを検証
+
+**Claude Desktop 設定例:**
+
+```json
+{
+  "mcpServers": {
+    "wcf": {
+      "command": "npx",
+      "args": ["@monoharada/wcf-mcp"]
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["@anthropic/figma-dev-mode-mcp-server"]
+    }
+  }
+}
+```
+
+> `figma_to_wcf` プロンプトは wcf-mcp に組み込まれており、Figma URL を入力として上記ワークフローの実行順序をガイドします。
 
 ## transport
 
@@ -145,13 +260,7 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 - bind: `127.0.0.1`
 - endpoint: `http://127.0.0.1:3100/mcp`
 
-### パフォーマンス関連フラグ
-
-- `WCF_MCP_HOT_RELOAD=1`: `design-tokens.json` / `guidelines-index.json` / `llms-full.txt` をツール実行時に再読込（変更検出あり）
-- `WCF_MCP_PERF_LOG=1`: ツールごとの `durationMs/bytes/originalBytes/truncated/transport` を stderr に出力
-- `WCF_MCP_TRANSPORT`: `bin.mjs` が自動設定（`stdio` or `http`）
-
-## 設定ファイル（@experimental）
+## 設定ファイル
 
 `wcf-mcp.config.json` を使うと、データソース差し替えとカスタムツール追加ができます。
 
@@ -193,7 +302,9 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 ※ `./plugins/custom-validation-plugin.mjs` は利用側プロジェクトに配置してください。  
 このリポジトリには参照用として `packages/mcp-server/examples/plugins/custom-validation-plugin.mjs` を同梱しています。
 
-### plugin 契約（@experimental）
+### plugin 契約（v1）
+
+詳細仕様: [docs/plugin-contract-v1.md](../../docs/plugin-contract-v1.md)
 
 - `plugins[].name` / `plugins[].version` は必須
 - tool 名は組み込みツール名と重複不可（例: `list_components` など）
@@ -204,23 +315,9 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
   - `design-tokens.json`
   - `guidelines-index.json`
 
-## structuredContent / summary モード
+## structuredContent rollback
 
-14 tools はすべて `summary?: boolean` を受け付けます（既定: `false`）。
-
-- `summary` 未指定/`false`: 従来どおりの `content`（JSON 文字列または snippet 文字列）を返します
-- `summary=true`: `content` は Markdown 要約を返し、同時に `structuredContent` に機械可読 JSON を返します
-
-`structuredContent` のスキーマは共通です。
-
-```json
-{
-  "type": "application/json",
-  "data": { "...": "tool payload" }
-}
-```
-
-互換性と安全策:
+`get_component_api` / `get_design_tokens` / `get_design_token_detail` / `get_accessibility_docs` / `search_guidelines` は通常 `structuredContent` を返します。
 
 - 100KB 制限を超える場合は自動的に `structuredContent` を省略し、`content` のみ返します
 - 緊急切り戻し時は環境変数 `WCF_MCP_DISABLE_STRUCTURED_CONTENT=1` を設定してください
@@ -258,7 +355,47 @@ Claude Desktop 設定例:
 prefix: "myui" → dads-button → myui-button
 ```
 
+## v0.2.0 マイグレーション
+
+### `list_components` のデフォルトページネーション変更
+
+v0.2.0 から `list_components` のデフォルト返却件数が **全件 → 20件** に変更されました。
+
+- `limit` を省略すると 20件が返り、`_notice` フィールドで変更を通知します
+- 全件取得が必要な場合: `limit: 200` を指定してください
+- `hasMore: true` の場合、`offset` で次のページを取得できます
+
+```json
+// 全件取得
+{ "name": "list_components", "arguments": { "limit": 200 } }
+// ページネーション
+{ "name": "list_components", "arguments": { "limit": 20, "offset": 20 } }
+```
+
 ## ツール使用例
+
+### コンポーネント一覧を取得
+
+```json
+{
+  "name": "list_components",
+  "arguments": { "category": "Form", "limit": 20 }
+}
+```
+
+レスポンス（抜粋）:
+```json
+{
+  "items": [
+    { "tagName": "dads-input-text", "className": "DadsInputText", "category": "Form" },
+    { "tagName": "dads-textarea", "className": "DadsTextarea", "category": "Form" }
+  ],
+  "total": 8,
+  "limit": 20,
+  "offset": 0,
+  "hasMore": false
+}
+```
 
 ### コンポーネント API を取得
 
@@ -269,15 +406,14 @@ prefix: "myui" → dads-button → myui-button
 }
 ```
 
-レスポンス:
+レスポンス（抜粋）:
 ```json
 {
   "tagName": "dads-button",
   "className": "DadsButton",
   "attributes": [
     { "name": "variant", "type": "'solid' | 'outlined' | 'text'" },
-    { "name": "size", "type": "'x-small' | 'small' | 'medium' | 'large'" },
-    ...
+    { "name": "size", "type": "'x-small' | 'small' | 'medium' | 'large'" }
   ],
   "slots": [...],
   "cssParts": [...],
@@ -285,6 +421,43 @@ prefix: "myui" → dads-button → myui-button
   "events": [...]
 }
 ```
+
+### 使い方スニペットを生成
+
+```json
+{
+  "name": "generate_usage_snippet",
+  "arguments": { "component": "dads-button" }
+}
+```
+
+レスポンス（テキスト形式 — HTML スニペットをそのまま返します）:
+```html
+<dads-button variant="solid">Label</dads-button>
+```
+
+### インストール手順を取得
+
+```json
+{
+  "name": "get_install_recipe",
+  "arguments": { "component": "dads-combobox" }
+}
+```
+
+レスポンス（抜粋）:
+```json
+{
+  "componentId": "combobox",
+  "tagNames": ["dads-combobox"],
+  "deps": ["avatar", "chip-tag", "icon"],
+  "transitiveDeps": ["avatar", "chip-tag", "icon"],
+  "define": "defineCombobox",
+  "installHint": "wcf add combobox"
+}
+```
+
+> `transitiveDeps` は BFS で解決された全推移的依存（自身を除く）の配列です。
 
 ### HTML バリデーション
 
@@ -310,6 +483,54 @@ prefix: "myui" → dads-button → myui-button
   ]
 }
 ```
+
+### ガイドライン検索
+
+```json
+{
+  "name": "search_guidelines",
+  "arguments": { "query": "keyboard", "topic": "accessibility" }
+}
+```
+
+レスポンス（抜粋）:
+```json
+{
+  "query": "keyboard",
+  "topic": "accessibility",
+  "totalHits": 3,
+  "results": [
+    {
+      "score": 5,
+      "title": "Keyboard Navigation",
+      "topic": "accessibility",
+      "heading": "Keyboard Navigation",
+      "snippet": "All interactive elements must be operable via keyboard..."
+    }
+  ]
+}
+```
+
+## スニペット vs レシピ
+
+| 用途 | ツール | 返すもの |
+|------|--------|----------|
+| 最小限 HTML を素早く確認 | `generate_usage_snippet` | 単一コンポーネントの HTML 断片 |
+| 画面パターン全体を構築 | `get_pattern_recipe` | 必要コンポーネント群 + 依存解決 + 完全 HTML |
+
+**使い分け**: 1 コンポーネントだけ使う場合は `generate_usage_snippet`。複数コンポーネントを組み合わせた UI パターン（フォーム、カード一覧など）には `get_pattern_recipe` を使用。
+
+## noscript ガイダンス
+
+WCF コンポーネントは JavaScript が必須です。`<noscript>` タグを使い、JavaScript 無効環境に対してフォールバックを提供してください。
+
+```html
+<noscript>
+  <p>このページは JavaScript を有効にする必要があります。</p>
+</noscript>
+```
+
+`get_design_system_overview` の `setupInfo.noscriptGuidance` にも同様の案内が含まれています。
 
 ## 開発者向け
 

@@ -1,6 +1,9 @@
 /**
- * @experimental sample plugin for wcf-mcp.
- * Adds a simple heading structure validator tool.
+ * Sample plugin for wcf-mcp (Plugin Contract v1).
+ * Demonstrates:
+ *  - Custom tool with handler
+ *  - Custom tool using handler context (helpers.loadJsonData)
+ *  - dataSources override for guidelines-index.json
  */
 
 function detectSkippedHeadingLevel(html = '') {
@@ -23,7 +26,13 @@ function detectSkippedHeadingLevel(html = '') {
 
 export default {
   name: 'custom-validation-plugin',
-  version: '0.1.0',
+  version: '0.2.0',
+  dataSources: [
+    {
+      fileName: 'guidelines-index.json',
+      path: './custom-guidelines.json',
+    },
+  ],
   tools: [
     {
       name: 'validate_heading_structure',
@@ -37,6 +46,23 @@ export default {
           diagnostics,
           total: diagnostics.length,
           ok: diagnostics.length === 0,
+        };
+      },
+    },
+    {
+      name: 'list_custom_guidelines',
+      description:
+        'List custom organization guidelines. When: discovering org-specific guidelines. Returns: guideline document titles and topics.',
+      async handler(_args, { helpers }) {
+        const data = await helpers.loadJsonData('guidelines-index.json');
+        const documents = Array.isArray(data?.documents) ? data.documents : [];
+        return {
+          total: documents.length,
+          documents: documents.map((doc) => ({
+            id: doc.id,
+            title: doc.title,
+            topic: doc.topic,
+          })),
         };
       },
     },

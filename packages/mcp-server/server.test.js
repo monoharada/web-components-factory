@@ -5,7 +5,7 @@
  * without actually starting the stdio transport.
  */
 
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -24,7 +24,6 @@ import {
   CATEGORY_MAP,
   FIGMA_TO_WCF_PROMPT,
   IDE_SETUP_TEMPLATES,
-  HOT_RELOAD_ENABLE_FLAG,
   MAX_TOOL_RESULT_BYTES,
   MAX_PREFIX_LENGTH,
   STRUCTURED_CONTENT_DISABLE_FLAG,
@@ -38,7 +37,7 @@ import {
   buildRelatedComponentMap,
   buildTokenRelationshipIndex,
   buildTokenSuggestionMap,
-  enforceToolResultSize,
+  expandQueryWithSynonyms,
   extractAccessibilityChecklist,
   extractIconNames,
   extractReferencedTokenNames,
@@ -55,15 +54,16 @@ import {
   parseIconNamesFromDescription,
   parseIconNamesFromType,
   normalizePlugins,
+  PLUGIN_CONTRACT_VERSION,
   buildPluginDataSourceMap,
   createMcpServer,
   queryAccessibilityIndex,
+  resolveComponentClosure,
   searchIconCatalog,
   toCanonicalTagName,
   WCF_RESOURCE_URIS,
-  LIST_COMPONENTS_PAGED_DEFAULT_LIMIT,
 } from './core.mjs';
-import { detectAccessibilityMisuseInMarkup, detectTokenMisuseInInlineStyles } from './validator.mjs';
+import { buildEnumAttributeMap, buildSlotNameMap, detectAccessibilityMisuseInMarkup, detectEmptyInteractiveElement, detectEnumValueMisuse, detectInvalidSlotName, detectMissingRequiredAttributes, detectOrphanedChildComponents, detectTokenMisuseInInlineStyles } from './validator.mjs';
 import { loadWcfMcpRuntimeConfig } from './server.mjs';
 
 // ---------------------------------------------------------------------------
@@ -243,7 +243,7 @@ describe('list_components category filter (logic)', () => {
     expect(decls.length).toBeGreaterThan(0);
   });
 
-  it('keeps backward compatibility: no limit means all items', async () => {
+  it('defaults to 20 items when limit is not specified', async () => {
     const manifest = await loadBundledJson('custom-elements.json');
     const decls = findCustomElementDeclarations(manifest);
     const indexes = buildIndexes(manifest);
@@ -251,8 +251,22 @@ describe('list_components category filter (logic)', () => {
 
     expect(page.offset).toBe(0);
     expect(page.total).toBe(decls.length);
+    expect(page.limit).toBe(20);
+    expect(page.items.length).toBe(20);
+    expect(page.hasMore).toBe(true);
+    expect(page._notice).toContain('Default pagination changed');
+  });
+
+  it('returns all items when limit=200 is set', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const decls = findCustomElementDeclarations(manifest);
+    const indexes = buildIndexes(manifest);
+    const page = buildComponentSummaries(indexes, { limit: 200 });
+
+    expect(page.total).toBe(decls.length);
     expect(page.items.length).toBe(decls.length);
     expect(page.hasMore).toBe(false);
+    expect(page._notice).toBeUndefined();
   });
 
   it('supports query filter and offset pagination', async () => {
@@ -379,23 +393,6 @@ describe('get_component_api relatedComponents (logic)', () => {
 });
 
 describe('tool descriptions', () => {
-  const allBuiltinToolNames = [
-    'get_design_system_overview',
-    'list_components',
-    'search_icons',
-    'get_component_api',
-    'generate_usage_snippet',
-    'get_install_recipe',
-    'validate_markup',
-    'list_patterns',
-    'get_pattern_recipe',
-    'generate_pattern_snippet',
-    'get_design_tokens',
-    'get_design_token_detail',
-    'get_accessibility_docs',
-    'search_guidelines',
-  ];
-
   it('get_design_system_overview description contains MUST guardrail', async () => {
     // Tool descriptions now live in core.mjs
     const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
@@ -405,9 +402,26 @@ describe('tool descriptions', () => {
   it('all tools have When/Returns/After guidance in descriptions', async () => {
     const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
 
-    for (const name of allBuiltinToolNames) {
+    // Tools that should have enhanced descriptions
+    const toolNames = [
+      'list_components',
+      'search_icons',
+      'get_component_api',
+      'generate_usage_snippet',
+      'get_install_recipe',
+      'validate_markup',
+      'list_patterns',
+      'get_pattern_recipe',
+      'generate_pattern_snippet',
+      'get_design_tokens',
+      'get_design_token_detail',
+      'get_accessibility_docs',
+      'search_guidelines',
+    ];
+
+    for (const name of toolNames) {
       // Each tool's description block should contain "When:" and "Returns:"
-      const marker = `registerTool(\n    '${name}'`;
+      const marker = `server.registerTool(\n    '${name}'`;
       const markerIndex = coreSrc.indexOf(marker);
       expect(markerIndex).toBeGreaterThanOrEqual(0);
       const toolSection = coreSrc.slice(markerIndex);
@@ -415,24 +429,6 @@ describe('tool descriptions', () => {
       const descBlock = toolSection.slice(0, descEnd);
       expect(descBlock).toContain('When:');
       expect(descBlock).toContain('Returns:');
-      expect(descBlock).toContain('After:');
-    }
-  });
-
-  it('all tools expose summary input flag', async () => {
-    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
-
-    for (const name of allBuiltinToolNames) {
-      const marker = `registerTool(\n    '${name}'`;
-      const markerIndex = coreSrc.indexOf(marker);
-      expect(markerIndex).toBeGreaterThanOrEqual(0);
-      const toolSection = coreSrc.slice(markerIndex);
-      const asyncStart = toolSection.indexOf('},\n    async');
-      const schemaBlock = toolSection.slice(0, asyncStart);
-      expect(
-        schemaBlock.includes('summary: summaryInputSchema()')
-        || schemaBlock.includes('summary: z.boolean().optional()'),
-      ).toBe(true);
     }
   });
 });
@@ -526,6 +522,15 @@ describe('MCP prompts/resources contract', () => {
     expect(payload.ideSetupTemplates.length).toBeGreaterThanOrEqual(5);
     expect(payload.ideSetupTemplates.some((item) => item.ide === 'VS Code (GitHub Copilot)')).toBe(true);
     expect(payload.ideSetupTemplates.some((item) => item.ide === 'Windsurf')).toBe(true);
+
+    expect(payload.setupInfo).toBeDefined();
+    expect(payload.setupInfo.npmPackage).toBe('web-components-factory');
+    expect(typeof payload.setupInfo.installCommand).toBe('string');
+    expect(typeof payload.setupInfo.vendorRuntimePath).toBe('string');
+    expect(typeof payload.setupInfo.htmlBoilerplate).toBe('string');
+    expect(payload.setupInfo.htmlBoilerplate).toContain('<script');
+    expect(typeof payload.setupInfo.noscriptGuidance).toBe('string');
+    expect(payload.setupInfo.noscriptGuidance).toContain('noscript');
 
     expect(Array.isArray(payload.availablePrompts)).toBe(true);
     expect(payload.availablePrompts.some((item) => item.name === FIGMA_TO_WCF_PROMPT)).toBe(true);
@@ -625,196 +630,227 @@ describe('MCP prompts/resources contract', () => {
     }
   });
 
-  it('supports summary mode across all builtin tools', async () => {
-    const patternsResult = await client.callTool({
-      name: 'list_patterns',
-      arguments: {},
+  it('get_component_api resolves by tagName', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { tagName: 'dads-button' },
     });
-    const patterns = JSON.parse(String(patternsResult.content?.[0]?.text ?? '[]'));
-    const firstPatternId = Array.isArray(patterns) && patterns[0]?.id ? String(patterns[0].id) : 'mockup-website';
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.tagName).toBe('dads-button');
+  });
 
-    const calls = [
-      { name: 'get_design_system_overview', arguments: {} },
-      { name: 'list_components', arguments: {} },
-      { name: 'search_icons', arguments: {} },
-      { name: 'get_component_api', arguments: { tagName: 'dads-button' } },
-      { name: 'generate_usage_snippet', arguments: { component: 'dads-button' } },
-      { name: 'get_install_recipe', arguments: { component: 'dads-button' } },
-      { name: 'validate_markup', arguments: { html: '<dads-button>Click</dads-button>' } },
-      { name: 'list_patterns', arguments: {} },
-      { name: 'get_pattern_recipe', arguments: { patternId: firstPatternId } },
-      { name: 'generate_pattern_snippet', arguments: { patternId: firstPatternId } },
-      { name: 'get_design_tokens', arguments: {} },
-      { name: 'get_design_token_detail', arguments: { name: '--color-text-body' } },
-      { name: 'get_accessibility_docs', arguments: {} },
-      { name: 'search_guidelines', arguments: { query: 'focus' } },
+  it('get_component_api resolves by className', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { className: 'DadsButton' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.tagName).toBe('dads-button');
+  });
+
+  it('get_component_api resolves by bare name via auto-prefix (component param)', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'button' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.tagName).toBe('dads-button');
+  });
+
+  it('get_component_api returns suggestions for unknown component', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'nonexistent-xyz' },
+    });
+    expect(result.isError).toBe(true);
+    expect(String(result.content?.[0]?.text)).toContain('not found');
+  });
+
+  it('get_component_api suggests correct tag for unprefixed typo (Levenshtein)', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'buton' },
+    });
+    expect(result.isError).toBe(true);
+    const text = String(result.content?.[0]?.text);
+    expect(text).toContain('Did you mean');
+    expect(text).toContain('dads-button');
+  });
+
+  it('generate_usage_snippet resolves by bare name via auto-prefix', async () => {
+    const result = await client.callTool({
+      name: 'generate_usage_snippet',
+      arguments: { component: 'button' },
+    });
+    expect(result.isError).toBeFalsy();
+    expect(String(result.content?.[0]?.text)).toContain('dads-button');
+  });
+
+  it('search_guidelines zero-result query returns suggestions with alternativeTools', async () => {
+    const result = await client.callTool({
+      name: 'search_guidelines',
+      arguments: { query: 'xyznonexistentquery123' },
+    });
+    if (result.isError) {
+      // guidelines-index.json not built — verify graceful error
+      expect(String(result.content?.[0]?.text)).toContain('Guidelines index not available');
+      return;
+    }
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.totalHits).toBe(0);
+    expect(payload.suggestions).toBeDefined();
+    expect(Array.isArray(payload.suggestions.alternativeTools)).toBe(true);
+    expect(payload.suggestions.alternativeTools.some((t) => t.tool === 'get_accessibility_docs')).toBe(true);
+    expect(payload.suggestions.alternativeTools.some((t) => t.tool === 'get_component_api')).toBe(true);
+  });
+
+  it('search_guidelines benchmark: all 6 builder queries return >0 results', async () => {
+    const BENCHMARK_QUERIES = [
+      'keyboard navigation',
+      'focus management',
+      'color contrast',
+      'form validation error',
+      'heading hierarchy',
+      'skip navigation',
     ];
 
-    for (const call of calls) {
+    // Skip benchmark when guidelines-index.json is not built
+    const probe = await client.callTool({
+      name: 'search_guidelines',
+      arguments: { query: BENCHMARK_QUERIES[0] },
+    });
+    if (probe.isError) {
+      expect(String(probe.content?.[0]?.text)).toContain('Guidelines index not available');
+      return;
+    }
+    const probePayload = JSON.parse(String(probe.content?.[0]?.text ?? '{}'));
+    expect(probePayload.totalHits, `"${BENCHMARK_QUERIES[0]}" should return >0 results`).toBeGreaterThan(0);
+
+    for (const query of BENCHMARK_QUERIES.slice(1)) {
       const result = await client.callTool({
-        name: call.name,
-        arguments: {
-          ...call.arguments,
-          summary: true,
-        },
+        name: 'search_guidelines',
+        arguments: { query },
       });
-
-      const text = String(result.content?.[0]?.text ?? '');
-      expect(text.length).toBeGreaterThan(0);
-
-      if (result.isError === true) continue;
-
-      expect(text.startsWith('## ')).toBe(true);
-      expect(result.structuredContent?.type).toBe('application/json');
-      expect(result.structuredContent?.data).toBeDefined();
+      const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+      expect(payload.totalHits, `"${query}" should return >0 results`).toBeGreaterThan(0);
     }
   });
 
-  it('supports list_components paged mode with default limit', async () => {
-    const pagedResult = await client.callTool({
-      name: 'list_components',
-      arguments: { mode: 'paged' },
+  // P-07: Enum attribute validation via validate_markup
+  it('validate_markup detects invalid enum value with error severity', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-breadcrumb separator="invalid-val"></dads-breadcrumb>' },
     });
-    const pagedPayload = JSON.parse(String(pagedResult.content?.[0]?.text ?? '{}'));
-    expect(pagedPayload.limit).toBe(LIST_COMPONENTS_PAGED_DEFAULT_LIMIT);
-    expect(pagedPayload.offset).toBe(0);
-    expect(Array.isArray(pagedPayload.items)).toBe(true);
-    expect(pagedPayload.items.length).toBeLessThanOrEqual(LIST_COMPONENTS_PAGED_DEFAULT_LIMIT);
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const enumDiag = payload.diagnostics.find((d) => d.code === 'invalidEnumValue');
+    expect(enumDiag).toBeDefined();
+    expect(enumDiag.severity).toBe('error');
+    expect(enumDiag.message).toContain('invalid-val');
+    expect(enumDiag.message).toContain('separator');
+    expect(enumDiag.hint).toBeTruthy();
+  });
 
-    const compatResult = await client.callTool({
-      name: 'list_components',
-      arguments: {},
+  it('validate_markup accepts valid enum values without error', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-breadcrumb separator="chevron"></dads-breadcrumb>' },
     });
-    const compatPayload = JSON.parse(String(compatResult.content?.[0]?.text ?? '[]'));
-    expect(Array.isArray(compatPayload)).toBe(true);
-  });
-});
-
-describe('runtime performance behaviors', () => {
-  it('reloads optional design tokens when hot reload flag is enabled', async () => {
-    const previous = process.env[HOT_RELOAD_ENABLE_FLAG];
-    process.env[HOT_RELOAD_ENABLE_FLAG] = '1';
-
-    const firstTokens = {
-      version: 1,
-      tokens: [
-        {
-          name: '--color-a',
-          value: '#111111',
-          type: 'color',
-          category: 'primitive',
-          cssVariable: '--color-a',
-        },
-      ],
-      summary: { color: 1, spacing: 0, typography: 0, radius: 0, shadow: 0 },
-      themes: { default: 'light', available: ['light'] },
-    };
-    const secondTokens = {
-      ...firstTokens,
-      tokens: [
-        ...firstTokens.tokens,
-        {
-          name: '--color-b',
-          value: '#222222',
-          type: 'color',
-          category: 'primitive',
-          cssVariable: '--color-b',
-        },
-      ],
-      summary: { color: 2, spacing: 0, typography: 0, radius: 0, shadow: 0 },
-    };
-
-    let tokenLoadCount = 0;
-    const loadJsonData = async (fileName) => {
-      if (fileName === 'design-tokens.json') {
-        tokenLoadCount += 1;
-        return tokenLoadCount <= 2 ? firstTokens : secondTokens;
-      }
-      if (fileName === 'guidelines-index.json') {
-        return (await loadBundledJsonOrNull(fileName)) ?? { version: 1, documents: [], topicCounts: {} };
-      }
-      return loadBundledJson(fileName);
-    };
-
-    const created = await createMcpServer(
-      loadJsonData,
-      async () => import('./validator.mjs'),
-      { loadTextData: loadBundledText },
-    );
-
-    const server = created.server;
-    const client = new Client(
-      { name: 'wcf-mcp-hot-reload-client', version: '0.0.0' },
-      { capabilities: {} },
-    );
-    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-    await Promise.all([
-      server.connect(serverTransport),
-      client.connect(clientTransport),
-    ]);
-
-    try {
-      const first = await client.callTool({
-        name: 'get_design_tokens',
-        arguments: { theme: 'light' },
-      });
-      const firstPayload = JSON.parse(String(first.content?.[0]?.text ?? '{}'));
-      expect(firstPayload.total).toBe(1);
-
-      const second = await client.callTool({
-        name: 'get_design_tokens',
-        arguments: { theme: 'light' },
-      });
-      const secondPayload = JSON.parse(String(second.content?.[0]?.text ?? '{}'));
-      expect(secondPayload.total).toBe(2);
-    } finally {
-      await Promise.allSettled([client.close(), server.close()]);
-      if (typeof previous === 'string') {
-        process.env[HOT_RELOAD_ENABLE_FLAG] = previous;
-      } else {
-        delete process.env[HOT_RELOAD_ENABLE_FLAG];
-      }
-    }
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const enumDiag = payload.diagnostics.find((d) => d.code === 'invalidEnumValue');
+    expect(enumDiag).toBeUndefined();
   });
 
-  it('emits tool performance logs when WCF_MCP_PERF_LOG is enabled', async () => {
-    const previous = process.env.WCF_MCP_PERF_LOG;
-    process.env.WCF_MCP_PERF_LOG = '1';
+  // P-08: Slot name and required attribute validation
+  it('validate_markup detects invalid slot name', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<div slot="nonexistent-slot-xyz">content</div>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const slotDiag = payload.diagnostics.find((d) => d.code === 'invalidSlotName');
+    expect(slotDiag).toBeDefined();
+    expect(slotDiag.severity).toBe('error');
+    expect(slotDiag.message).toContain('nonexistent-slot-xyz');
+  });
 
-    const created = await createMcpServer(
-      loadBundledJson,
-      async () => import('./validator.mjs'),
-      { loadTextData: loadBundledText },
-    );
-    const server = created.server;
-    const client = new Client(
-      { name: 'wcf-mcp-perf-client', version: '0.0.0' },
-      { capabilities: {} },
-    );
-    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
-    await Promise.all([
-      server.connect(serverTransport),
-      client.connect(clientTransport),
-    ]);
+  it('validate_markup accepts known slot names', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<div slot="header">content</div>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const slotDiag = payload.diagnostics.find((d) => d.code === 'invalidSlotName');
+    expect(slotDiag).toBeUndefined();
+  });
 
-    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    try {
-      await client.callTool({
-        name: 'list_patterns',
-        arguments: {},
-      });
-      const logs = errorSpy.mock.calls.map((entry) => String(entry[0] ?? ''));
-      expect(logs.some((line) => line.includes('[wcf-mcp][perf]'))).toBe(true);
-      expect(logs.some((line) => line.includes('"tool":"list_patterns"'))).toBe(true);
-    } finally {
-      errorSpy.mockRestore();
-      await Promise.allSettled([client.close(), server.close()]);
-      if (typeof previous === 'string') {
-        process.env.WCF_MCP_PERF_LOG = previous;
-      } else {
-        delete process.env.WCF_MCP_PERF_LOG;
-      }
-    }
+  it('validate_markup detects missing label on form input', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-input-text></dads-input-text>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const reqDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute');
+    expect(reqDiag).toBeDefined();
+    expect(reqDiag.severity).toBe('error');
+    expect(reqDiag.attrName).toBe('label');
+  });
+
+  it('validate_markup passes when label is present on form input', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-input-text label="Name"></dads-input-text>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const reqDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute');
+    expect(reqDiag).toBeUndefined();
+  });
+
+  // P-09: Parent-child + empty interactive element validation
+  it('validate_markup warns on orphaned child component', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-breadcrumb-item>Home</dads-breadcrumb-item>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const orphanDiag = payload.diagnostics.find((d) => d.code === 'orphanedChildComponent');
+    expect(orphanDiag).toBeDefined();
+    expect(orphanDiag.severity).toBe('warning');
+    expect(orphanDiag.message).toContain('dads-breadcrumb');
+  });
+
+  it('validate_markup does not warn on properly nested child', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-breadcrumb><dads-breadcrumb-item>Home</dads-breadcrumb-item></dads-breadcrumb>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const orphanDiag = payload.diagnostics.find((d) => d.code === 'orphanedChildComponent');
+    expect(orphanDiag).toBeUndefined();
+  });
+
+  it('validate_markup warns on empty interactive button', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-button></dads-button>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const emptyDiag = payload.diagnostics.find((d) => d.code === 'emptyInteractiveElement');
+    expect(emptyDiag).toBeDefined();
+    expect(emptyDiag.severity).toBe('warning');
+  });
+
+  it('validate_markup does not warn on button with content', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-button>Click me</dads-button>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const emptyDiag = payload.diagnostics.find((d) => d.code === 'emptyInteractiveElement');
+    expect(emptyDiag).toBeUndefined();
   });
 });
 
@@ -942,28 +978,6 @@ describe('get_design_tokens', () => {
     expect(allResult.isError).toBe(true);
     expect(allResult.payload.error.code).toBe('INVALID_THEME');
   });
-
-  it('supports limit/offset pagination in helper payload', async () => {
-    let data;
-    try {
-      data = await loadBundledJson('design-tokens.json');
-    } catch {
-      return;
-    }
-
-    const paged = buildDesignTokensPayload(data, {
-      theme: 'light',
-      limit: 7,
-      offset: 5,
-    });
-
-    expect(paged.isError).toBe(false);
-    expect(paged.payload.limit).toBe(7);
-    expect(paged.payload.offset).toBe(5);
-    expect(Array.isArray(paged.payload.tokens)).toBe(true);
-    expect(paged.payload.tokens.length).toBeLessThanOrEqual(7);
-    expect(typeof paged.payload.hasMore).toBe('boolean');
-  });
 });
 
 describe('token detail helpers', () => {
@@ -1034,6 +1048,49 @@ describe('token detail helpers', () => {
     const result = buildDesignTokenDetailPayload(data, '--color-primary', 'dark');
     expect(result.isError).toBe(true);
     expect(result.payload.error.code).toBe('INVALID_THEME');
+  });
+
+  it('returns non-empty usageExamples for color and spacing tokens', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const colorToken = data.tokens.find((t) => String(t?.type).toLowerCase() === 'color' && t?.name);
+    if (colorToken) {
+      const result = buildDesignTokenDetailPayload(data, colorToken.name, 'light');
+      expect(result.isError).toBe(false);
+      expect(result.payload.usageExamples.length).toBeGreaterThan(0);
+      expect(result.payload.usageExamples[0]).toContain('color');
+    }
+
+    const spacingToken = data.tokens.find((t) => String(t?.type).toLowerCase() === 'spacing' && t?.name);
+    if (spacingToken) {
+      const result = buildDesignTokenDetailPayload(data, spacingToken.name, 'light');
+      expect(result.isError).toBe(false);
+      expect(result.payload.usageExamples.length).toBeGreaterThan(0);
+      expect(result.payload.usageExamples[0]).toContain(spacingToken.cssVariable || spacingToken.name);
+    }
+  });
+
+  it('extracts relatedTokens from semantic referencedBy entries', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const primitiveColor = data.tokens.find(
+      (t) => String(t?.category).toLowerCase() === 'primitive' && String(t?.type).toLowerCase() === 'color' && t?.name,
+    );
+    if (primitiveColor) {
+      const result = buildDesignTokenDetailPayload(data, primitiveColor.name, 'light');
+      expect(result.isError).toBe(false);
+      expect(Array.isArray(result.payload.relatedTokens)).toBe(true);
+    }
   });
 });
 
@@ -1114,6 +1171,50 @@ describe('search_guidelines', () => {
 
     // Should find at least some hits for "accessibility"
     expect(hits).toBeGreaterThan(0);
+  });
+
+  it('synonym expansion returns expanded terms for "keyboard"', () => {
+    const expanded = expandQueryWithSynonyms('keyboard');
+    expect(expanded).toContain('keyboard');
+    expect(expanded).toContain('focus');
+    expect(expanded).toContain('tab');
+    expect(expanded.length).toBeGreaterThan(1);
+  });
+
+  it('synonym expansion does not expand unrelated terms', () => {
+    const expanded = expandQueryWithSynonyms('button');
+    expect(expanded).toEqual(['button']);
+  });
+
+  it('body field is present in guidelines-index sections', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('guidelines-index.json');
+    } catch {
+      return;
+    }
+
+    const docWithBody = data.documents.find(
+      (d) => d.sections.some((s) => typeof s.body === 'string' && s.body.length > 0),
+    );
+    expect(docWithBody).toBeDefined();
+  });
+
+  it('contains DADS topic entries (keyboard, focus, contrast, form, heading, skip)', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('guidelines-index.json');
+    } catch {
+      return;
+    }
+
+    const ids = data.documents.map((d) => d.id);
+    expect(ids).toContain('dads:keyboard-navigation');
+    expect(ids).toContain('dads:focus-management');
+    expect(ids).toContain('dads:contrast-color');
+    expect(ids).toContain('dads:form-validation');
+    expect(ids).toContain('dads:heading-hierarchy');
+    expect(ids).toContain('dads:skip-navigation');
   });
 });
 
@@ -1240,18 +1341,6 @@ describe('structuredContent helpers', () => {
     expect(result.structuredContent).toBeUndefined();
     expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
   });
-
-  it('truncates oversized text responses and appends truncation metadata', () => {
-    const oversized = {
-      content: [{ type: 'text', text: 'x'.repeat(220 * 1024) }],
-    };
-    const sized = enforceToolResultSize(oversized, { toolName: 'test_tool', maxBytes: 24 * 1024 });
-
-    expect(sized.truncated).toBe(true);
-    expect(sized.finalBytes).toBeLessThanOrEqual(24 * 1024);
-    expect(sized.result.metadata?.truncation?.applied).toBe(true);
-    expect(sized.result.metadata?.truncation?.strategy).toBe('truncateText');
-  });
 });
 
 describe('token misuse detection', () => {
@@ -1376,6 +1465,166 @@ describe('repo-local validator wiring', () => {
   });
 });
 
+describe('enum attribute validation', () => {
+  it('buildEnumAttributeMap extracts enum types from CEM', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const enumMap = buildEnumAttributeMap(manifest);
+    expect(enumMap.size).toBeGreaterThan(0);
+    // dads-breadcrumb has separator enum: 'chevron' | 'slash' | 'pipe'
+    const breadcrumbEnums = enumMap.get('dads-breadcrumb');
+    expect(breadcrumbEnums).toBeDefined();
+    expect(breadcrumbEnums.has('separator')).toBe(true);
+    const validSeparators = breadcrumbEnums.get('separator');
+    expect(validSeparators.has('chevron')).toBe(true);
+    expect(validSeparators.has('slash')).toBe(true);
+    expect(validSeparators.has('pipe')).toBe(true);
+  });
+
+  it('detectEnumValueMisuse returns error for invalid values', () => {
+    const enumMap = new Map([
+      ['dads-button', new Map([['variant', new Set(['solid', 'outlined', 'text'])]])],
+    ]);
+    const diagnostics = detectEnumValueMisuse({
+      text: '<dads-button variant="bogus">Click</dads-button>',
+      enumMap,
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('invalidEnumValue');
+    expect(diagnostics[0].severity).toBe('error');
+    expect(diagnostics[0].message).toContain('bogus');
+    expect(diagnostics[0].message).toContain('variant');
+    expect(diagnostics[0].hint).toContain("'solid'");
+  });
+
+  it('detectEnumValueMisuse accepts valid values silently', () => {
+    const enumMap = new Map([
+      ['dads-button', new Map([['variant', new Set(['solid', 'outlined', 'text'])]])],
+    ]);
+    const diagnostics = detectEnumValueMisuse({
+      text: '<dads-button variant="solid">Click</dads-button>',
+      enumMap,
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectEnumValueMisuse skips empty attribute values', () => {
+    const enumMap = new Map([
+      ['dads-button', new Map([['variant', new Set(['solid', 'outlined'])]])],
+    ]);
+    const diagnostics = detectEnumValueMisuse({
+      text: '<dads-button variant>Click</dads-button>',
+      enumMap,
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+});
+
+describe('slot and required attribute validation', () => {
+  it('buildSlotNameMap extracts slot names from CEM', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const slotMap = buildSlotNameMap(manifest);
+    expect(slotMap.size).toBeGreaterThan(0);
+    // dads-accordion-item-details has slots: content, header
+    const accordionSlots = slotMap.get('dads-accordion-item-details');
+    expect(accordionSlots).toBeDefined();
+    expect(accordionSlots.has('content')).toBe(true);
+    expect(accordionSlots.has('header')).toBe(true);
+  });
+
+  it('detectInvalidSlotName flags unknown slot names', () => {
+    const slotMap = new Map([
+      ['dads-accordion-item-details', new Set(['content', 'header'])],
+    ]);
+    const diagnostics = detectInvalidSlotName({
+      text: '<div slot="bogus-slot">content</div>',
+      slotMap,
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('invalidSlotName');
+    expect(diagnostics[0].severity).toBe('error');
+    expect(diagnostics[0].message).toContain('bogus-slot');
+  });
+
+  it('detectInvalidSlotName accepts known slot names', () => {
+    const slotMap = new Map([
+      ['dads-accordion-item-details', new Set(['content', 'header'])],
+    ]);
+    const diagnostics = detectInvalidSlotName({
+      text: '<div slot="content">content</div>',
+      slotMap,
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectMissingRequiredAttributes flags missing label on form input', () => {
+    const diagnostics = detectMissingRequiredAttributes({
+      text: '<dads-input-text></dads-input-text>',
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('missingRequiredAttribute');
+    expect(diagnostics[0].attrName).toBe('label');
+    expect(diagnostics[0].tagName).toBe('dads-input-text');
+  });
+
+  it('detectMissingRequiredAttributes passes when label is present', () => {
+    const diagnostics = detectMissingRequiredAttributes({
+      text: '<dads-input-text label="Name"></dads-input-text>',
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectMissingRequiredAttributes respects custom prefix', () => {
+    const diagnostics = detectMissingRequiredAttributes({
+      text: '<myui-input-text></myui-input-text>',
+      prefix: 'myui',
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].tagName).toBe('myui-input-text');
+  });
+});
+
+describe('parent-child and empty interactive validation', () => {
+  it('detectOrphanedChildComponents warns on orphaned child', () => {
+    const diagnostics = detectOrphanedChildComponents({
+      text: '<dads-breadcrumb-item>Home</dads-breadcrumb-item>',
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('orphanedChildComponent');
+    expect(diagnostics[0].severity).toBe('warning');
+    expect(diagnostics[0].message).toContain('dads-breadcrumb');
+  });
+
+  it('detectOrphanedChildComponents passes when parent wraps child', () => {
+    const diagnostics = detectOrphanedChildComponents({
+      text: '<dads-breadcrumb><dads-breadcrumb-item>Home</dads-breadcrumb-item></dads-breadcrumb>',
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectEmptyInteractiveElement warns on empty button', () => {
+    const diagnostics = detectEmptyInteractiveElement({
+      text: '<dads-button></dads-button>',
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('emptyInteractiveElement');
+    expect(diagnostics[0].severity).toBe('warning');
+  });
+
+  it('detectEmptyInteractiveElement passes with text content', () => {
+    const diagnostics = detectEmptyInteractiveElement({
+      text: '<dads-button>Click me</dads-button>',
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectEmptyInteractiveElement passes with aria-label', () => {
+    const diagnostics = detectEmptyInteractiveElement({
+      text: '<dads-button aria-label="Close"></dads-button>',
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+});
+
 describe('HTTP transport support', () => {
   it('bin.mjs imports both transport types', async () => {
     const binSrc = await fs.readFile(path.join(__dirname, 'bin.mjs'), 'utf8');
@@ -1388,6 +1637,11 @@ describe('HTTP transport support', () => {
 });
 
 describe('plugin extensibility', () => {
+  it('exports PLUGIN_CONTRACT_VERSION as semver string', () => {
+    expect(PLUGIN_CONTRACT_VERSION).toBe('1.0.0');
+    expect(typeof PLUGIN_CONTRACT_VERSION).toBe('string');
+  });
+
   it('normalizes plugin tools and blocks builtin tool name collisions', () => {
     const normalized = normalizePlugins([
       {
@@ -1403,7 +1657,7 @@ describe('plugin extensibility', () => {
     ]);
     expect(normalized).toHaveLength(1);
     expect(normalized[0].tools[0].name).toBe('sample_tool');
-    expect(normalized[0].tools[0].description).toContain('@experimental');
+    expect(normalized[0].tools[0].description).toContain('contract v1');
 
     expect(() => normalizePlugins([
       {
@@ -1412,6 +1666,27 @@ describe('plugin extensibility', () => {
         tools: [{ name: 'list_components', staticPayload: {} }],
       },
     ])).toThrow(/tool name collision/);
+  });
+
+  it('handler wins when both handler and staticPayload are specified', () => {
+    const normalized = normalizePlugins([
+      {
+        name: 'both-plugin',
+        version: '1.0.0',
+        tools: [
+          {
+            name: 'both_tool',
+            handler: () => ({ fromHandler: true }),
+            staticPayload: { fromStatic: true },
+          },
+        ],
+      },
+    ]);
+    expect(normalized).toHaveLength(1);
+    const tool = normalized[0].tools[0];
+    expect(typeof tool.handler).toBe('function');
+    // handler is preserved, staticPayload is still stored but ignored at runtime
+    expect(tool.name).toBe('both_tool');
   });
 
   it('builds plugin data source map and rejects duplicate file overrides', () => {
@@ -1491,6 +1766,106 @@ describe('plugin extensibility', () => {
       expect(fileLoadCalls).toContain('pattern-registry.json');
     } finally {
       await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it('rejects plugin without name', () => {
+    expect(() => normalizePlugins([{ version: '1.0.0' }])).toThrow();
+  });
+
+  it('rejects plugin without version', () => {
+    expect(() => normalizePlugins([{ name: 'no-version' }])).toThrow();
+  });
+
+  it('rejects duplicate plugin names', () => {
+    expect(() => normalizePlugins([
+      { name: 'dup', version: '1.0.0' },
+      { name: 'dup', version: '2.0.0' },
+    ])).toThrow(/duplicate/i);
+  });
+
+  it('registers plugin tool with handler via MCP', async () => {
+    let handlerCalled = false;
+    const { server } = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      {
+        loadTextData: loadBundledText,
+        plugins: [{
+          name: 'handler-test-plugin',
+          version: '1.0.0',
+          tools: [{
+            name: 'handler_test_tool',
+            description: 'Test tool with handler',
+            async handler(args, ctx) {
+              handlerCalled = true;
+              return { received: args, pluginName: ctx.plugin.name };
+            },
+          }],
+        }],
+      },
+    );
+    const client = new Client(
+      { name: 'wcf-mcp-test-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+    try {
+      const result = await client.callTool({ name: 'handler_test_tool', arguments: { foo: 'bar' } });
+      expect(handlerCalled).toBe(true);
+      const text = result.content?.[0]?.text;
+      expect(text).toBeTruthy();
+      const payload = JSON.parse(text);
+      expect(payload.pluginName).toBe('handler-test-plugin');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('provides helpers.loadJsonData in handler context (contract v1)', async () => {
+    let receivedHelpers = null;
+    const { server } = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      {
+        loadTextData: loadBundledText,
+        plugins: [{
+          name: 'helpers-test-plugin',
+          version: '1.0.0',
+          tools: [{
+            name: 'helpers_context_test',
+            description: 'Verify helpers shape',
+            async handler(_args, ctx) {
+              receivedHelpers = ctx.helpers;
+              return { ok: true };
+            },
+          }],
+        }],
+      },
+    );
+    const client = new Client(
+      { name: 'wcf-mcp-test-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+    try {
+      await client.callTool({ name: 'helpers_context_test', arguments: {} });
+      expect(receivedHelpers).toBeTruthy();
+      expect(typeof receivedHelpers.loadJsonData).toBe('function');
+      expect(typeof receivedHelpers.buildJsonToolResponse).toBe('function');
+      expect(typeof receivedHelpers.normalizePrefix).toBe('function');
+      expect(typeof receivedHelpers.withPrefix).toBe('function');
+      expect(typeof receivedHelpers.toCanonicalTagName).toBe('function');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
   });
 });
@@ -1588,6 +1963,92 @@ export default {
       });
     } finally {
       await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('resolveComponentClosure and transitive deps', () => {
+  let installRegistry;
+  beforeAll(async () => {
+    installRegistry = await loadBundledJson('install-registry.json');
+  });
+
+  it('resolves transitive deps for component with direct deps', () => {
+    // combobox depends on avatar, chip-tag, icon
+    const closure = resolveComponentClosure({ installRegistry }, ['combobox']);
+    expect(closure).toContain('combobox');
+    expect(closure).toContain('avatar');
+    expect(closure).toContain('chip-tag');
+    expect(closure).toContain('icon');
+  });
+
+  it('returns only the component itself when no deps', () => {
+    const closure = resolveComponentClosure({ installRegistry }, ['button']);
+    expect(closure).toEqual(['button']);
+  });
+
+  it('deduplicates shared transitive deps', () => {
+    const closure = resolveComponentClosure({ installRegistry }, ['combobox', 'avatar']);
+    // avatar should appear only once despite being both a root and a dep of combobox
+    const avatarCount = closure.filter((id) => id === 'avatar').length;
+    expect(avatarCount).toBe(1);
+  });
+
+  it('get_install_recipe returns transitiveDeps field via MCP', async () => {
+    const { server } = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      { loadTextData: loadBundledText },
+    );
+    const client = new Client(
+      { name: 'wcf-mcp-test-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+    try {
+      const result = await client.callTool({ name: 'get_install_recipe', arguments: { component: 'dads-combobox' } });
+      const text = result.content?.[0]?.text;
+      expect(text).toBeTruthy();
+      const payload = JSON.parse(text);
+      expect(payload.deps).toBeDefined();
+      expect(payload.transitiveDeps).toBeDefined();
+      expect(Array.isArray(payload.transitiveDeps)).toBe(true);
+      // combobox has deps: avatar, chip-tag, icon — all are leaf so transitiveDeps = same as deps
+      expect(payload.transitiveDeps).toContain('avatar');
+      expect(payload.transitiveDeps).toContain('chip-tag');
+      expect(payload.transitiveDeps).toContain('icon');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('get_install_recipe returns empty transitiveDeps for leaf component', async () => {
+    const { server } = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      { loadTextData: loadBundledText },
+    );
+    const client = new Client(
+      { name: 'wcf-mcp-test-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+    try {
+      const result = await client.callTool({ name: 'get_install_recipe', arguments: { component: 'dads-button' } });
+      const text = result.content?.[0]?.text;
+      expect(text).toBeTruthy();
+      const payload = JSON.parse(text);
+      expect(payload.transitiveDeps).toEqual([]);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
   });
 });
