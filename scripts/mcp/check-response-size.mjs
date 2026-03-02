@@ -16,6 +16,7 @@ import {
   getRelatedComponentsForTag,
   measureToolResultBytes,
   queryAccessibilityIndex,
+  resolveComponentClosure,
   serializeApi,
   searchIconCatalog,
 } from '../../packages/mcp-server/core.mjs';
@@ -299,6 +300,129 @@ function pickLargestGuidelineResponse(guidelinesIndex) {
   return largest;
 }
 
+function getDesignSystemOverviewPayload(manifest, installRegistry, patternRegistry) {
+  const indexes = buildIndexes(manifest);
+  const patterns =
+    patternRegistry?.patterns && typeof patternRegistry.patterns === 'object'
+      ? patternRegistry.patterns
+      : {};
+  const patternList = Object.values(patterns).map((p) => ({ id: p?.id, title: p?.title }));
+  const categoryCount = {};
+  for (const decl of indexes.decls) {
+    const cat = decl?.custom?.category ?? 'Other';
+    categoryCount[cat] = (categoryCount[cat] ?? 0) + 1;
+  }
+  return {
+    name: 'DADS Web Components (wcf)',
+    version: '0.3.0',
+    prefix: 'dads',
+    totalComponents: indexes.decls.length,
+    componentsByCategory: categoryCount,
+    totalPatterns: patternList.length,
+    patterns: patternList,
+    setupInfo: {
+      npmPackage: 'web-components-factory',
+      installCommand: 'npm install web-components-factory',
+      vendorRuntimePath: 'vendor-runtime/',
+      htmlBoilerplate: '<script type="module" src="vendor-runtime/src/autoload.js"></script>',
+      noscriptGuidance: 'WCF components require JavaScript.',
+      noCDN: true,
+      deliveryModel: 'vendor-local',
+      importMapHint: 'WCF uses <script type="importmap"> for module resolution.',
+      bootScript: '<vendorDir>/boot.js',
+      vendorSetup: { init: 'wcf init', add: 'wcf add', workflow: '...' },
+      htmlSetup: '<script type="importmap">...</script><script type="module" src="./boot.js"></script>',
+    },
+  };
+}
+
+function getInstallRecipePayload(_manifest, installRegistry) {
+  const components = installRegistry?.components && typeof installRegistry.components === 'object' ? installRegistry.components : {};
+  let largest = { label: 'get_install_recipe', bytes: 0 };
+  for (const [componentId, meta] of Object.entries(components)) {
+    if (!meta || typeof meta !== 'object') continue;
+    const deps = Array.isArray(meta.deps) ? meta.deps : [];
+    const tags = Array.isArray(meta.tags) ? meta.tags.map((t) => String(t).toLowerCase()) : [componentId];
+    const transitiveDeps = resolveComponentClosure({ installRegistry }, [componentId]).filter((id) => id !== componentId);
+    const payload = {
+      componentId,
+      tagNames: tags,
+      deps,
+      transitiveDeps,
+      define: String(meta.define ?? '').trim(),
+      source: meta.source,
+      usageSnippet: `<dads-${componentId}>...</dads-${componentId}>`,
+      usageContext: 'body-only',
+      installHint: `wcf add ${componentId}`,
+      vendorHint: (() => {
+        const im = JSON.stringify({ imports: Object.fromEntries(tags.map((t) => [t, `./<dir>/components/${t.replace(/^[^-]+-/, '')}.js`])) });
+        return {
+          install: `wcf add ${componentId} --prefix <prefix> --out <dir>`,
+          importMap: im,
+          importmap: im,
+          boot: '<dir>/boot.js',
+        };
+      })(),
+    };
+    const bytes = toolResponseBytes(toTextToolResponse(payload));
+    if (bytes > largest.bytes) {
+      largest = { label: `get_install_recipe(component="${componentId}")`, bytes };
+    }
+  }
+  return largest;
+}
+
+function getPatternRecipePayload(installRegistry, patternRegistry) {
+  const patterns =
+    patternRegistry?.patterns && typeof patternRegistry.patterns === 'object'
+      ? patternRegistry.patterns
+      : {};
+  const components = installRegistry?.components && typeof installRegistry.components === 'object' ? installRegistry.components : {};
+  let largest = { label: 'get_pattern_recipe', bytes: 0 };
+  for (const pat of Object.values(patterns)) {
+    const requires = Array.isArray(pat.requires) ? pat.requires : [];
+    const closure = resolveComponentClosure({ installRegistry }, requires);
+    const install = Object.fromEntries(
+      closure.map((cid) => [cid, components[cid]]).filter(([, meta]) => meta && typeof meta === 'object'),
+    );
+    const entryHints = Array.isArray(pat.entryHints) ? [...pat.entryHints] : ['boot'];
+    const importMapEntries = Object.fromEntries(
+      closure.flatMap((cid) => {
+        const meta = components[cid];
+        const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
+        return tags.map((t) => {
+          const lower = String(t).toLowerCase();
+          const suffix = lower.replace(/^[^-]+-/, '');
+          return [lower, `./<dir>/components/${suffix}.js`];
+        });
+      }),
+    );
+    const payload = {
+      pattern: { id: pat.id, title: pat.title, description: pat.description },
+      prefix: 'dads',
+      requires,
+      components: closure,
+      install,
+      html: String(pat.html ?? ''),
+      canonicalHtml: String(pat.html ?? ''),
+      installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
+      entryHints,
+      scaffoldHint: {
+        doctype: '<!DOCTYPE html>',
+        importMap: `<script type="importmap">\n${JSON.stringify({ imports: importMapEntries }, null, 2)}\n</script>`,
+        bootScript: '<script type="module" src="./<dir>/boot.js"></script>',
+        noscript: '<noscript>このページの機能にはJavaScriptが必要です。</noscript>',
+        serveOverHttp: 'Import maps require HTTP/HTTPS. Use a local dev server.',
+      },
+    };
+    const bytes = toolResponseBytes(toTextToolResponse(payload));
+    if (bytes > largest.bytes) {
+      largest = { label: `get_pattern_recipe(patternId="${pat.id}")`, bytes };
+    }
+  }
+  return largest;
+}
+
 async function main() {
   const [manifest, designTokens, guidelinesIndex, installRegistry, patternRegistry] = await Promise.all([
     loadJson('custom-elements.json'),
@@ -319,6 +443,12 @@ async function main() {
     timed(() => pickLargestGetDesignTokenDetailResponse(designTokens)),
     timed(() => pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex)),
     timed(() => pickLargestGuidelineResponse(guidelinesIndex)),
+    timed(() => ({
+      label: 'get_design_system_overview',
+      bytes: toolResponseBytes(toTextToolResponse(getDesignSystemOverviewPayload(manifest, installRegistry, patternRegistry))),
+    })),
+    timed(() => getInstallRecipePayload(manifest, installRegistry)),
+    timed(() => getPatternRecipePayload(installRegistry, patternRegistry)),
   ];
 
   let failed = false;

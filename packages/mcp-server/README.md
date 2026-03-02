@@ -355,6 +355,39 @@ Claude Desktop 設定例:
 prefix: "myui" → dads-button → myui-button
 ```
 
+## v0.3.0 新機能 — ランタイムセットアップ情報
+
+v0.3.0 では、AI エージェントが CDN 非対応の vendor-local 配信モデルを正しく理解できるよう、3つのツールにランタイムセットアップ情報を追加しました。
+
+### `get_design_system_overview` — setupInfo 新フィールド
+
+| フィールド | 型 | 説明 |
+|-----------|-----|------|
+| `noCDN` | `true` | CDN 配信が利用不可であることを示すフラグ |
+| `deliveryModel` | `"vendor-local"` | 配信モデルの種別（将来拡張可能） |
+| `importMapHint` | `string` | import map のパターン説明 |
+| `bootScript` | `string` | boot.js の役割説明 |
+| `vendorSetup` | `object` | `init`/`add`/`workflow` の2段階セットアップガイド |
+| `htmlSetup` | `string` | import map + boot.js を含む完全な HTML head テンプレート |
+
+> 既存の `htmlBoilerplate` は変更なし（後方互換性）
+
+### `get_install_recipe` — 新フィールド
+
+| フィールド | 型 | 説明 |
+|-----------|-----|------|
+| `usageContext` | `"body-only"` | `usageSnippet` が body 用 HTML であることを明示 |
+| `vendorHint` | `object` | `install`（CLI コマンド）、`importMap`（テンプレート）、`boot`（ブートスクリプト説明）。`importmap`（小文字 m）は非推奨エイリアス — v1.0 で削除予定 |
+
+### `get_pattern_recipe` — 新フィールド
+
+| フィールド | 型 | 説明 |
+|-----------|-----|------|
+| `entryHints` | `string[]` | パターンのエントリポイント（`["boot"]` など） |
+| `scaffoldHint` | `object` | `doctype`、`importMap`、`bootScript`、`noscript`、`serveOverHttp` を含むページ雛形情報 |
+
+> `scaffoldHint.serveOverHttp` は `file://` プロトコルでの実行を防止するガイダンスです。
+
 ## v0.2.0 マイグレーション
 
 ### `list_components` のデフォルトページネーション変更

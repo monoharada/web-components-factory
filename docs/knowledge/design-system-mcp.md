@@ -27,6 +27,7 @@ repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。
 最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー、IDE 設定テンプレート、prompt/resource 導線）を返します。
 
 - IDE テンプレート: Claude Desktop / Claude Code / Cursor / VS Code (GitHub Copilot) / Windsurf
+- `setupInfo` にランタイムセットアップ情報を含む: `noCDN`, `deliveryModel`, `importMapHint`, `bootScript`, `vendorSetup`, `htmlSetup`
 
 ### `list_components({ prefix? })`
 
@@ -45,6 +46,9 @@ repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。
 ### `get_install_recipe({ component, prefix? })`
 
 install recipe（componentId / deps / define / usageSnippet）を返します。
+
+- `usageContext: "body-only"`: usageSnippet が `<body>` 内用 HTML であることを明示
+- `vendorHint`: vendor セットアップに必要な CLI コマンド・import map テンプレート・boot.js 参照を提供
 
 ### `validate_markup({ html, prefix? })`
 
@@ -68,6 +72,9 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 ### `get_pattern_recipe({ patternId, prefix? })`
 
 パターンの recipe を返します（必要 componentId + prefix適用済み snippet）。
+
+- `entryHints`: パターンのエントリポイント（通常 `["boot"]`）
+- `scaffoldHint`: 完全な HTML ページを構築するための雛形情報（doctype, importMap, bootScript, noscript, serveOverHttp）
 
 ### `generate_pattern_snippet({ patternId, prefix? })`
 

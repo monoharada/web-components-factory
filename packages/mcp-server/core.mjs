@@ -1655,7 +1655,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
-    version: '0.2.0',
+    version: '0.3.0',
   });
 
   server.registerPrompt(
@@ -1805,7 +1805,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
       const overview = {
         name: 'DADS Web Components (wcf)',
-        version: '0.2.0',
+        version: '0.3.0',
         prefix: CANONICAL_PREFIX,
         totalComponents: indexes.decls.length,
         componentsByCategory: categoryCount,
@@ -1817,6 +1817,26 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           vendorRuntimePath: 'vendor-runtime/',
           htmlBoilerplate: '<script type="module" src="vendor-runtime/src/autoload.js"></script>',
           noscriptGuidance: 'WCF components require JavaScript. Provide <noscript> fallback with static HTML equivalents for critical content.',
+          noCDN: true,
+          deliveryModel: 'vendor-local',
+          importMapHint: 'WCF uses <script type="importmap"> for module resolution. Each component tag name maps to a local JS file: { "<prefix>-<component>": "./<dir>/components/<component>.js" }. The wcf CLI generates importmap.snippet.json automatically via `wcf init`.',
+          bootScript: '<dir>/boot.js — sets the component prefix via setConfig(), then loads wc-autoloader.js which scans the DOM for custom element tags and dynamically imports them via the import map.',
+          vendorSetup: {
+            init: 'wcf init --prefix <prefix> --dir <dir>',
+            add: 'wcf add <componentId> --prefix <prefix> --out <dir>',
+            workflow: '1. wcf init で初期化（boot.js, importmap.snippet.json, autoloader を生成） → 2. wcf add で各コンポーネントを追加 → import map と boot.js が自動生成される',
+          },
+          htmlSetup: [
+            '<script type="importmap">',
+            '{',
+            '  "imports": {',
+            '    "<prefix>-button": "./<dir>/components/button.js",',
+            '    "<prefix>-card": "./<dir>/components/card.js"',
+            '  }',
+            '}',
+            '</script>',
+            '<script type="module" src="./<dir>/boot.js"></script>',
+          ].join('\n'),
         },
         ideSetupTemplates: IDE_SETUP_TEMPLATES,
         availablePrompts: [
@@ -2133,7 +2153,19 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
                 defineHint,
                 source: install.source,
                 usageSnippet,
+                usageContext: 'body-only',
                 installHint: componentId ? `wcf add ${componentId}` : undefined,
+                vendorHint: (() => {
+                  const im = tagNames.length > 0
+                    ? JSON.stringify({ imports: Object.fromEntries(tagNames.map((t) => [t, `./<dir>/components/${t.replace(/^[^-]+-/, '')}.js`])) })
+                    : undefined;
+                  return {
+                    install: componentId ? `wcf add ${componentId} --prefix <prefix> --out <dir>` : undefined,
+                    importMap: im,
+                    importmap: im, // @deprecated — use importMap; will be removed in v1.0
+                    boot: '<dir>/boot.js -- loads autoloader that registers components via import map',
+                  };
+                })(),
               },
               null,
               2,
@@ -2315,6 +2347,28 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const canonicalHtml = String(pat.html ?? '');
       const html = applyPrefixToHtml(canonicalHtml, p);
 
+      const entryHints = Array.isArray(pat.entryHints) ? [...pat.entryHints] : ['boot'];
+
+      const importMapEntries = Object.fromEntries(
+        closure.flatMap((cid) => {
+          const meta = components[cid];
+          const tags = Array.isArray(meta?.tags) ? meta.tags : [cid];
+          return tags.map((t) => {
+            const lower = String(t).toLowerCase();
+            const suffix = lower.replace(/^[^-]+-/, '');
+            return [withPrefix(lower, p), `./<dir>/components/${suffix}.js`];
+          });
+        }),
+      );
+
+      const scaffoldHint = {
+        doctype: '<!DOCTYPE html>',
+        importMap: `<script type="importmap">\n${JSON.stringify({ imports: importMapEntries }, null, 2)}\n</script>`,
+        bootScript: '<script type="module" src="./<dir>/boot.js"></script>',
+        noscript: '<noscript>このページの機能にはJavaScriptが必要です。</noscript>',
+        serveOverHttp: 'Import maps require HTTP/HTTPS. Use a local dev server (e.g. npx serve .) instead of opening the HTML file directly via file:// protocol.',
+      };
+
       return {
         content: [
           {
@@ -2333,6 +2387,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
                 html,
                 canonicalHtml,
                 installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
+                entryHints,
+                scaffoldHint,
               },
               null,
               2,

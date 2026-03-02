@@ -532,6 +532,22 @@ describe('MCP prompts/resources contract', () => {
     expect(typeof payload.setupInfo.noscriptGuidance).toBe('string');
     expect(payload.setupInfo.noscriptGuidance).toContain('noscript');
 
+    // Tier 1: runtime setup info fields (v0.3.0)
+    expect(payload.setupInfo.noCDN).toBe(true);
+    expect(payload.setupInfo.deliveryModel).toBe('vendor-local');
+    expect(typeof payload.setupInfo.importMapHint).toBe('string');
+    expect(payload.setupInfo.importMapHint).toContain('importmap');
+    expect(typeof payload.setupInfo.bootScript).toBe('string');
+    expect(payload.setupInfo.bootScript).toContain('boot.js');
+    expect(payload.setupInfo.vendorSetup).toBeDefined();
+    expect(payload.setupInfo.vendorSetup.init).toContain('wcf init');
+    expect(payload.setupInfo.vendorSetup.add).toContain('wcf add');
+    expect(typeof payload.setupInfo.vendorSetup.workflow).toBe('string');
+    expect(payload.setupInfo.htmlSetup).toContain('importmap');
+    expect(payload.setupInfo.htmlSetup).toContain('boot.js');
+    // Backward compatibility: htmlBoilerplate must remain unchanged
+    expect(payload.setupInfo.htmlBoilerplate).toContain('vendor-runtime/src/autoload.js');
+
     expect(Array.isArray(payload.availablePrompts)).toBe(true);
     expect(payload.availablePrompts.some((item) => item.name === FIGMA_TO_WCF_PROMPT)).toBe(true);
 
@@ -2026,6 +2042,30 @@ describe('resolveComponentClosure and transitive deps', () => {
     }
   });
 
+  it('get_install_recipe returns vendorHint and usageContext fields', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_install_recipe', arguments: { component: 'dads-button' } });
+      const text = result.content?.[0]?.text;
+      expect(text).toBeTruthy();
+      const payload = JSON.parse(text);
+      // usageContext
+      expect(payload.usageContext).toBe('body-only');
+      // vendorHint
+      expect(payload.vendorHint).toBeDefined();
+      expect(typeof payload.vendorHint.install).toBe('string');
+      expect(payload.vendorHint.install).toContain('wcf add');
+      expect(typeof payload.vendorHint.importMap).toBe('string');
+      expect(payload.vendorHint.importMap).toContain('imports');
+      // importmap (deprecated) is kept as alias for backward compat
+      expect(payload.vendorHint.importmap).toBe(payload.vendorHint.importMap);
+      expect(typeof payload.vendorHint.boot).toBe('string');
+      expect(payload.vendorHint.boot).toContain('boot.js');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
   it('get_install_recipe returns empty transitiveDeps for leaf component', async () => {
     const { server } = await createMcpServer(
       loadBundledJson,
@@ -2047,6 +2087,112 @@ describe('resolveComponentClosure and transitive deps', () => {
       expect(text).toBeTruthy();
       const payload = JSON.parse(text);
       expect(payload.transitiveDeps).toEqual([]);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Shared helper — creates an MCP client/server pair for tool-level tests
+// ---------------------------------------------------------------------------
+async function createTestPair() {
+  const { server } = await createMcpServer(
+    loadBundledJson,
+    async () => import('./validator.mjs'),
+    { loadTextData: loadBundledText },
+  );
+  const client = new Client(
+    { name: 'wcf-mcp-test-client', version: '0.0.0' },
+    { capabilities: {} },
+  );
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  await Promise.all([
+    server.connect(serverTransport),
+    client.connect(clientTransport),
+  ]);
+  return { client, server };
+}
+
+// ---------------------------------------------------------------------------
+// get_pattern_recipe contract and new fields
+// ---------------------------------------------------------------------------
+describe('get_pattern_recipe contract', () => {
+  it('returns all base contract fields for a valid pattern', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form' } });
+      const text = result.content?.[0]?.text;
+      expect(text).toBeTruthy();
+      const payload = JSON.parse(text);
+      expect(payload.pattern).toBeDefined();
+      expect(payload.pattern.id).toBe('search-form');
+      expect(typeof payload.pattern.title).toBe('string');
+      expect(payload.prefix).toBeDefined();
+      expect(Array.isArray(payload.requires)).toBe(true);
+      expect(Array.isArray(payload.components)).toBe(true);
+      expect(payload.install).toBeDefined();
+      expect(typeof payload.html).toBe('string');
+      expect(payload.installHint).toBeDefined();
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('applies prefix to tag names when prefix is specified', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form', prefix: 'myui' } });
+      const text = result.content?.[0]?.text;
+      expect(text).toBeTruthy();
+      const payload = JSON.parse(text);
+      expect(payload.prefix).toBe('myui');
+      expect(payload.html).toContain('myui-');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('returns isError for invalid pattern ID', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'nonexistent-pattern-xyz' } });
+      expect(result.isError).toBe(true);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('returns entryHints array containing "boot"', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form' } });
+      const text = result.content?.[0]?.text;
+      expect(text).toBeTruthy();
+      const payload = JSON.parse(text);
+      expect(Array.isArray(payload.entryHints)).toBe(true);
+      expect(payload.entryHints).toContain('boot');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('returns scaffoldHint with all 5 keys', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'get_pattern_recipe', arguments: { patternId: 'search-form' } });
+      const text = result.content?.[0]?.text;
+      expect(text).toBeTruthy();
+      const payload = JSON.parse(text);
+      expect(payload.scaffoldHint).toBeDefined();
+      expect(payload.scaffoldHint.doctype).toBe('<!DOCTYPE html>');
+      expect(payload.scaffoldHint.importMap).toContain('importmap');
+      // importMap paths must use prefix-stripped suffix (e.g. button.js, not dads-button.js)
+      expect(payload.scaffoldHint.importMap).toContain('/button.js');
+      expect(payload.scaffoldHint.importMap).not.toMatch(/\/dads-button\.js/);
+      expect(payload.scaffoldHint.bootScript).toContain('boot.js');
+      expect(payload.scaffoldHint.noscript).toContain('noscript');
+      expect(payload.scaffoldHint.serveOverHttp).toContain('HTTP');
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
