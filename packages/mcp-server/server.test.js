@@ -669,6 +669,17 @@ describe('MCP prompts/resources contract', () => {
     expect(String(result.content?.[0]?.text)).toContain('not found');
   });
 
+  it('get_component_api suggests correct tag for unprefixed typo (Levenshtein)', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'buton' },
+    });
+    expect(result.isError).toBe(true);
+    const text = String(result.content?.[0]?.text);
+    expect(text).toContain('Did you mean');
+    expect(text).toContain('dads-button');
+  });
+
   it('generate_usage_snippet resolves by bare name via auto-prefix', async () => {
     const result = await client.callTool({
       name: 'generate_usage_snippet',
@@ -1629,7 +1640,7 @@ describe('plugin extensibility', () => {
     ]);
     expect(normalized).toHaveLength(1);
     expect(normalized[0].tools[0].name).toBe('sample_tool');
-    expect(normalized[0].tools[0].description).toContain('@experimental');
+    expect(normalized[0].tools[0].description).toContain('contract v1');
 
     expect(() => normalizePlugins([
       {
@@ -1638,6 +1649,27 @@ describe('plugin extensibility', () => {
         tools: [{ name: 'list_components', staticPayload: {} }],
       },
     ])).toThrow(/tool name collision/);
+  });
+
+  it('handler wins when both handler and staticPayload are specified', () => {
+    const normalized = normalizePlugins([
+      {
+        name: 'both-plugin',
+        version: '1.0.0',
+        tools: [
+          {
+            name: 'both_tool',
+            handler: () => ({ fromHandler: true }),
+            staticPayload: { fromStatic: true },
+          },
+        ],
+      },
+    ]);
+    expect(normalized).toHaveLength(1);
+    const tool = normalized[0].tools[0];
+    expect(typeof tool.handler).toBe('function');
+    // handler is preserved, staticPayload is still stored but ignored at runtime
+    expect(tool.name).toBe('both_tool');
   });
 
   it('builds plugin data source map and rejects duplicate file overrides', () => {
@@ -1772,6 +1804,49 @@ describe('plugin extensibility', () => {
       expect(text).toBeTruthy();
       const payload = JSON.parse(text);
       expect(payload.pluginName).toBe('handler-test-plugin');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('provides helpers.loadJsonData in handler context (contract v1)', async () => {
+    let receivedHelpers = null;
+    const { server } = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      {
+        loadTextData: loadBundledText,
+        plugins: [{
+          name: 'helpers-test-plugin',
+          version: '1.0.0',
+          tools: [{
+            name: 'helpers_context_test',
+            description: 'Verify helpers shape',
+            async handler(_args, ctx) {
+              receivedHelpers = ctx.helpers;
+              return { ok: true };
+            },
+          }],
+        }],
+      },
+    );
+    const client = new Client(
+      { name: 'wcf-mcp-test-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+    try {
+      await client.callTool({ name: 'helpers_context_test', arguments: {} });
+      expect(receivedHelpers).toBeTruthy();
+      expect(typeof receivedHelpers.loadJsonData).toBe('function');
+      expect(typeof receivedHelpers.buildJsonToolResponse).toBe('function');
+      expect(typeof receivedHelpers.normalizePrefix).toBe('function');
+      expect(typeof receivedHelpers.withPrefix).toBe('function');
+      expect(typeof receivedHelpers.toCanonicalTagName).toBe('function');
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }

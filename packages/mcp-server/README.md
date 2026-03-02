@@ -431,12 +431,9 @@ v0.2.0 から `list_components` のデフォルト返却件数が **全件 → 2
 }
 ```
 
-レスポンス（抜粋）:
-```json
-{
-  "tagName": "dads-button",
-  "html": "<dads-button variant=\"solid\">Label</dads-button>"
-}
+レスポンス（テキスト形式 — HTML スニペットをそのまま返します）:
+```html
+<dads-button variant="solid">Label</dads-button>
 ```
 
 ### インストール手順を取得

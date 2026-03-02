@@ -33,9 +33,9 @@ interface WcfMcpPluginTool {
   description?: string;
   /** 入力スキーマ（JSON Schema 形式） */
   inputSchema?: Record<string, unknown>;
-  /** 動的ハンドラ関数。staticPayload と排他 */
+  /** 動的ハンドラ関数。両方指定時は handler が優先される */
   handler?: (args: Record<string, unknown>, context: WcfMcpHandlerContext) => unknown | Promise<unknown>;
-  /** 静的レスポンスペイロード。handler と排他 */
+  /** 静的レスポンスペイロード。handler がある場合は無視される */
   staticPayload?: unknown;
 }
 ```
@@ -43,8 +43,9 @@ interface WcfMcpPluginTool {
 ### handler vs staticPayload
 
 - `handler`: リクエストごとに実行される関数。動的な結果を返す場合に使用
-- `staticPayload`: 固定のレスポンスを返す場合に使用。handler より優先度が低い
-- 両方指定した場合は `handler` が使用される
+- `staticPayload`: 固定のレスポンスを返す場合に使用
+- **両方指定した場合**: `handler` が優先され、`staticPayload` は無視される
+- **どちらも未指定**: バリデーションエラー（少なくとも一方が必須）
 
 ## Handler Context
 
@@ -57,6 +58,14 @@ interface WcfMcpHandlerContext {
   helpers: {
     /** JSON データファイルを読み込む */
     loadJsonData: (fileName: string) => Promise<unknown>;
+    /** ツール応答を MCP 形式の JSON テキストに変換する */
+    buildJsonToolResponse: (payload: unknown) => { content: Array<{ type: string; text: string }> };
+    /** prefix を正規化する（デフォルト: "dads"） */
+    normalizePrefix: (prefix?: string) => string;
+    /** タグ名に prefix を付与する */
+    withPrefix: (tagName: string, prefix: string) => string;
+    /** タグ名を canonical（dads-*）に変換する */
+    toCanonicalTagName: (tagName: string) => string;
   };
 }
 ```

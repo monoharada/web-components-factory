@@ -17,7 +17,7 @@ export const CANONICAL_PREFIX = 'dads';
 export const MAX_PREFIX_LENGTH = 64;
 export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
 export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
-export const EXPERIMENTAL_PLUGIN_NOTICE = '@experimental — API may change without notice.';
+export const PLUGIN_TOOL_NOTICE = 'Plugin tool (contract v1).';
 export const PLUGIN_CONTRACT_VERSION = '1.0.0';
 
 export const CATEGORY_MAP = {
@@ -620,11 +620,10 @@ function normalizePluginTools(pluginName, tools) {
     if (!hasHandler && !hasStaticPayload) {
       throw new Error(toPluginErrorMessage(pluginName, `tool "${name}" needs handler or staticPayload`));
     }
-    if (hasHandler && hasStaticPayload) {
-      throw new Error(toPluginErrorMessage(pluginName, `tool "${name}" cannot define both handler and staticPayload`));
-    }
+    // When both are specified, handler takes priority (contract v1: handler-wins)
+    // staticPayload is ignored silently.
     const description = String(rawTool.description ?? '').trim() ||
-      `Plugin tool provided by ${pluginName}. ${EXPERIMENTAL_PLUGIN_NOTICE}`;
+      `Plugin tool provided by ${pluginName}. ${PLUGIN_TOOL_NOTICE}`;
     const inputSchema = isPlainObject(rawTool.inputSchema) ? rawTool.inputSchema : {};
     out.push({
       name,
@@ -1561,7 +1560,7 @@ function buildComponentNotFoundError(component, indexes, prefix) {
   }
 
   // Levenshtein-based suggestion
-  const suggested = suggestUnknownElementTagName(comp.includes('-') ? comp : `${p}${comp}`, indexes.byTag);
+  const suggested = suggestUnknownElementTagName(comp.includes('-') ? comp : `${p}-${comp}`, indexes.byTag);
   if (suggested && !suggestions.includes(suggested)) {
     suggestions.push(suggested);
   }
@@ -1878,7 +1877,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         experimental: {
           plugins: {
             enabled: plugins.length > 0,
-            note: EXPERIMENTAL_PLUGIN_NOTICE,
+            note: PLUGIN_TOOL_NOTICE,
             pluginCount: plugins.length,
             pluginToolCount: plugins.reduce((sum, plugin) => sum + (plugin.tools?.length ?? 0), 0),
             plugins: plugins.map((plugin) => ({
@@ -1914,7 +1913,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     'list_components',
     {
       description:
-        'List custom elements in the design system. When: exploring available components, searching by keyword, or paging through results. Returns: array of {tagName, className, description, category}. After: use get_component_api for details on a specific component.',
+        'List custom elements in the design system. When: exploring available components, searching by keyword, or paging through results. Returns: {items, total, limit, offset, hasMore} where items is array of {tagName, className, description, category}. After: use get_component_api for details on a specific component.',
       inputSchema: {
         category: z
           .enum(['Form', 'Actions', 'Navigation', 'Content', 'Display', 'Layout', 'Other'])
@@ -2640,12 +2639,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
               const result = await tool.handler(args, {
                 plugin: { name: plugin.name, version: plugin.version },
                 helpers: {
+                  loadJsonData: loadJson,
                   buildJsonToolResponse,
                   normalizePrefix,
                   withPrefix,
                   toCanonicalTagName,
                 },
-                loadJsonData: loadJson,
               });
               if (isPlainObject(result) && Array.isArray(result.content)) {
                 return result;
