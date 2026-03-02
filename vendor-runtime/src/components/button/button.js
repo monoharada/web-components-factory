@@ -140,6 +140,20 @@ export class DadsButton extends TypographyFormComponent {
         this.removeEventListener('click', __classPrivateFieldGet(this, _DadsButton_handleHostClick, "f"));
         __classPrivateFieldGet(this, _DadsButton_instances, "m", _DadsButton_teardownIconSlots).call(this);
     }
+    focus(options) {
+        const base = this.shadowRoot?.querySelector('[part="base"]');
+        if (base)
+            base.focus(options);
+        else
+            super.focus(options);
+    }
+    blur() {
+        const base = this.shadowRoot?.querySelector('[part="base"]');
+        if (base)
+            base.blur();
+        else
+            super.blur();
+    }
     attributeChangedCallback(name, oldValue, newValue) {
         super.attributeChangedCallback(name, oldValue, newValue);
         // as属性やhref属性が変更された場合は再レンダリングが必要
@@ -376,6 +390,7 @@ _DadsButton_iconStartSlot = new WeakMap(), _DadsButton_iconEndSlot = new WeakMap
 DadsButton.formAssociated = true;
 DadsButton.definition = {
     name: 'dads-button',
+    shadowOptions: { mode: 'open', delegatesFocus: true },
     template: html `
       <button 
         part="base"

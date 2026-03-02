@@ -15,7 +15,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsTab_instances, _DadsTab_tablist, _DadsTab_slot, _DadsTab_tabs, _DadsTab_panels, _DadsTab_childObserver, _DadsTab_layoutObserver, _DadsTab_idCounter, _DadsTab_lastTablistBlockSize, _DadsTab_handleSlotChange, _DadsTab_handleChildMutation, _DadsTab_generateId, _DadsTab_getPanelChildren, _DadsTab_syncTabs, _DadsTab_syncAriaOrientation, _DadsTab_syncPanelMinBlockSize, _DadsTab_syncSelection, _DadsTab_getEnabledTabs, _DadsTab_handleTabClick, _DadsTab_handleKeyDown, _DadsTab_selectTab;
+var _DadsTab_instances, _DadsTab_tablist, _DadsTab_slot, _DadsTab_tabs, _DadsTab_panels, _DadsTab_childObserver, _DadsTab_layoutObserver, _DadsTab_idCounter, _DadsTab_lastTablistBlockSize, _DadsTab_handleSlotChange, _DadsTab_handleChildMutation, _DadsTab_generateId, _DadsTab_getPanelChildren, _DadsTab_getSelectedIndex, _DadsTab_syncTabs, _DadsTab_syncAriaOrientation, _DadsTab_syncPanelMinBlockSize, _DadsTab_syncSelection, _DadsTab_getEnabledTabs, _DadsTab_handleTabClick, _DadsTab_handleKeyDown, _DadsTab_focusActivePanel, _DadsTab_activateTab, _DadsTab_selectTab;
 import { html, PropertyAttr, Keys, ElementSelection, Orientation, } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -24,6 +24,14 @@ import { applyDADSFocusStyles } from '../../styles/mixins/focus-styles-official.
 import { withReset } from '../../styles/reset-css.js';
 import { tabTokens } from './tab-tokens.js';
 import { tabStyles } from './tab-styles.js';
+const navigationKeys = new Set([
+    Keys.arrowUp,
+    Keys.arrowDown,
+    Keys.arrowLeft,
+    Keys.arrowRight,
+    Keys.home,
+    Keys.end,
+]);
 function normalizeOrientation(v) {
     if (v === 'bottom' || v === 'left' || v === 'right')
         return v;
@@ -67,6 +75,7 @@ function isHorizontalOrientation(orientation) {
  * @cssprop --dads-tab-indicator-height - インジケーター高さ
  * @cssprop --dads-tab-focus-outline-color - フォーカスアウトライン色
  * @cssprop --dads-tab-focus-ring-color - フォーカスリング色
+ * @cssprop --dads-tab-focus-border-radius - フォーカスリングの角丸
  *
  * @fires dads-tab-change - タブ選択変更時（detail: { selectedIndex: number, previousIndex: number }）
  *
@@ -139,27 +148,27 @@ export class DadsTab extends TypographyWebComponent {
         });
         _DadsTab_handleKeyDown.set(this, (event) => {
             const currentTab = event.currentTarget;
-            if (currentTab.getAttribute('aria-disabled') === 'true' &&
-                event.key !== Keys.arrowUp &&
-                event.key !== Keys.arrowDown &&
-                event.key !== Keys.arrowLeft &&
-                event.key !== Keys.arrowRight &&
-                event.key !== Keys.home &&
-                event.key !== Keys.end) {
+            const isDisabled = currentTab.getAttribute('aria-disabled') === 'true';
+            if (isDisabled && !navigationKeys.has(event.key))
                 return;
-            }
             const mode = normalizeActivationMode(this.getAttribute('activation-mode'));
             const orientation = normalizeOrientation(this.getAttribute('orientation'));
             const ariaOrientation = isHorizontalOrientation(orientation)
                 ? Orientation.horizontal
                 : Orientation.vertical;
-            // APG: manual モードでは Enter/Space で選択確定。フォーカスは tab に留める。
-            if (mode === 'manual' && (event.key === Keys.enter || event.key === Keys.space)) {
+            // Enter: タブパネルへフォーカスを移す（manual モードでは先に選択確定）
+            if (event.key === Keys.enter) {
                 event.preventDefault();
-                const index = __classPrivateFieldGet(this, _DadsTab_tabs, "f").indexOf(currentTab);
-                if (index >= 0 && currentTab.getAttribute('aria-disabled') !== 'true') {
-                    __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_selectTab).call(this, index);
+                if (mode === 'manual') {
+                    __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_activateTab).call(this, currentTab);
                 }
+                __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_focusActivePanel).call(this);
+                return;
+            }
+            // Space: manual モードでは選択確定（フォーカスはタブに留まる）
+            if (mode === 'manual' && event.key === Keys.space) {
+                event.preventDefault();
+                __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_activateTab).call(this, currentTab);
                 return;
             }
             const enabledTabs = __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_getEnabledTabs).call(this);
@@ -169,10 +178,7 @@ export class DadsTab extends TypographyWebComponent {
             selection.processKey(event, (target) => {
                 target.focus();
                 if (mode === 'auto') {
-                    const index = __classPrivateFieldGet(this, _DadsTab_tabs, "f").indexOf(target);
-                    if (index >= 0) {
-                        __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_selectTab).call(this, index);
-                    }
+                    __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_activateTab).call(this, target);
                 }
             }, {
                 orientation: ariaOrientation,
@@ -251,6 +257,8 @@ _DadsTab_tablist = new WeakMap(), _DadsTab_slot = new WeakMap(), _DadsTab_tabs =
         children.push(child);
     }
     return children;
+}, _DadsTab_getSelectedIndex = function _DadsTab_getSelectedIndex() {
+    return Math.max(0, parseInt(this.getAttribute('selected-index') ?? '0', 10) || 0);
 }, _DadsTab_syncTabs = function _DadsTab_syncTabs() {
     const tablist = __classPrivateFieldGet(this, _DadsTab_tablist, "f");
     if (!tablist)
@@ -276,6 +284,7 @@ _DadsTab_tablist = new WeakMap(), _DadsTab_slot = new WeakMap(), _DadsTab_tabs =
         tab.setAttribute('role', 'tab');
         tab.setAttribute('id', tabId);
         tab.setAttribute('aria-controls', child.id);
+        tab.setAttribute('tabindex', '0');
         tab.type = 'button';
         tab.addEventListener('click', __classPrivateFieldGet(this, _DadsTab_handleTabClick, "f"));
         tab.addEventListener('keydown', __classPrivateFieldGet(this, _DadsTab_handleKeyDown, "f"));
@@ -293,7 +302,7 @@ _DadsTab_tablist = new WeakMap(), _DadsTab_slot = new WeakMap(), _DadsTab_tabs =
         child.setAttribute('role', 'tabpanel');
         child.setAttribute('part', 'tabpanel');
         child.setAttribute('aria-labelledby', tabId);
-        child.setAttribute('tabindex', '0');
+        child.setAttribute('tabindex', '-1');
         tablist.appendChild(tab);
         __classPrivateFieldGet(this, _DadsTab_tabs, "f").push(tab);
         __classPrivateFieldGet(this, _DadsTab_panels, "f").push(child);
@@ -328,19 +337,15 @@ _DadsTab_tablist = new WeakMap(), _DadsTab_slot = new WeakMap(), _DadsTab_tabs =
     __classPrivateFieldSet(this, _DadsTab_lastTablistBlockSize, nextValue, "f");
     this.style.setProperty('--_dads-tab-tablist-block-size', nextValue);
 }, _DadsTab_syncSelection = function _DadsTab_syncSelection() {
-    const index = Math.max(0, parseInt(this.getAttribute('selected-index') ?? '0', 10) || 0);
-    const clampedIndex = Math.min(index, __classPrivateFieldGet(this, _DadsTab_tabs, "f").length - 1);
+    const clampedIndex = Math.min(__classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_getSelectedIndex).call(this), __classPrivateFieldGet(this, _DadsTab_tabs, "f").length - 1);
     for (let i = 0; i < __classPrivateFieldGet(this, _DadsTab_tabs, "f").length; i++) {
-        const tab = __classPrivateFieldGet(this, _DadsTab_tabs, "f")[i];
-        const panel = __classPrivateFieldGet(this, _DadsTab_panels, "f")[i];
         const isSelected = i === clampedIndex;
-        tab.setAttribute('aria-selected', String(isSelected));
-        tab.setAttribute('tabindex', isSelected ? '0' : '-1');
+        __classPrivateFieldGet(this, _DadsTab_tabs, "f")[i].setAttribute('aria-selected', String(isSelected));
         if (isSelected) {
-            panel.removeAttribute('hidden');
+            __classPrivateFieldGet(this, _DadsTab_panels, "f")[i].removeAttribute('hidden');
         }
         else {
-            panel.setAttribute('hidden', '');
+            __classPrivateFieldGet(this, _DadsTab_panels, "f")[i].setAttribute('hidden', '');
         }
     }
 }, _DadsTab_getEnabledTabs = function _DadsTab_getEnabledTabs() {
@@ -351,8 +356,20 @@ _DadsTab_tablist = new WeakMap(), _DadsTab_slot = new WeakMap(), _DadsTab_tabs =
         enabled.push(tab);
     }
     return enabled;
+}, _DadsTab_focusActivePanel = function _DadsTab_focusActivePanel() {
+    const clampedIndex = Math.min(__classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_getSelectedIndex).call(this), __classPrivateFieldGet(this, _DadsTab_panels, "f").length - 1);
+    if (clampedIndex >= 0 && __classPrivateFieldGet(this, _DadsTab_panels, "f")[clampedIndex]) {
+        __classPrivateFieldGet(this, _DadsTab_panels, "f")[clampedIndex].focus();
+    }
+}, _DadsTab_activateTab = function _DadsTab_activateTab(tab) {
+    if (tab.getAttribute('aria-disabled') === 'true')
+        return;
+    const index = __classPrivateFieldGet(this, _DadsTab_tabs, "f").indexOf(tab);
+    if (index >= 0) {
+        __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_selectTab).call(this, index);
+    }
 }, _DadsTab_selectTab = function _DadsTab_selectTab(index) {
-    const previousIndex = parseInt(this.getAttribute('selected-index') ?? '0', 10) || 0;
+    const previousIndex = __classPrivateFieldGet(this, _DadsTab_instances, "m", _DadsTab_getSelectedIndex).call(this);
     if (index === previousIndex)
         return;
     this.setAttribute('selected-index', String(index));

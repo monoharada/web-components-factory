@@ -34,7 +34,6 @@ export const loadingIconStyles = css `
   :host([underlay]) [part="base"] {
     min-width: 128px;
     min-height: 128px;
-    padding: var(--spacing-4);
     justify-content: center;
     box-sizing: border-box;
   }
@@ -43,7 +42,7 @@ export const loadingIconStyles = css `
     display: block;
     position: absolute;
     inset: 0;
-    border-radius: 12px;
+    border-radius: var(--spacing-3);
     border: 1px solid var(--dads-loading-icon-underlay-border);
     background: var(--dads-loading-icon-underlay-bg);
     z-index: -1;
@@ -70,7 +69,8 @@ export const loadingIconStyles = css `
     color: var(--dads-loading-icon-label-color);
   }
 
-  :host(:not([label])) [part="label"] {
+  :host(:not([label])) [part="label"],
+  :host([label=""]) [part="label"] {
     display: none;
   }
 
@@ -81,6 +81,7 @@ export const loadingIconStyles = css `
 
     [part="underlay"] {
       border-color: CanvasText;
+      background: Canvas;
     }
   }
 `;

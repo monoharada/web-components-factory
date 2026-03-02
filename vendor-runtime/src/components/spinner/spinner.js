@@ -34,12 +34,14 @@ import { spinnerStyles } from './spinner-styles.js';
  * @csspart base - ルートコンテナ（role="progressbar"）
  * @csspart underlay - カード背景（underlay属性時に表示）
  * @csspart svg - SVGコンテナ
- * @csspart track - トラック円（背景）
+ * @csspart track - トラックリング（背景ドーナツ）
+ * @csspart border - 外周ボーダーライン
  * @csspart indicator - インジケーター円（アニメーション）
  * @csspart label - ラベルテキスト
  *
  * @attr {'sm' | 'lg'} size - サイズ（sm: 24px, lg: 48px）
  * @attr {'stacked' | 'inlined'} composition - レイアウト方向
+ * @attr {'slow' | 'normal' | 'fast'} speed - アニメーション速度
  * @attr {boolean} underlay - カード背景表示
  * @attr {string} label - 表示ラベル兼アクセシブル名
  *
@@ -48,6 +50,8 @@ import { spinnerStyles } from './spinner-styles.js';
  * @cssprop --dads-spinner-label-color - ラベルテキスト色
  * @cssprop --dads-spinner-underlay-bg - アンダーレイ背景色
  * @cssprop --dads-spinner-underlay-border - アンダーレイ枠線色
+ * @cssprop --dads-spinner-rotate-duration - 回転アニメーション速度
+ * @cssprop --dads-spinner-dash-duration - ダッシュアニメーション速度
  *
  * @example
  * ```html
@@ -69,6 +73,10 @@ export class DadsSpinner extends TypographyWebComponent {
         __classPrivateFieldSet(this, _DadsSpinner_labelEl, this.shadowRoot?.querySelector('[part="label"]') ?? null, "f");
         __classPrivateFieldGet(this, _DadsSpinner_instances, "m", _DadsSpinner_setDefaultAttributes).call(this);
         __classPrivateFieldGet(this, _DadsSpinner_instances, "m", _DadsSpinner_syncLabel).call(this);
+        const labelValue = this.getAttribute('label');
+        if (!labelValue || labelValue.length === 0) {
+            console.warn('[dads-spinner] label属性が未指定です。スクリーンリーダーのために label 属性を設定してください。');
+        }
     }
     labelChanged() {
         __classPrivateFieldGet(this, _DadsSpinner_instances, "m", _DadsSpinner_syncLabel).call(this);
@@ -80,6 +88,9 @@ _DadsSpinner_base = new WeakMap(), _DadsSpinner_labelEl = new WeakMap(), _DadsSp
     }
     if (!this.hasAttribute('composition')) {
         this.setAttribute('composition', 'stacked');
+    }
+    if (!this.hasAttribute('speed')) {
+        this.setAttribute('speed', 'normal');
     }
 }, _DadsSpinner_syncLabel = function _DadsSpinner_syncLabel() {
     if (!__classPrivateFieldGet(this, _DadsSpinner_base, "f") || !__classPrivateFieldGet(this, _DadsSpinner_labelEl, "f"))
@@ -101,12 +112,12 @@ DadsSpinner.definition = {
       <div part="base" role="progressbar">
         <div part="underlay" aria-hidden="true"></div>
         <svg part="svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-          <circle part="track" cx="24" cy="24" r="20"
-                  fill="none" stroke-width="4" />
+          <circle part="track" cx="24" cy="24" r="20" />
+          <circle part="border" cx="24" cy="24" r="22" />
           <circle part="indicator" cx="24" cy="24" r="20"
                   fill="none" stroke-width="4"
                   stroke-linecap="round"
-                  stroke-dasharray="125.66" />
+                  stroke-dasharray="31.42 125.66" />
         </svg>
         <span part="label"></span>
       </div>
@@ -120,6 +131,7 @@ DadsSpinner.definition = {
     attributes: [
         PropertyAttr('size'),
         PropertyAttr('composition'),
+        PropertyAttr('speed'),
         BooleanAttr('underlay'),
         PropertyAttr('label'),
     ],
