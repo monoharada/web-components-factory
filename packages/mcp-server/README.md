@@ -114,7 +114,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | `orphanedChildComponent` | warning | 親要素なしの子コンポーネント | `<dads-breadcrumb-item>` without `<dads-breadcrumb>` |
 | `emptyInteractiveElement` | warning | accessible name が空の操作要素 | `<dads-button></dads-button>` |
 | `canonicalLowercaseRecommendation` | warning | 大文字を含む属性名（lowercase が canonical） | `Variant="solid"` → `variant` |
-| `tokenMisuseInInlineStyles` | warning | inline style でのトークン誤用 | `color: #000` → `var(--color-*)` |
+| `tokenMisuse` | warning | inline style でのトークン誤用 | `color: #000` → `var(--color-*)` |
 | `ariaLiveNotRecommended` | warning | `aria-live` の使用（DADS 非推奨） | `aria-live="polite"` |
 | `roleAlertNotRecommended` | warning | `role="alert"` の使用（DADS 非推奨） | `role="alert"` |
 | `forbiddenAttribute` | warning | 禁止属性 | `placeholder` |
