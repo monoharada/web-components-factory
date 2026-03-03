@@ -471,12 +471,14 @@ export function detectTokenMisuseInInlineStyles({
  *   filePath?: string;
  *   text: string;
  *   severity?: string;
+ *   cemTagNames?: Set<string>;
  * }} params
  */
 export function detectAccessibilityMisuseInMarkup({
   filePath = '<input>',
   text,
   severity = 'warning',
+  cemTagNames,
 }) {
   const diagnostics = [];
   const lineStarts = computeLineIndex(text);
@@ -508,7 +510,9 @@ export function detectAccessibilityMisuseInMarkup({
       });
     }
 
-    const roleAttr = parseAttributes(attrChunk).find(({ name }) => String(name ?? '').toLowerCase() === 'role');
+    const parsedAttrs = parseAttributes(attrChunk);
+
+    const roleAttr = parsedAttrs.find(({ name }) => String(name ?? '').toLowerCase() === 'role');
     const roleValue = String(roleAttr?.value ?? '').trim().toLowerCase();
     if (roleAttr && roleValue === 'alert') {
       const attrName = 'role';
@@ -526,6 +530,35 @@ export function detectAccessibilityMisuseInMarkup({
         attrName,
         hint: 'Replace role=\"alert\" with non-live text associated to the control.',
       });
+    }
+
+    // Empty label / aria-label detection (v0.4.0, DD-26)
+    // Only check CEM-registered custom elements to avoid false positives on third-party elements
+    const isCemElement = cemTagNames ? cemTagNames.has(tag) : tag.includes('-');
+    if (isCemElement) {
+      const EMPTY_LABEL_CHECKS = [
+        { attr: 'label', code: 'emptyLabel', hint: 'Set label to a descriptive text, e.g. label="氏名".', msg: (t) => `Empty label attribute on <${t}>. Provide a meaningful label for accessibility.` },
+        { attr: 'aria-label', code: 'emptyAriaLabel', hint: 'Set aria-label to descriptive text or use a visible <label> element instead.', msg: (t) => `Empty aria-label attribute on <${t}>. Provide a meaningful label for accessibility.` },
+      ];
+      for (const { name, offset, value } of parsedAttrs) {
+        const attrLower = String(name ?? '').toLowerCase();
+        if (typeof value !== 'string' || value.trim() !== '') continue;
+        const check = EMPTY_LABEL_CHECKS.find((c) => c.attr === attrLower);
+        if (!check) continue;
+        const startIndex = rawAttrsStart + offset;
+        const endIndex = startIndex + name.length;
+        const range = makeRange(lineStarts, startIndex, endIndex);
+        diagnostics.push({
+          file: filePath,
+          range,
+          severity,
+          code: check.code,
+          message: check.msg(tag),
+          tagName: tag,
+          attrName: check.attr,
+          hint: check.hint,
+        });
+      }
     }
   }
 

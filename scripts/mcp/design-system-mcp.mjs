@@ -18,6 +18,7 @@ const FILE_MAP = {
   'custom-elements.json': 'custom-elements.json',
   'install-registry.json': 'registry/install-registry.json',
   'pattern-registry.json': 'registry/pattern-registry.json',
+  'component-selector-guide.json': 'registry/component-selector-guide.json',
   'design-tokens.json': 'packages/mcp-server/data/design-tokens.json',
   'guidelines-index.json': 'packages/mcp-server/data/guidelines-index.json',
   'llms-full.txt': 'llms-full.txt',

@@ -34,6 +34,10 @@ const FILES = [
     dest: path.join(MCP_DATA_DIR, 'pattern-registry.json'),
   },
   {
+    src: path.join(ROOT, 'registry/component-selector-guide.json'),
+    dest: path.join(MCP_DATA_DIR, 'component-selector-guide.json'),
+  },
+  {
     src: path.join(ROOT, 'llms-full.txt'),
     dest: path.join(MCP_DATA_DIR, 'llms-full.txt'),
   },

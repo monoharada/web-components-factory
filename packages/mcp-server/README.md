@@ -78,7 +78,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 }
 ```
 
-## 提供機能（14 tools + 1 prompt + 4 resources）
+## 提供機能（16 tools + 1 prompt + 4 resources）
 
 ### ガードレール
 
@@ -92,7 +92,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 |--------|------|
 | `list_components` | カテゴリ/クエリ/limit/offset でコンポーネントを段階的に取得（デフォルト20件。全件取得は `limit: 200`） |
 | `search_icons` | アイコン名をキーワード検索し、usage example を返す |
-| `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得（`relatedComponents` を含む） |
+| `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得。`components` 配列でバッチ取得可能（最大10件） |
 | `generate_usage_snippet` | コンポーネントの最小限 HTML スニペットを生成 |
 | `get_install_recipe` | componentId・依存関係・define関数・インストールコマンドを取得 |
 
@@ -117,6 +117,8 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | `tokenMisuse` | warning | inline style でのトークン誤用 | `color: #000` → `var(--color-*)` |
 | `ariaLiveNotRecommended` | warning | `aria-live` の使用（DADS 非推奨） | `aria-live="polite"` |
 | `roleAlertNotRecommended` | warning | `role="alert"` の使用（DADS 非推奨） | `role="alert"` |
+| `emptyLabel` | error | 空の `label` 属性（アクセシビリティ違反） | `<dads-input-text label="">` |
+| `emptyAriaLabel` | error | 空の `aria-label` 属性（アクセシビリティ違反） | `<dads-button aria-label="">` |
 | `forbiddenAttribute` | warning | 禁止属性 | `placeholder` |
 
 ### UI パターン
@@ -126,6 +128,13 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | `list_patterns` | 利用可能な UI パターン（レシピ）を一覧表示 |
 | `get_pattern_recipe` | パターンの完全レシピ（必要コンポーネント・依存解決・HTML）を取得 |
 | `generate_pattern_snippet` | パターンの HTML スニペットを生成 |
+| `generate_full_page_html` | HTML フラグメントを `<!DOCTYPE html>` + importmap + boot script 付きの完全ページに変換 |
+
+### コンポーネント選択支援
+
+| ツール | 説明 |
+|--------|------|
+| `get_component_selector_guide` | カテゴリ・ユースケースでコンポーネントを選択支援（6カテゴリ: Form, Actions, Navigation, Content, Display, Layout） |
 
 ### トークン・ガイドライン検索
 
@@ -371,6 +380,27 @@ Claude Desktop 設定例:
 ```
 prefix: "myui" → dads-button → myui-button
 ```
+
+## v0.4.0 新機能
+
+### 新ツール
+- **`generate_full_page_html`** — HTML フラグメントを完全な HTML ページに変換（importmap, boot script, tokens CSS 付き）
+- **`get_component_selector_guide`** — カテゴリ・ユースケースキーワードでコンポーネント選択を支援
+
+### 改善
+- **空ラベル検出** — `label=""` / `aria-label=""` を error として検出（`emptyLabel`, `emptyAriaLabel`）
+- **属性プリフィル** — `generate_usage_snippet` で CEM デフォルト値を自動挿入
+- **アイコンエイリアス** — `search_icons` で `"trash"` → `"delete"` 等のエイリアス展開
+- **ガイドライン拡充** — spacing token, `::part()`, div-soup, form-validation の検索対応
+- **パターンビヘイビア** — `get_pattern_recipe` に JS コード例（`behavior` フィールド）を追加
+- **コンポーネントトークン参照** — `get_design_token_detail` に `componentReferencedBy` フィールド追加
+- **バッチ対応** — `get_component_api` に `components` 配列パラメータ（最大10件）
+- **vendor path 統一** — `setupInfo` のパスを `<dir>` プレースホルダに統一
+
+### Breaking Changes
+- `setupInfo.vendorRuntimePath` の値が `vendor-runtime/` から `<dir>/` ベースに変更
+
+---
 
 ## v0.3.0 新機能 — ランタイムセットアップ情報
 

@@ -112,6 +112,8 @@ const BUILTIN_TOOL_NAMES = Object.freeze(new Set([
   'get_design_token_detail',
   'get_accessibility_docs',
   'search_guidelines',
+  'generate_full_page_html',
+  'get_component_selector_guide',
 ]));
 const A11Y_CATEGORY_LEVEL_MAP = Object.freeze({
   semantics: 'A',
@@ -141,15 +143,39 @@ const SYNONYM_TABLE = new Map([
   ['aria-live', ['role=alert', 'aria-describedby', 'live region', 'error text']],
   ['keyboard', ['focus', 'tab', 'tabindex', 'key event', 'focus trap']],
   ['contrast', ['color', 'wcag', 'color contrast']],
-  ['spacing', ['margin', 'padding', 'gap', 'spacing token']],
+  ['spacing', ['margin', 'padding', 'gap', 'spacing token', '--spacing']],
   ['skip-navigation', ['skip-link', 'landmark', 'skip nav']],
   ['heading', ['heading hierarchy', 'h1', 'heading level']],
   ['form', ['input', 'validation', 'required', 'label']],
+  ['part', ['::part', 'css part', 'shadow dom styling']],
   ['layout', ['grid', 'flexbox', 'layout-shell', 'responsive', 'breakpoint']],
   ['responsive', ['media query', 'breakpoint', 'viewport', 'mobile']],
   ['error', ['validation', 'aria-invalid', 'aria-describedby', 'error text']],
   ['focus', ['focus-visible', 'focus ring', 'outline', 'tabindex', 'keyboard']],
   ['token', ['design token', 'css variable', 'custom property', 'spacing token']],
+  ['div-soup', ['wrapper', 'unnecessary div', 'minimal dom']],
+]);
+
+// Icon alias table: common alias → canonical icon names (DD-18)
+// Maps user-friendly search terms to actual icon names in the CEM catalog.
+const ICON_ALIAS_TABLE = new Map([
+  ['x', ['close', 'cancel']],
+  ['trash', ['delete']],
+  ['pencil', ['edit']],
+  ['magnifying', ['search']],
+  ['gear', ['settings']],
+  ['plus', ['add']],
+  ['minus', ['subtract']],
+  ['tick', ['check', 'checkmark']],
+  ['alert', ['warning', 'attention']],
+  ['info', ['information', 'help']],
+  ['hamburger', ['menu']],
+  ['back', ['arrowBack', 'arrowLeft']],
+  ['forward', ['arrowForward', 'arrowRight']],
+  ['eye', ['visibility']],
+  ['user', ['person']],
+  ['file', ['document']],
+  ['bell', ['notification']],
 ]);
 
 // Interaction examples for form components (P-04 / #206)
@@ -464,6 +490,42 @@ export function buildTokenRelationshipIndex(designTokensData) {
   }
 
   return { byToken };
+}
+
+/**
+ * Extract which components reference which design tokens via var() in CEM cssProperties.
+ * Returns Map<tokenName, Set<componentTagName>>.
+ * DD-25: var(--token, fallback) fallback values are not extracted (known limitation).
+ */
+export function buildComponentTokenReferencedBy(manifest) {
+  const result = new Map();
+  const modules = Array.isArray(manifest?.modules) ? manifest.modules : [];
+  const varRe = /var\((--[\w-]+)/g;
+  for (const mod of modules) {
+    const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
+    for (const decl of declarations) {
+      const tag = decl?.tagName;
+      if (typeof tag !== 'string') continue;
+      const cssProps = Array.isArray(decl?.cssProperties) ? decl.cssProperties : [];
+      for (const prop of cssProps) {
+        const defaultVal = typeof prop?.default === 'string' ? prop.default : '';
+        let m;
+        while ((m = varRe.exec(defaultVal)) !== null) {
+          const tokenName = normalizeTokenIdentifier(m[1]);
+          if (!tokenName) continue;
+          if (!result.has(tokenName)) result.set(tokenName, new Set());
+          result.get(tokenName).add(tag);
+        }
+        // Also index the css property name itself as a token → component mapping
+        const propName = normalizeTokenIdentifier(prop?.name);
+        if (propName) {
+          if (!result.has(propName)) result.set(propName, new Set());
+          result.get(propName).add(tag);
+        }
+      }
+    }
+  }
+  return result;
 }
 
 function toTokenSummary(token) {
@@ -895,6 +957,14 @@ export function buildDiagnosticSuggestion({ diagnostic, cemIndex, prefix }) {
     return 'Use role="alert" only for urgent live updates; otherwise use static text associated via aria-describedby.';
   }
 
+  if (code === 'emptyLabel') {
+    return diagnostic?.hint ?? 'Provide a meaningful label value for accessibility.';
+  }
+
+  if (code === 'emptyAriaLabel') {
+    return diagnostic?.hint ?? 'Provide a meaningful aria-label value or use a visible <label> element.';
+  }
+
   return undefined;
 }
 
@@ -934,6 +1004,74 @@ export function buildIndexes(manifest) {
   return { byTag, byClass, modulePathByTag, decls };
 }
 
+/**
+ * Extracts the primary component prefix from CEM indexes.
+ * Returns the most common prefix among all tagNames (e.g. 'dads' from 'dads-button').
+ * Falls back to CANONICAL_PREFIX if no tagNames are found.
+ */
+export function extractPrefixFromIndexes(indexes) {
+  const counts = new Map();
+  for (const { tagName } of indexes.decls) {
+    const i = tagName.indexOf('-');
+    if (i > 0) {
+      const p = tagName.slice(0, i);
+      counts.set(p, (counts.get(p) ?? 0) + 1);
+    }
+  }
+  let best = CANONICAL_PREFIX;
+  let bestCount = 0;
+  for (const [p, c] of counts) {
+    if (c > bestCount) { best = p; bestCount = c; }
+  }
+  return best;
+}
+
+/**
+ * Build a full HTML page from a fragment.
+ * @param {{ html: string; prefix: string; cemIndex: Map }} params
+ */
+export function buildFullPageHtml({ html, prefix, cemIndex }) {
+  // Extract custom element tags from the HTML fragment
+  const tagRe = /<([a-z][a-z0-9]*-[a-z0-9-]*)\b/gi;
+  const tags = new Set();
+  let m;
+  while ((m = tagRe.exec(html))) {
+    tags.add(String(m[1]).toLowerCase());
+  }
+
+  // Build import map entries for recognized components
+  const importEntries = {};
+  for (const tag of tags) {
+    if (cemIndex.has(tag)) {
+      const suffix = tag.replace(/^[^-]+-/, '');
+      importEntries[tag] = `./<dir>/components/${suffix}.js`;
+    }
+  }
+
+  const importMapJson = JSON.stringify({ imports: importEntries }, null, 2);
+
+  const lines = [
+    '<!DOCTYPE html>',
+    `<html lang="ja">`,
+    '<head>',
+    '  <meta charset="utf-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+    `  <title>WCF Preview</title>`,
+    `  <link rel="stylesheet" href="./<dir>/styles/tokens.css">`,
+    `  <script type="importmap">`,
+    importMapJson,
+    `  </script>`,
+    '</head>',
+    '<body>',
+    html,
+    `  <script type="module" src="./<dir>/boot.js"></script>`,
+    '</body>',
+    '</html>',
+  ];
+
+  return { fullHtml: lines.join('\n'), importEntries };
+}
+
 export function pickDecl({ byTag, byClass }, { tagName, className, prefix }) {
   if (typeof tagName === 'string' && tagName.trim() !== '') {
     const canonical = toCanonicalTagName(tagName, prefix);
@@ -966,6 +1104,7 @@ export function serializeApi(decl, modulePath, prefix) {
     attributes: attributes.map((a) => ({
       name: a?.name,
       type: a?.type?.text,
+      default: a?.default ?? null,
       description: a?.description,
       inheritedFrom: a?.inheritedFrom,
       deprecated: a?.deprecated,
@@ -1032,8 +1171,12 @@ export function generateSnippet(api, prefix) {
     if (!a) continue;
     const t = String(a.type ?? '').toLowerCase();
     const isBoolean = t.includes('boolean');
-    if (isBoolean) lines.push(`  ${name}`);
-    else lines.push(`  ${name}=""`);
+    if (isBoolean) {
+      lines.push(`  ${name}`);
+    } else {
+      const defaultVal = typeof a.default === 'string' ? a.default.replace(/^['"]|['"]$/g, '') : '';
+      lines.push(`  ${name}="${defaultVal}"`);
+    }
     if (lines.length >= 4) break;
   }
 
@@ -1232,7 +1375,18 @@ export function searchIconCatalog(indexes, { query, limit, offset, prefix } = {}
 
   let icons = buildIconCatalog(indexes, prefix);
   if (q) {
-    icons = icons.filter((icon) => icon.name.toLowerCase().includes(q));
+    // Expand query with icon aliases (DD-18)
+    const searchTerms = [q];
+    const aliases = ICON_ALIAS_TABLE.get(q);
+    if (aliases) {
+      for (const alias of aliases) {
+        if (!searchTerms.includes(alias)) searchTerms.push(alias);
+      }
+    }
+    icons = icons.filter((icon) => {
+      const name = icon.name.toLowerCase();
+      return searchTerms.some((term) => name.includes(term));
+    });
   }
 
   const total = icons.length;
@@ -1708,6 +1862,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
   const manifest = await loadJson('custom-elements.json');
   const indexes = buildIndexes(manifest);
+  const detectedPrefix = extractPrefixFromIndexes(indexes);
   const {
     collectCemCustomElements,
     validateTextAgainstCem,
@@ -1754,6 +1909,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   }
 
   const tokenSuggestionMap = buildTokenSuggestionMap(designTokensData);
+  const componentTokenRefMap = buildComponentTokenReferencedBy(manifest);
 
   const VENDOR_DIR = 'vendor-runtime';
   const PREFIX_STRIP_RE = /^[^-]+-/;
@@ -1911,7 +2067,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       const overview = {
         name: 'DADS Web Components (wcf)',
         version: '0.5.0',
-        prefix: CANONICAL_PREFIX,
+        prefix: detectedPrefix,
         totalComponents: indexes.decls.length,
         componentsByCategory: categoryCount,
         totalPatterns: patternList.length,
@@ -1919,8 +2075,13 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         setupInfo: {
           npmPackage: 'web-components-factory',
           installCommand: 'npm install web-components-factory',
-          vendorRuntimePath: `${VENDOR_DIR}/`,
-          htmlBoilerplate: '<script type="module" src="vendor-runtime/src/autoload.js"></script>',
+          vendorRuntimePath: '<dir>/',
+          htmlBoilerplate: [
+            '<script type="importmap">',
+            `{ "imports": { "${detectedPrefix}-button": "./<dir>/components/button.js" } }`,
+            '</script>',
+            '<script type="module" src="./<dir>/boot.js"></script>',
+          ].join('\n'),
           noscriptGuidance: 'WCF components require JavaScript. Provide <noscript> fallback with static HTML equivalents for critical content.',
           noCDN: true,
           deliveryModel: 'vendor-local',
@@ -1932,19 +2093,20 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
             description:
               'Components are installed locally via the wcf CLI. No CDN is available. All assets are served from the project directory using import maps and a boot script.',
           },
-          importMapHint: 'WCF uses <script type="importmap"> for module resolution. Each component tag name maps to a local JS file: { "<prefix>-<component>": "./<dir>/components/<component>.js" }. The wcf CLI generates importmap.snippet.json automatically via `wcf init`.',
+          importMapHint: `WCF uses <script type="importmap"> for module resolution. Each component tag name maps to a local JS file: { "${detectedPrefix}-<component>": "./<dir>/components/<component>.js" }. The wcf CLI generates importmap.snippet.json automatically via \`wcf init\`.`,
           bootScript: '<dir>/boot.js — sets the component prefix via setConfig(), then loads wc-autoloader.js which scans the DOM for custom element tags and dynamically imports them via the import map.',
+          detectedPrefix,
           vendorSetup: {
-            init: 'wcf init --prefix <prefix> --dir <dir>',
-            add: 'wcf add <componentId> --prefix <prefix> --out <dir>',
+            init: `wcf init --prefix ${detectedPrefix} --dir <dir>`,
+            add: `wcf add <componentId> --prefix ${detectedPrefix} --out <dir>`,
             workflow: '1. wcf init で初期化（boot.js, importmap.snippet.json, autoloader を生成） → 2. wcf add で各コンポーネントを追加 → import map と boot.js が自動生成される',
           },
           htmlSetup: [
             '<script type="importmap">',
             '{',
             '  "imports": {',
-            '    "<prefix>-button": "./<dir>/components/button.js",',
-            '    "<prefix>-card": "./<dir>/components/card.js"',
+            `    "${detectedPrefix}-button": "./<dir>/components/button.js",`,
+            `    "${detectedPrefix}-card": "./<dir>/components/card.js"`,
             '  }',
             '}',
             '</script>',
@@ -1984,6 +2146,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           { name: 'generate_usage_snippet', purpose: 'Minimal HTML usage example' },
           { name: 'get_install_recipe', purpose: 'Installation instructions and dependency tree' },
           { name: 'validate_markup', purpose: 'Validate HTML against CEM schema' },
+          { name: 'generate_full_page_html', purpose: 'Wrap HTML fragment into a complete page with importmap and boot script' },
           { name: 'list_patterns', purpose: 'Browse page-level UI composition patterns' },
           { name: 'get_pattern_recipe', purpose: 'Full pattern recipe with dependencies and HTML' },
           { name: 'generate_pattern_snippet', purpose: 'Pattern HTML snippet only' },
@@ -1991,6 +2154,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           { name: 'get_design_token_detail', purpose: 'Get details, relationships, and usage examples for one token' },
           { name: 'get_accessibility_docs', purpose: 'Search component-level accessibility checklist and WCAG-filtered guidance' },
           { name: 'search_guidelines', purpose: 'Search design system guidelines and best practices' },
+          { name: 'get_component_selector_guide', purpose: 'Component selection guide by category and use case' },
         ],
         recommendedWorkflow: [
           '1. get_design_system_overview → understand components, patterns, tokens, and IDE setup templates',
@@ -2005,7 +2169,8 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           '10. get_component_api → check attributes, slots, events, CSS parts',
           '11. generate_usage_snippet or get_pattern_recipe → get code',
           '12. validate_markup → verify your HTML and use suggestions to self-correct',
-          '13. get_install_recipe → get import/install instructions',
+          '13. generate_full_page_html → wrap fragment into a complete preview-ready page',
+          '14. get_install_recipe → get import/install instructions',
         ],
         experimental: {
           plugins: {
@@ -2104,16 +2269,53 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     'get_component_api',
     {
       description:
-        'Get the full API surface of a single component (attributes, slots, events, CSS parts, CSS custom properties). When: you need detailed specs for a component. Returns: complete component specification. After: use generate_usage_snippet for a code example.',
+        'Get the full API surface of one or more components (attributes, slots, events, CSS parts, CSS custom properties). When: you need detailed specs for components. Returns: complete component specification (single object or array for batch). After: use generate_usage_snippet for a code example.',
       inputSchema: {
         tagName: z.string().optional().describe('Tag name (e.g., "dads-button")'),
         className: z.string().optional().describe('Class name (e.g., "DadsButton")'),
         component: z.string().optional().describe('Any identifier: tagName, className, or bare name (e.g., "button")'),
+        components: z.array(z.string()).max(10).optional().describe('Batch: array of component identifiers (max 10). When provided, component/tagName/className are ignored.'),
         prefix: z.string().optional(),
       },
     },
-    async ({ tagName, className, component, prefix }) => {
+    async ({ tagName, className, component, components, prefix }) => {
       const p = normalizePrefix(prefix);
+
+      // Batch mode: components array takes priority (DD-23)
+      if (Array.isArray(components) && components.length > 0) {
+        const results = [];
+        for (const comp of components) {
+          const resolved = resolveDeclByComponent(indexes, comp, p);
+          if (!resolved?.decl) {
+            results.push({ component: comp, error: `Component not found: ${comp}` });
+            continue;
+          }
+          const { decl: d, modulePath: mp } = resolved;
+          const cTag = typeof d.tagName === 'string' ? d.tagName.toLowerCase() : undefined;
+          const mPath = mp ?? (cTag ? indexes.modulePathByTag.get(cTag) : undefined);
+          const api = serializeApi(d, mPath, prefix);
+          const related = getRelatedComponentsForTag({
+            canonicalTagName: cTag,
+            installRegistry,
+            relatedMap: relatedComponentMap,
+            prefix,
+          });
+          if (related.length > 0) api.relatedComponents = related;
+          const a11y = extractAccessibilityChecklist(d, { prefix });
+          if (a11y) api.accessibilityChecklist = a11y;
+          results.push(api);
+        }
+        const resultJson = JSON.stringify(results, null, 2);
+        if (measureToolResultBytes(resultJson) > MAX_TOOL_RESULT_BYTES) {
+          return {
+            content: [{ type: 'text', text: JSON.stringify({ error: 'Batch result exceeds size limit. Reduce the number of components.' }) }],
+            isError: true,
+          };
+        }
+        return buildJsonToolResponse(results);
+      }
+
+      // Single mode (existing behavior)
       let decl;
       let modulePath;
 
@@ -2345,10 +2547,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         severity: 'warning',
       });
 
+      const cemTagNames = new Set(cemIndex.keys());
       const accessibilityDiagnostics = detectAccessibilityMisuseInMarkup({
         filePath: '<markup>',
         text: html,
-        severity: 'warning',
+        severity: 'error',
+        cemTagNames,
       });
 
       const slotDiagnostics = detectInvalidSlotName({
@@ -2433,6 +2637,102 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   );
 
   // -----------------------------------------------------------------------
+  // Tool: generate_full_page_html
+  // -----------------------------------------------------------------------
+  server.registerTool(
+    'generate_full_page_html',
+    {
+      description:
+        'Generate a complete, self-contained HTML page from a component HTML fragment. When: you need a preview-ready full page with <!DOCTYPE html>, importmap, and boot script. Returns: { fullHtml, componentCount, importMapEntries }. After: save to a .html file and open via a local HTTP server.',
+      inputSchema: {
+        html: z.string().describe('HTML fragment containing WCF custom elements'),
+        prefix: z.string().optional().describe('Component prefix (default: auto-detected)'),
+      },
+    },
+    async ({ html, prefix }) => {
+      const p = normalizePrefix(prefix);
+      let ci = canonicalCemIndex;
+      if (p !== CANONICAL_PREFIX) {
+        ci = mergeWithPrefixed(canonicalCemIndex, p);
+      }
+
+      const { fullHtml, importEntries } = buildFullPageHtml({ html, prefix: p, cemIndex: ci });
+
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            fullHtml,
+            componentCount: Object.keys(importEntries).length,
+            importMapEntries: importEntries,
+          }, null, 2),
+        }],
+      };
+    },
+  );
+
+  // -----------------------------------------------------------------------
+  // Tool: get_component_selector_guide
+  // -----------------------------------------------------------------------
+  let selectorGuideData = null;
+  try {
+    selectorGuideData = await loadJson('component-selector-guide.json');
+  } catch {
+    // component-selector-guide.json may not exist yet
+  }
+
+  server.registerTool(
+    'get_component_selector_guide',
+    {
+      description:
+        'Get a component selection guide organized by UI category and use case. When: deciding which component to use for a UI requirement. Returns: categories with recommended components and use cases. After: use get_component_api for the selected component details.',
+      inputSchema: {
+        category: z.string().optional().describe('Filter by category key (e.g., "Form", "Navigation", "Layout")'),
+        useCase: z.string().optional().describe('Search by use-case keyword (e.g., "date", "login", "upload")'),
+      },
+    },
+    async ({ category, useCase }) => {
+      if (!selectorGuideData || !Array.isArray(selectorGuideData.categories)) {
+        return {
+          content: [{ type: 'text', text: JSON.stringify({ error: 'Component selector guide not available.' }) }],
+          isError: true,
+        };
+      }
+
+      let categories = selectorGuideData.categories;
+
+      // Filter by category
+      if (typeof category === 'string' && category.trim()) {
+        const cat = category.trim().toLowerCase();
+        categories = categories.filter((c) => c.key.toLowerCase() === cat);
+      }
+
+      // Filter by use case keyword
+      if (typeof useCase === 'string' && useCase.trim()) {
+        const kw = useCase.trim().toLowerCase();
+        categories = categories.map((c) => ({
+          ...c,
+          components: c.components.filter((comp) =>
+            comp.useCase.toLowerCase().includes(kw) ||
+            comp.id.toLowerCase().includes(kw) ||
+            comp.tagName.toLowerCase().includes(kw)
+          ),
+        })).filter((c) => c.components.length > 0);
+      }
+
+      return buildJsonToolResponse({
+        totalCategories: categories.length,
+        categories: categories.map((c) => ({
+          key: c.key,
+          label: c.label,
+          description: c.description,
+          components: c.components,
+        })),
+      });
+    },
+  );
+
+  // -----------------------------------------------------------------------
   // Tool: list_patterns
   // -----------------------------------------------------------------------
   server.registerTool(
@@ -2457,7 +2757,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   );
 
   // -----------------------------------------------------------------------
-  // Helper: buildFullPageHtml
+  // Helper: buildFullPageHtmlFromImportMap
   // -----------------------------------------------------------------------
   function escapeHtmlTitle(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -2496,7 +2796,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
    * @param {string} [opts.lang='ja'] - HTML lang attribute
    * @returns {string} Complete HTML5 document
    */
-  function buildFullPageHtml({ html, title, importMapEntries, dir = VENDOR_DIR, lang = 'ja' }) {
+  function buildFullPageHtmlFromImportMap({ html, title, importMapEntries, dir = VENDOR_DIR, lang = 'ja' }) {
     const importMapJson = JSON.stringify({ imports: importMapEntries }, null, 2);
     return [
       '<!DOCTYPE html>',
@@ -2582,7 +2882,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       let fullPageHtml;
       if (includeArr.includes('fullPage')) {
         const resolvedImportMap = buildImportMapEntries(closure, components, p, VENDOR_DIR);
-        fullPageHtml = buildFullPageHtml({
+        fullPageHtml = buildFullPageHtmlFromImportMap({
           html,
           title: pat.title ?? pat.id,
           importMapEntries: resolvedImportMap,
@@ -2604,6 +2904,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         installHint: closure.length > 0 ? `wcf add ${closure.join(' ')}` : undefined,
         entryHints,
         scaffoldHint,
+        behavior: typeof pat.behavior === 'string' ? pat.behavior : undefined,
       };
 
       if (fullPageHtml !== undefined) {
@@ -2713,6 +3014,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
           isError: true,
         };
+      }
+      // Enrich referencedBy with component tagNames from CEM cssProperties
+      const normalizedName = normalizeTokenIdentifier(name);
+      const componentRefs = componentTokenRefMap.get(normalizedName);
+      if (componentRefs && componentRefs.size > 0) {
+        payload.componentReferencedBy = [...componentRefs].sort();
       }
       return buildJsonToolResponse(payload);
     },
