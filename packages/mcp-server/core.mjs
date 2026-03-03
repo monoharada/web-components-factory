@@ -1916,7 +1916,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
-    version: '0.5.0',
+    version: '0.6.0',
   });
 
   server.registerPrompt(
@@ -2066,7 +2066,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
       const overview = {
         name: 'DADS Web Components (wcf)',
-        version: '0.5.0',
+        version: '0.6.0',
         prefix: detectedPrefix,
         totalComponents: indexes.decls.length,
         componentsByCategory: categoryCount,
