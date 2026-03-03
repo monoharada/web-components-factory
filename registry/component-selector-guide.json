@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "categories": [
+    {
+      "key": "Form",
+      "label": "フォーム入力",
+      "description": "User input, selection, and form control components",
+      "components": [
+        { "id": "input-text", "tagName": "dads-input-text", "useCase": "Single-line text input (name, email, phone, etc.)" },
+        { "id": "textarea", "tagName": "dads-textarea", "useCase": "Multi-line text input (comments, descriptions, notes)" },
+        { "id": "select", "tagName": "dads-select", "useCase": "Dropdown selection from predefined options" },
+        { "id": "checkbox", "tagName": "dads-checkbox", "useCase": "Boolean toggle or multi-select checkboxes" },
+        { "id": "radio", "tagName": "dads-radio", "useCase": "Single selection from mutually exclusive options" },
+        { "id": "switch", "tagName": "dads-switch", "useCase": "On/off toggle for settings or preferences" },
+        { "id": "combobox", "tagName": "dads-combobox", "useCase": "Text input with autocomplete/suggestion dropdown" },
+        { "id": "date-picker", "tagName": "dads-date-picker", "useCase": "Date selection with calendar interface" },
+        { "id": "file-upload", "tagName": "dads-file-upload", "useCase": "File attachment and upload" },
+        { "id": "fieldset", "tagName": "dads-fieldset", "useCase": "Group related form fields with legend" },
+        { "id": "search-box", "tagName": "dads-search-box", "useCase": "Search input with clear/submit actions" },
+        { "id": "calendar", "tagName": "dads-calendar", "useCase": "Calendar date picker component" }
+      ]
+    },
+    {
+      "key": "Actions",
+      "label": "アクション",
+      "description": "Interactive elements that trigger actions or reveal content",
+      "components": [
+        { "id": "button", "tagName": "dads-button", "useCase": "Primary action trigger (submit, save, cancel, delete)" },
+        { "id": "dialog", "tagName": "dads-dialog", "useCase": "Modal dialog for confirmations, alerts, or focused tasks" },
+        { "id": "drawer", "tagName": "dads-drawer", "useCase": "Slide-out panel for secondary content or navigation" },
+        { "id": "disclosure", "tagName": "dads-disclosure", "useCase": "Expandable content section (show/hide)" },
+        { "id": "accordion-details", "tagName": "dads-accordion-details", "useCase": "Accordion container for collapsible FAQ or grouped content" },
+        { "id": "accordion-item-details", "tagName": "dads-accordion-item-details", "useCase": "Individual accordion item within an accordion group" }
+      ]
+    },
+    {
+      "key": "Navigation",
+      "label": "ナビゲーション",
+      "description": "Page navigation, breadcrumbs, tabs, and menu components",
+      "components": [
+        { "id": "breadcrumb", "tagName": "dads-breadcrumb", "useCase": "Hierarchical page location indicator" },
+        { "id": "page-navigation", "tagName": "dads-page-navigation", "useCase": "Pagination for multi-page content (tables, search results)" },
+        { "id": "step-navigation", "tagName": "dads-step-navigation", "useCase": "Step-by-step wizard progress indicator" },
+        { "id": "menu-list", "tagName": "dads-menu-list", "useCase": "Vertical navigation menu list" },
+        { "id": "tab", "tagName": "dads-tab", "useCase": "Tab interface for switching between related content panels" },
+        { "id": "global-menu", "tagName": "dads-global-menu", "useCase": "Site-wide header navigation menu" },
+        { "id": "language-selector", "tagName": "dads-language-selector", "useCase": "Language/locale switcher" },
+        { "id": "hamburger-menu-button", "tagName": "dads-hamburger-menu-button", "useCase": "Mobile menu toggle button" },
+        { "id": "utility-link", "tagName": "dads-utility-link", "useCase": "Utility navigation link (login, settings, help)" },
+        { "id": "mobile-menu", "tagName": "dads-mobile-menu", "useCase": "Mobile-optimized navigation menu" }
+      ]
+    },
+    {
+      "key": "Content",
+      "label": "コンテンツ表示",
+      "description": "Text, list, table, and structured content display",
+      "components": [
+        { "id": "card", "tagName": "dads-card", "useCase": "Contained content block (article preview, info card)" },
+        { "id": "heading", "tagName": "dads-heading", "useCase": "Section heading with proper hierarchy (h1-h6)" },
+        { "id": "text", "tagName": "dads-text", "useCase": "Styled text block with typography tokens" },
+        { "id": "blockquote", "tagName": "dads-blockquote", "useCase": "Quoted text or citation block" },
+        { "id": "code-block", "tagName": "dads-code-block", "useCase": "Code snippet display with syntax styling" },
+        { "id": "divider", "tagName": "dads-divider", "useCase": "Visual separator between content sections" },
+        { "id": "list", "tagName": "dads-list", "useCase": "Ordered or unordered list" },
+        { "id": "description-list", "tagName": "dads-description-list", "useCase": "Key-value pair list (terms and definitions)" },
+        { "id": "resource-list", "tagName": "dads-resource-list", "useCase": "List of downloadable resources or links" },
+        { "id": "table", "tagName": "dads-table", "useCase": "Data table with sortable columns" },
+        { "id": "table-control", "tagName": "dads-table-control", "useCase": "Table toolbar with filters and actions" }
+      ]
+    },
+    {
+      "key": "Display",
+      "label": "表示・フィードバック",
+      "description": "Visual indicators, status displays, and feedback elements",
+      "components": [
+        { "id": "avatar", "tagName": "dads-avatar", "useCase": "User profile image or initials" },
+        { "id": "icon", "tagName": "dads-icon", "useCase": "SVG icon display" },
+        { "id": "chip-label", "tagName": "dads-chip-label", "useCase": "Label chip for categories or tags" },
+        { "id": "chip-tag", "tagName": "dads-chip-tag", "useCase": "Interactive tag chip (filterable, removable)" },
+        { "id": "notification-banner", "tagName": "dads-notification-banner", "useCase": "Page-level notification or info banner" },
+        { "id": "emergency-banner", "tagName": "dads-emergency-banner", "useCase": "Critical alert banner (system-wide)" },
+        { "id": "carousel", "tagName": "dads-carousel", "useCase": "Image or content carousel/slider" },
+        { "id": "device-mock", "tagName": "dads-device-mock", "useCase": "Device frame mockup for previews" },
+        { "id": "progress-indicator", "tagName": "dads-progress-indicator", "useCase": "Progress display (determinate or indeterminate)" },
+        { "id": "spinner", "tagName": "dads-spinner", "useCase": "Loading spinner for async operations" },
+        { "id": "progress-bar", "tagName": "dads-progress-bar", "useCase": "Linear progress bar" },
+        { "id": "loading-icon", "tagName": "dads-loading-icon", "useCase": "Inline loading indicator" }
+      ]
+    },
+    {
+      "key": "Layout",
+      "label": "レイアウト",
+      "description": "Page layout containers and structural components",
+      "components": [
+        { "id": "layout-shell", "tagName": "dads-layout-shell", "useCase": "Page-level layout container (website, app-shell, master-detail)" },
+        { "id": "layout-sidebar", "tagName": "dads-layout-sidebar", "useCase": "Sidebar navigation panel for app layouts" },
+        { "id": "layout-aside", "tagName": "dads-layout-aside", "useCase": "Aside panel for detail/supplementary content" },
+        { "id": "header-container", "tagName": "dads-header-container", "useCase": "Header area container with slots" }
+      ]
+    }
+  ]
+}

@@ -471,12 +471,14 @@ export function detectTokenMisuseInInlineStyles({
  *   filePath?: string;
  *   text: string;
  *   severity?: string;
+ *   cemTagNames?: Set<string>;
  * }} params
  */
 export function detectAccessibilityMisuseInMarkup({
   filePath = '<input>',
   text,
   severity = 'warning',
+  cemTagNames,
 }) {
   const diagnostics = [];
   const lineStarts = computeLineIndex(text);
@@ -531,7 +533,9 @@ export function detectAccessibilityMisuseInMarkup({
     }
 
     // Empty label / aria-label detection (v0.4.0, DD-26)
-    if (tag.includes('-')) {
+    // Only check CEM-registered custom elements to avoid false positives on third-party elements
+    const isCemElement = cemTagNames ? cemTagNames.has(tag) : tag.includes('-');
+    if (isCemElement) {
       const EMPTY_LABEL_CHECKS = [
         { attr: 'label', code: 'emptyLabel', hint: 'Set label to a descriptive text, e.g. label="氏名".', msg: (t) => `Empty label attribute on <${t}>. Provide a meaningful label for accessibility.` },
         { attr: 'aria-label', code: 'emptyAriaLabel', hint: 'Set aria-label to descriptive text or use a visible <label> element instead.', msg: (t) => `Empty aria-label attribute on <${t}>. Provide a meaningful label for accessibility.` },

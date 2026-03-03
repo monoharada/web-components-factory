@@ -9,10 +9,12 @@ import {
   buildDesignTokenDetailPayload,
   buildAccessibilityIndex,
   buildComponentSummaries,
+  buildFullPageHtml,
   buildRelatedComponentMap,
   buildIndexes,
   buildJsonToolResponse,
   extractAccessibilityChecklist,
+  extractPrefixFromIndexes,
   getRelatedComponentsForTag,
   measureToolResultBytes,
   queryAccessibilityIndex,
@@ -314,7 +316,7 @@ function getDesignSystemOverviewPayload(manifest, installRegistry, patternRegist
   }
   return {
     name: 'DADS Web Components (wcf)',
-    version: '0.3.0',
+    version: '0.4.0',
     prefix: 'dads',
     totalComponents: indexes.decls.length,
     componentsByCategory: categoryCount,
@@ -323,15 +325,21 @@ function getDesignSystemOverviewPayload(manifest, installRegistry, patternRegist
     setupInfo: {
       npmPackage: 'web-components-factory',
       installCommand: 'npm install web-components-factory',
-      vendorRuntimePath: 'vendor-runtime/',
-      htmlBoilerplate: '<script type="module" src="vendor-runtime/src/autoload.js"></script>',
+      vendorRuntimePath: '<dir>/',
+      htmlBoilerplate: [
+        '<script type="importmap">',
+        '{ "imports": { "dads-button": "./<dir>/components/button.js" } }',
+        '</script>',
+        '<script type="module" src="./<dir>/boot.js"></script>',
+      ].join('\n'),
       noscriptGuidance: 'WCF components require JavaScript.',
       noCDN: true,
       deliveryModel: 'vendor-local',
       importMapHint: 'WCF uses <script type="importmap"> for module resolution.',
-      bootScript: '<vendorDir>/boot.js',
-      vendorSetup: { init: 'wcf init', add: 'wcf add', workflow: '...' },
-      htmlSetup: '<script type="importmap">...</script><script type="module" src="./boot.js"></script>',
+      bootScript: '<dir>/boot.js',
+      detectedPrefix: 'dads',
+      vendorSetup: { init: 'wcf init --prefix dads --dir <dir>', add: 'wcf add <componentId> --prefix dads --out <dir>', workflow: '...' },
+      htmlSetup: '<script type="importmap">...</script><script type="module" src="./<dir>/boot.js"></script>',
     },
   };
 }
@@ -424,13 +432,16 @@ function getPatternRecipePayload(installRegistry, patternRegistry) {
 }
 
 async function main() {
-  const [manifest, designTokens, guidelinesIndex, installRegistry, patternRegistry] = await Promise.all([
+  const [manifest, designTokens, guidelinesIndex, installRegistry, patternRegistry, selectorGuide] = await Promise.all([
     loadJson('custom-elements.json'),
     loadJson('design-tokens.json'),
     loadJson('guidelines-index.json'),
     loadJson('install-registry.json'),
     loadJson('pattern-registry.json'),
+    loadJson('component-selector-guide.json').catch(() => null),
   ]);
+
+  const indexes = buildIndexes(manifest);
 
   const checks = [
     timed(() => pickLargestListComponentsResponse(manifest)),
@@ -449,6 +460,19 @@ async function main() {
     })),
     timed(() => getInstallRecipePayload(manifest, installRegistry)),
     timed(() => getPatternRecipePayload(installRegistry, patternRegistry)),
+    // v0.4.0 new tools
+    timed(() => {
+      const cemIndex = new Map(indexes.decls.map((d) => [d.tagName, d]));
+      const fragment = '<dads-button variant="solid">OK</dads-button><dads-card>Content</dads-card>';
+      const { fullHtml, importEntries } = buildFullPageHtml({ html: fragment, prefix: 'dads', cemIndex });
+      const payload = { fullHtml, componentCount: Object.keys(importEntries).length, importMapEntries: importEntries };
+      return { label: 'generate_full_page_html(2 components)', bytes: toolResponseBytes(toTextToolResponse(payload)) };
+    }),
+    timed(() => {
+      if (!selectorGuide) return { label: 'get_component_selector_guide(skipped)', bytes: 0 };
+      const payload = { totalCategories: selectorGuide.categories?.length ?? 0, categories: selectorGuide.categories ?? [] };
+      return { label: 'get_component_selector_guide(all)', bytes: toolResponseBytes(buildJsonToolResponse(payload, { env: {} })) };
+    }),
   ];
 
   let failed = false;

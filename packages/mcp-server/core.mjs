@@ -2439,10 +2439,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         severity: 'warning',
       });
 
+      const cemTagNames = new Set(cemIndex.keys());
       const accessibilityDiagnostics = detectAccessibilityMisuseInMarkup({
         filePath: '<markup>',
         text: html,
         severity: 'error',
+        cemTagNames,
       });
 
       const slotDiagnostics = detectInvalidSlotName({
