@@ -77,6 +77,7 @@ const REPO_FILE_MAP = {
   'custom-elements.json': 'custom-elements.json',
   'install-registry.json': 'registry/install-registry.json',
   'pattern-registry.json': 'registry/pattern-registry.json',
+  'component-selector-guide.json': 'registry/component-selector-guide.json',
   'design-tokens.json': 'design-tokens.json',
   'guidelines-index.json': 'guidelines-index.json',
   'llms-full.txt': 'llms-full.txt',
