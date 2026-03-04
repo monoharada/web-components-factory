@@ -29,6 +29,7 @@ import {
   STRUCTURED_CONTENT_DISABLE_FLAG,
   buildAccessibilityIndex,
   buildComponentSummaries,
+  buildPatternFrequencyMap,
   buildDesignTokenDetailPayload,
   buildDesignTokensPayload,
   buildDiagnosticSuggestion,
@@ -288,6 +289,139 @@ describe('list_components category filter (logic)', () => {
     expect(first.items).toHaveLength(5);
     expect(second.items).toHaveLength(5);
     expect(first.items[0].tagName).not.toBe(second.items[0].tagName);
+  });
+});
+
+describe('buildPatternFrequencyMap', () => {
+  it('counts component usage across patterns', () => {
+    const patterns = {
+      'form-a': { requires: ['button', 'input-text', 'heading'] },
+      'form-b': { requires: ['button', 'select', 'heading'] },
+      'search': { requires: ['button', 'search-box'] },
+    };
+    const freq = buildPatternFrequencyMap(patterns);
+    expect(freq.get('button')).toBe(3);
+    expect(freq.get('heading')).toBe(2);
+    expect(freq.get('input-text')).toBe(1);
+    expect(freq.get('select')).toBe(1);
+    expect(freq.get('search-box')).toBe(1);
+  });
+
+  it('returns empty map for empty patterns', () => {
+    const freq = buildPatternFrequencyMap({});
+    expect(freq.size).toBe(0);
+  });
+});
+
+describe('buildComponentSummaries patternId filter and frequency sort', () => {
+  it('filters by patternId using real registries', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const installRegistry = await loadBundledJson('install-registry.json');
+    const patternRegistryRaw = await loadBundledJson('pattern-registry.json');
+    const patterns = patternRegistryRaw?.patterns ?? {};
+
+    // Use a real pattern that exists
+    const patternIds = Object.keys(patterns);
+    expect(patternIds.length).toBeGreaterThan(0);
+    const testPatternId = patternIds[0];
+    const expectedRequires = patterns[testPatternId]?.requires ?? [];
+
+    const page = buildComponentSummaries(indexes, {
+      patternId: testPatternId,
+      limit: 200,
+      patterns,
+      installRegistry,
+    });
+
+    expect(page.total).toBeGreaterThan(0);
+    expect(page.total).toBeLessThanOrEqual(expectedRequires.length * 3); // some components have multiple tags
+    // All returned items should map to required component IDs
+    const tags = installRegistry?.tags ?? {};
+    for (const item of page.items) {
+      const componentId = tags[item.tagName];
+      expect(expectedRequires).toContain(componentId);
+    }
+  });
+
+  it('returns empty for unknown patternId', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const page = buildComponentSummaries(indexes, {
+      patternId: 'nonexistent-pattern-xyz',
+      limit: 200,
+      patterns: {},
+      installRegistry: {},
+    });
+    expect(page.total).toBe(0);
+    expect(page.items).toHaveLength(0);
+  });
+
+  it('sorts by frequency descending', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const installRegistry = await loadBundledJson('install-registry.json');
+    const patternRegistryRaw = await loadBundledJson('pattern-registry.json');
+    const patterns = patternRegistryRaw?.patterns ?? {};
+    const patternFrequency = buildPatternFrequencyMap(patterns);
+
+    const page = buildComponentSummaries(indexes, {
+      sort: 'frequency',
+      limit: 200,
+      patterns,
+      installRegistry,
+      patternFrequency,
+    });
+
+    expect(page.total).toBeGreaterThan(0);
+    // Items should have frequency field and be sorted descending
+    for (let i = 0; i < page.items.length - 1; i++) {
+      expect(page.items[i].frequency).toBeGreaterThanOrEqual(page.items[i + 1].frequency);
+    }
+    // First item should have the highest frequency
+    expect(page.items[0].frequency).toBeGreaterThan(0);
+  });
+
+  it('combines patternId filter with frequency sort', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    const installRegistry = await loadBundledJson('install-registry.json');
+    const patternRegistryRaw = await loadBundledJson('pattern-registry.json');
+    const patterns = patternRegistryRaw?.patterns ?? {};
+    const patternFrequency = buildPatternFrequencyMap(patterns);
+
+    const patternIds = Object.keys(patterns);
+    const testPatternId = patternIds[0];
+
+    const page = buildComponentSummaries(indexes, {
+      patternId: testPatternId,
+      sort: 'frequency',
+      limit: 200,
+      patterns,
+      installRegistry,
+      patternFrequency,
+    });
+
+    expect(page.total).toBeGreaterThan(0);
+    for (let i = 0; i < page.items.length - 1; i++) {
+      expect(page.items[i].frequency).toBeGreaterThanOrEqual(page.items[i + 1].frequency);
+    }
+  });
+
+  it('does not throw with regex-special prefix characters', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    // prefix "[" would cause "Invalid regular expression" if passed to new RegExp
+    // With string-based toCanonicalTag, this should not throw
+    expect(() => {
+      buildComponentSummaries(indexes, {
+        prefix: '[',
+        sort: 'frequency',
+        limit: 10,
+        patternFrequency: new Map(),
+        installRegistry: {},
+      });
+    }).not.toThrow();
   });
 });
 
@@ -877,6 +1011,86 @@ describe('MCP prompts/resources contract', () => {
     expect(snippet).not.toContain('disabled=');
   });
 
+  // P-04: fallback values when CEM default is missing (#229)
+  it('generate_usage_snippet uses fallback values when CEM default is missing', () => {
+    const mockApi = {
+      tagName: 'dads-input-text',
+      attributes: [
+        { name: 'label', type: 'string', default: null },
+        { name: 'name', type: 'string', default: null },
+        { name: 'variant', type: "'outlined' | 'solid'", default: "'outlined'" },
+      ],
+      slots: [],
+    };
+    const snippet = generateSnippet(mockApi, 'dads');
+    expect(snippet).toContain('label="ラベル"');
+    expect(snippet).toContain('name="field1"');
+    // CEM default takes priority over fallback
+    expect(snippet).toContain('variant="outlined"');
+  });
+
+  it('generate_usage_snippet uses first enum value for variant without CEM default', () => {
+    // variant with no default should use the first enum value, not a hardcoded "solid"
+    const mockApi = {
+      tagName: 'dads-notification-banner',
+      attributes: [
+        { name: 'label', type: 'string', default: null },
+        { name: 'variant', type: "'info' | 'success' | 'warning' | 'error'", default: null },
+      ],
+      slots: [],
+    };
+    const snippet = generateSnippet(mockApi, 'dads');
+    expect(snippet).toContain('variant="info"');
+    expect(snippet).not.toContain('variant="solid"');
+  });
+
+  it('generate_usage_snippet extracts enum from description when type is plain string', () => {
+    // dads-button has type="string" but description="バリアント (solid | outlined | text)"
+    const mockApi = {
+      tagName: 'dads-button',
+      attributes: [
+        { name: 'label', type: 'string', description: 'ボタンラベル', default: null },
+        { name: 'type', type: 'string', description: 'ボタンタイプ (button | submit | reset)', default: null },
+        { name: 'variant', type: 'string', description: 'バリアント (solid | outlined | text)', default: null },
+      ],
+      slots: [],
+    };
+    const snippet = generateSnippet(mockApi, 'dads');
+    expect(snippet).toContain('variant="solid"');
+    expect(snippet).toContain('type="button"');
+  });
+
+  it('generate_usage_snippet uses empty string for unmapped non-enum attributes', () => {
+    // 'size' is in attrPriority but NOT in SNIPPET_FALLBACK_VALUES and not an enum
+    const mockApi = {
+      tagName: 'dads-custom',
+      attributes: [
+        { name: 'label', type: 'string', default: null },
+        { name: 'size', type: 'string', default: null },
+      ],
+      slots: [],
+    };
+    const snippet = generateSnippet(mockApi, 'dads');
+    expect(snippet).toContain('label="ラベル"');
+    expect(snippet).toContain('size=""');
+  });
+
+  it('generate_usage_snippet does not affect boolean attributes with fallback', () => {
+    const mockApi = {
+      tagName: 'dads-checkbox',
+      attributes: [
+        { name: 'label', type: 'string', default: null },
+        { name: 'required', type: 'boolean', default: null },
+        { name: 'disabled', type: 'boolean', default: null },
+      ],
+      slots: [],
+    };
+    const snippet = generateSnippet(mockApi, 'dads');
+    expect(snippet).toContain('label="ラベル"');
+    expect(snippet).toContain('  required');
+    expect(snippet).not.toContain('required=');
+  });
+
   it('get_component_api includes default field in attributes', async () => {
     const result = await client.callTool({
       name: 'get_component_api',
@@ -1293,6 +1507,29 @@ describe('MCP prompts/resources contract', () => {
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
     const nameDiag = payload.diagnostics.find((d) => d.code === 'missingRequiredAttribute' && d.attrName === 'name');
     expect(nameDiag).toBeDefined();
+  });
+
+  // P-07 v0.7.0: list_components patternId & sort=frequency via MCP
+  it('list_components accepts patternId parameter via MCP', async () => {
+    const patternRegistryRaw = await loadBundledJson('pattern-registry.json');
+    const patternIds = Object.keys(patternRegistryRaw?.patterns ?? {});
+    expect(patternIds.length).toBeGreaterThan(0);
+    const result = await client.callTool({
+      name: 'list_components',
+      arguments: { patternId: patternIds[0], limit: 200 },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.total).toBeGreaterThan(0);
+  });
+
+  it('list_components accepts sort=frequency parameter via MCP', async () => {
+    const result = await client.callTool({
+      name: 'list_components',
+      arguments: { sort: 'frequency', limit: 50 },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.total).toBeGreaterThan(0);
+    expect(payload.items[0]).toHaveProperty('frequency');
   });
 });
 
@@ -2212,6 +2449,69 @@ describe('parent-child and empty interactive validation', () => {
       text: '<dads-breadcrumb><dads-breadcrumb-item>Home</dads-breadcrumb-item></dads-breadcrumb>',
     });
     expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectOrphanedChildComponents passes with intermediate HTML elements', () => {
+    const diagnostics = detectOrphanedChildComponents({
+      text: '<dads-breadcrumb><nav aria-label="パンくず"><dads-breadcrumb-item>Home</dads-breadcrumb-item></nav></dads-breadcrumb>',
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectOrphanedChildComponents passes with multiple levels of intermediate elements', () => {
+    const diagnostics = detectOrphanedChildComponents({
+      text: '<dads-list><ul><li><dads-list-item>A</dads-list-item></li><li><dads-list-item>B</dads-list-item></li></ul></dads-list>',
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectOrphanedChildComponents passes with multiple sibling children (prefix substring fix)', () => {
+    // This was the primary false positive: lastIndexOf('</dads-list') matched '</dads-list-item>'
+    const diagnostics = detectOrphanedChildComponents({
+      text: '<dads-list><dads-list-item>A</dads-list-item><dads-list-item>B</dads-list-item></dads-list>',
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectOrphanedChildComponents detects orphan after parent is closed', () => {
+    const diagnostics = detectOrphanedChildComponents({
+      text: '<dads-breadcrumb></dads-breadcrumb><dads-breadcrumb-item>Orphan</dads-breadcrumb-item>',
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('orphanedChildComponent');
+  });
+
+  it('detectOrphanedChildComponents handles self-closing tags between parent and child', () => {
+    const diagnostics = detectOrphanedChildComponents({
+      text: '<dads-breadcrumb><br/><hr><dads-breadcrumb-item>A</dads-breadcrumb-item></dads-breadcrumb>',
+    });
+    expect(diagnostics).toHaveLength(0);
+  });
+
+  it('detectOrphanedChildComponents validates all 6 PARENT_CHILD_CONSTRAINTS with intermediaries', () => {
+    const pairs = [
+      ['dads-accordion-details', 'dads-accordion-item-details'],
+      ['dads-breadcrumb', 'dads-breadcrumb-item'],
+      ['dads-list', 'dads-list-item'],
+      ['dads-step-navigation', 'dads-step-navigation-item'],
+      ['dads-global-menu', 'dads-global-menu-item'],
+      ['dads-menu-list', 'dads-menu-list-item'],
+    ];
+    for (const [parent, child] of pairs) {
+      const diagnostics = detectOrphanedChildComponents({
+        text: `<${parent}><div><${child}>X</${child}></div></${parent}>`,
+      });
+      expect(diagnostics).toHaveLength(0);
+    }
+  });
+
+  it('detectOrphanedChildComponents supports custom prefix', () => {
+    const diagnostics = detectOrphanedChildComponents({
+      text: '<x-breadcrumb-item>A</x-breadcrumb-item>',
+      prefix: 'x',
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].message).toContain('x-breadcrumb');
   });
 
   it('detectEmptyInteractiveElement warns on empty button', () => {

@@ -677,8 +677,17 @@ const PARENT_CHILD_CONSTRAINTS = new Map([
 ]);
 
 /**
+ * HTML void elements that never have a closing tag.
+ */
+const HTML_VOID_ELEMENTS = new Set([
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+  'link', 'meta', 'source', 'track', 'wbr',
+]);
+
+/**
  * Detect orphaned child components (child appears without expected parent).
- * Uses regex/text scan (DIG-13) — lower confidence, severity: warning.
+ * Uses a lightweight tag-stack approach: only prefix-matching tags (e.g. dads-*)
+ * are tracked on the stack; all other HTML elements are ignored.
  * @param {{
  *   filePath?: string;
  *   text: string;
@@ -697,7 +706,7 @@ export function detectOrphanedChildComponents({
   const p = prefix.toLowerCase();
   const canonicalPrefix = 'dads';
 
-  // Build prefix-aware constraint map
+  // Build prefix-aware constraint map (child → parent)
   const constraints = new Map();
   for (const [child, parent] of PARENT_CHILD_CONSTRAINTS.entries()) {
     const mappedChild = p !== canonicalPrefix ? child.replace(canonicalPrefix, p) : child;
@@ -705,36 +714,56 @@ export function detectOrphanedChildComponents({
     constraints.set(mappedChild, mappedParent);
   }
 
-  const textLower = text.toLowerCase();
+  const prefixDash = `${p}-`;
+  // Stack of currently open prefix-matching tags
+  const stack = [];
 
-  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  // Regex matches opening tags, closing tags, and self-closing tags
+  const tagRe = /<\/?([a-z][a-z0-9-]*)\b[^<>]*?\/?>/gi;
   let m;
 
   while ((m = tagRe.exec(text))) {
+    const fullMatch = m[0];
     const tag = String(m[1] ?? '').toLowerCase();
+    const isClosing = fullMatch.startsWith('</');
+    const isSelfClosing = fullMatch.endsWith('/>');
+
+    // Only track prefix-matching tags on the stack
+    if (!tag.startsWith(prefixDash)) continue;
+
+    if (isClosing) {
+      // Pop the matching opening tag from the stack (search from top)
+      for (let i = stack.length - 1; i >= 0; i--) {
+        if (stack[i] === tag) {
+          stack.splice(i, 1);
+          break;
+        }
+      }
+      continue;
+    }
+
+    // Check if this is a child that needs a parent
     const expectedParent = constraints.get(tag);
-    if (!expectedParent) continue;
+    if (expectedParent) {
+      const hasParent = stack.includes(expectedParent);
+      if (!hasParent) {
+        const tagOffset = m.index + 1;
+        const range = makeRange(lineStarts, tagOffset, tagOffset + tag.length);
+        diagnostics.push({
+          file: filePath,
+          range,
+          severity,
+          code: 'orphanedChildComponent',
+          message: `<${tag}> should be a child of <${expectedParent}>.`,
+          tagName: tag,
+          hint: `Wrap <${tag}> inside <${expectedParent}>...</${expectedParent}>.`,
+        });
+      }
+    }
 
-    // Check if the expected parent tag appears before this child in the text
-    const precedingText = textLower.slice(0, m.index);
-    const parentOpenPattern = `<${expectedParent}`;
-    const parentClosePattern = `</${expectedParent}`;
-
-    const lastParentOpen = precedingText.lastIndexOf(parentOpenPattern);
-    const lastParentClose = precedingText.lastIndexOf(parentClosePattern);
-
-    if (lastParentOpen === -1 || lastParentClose > lastParentOpen) {
-      const tagOffset = m.index + 1;
-      const range = makeRange(lineStarts, tagOffset, tagOffset + tag.length);
-      diagnostics.push({
-        file: filePath,
-        range,
-        severity,
-        code: 'orphanedChildComponent',
-        message: `<${tag}> should be a child of <${expectedParent}>.`,
-        tagName: tag,
-        hint: `Wrap <${tag}> inside <${expectedParent}>...</${expectedParent}>.`,
-      });
+    // Push opening tag to stack (skip void elements and self-closing)
+    if (!isSelfClosing && !HTML_VOID_ELEMENTS.has(tag)) {
+      stack.push(tag);
     }
   }
 
