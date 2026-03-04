@@ -3800,7 +3800,7 @@ describe('design-system-skills plugin: check_drift', () => {
     expect(payload.meta.phase).toBe(1);
     expect(payload.meta.scope).toBe('all');
     expect(Array.isArray(payload.meta.rulesExecuted)).toBe(true);
-    expect(payload.meta.rulesExecuted.length).toBe(13);
+    expect(payload.meta.rulesExecuted.length).toBe(12);
   });
 
   it('limits rules for scope=cem', async () => {
@@ -3823,9 +3823,9 @@ describe('design-system-skills plugin: check_drift', () => {
     });
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
     expect(payload.meta.scope).toBe('skills');
-    expect(payload.meta.rulesExecuted.length).toBe(3);
+    expect(payload.meta.rulesExecuted.length).toBe(2);
     for (const ruleId of payload.meta.rulesExecuted) {
-      expect(['SIR01', 'SPR01', 'SID01']).toContain(ruleId);
+      expect(['SIR01', 'SID01']).toContain(ruleId);
     }
   });
 

@@ -511,39 +511,6 @@ async function ruleSIR01(skillsRegistry) {
 }
 
 /**
- * SPR01 - Skills to pattern-registry indirect reference.
- * Skills with "workflow" tag should ideally reference pattern-registry.
- */
-function ruleSPR01(skillsRegistry, patterns) {
-  const drifts = [];
-  const suggestions = [];
-  if (!skillsRegistry?.skills) return { drifts, suggestions };
-
-  const hasPatterns = patterns && Object.keys(patterns).length > 0;
-  if (!hasPatterns) return { drifts, suggestions };
-
-  for (const skill of skillsRegistry.skills) {
-    const tags = Array.isArray(skill.tags) ? skill.tags : [];
-    if (tags.includes('workflow')) {
-      // This is informational — no strict requirement, severity LOW
-      const d = createDrift(
-        'SPR01',
-        'LOW',
-        'skills-registry.json',
-        'pattern-registry.json',
-        `Workflow skill "${skill.name}" may benefit from referencing pattern-registry patterns`,
-        { skillName: skill.name, tags },
-      );
-      drifts.push(d);
-      suggestions.push(
-        createSuggestion(d.id, 'document', `Consider documenting pattern-registry usage in skill "${skill.name}"`, `${skill.path}/${skill.entry ?? 'SKILL.md'}`, 'optional'),
-      );
-    }
-  }
-  return { drifts, suggestions };
-}
-
-/**
  * SID01 - Skills dependency existence (v2 only).
  * Each skill.dependencies[] name must exist as another skill.name in the registry.
  */
@@ -582,9 +549,9 @@ function ruleSID01(skillsRegistry) {
 // ---------------------------------------------------------------------------
 
 const SCOPE_RULES = {
-  all: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'CPT02', 'CPC01', 'SIR01', 'SPR01', 'SID01'],
+  all: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'CPT02', 'CPC01', 'SIR01', 'SID01'],
   cem: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01'],
-  skills: ['SIR01', 'SPR01', 'SID01'],
+  skills: ['SIR01', 'SID01'],
   tokens: [], // Reserved for future Phase 2
   patterns: ['CPR01', 'CPT01', 'CPT02', 'CPC01'],
 };
@@ -658,10 +625,26 @@ async function checkDriftHandler(args, { helpers }) {
   runSync('CPT02', () => ruleCPT02(patterns, irTags));
   runSync('CPC01', () => ruleCPC01(patterns, irComponents));
 
-  // Skills rules
-  await runAsync('SIR01', () => ruleSIR01(sr));
-  runSync('SPR01', () => ruleSPR01(sr, patterns));
-  runSync('SID01', () => ruleSID01(sr));
+  // Skills rules — require skills-registry for scopes that include skill rules
+  const hasSkillRules = ['SIR01', 'SID01'].some((id) => activeRules.has(id));
+  if (hasSkillRules && !sr) {
+    const d = createDrift(
+      'SIR01',
+      'HIGH',
+      'skills-registry.json',
+      'filesystem',
+      'skills-registry.json is missing or corrupted — all skill rules skipped',
+      {},
+    );
+    drifts.push(d);
+    suggestions.push(
+      createSuggestion(d.id, 'add', 'Create or restore registry/skills-registry.json', 'registry/skills-registry.json'),
+    );
+    rulesExecuted.push(...['SIR01', 'SID01'].filter((id) => activeRules.has(id)));
+  } else {
+    await runAsync('SIR01', () => ruleSIR01(sr));
+    runSync('SID01', () => ruleSID01(sr));
+  }
 
   // -----------------------------------------------------------------------
   // Build output

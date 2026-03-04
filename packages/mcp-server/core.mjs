@@ -20,6 +20,23 @@ export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
 export const PLUGIN_TOOL_NOTICE = 'Plugin tool (contract v1.1).';
 export const PLUGIN_CONTRACT_VERSION = '1.1.0';
 
+/**
+ * Convert a plugin tool's inputSchema to a passthrough Zod schema.
+ * Handles three cases:
+ *  - Already a Zod schema instance (has _def or _zod) → apply .passthrough()
+ *  - Plain object (raw shape map) → wrap with z.object().passthrough()
+ *  - Falsy / empty → z.object({}).passthrough()
+ */
+function toPassthroughSchema(schema) {
+  if (schema && (schema._def || schema._zod)) {
+    // Already a Zod schema — apply passthrough if it's an object type
+    return typeof schema.passthrough === 'function'
+      ? schema.passthrough()
+      : schema;
+  }
+  return z.object(schema ?? {}).passthrough();
+}
+
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
   'dads-textarea': 'Form',
@@ -3326,7 +3343,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         tool.name,
         {
           description: tool.description,
-          inputSchema: z.object(tool.inputSchema ?? {}).passthrough(),
+          inputSchema: toPassthroughSchema(tool.inputSchema),
         },
         async (args) => {
           try {
