@@ -1044,6 +1044,22 @@ describe('MCP prompts/resources contract', () => {
     expect(snippet).not.toContain('variant="solid"');
   });
 
+  it('generate_usage_snippet extracts enum from description when type is plain string', () => {
+    // dads-button has type="string" but description="バリアント (solid | outlined | text)"
+    const mockApi = {
+      tagName: 'dads-button',
+      attributes: [
+        { name: 'label', type: 'string', description: 'ボタンラベル', default: null },
+        { name: 'type', type: 'string', description: 'ボタンタイプ (button | submit | reset)', default: null },
+        { name: 'variant', type: 'string', description: 'バリアント (solid | outlined | text)', default: null },
+      ],
+      slots: [],
+    };
+    const snippet = generateSnippet(mockApi, 'dads');
+    expect(snippet).toContain('variant="solid"');
+    expect(snippet).toContain('type="button"');
+  });
+
   it('generate_usage_snippet uses empty string for unmapped non-enum attributes', () => {
     // 'size' is in attrPriority but NOT in SNIPPET_FALLBACK_VALUES and not an enum
     const mockApi = {

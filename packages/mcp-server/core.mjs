@@ -1196,7 +1196,19 @@ export function generateSnippet(api, prefix) {
       } else {
         // For enum types, use the first enum value as fallback
         const enumMatch = t.match(/^'([^']+)'/);
-        defaultVal = enumMatch ? enumMatch[1] : '';
+        if (enumMatch) {
+          defaultVal = enumMatch[1];
+        } else {
+          // Fallback: extract first value from description pattern like "(solid | outlined | text)"
+          const desc = String(a.description ?? '');
+          const descEnum = desc.match(/\(([^)]+)\)/);
+          if (descEnum) {
+            const first = descEnum[1].split(/\s*[|｜]\s*/)[0]?.trim();
+            defaultVal = first || '';
+          } else {
+            defaultVal = '';
+          }
+        }
       }
       lines.push(`  ${name}="${defaultVal}"`);
     }
