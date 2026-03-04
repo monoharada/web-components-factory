@@ -17,8 +17,25 @@ export const CANONICAL_PREFIX = 'dads';
 export const MAX_PREFIX_LENGTH = 64;
 export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
 export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
-export const PLUGIN_TOOL_NOTICE = 'Plugin tool (contract v1).';
-export const PLUGIN_CONTRACT_VERSION = '1.0.0';
+export const PLUGIN_TOOL_NOTICE = 'Plugin tool (contract v1.1).';
+export const PLUGIN_CONTRACT_VERSION = '1.1.0';
+
+/**
+ * Convert a plugin tool's inputSchema to a passthrough Zod schema.
+ * Handles three cases:
+ *  - Already a Zod schema instance (has _def or _zod) → apply .passthrough()
+ *  - Plain object (raw shape map) → wrap with z.object().passthrough()
+ *  - Falsy / empty → z.object({}).passthrough()
+ */
+function toPassthroughSchema(schema) {
+  if (schema && (schema._def || schema._zod)) {
+    // Already a Zod schema — apply passthrough if it's an object type
+    return typeof schema.passthrough === 'function'
+      ? schema.passthrough()
+      : schema;
+  }
+  return z.object(schema ?? {}).passthrough();
+}
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',
@@ -722,7 +739,7 @@ function toPluginErrorMessage(name, reason) {
  *   name: string,
  *   description?: string,
  *   inputSchema?: Record<string, unknown>,
- *   handler?: (args: Record<string, unknown>, context: { plugin: { name: string, version: string }, helpers: { loadJsonData: Function } }) => unknown,
+ *   handler?: (args: Record<string, unknown>, context: { plugin: { name: string, version: string }, helpers: { loadJsonData: Function, loadTextData: Function } }) => unknown,
  *   staticPayload?: unknown,
  * }} WcfMcpPluginTool
  */
@@ -3326,7 +3343,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         tool.name,
         {
           description: tool.description,
-          inputSchema: tool.inputSchema ?? {},
+          inputSchema: toPassthroughSchema(tool.inputSchema),
         },
         async (args) => {
           try {
@@ -3335,6 +3352,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
                 plugin: { name: plugin.name, version: plugin.version },
                 helpers: {
                   loadJsonData: loadJson,
+                  loadTextData: loadText,
                   buildJsonToolResponse,
                   normalizePrefix,
                   withPrefix,
