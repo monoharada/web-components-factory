@@ -8,6 +8,7 @@
 
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { loadRegistry, normalizeSkillEntry } from './plugins/design-system-skills/shared.mjs';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -152,6 +153,7 @@ export const WCF_RESOURCE_URIS = Object.freeze({
   tokens: 'wcf://tokens',
   guidelinesTemplate: 'wcf://guidelines/{topic}',
   llmsFull: 'wcf://llms-full',
+  skills: 'wcf://skills',
 });
 
 // Unidirectional synonym table: key → expands to include these terms (DIG-09)
@@ -2155,6 +2157,36 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   );
 
   // -----------------------------------------------------------------------
+  // Resource: wcf://skills
+  // -----------------------------------------------------------------------
+  server.registerResource(
+    'wcf_skills',
+    WCF_RESOURCE_URIS.skills,
+    {
+      title: 'WCF Skills Catalog',
+      description: 'Registered Claude Code / Cursor / Codex skills from skills-registry.json.',
+      mimeType: 'application/json',
+    },
+    async () => {
+      const registry = await loadRegistry();
+      if (!registry || !Array.isArray(registry.skills)) {
+        throw new Error('SKILLS_REGISTRY_UNAVAILABLE: skills-registry.json is not available.');
+      }
+      const skills = registry.skills.map((s) => {
+        const { compat, manifest, ...summary } = normalizeSkillEntry(s);
+        return summary;
+      });
+      return {
+        contents: [{
+          uri: WCF_RESOURCE_URIS.skills,
+          mimeType: 'application/json',
+          text: JSON.stringify({ schemaVersion: registry.schemaVersion ?? 2, total: skills.length, skills }, null, 2),
+        }],
+      };
+    },
+  );
+
+  // -----------------------------------------------------------------------
   // Tool: get_design_system_overview
   // -----------------------------------------------------------------------
   server.registerTool(
@@ -2248,6 +2280,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           {
             uri: WCF_RESOURCE_URIS.llmsFull,
             purpose: 'Full LLM reference text for WCF',
+          },
+          {
+            uri: WCF_RESOURCE_URIS.skills,
+            purpose: 'Skills catalog snapshot',
           },
         ],
         availableTools: [

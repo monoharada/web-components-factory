@@ -163,3 +163,28 @@ box-shadow: 0 0 0 .125rem var(--dads-focus-ring-color);
 | `/docs/architecture/design-philosophy.md` | 設計思想の詳細 |
 | `/docs/css-variable-pattern.md` | CSS変数パターン |
 | `.claude/skills/css-writing-rules/` | CSS実装ガイドライン |
+
+## Do / Don't
+
+### Do
+
+- **Follow DADS baseline first** — Start with DADS component specifications before adding customization.
+- **Expose override points via `--dads-*` CSS variables** — Allow theming through CSS custom properties with the `--dads-` prefix.
+  ```css
+  [part="base"] { background: var(--dads-button-background); }
+  ```
+- **Use 3-layer token structure** — Global → Component → Local token hierarchy for scalable theming.
+- **Implement WCAG 2.2 AA by default** — All components must meet accessibility standards without additional configuration.
+- **Use `::part()` for external customization** — Expose specific elements for styling, not the entire Shadow DOM.
+
+### Don't
+
+- **Skip DADS compatibility check** — Always verify component behavior against DADS specifications.
+- **Hardcode styles without token indirection** — Every visual property should reference a token variable.
+  ```css
+  /* NG */ background: #1a73e8;
+  /* OK */ background: var(--dads-button-background, var(--color-primary));
+  ```
+- **Mix token layers** — Don't use global tokens directly in component styles; use component-level tokens that reference globals.
+- **Ignore focus style specifications** — Focus indicators must follow DADS focus ring guidelines.
+- **Expose internal implementation details** — Keep Shadow DOM internals private; only expose intentional `part` attributes.

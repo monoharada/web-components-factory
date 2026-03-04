@@ -545,15 +545,75 @@ function ruleSID01(skillsRegistry) {
 }
 
 // ---------------------------------------------------------------------------
+// Token rules (Phase 2)
+// ---------------------------------------------------------------------------
+
+/**
+ * TKN01 - Token source file existence check.
+ * Verify packages/styles/tokens.ts exists on disk.
+ */
+async function ruleTKN01() {
+  const drifts = [];
+  const suggestions = [];
+  const filePath = resolve(REPO_ROOT, 'packages', 'styles', 'tokens.ts');
+  try {
+    await access(filePath);
+  } catch {
+    const d = createDrift(
+      'TKN01',
+      'HIGH',
+      'filesystem',
+      'packages/styles/tokens.ts',
+      'Token source file "packages/styles/tokens.ts" is missing',
+      { expected: filePath },
+    );
+    drifts.push(d);
+    suggestions.push(
+      createSuggestion(d.id, 'add', 'Create or restore packages/styles/tokens.ts', 'packages/styles/tokens.ts'),
+    );
+  }
+  return { drifts, suggestions };
+}
+
+/**
+ * TKN02 - Spacing tokens source file existence check.
+ * Verify packages/styles/spacing-tokens.ts exists on disk.
+ * tokens.ts imports spacing-tokens.ts, so its absence causes build errors.
+ */
+async function ruleTKN02() {
+  const drifts = [];
+  const suggestions = [];
+  const filePath = resolve(REPO_ROOT, 'packages', 'styles', 'spacing-tokens.ts');
+  try {
+    await access(filePath);
+  } catch {
+    const d = createDrift(
+      'TKN02',
+      'HIGH',
+      'filesystem',
+      'packages/styles/spacing-tokens.ts',
+      'Spacing tokens source file "packages/styles/spacing-tokens.ts" is missing — tokens.ts depends on it',
+      { expected: filePath },
+    );
+    drifts.push(d);
+    suggestions.push(
+      createSuggestion(d.id, 'add', 'Create or restore packages/styles/spacing-tokens.ts', 'packages/styles/spacing-tokens.ts'),
+    );
+  }
+  return { drifts, suggestions };
+}
+
+// ---------------------------------------------------------------------------
 // Scope mapping
 // ---------------------------------------------------------------------------
 
 const SCOPE_RULES = {
-  all: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'CPT02', 'CPC01', 'SIR01', 'SID01'],
+  all: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'CPT02', 'CPC01', 'SIR01', 'SID01', 'TKN01', 'TKN02'],
   cem: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01'],
   skills: ['SIR01', 'SID01'],
-  tokens: [], // Reserved for future Phase 2
+  tokens: ['TKN01', 'TKN02'],
   patterns: ['CPR01', 'CPT01', 'CPT02', 'CPC01'],
+  audit: ['CIR01', 'CIT01', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'SIR01', 'SID01', 'TKN01', 'TKN02'],
 };
 
 // ---------------------------------------------------------------------------
@@ -646,6 +706,10 @@ async function checkDriftHandler(args, { helpers }) {
     runSync('SID01', () => ruleSID01(sr));
   }
 
+  // Token rules
+  await runAsync('TKN01', () => ruleTKN01());
+  await runAsync('TKN02', () => ruleTKN02());
+
   // -----------------------------------------------------------------------
   // Build output
   // -----------------------------------------------------------------------
@@ -677,7 +741,7 @@ export default {
     {
       name: 'check_drift',
       description:
-        'Check consistency across CEM, install-registry, skills-registry, and pattern-registry. Detects drift (divergence) between data sources. When: before PR, after registry updates, periodic audits. Returns: {drifts[], suggestions[], summary{total,high,medium,low,ignored}, meta{phase,scope,rulesExecuted,timestamp}}. Args: scope? (all|cem|skills|tokens|patterns, default: all). Phase 1: 12 JSON comparison rules.',
+        'Check consistency across CEM, install-registry, skills-registry, pattern-registry, and token source files. Detects drift (divergence) between data sources. When: before PR, after registry updates, periodic audits. Returns: {drifts[], suggestions[], summary{total,high,medium,low,ignored}, meta{phase,scope,rulesExecuted,timestamp}}. Args: scope? (all|cem|skills|tokens|patterns|audit, default: all). 14 rules across 6 scopes. audit scope runs HIGH-severity rules only.',
       inputSchema: {},
       handler: checkDriftHandler,
     },

@@ -437,3 +437,19 @@ JSON excerpt:
 - `.claude/skills/css-writing-rules/SKILL.md`
 - `.claude/skills/headless-component-design/SKILL.md`
 - `docs/rules/content-typeset-rules.md`
+
+## Do / Don't
+
+### Do
+
+- **Evidence-based variant selection** — Compare 3+ implementations before choosing. Document pros/cons with criteria scores.
+- **Reference quality criteria** — Always validate against WCAG 2.2 AA and DADS guidelines before finalizing a variant.
+- **Validate with working examples** — Build a minimal prototype in viewer.html to confirm behavior before committing.
+- **Maintain step structure** — Follow the 5-step flow (Survey → Spec → Verify → Example → Finalize) without skipping steps.
+
+### Don't
+
+- **Copy implementations without analysis** — Never adopt a pattern from another design system without evaluating its fit for DADS constraints.
+- **Skip quality criteria evaluation** — Don't choose a variant based on aesthetics alone; always score against accessibility, performance, and maintainability.
+- **Choose variants by personal preference** — Selection must be justified by evidence, not opinion.
+- **Omit judgment logs** — Every decision must be documented with rationale for future traceability.

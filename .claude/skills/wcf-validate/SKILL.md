@@ -97,3 +97,19 @@ MCPが使えない場合は `npm run validate:wc` を主経路とし、失敗時
   "rerunCommands": []
 }
 ```
+
+## Do / Don't
+
+### Do
+
+- **Run validation before PR** — Always execute `validate_markup` on changed HTML before submitting a pull request.
+- **Use MCP `validate_markup` as primary validator** — It checks against CEM schema for accurate component validation.
+- **Check CEM registration for unknown elements** — `unknownElement` warnings indicate missing component definitions.
+- **Include `rerunCommands` in diagnostics** — Provide actionable re-run commands for reproducible validation.
+
+### Don't
+
+- **Skip validation for "small" changes** — Even minor HTML edits can introduce invalid attribute usage.
+- **Ignore `unknownElement` warnings** — These indicate tag names not registered in CEM, which may be typos or missing imports.
+- **Suppress validation errors silently** — All diagnostics should be surfaced to the user for informed decisions.
+- **Assume tag names are correct without CEM check** — Always verify against the custom-elements.json manifest.
