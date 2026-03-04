@@ -1132,6 +1132,19 @@ export function serializeApi(decl, modulePath, prefix) {
   };
 }
 
+/**
+ * Generic fallback values for common attributes when CEM default is missing.
+ * Attribute-name-based (not component-specific). `type` is excluded to avoid
+ * conflicts between button (type="button") and input (type="text").
+ */
+const SNIPPET_FALLBACK_VALUES = {
+  label: 'ラベル',
+  name: 'field1',
+  variant: 'solid',
+  value: 'サンプル値',
+  'support-text': '説明テキスト',
+};
+
 export function generateSnippet(api, prefix) {
   // Use custom snippet if injected by CEM plugin (e.g. data-* driven components)
   const customSnippet = api.custom?.usageSnippet;
@@ -1174,7 +1187,9 @@ export function generateSnippet(api, prefix) {
     if (isBoolean) {
       lines.push(`  ${name}`);
     } else {
-      const defaultVal = typeof a.default === 'string' ? a.default.replace(/^['"]|['"]$/g, '') : '';
+      const defaultVal = typeof a.default === 'string'
+        ? a.default.replace(/^['"]|['"]$/g, '')
+        : (SNIPPET_FALLBACK_VALUES[name] ?? '');
       lines.push(`  ${name}="${defaultVal}"`);
     }
     if (lines.length >= 4) break;
@@ -1264,7 +1279,24 @@ export function resolveComponentClosure({ installRegistry }, componentIds) {
   return [...out];
 }
 
-export function buildComponentSummaries(indexes, { category, query, limit, offset, prefix } = {}) {
+/**
+ * Build a frequency map: componentId → count of patterns that require it.
+ * Counts from pattern-registry.json `requires` arrays only.
+ */
+export function buildPatternFrequencyMap(patterns) {
+  const freq = new Map();
+  if (!patterns || typeof patterns !== 'object') return freq;
+  for (const pat of Object.values(patterns)) {
+    const requires = Array.isArray(pat?.requires) ? pat.requires : [];
+    for (const id of requires) {
+      const key = String(id ?? '').trim();
+      if (key) freq.set(key, (freq.get(key) ?? 0) + 1);
+    }
+  }
+  return freq;
+}
+
+export function buildComponentSummaries(indexes, { category, query, limit, offset, prefix, patternId, sort, patterns, installRegistry, patternFrequency } = {}) {
   const p = normalizePrefix(prefix);
   const q = typeof query === 'string' ? query.trim().toLowerCase() : '';
   const limitExplicit = Number.isInteger(limit);
@@ -1278,6 +1310,24 @@ export function buildComponentSummaries(indexes, { category, query, limit, offse
     category: getCategory(tagName),
     modulePath,
   }));
+
+  // patternId filter: restrict to components required by a specific pattern
+  if (typeof patternId === 'string' && patternId.trim()) {
+    const pats = patterns && typeof patterns === 'object' ? patterns : {};
+    const pat = pats[patternId.trim()];
+    if (pat && Array.isArray(pat.requires)) {
+      const requiredIds = new Set(pat.requires.map((r) => String(r ?? '').trim()).filter(Boolean));
+      const tags = installRegistry?.tags && typeof installRegistry.tags === 'object' ? installRegistry.tags : {};
+      items = items.filter((item) => {
+        // Map tagName to componentId via install registry
+        const canonicalTag = withPrefix(item.tagName.replace(new RegExp(`^${p}-`), `${CANONICAL_PREFIX}-`), CANONICAL_PREFIX);
+        const componentId = tags[canonicalTag];
+        return componentId && requiredIds.has(componentId);
+      });
+    } else {
+      items = [];
+    }
+  }
 
   if (category) {
     items = items.filter((item) => item.category === category);
@@ -1294,6 +1344,18 @@ export function buildComponentSummaries(indexes, { category, query, limit, offse
       ];
       return haystacks.some((value) => String(value ?? '').toLowerCase().includes(q));
     });
+  }
+
+  // frequency sort: order by pattern usage count descending
+  if (sort === 'frequency') {
+    const freq = patternFrequency instanceof Map ? patternFrequency : new Map();
+    const tags = installRegistry?.tags && typeof installRegistry.tags === 'object' ? installRegistry.tags : {};
+    items = items.map((item) => {
+      const canonicalTag = withPrefix(item.tagName.replace(new RegExp(`^${p}-`), `${CANONICAL_PREFIX}-`), CANONICAL_PREFIX);
+      const componentId = tags[canonicalTag] ?? '';
+      return { ...item, frequency: freq.get(componentId) ?? 0 };
+    });
+    items.sort((a, b) => b.frequency - a.frequency);
   }
 
   const total = items.length;
@@ -1886,6 +1948,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   const patternRegistry = await loadJson('pattern-registry.json');
   const { patterns } = loadPatternRegistryShape(patternRegistry);
   const relatedComponentMap = buildRelatedComponentMap(installRegistry, patterns);
+  const patternFrequency = buildPatternFrequencyMap(patterns);
 
   // Load optional data files (design tokens, guidelines index)
   let designTokensData = null;
@@ -1916,7 +1979,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
-    version: '0.5.0',
+    version: '0.7.0',
   });
 
   server.registerPrompt(
@@ -2066,7 +2129,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
       const overview = {
         name: 'DADS Web Components (wcf)',
-        version: '0.5.0',
+        version: '0.7.0',
         prefix: detectedPrefix,
         totalComponents: indexes.decls.length,
         componentsByCategory: categoryCount,
@@ -2221,10 +2284,12 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         limit: z.number().int().min(1).max(200).optional().describe('Maximum items to return (default: 20; set 200 for all results)'),
         offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
         prefix: z.string().optional(),
+        patternId: z.string().optional().describe('Filter to components required by this pattern'),
+        sort: z.enum(['default', 'frequency']).optional().describe('Sort order: "default" (alphabetical by tag) or "frequency" (pattern usage count, descending)'),
       },
     },
-    async ({ category, query, limit, offset, prefix }) => {
-      const page = buildComponentSummaries(indexes, { category, query, limit, offset, prefix });
+    async ({ category, query, limit, offset, prefix, patternId, sort }) => {
+      const page = buildComponentSummaries(indexes, { category, query, limit, offset, prefix, patternId, sort, patterns, installRegistry, patternFrequency });
       const payload = {
         items: page.items,
         total: page.total,
