@@ -6,134 +6,72 @@
  */
 
 import { readFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const REPO_ROOT = resolve(__dirname, '..', '..', '..', '..');
-const REGISTRY_PATH = resolve(REPO_ROOT, 'registry', 'skills-registry.json');
+import { resolve } from 'node:path';
+import {
+  REPO_ROOT,
+  loadRegistry,
+  normalizeSkillEntry,
+  buildErrorResponse,
+} from './shared.mjs';
 
 /** Maximum safe response size in bytes (95KB) */
 const MAX_SAFE_RESPONSE = 95 * 1024;
 
-/** v2 defaults for v1 skill entries */
-const V2_DEFAULTS = {
-  tags: [],
-  version: '0.0.0',
-  dependencies: [],
-  compat: {},
-  manifest: {},
-};
-
 /**
- * Load skills registry from disk.
- * @returns {Promise<object|null>}
+ * Normalize a heading text to a slug for section matching.
+ * @param {string} text
+ * @returns {string}
  */
-async function loadRegistry() {
-  try {
-    const raw = await readFile(REGISTRY_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Build a full manifest object from a skill entry, applying v2 defaults.
- * @param {object} skill - Raw skill entry from the registry
- * @returns {object}
- */
-function buildManifest(skill) {
-  return {
-    name: skill.name,
-    description: skill.description ?? '',
-    status: skill.status ?? 'active',
-    path: skill.path ?? '',
-    entry: skill.entry ?? 'SKILL.md',
-    clients: Array.isArray(skill.clients) ? skill.clients : [],
-    tags: Array.isArray(skill.tags) ? skill.tags : V2_DEFAULTS.tags,
-    version: typeof skill.version === 'string' ? skill.version : V2_DEFAULTS.version,
-    dependencies: Array.isArray(skill.dependencies) ? skill.dependencies : V2_DEFAULTS.dependencies,
-    compat: skill.compat ?? V2_DEFAULTS.compat,
-    manifest: skill.manifest ?? V2_DEFAULTS.manifest,
-  };
+function normalizeHeading(text) {
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s_]/g, '')
+    .replace(/\s+/g, '_');
 }
 
 /**
  * Detect sections (H1/H2 headings) from markdown content.
  * @param {string} content
- * @returns {Array<{level: number, text: string, normalized: string}>}
+ * @returns {{ sections: Array<{level: number, text: string, normalized: string, line: number}>, lines: string[] }}
  */
-function detectSections(content) {
-  const sections = [];
+function parseMarkdownSections(content) {
   const lines = content.split('\n');
+  const sections = [];
   for (let i = 0; i < lines.length; i++) {
     const match = lines[i].match(/^(#{1,2})\s+(.+)/);
     if (match) {
-      const level = match[1].length;
-      const text = match[2].trim();
-      const normalized = text
-        .toLowerCase()
-        .replace(/[^a-z0-9\s_]/g, '')
-        .replace(/\s+/g, '_');
-      sections.push({ level, text, normalized });
+      sections.push({
+        level: match[1].length,
+        text: match[2].trim(),
+        normalized: normalizeHeading(match[2]),
+        line: i,
+      });
     }
   }
-  return sections;
+  return { sections, lines };
 }
 
 /**
- * Extract a specific section from markdown content by normalized heading name.
- * @param {string} content
+ * Extract a specific section from parsed markdown by normalized heading name.
+ * @param {{ sections: Array<{level: number, normalized: string, line: number}>, lines: string[] }} parsed
  * @param {string} sectionName
  * @returns {string|null}
  */
-function extractSection(content, sectionName) {
-  const lines = content.split('\n');
-  let startLine = -1;
-  let startLevel = 0;
-  let endLine = lines.length;
+function extractSection(parsed, sectionName) {
+  const idx = parsed.sections.findIndex((s) =>
+    s.normalized === sectionName,
+  );
+  if (idx === -1) return null;
 
-  for (let i = 0; i < lines.length; i++) {
-    const match = lines[i].match(/^(#{1,2})\s+(.+)/);
-    if (!match) continue;
-    const level = match[1].length;
-    const normalized = match[2]
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9\s_]/g, '')
-      .replace(/\s+/g, '_');
+  const startLine = parsed.sections[idx].line;
+  const startLevel = parsed.sections[idx].level;
+  const nextSection = parsed.sections
+    .slice(idx + 1)
+    .find((s) => s.level <= startLevel);
+  const endLine = nextSection ? nextSection.line : parsed.lines.length;
 
-    if (startLine === -1 && normalized.startsWith(sectionName)) {
-      startLine = i;
-      startLevel = level;
-    } else if (startLine !== -1 && level <= startLevel) {
-      endLine = i;
-      break;
-    }
-  }
-
-  if (startLine === -1) return null;
-  return lines.slice(startLine, endLine).join('\n').trim();
-}
-
-/**
- * Build an MCP error response.
- * @param {string} code
- * @param {string} message
- * @returns {object}
- */
-function buildErrorResponse(code, message) {
-  return {
-    content: [
-      {
-        type: 'text',
-        text: JSON.stringify({ error: { code, message } }, null, 2),
-      },
-    ],
-    isError: true,
-  };
+  return parsed.lines.slice(startLine, endLine).join('\n').trim();
 }
 
 export default {
@@ -166,7 +104,7 @@ export default {
         }
 
         // 3. Build manifest with v2 defaults
-        const manifest = buildManifest(skill);
+        const manifest = normalizeSkillEntry(skill);
 
         // 4. Mode 1: Metadata Only
         const wantsContent = include_content === true;
@@ -197,9 +135,9 @@ export default {
           );
         }
 
-        // 7. Detect available sections
-        const detectedSections = detectSections(fileContent);
-        const available_sections = detectedSections.map((s) => s.normalized);
+        // 7. Parse sections once (reused for detection and extraction)
+        const parsed = parseMarkdownSections(fileContent);
+        const available_sections = parsed.sections.map((s) => s.normalized);
 
         // 8. Build response payload
         const payload = { manifest };
@@ -207,7 +145,7 @@ export default {
 
         // Mode 2: Full content
         if (wantsContent) {
-          const contentBytes = new TextEncoder().encode(fileContent).length;
+          const contentBytes = Buffer.byteLength(fileContent, 'utf8');
           totalContentSize += contentBytes;
           payload.content = fileContent;
           payload.content_size = contentBytes;
@@ -215,14 +153,14 @@ export default {
 
         // Mode 3: Section extraction
         if (wantsSection) {
-          const sectionContent = extractSection(fileContent, section);
+          const sectionContent = extractSection(parsed, section);
           if (sectionContent === null) {
             return buildErrorResponse(
               'SECTION_NOT_FOUND',
               `Section '${section}' not found in ${skill_id} SKILL.md. Available: [${available_sections.join(', ')}]`,
             );
           }
-          const sectionBytes = new TextEncoder().encode(sectionContent).length;
+          const sectionBytes = Buffer.byteLength(sectionContent, 'utf8');
           totalContentSize += sectionBytes;
           payload.section_content = sectionContent;
           payload.content_size = payload.content_size ?? sectionBytes;
@@ -232,17 +170,16 @@ export default {
 
         // 9. Truncation check
         const responseJson = JSON.stringify(payload);
-        const responseBytes = new TextEncoder().encode(responseJson).length;
+        const responseBytes = Buffer.byteLength(responseJson, 'utf8');
         if (responseBytes > MAX_SAFE_RESPONSE) {
-          // Truncate content to fit within MAX_SAFE_RESPONSE
           if (payload.content) {
             const overhead = responseBytes - totalContentSize;
-            const availableBytes = MAX_SAFE_RESPONSE - overhead - 200; // leave margin for truncated flag
-            const truncated = new TextDecoder().decode(
-              new TextEncoder().encode(payload.content).slice(0, Math.max(0, availableBytes)),
-            );
-            payload.content = truncated;
-            payload.content_size = new TextEncoder().encode(truncated).length;
+            const availableBytes = MAX_SAFE_RESPONSE - overhead - 200;
+            // Estimate char limit from byte ratio
+            const ratio = Math.max(0, availableBytes) / Buffer.byteLength(payload.content, 'utf8');
+            const charLimit = Math.floor(payload.content.length * Math.min(1, ratio));
+            payload.content = payload.content.slice(0, charLimit);
+            payload.content_size = Buffer.byteLength(payload.content, 'utf8');
           }
           payload.truncated = true;
         } else {

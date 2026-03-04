@@ -6,13 +6,9 @@
  * Plugin Contract v1.0+
  */
 
-import { readFile, access } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const REPO_ROOT = resolve(__dirname, '..', '..', '..', '..');
+import { access } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { REPO_ROOT, loadRegistry } from './shared.mjs';
 
 // ---------------------------------------------------------------------------
 // Helper utilities
@@ -452,19 +448,21 @@ function ruleCPC01(patterns, irComponents) {
   }
 
   const totalComponents = componentIds.length;
-  const coveredCount = componentIds.filter((id) => coveredComponents.has(id)).length;
-  const uncoveredCount = totalComponents - coveredCount;
+  const uncoveredIds = [];
+  for (const id of componentIds) {
+    if (!coveredComponents.has(id)) uncoveredIds.push(id);
+  }
+  const coveredCount = totalComponents - uncoveredIds.length;
   const coveragePercent = Math.round((coveredCount / totalComponents) * 100);
   const severity = coveragePercent < 50 ? 'MEDIUM' : 'LOW';
 
-  if (uncoveredCount > 0) {
-    const uncoveredIds = componentIds.filter((id) => !coveredComponents.has(id));
+  if (uncoveredIds.length > 0) {
     const d = createDrift(
       'CPC01',
       severity,
       'pattern-registry.json',
       'install-registry.json',
-      `Pattern coverage: ${coveredCount}/${totalComponents} components (${coveragePercent}%). ${uncoveredCount} components not used in any pattern.`,
+      `Pattern coverage: ${coveredCount}/${totalComponents} components (${coveragePercent}%). ${uncoveredIds.length} components not used in any pattern.`,
       {
         coverage: coveragePercent,
         coveredCount,
@@ -609,17 +607,12 @@ async function checkDriftHandler(args, { helpers }) {
   // -----------------------------------------------------------------------
   // Load data sources
   // -----------------------------------------------------------------------
-  const cem = await helpers.loadJsonData('custom-elements.json');
-  const ir = await helpers.loadJsonData('install-registry.json');
-  const pr = await helpers.loadJsonData('pattern-registry.json');
-
-  let sr = null;
-  try {
-    const raw = await readFile(resolve(REPO_ROOT, 'registry', 'skills-registry.json'), 'utf-8');
-    sr = JSON.parse(raw);
-  } catch {
-    // skills-registry unavailable — skill rules will be skipped gracefully
-  }
+  const [cem, ir, pr, sr] = await Promise.all([
+    helpers.loadJsonData('custom-elements.json'),
+    helpers.loadJsonData('install-registry.json'),
+    helpers.loadJsonData('pattern-registry.json'),
+    loadRegistry(),
+  ]);
 
   // -----------------------------------------------------------------------
   // Extract commonly used data
@@ -673,13 +666,12 @@ async function checkDriftHandler(args, { helpers }) {
   // -----------------------------------------------------------------------
   // Build output
   // -----------------------------------------------------------------------
-  const summary = {
-    total: drifts.length,
-    high: drifts.filter((d) => d.severity === 'HIGH').length,
-    medium: drifts.filter((d) => d.severity === 'MEDIUM').length,
-    low: drifts.filter((d) => d.severity === 'LOW').length,
-    ignored: 0, // Phase 1: no .driftignore support
-  };
+  const summary = { total: drifts.length, high: 0, medium: 0, low: 0, ignored: 0 };
+  for (const d of drifts) {
+    if (d.severity === 'HIGH') summary.high++;
+    else if (d.severity === 'MEDIUM') summary.medium++;
+    else if (d.severity === 'LOW') summary.low++;
+  }
 
   const meta = {
     phase: 1,

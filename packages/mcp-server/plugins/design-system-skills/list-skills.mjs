@@ -4,50 +4,14 @@
  * Plugin Contract v1.0+
  */
 
-import { readFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const REPO_ROOT = resolve(__dirname, '..', '..', '..', '..');
-const REGISTRY_PATH = resolve(REPO_ROOT, 'registry', 'skills-registry.json');
-
-/** v2 defaults for v1 skill entries */
-const V2_DEFAULTS = {
-  tags: [],
-  version: '0.0.0',
-  dependencies: [],
-};
+import { loadRegistry, normalizeSkillEntry, buildErrorResponse } from './shared.mjs';
 
 /**
- * Load skills registry from disk.
- * @returns {Promise<object|null>}
- */
-async function loadRegistry() {
-  try {
-    const raw = await readFile(REGISTRY_PATH, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Project a full skill entry to a lightweight summary.
+ * Project a full skill entry to a lightweight summary (excludes compat/manifest).
  */
 function toSummary(skill) {
-  return {
-    name: skill.name,
-    description: skill.description ?? '',
-    status: skill.status ?? 'active',
-    clients: Array.isArray(skill.clients) ? skill.clients : [],
-    tags: Array.isArray(skill.tags) ? skill.tags : V2_DEFAULTS.tags,
-    version: typeof skill.version === 'string' ? skill.version : V2_DEFAULTS.version,
-    dependencies: Array.isArray(skill.dependencies) ? skill.dependencies : V2_DEFAULTS.dependencies,
-    path: skill.path ?? '',
-    entry: skill.entry ?? 'SKILL.md',
-  };
+  const { compat, manifest, ...summary } = normalizeSkillEntry(skill);
+  return summary;
 }
 
 export default {
@@ -62,24 +26,10 @@ export default {
       async handler(args = {}, { helpers }) {
         const registry = await loadRegistry();
         if (!registry || !Array.isArray(registry.skills)) {
-          return {
-            content: [
-              {
-                type: 'text',
-                text: JSON.stringify(
-                  {
-                    error: {
-                      code: 'SKILLS_REGISTRY_UNAVAILABLE',
-                      message: 'Skills registry data not available.',
-                    },
-                  },
-                  null,
-                  2,
-                ),
-              },
-            ],
-            isError: true,
-          };
+          return buildErrorResponse(
+            'SKILLS_REGISTRY_UNAVAILABLE',
+            'Skills registry data not available.',
+          );
         }
 
         const { client, tags, status, query } = args;
