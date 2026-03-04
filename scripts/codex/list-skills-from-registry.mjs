@@ -87,7 +87,8 @@ async function assertInsideRepo(absTargetPath, repoRoot, label) {
 
 export async function validateSkillsRegistry(registry, { repoRoot, registryPath, checkFiles }) {
   assert(isPlainObject(registry), 'registry must be an object');
-  assert(Number(registry.schemaVersion) === 1, `unsupported schemaVersion: ${String(registry.schemaVersion)}`);
+  const sv = Number(registry.schemaVersion);
+  assert(sv === 1 || sv === 2, `unsupported schemaVersion: ${String(registry.schemaVersion)}`);
 
   const sourceOfTruth = String(registry.sourceOfTruth ?? '').trim();
   assert(sourceOfTruth === '.claude/skills', `sourceOfTruth must be ".claude/skills" (got "${sourceOfTruth}")`);

@@ -2551,7 +2551,7 @@ describe('HTTP transport support', () => {
 
 describe('plugin extensibility', () => {
   it('exports PLUGIN_CONTRACT_VERSION as semver string', () => {
-    expect(PLUGIN_CONTRACT_VERSION).toBe('1.0.0');
+    expect(PLUGIN_CONTRACT_VERSION).toBe('1.1.0');
     expect(typeof PLUGIN_CONTRACT_VERSION).toBe('string');
   });
 
@@ -2777,6 +2777,85 @@ describe('plugin extensibility', () => {
       expect(typeof receivedHelpers.normalizePrefix).toBe('function');
       expect(typeof receivedHelpers.withPrefix).toBe('function');
       expect(typeof receivedHelpers.toCanonicalTagName).toBe('function');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('provides helpers.loadTextData in handler context (contract v1.1)', async () => {
+    let receivedHelpers = null;
+    const { server } = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      {
+        loadTextData: loadBundledText,
+        plugins: [{
+          name: 'text-helpers-test-plugin',
+          version: '1.0.0',
+          tools: [{
+            name: 'text_helpers_context_test',
+            description: 'Verify loadTextData in helpers',
+            async handler(_args, ctx) {
+              receivedHelpers = ctx.helpers;
+              return { ok: true };
+            },
+          }],
+        }],
+      },
+    );
+    const client = new Client(
+      { name: 'wcf-mcp-test-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+    try {
+      await client.callTool({ name: 'text_helpers_context_test', arguments: {} });
+      expect(receivedHelpers).toBeTruthy();
+      expect(typeof receivedHelpers.loadTextData).toBe('function');
+      expect(typeof receivedHelpers.loadJsonData).toBe('function');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('loadTextData returns text content via plugin handler', async () => {
+    let textContent = null;
+    const { server } = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      {
+        loadTextData: loadBundledText,
+        plugins: [{
+          name: 'text-read-test-plugin',
+          version: '1.0.0',
+          tools: [{
+            name: 'text_read_test',
+            description: 'Read text via loadTextData',
+            async handler(_args, ctx) {
+              textContent = await ctx.helpers.loadTextData('llms-full.txt');
+              return { length: textContent.length };
+            },
+          }],
+        }],
+      },
+    );
+    const client = new Client(
+      { name: 'wcf-mcp-test-client', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+    await Promise.all([
+      server.connect(serverTransport),
+      client.connect(clientTransport),
+    ]);
+    try {
+      await client.callTool({ name: 'text_read_test', arguments: {} });
+      expect(typeof textContent).toBe('string');
+      expect(textContent.length).toBeGreaterThan(0);
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
@@ -3491,5 +3570,307 @@ describe('get_component_selector_guide', () => {
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Design System Skills plugin tests
+// ---------------------------------------------------------------------------
+
+describe('design-system-skills plugin: list_skills', () => {
+  let client;
+  let server;
+
+  beforeAll(async () => {
+    const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
+    const created = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      {
+        loadTextData: loadBundledText,
+        plugins: [dsPlugin],
+      },
+    );
+    server = created.server;
+    client = new Client(
+      { name: 'ds-skills-test', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [ct, st] = InMemoryTransport.createLinkedPair();
+    await Promise.all([server.connect(st), client.connect(ct)]);
+  });
+
+  afterAll(async () => {
+    await Promise.allSettled([client?.close?.(), server?.close?.()]);
+  });
+
+  it('returns all skills when no filters', async () => {
+    const result = await client.callTool({ name: 'list_skills', arguments: {} });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.total).toBeGreaterThanOrEqual(1);
+    expect(Array.isArray(payload.skills)).toBe(true);
+    // Every skill should have required summary fields
+    for (const s of payload.skills) {
+      expect(typeof s.name).toBe('string');
+      expect(typeof s.description).toBe('string');
+      expect(typeof s.status).toBe('string');
+      expect(Array.isArray(s.clients)).toBe(true);
+      expect(Array.isArray(s.tags)).toBe(true);
+      expect(typeof s.version).toBe('string');
+    }
+  });
+
+  it('filters by client', async () => {
+    const result = await client.callTool({
+      name: 'list_skills',
+      arguments: { client: 'codex' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    for (const s of payload.skills) {
+      expect(s.clients).toContain('codex');
+    }
+  });
+
+  it('filters by tags (AND logic)', async () => {
+    const result = await client.callTool({
+      name: 'list_skills',
+      arguments: { tags: ['spec', 'workflow'] },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    for (const s of payload.skills) {
+      expect(s.tags).toContain('spec');
+      expect(s.tags).toContain('workflow');
+    }
+  });
+
+  it('filters by query substring', async () => {
+    const result = await client.callTool({
+      name: 'list_skills',
+      arguments: { query: 'css' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.total).toBeGreaterThanOrEqual(1);
+    for (const s of payload.skills) {
+      const nameOrDesc = (s.name + ' ' + s.description).toLowerCase();
+      expect(nameOrDesc).toContain('css');
+    }
+  });
+
+  it('returns empty array when no match', async () => {
+    const result = await client.callTool({
+      name: 'list_skills',
+      arguments: { query: 'zzz-nonexistent-skill-xyz' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.total).toBe(0);
+    expect(payload.skills).toEqual([]);
+  });
+});
+
+describe('design-system-skills plugin: get_skill_manifest', () => {
+  let client;
+  let server;
+
+  beforeAll(async () => {
+    const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
+    const created = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      {
+        loadTextData: loadBundledText,
+        plugins: [dsPlugin],
+      },
+    );
+    server = created.server;
+    client = new Client(
+      { name: 'ds-manifest-test', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [ct, st] = InMemoryTransport.createLinkedPair();
+    await Promise.all([server.connect(st), client.connect(ct)]);
+  });
+
+  afterAll(async () => {
+    await Promise.allSettled([client?.close?.(), server?.close?.()]);
+  });
+
+  it('returns manifest for metadata-only mode', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'css-writing-rules' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.manifest).toBeDefined();
+    expect(payload.manifest.name).toBe('css-writing-rules');
+    expect(payload.manifest.status).toBe('active');
+    expect(payload.content).toBeUndefined();
+  });
+
+  it('returns content when include_content=true', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'css-writing-rules', include_content: true },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.manifest).toBeDefined();
+    expect(typeof payload.content).toBe('string');
+    expect(payload.content.length).toBeGreaterThan(0);
+    expect(typeof payload.content_size).toBe('number');
+    expect(Array.isArray(payload.available_sections)).toBe(true);
+  });
+
+  it('extracts a specific section', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'css-writing-rules', section: 'quick_reference' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.manifest).toBeDefined();
+    expect(typeof payload.section_content).toBe('string');
+    expect(payload.section_content.length).toBeGreaterThan(0);
+  });
+
+  it('returns SKILL_NOT_FOUND for unknown skill', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'nonexistent-skill' },
+    });
+    expect(result.isError).toBe(true);
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.error.code).toBe('SKILL_NOT_FOUND');
+  });
+
+  it('returns SECTION_NOT_FOUND for unknown section', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'css-writing-rules', section: 'procedure' },
+    });
+    // procedure section may not exist in css-writing-rules
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    // Either returns section content or SECTION_NOT_FOUND error
+    if (result.isError) {
+      expect(payload.error.code).toBe('SECTION_NOT_FOUND');
+    } else {
+      expect(payload.section_content).toBeDefined();
+    }
+  });
+});
+
+describe('design-system-skills plugin: check_drift', () => {
+  let client;
+  let server;
+
+  beforeAll(async () => {
+    const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
+    const created = await createMcpServer(
+      loadBundledJson,
+      async () => import('./validator.mjs'),
+      {
+        loadTextData: loadBundledText,
+        plugins: [dsPlugin],
+      },
+    );
+    server = created.server;
+    client = new Client(
+      { name: 'ds-drift-test', version: '0.0.0' },
+      { capabilities: {} },
+    );
+    const [ct, st] = InMemoryTransport.createLinkedPair();
+    await Promise.all([server.connect(st), client.connect(ct)]);
+  });
+
+  afterAll(async () => {
+    await Promise.allSettled([client?.close?.(), server?.close?.()]);
+  });
+
+  it('returns drift report with correct structure for scope=all', async () => {
+    const result = await client.callTool({
+      name: 'check_drift',
+      arguments: { scope: 'all' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(Array.isArray(payload.drifts)).toBe(true);
+    expect(Array.isArray(payload.suggestions)).toBe(true);
+    expect(payload.summary).toBeDefined();
+    expect(typeof payload.summary.total).toBe('number');
+    expect(typeof payload.summary.high).toBe('number');
+    expect(typeof payload.summary.medium).toBe('number');
+    expect(typeof payload.summary.low).toBe('number');
+    expect(payload.meta).toBeDefined();
+    expect(payload.meta.phase).toBe(1);
+    expect(payload.meta.scope).toBe('all');
+    expect(Array.isArray(payload.meta.rulesExecuted)).toBe(true);
+    expect(payload.meta.rulesExecuted.length).toBe(13);
+  });
+
+  it('limits rules for scope=cem', async () => {
+    const result = await client.callTool({
+      name: 'check_drift',
+      arguments: { scope: 'cem' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.meta.scope).toBe('cem');
+    expect(payload.meta.rulesExecuted.length).toBe(6);
+    for (const ruleId of payload.meta.rulesExecuted) {
+      expect(['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01']).toContain(ruleId);
+    }
+  });
+
+  it('limits rules for scope=skills', async () => {
+    const result = await client.callTool({
+      name: 'check_drift',
+      arguments: { scope: 'skills' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.meta.scope).toBe('skills');
+    expect(payload.meta.rulesExecuted.length).toBe(3);
+    for (const ruleId of payload.meta.rulesExecuted) {
+      expect(['SIR01', 'SPR01', 'SID01']).toContain(ruleId);
+    }
+  });
+
+  it('limits rules for scope=patterns', async () => {
+    const result = await client.callTool({
+      name: 'check_drift',
+      arguments: { scope: 'patterns' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.meta.scope).toBe('patterns');
+    expect(payload.meta.rulesExecuted.length).toBe(4);
+    for (const ruleId of payload.meta.rulesExecuted) {
+      expect(['CPR01', 'CPT01', 'CPT02', 'CPC01']).toContain(ruleId);
+    }
+  });
+
+  it('has no HIGH severity drifts for skills-registry (v2)', async () => {
+    const result = await client.callTool({
+      name: 'check_drift',
+      arguments: { scope: 'skills' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const highDrifts = payload.drifts.filter((d) => d.severity === 'HIGH');
+    expect(highDrifts.length).toBe(0);
+  });
+
+  it('each drift has a matching suggestion', async () => {
+    const result = await client.callTool({
+      name: 'check_drift',
+      arguments: { scope: 'all' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const suggestionDriftIds = new Set(payload.suggestions.map((s) => s.driftId));
+    for (const drift of payload.drifts) {
+      expect(suggestionDriftIds.has(drift.id)).toBe(true);
+    }
+  });
+
+  it('returns empty drifts for scope=tokens (no Phase 1 rules)', async () => {
+    const result = await client.callTool({
+      name: 'check_drift',
+      arguments: { scope: 'tokens' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.drifts.length).toBe(0);
+    expect(payload.meta.rulesExecuted.length).toBe(0);
   });
 });

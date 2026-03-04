@@ -58,6 +58,8 @@ interface WcfMcpHandlerContext {
   helpers: {
     /** JSON データファイルを読み込む */
     loadJsonData: (fileName: string) => Promise<unknown>;
+    /** テキストデータファイルを読み込む (v1.1+) */
+    loadTextData: (fileName: string) => Promise<string>;
     /** ツール応答を MCP 形式の JSON テキストに変換する */
     buildJsonToolResponse: (payload: unknown) => { content: Array<{ type: string; text: string }> };
     /** prefix を正規化する（デフォルト: "dads"） */
@@ -102,7 +104,8 @@ interface WcfMcpDataSourceConfig {
 
 ## 互換性ポリシー
 
-- **契約バージョン**: `1.0.0`（`PLUGIN_CONTRACT_VERSION` 定数で公開）
+- **契約バージョン**: `1.1.0`（`PLUGIN_CONTRACT_VERSION` 定数で公開）
+- **v1.1 追加**: `helpers.loadTextData` — テキストファイルの読み込み（UTF-8）
 - **v1.x 内**: 破壊的変更なし。新フィールドは追加のみ（既存フィールドの削除・型変更なし）
 - **v2.0**: 破壊的変更を含む可能性あり。メジャーバージョンアップで通知
 

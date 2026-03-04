@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "sourceOfTruth": ".claude/skills",
   "clients": {
     "codex": {
@@ -23,7 +23,37 @@
         "cursor"
       ],
       "status": "active",
-      "description": "Drive design studies for new web components with evidence-based variant selection."
+      "description": "Drive design studies for new web components with evidence-based variant selection.",
+      "tags": [
+        "spec",
+        "workflow"
+      ],
+      "version": "1.0.0",
+      "dependencies": [],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo",
+          "web_fetch"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "workflow",
+          "do_dont",
+          "references"
+        ],
+        "sizeBytes": 30404,
+        "lastUpdated": "2026-03-04"
+      }
     },
     {
       "name": "css-writing-rules",
@@ -35,7 +65,36 @@
         "cursor"
       ],
       "status": "active",
-      "description": "CSS coding guidelines for Web Components with Shadow DOM."
+      "description": "CSS coding guidelines for Web Components with Shadow DOM.",
+      "tags": [
+        "spec",
+        "token"
+      ],
+      "version": "1.0.0",
+      "dependencies": [],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "workflow",
+          "do_dont",
+          "references"
+        ],
+        "sizeBytes": 43328,
+        "lastUpdated": "2026-03-04"
+      }
     },
     {
       "name": "headless-component-design",
@@ -47,7 +106,34 @@
         "cursor"
       ],
       "status": "active",
-      "description": "Headless Web Component design patterns with DADS conventions."
+      "description": "Headless Web Component design patterns with DADS conventions.",
+      "tags": [
+        "spec"
+      ],
+      "version": "1.0.0",
+      "dependencies": [],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "do_dont",
+          "references"
+        ],
+        "sizeBytes": 24403,
+        "lastUpdated": "2026-03-04"
+      }
     },
     {
       "name": "wcf-compose",
@@ -59,7 +145,36 @@
         "cursor"
       ],
       "status": "active",
-      "description": "Compose screen HTML and state variants from installed component IDs."
+      "description": "Compose screen HTML and state variants from installed component IDs.",
+      "tags": [
+        "workflow"
+      ],
+      "version": "1.0.0",
+      "dependencies": [
+        "wcf-install"
+      ],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo",
+          "write_repo"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "workflow"
+        ],
+        "sizeBytes": 2333,
+        "lastUpdated": "2026-03-04"
+      }
     },
     {
       "name": "wcf-discovery",
@@ -71,7 +186,34 @@
         "cursor"
       ],
       "status": "active",
-      "description": "Discover component IDs and patterns from screen requirements."
+      "description": "Discover component IDs and patterns from screen requirements.",
+      "tags": [
+        "workflow"
+      ],
+      "version": "1.0.0",
+      "dependencies": [],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo",
+          "mcp_tools"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "workflow"
+        ],
+        "sizeBytes": 2514,
+        "lastUpdated": "2026-03-04"
+      }
     },
     {
       "name": "wcf-install",
@@ -83,7 +225,36 @@
         "cursor"
       ],
       "status": "active",
-      "description": "Resolve install order and generate WCF install commands."
+      "description": "Resolve install order and generate WCF install commands.",
+      "tags": [
+        "workflow"
+      ],
+      "version": "1.0.0",
+      "dependencies": [
+        "wcf-discovery"
+      ],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo",
+          "run_commands"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "workflow"
+        ],
+        "sizeBytes": 2341,
+        "lastUpdated": "2026-03-04"
+      }
     },
     {
       "name": "wcf-ui-builder",
@@ -95,7 +266,40 @@
         "cursor"
       ],
       "status": "active",
-      "description": "Orchestrator skill for discovery, install, compose, and validate flow."
+      "description": "Orchestrator skill for discovery, install, compose, and validate flow.",
+      "tags": [
+        "workflow"
+      ],
+      "version": "1.0.0",
+      "dependencies": [
+        "wcf-discovery",
+        "wcf-install",
+        "wcf-compose",
+        "wcf-validate"
+      ],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo",
+          "write_repo",
+          "mcp_tools"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "workflow"
+        ],
+        "sizeBytes": 1986,
+        "lastUpdated": "2026-03-04"
+      }
     },
     {
       "name": "wcf-validate",
@@ -107,7 +311,35 @@
         "cursor"
       ],
       "status": "active",
-      "description": "Validate generated markup and return diagnostics with fix suggestions."
+      "description": "Validate generated markup and return diagnostics with fix suggestions.",
+      "tags": [
+        "audit"
+      ],
+      "version": "1.0.0",
+      "dependencies": [],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo",
+          "mcp_tools"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "workflow",
+          "do_dont"
+        ],
+        "sizeBytes": 2129,
+        "lastUpdated": "2026-03-04"
+      }
     }
   ]
 }
