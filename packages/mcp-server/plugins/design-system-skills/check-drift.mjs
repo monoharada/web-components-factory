@@ -677,7 +677,7 @@ export default {
     {
       name: 'check_drift',
       description:
-        'Check consistency across CEM, install-registry, skills-registry, and pattern-registry. Detects drift (divergence) between data sources. When: before PR, after registry updates, periodic audits. Returns: {drifts[], suggestions[], summary{total,high,medium,low,ignored}, meta{phase,scope,rulesExecuted,timestamp}}. Args: scope? (all|cem|skills|tokens|patterns, default: all). Phase 1: 13 JSON comparison rules.',
+        'Check consistency across CEM, install-registry, skills-registry, and pattern-registry. Detects drift (divergence) between data sources. When: before PR, after registry updates, periodic audits. Returns: {drifts[], suggestions[], summary{total,high,medium,low,ignored}, meta{phase,scope,rulesExecuted,timestamp}}. Args: scope? (all|cem|skills|tokens|patterns, default: all). Phase 1: 12 JSON comparison rules.',
       inputSchema: {},
       handler: checkDriftHandler,
     },
