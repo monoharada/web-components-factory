@@ -1136,11 +1136,12 @@ export function serializeApi(decl, modulePath, prefix) {
  * Generic fallback values for common attributes when CEM default is missing.
  * Attribute-name-based (not component-specific). `type` is excluded to avoid
  * conflicts between button (type="button") and input (type="text").
+ * `variant` is also excluded — its valid values differ per component,
+ * so the first enum value is used instead (see generateSnippet).
  */
 const SNIPPET_FALLBACK_VALUES = {
   label: 'ラベル',
   name: 'field1',
-  variant: 'solid',
   value: 'サンプル値',
   'support-text': '説明テキスト',
 };
@@ -1187,9 +1188,16 @@ export function generateSnippet(api, prefix) {
     if (isBoolean) {
       lines.push(`  ${name}`);
     } else {
-      const defaultVal = typeof a.default === 'string'
-        ? a.default.replace(/^['"]|['"]$/g, '')
-        : (SNIPPET_FALLBACK_VALUES[name] ?? '');
+      let defaultVal;
+      if (typeof a.default === 'string') {
+        defaultVal = a.default.replace(/^['"]|['"]$/g, '');
+      } else if (SNIPPET_FALLBACK_VALUES[name] !== undefined) {
+        defaultVal = SNIPPET_FALLBACK_VALUES[name];
+      } else {
+        // For enum types, use the first enum value as fallback
+        const enumMatch = t.match(/^'([^']+)'/);
+        defaultVal = enumMatch ? enumMatch[1] : '';
+      }
       lines.push(`  ${name}="${defaultVal}"`);
     }
     if (lines.length >= 4) break;
@@ -1296,6 +1304,18 @@ export function buildPatternFrequencyMap(patterns) {
   return freq;
 }
 
+/**
+ * Convert a tag from the current prefix to canonical prefix using string ops
+ * (no regex, safe for arbitrary prefix values).
+ */
+function toCanonicalTag(tag, currentPrefix) {
+  const cp = `${currentPrefix}-`;
+  if (tag.startsWith(cp)) {
+    return `${CANONICAL_PREFIX}-${tag.slice(cp.length)}`;
+  }
+  return tag;
+}
+
 export function buildComponentSummaries(indexes, { category, query, limit, offset, prefix, patternId, sort, patterns, installRegistry, patternFrequency } = {}) {
   const p = normalizePrefix(prefix);
   const q = typeof query === 'string' ? query.trim().toLowerCase() : '';
@@ -1320,7 +1340,7 @@ export function buildComponentSummaries(indexes, { category, query, limit, offse
       const tags = installRegistry?.tags && typeof installRegistry.tags === 'object' ? installRegistry.tags : {};
       items = items.filter((item) => {
         // Map tagName to componentId via install registry
-        const canonicalTag = withPrefix(item.tagName.replace(new RegExp(`^${p}-`), `${CANONICAL_PREFIX}-`), CANONICAL_PREFIX);
+        const canonicalTag = toCanonicalTag(item.tagName, p);
         const componentId = tags[canonicalTag];
         return componentId && requiredIds.has(componentId);
       });
@@ -1351,7 +1371,7 @@ export function buildComponentSummaries(indexes, { category, query, limit, offse
     const freq = patternFrequency instanceof Map ? patternFrequency : new Map();
     const tags = installRegistry?.tags && typeof installRegistry.tags === 'object' ? installRegistry.tags : {};
     items = items.map((item) => {
-      const canonicalTag = withPrefix(item.tagName.replace(new RegExp(`^${p}-`), `${CANONICAL_PREFIX}-`), CANONICAL_PREFIX);
+      const canonicalTag = toCanonicalTag(item.tagName, p);
       const componentId = tags[canonicalTag] ?? '';
       return { ...item, frequency: freq.get(componentId) ?? 0 };
     });
@@ -2285,7 +2305,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         offset: z.number().int().min(0).optional().describe('Pagination offset (default: 0)'),
         prefix: z.string().optional(),
         patternId: z.string().optional().describe('Filter to components required by this pattern'),
-        sort: z.enum(['default', 'frequency']).optional().describe('Sort order: "default" (alphabetical by tag) or "frequency" (pattern usage count, descending)'),
+        sort: z.enum(['default', 'frequency']).optional().describe('Sort order: "default" (CEM declaration order) or "frequency" (pattern usage count, descending)'),
       },
     },
     async ({ category, query, limit, offset, prefix, patternId, sort }) => {

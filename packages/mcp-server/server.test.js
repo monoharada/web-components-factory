@@ -407,6 +407,22 @@ describe('buildComponentSummaries patternId filter and frequency sort', () => {
       expect(page.items[i].frequency).toBeGreaterThanOrEqual(page.items[i + 1].frequency);
     }
   });
+
+  it('does not throw with regex-special prefix characters', async () => {
+    const manifest = await loadBundledJson('custom-elements.json');
+    const indexes = buildIndexes(manifest);
+    // prefix "[" would cause "Invalid regular expression" if passed to new RegExp
+    // With string-based toCanonicalTag, this should not throw
+    expect(() => {
+      buildComponentSummaries(indexes, {
+        prefix: '[',
+        sort: 'frequency',
+        limit: 10,
+        patternFrequency: new Map(),
+        installRegistry: {},
+      });
+    }).not.toThrow();
+  });
 });
 
 describe('search_icons (logic)', () => {
@@ -1002,7 +1018,7 @@ describe('MCP prompts/resources contract', () => {
       attributes: [
         { name: 'label', type: 'string', default: null },
         { name: 'name', type: 'string', default: null },
-        { name: 'variant', type: 'string', default: "'outlined'" },
+        { name: 'variant', type: "'outlined' | 'solid'", default: "'outlined'" },
       ],
       slots: [],
     };
@@ -1013,8 +1029,23 @@ describe('MCP prompts/resources contract', () => {
     expect(snippet).toContain('variant="outlined"');
   });
 
-  it('generate_usage_snippet uses empty string for unmapped attributes', () => {
-    // 'size' is in attrPriority but NOT in SNIPPET_FALLBACK_VALUES
+  it('generate_usage_snippet uses first enum value for variant without CEM default', () => {
+    // variant with no default should use the first enum value, not a hardcoded "solid"
+    const mockApi = {
+      tagName: 'dads-notification-banner',
+      attributes: [
+        { name: 'label', type: 'string', default: null },
+        { name: 'variant', type: "'info' | 'success' | 'warning' | 'error'", default: null },
+      ],
+      slots: [],
+    };
+    const snippet = generateSnippet(mockApi, 'dads');
+    expect(snippet).toContain('variant="info"');
+    expect(snippet).not.toContain('variant="solid"');
+  });
+
+  it('generate_usage_snippet uses empty string for unmapped non-enum attributes', () => {
+    // 'size' is in attrPriority but NOT in SNIPPET_FALLBACK_VALUES and not an enum
     const mockApi = {
       tagName: 'dads-custom',
       attributes: [
