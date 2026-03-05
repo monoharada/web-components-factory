@@ -14,7 +14,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _DadsResourceList_instances, _a, _DadsResourceList_body, _DadsResourceList_controlPart, _DadsResourceList_contentsPart, _DadsResourceList_controlSlot, _DadsResourceList_iconSlot, _DadsResourceList_titleSlot, _DadsResourceList_labelSlot, _DadsResourceList_supportSlot, _DadsResourceList_subSlot, _DadsResourceList_actionSlot, _DadsResourceList_slotMutationObserver, _DadsResourceList_pendingControlUpgradeTags, _DadsResourceList_boundControlHost, _DadsResourceList_boundControlInput, _DadsResourceList_primaryTitleLink, _DadsResourceList_instanceId, _DadsResourceList_slots, _DadsResourceList_bindSlotListeners, _DadsResourceList_unbindSlotListeners, _DadsResourceList_observeSlotMutations, _DadsResourceList_handleSlotChange, _DadsResourceList_syncAll, _DadsResourceList_syncControlComponentSize, _DadsResourceList_syncPresenceFlags, _DadsResourceList_syncControlTarget, _DadsResourceList_unbindControlListeners, _DadsResourceList_syncControlAccessibleName, _DadsResourceList_resolveControlAccessibleNameTarget, _DadsResourceList_resolveControlLabelReferenceIds, _DadsResourceList_resolveLabelSourceElements, _DadsResourceList_isLabelSourceElement, _DadsResourceList_ensureLabelSourceElementId, _DadsResourceList_clearAutoControlLabelledby, _DadsResourceList_clearAutoControlLabelledbyFrom, _DadsResourceList_resolveControlTarget, _DadsResourceList_resolveControlTargetFromSlot, _DadsResourceList_resolveControlTargetFromElement, _DadsResourceList_queueControlUpgradeSync, _DadsResourceList_syncControlStateFlags, _DadsResourceList_isControlChecked, _DadsResourceList_isControlDisabled, _DadsResourceList_syncBodyMode, _DadsResourceList_syncBodyLinkAttributes, _DadsResourceList_syncInteractionFlags, _DadsResourceList_syncActionStateFlags, _DadsResourceList_resolvePrimaryActionElement, _DadsResourceList_resolvePrimaryActionElementFromSlot, _DadsResourceList_isActionDisabled, _DadsResourceList_hasMeaningfulSlotContent, _DadsResourceList_isWholeControlInteraction, _DadsResourceList_isInlineControlInteraction, _DadsResourceList_isControlRegionClick, _DadsResourceList_isContentsRegionClick, _DadsResourceList_isSlottedContentsClick, _DadsResourceList_isSlottedControlClick, _DadsResourceList_isWholeDelegatedLinkInteraction, _DadsResourceList_getHostHref, _DadsResourceList_syncPrimaryTitleLink, _DadsResourceList_resolvePrimaryTitleLink, _DadsResourceList_resolvePrimaryTitleLinkFromSlot, _DadsResourceList_resolvePrimaryTitleLinkFromElement, _DadsResourceList_isUsablePrimaryTitleLink, _DadsResourceList_syncPrimaryFocusFlag, _DadsResourceList_activatePrimaryTitleLink, _DadsResourceList_activateControl, _DadsResourceList_handleControlStateChange, _DadsResourceList_handleFocusStateChange, _DadsResourceList_handleBodyClick, _DadsResourceList_handleHostClick, _DadsResourceList_syncRelatedRadioRows, _DadsResourceList_queueControlStateSync, _DadsResourceList_resolveRadioControlGroup, _DadsResourceList_isSameRadioControlGroup, _DadsResourceList_resolveRadioControlName;
+var _DadsResourceList_instances, _a, _DadsResourceList_body, _DadsResourceList_controlPart, _DadsResourceList_contentsPart, _DadsResourceList_controlSlot, _DadsResourceList_iconSlot, _DadsResourceList_titleSlot, _DadsResourceList_labelSlot, _DadsResourceList_supportSlot, _DadsResourceList_subSlot, _DadsResourceList_actionSlot, _DadsResourceList_slotMutationObserver, _DadsResourceList_pendingControlUpgradeTags, _DadsResourceList_boundControlHost, _DadsResourceList_boundControlInput, _DadsResourceList_primaryTitleLink, _DadsResourceList_instanceId, _DadsResourceList_slots, _DadsResourceList_bindSlotListeners, _DadsResourceList_unbindSlotListeners, _DadsResourceList_observeSlotMutations, _DadsResourceList_handleSlotChange, _DadsResourceList_syncAll, _DadsResourceList_syncControlComponentSize, _DadsResourceList_syncPresenceFlags, _DadsResourceList_syncControlTarget, _DadsResourceList_unbindControlListeners, _DadsResourceList_syncControlAccessibleName, _DadsResourceList_resolveControlAccessibleNameTarget, _DadsResourceList_resolveControlLabelReferenceIds, _DadsResourceList_resolveLabelSourceElements, _DadsResourceList_isLabelSourceElement, _DadsResourceList_ensureLabelSourceElementId, _DadsResourceList_clearAutoControlLabelledby, _DadsResourceList_clearAutoControlLabelledbyFrom, _DadsResourceList_resolveControlTarget, _DadsResourceList_resolveControlTargetFromSlot, _DadsResourceList_resolveControlTargetFromElement, _DadsResourceList_queueControlUpgradeSync, _DadsResourceList_syncControlStateFlags, _DadsResourceList_isControlChecked, _DadsResourceList_isControlDisabled, _DadsResourceList_syncBodyMode, _DadsResourceList_syncBodyLinkAttributes, _DadsResourceList_syncInteractionFlags, _DadsResourceList_syncActionStateFlags, _DadsResourceList_resolvePrimaryActionElement, _DadsResourceList_resolvePrimaryActionElementFromSlot, _DadsResourceList_isActionDisabled, _DadsResourceList_hasMeaningfulSlotContent, _DadsResourceList_isWholeControlInteraction, _DadsResourceList_isInlineControlInteraction, _DadsResourceList_isControlRegionClick, _DadsResourceList_isContentsRegionClick, _DadsResourceList_isSlottedContentsClick, _DadsResourceList_isWholeDelegatedLinkInteraction, _DadsResourceList_getHostHref, _DadsResourceList_syncPrimaryTitleLink, _DadsResourceList_resolvePrimaryTitleLink, _DadsResourceList_resolvePrimaryTitleLinkFromSlot, _DadsResourceList_resolvePrimaryTitleLinkFromElement, _DadsResourceList_isUsablePrimaryTitleLink, _DadsResourceList_syncPrimaryFocusFlag, _DadsResourceList_activatePrimaryTitleLink, _DadsResourceList_activateControl, _DadsResourceList_handleControlStateChange, _DadsResourceList_handleFocusStateChange, _DadsResourceList_handleBodyClick, _DadsResourceList_handleHostClick, _DadsResourceList_syncRelatedRadioRows, _DadsResourceList_queueControlStateSync, _DadsResourceList_resolveRadioControlGroup, _DadsResourceList_isSameRadioControlGroup, _DadsResourceList_resolveRadioControlName;
 import { html, PropertyAttr, BooleanAttr, } from '../../core/web-components.js';
 import { TypographyWebComponent } from '../../core/typography/typography-web-component.js';
 import { applyDADSTokens } from '../../styles/design-tokens/index.js';
@@ -60,18 +60,6 @@ function isMeaningfulNode(node) {
 }
 function isInteractiveElement(node) {
     return Boolean(node.closest('a,button,input,select,textarea,label,summary,[contenteditable="true"]'));
-}
-function shouldCancelControlActivationFromNode(node, options) {
-    const { boundControlInput, boundControlHost, allowLabelClick = false } = options;
-    if (node === boundControlInput)
-        return true;
-    if (boundControlHost && node !== boundControlHost && boundControlHost.contains(node))
-        return true;
-    if (!isInteractiveElement(node))
-        return false;
-    if (allowLabelClick && node.tagName.toLowerCase() === 'label')
-        return false;
-    return true;
 }
 /**
  * リソースリストコンポーネント
@@ -164,10 +152,11 @@ export class DadsResourceList extends TypographyWebComponent {
                 for (const node of path) {
                     if (!(node instanceof Element))
                         continue;
-                    if (shouldCancelControlActivationFromNode(node, {
-                        boundControlInput: __classPrivateFieldGet(this, _DadsResourceList_boundControlInput, "f"),
-                        boundControlHost: __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f"),
-                    }))
+                    if (node === __classPrivateFieldGet(this, _DadsResourceList_boundControlInput, "f") || node === __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f"))
+                        return;
+                    if (__classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f") && __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f").contains(node))
+                        return;
+                    if (isInteractiveElement(node))
                         return;
                 }
                 event.preventDefault();
@@ -185,12 +174,15 @@ export class DadsResourceList extends TypographyWebComponent {
                 for (const node of path) {
                     if (!(node instanceof Element))
                         continue;
-                    if (shouldCancelControlActivationFromNode(node, {
-                        boundControlInput: __classPrivateFieldGet(this, _DadsResourceList_boundControlInput, "f"),
-                        boundControlHost: __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f"),
-                        allowLabelClick: isContentsRegion,
-                    }))
+                    if (node === __classPrivateFieldGet(this, _DadsResourceList_boundControlInput, "f") || node === __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f"))
                         return;
+                    if (__classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f") && __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f").contains(node))
+                        return;
+                    if (isInteractiveElement(node)) {
+                        if (isContentsRegion && node.tagName.toLowerCase() === 'label')
+                            continue;
+                        return;
+                    }
                 }
                 event.preventDefault();
                 __classPrivateFieldGet(this, _DadsResourceList_instances, "m", _DadsResourceList_activateControl).call(this);
@@ -223,19 +215,20 @@ export class DadsResourceList extends TypographyWebComponent {
             const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
             if (path.some((node) => node === __classPrivateFieldGet(this, _DadsResourceList_body, "f")))
                 return;
-            const isSlottedControl = __classPrivateFieldGet(this, _DadsResourceList_instances, "m", _DadsResourceList_isSlottedControlClick).call(this, path);
-            const isSlottedContents = __classPrivateFieldGet(this, _DadsResourceList_instances, "m", _DadsResourceList_isSlottedContentsClick).call(this, path);
-            if (!isSlottedControl && !isSlottedContents)
+            if (!__classPrivateFieldGet(this, _DadsResourceList_instances, "m", _DadsResourceList_isSlottedContentsClick).call(this, path))
                 return;
             for (const node of path) {
                 if (!(node instanceof Element))
                     continue;
-                if (shouldCancelControlActivationFromNode(node, {
-                    boundControlInput: __classPrivateFieldGet(this, _DadsResourceList_boundControlInput, "f"),
-                    boundControlHost: __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f"),
-                    allowLabelClick: isSlottedContents,
-                }))
+                if (node === __classPrivateFieldGet(this, _DadsResourceList_boundControlInput, "f") || node === __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f"))
                     return;
+                if (__classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f") && __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f").contains(node))
+                    return;
+                if (isInteractiveElement(node)) {
+                    if (node.tagName.toLowerCase() === 'label')
+                        continue;
+                    return;
+                }
             }
             event.preventDefault();
             __classPrivateFieldGet(this, _DadsResourceList_instances, "m", _DadsResourceList_activateControl).call(this);
@@ -743,25 +736,6 @@ _a = DadsResourceList, _DadsResourceList_body = new WeakMap(), _DadsResourceList
             return true;
     }
     return false;
-}, _DadsResourceList_isSlottedControlClick = function _DadsResourceList_isSlottedControlClick(path) {
-    for (const node of path) {
-        if (!(node instanceof Element))
-            continue;
-        if (node === __classPrivateFieldGet(this, _DadsResourceList_boundControlHost, "f"))
-            return true;
-        const slotName = node.getAttribute('slot');
-        if (slotName === 'control' && this.contains(node))
-            return true;
-        if (!(node instanceof HTMLElement))
-            continue;
-        const slottedAncestor = node.closest('[slot]');
-        if (!slottedAncestor)
-            continue;
-        if (slottedAncestor.getAttribute('slot') === 'control' && this.contains(slottedAncestor)) {
-            return true;
-        }
-    }
-    return false;
 }, _DadsResourceList_isWholeDelegatedLinkInteraction = function _DadsResourceList_isWholeDelegatedLinkInteraction() {
     return (normalizeInteraction(this.getAttribute('data-interaction')) === 'whole' &&
         !this.hasAttribute('data-has-control') &&
@@ -839,22 +813,6 @@ _a = DadsResourceList, _DadsResourceList_body = new WeakMap(), _DadsResourceList
     if (shadowInput instanceof HTMLInputElement && !shadowInput.disabled) {
         shadowInput.click();
         shadowInput.focus();
-        __classPrivateFieldGet(this, _DadsResourceList_instances, "m", _DadsResourceList_queueControlStateSync).call(this);
-        return;
-    }
-    const tagName = host.tagName.toLowerCase();
-    const hostControl = host;
-    if ((tagName === 'dads-checkbox' || tagName === 'dads-radio') &&
-        typeof hostControl.checked === 'boolean' &&
-        hostControl.disabled !== true) {
-        const nextChecked = tagName === 'dads-radio' ? true : !hostControl.checked;
-        hostControl.checked = nextChecked;
-        host.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
-        host.dispatchEvent(new CustomEvent('dads-change', {
-            detail: { checked: nextChecked },
-            bubbles: true,
-            composed: true,
-        }));
         __classPrivateFieldGet(this, _DadsResourceList_instances, "m", _DadsResourceList_queueControlStateSync).call(this);
         return;
     }

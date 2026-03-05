@@ -303,7 +303,7 @@ describe('DadsResourceList - 基本', () => {
     expect(element.hasAttribute('data-selected')).toBe(true);
   });
 
-  it('inline + dads-checkbox で control host クリック時に control を切り替える', async () => {
+  it('inline + dads-checkbox でタイトルクリック時に checked/data-selected が立つ', async () => {
     const { defineDefaultResourceList } = await import('./resource-list-define.js');
     const { defineDefaultCheckbox } = await import('../checkbox/checkbox-define.js');
     defineDefaultResourceList();
@@ -312,17 +312,47 @@ describe('DadsResourceList - 基本', () => {
     element = renderWebComponent(`
       <dads-resource-list data-interaction="inline">
         <dads-checkbox slot="control" aria-label="行を選択"></dads-checkbox>
-        <span slot="title">タイトル</span>
+        <span slot="title">デジ山 ひかり</span>
       </dads-resource-list>
     `);
     await waitForCustomElement(element);
     await waitTick();
 
+    const title = element.querySelector('[slot="title"]') as HTMLElement | null;
     const control = element.querySelector('dads-checkbox') as HTMLElement | null;
+    expect(title).toBeInTheDocument();
     expect(control).toBeInTheDocument();
-    if (!control) return;
+    if (!title || !control) return;
 
-    control.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    title.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await waitTick();
+
+    expect((control as unknown as { checked?: boolean }).checked).toBe(true);
+    expect(element.hasAttribute('data-selected')).toBe(true);
+  });
+
+  it('inline + dads-radio でタイトルクリック時に checked/data-selected が立つ', async () => {
+    const { defineDefaultResourceList } = await import('./resource-list-define.js');
+    const { defineDefaultRadio } = await import('../radio/radio-define.js');
+    defineDefaultResourceList();
+    defineDefaultRadio();
+
+    element = renderWebComponent(`
+      <dads-resource-list data-interaction="inline">
+        <dads-radio slot="control" name="inline-radio-test" aria-label="行を選択"></dads-radio>
+        <span slot="title">デジ山 ひかり</span>
+      </dads-resource-list>
+    `);
+    await waitForCustomElement(element);
+    await waitTick();
+
+    const title = element.querySelector('[slot="title"]') as HTMLElement | null;
+    const control = element.querySelector('dads-radio') as HTMLElement | null;
+    expect(title).toBeInTheDocument();
+    expect(control).toBeInTheDocument();
+    if (!title || !control) return;
+
+    title.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
     await waitTick();
 
     expect((control as unknown as { checked?: boolean }).checked).toBe(true);
