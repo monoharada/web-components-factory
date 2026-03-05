@@ -691,12 +691,12 @@ describe('DadsTab', () => {
       const tablist = getShadowElement(tab, '[role="tablist"]');
 
       tab.setAttribute('aria-label', '初期ラベル');
-      // MutationObserver は非同期なので待つ
-      await new Promise((r) => setTimeout(r, 50));
+      // MutationObserver は非同期なので待つ（CI環境では50msでは不足する場合がある）
+      await new Promise((r) => setTimeout(r, 200));
       expect(tablist?.getAttribute('aria-label')).toBe('初期ラベル');
 
       tab.setAttribute('aria-label', '変更後ラベル');
-      await new Promise((r) => setTimeout(r, 50));
+      await new Promise((r) => setTimeout(r, 200));
       expect(tablist?.getAttribute('aria-label')).toBe('変更後ラベル');
     });
   });
