@@ -549,58 +549,33 @@ function ruleSID01(skillsRegistry) {
 // ---------------------------------------------------------------------------
 
 /**
- * TKN01 - Token source file existence check.
- * Verify packages/styles/tokens.ts exists on disk.
+ * Generic file-existence check rule.
+ * @param {string} ruleId
+ * @param {string} relativePath - Repo-relative path to check
+ * @param {string} message - User-facing drift description
  */
-async function ruleTKN01() {
+async function fileExistenceRule(ruleId, relativePath, message) {
   const drifts = [];
   const suggestions = [];
-  const filePath = resolve(REPO_ROOT, 'packages', 'styles', 'tokens.ts');
+  const filePath = resolve(REPO_ROOT, ...relativePath.split('/'));
   try {
     await access(filePath);
   } catch {
-    const d = createDrift(
-      'TKN01',
-      'HIGH',
-      'filesystem',
-      'packages/styles/tokens.ts',
-      'Token source file "packages/styles/tokens.ts" is missing',
-      { expected: filePath },
-    );
+    const d = createDrift(ruleId, 'HIGH', 'filesystem', relativePath, message, { expected: filePath });
     drifts.push(d);
-    suggestions.push(
-      createSuggestion(d.id, 'add', 'Create or restore packages/styles/tokens.ts', 'packages/styles/tokens.ts'),
-    );
+    suggestions.push(createSuggestion(d.id, 'add', `Create or restore ${relativePath}`, relativePath));
   }
   return { drifts, suggestions };
 }
 
-/**
- * TKN02 - Spacing tokens source file existence check.
- * Verify packages/styles/spacing-tokens.ts exists on disk.
- * tokens.ts imports spacing-tokens.ts, so its absence causes build errors.
- */
-async function ruleTKN02() {
-  const drifts = [];
-  const suggestions = [];
-  const filePath = resolve(REPO_ROOT, 'packages', 'styles', 'spacing-tokens.ts');
-  try {
-    await access(filePath);
-  } catch {
-    const d = createDrift(
-      'TKN02',
-      'HIGH',
-      'filesystem',
-      'packages/styles/spacing-tokens.ts',
-      'Spacing tokens source file "packages/styles/spacing-tokens.ts" is missing — tokens.ts depends on it',
-      { expected: filePath },
-    );
-    drifts.push(d);
-    suggestions.push(
-      createSuggestion(d.id, 'add', 'Create or restore packages/styles/spacing-tokens.ts', 'packages/styles/spacing-tokens.ts'),
-    );
-  }
-  return { drifts, suggestions };
+/** TKN01 - Token source file existence check. */
+function ruleTKN01() {
+  return fileExistenceRule('TKN01', 'packages/styles/tokens.ts', 'Token source file "packages/styles/tokens.ts" is missing');
+}
+
+/** TKN02 - Spacing tokens source file existence check. */
+function ruleTKN02() {
+  return fileExistenceRule('TKN02', 'packages/styles/spacing-tokens.ts', 'Spacing tokens source file "packages/styles/spacing-tokens.ts" is missing — tokens.ts depends on it');
 }
 
 // ---------------------------------------------------------------------------
@@ -706,9 +681,11 @@ async function checkDriftHandler(args, { helpers }) {
     runSync('SID01', () => ruleSID01(sr));
   }
 
-  // Token rules
-  await runAsync('TKN01', () => ruleTKN01());
-  await runAsync('TKN02', () => ruleTKN02());
+  // Token rules (independent — run in parallel)
+  await Promise.all([
+    runAsync('TKN01', () => ruleTKN01()),
+    runAsync('TKN02', () => ruleTKN02()),
+  ]);
 
   // -----------------------------------------------------------------------
   // Build output

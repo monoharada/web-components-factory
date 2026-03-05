@@ -3758,27 +3758,32 @@ describe('design-system-skills plugin: get_skill_manifest', () => {
   });
 });
 
+async function setupDsPluginTest(clientName) {
+  const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
+  const created = await createMcpServer(
+    loadBundledJson,
+    async () => import('./validator.mjs'),
+    {
+      loadTextData: loadBundledText,
+      plugins: [dsPlugin],
+    },
+  );
+  const server = created.server;
+  const client = new Client(
+    { name: clientName, version: '0.0.0' },
+    { capabilities: {} },
+  );
+  const [ct, st] = InMemoryTransport.createLinkedPair();
+  await Promise.all([server.connect(st), client.connect(ct)]);
+  return { server, client };
+}
+
 describe('design-system-skills plugin: check_drift', () => {
   let client;
   let server;
 
   beforeAll(async () => {
-    const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
-    const created = await createMcpServer(
-      loadBundledJson,
-      async () => import('./validator.mjs'),
-      {
-        loadTextData: loadBundledText,
-        plugins: [dsPlugin],
-      },
-    );
-    server = created.server;
-    client = new Client(
-      { name: 'ds-drift-test', version: '0.0.0' },
-      { capabilities: {} },
-    );
-    const [ct, st] = InMemoryTransport.createLinkedPair();
-    await Promise.all([server.connect(st), client.connect(ct)]);
+    ({ server, client } = await setupDsPluginTest('ds-drift-test'));
   });
 
   afterAll(async () => {
@@ -3897,22 +3902,7 @@ describe('design-system-skills plugin: do_dont section extraction', () => {
   let server;
 
   beforeAll(async () => {
-    const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
-    const created = await createMcpServer(
-      loadBundledJson,
-      async () => import('./validator.mjs'),
-      {
-        loadTextData: loadBundledText,
-        plugins: [dsPlugin],
-      },
-    );
-    server = created.server;
-    client = new Client(
-      { name: 'ds-dodont-test', version: '0.0.0' },
-      { capabilities: {} },
-    );
-    const [ct, st] = InMemoryTransport.createLinkedPair();
-    await Promise.all([server.connect(st), client.connect(ct)]);
+    ({ server, client } = await setupDsPluginTest('ds-dodont-test'));
   });
 
   afterAll(async () => {
@@ -3970,22 +3960,7 @@ describe('wcf://skills resource', () => {
   let server;
 
   beforeAll(async () => {
-    const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
-    const created = await createMcpServer(
-      loadBundledJson,
-      async () => import('./validator.mjs'),
-      {
-        loadTextData: loadBundledText,
-        plugins: [dsPlugin],
-      },
-    );
-    server = created.server;
-    client = new Client(
-      { name: 'ds-resource-test', version: '0.0.0' },
-      { capabilities: {} },
-    );
-    const [ct, st] = InMemoryTransport.createLinkedPair();
-    await Promise.all([server.connect(st), client.connect(ct)]);
+    ({ server, client } = await setupDsPluginTest('ds-resource-test'));
   });
 
   afterAll(async () => {

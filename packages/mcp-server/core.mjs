@@ -155,6 +155,21 @@ export const WCF_RESOURCE_URIS = Object.freeze({
   skills: 'wcf://skills',
 });
 
+/** Normalize a skill entry to summary fields (omit compat/manifest for wcf://skills). */
+function normalizeSkillSummary(s) {
+  return {
+    name: s.name,
+    description: s.description ?? '',
+    status: s.status ?? 'active',
+    path: s.path ?? '',
+    entry: s.entry ?? 'SKILL.md',
+    clients: Array.isArray(s.clients) ? s.clients : [],
+    tags: Array.isArray(s.tags) ? s.tags : [],
+    version: typeof s.version === 'string' ? s.version : '0.0.0',
+    dependencies: Array.isArray(s.dependencies) ? s.dependencies : [],
+  };
+}
+
 // Unidirectional synonym table: key → expands to include these terms (DIG-09)
 // Searching "keyboard" also matches "focus", "tab" etc. but NOT reverse.
 const SYNONYM_TABLE = new Map([
@@ -2171,20 +2186,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       if (!registry || !Array.isArray(registry.skills)) {
         throw new Error('SKILLS_REGISTRY_UNAVAILABLE: skills-registry.json is not available.');
       }
-      const skills = registry.skills.map((s) => {
-        // Inline normalization (summary fields only, omit compat/manifest)
-        return {
-          name: s.name,
-          description: s.description ?? '',
-          status: s.status ?? 'active',
-          path: s.path ?? '',
-          entry: s.entry ?? 'SKILL.md',
-          clients: Array.isArray(s.clients) ? s.clients : [],
-          tags: Array.isArray(s.tags) ? s.tags : [],
-          version: typeof s.version === 'string' ? s.version : '0.0.0',
-          dependencies: Array.isArray(s.dependencies) ? s.dependencies : [],
-        };
-      });
+      const skills = registry.skills.map(normalizeSkillSummary);
       return {
         contents: [{
           uri: WCF_RESOURCE_URIS.skills,
