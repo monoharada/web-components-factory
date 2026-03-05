@@ -8,7 +8,6 @@
 
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { loadRegistry, normalizeSkillEntry } from './plugins/design-system-skills/shared.mjs';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -2168,13 +2167,23 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       mimeType: 'application/json',
     },
     async () => {
-      const registry = await loadRegistry();
+      const registry = await loadJsonData('skills-registry.json');
       if (!registry || !Array.isArray(registry.skills)) {
         throw new Error('SKILLS_REGISTRY_UNAVAILABLE: skills-registry.json is not available.');
       }
       const skills = registry.skills.map((s) => {
-        const { compat, manifest, ...summary } = normalizeSkillEntry(s);
-        return summary;
+        // Inline normalization (summary fields only, omit compat/manifest)
+        return {
+          name: s.name,
+          description: s.description ?? '',
+          status: s.status ?? 'active',
+          path: s.path ?? '',
+          entry: s.entry ?? 'SKILL.md',
+          clients: Array.isArray(s.clients) ? s.clients : [],
+          tags: Array.isArray(s.tags) ? s.tags : [],
+          version: typeof s.version === 'string' ? s.version : '0.0.0',
+          dependencies: Array.isArray(s.dependencies) ? s.dependencies : [],
+        };
       });
       return {
         contents: [{

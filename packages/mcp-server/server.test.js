@@ -82,6 +82,7 @@ const REPO_FILE_MAP = {
   'design-tokens.json': 'design-tokens.json',
   'guidelines-index.json': 'guidelines-index.json',
   'llms-full.txt': 'llms-full.txt',
+  'skills-registry.json': 'registry/skills-registry.json',
 };
 
 async function loadBundledJson(fileName) {
@@ -3885,7 +3886,7 @@ describe('design-system-skills plugin: check_drift', () => {
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
     expect(payload.meta.scope).toBe('audit');
     expect(payload.meta.rulesExecuted.length).toBe(10);
-    for (const ruleId of ['CIR01', 'CIT01', 'IRD01', 'IRT01', 'SIR01', 'SID01', 'TKN01', 'TKN02']) {
+    for (const ruleId of ['CIR01', 'CIT01', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'SIR01', 'SID01', 'TKN01', 'TKN02']) {
       expect(payload.meta.rulesExecuted).toContain(ruleId);
     }
   });

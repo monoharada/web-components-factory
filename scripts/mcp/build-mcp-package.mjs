@@ -41,6 +41,10 @@ const FILES = [
     src: path.join(ROOT, 'llms-full.txt'),
     dest: path.join(MCP_DATA_DIR, 'llms-full.txt'),
   },
+  {
+    src: path.join(ROOT, 'registry/skills-registry.json'),
+    dest: path.join(MCP_DATA_DIR, 'skills-registry.json'),
+  },
 ];
 
 // Generated data files — checked for existence only (not copied from elsewhere)

@@ -183,7 +183,7 @@ styles: withReset([
 
 - **Use `::part()` for Shadow DOM styling** — Expose customization points via part attributes, not classes.
   ```css
-  my-component::part(base) { background: var(--dads-component-bg); }
+  my-component::part(base) { background: var(--dads-button-background); }
   ```
 - **Use `@layer` for specificity management** — Organize styles into layers instead of increasing specificity.
   ```css
