@@ -5083,9 +5083,9 @@ Requires: `heading`, `fieldset`, `input-text`, `select`, `textarea`, `button`
   <form id="application-form-single">
     <dads-fieldset>
       <legend>申請情報</legend>
-      <dads-input-text name="name" required error error-text="氏名は必須です"></dads-input-text>
-      <dads-select name="type" required></dads-select>
-      <dads-textarea name="reason" required></dads-textarea>
+      <dads-input-text label="氏名" name="name" required error error-text="氏名は必須です"></dads-input-text>
+      <dads-select label="種別" name="type" required></dads-select>
+      <dads-textarea label="理由" name="reason" required></dads-textarea>
     </dads-fieldset>
     <dads-button type="submit">送信</dads-button>
   </form>
@@ -5105,7 +5105,7 @@ Requires: `heading`, `step-navigation`, `fieldset`, `input-text`, `button`
   <form id="application-form-step">
     <dads-fieldset>
       <legend>ステップ1: 申請者情報</legend>
-      <dads-input-text name="name" required error error-text="氏名は必須です"></dads-input-text>
+      <dads-input-text label="氏名" name="name" required error error-text="氏名は必須です"></dads-input-text>
     </dads-fieldset>
     <dads-button type="submit">次へ</dads-button>
   </form>
@@ -5184,9 +5184,9 @@ Requires: `device-mock`, `heading`, `fieldset`, `input-text`, `select`, `textare
       <form>
         <dads-fieldset>
           <legend>基本情報</legend>
-          <dads-input-text name="name" required></dads-input-text>
-          <dads-select name="type" required></dads-select>
-          <dads-textarea name="detail" required></dads-textarea>
+          <dads-input-text label="氏名" name="name" required></dads-input-text>
+          <dads-select label="種別" name="type" required></dads-select>
+          <dads-textarea label="詳細" name="detail" required></dads-textarea>
         </dads-fieldset>
         <dads-button type="submit">確認へ進む</dads-button>
       </form>

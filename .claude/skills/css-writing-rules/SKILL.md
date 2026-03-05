@@ -176,3 +176,44 @@ styles: withReset([
 
 - [monosus CSS Coding Guidelines](https://coding-guidelines.pages.dev/05-coding-style/03-css/)
 - [monosus Naming Rules](https://coding-guidelines.pages.dev/07-naming-rules/)
+
+## Do / Don't
+
+### Do
+
+- **Use `::part()` for Shadow DOM styling** — Expose customization points via part attributes, not classes.
+  ```css
+  my-component::part(base) { background: var(--dads-button-background); }
+  ```
+- **Use `@layer` for specificity management** — Organize styles into layers instead of increasing specificity.
+  ```css
+  @layer base, variants, states;
+  ```
+- **Use design tokens for all values** — Reference `var(--color-*)`, `var(--spacing-*)` instead of hardcoded values.
+  ```css
+  padding: var(--spacing-4) var(--spacing-5);
+  color: var(--color-neutral-black);
+  ```
+- **Use HTML attributes for state** — Style based on `[open]`, `[aria-expanded="true"]`, not `.is-open`.
+  ```css
+  :host([disabled]) { opacity: 0.5; }
+  ```
+
+### Don't
+
+- **Use `!important`** — Manage specificity with `@layer` instead. `!important` breaks the cascade.
+  ```css
+  /* NG */ color: red !important;
+  /* OK */ @layer states { :host([error]) { --color: var(--color-error); } }
+  ```
+- **Use CSS classes in Shadow DOM** — Classes leak implementation details. Use `part` attributes.
+  ```css
+  /* NG */ .accordion-header { ... }
+  /* OK */ [part="header"] { ... }
+  ```
+- **Hardcode color or spacing values** — Always use token variables.
+  ```css
+  /* NG */ padding: 16px; color: #333;
+  /* OK */ padding: var(--spacing-4); color: var(--color-text-body);
+  ```
+- **Create div soup wrappers** — Minimize DOM depth. Use semantic elements with part attributes.

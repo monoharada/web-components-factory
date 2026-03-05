@@ -82,6 +82,7 @@ const REPO_FILE_MAP = {
   'design-tokens.json': 'design-tokens.json',
   'guidelines-index.json': 'guidelines-index.json',
   'llms-full.txt': 'llms-full.txt',
+  'skills-registry.json': 'registry/skills-registry.json',
 };
 
 async function loadBundledJson(fileName) {
@@ -757,6 +758,7 @@ describe('MCP prompts/resources contract', () => {
     expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.tokens)).toBe(true);
     expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.guidelinesTemplate)).toBe(true);
     expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.llmsFull)).toBe(true);
+    expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.skills)).toBe(true);
   });
 
   it('exposes static resources and guidelines template resources', async () => {
@@ -3756,27 +3758,32 @@ describe('design-system-skills plugin: get_skill_manifest', () => {
   });
 });
 
+async function setupDsPluginTest(clientName) {
+  const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
+  const created = await createMcpServer(
+    loadBundledJson,
+    async () => import('./validator.mjs'),
+    {
+      loadTextData: loadBundledText,
+      plugins: [dsPlugin],
+    },
+  );
+  const server = created.server;
+  const client = new Client(
+    { name: clientName, version: '0.0.0' },
+    { capabilities: {} },
+  );
+  const [ct, st] = InMemoryTransport.createLinkedPair();
+  await Promise.all([server.connect(st), client.connect(ct)]);
+  return { server, client };
+}
+
 describe('design-system-skills plugin: check_drift', () => {
   let client;
   let server;
 
   beforeAll(async () => {
-    const dsPlugin = (await import('./plugins/design-system-skills/index.mjs')).default;
-    const created = await createMcpServer(
-      loadBundledJson,
-      async () => import('./validator.mjs'),
-      {
-        loadTextData: loadBundledText,
-        plugins: [dsPlugin],
-      },
-    );
-    server = created.server;
-    client = new Client(
-      { name: 'ds-drift-test', version: '0.0.0' },
-      { capabilities: {} },
-    );
-    const [ct, st] = InMemoryTransport.createLinkedPair();
-    await Promise.all([server.connect(st), client.connect(ct)]);
+    ({ server, client } = await setupDsPluginTest('ds-drift-test'));
   });
 
   afterAll(async () => {
@@ -3800,7 +3807,7 @@ describe('design-system-skills plugin: check_drift', () => {
     expect(payload.meta.phase).toBe(1);
     expect(payload.meta.scope).toBe('all');
     expect(Array.isArray(payload.meta.rulesExecuted)).toBe(true);
-    expect(payload.meta.rulesExecuted.length).toBe(12);
+    expect(payload.meta.rulesExecuted.length).toBe(14);
   });
 
   it('limits rules for scope=cem', async () => {
@@ -3864,13 +3871,114 @@ describe('design-system-skills plugin: check_drift', () => {
     }
   });
 
-  it('returns empty drifts for scope=tokens (no Phase 1 rules)', async () => {
+  it('executes TKN01 and TKN02 for scope=tokens', async () => {
     const result = await client.callTool({
       name: 'check_drift',
       arguments: { scope: 'tokens' },
     });
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
-    expect(payload.drifts.length).toBe(0);
-    expect(payload.meta.rulesExecuted.length).toBe(0);
+    expect(payload.meta.scope).toBe('tokens');
+    expect(payload.meta.rulesExecuted.length).toBe(2);
+    expect(payload.meta.rulesExecuted).toContain('TKN01');
+    expect(payload.meta.rulesExecuted).toContain('TKN02');
+  });
+
+  it('executes HIGH severity rules for scope=audit', async () => {
+    const result = await client.callTool({
+      name: 'check_drift',
+      arguments: { scope: 'audit' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.meta.scope).toBe('audit');
+    expect(payload.meta.rulesExecuted.length).toBe(10);
+    for (const ruleId of ['CIR01', 'CIT01', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'SIR01', 'SID01', 'TKN01', 'TKN02']) {
+      expect(payload.meta.rulesExecuted).toContain(ruleId);
+    }
+  });
+});
+
+describe('design-system-skills plugin: do_dont section extraction', () => {
+  let client;
+  let server;
+
+  beforeAll(async () => {
+    ({ server, client } = await setupDsPluginTest('ds-dodont-test'));
+  });
+
+  afterAll(async () => {
+    await Promise.allSettled([client?.close?.(), server?.close?.()]);
+  });
+
+  it('extracts do_dont section from css-writing-rules', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'css-writing-rules', section: 'do_dont' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(typeof payload.section_content).toBe('string');
+    expect(payload.section_content.length).toBeGreaterThan(0);
+    expect(payload.section_content).toContain('Do');
+  });
+
+  it('extracts do_dont section from component-design-study', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'component-design-study', section: 'do_dont' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(typeof payload.section_content).toBe('string');
+    expect(payload.section_content.length).toBeGreaterThan(0);
+  });
+
+  it('extracts do_dont section from headless-component-design', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'headless-component-design', section: 'do_dont' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(typeof payload.section_content).toBe('string');
+    expect(payload.section_content.length).toBeGreaterThan(0);
+  });
+
+  it('extracts do_dont section from wcf-validate', async () => {
+    const result = await client.callTool({
+      name: 'get_skill_manifest',
+      arguments: { skill_id: 'wcf-validate', section: 'do_dont' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(typeof payload.section_content).toBe('string');
+    expect(payload.section_content.length).toBeGreaterThan(0);
+  });
+});
+
+describe('wcf://skills resource', () => {
+  let client;
+  let server;
+
+  beforeAll(async () => {
+    ({ server, client } = await setupDsPluginTest('ds-resource-test'));
+  });
+
+  afterAll(async () => {
+    await Promise.allSettled([client?.close?.(), server?.close?.()]);
+  });
+
+  it('returns skills catalog with 8 entries', async () => {
+    const result = await client.readResource({ uri: 'wcf://skills' });
+    expect(result.contents).toBeDefined();
+    expect(result.contents.length).toBe(1);
+    const payload = JSON.parse(String(result.contents[0].text));
+    expect(payload.schemaVersion).toBe(2);
+    expect(payload.total).toBe(8);
+    expect(Array.isArray(payload.skills)).toBe(true);
+    expect(payload.skills.length).toBe(8);
+    for (const s of payload.skills) {
+      expect(typeof s.name).toBe('string');
+      expect(typeof s.description).toBe('string');
+    }
   });
 });

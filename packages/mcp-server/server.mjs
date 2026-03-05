@@ -25,6 +25,7 @@ const REPO_FILE_MAP = {
   'design-tokens.json': 'design-tokens.json',
   'guidelines-index.json': 'guidelines-index.json',
   'llms-full.txt': 'llms-full.txt',
+  'skills-registry.json': 'registry/skills-registry.json',
 };
 export const DEFAULT_WCF_MCP_CONFIG = 'wcf-mcp.config.json';
 

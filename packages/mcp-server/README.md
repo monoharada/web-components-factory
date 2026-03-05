@@ -78,7 +78,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 }
 ```
 
-## 提供機能（16 tools + 1 prompt + 4 resources）
+## 提供機能（16 tools + 1 prompt + 5 resources）
 
 ### ガードレール
 
@@ -242,6 +242,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | `wcf://tokens` | トークン summary（type/category/themes/sample） |
 | `wcf://guidelines/{topic}` | topic 別ガイドライン要約（`accessibility`,`css`,`patterns`,`all`） |
 | `wcf://llms-full` | `llms-full.txt` の全文 |
+| `wcf://skills` | 登録済み Claude Code / Cursor / Codex スキルカタログ（skills-registry.json ベース） |
 
 ### Figma MCP との併用
 

@@ -152,7 +152,23 @@ export const WCF_RESOURCE_URIS = Object.freeze({
   tokens: 'wcf://tokens',
   guidelinesTemplate: 'wcf://guidelines/{topic}',
   llmsFull: 'wcf://llms-full',
+  skills: 'wcf://skills',
 });
+
+/** Normalize a skill entry to summary fields (omit compat/manifest for wcf://skills). */
+function normalizeSkillSummary(s) {
+  return {
+    name: s.name,
+    description: s.description ?? '',
+    status: s.status ?? 'active',
+    path: s.path ?? '',
+    entry: s.entry ?? 'SKILL.md',
+    clients: Array.isArray(s.clients) ? s.clients : [],
+    tags: Array.isArray(s.tags) ? s.tags : [],
+    version: typeof s.version === 'string' ? s.version : '0.0.0',
+    dependencies: Array.isArray(s.dependencies) ? s.dependencies : [],
+  };
+}
 
 // Unidirectional synonym table: key → expands to include these terms (DIG-09)
 // Searching "keyboard" also matches "focus", "tab" etc. but NOT reverse.
@@ -2155,6 +2171,33 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   );
 
   // -----------------------------------------------------------------------
+  // Resource: wcf://skills
+  // -----------------------------------------------------------------------
+  server.registerResource(
+    'wcf_skills',
+    WCF_RESOURCE_URIS.skills,
+    {
+      title: 'WCF Skills Catalog',
+      description: 'Registered Claude Code / Cursor / Codex skills from skills-registry.json.',
+      mimeType: 'application/json',
+    },
+    async () => {
+      const registry = await loadJsonData('skills-registry.json');
+      if (!registry || !Array.isArray(registry.skills)) {
+        throw new Error('SKILLS_REGISTRY_UNAVAILABLE: skills-registry.json is not available.');
+      }
+      const skills = registry.skills.map(normalizeSkillSummary);
+      return {
+        contents: [{
+          uri: WCF_RESOURCE_URIS.skills,
+          mimeType: 'application/json',
+          text: JSON.stringify({ schemaVersion: registry.schemaVersion ?? 2, total: skills.length, skills }, null, 2),
+        }],
+      };
+    },
+  );
+
+  // -----------------------------------------------------------------------
   // Tool: get_design_system_overview
   // -----------------------------------------------------------------------
   server.registerTool(
@@ -2248,6 +2291,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
           {
             uri: WCF_RESOURCE_URIS.llmsFull,
             purpose: 'Full LLM reference text for WCF',
+          },
+          {
+            uri: WCF_RESOURCE_URIS.skills,
+            purpose: 'Skills catalog snapshot',
           },
         ],
         availableTools: [

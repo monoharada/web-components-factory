@@ -545,15 +545,50 @@ function ruleSID01(skillsRegistry) {
 }
 
 // ---------------------------------------------------------------------------
+// Token rules
+// ---------------------------------------------------------------------------
+
+/**
+ * Generic file-existence check rule.
+ * @param {string} ruleId
+ * @param {string} relativePath - Repo-relative path to check
+ * @param {string} message - User-facing drift description
+ */
+async function fileExistenceRule(ruleId, relativePath, message) {
+  const drifts = [];
+  const suggestions = [];
+  const filePath = resolve(REPO_ROOT, ...relativePath.split('/'));
+  try {
+    await access(filePath);
+  } catch {
+    const d = createDrift(ruleId, 'HIGH', 'filesystem', relativePath, message, { expected: filePath });
+    drifts.push(d);
+    suggestions.push(createSuggestion(d.id, 'add', `Create or restore ${relativePath}`, relativePath));
+  }
+  return { drifts, suggestions };
+}
+
+/** TKN01 - Token source file existence check. */
+function ruleTKN01() {
+  return fileExistenceRule('TKN01', 'packages/styles/tokens.ts', 'Token source file "packages/styles/tokens.ts" is missing');
+}
+
+/** TKN02 - Spacing tokens source file existence check. */
+function ruleTKN02() {
+  return fileExistenceRule('TKN02', 'packages/styles/spacing-tokens.ts', 'Spacing tokens source file "packages/styles/spacing-tokens.ts" is missing — tokens.ts depends on it');
+}
+
+// ---------------------------------------------------------------------------
 // Scope mapping
 // ---------------------------------------------------------------------------
 
 const SCOPE_RULES = {
-  all: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'CPT02', 'CPC01', 'SIR01', 'SID01'],
+  all: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'CPT02', 'CPC01', 'SIR01', 'SID01', 'TKN01', 'TKN02'],
   cem: ['CIR01', 'CIR02', 'CIT01', 'CIT02', 'IRD01', 'IRT01'],
   skills: ['SIR01', 'SID01'],
-  tokens: [], // Reserved for future Phase 2
+  tokens: ['TKN01', 'TKN02'],
   patterns: ['CPR01', 'CPT01', 'CPT02', 'CPC01'],
+  audit: ['CIR01', 'CIT01', 'IRD01', 'IRT01', 'CPR01', 'CPT01', 'SIR01', 'SID01', 'TKN01', 'TKN02'],
 };
 
 // ---------------------------------------------------------------------------
@@ -646,6 +681,12 @@ async function checkDriftHandler(args, { helpers }) {
     runSync('SID01', () => ruleSID01(sr));
   }
 
+  // Token rules (independent — run in parallel)
+  await Promise.all([
+    runAsync('TKN01', () => ruleTKN01()),
+    runAsync('TKN02', () => ruleTKN02()),
+  ]);
+
   // -----------------------------------------------------------------------
   // Build output
   // -----------------------------------------------------------------------
@@ -677,7 +718,7 @@ export default {
     {
       name: 'check_drift',
       description:
-        'Check consistency across CEM, install-registry, skills-registry, and pattern-registry. Detects drift (divergence) between data sources. When: before PR, after registry updates, periodic audits. Returns: {drifts[], suggestions[], summary{total,high,medium,low,ignored}, meta{phase,scope,rulesExecuted,timestamp}}. Args: scope? (all|cem|skills|tokens|patterns, default: all). Phase 1: 12 JSON comparison rules.',
+        'Check consistency across CEM, install-registry, skills-registry, pattern-registry, and token source files. Detects drift (divergence) between data sources. When: before PR, after registry updates, periodic audits. Returns: {drifts[], suggestions[], summary{total,high,medium,low,ignored}, meta{phase,scope,rulesExecuted,timestamp}}. Args: scope? (all|cem|skills|tokens|patterns|audit, default: all). 14 rules across 6 scopes. audit scope runs HIGH-severity rules only.',
       inputSchema: {},
       handler: checkDriftHandler,
     },
