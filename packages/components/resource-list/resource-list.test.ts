@@ -303,6 +303,34 @@ describe('DadsResourceList - 基本', () => {
     expect(element.hasAttribute('data-selected')).toBe(true);
   });
 
+  it('inline + dads-checkbox でタイトルクリック時に checked/data-selected が立つ', async () => {
+    const { defineDefaultResourceList } = await import('./resource-list-define.js');
+    const { defineDefaultCheckbox } = await import('../checkbox/checkbox-define.js');
+    defineDefaultResourceList();
+    defineDefaultCheckbox();
+
+    element = renderWebComponent(`
+      <dads-resource-list data-interaction="inline">
+        <dads-checkbox slot="control" aria-label="行を選択"></dads-checkbox>
+        <span slot="title">デジ山 ひかり</span>
+      </dads-resource-list>
+    `);
+    await waitForCustomElement(element);
+    await waitTick();
+
+    const title = element.querySelector('[slot="title"]') as HTMLElement | null;
+    const control = element.querySelector('dads-checkbox') as HTMLElement | null;
+    expect(title).toBeInTheDocument();
+    expect(control).toBeInTheDocument();
+    if (!title || !control) return;
+
+    title.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+    await waitTick();
+
+    expect((control as unknown as { checked?: boolean }).checked).toBe(true);
+    expect(element.hasAttribute('data-selected')).toBe(true);
+  });
+
   it('inline + control でタイトル/サポート領域クリック時に control を切り替える', async () => {
     const { defineDefaultResourceList } = await import('./resource-list-define.js');
     defineDefaultResourceList();
