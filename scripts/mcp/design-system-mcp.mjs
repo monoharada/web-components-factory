@@ -22,6 +22,7 @@ const FILE_MAP = {
   'design-tokens.json': 'packages/mcp-server/data/design-tokens.json',
   'guidelines-index.json': 'packages/mcp-server/data/guidelines-index.json',
   'llms-full.txt': 'llms-full.txt',
+  'skills-registry.json': 'registry/skills-registry.json',
 };
 
 export async function loadJsonData(fileName) {
