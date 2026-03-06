@@ -554,13 +554,13 @@ describe('get_component_api relatedComponents (logic)', () => {
 
 describe('tool descriptions', () => {
   it('get_design_system_overview description contains MUST guardrail', async () => {
-    // Tool descriptions now live in core.mjs
-    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
+    // Tool descriptions now live in core/register.mjs (DD-08)
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core/register.mjs'), 'utf8');
     expect(coreSrc).toContain('MUST be called first');
   });
 
   it('all tools have When/Returns/After guidance in descriptions', async () => {
-    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core/register.mjs'), 'utf8');
 
     // Tools that should have enhanced descriptions
     const toolNames = [
