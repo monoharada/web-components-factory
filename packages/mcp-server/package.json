@@ -10,6 +10,7 @@
     "bin.mjs",
     "core.mjs",
     "server.mjs",
+    "runtime-data.mjs",
     "validator.mjs",
     "data/",
     "examples/",

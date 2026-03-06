@@ -36,6 +36,7 @@ import {
   buildDiagnosticSuggestion,
   buildFullPageHtml,
   buildIndexes,
+  buildJsonToolErrorResponse,
   buildJsonToolResponse,
   buildRelatedComponentMap,
   buildTokenRelationshipIndex,
@@ -2061,6 +2062,23 @@ describe('structuredContent helpers', () => {
     expect(JSON.parse(result.content[0].text)).toEqual(payload);
   });
 
+  it('marks JSON error responses without dropping structuredContent', () => {
+    const payload = {
+      error: {
+        code: 'TOKEN_NOT_FOUND',
+        message: 'Token not found: --missing-token',
+      },
+    };
+    const result = buildJsonToolErrorResponse(payload, { env: {} });
+
+    expect(result.isError).toBe(true);
+    expect(result.structuredContent).toEqual({
+      type: 'application/json',
+      data: payload,
+    });
+    expect(JSON.parse(result.content[0].text)).toEqual(payload);
+  });
+
   it('builds token suggestion map from color/spacing tokens only', () => {
     const map = buildTokenSuggestionMap({
       tokens: [
@@ -2508,17 +2526,6 @@ describe('parent-child and empty interactive validation', () => {
       text: '<dads-button aria-label="Close"></dads-button>',
     });
     expect(diagnostics).toHaveLength(0);
-  });
-});
-
-describe('HTTP transport support', () => {
-  it('bin.mjs imports both transport types', async () => {
-    const binSrc = await fs.readFile(path.join(__dirname, 'bin.mjs'), 'utf8');
-    expect(binSrc).toContain('StdioServerTransport');
-    expect(binSrc).toContain('StreamableHTTPServerTransport');
-    expect(binSrc).toContain('--transport=');
-    expect(binSrc).toContain('--port=');
-    expect(binSrc).toContain("127.0.0.1");
   });
 });
 

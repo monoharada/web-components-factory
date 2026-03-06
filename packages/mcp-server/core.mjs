@@ -396,6 +396,13 @@ export function buildJsonToolResponse(payload, { env = process.env } = {}) {
   return withStructuredContent;
 }
 
+export function buildJsonToolErrorResponse(payload, options) {
+  return {
+    ...buildJsonToolResponse(payload, options),
+    isError: true,
+  };
+}
+
 export function normalizeTokenValue(value) {
   if (typeof value === 'string') return value.trim().toLowerCase().replace(/\s+/g, ' ');
   if (typeof value === 'number') return String(value);
@@ -2462,10 +2469,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         }
         const resultJson = JSON.stringify(results, null, 2);
         if (measureToolResultBytes(resultJson) > MAX_TOOL_RESULT_BYTES) {
-          return {
-            content: [{ type: 'text', text: JSON.stringify({ error: 'Batch result exceeds size limit. Reduce the number of components.' }) }],
-            isError: true,
-          };
+          return buildJsonToolErrorResponse({
+            error: 'Batch result exceeds size limit. Reduce the number of components.',
+          });
         }
         return buildJsonToolResponse(results);
       }
@@ -2830,10 +2836,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     },
     async ({ category, useCase }) => {
       if (!selectorGuideData || !Array.isArray(selectorGuideData.categories)) {
-        return {
-          content: [{ type: 'text', text: JSON.stringify({ error: 'Component selector guide not available.' }) }],
-          isError: true,
-        };
+        return buildJsonToolErrorResponse({
+          error: 'Component selector guide not available.',
+        });
       }
 
       let categories = selectorGuideData.categories;
@@ -3108,10 +3113,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     async ({ type, category, query, theme }) => {
       const { isError, payload } = buildDesignTokensPayload(designTokensData, { type, category, query, theme });
       if (isError) {
-        return {
-          content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
-          isError: true,
-        };
+        return buildJsonToolErrorResponse(payload);
       }
       return buildJsonToolResponse(payload);
     },
@@ -3138,10 +3140,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     async ({ name, theme }) => {
       const { isError, payload } = buildDesignTokenDetailPayload(designTokensData, name, theme);
       if (isError) {
-        return {
-          content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
-          isError: true,
-        };
+        return buildJsonToolErrorResponse(payload);
       }
       // Enrich referencedBy with component tagNames from CEM cssProperties
       const normalizedName = normalizeTokenIdentifier(name);
@@ -3381,19 +3380,13 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
             return buildJsonToolResponse(tool.staticPayload ?? {});
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
-            return {
-              content: [{
-                type: 'text',
-                text: JSON.stringify({
-                  error: {
-                    code: 'PLUGIN_TOOL_RUNTIME_ERROR',
-                    message: `Plugin tool failed (${tool.name}): ${message}`,
-                    plugin: plugin.name,
-                  },
-                }, null, 2),
-              }],
-              isError: true,
-            };
+            return buildJsonToolErrorResponse({
+              error: {
+                code: 'PLUGIN_TOOL_RUNTIME_ERROR',
+                message: `Plugin tool failed (${tool.name}): ${message}`,
+                plugin: plugin.name,
+              },
+            });
           }
         },
       );
