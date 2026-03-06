@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { USAGE, parseArgs } from './bin.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const BIN_PATH = path.join(__dirname, 'bin.mjs');
 
 describe('bin CLI argument parsing', () => {
   it('uses stdio transport by default', () => {
@@ -49,11 +52,32 @@ describe('bin CLI argument parsing', () => {
 
 describe('bin transport wiring', () => {
   it('keeps both transport implementations in the CLI entry', async () => {
-    const binSrc = await fs.readFile(path.join(__dirname, 'bin.mjs'), 'utf8');
+    const binSrc = await fs.readFile(BIN_PATH, 'utf8');
     expect(binSrc).toContain('StdioServerTransport');
     expect(binSrc).toContain('StreamableHTTPServerTransport');
     expect(binSrc).toContain('--transport=');
     expect(binSrc).toContain('--port=');
     expect(binSrc).toContain('127.0.0.1');
+  });
+
+  it('prints help when invoked through a symlinked CLI path', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-mcp-bin-'));
+    const symlinkPath = path.join(tmpDir, 'wcf-mcp');
+
+    try {
+      await fs.symlink(BIN_PATH, symlinkPath, 'file');
+
+      const result = spawnSync(process.execPath, [symlinkPath, '--help'], {
+        encoding: 'utf8',
+        timeout: 10_000,
+      });
+
+      expect(result.status).toBe(0);
+      expect(result.stdout).toContain('Usage:');
+      expect(result.stdout).toContain('wcf-mcp --help');
+      expect(result.stderr).toBe('');
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
   });
 });

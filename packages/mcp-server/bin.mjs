@@ -9,8 +9,9 @@
  */
 
 import { createServer } from './server.mjs';
+import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 export const USAGE = [
@@ -95,7 +96,17 @@ export function parseArgs(argv) {
 function isDirectRun(metaUrl = import.meta.url, argv = process.argv) {
   const entryPath = argv[1];
   if (!entryPath) return false;
-  return pathToFileURL(path.resolve(entryPath)).href === metaUrl;
+
+  const resolveFilePath = (value) => {
+    const resolvedPath = path.resolve(value);
+    try {
+      return fs.realpathSync.native?.(resolvedPath) ?? fs.realpathSync(resolvedPath);
+    } catch {
+      return resolvedPath;
+    }
+  };
+
+  return resolveFilePath(entryPath) === resolveFilePath(fileURLToPath(metaUrl));
 }
 
 async function main() {
