@@ -12,6 +12,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { loadJsonDataWithFallback, loadTextDataWithFallback } from './runtime-data.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -74,33 +75,13 @@ import { loadWcfMcpRuntimeConfig } from './server.mjs';
 // Load data the same way the server does
 // ---------------------------------------------------------------------------
 
-const REPO_FILE_MAP = {
-  'custom-elements.json': 'custom-elements.json',
-  'install-registry.json': 'registry/install-registry.json',
-  'pattern-registry.json': 'registry/pattern-registry.json',
-  'component-selector-guide.json': 'registry/component-selector-guide.json',
-  'design-tokens.json': 'design-tokens.json',
-  'guidelines-index.json': 'guidelines-index.json',
-  'llms-full.txt': 'llms-full.txt',
-  'skills-registry.json': 'registry/skills-registry.json',
-};
+const REPO_ROOT = path.resolve(__dirname, '../..');
 
 async function loadBundledJson(fileName) {
-  const bundled = path.join(__dirname, 'data', fileName);
-  const repoRoot = path.resolve(__dirname, '../..');
-  const repoRelative = REPO_FILE_MAP[fileName];
-  const repo = repoRelative ? path.join(repoRoot, repoRelative) : undefined;
-
-  for (const p of [bundled, repo]) {
-    if (!p) continue;
-    try {
-      const text = await fs.readFile(p, 'utf8');
-      return JSON.parse(text);
-    } catch {
-      // Try next path
-    }
-  }
-  throw new Error(`Data file not found: ${fileName} (tried data/ and repo root)`);
+  return loadJsonDataWithFallback(fileName, {
+    bundledDir: __dirname,
+    repoRoot: REPO_ROOT,
+  });
 }
 
 async function loadBundledJsonOrNull(fileName) {
@@ -112,20 +93,10 @@ async function loadBundledJsonOrNull(fileName) {
 }
 
 async function loadBundledText(fileName) {
-  const bundled = path.join(__dirname, 'data', fileName);
-  const repoRoot = path.resolve(__dirname, '../..');
-  const repoRelative = REPO_FILE_MAP[fileName];
-  const repo = repoRelative ? path.join(repoRoot, repoRelative) : undefined;
-
-  for (const p of [bundled, repo]) {
-    if (!p) continue;
-    try {
-      return await fs.readFile(p, 'utf8');
-    } catch {
-      // Try next path
-    }
-  }
-  throw new Error(`Data file not found: ${fileName} (tried data/ and repo root)`);
+  return loadTextDataWithFallback(fileName, {
+    bundledDir: __dirname,
+    repoRoot: REPO_ROOT,
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -180,7 +151,7 @@ describe('get_design_system_overview (logic)', () => {
     }
   });
 
-  it('includes all expected tool names (14 tools)', () => {
+  it('includes all expected tool names (16 tools)', () => {
     const expectedTools = [
       'get_design_system_overview',
       'list_components',

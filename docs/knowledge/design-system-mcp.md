@@ -20,7 +20,7 @@ MCP クライアント側からは、stdio サーバーとして次のように�
 repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。  
 `npm run mcp:design-system` を repo root で実行する場合は、`<repo-root>/wcf-mcp.config.json` を配置してください。
 
-## 提供 tools（標準セット）
+## 提供 tools / prompt / resources（16 tools + 1 prompt + 5 resources）
 
 ### `get_design_system_overview()`
 
@@ -35,9 +35,15 @@ repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。
 
 - `prefix` を指定すると、`dads-*` の tagName を `<prefix>-*` に置換した形で返します
 
-### `get_component_api({ tagName?, className?, prefix? })`
+### `search_icons({ query?, limit?, offset?, prefix? })`
 
-単一コンポーネントの API を返します（attributes / slots / events / cssParts）。
+アイコン名をキーワード検索して返します。
+
+- `usageExample` を含むため、`generate_usage_snippet` やマークアップ生成前の候補絞り込みに使えます
+
+### `get_component_api({ tagName?, className?, component?, components?, prefix? })`
+
+単一または複数コンポーネントの API を返します（attributes / slots / events / cssParts）。
 
 ### `generate_usage_snippet({ component, prefix? })`
 
@@ -80,6 +86,10 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 
 HTML snippet だけを返します。
 
+### `generate_full_page_html({ html, prefix? })`
+
+HTML フラグメントを `<!DOCTYPE html>` / import map / `boot.js` 付きの完全ページへ変換します。
+
 ### `get_design_tokens({ type?, category?, query?, theme? })`
 
 デザイントークンを type/category/query/theme でフィルタして返します。
@@ -108,6 +118,10 @@ HTML snippet だけを返します。
 
 設計ガイドラインを topic/query で検索し、スコア付きで返します。
 
+### `get_component_selector_guide({ category?, useCase? })`
+
+カテゴリやユースケースから候補コンポーネントを返します。
+
 ## Prompt / Resources
 
 ### Prompt: `figma_to_wcf({ figmaUrl, userIntent? })`
@@ -126,6 +140,7 @@ Figma URL を受け取り、以下の順序で実装を進めるプロンプト�
 - `wcf://tokens`: トークン summary
 - `wcf://guidelines/{topic}`: topic 別ガイドライン（`accessibility|css|patterns|all`）
 - `wcf://llms-full`: `llms-full.txt` 全文
+- `wcf://skills`: `skills-registry.json` ベースのスキルカタログ
 
 ## 拡張（@experimental）
 
@@ -142,7 +157,7 @@ Figma URL を受け取り、以下の順序で実装を進めるプロンプト�
 
 制約:
 
-- plugin tool 名は組み込み14ツールと重複不可
+- plugin tool 名は組み込み16ツールと重複不可
 - data source key は `custom-elements.json` / `install-registry.json` / `pattern-registry.json` / `design-tokens.json` / `guidelines-index.json` のみ
 - 契約は `@experimental`（将来変更の可能性あり）
 

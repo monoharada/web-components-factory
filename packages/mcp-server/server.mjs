@@ -10,6 +10,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { createMcpServer } from './core.mjs';
+import { loadJsonDataWithFallback, loadTextDataWithFallback } from './runtime-data.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,51 +18,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Data loading — bundled data/ first, then repo root fallback
 // ---------------------------------------------------------------------------
 
-const REPO_FILE_MAP = {
-  'custom-elements.json': 'custom-elements.json',
-  'install-registry.json': 'registry/install-registry.json',
-  'pattern-registry.json': 'registry/pattern-registry.json',
-  'component-selector-guide.json': 'registry/component-selector-guide.json',
-  'design-tokens.json': 'design-tokens.json',
-  'guidelines-index.json': 'guidelines-index.json',
-  'llms-full.txt': 'llms-full.txt',
-  'skills-registry.json': 'registry/skills-registry.json',
-};
 export const DEFAULT_WCF_MCP_CONFIG = 'wcf-mcp.config.json';
 
-function resolveDataPath(fileName) {
-  const bundled = path.join(__dirname, 'data', fileName);
-  const repoRoot = path.resolve(process.cwd());
-  const repoRelative = REPO_FILE_MAP[fileName];
-  const repo = repoRelative ? path.join(repoRoot, repoRelative) : undefined;
-  return { bundled, repo };
-}
-
 async function loadJsonData(fileName) {
-  const { bundled, repo } = resolveDataPath(fileName);
-  for (const p of [bundled, repo]) {
-    if (!p) continue;
-    try {
-      const text = await fs.readFile(p, 'utf8');
-      return JSON.parse(text);
-    } catch {
-      // Try next path
-    }
-  }
-  throw new Error(`データファイルが見つかりません: ${fileName}`);
+  return loadJsonDataWithFallback(fileName, {
+    bundledDir: __dirname,
+    repoRoot: path.resolve(process.cwd()),
+  });
 }
 
 async function loadTextData(fileName) {
-  const { bundled, repo } = resolveDataPath(fileName);
-  for (const p of [bundled, repo]) {
-    if (!p) continue;
-    try {
-      return await fs.readFile(p, 'utf8');
-    } catch {
-      // Try next path
-    }
-  }
-  throw new Error(`テキストデータファイルが見つかりません: ${fileName}`);
+  return loadTextDataWithFallback(fileName, {
+    bundledDir: __dirname,
+    repoRoot: path.resolve(process.cwd()),
+  });
 }
 
 async function loadValidator() {

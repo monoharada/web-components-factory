@@ -2357,9 +2357,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         }
       }
 
-      return {
-        content: [{ type: 'text', text: JSON.stringify(overview, null, 2) }],
-      };
+      return buildJsonToolResponse(overview);
     },
   );
 
@@ -2394,9 +2392,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         hasMore: page.hasMore,
       };
       if (page._notice) payload._notice = page._notice;
-      return {
-        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
-      };
+      return buildJsonToolResponse(payload);
     },
   );
 
@@ -2417,9 +2413,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     },
     async ({ query, limit, offset, prefix }) => {
       const payload = searchIconCatalog(indexes, { query, limit, offset, prefix });
-      return {
-        content: [{ type: 'text', text: JSON.stringify(payload, null, 2) }],
-      };
+      return buildJsonToolResponse(payload);
     },
   );
 
@@ -2623,40 +2617,29 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
             .join('\n')
         : undefined;
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(
-              {
-                componentId,
-                tagNames,
-                deps,
-                transitiveDeps,
-                define,
-                defineHint,
-                source: install.source,
-                usageSnippet,
-                usageContext: 'body-only',
-                installHint: componentId ? `wcf add ${componentId}` : undefined,
-                vendorHint: (() => {
-                  const im = tagNames.length > 0
-                    ? JSON.stringify({ imports: Object.fromEntries(tagNames.map((t) => [t, `./<dir>/components/${t.replace(/^[^-]+-/, '')}.js`])) })
-                    : undefined;
-                  return {
-                    install: componentId ? `wcf add ${componentId} --prefix <prefix> --out <dir>` : undefined,
-                    importMap: im,
-                    importmap: im, // @deprecated — use importMap; will be removed in v1.0
-                    boot: '<dir>/boot.js -- loads autoloader that registers components via import map',
-                  };
-                })(),
-              },
-              null,
-              2,
-            ),
-          },
-        ],
-      };
+      return buildJsonToolResponse({
+        componentId,
+        tagNames,
+        deps,
+        transitiveDeps,
+        define,
+        defineHint,
+        source: install.source,
+        usageSnippet,
+        usageContext: 'body-only',
+        installHint: componentId ? `wcf add ${componentId}` : undefined,
+        vendorHint: (() => {
+          const im = tagNames.length > 0
+            ? JSON.stringify({ imports: Object.fromEntries(tagNames.map((t) => [t, `./<dir>/components/${t.replace(/^[^-]+-/, '')}.js`])) })
+            : undefined;
+          return {
+            install: componentId ? `wcf add ${componentId} --prefix <prefix> --out <dir>` : undefined,
+            importMap: im,
+            importmap: im, // @deprecated — use importMap; will be removed in v1.0
+            boot: '<dir>/boot.js -- loads autoloader that registers components via import map',
+          };
+        })(),
+      });
     },
   );
 
@@ -2791,9 +2774,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         };
       });
 
-      return {
-        content: [{ type: 'text', text: JSON.stringify({ diagnostics }, null, 2) }],
-      };
+      return buildJsonToolResponse({ diagnostics });
     },
   );
 
@@ -2819,16 +2800,11 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
       const { fullHtml, importEntries } = buildFullPageHtml({ html, prefix: p, cemIndex: ci });
 
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            fullHtml,
-            componentCount: Object.keys(importEntries).length,
-            importMapEntries: importEntries,
-          }, null, 2),
-        }],
-      };
+      return buildJsonToolResponse({
+        fullHtml,
+        componentCount: Object.keys(importEntries).length,
+        importMapEntries: importEntries,
+      });
     },
   );
 
@@ -2911,9 +2887,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         requires: p?.requires,
       }));
 
-      return {
-        content: [{ type: 'text', text: JSON.stringify(list, null, 2) }],
-      };
+      return buildJsonToolResponse(list);
     },
   );
 
@@ -3075,14 +3049,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
         };
       }
 
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-      };
+      return buildJsonToolResponse(result);
     },
   );
 
