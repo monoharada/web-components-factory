@@ -44,14 +44,12 @@ export {
   suggestUnknownElementTagName,
   buildDiagnosticSuggestion,
   applyPrefixToTagMap,
-  mergeWithPrefixed,
   applyPrefixToHtml,
 } from './core/prefix.mjs';
 
 // --- core/plugins.mjs ---
 export {
   PLUGIN_CONTRACT_VERSION,
-  toPassthroughSchema,
   normalizePlugins,
   buildPluginDataSourceMap,
 } from './core/plugins.mjs';
@@ -69,7 +67,6 @@ export {
   suggestTokenNames,
   buildDesignTokenDetailPayload,
   buildDesignTokensPayload,
-  buildTokensResourcePayload,
 } from './core/tokens.mjs';
 
 // --- core/cem.mjs ---

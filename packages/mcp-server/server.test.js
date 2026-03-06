@@ -593,6 +593,78 @@ describe('tool descriptions', () => {
   });
 });
 
+describe('core.mjs facade export surface', () => {
+  it('exports exactly the expected public symbols (no leak, no drop)', async () => {
+    const core = await import('./core.mjs');
+    const actual = Object.keys(core).sort();
+    const expected = [
+      'CANONICAL_PREFIX',
+      'CATEGORY_MAP',
+      'FIGMA_TO_WCF_PROMPT',
+      'IDE_SETUP_TEMPLATES',
+      'MAX_PREFIX_LENGTH',
+      'MAX_TOOL_RESULT_BYTES',
+      'PLUGIN_CONTRACT_VERSION',
+      'PLUGIN_TOOL_NOTICE',
+      'STRUCTURED_CONTENT_DISABLE_FLAG',
+      'WCF_RESOURCE_URIS',
+      'applyPrefixToHtml',
+      'applyPrefixToTagMap',
+      'buildAccessibilityIndex',
+      'buildComponentSummaries',
+      'buildComponentTokenReferencedBy',
+      'buildDesignTokenDetailPayload',
+      'buildDesignTokensPayload',
+      'buildDiagnosticSuggestion',
+      'buildFullPageHtml',
+      'buildIconCatalog',
+      'buildIndexes',
+      'buildJsonToolErrorResponse',
+      'buildJsonToolResponse',
+      'buildPatternFrequencyMap',
+      'buildPluginDataSourceMap',
+      'buildRelatedComponentMap',
+      'buildTokenRelationshipIndex',
+      'buildTokenSuggestionMap',
+      'createMcpServer',
+      'expandQueryWithSynonyms',
+      'extractAccessibilityChecklist',
+      'extractIconNames',
+      'extractPrefixFromIndexes',
+      'extractReferencedTokenNames',
+      'findCustomElementDeclarations',
+      'findDeclByComponentId',
+      'generateSnippet',
+      'getCategory',
+      'getRelatedComponentsForTag',
+      'isStructuredContentDisabled',
+      'levenshteinDistance',
+      'loadPatternRegistryShape',
+      'measureToolResultBytes',
+      'normalizeCssVariable',
+      'normalizePlugins',
+      'normalizePrefix',
+      'normalizeTokenIdentifier',
+      'normalizeTokenValue',
+      'normalizeWcagLevel',
+      'parseIconNamesFromDescription',
+      'parseIconNamesFromType',
+      'pickDecl',
+      'queryAccessibilityIndex',
+      'resolveComponentClosure',
+      'resolveTokenTheme',
+      'searchIconCatalog',
+      'serializeApi',
+      'suggestTokenNames',
+      'suggestUnknownElementTagName',
+      'toCanonicalTagName',
+      'toStructuredContent',
+      'withPrefix',
+    ];
+    expect(actual).toEqual(expected);
+  });
+});
+
 describe('MCP prompts/resources contract', () => {
   let client;
   let server;
