@@ -69,6 +69,7 @@ export {
   suggestTokenNames,
   buildDesignTokenDetailPayload,
   buildDesignTokensPayload,
+  buildTokensResourcePayload,
 } from './core/tokens.mjs';
 
 // --- core/cem.mjs ---
