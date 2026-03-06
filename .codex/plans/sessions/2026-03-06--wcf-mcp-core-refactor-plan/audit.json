@@ -1,0 +1,24 @@
+{
+  "verdict": "READY_FOR_IMPLEMENTATION",
+  "summary": "`core.mjs` の責務混在、直参照 export、register 副作用、package 同梱リスクが整理され、互換 facade を前提にした段階分割計画と検証ゲートが定義されている。",
+  "checks": {
+    "scope_consistency": "pass",
+    "dependency_consistency": "pass",
+    "verification_coverage": "pass",
+    "constraint_coverage": "pass",
+    "dod_coverage": "pass"
+  },
+  "blockers": [],
+  "high_risks": [
+    "R-01: core.mjs export 互換破壊",
+    "R-02: register 層抽出で tool/resource/prompt contract を崩す",
+    "R-03: package files 更新漏れで npm 配布版だけ壊す"
+  ],
+  "unknowns": [
+    "U-01: 維持すべき public export 範囲",
+    "U-02: 新規内部ディレクトリ名",
+    "U-03: error normalization を今回どこまで含めるか",
+    "U-04: response-size script 向け public API の切り方"
+  ],
+  "recommended_next_action": "Issue 化して P-01 から P-07 の順で別 PR として進める。"
+}

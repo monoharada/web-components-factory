@@ -9,9 +9,12 @@
  */
 
 import { createServer } from './server.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
-const USAGE = [
+export const USAGE = [
   'Usage:',
   '  wcf-mcp',
   '  wcf-mcp --transport=stdio',
@@ -20,7 +23,7 @@ const USAGE = [
   '  wcf-mcp --help',
 ].join('\n');
 
-function parseArgs(argv) {
+export function parseArgs(argv) {
   let transport = 'stdio';
   let port = 3100;
   let configPath;
@@ -90,6 +93,22 @@ function parseArgs(argv) {
   return { help: false, transport, port, configPath };
 }
 
+function isDirectRun(metaUrl = import.meta.url, argv = process.argv) {
+  const entryPath = argv[1];
+  if (!entryPath) return false;
+
+  const resolveFilePath = (value) => {
+    const resolvedPath = path.resolve(value);
+    try {
+      return fs.realpathSync.native?.(resolvedPath) ?? fs.realpathSync(resolvedPath);
+    } catch {
+      return resolvedPath;
+    }
+  };
+
+  return resolveFilePath(entryPath) === resolveFilePath(fileURLToPath(metaUrl));
+}
+
 async function main() {
   let parsed;
   try {
@@ -124,7 +143,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (isDirectRun()) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
