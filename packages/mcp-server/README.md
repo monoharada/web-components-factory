@@ -285,8 +285,9 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 ```
 
 - bind: `127.0.0.1`
-- endpoint: `http://127.0.0.1:3100/mcp`
+- endpoint: `http://127.0.0.1:3100/mcp` のみ
 - Host / Origin validation を有効化して DNS rebinding を抑止します
+- `--config` が不正な場合は待受開始前に起動失敗します
 
 ## 設定ファイル
 

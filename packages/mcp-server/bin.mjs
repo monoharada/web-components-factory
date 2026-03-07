@@ -22,6 +22,7 @@ export const USAGE = [
   '  wcf-mcp --config=./wcf-mcp.config.json',
   '  wcf-mcp --help',
 ].join('\n');
+export const HTTP_ENDPOINT_PATH = '/mcp';
 
 export function parseArgs(argv) {
   let transport = 'stdio';
@@ -94,20 +95,30 @@ export function parseArgs(argv) {
 }
 
 export function buildHttpTransportOptions({ host = '127.0.0.1', port }) {
-  const allowedHosts = new Set([
-    `${host}:${port}`,
-  ]);
+  const allowedHostnames = new Set([host]);
   if (host === '127.0.0.1') {
-    allowedHosts.add(`localhost:${port}`);
+    allowedHostnames.add('localhost');
   }
   if (host === 'localhost') {
-    allowedHosts.add(`127.0.0.1:${port}`);
+    allowedHostnames.add('127.0.0.1');
+  }
+
+  const defaultHttpPort = port === 80;
+  const allowedHosts = new Set();
+  const allowedOrigins = new Set();
+  for (const allowedHostname of allowedHostnames) {
+    allowedHosts.add(`${allowedHostname}:${port}`);
+    allowedOrigins.add(`http://${allowedHostname}:${port}`);
+    if (defaultHttpPort) {
+      allowedHosts.add(allowedHostname);
+      allowedOrigins.add(`http://${allowedHostname}`);
+    }
   }
 
   return {
     sessionIdGenerator: undefined,
     allowedHosts: [...allowedHosts],
-    allowedOrigins: [...allowedHosts].map((value) => `http://${value}`),
+    allowedOrigins: [...allowedOrigins],
     enableDnsRebindingProtection: true,
   };
 }
@@ -126,6 +137,32 @@ function sendJsonRpcError(res, status, message) {
   }));
 }
 
+function sendNotFound(res) {
+  if (res.headersSent) return;
+  res.statusCode = 404;
+  res.setHeader('content-type', 'text/plain; charset=utf-8');
+  res.end('Not Found');
+}
+
+function getRequestPath(req) {
+  const rawUrl = req.url ?? '/';
+  try {
+    return new URL(rawUrl, 'http://localhost').pathname;
+  } catch {
+    return rawUrl;
+  }
+}
+
+export async function validateHttpStartup({
+  configPath,
+  createServerImpl = createServer,
+} = {}) {
+  const bootstrap = await createServerImpl({ configPath });
+  await Promise.allSettled([
+    bootstrap?.server?.close?.(),
+  ]);
+}
+
 export function createHttpRequestHandler({
   port,
   host = '127.0.0.1',
@@ -135,6 +172,11 @@ export function createHttpRequestHandler({
   const transportOptions = buildHttpTransportOptions({ host, port });
 
   return async function handleHttpRequest(req, res) {
+    if (getRequestPath(req) !== HTTP_ENDPOINT_PATH) {
+      sendNotFound(res);
+      return;
+    }
+
     let server;
     let transport;
     let cleanedUp = false;
@@ -207,6 +249,7 @@ async function main() {
   }
 
   if (parsed.transport === 'http') {
+    await validateHttpStartup({ configPath: parsed.configPath });
     const { createServer: createHttpServer } = await import('node:http');
     const handleHttpRequest = createHttpRequestHandler({
       port: parsed.port,
@@ -216,7 +259,7 @@ async function main() {
       void handleHttpRequest(req, res);
     });
     httpServer.listen(parsed.port, '127.0.0.1', () => {
-      console.error(`MCP HTTP server listening on http://127.0.0.1:${parsed.port}/mcp`);
+      console.error(`MCP HTTP server listening on http://127.0.0.1:${parsed.port}${HTTP_ENDPOINT_PATH}`);
     });
   } else {
     const { server } = await createServer({ configPath: parsed.configPath });

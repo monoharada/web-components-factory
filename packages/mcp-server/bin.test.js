@@ -117,6 +117,15 @@ describe('HTTP transport handler', () => {
     });
   });
 
+  it('allows default-port host and origin variants without explicit :80', () => {
+    expect(buildHttpTransportOptions({ port: 80 })).toEqual({
+      sessionIdGenerator: undefined,
+      allowedHosts: ['127.0.0.1:80', '127.0.0.1', 'localhost:80', 'localhost'],
+      allowedOrigins: ['http://127.0.0.1:80', 'http://127.0.0.1', 'http://localhost:80', 'http://localhost'],
+      enableDnsRebindingProtection: true,
+    });
+  });
+
   it('handles repeated requests without reusing a stateless transport', async () => {
     let handleRequest;
     const httpServer = http.createServer((req, res) => {
@@ -133,6 +142,27 @@ describe('HTTP transport handler', () => {
 
       expect(first.statusCode).toBe(406);
       expect(second.statusCode).toBe(406);
+    } finally {
+      await new Promise((resolve) => httpServer.close(resolve));
+    }
+  });
+
+  it('returns 404 for non-MCP HTTP paths', async () => {
+    let handleRequest;
+    const httpServer = http.createServer((req, res) => {
+      void handleRequest(req, res);
+    });
+    await new Promise((resolve) => httpServer.listen(0, '127.0.0.1', resolve));
+    const address = httpServer.address();
+    const port = typeof address === 'object' && address ? address.port : 0;
+    handleRequest = createHttpRequestHandler({ port });
+
+    try {
+      const response = await sendHttpRequest({
+        port,
+        pathName: '/wrong',
+      });
+      expect(response.statusCode).toBe(404);
     } finally {
       await new Promise((resolve) => httpServer.close(resolve));
     }
@@ -157,5 +187,22 @@ describe('HTTP transport handler', () => {
     } finally {
       await new Promise((resolve) => httpServer.close(resolve));
     }
+  });
+
+  it('fails fast before listening when HTTP config is invalid', () => {
+    const result = spawnSync(process.execPath, [
+      BIN_PATH,
+      '--transport=http',
+      '--port=43121',
+      '--config=./definitely-missing-config.json',
+    ], {
+      cwd: path.resolve(__dirname, '../..'),
+      encoding: 'utf8',
+      timeout: 10_000,
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('Config file not found');
+    expect(result.stderr).not.toContain('MCP HTTP server listening');
   });
 });

@@ -1195,7 +1195,7 @@ describe('MCP prompts/resources contract', () => {
     expect(payload[1].error).toContain('not found');
   });
 
-  it('get_component_api batch keeps representative 10-component payload usable', async () => {
+  it('get_component_api batch returns a bounded overflow payload for representative 10-component responses', async () => {
     const result = await client.callTool({
       name: 'get_component_api',
       arguments: {
@@ -1214,12 +1214,19 @@ describe('MCP prompts/resources contract', () => {
       },
     });
     expect(result.isError).toBeFalsy();
-    expect(result.structuredContent).toBeUndefined();
-    const responseText = String(result.content?.[0]?.text ?? '[]');
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+    const responseText = String(result.content?.[0]?.text ?? '{}');
     expect(responseText).not.toContain('\n  ');
     const payload = JSON.parse(responseText);
-    expect(Array.isArray(payload)).toBe(true);
-    expect(payload).toHaveLength(10);
+    expect(payload).toEqual({
+      warning: {
+        code: 'TOOL_RESULT_TOO_LARGE',
+        message: 'Tool result exceeded the response size limit; returning metadata only.',
+        actualBytes: expect.any(Number),
+        limitBytes: MAX_TOOL_RESULT_BYTES,
+      },
+    });
+    expect(result.structuredContent).toEqual(payload);
   });
 
   it('search_guidelines zero-result query returns suggestions with alternativeTools', async () => {
@@ -2221,6 +2228,42 @@ describe('structuredContent helpers', () => {
     const result = buildJsonToolResponse(payload, { env: {} });
     expect(result.structuredContent).toBeUndefined();
     expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+  });
+
+  it('returns an overflow warning payload when compact text-only would still exceed the response size limit', () => {
+    const payload = { blob: 'x'.repeat(120 * 1024) };
+
+    const result = buildJsonToolResponse(payload, { env: {} });
+
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+    expect(result.structuredContent).toEqual({
+      warning: {
+        code: 'TOOL_RESULT_TOO_LARGE',
+        message: 'Tool result exceeded the response size limit; returning metadata only.',
+        actualBytes: expect.any(Number),
+        limitBytes: MAX_TOOL_RESULT_BYTES,
+      },
+    });
+    expect(JSON.parse(result.content[0].text)).toEqual(result.structuredContent);
+  });
+
+  it('keeps overflow fallback bounded when structuredContent is disabled', () => {
+    const payload = { blob: 'x'.repeat(120 * 1024) };
+
+    const result = buildJsonToolResponse(payload, {
+      env: { [STRUCTURED_CONTENT_DISABLE_FLAG]: '1' },
+    });
+
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+    expect(result.structuredContent).toBeUndefined();
+    expect(JSON.parse(result.content[0].text)).toEqual({
+      warning: {
+        code: 'TOOL_RESULT_TOO_LARGE',
+        message: 'Tool result exceeded the response size limit; returning metadata only.',
+        actualBytes: expect.any(Number),
+        limitBytes: MAX_TOOL_RESULT_BYTES,
+      },
+    });
   });
 });
 

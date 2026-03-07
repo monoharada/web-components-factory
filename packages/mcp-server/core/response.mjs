@@ -58,6 +58,32 @@ export function measureToolResultBytes(result) {
   return Buffer.byteLength(JSON.stringify(result), 'utf8');
 }
 
+function buildOverflowToolResponse(actualBytes, { env = process.env } = {}) {
+  const payload = {
+    warning: {
+      code: 'TOOL_RESULT_TOO_LARGE',
+      message: 'Tool result exceeded the response size limit; returning metadata only.',
+      actualBytes,
+      limitBytes: MAX_TOOL_RESULT_BYTES,
+    },
+  };
+  const content = [{
+    type: 'text',
+    text: JSON.stringify(payload),
+  }];
+  if (isStructuredContentDisabled(env)) {
+    return { content };
+  }
+  const structuredResponse = {
+    content,
+    structuredContent: payload,
+  };
+  if (measureToolResultBytes(structuredResponse) <= MAX_TOOL_RESULT_BYTES) {
+    return structuredResponse;
+  }
+  return { content };
+}
+
 export function buildJsonToolResponse(payload, { env = process.env } = {}) {
   const prettyText = JSON.stringify(payload, null, 2);
   const compactText = JSON.stringify(payload);
@@ -74,7 +100,11 @@ export function buildJsonToolResponse(payload, { env = process.env } = {}) {
     if (measureToolResultBytes(prettyResponse) <= MAX_TOOL_RESULT_BYTES) {
       return prettyResponse;
     }
-    return { content: compactContent };
+    const compactResponse = { content: compactContent };
+    if (measureToolResultBytes(compactResponse) <= MAX_TOOL_RESULT_BYTES) {
+      return compactResponse;
+    }
+    return buildOverflowToolResponse(measureToolResultBytes(compactResponse), { env });
   }
 
   const prettyStructuredResponse = {
@@ -98,7 +128,12 @@ export function buildJsonToolResponse(payload, { env = process.env } = {}) {
     return prettyTextOnlyResponse;
   }
 
-  return { content: compactContent };
+  const compactTextOnlyResponse = { content: compactContent };
+  if (measureToolResultBytes(compactTextOnlyResponse) <= MAX_TOOL_RESULT_BYTES) {
+    return compactTextOnlyResponse;
+  }
+
+  return buildOverflowToolResponse(measureToolResultBytes(compactTextOnlyResponse), { env });
 }
 
 export function buildJsonToolErrorResponse(payload, options) {
