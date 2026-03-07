@@ -9,6 +9,7 @@
   "files": [
     "bin.mjs",
     "core.mjs",
+    "core/",
     "server.mjs",
     "runtime-data.mjs",
     "validator.mjs",

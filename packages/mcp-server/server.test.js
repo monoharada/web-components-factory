@@ -554,13 +554,13 @@ describe('get_component_api relatedComponents (logic)', () => {
 
 describe('tool descriptions', () => {
   it('get_design_system_overview description contains MUST guardrail', async () => {
-    // Tool descriptions now live in core.mjs
-    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
+    // Tool descriptions now live in core/register.mjs (DD-08)
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core/register.mjs'), 'utf8');
     expect(coreSrc).toContain('MUST be called first');
   });
 
   it('all tools have When/Returns/After guidance in descriptions', async () => {
-    const coreSrc = await fs.readFile(path.join(__dirname, 'core.mjs'), 'utf8');
+    const coreSrc = await fs.readFile(path.join(__dirname, 'core/register.mjs'), 'utf8');
 
     // Tools that should have enhanced descriptions
     const toolNames = [
@@ -590,6 +590,78 @@ describe('tool descriptions', () => {
       expect(descBlock).toContain('When:');
       expect(descBlock).toContain('Returns:');
     }
+  });
+});
+
+describe('core.mjs facade export surface', () => {
+  it('exports exactly the expected public symbols (no leak, no drop)', async () => {
+    const core = await import('./core.mjs');
+    const actual = Object.keys(core).sort();
+    const expected = [
+      'CANONICAL_PREFIX',
+      'CATEGORY_MAP',
+      'FIGMA_TO_WCF_PROMPT',
+      'IDE_SETUP_TEMPLATES',
+      'MAX_PREFIX_LENGTH',
+      'MAX_TOOL_RESULT_BYTES',
+      'PLUGIN_CONTRACT_VERSION',
+      'PLUGIN_TOOL_NOTICE',
+      'STRUCTURED_CONTENT_DISABLE_FLAG',
+      'WCF_RESOURCE_URIS',
+      'applyPrefixToHtml',
+      'applyPrefixToTagMap',
+      'buildAccessibilityIndex',
+      'buildComponentSummaries',
+      'buildComponentTokenReferencedBy',
+      'buildDesignTokenDetailPayload',
+      'buildDesignTokensPayload',
+      'buildDiagnosticSuggestion',
+      'buildFullPageHtml',
+      'buildIconCatalog',
+      'buildIndexes',
+      'buildJsonToolErrorResponse',
+      'buildJsonToolResponse',
+      'buildPatternFrequencyMap',
+      'buildPluginDataSourceMap',
+      'buildRelatedComponentMap',
+      'buildTokenRelationshipIndex',
+      'buildTokenSuggestionMap',
+      'createMcpServer',
+      'expandQueryWithSynonyms',
+      'extractAccessibilityChecklist',
+      'extractIconNames',
+      'extractPrefixFromIndexes',
+      'extractReferencedTokenNames',
+      'findCustomElementDeclarations',
+      'findDeclByComponentId',
+      'generateSnippet',
+      'getCategory',
+      'getRelatedComponentsForTag',
+      'isStructuredContentDisabled',
+      'levenshteinDistance',
+      'loadPatternRegistryShape',
+      'measureToolResultBytes',
+      'normalizeCssVariable',
+      'normalizePlugins',
+      'normalizePrefix',
+      'normalizeTokenIdentifier',
+      'normalizeTokenValue',
+      'normalizeWcagLevel',
+      'parseIconNamesFromDescription',
+      'parseIconNamesFromType',
+      'pickDecl',
+      'queryAccessibilityIndex',
+      'resolveComponentClosure',
+      'resolveTokenTheme',
+      'searchIconCatalog',
+      'serializeApi',
+      'suggestTokenNames',
+      'suggestUnknownElementTagName',
+      'toCanonicalTagName',
+      'toStructuredContent',
+      'withPrefix',
+    ];
+    expect(actual).toEqual(expected);
   });
 });
 
