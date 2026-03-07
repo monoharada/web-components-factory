@@ -8,7 +8,7 @@ import {
   createMcpServer,
   normalizePlugins,
 } from './core.mjs';
-import { loadWcfMcpRuntimeConfig } from './server.mjs';
+import { createServer, loadWcfMcpRuntimeConfig } from './server.mjs';
 import { createPluginTestPair, loadBundledJson, loadBundledText } from './test-support.js';
 
 describe('plugin extensibility', () => {
@@ -268,6 +268,36 @@ describe('plugin extensibility', () => {
 });
 
 describe('runtime config loader', () => {
+  it('createServer resolves the default config from the provided cwd', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(process.cwd(), '.tmp-wcf-mcp-loaders-'));
+    try {
+      const configPath = path.join(tmpDir, 'wcf-mcp.config.json');
+      await fs.writeFile(configPath, JSON.stringify({
+        plugins: [
+          {
+            name: 'cwd-static-plugin',
+            version: '1.0.0',
+            staticTools: [
+              {
+                name: 'cwd_tool',
+                payload: { ok: true },
+              },
+            ],
+          },
+        ],
+      }), 'utf8');
+
+      const runtime = await createServer({ cwd: tmpDir });
+      expect(runtime.pluginRuntime).toMatchObject({
+        pluginCount: 1,
+        pluginToolCount: 1,
+      });
+      await runtime.server.close();
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   it('returns empty plugins when default config is absent', async () => {
     const tmpDir = await fs.mkdtemp(path.join(process.cwd(), '.tmp-wcf-mcp-config-'));
     try {

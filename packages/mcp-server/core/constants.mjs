@@ -4,11 +4,17 @@
  * Single-module constants live in their respective module (DD-14).
  */
 
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const packageMeta = require('../package.json');
+
 export const CANONICAL_PREFIX = 'dads';
 export const MAX_PREFIX_LENGTH = 64;
 export const STRUCTURED_CONTENT_DISABLE_FLAG = 'WCF_MCP_DISABLE_STRUCTURED_CONTENT';
 export const MAX_TOOL_RESULT_BYTES = 100 * 1024;
 export const PLUGIN_TOOL_NOTICE = 'Plugin tool (contract v1.1).';
+export const PACKAGE_VERSION = String(packageMeta?.version ?? '0.0.0');
 
 export const CATEGORY_MAP = {
   'dads-input-text': 'Form',

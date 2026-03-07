@@ -92,7 +92,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 |--------|------|
 | `list_components` | カテゴリ/クエリ/limit/offset でコンポーネントを段階的に取得（デフォルト20件。全件取得は `limit: 200`） |
 | `search_icons` | アイコン名をキーワード検索し、usage example を返す |
-| `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得。`components` 配列でバッチ取得可能（最大10件） |
+| `get_component_api` | tagName or className で属性・スロット・イベント・CSS Parts・CSS Custom Properties を取得。`components` 配列でバッチ取得可能（最大10件。レスポンス予算次第で `structuredContent` は省略される） |
 | `generate_usage_snippet` | コンポーネントの最小限 HTML スニペットを生成 |
 | `get_install_recipe` | componentId・依存関係・define関数・インストールコマンドを取得 |
 
@@ -286,6 +286,7 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 
 - bind: `127.0.0.1`
 - endpoint: `http://127.0.0.1:3100/mcp`
+- Host / Origin validation を有効化して DNS rebinding を抑止します
 
 ## 設定ファイル
 
@@ -344,9 +345,10 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 
 ## structuredContent rollback
 
-`get_component_api` / `get_design_tokens` / `get_design_token_detail` / `get_accessibility_docs` / `search_guidelines` は通常 `structuredContent` を返します。
+`get_component_api` / `get_design_tokens` / `get_design_token_detail` / `get_accessibility_docs` / `search_guidelines` のうち、object payload を返すケースでは通常 `structuredContent` を返します。
 
-- 100KB 制限を超える場合は自動的に `structuredContent` を省略し、`content` のみ返します
+- `structuredContent` は MCP 仕様どおり JSON object を直接返します
+- 100KB 制限を超える場合は自動的に `structuredContent` を省略し、必要に応じて `content` を compact JSON に切り替えます
 - 緊急切り戻し時は環境変数 `WCF_MCP_DISABLE_STRUCTURED_CONTENT=1` を設定してください
 
 例:

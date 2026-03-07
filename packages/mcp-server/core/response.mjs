@@ -48,10 +48,10 @@ export function isStructuredContentDisabled(env = process.env) {
 }
 
 export function toStructuredContent(data) {
-  return {
-    type: 'application/json',
-    data,
-  };
+  if (data !== null && typeof data === 'object' && !Array.isArray(data)) {
+    return data;
+  }
+  return undefined;
 }
 
 export function measureToolResultBytes(result) {
@@ -59,26 +59,46 @@ export function measureToolResultBytes(result) {
 }
 
 export function buildJsonToolResponse(payload, { env = process.env } = {}) {
-  const content = [{
+  const prettyText = JSON.stringify(payload, null, 2);
+  const compactText = JSON.stringify(payload);
+  const buildContent = (text) => [{
     type: 'text',
-    text: JSON.stringify(payload, null, 2),
+    text,
   }];
+  const prettyContent = buildContent(prettyText);
+  const compactContent = buildContent(compactText);
+  const structuredPayload = toStructuredContent(payload);
 
-  if (isStructuredContentDisabled(env)) {
-    return { content };
+  if (isStructuredContentDisabled(env) || structuredPayload === undefined) {
+    const prettyResponse = { content: prettyContent };
+    if (measureToolResultBytes(prettyResponse) <= MAX_TOOL_RESULT_BYTES) {
+      return prettyResponse;
+    }
+    return { content: compactContent };
   }
 
-  const withStructuredContent = {
-    content,
-    structuredContent: toStructuredContent(payload),
+  const prettyStructuredResponse = {
+    content: prettyContent,
+    structuredContent: structuredPayload,
   };
-
-  // Keep response size under the 100KB guardrail even when structuredContent is enabled.
-  if (measureToolResultBytes(withStructuredContent) > MAX_TOOL_RESULT_BYTES) {
-    return { content };
+  if (measureToolResultBytes(prettyStructuredResponse) <= MAX_TOOL_RESULT_BYTES) {
+    return prettyStructuredResponse;
   }
 
-  return withStructuredContent;
+  const compactStructuredResponse = {
+    content: compactContent,
+    structuredContent: structuredPayload,
+  };
+  if (measureToolResultBytes(compactStructuredResponse) <= MAX_TOOL_RESULT_BYTES) {
+    return compactStructuredResponse;
+  }
+
+  const prettyTextOnlyResponse = { content: prettyContent };
+  if (measureToolResultBytes(prettyTextOnlyResponse) <= MAX_TOOL_RESULT_BYTES) {
+    return prettyTextOnlyResponse;
+  }
+
+  return { content: compactContent };
 }
 
 export function buildJsonToolErrorResponse(payload, options) {

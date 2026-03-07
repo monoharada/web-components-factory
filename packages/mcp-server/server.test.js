@@ -69,6 +69,7 @@ import {
   buildComponentTokenReferencedBy,
   WCF_RESOURCE_URIS,
 } from './core.mjs';
+import { PACKAGE_VERSION } from './core/constants.mjs';
 import { buildEnumAttributeMap, buildSlotNameMap, collectCemCustomElements, detectAccessibilityMisuseInMarkup, detectEmptyInteractiveElement, detectEnumValueMisuse, detectInvalidSlotName, detectMissingRequiredAttributes, detectNonLowercaseAttributes, detectOrphanedChildComponents, detectTokenMisuseInInlineStyles } from './validator.mjs';
 import { loadWcfMcpRuntimeConfig } from './server.mjs';
 
@@ -750,6 +751,8 @@ describe('MCP prompts/resources contract', () => {
     });
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
 
+    expect(client.getServerVersion()?.version).toBe(PACKAGE_VERSION);
+    expect(payload.version).toBe(PACKAGE_VERSION);
     expect(Array.isArray(payload.ideSetupTemplates)).toBe(true);
     expect(payload.ideSetupTemplates.length).toBeGreaterThanOrEqual(5);
     expect(payload.ideSetupTemplates.some((item) => item.ide === 'VS Code (GitHub Copilot)')).toBe(true);
@@ -1192,6 +1195,33 @@ describe('MCP prompts/resources contract', () => {
     expect(payload[1].error).toContain('not found');
   });
 
+  it('get_component_api batch keeps representative 10-component payload usable', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: {
+        components: [
+          'button',
+          'checkbox',
+          'input-text',
+          'radio',
+          'select',
+          'textarea',
+          'combobox',
+          'date-picker',
+          'file-upload',
+          'dialog',
+        ],
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    expect(result.structuredContent).toBeUndefined();
+    const responseText = String(result.content?.[0]?.text ?? '[]');
+    expect(responseText).not.toContain('\n  ');
+    const payload = JSON.parse(responseText);
+    expect(Array.isArray(payload)).toBe(true);
+    expect(payload).toHaveLength(10);
+  });
+
   it('search_guidelines zero-result query returns suggestions with alternativeTools', async () => {
     const result = await client.callTool({
       name: 'search_guidelines',
@@ -1445,6 +1475,19 @@ describe('MCP prompts/resources contract', () => {
     expect(emptyAriaLabelDiag).toBeDefined();
     expect(emptyAriaLabelDiag.severity).toBe('error');
     expect(emptyAriaLabelDiag.suggestion).toBeDefined();
+  });
+
+  it('validate_markup reports aria-live and role=alert as warnings', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<div aria-live="polite" role="alert">status</div>' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const ariaLive = payload.diagnostics.find((diag) => diag.code === 'ariaLiveNotRecommended');
+    const roleAlert = payload.diagnostics.find((diag) => diag.code === 'roleAlertNotRecommended');
+    expect(ariaLive?.severity).toBe('warning');
+    expect(roleAlert?.severity).toBe('warning');
   });
 
   it('validate_markup does not flag non-empty label', async () => {
@@ -2118,10 +2161,7 @@ describe('structuredContent helpers', () => {
     const result = buildJsonToolResponse(payload, { env: {} });
 
     expect(result).toHaveProperty('content');
-    expect(result.structuredContent).toEqual({
-      type: 'application/json',
-      data: payload,
-    });
+    expect(result.structuredContent).toEqual(payload);
     expect(JSON.parse(result.content[0].text)).toEqual(payload);
   });
 
@@ -2144,10 +2184,7 @@ describe('structuredContent helpers', () => {
     const result = buildJsonToolErrorResponse(payload, { env: {} });
 
     expect(result.isError).toBe(true);
-    expect(result.structuredContent).toEqual({
-      type: 'application/json',
-      data: payload,
-    });
+    expect(result.structuredContent).toEqual(payload);
     expect(JSON.parse(result.content[0].text)).toEqual(payload);
   });
 
@@ -2176,10 +2213,7 @@ describe('structuredContent helpers', () => {
     });
     const structuredCandidate = {
       ...textOnlyResponse,
-      structuredContent: {
-        type: 'application/json',
-        data: payload,
-      },
+      structuredContent: payload,
     };
 
     expect(measureToolResultBytes(structuredCandidate)).toBeGreaterThan(MAX_TOOL_RESULT_BYTES);
