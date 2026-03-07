@@ -271,7 +271,14 @@ describe('runtime config loader', () => {
   it('createServer resolves the default config from the provided cwd', async () => {
     const tmpDir = await fs.mkdtemp(path.join(process.cwd(), '.tmp-wcf-mcp-loaders-'));
     try {
+      const registryDir = path.join(tmpDir, 'registry');
       const configPath = path.join(tmpDir, 'wcf-mcp.config.json');
+      await fs.mkdir(registryDir, { recursive: true });
+      await Promise.all([
+        fs.copyFile(path.join(process.cwd(), 'custom-elements.json'), path.join(tmpDir, 'custom-elements.json')),
+        fs.copyFile(path.join(process.cwd(), 'registry', 'install-registry.json'), path.join(registryDir, 'install-registry.json')),
+        fs.copyFile(path.join(process.cwd(), 'registry', 'pattern-registry.json'), path.join(registryDir, 'pattern-registry.json')),
+      ]);
       await fs.writeFile(configPath, JSON.stringify({
         plugins: [
           {
