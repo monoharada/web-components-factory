@@ -20,18 +20,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const DEFAULT_WCF_MCP_CONFIG = 'wcf-mcp.config.json';
 
-async function loadJsonData(fileName) {
-  return loadJsonDataWithFallback(fileName, {
-    bundledDir: __dirname,
-    repoRoot: path.resolve(process.cwd()),
-  });
-}
-
-async function loadTextData(fileName) {
-  return loadTextDataWithFallback(fileName, {
-    bundledDir: __dirname,
-    repoRoot: path.resolve(process.cwd()),
-  });
+export function createRuntimeDataLoaders({ cwd = process.cwd() } = {}) {
+  const repoRoot = path.resolve(cwd);
+  return {
+    async loadJsonData(fileName) {
+      return loadJsonDataWithFallback(fileName, {
+        bundledDir: __dirname,
+        repoRoot,
+      });
+    },
+    async loadTextData(fileName) {
+      return loadTextDataWithFallback(fileName, {
+        bundledDir: __dirname,
+        repoRoot,
+      });
+    },
+  };
 }
 
 async function loadValidator() {
@@ -198,10 +202,12 @@ export async function loadJsonDataFromPath(sourcePath) {
 // ---------------------------------------------------------------------------
 
 export async function createServer(options = {}) {
+  const runtimeCwd = options.cwd ?? process.cwd();
   const runtimeConfig = await loadWcfMcpRuntimeConfig({
-    cwd: options.cwd ?? process.cwd(),
+    cwd: runtimeCwd,
     configPath: options.configPath,
   });
+  const { loadJsonData, loadTextData } = createRuntimeDataLoaders({ cwd: runtimeCwd });
   return createMcpServer(loadJsonData, loadValidator, {
     plugins: runtimeConfig.plugins,
     loadJsonDataFromPath,

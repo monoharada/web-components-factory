@@ -46,6 +46,8 @@ interface WcfMcpPluginTool {
 - `staticPayload`: 固定のレスポンスを返す場合に使用
 - **両方指定した場合**: `handler` が優先され、`staticPayload` は無視される
 - **どちらも未指定**: バリデーションエラー（少なくとも一方が必須）
+- `handler` は plain payload のほか raw MCP result（`{ content: [...] }`）を返してもよい
+- ただし最終返却サイズには 100KB 上限が適用され、上限を超える raw result は `TOOL_RESULT_TOO_LARGE` warning payload に置き換わる
 
 ## Handler Context
 

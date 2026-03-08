@@ -22,6 +22,7 @@ export const USAGE = [
   '  wcf-mcp --config=./wcf-mcp.config.json',
   '  wcf-mcp --help',
 ].join('\n');
+export const HTTP_ENDPOINT_PATH = '/mcp';
 
 export function parseArgs(argv) {
   let transport = 'stdio';
@@ -93,6 +94,128 @@ export function parseArgs(argv) {
   return { help: false, transport, port, configPath };
 }
 
+export function buildHttpTransportOptions({ host = '127.0.0.1', port }) {
+  const allowedHostnames = new Set([host]);
+  if (host === '127.0.0.1') {
+    allowedHostnames.add('localhost');
+  }
+  if (host === 'localhost') {
+    allowedHostnames.add('127.0.0.1');
+  }
+
+  const defaultHttpPort = port === 80;
+  const allowedHosts = new Set();
+  const allowedOrigins = new Set();
+  for (const allowedHostname of allowedHostnames) {
+    allowedHosts.add(`${allowedHostname}:${port}`);
+    allowedOrigins.add(`http://${allowedHostname}:${port}`);
+    if (defaultHttpPort) {
+      allowedHosts.add(allowedHostname);
+      allowedOrigins.add(`http://${allowedHostname}`);
+    }
+  }
+
+  return {
+    sessionIdGenerator: undefined,
+    allowedHosts: [...allowedHosts],
+    allowedOrigins: [...allowedOrigins],
+    enableDnsRebindingProtection: true,
+  };
+}
+
+function sendJsonRpcError(res, status, message) {
+  if (res.headersSent) return;
+  res.statusCode = status;
+  res.setHeader('content-type', 'application/json');
+  res.end(JSON.stringify({
+    jsonrpc: '2.0',
+    error: {
+      code: -32603,
+      message,
+    },
+    id: null,
+  }));
+}
+
+function sendNotFound(res) {
+  if (res.headersSent) return;
+  res.statusCode = 404;
+  res.setHeader('content-type', 'text/plain; charset=utf-8');
+  res.end('Not Found');
+}
+
+function getRequestPath(req) {
+  const rawUrl = req.url ?? '/';
+  try {
+    return new URL(rawUrl, 'http://localhost').pathname;
+  } catch {
+    return rawUrl;
+  }
+}
+
+export async function validateHttpStartup({
+  configPath,
+  createServerImpl = createServer,
+} = {}) {
+  const bootstrap = await createServerImpl({ configPath });
+  await Promise.allSettled([
+    bootstrap?.server?.close?.(),
+  ]);
+}
+
+export function createHttpRequestHandler({
+  port,
+  host = '127.0.0.1',
+  configPath,
+  createServerImpl = createServer,
+} = {}) {
+  const transportOptions = buildHttpTransportOptions({ host, port });
+
+  return async function handleHttpRequest(req, res) {
+    if (getRequestPath(req) !== HTTP_ENDPOINT_PATH) {
+      sendNotFound(res);
+      return;
+    }
+
+    let server;
+    let transport;
+    let cleanedUp = false;
+    const cleanup = async () => {
+      if (cleanedUp) return;
+      cleanedUp = true;
+      await Promise.allSettled([
+        transport?.close?.(),
+        server?.close?.(),
+      ]);
+    };
+
+    res.on('close', () => {
+      void cleanup();
+    });
+
+    try {
+      ({ server } = await createServerImpl({ configPath }));
+      const { StreamableHTTPServerTransport } = await import(
+        '@modelcontextprotocol/sdk/server/streamableHttp.js'
+      );
+      transport = new StreamableHTTPServerTransport(transportOptions);
+      await server.connect(transport);
+      await transport.handleRequest(req, res);
+      if (res.writableEnded) {
+        await cleanup();
+      }
+    } catch (error) {
+      await cleanup();
+      const message = error instanceof Error ? error.message : String(error);
+      if (res.headersSent) {
+        res.destroy(error instanceof Error ? error : new Error(message));
+        return;
+      }
+      sendJsonRpcError(res, 500, message);
+    }
+  };
+}
+
 function isDirectRun(metaUrl = import.meta.url, argv = process.argv) {
   const entryPath = argv[1];
   if (!entryPath) return false;
@@ -125,20 +248,21 @@ async function main() {
     return;
   }
 
-  const { server } = await createServer({ configPath: parsed.configPath });
-
   if (parsed.transport === 'http') {
-    const { StreamableHTTPServerTransport } = await import(
-      '@modelcontextprotocol/sdk/server/streamableHttp.js'
-    );
+    await validateHttpStartup({ configPath: parsed.configPath });
     const { createServer: createHttpServer } = await import('node:http');
-    const httpTransport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
-    await server.connect(httpTransport);
-    const httpServer = createHttpServer((req, res) => httpTransport.handleRequest(req, res));
+    const handleHttpRequest = createHttpRequestHandler({
+      port: parsed.port,
+      configPath: parsed.configPath,
+    });
+    const httpServer = createHttpServer((req, res) => {
+      void handleHttpRequest(req, res);
+    });
     httpServer.listen(parsed.port, '127.0.0.1', () => {
-      console.error(`MCP HTTP server listening on http://127.0.0.1:${parsed.port}/mcp`);
+      console.error(`MCP HTTP server listening on http://127.0.0.1:${parsed.port}${HTTP_ENDPOINT_PATH}`);
     });
   } else {
+    const { server } = await createServer({ configPath: parsed.configPath });
     await server.connect(new StdioServerTransport());
   }
 }

@@ -4,9 +4,9 @@
 
 import { ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { CANONICAL_PREFIX, PLUGIN_TOOL_NOTICE, FIGMA_TO_WCF_PROMPT, WCF_RESOURCE_URIS, IDE_SETUP_TEMPLATES } from './constants.mjs';
+import { CANONICAL_PREFIX, PACKAGE_VERSION, PLUGIN_TOOL_NOTICE, FIGMA_TO_WCF_PROMPT, WCF_RESOURCE_URIS, IDE_SETUP_TEMPLATES } from './constants.mjs';
 import { normalizePrefix, withPrefix, toCanonicalTagName, getCategory, buildDiagnosticSuggestion, applyPrefixToHtml, applyPrefixToTagMap, mergeWithPrefixed } from './prefix.mjs';
-import { buildJsonToolResponse, buildJsonToolErrorResponse, expandQueryWithSynonyms, measureToolResultBytes, isStructuredContentDisabled } from './response.mjs';
+import { buildJsonToolResponse, buildJsonToolErrorResponse, expandQueryWithSynonyms, finalizeToolResult } from './response.mjs';
 import { normalizePlugins, buildPluginDataSourceMap, toPassthroughSchema } from './plugins.mjs';
 import { normalizeTokenIdentifier, buildTokenSuggestionMap, buildDesignTokensPayload, buildDesignTokenDetailPayload, buildComponentTokenReferencedBy, buildTokensResourcePayload } from './tokens.mjs';
 import {
@@ -37,6 +37,10 @@ import {
 // Single-module constants (DD-14)
 const GUIDELINE_TOPICS = Object.freeze(['accessibility', 'css', 'patterns', 'all']);
 const GUIDELINE_TOPIC_SET = Object.freeze(new Set(GUIDELINE_TOPICS));
+const ACCESSIBILITY_WARNING_CODES = Object.freeze(new Set([
+  'ariaLiveNotRecommended',
+  'roleAlertNotRecommended',
+]));
 
 /** Normalize a skill entry to summary fields (omit compat/manifest for wcf://skills). */
 function normalizeSkillSummary(s) {
@@ -384,10 +388,10 @@ export function registerAll(context) {
         title: p?.title,
       }));
 
-      const overview = {
-        name: 'DADS Web Components (wcf)',
-        version: '0.7.0',
-        prefix: detectedPrefix,
+        const overview = {
+          name: 'DADS Web Components (wcf)',
+          version: PACKAGE_VERSION,
+          prefix: detectedPrefix,
         totalComponents: indexes.decls.length,
         componentsByCategory: categoryCount,
         totalPatterns: patternList.length,
@@ -609,12 +613,6 @@ export function registerAll(context) {
           const a11y = extractAccessibilityChecklist(d, { prefix });
           if (a11y) api.accessibilityChecklist = a11y;
           results.push(api);
-        }
-        const resultJson = JSON.stringify(results, null, 2);
-        if (measureToolResultBytes(resultJson) > context.maxToolResultBytes) {
-          return buildJsonToolErrorResponse({
-            error: 'Batch result exceeds size limit. Reduce the number of components.',
-          });
         }
         return buildJsonToolResponse(results);
       }
@@ -857,7 +855,10 @@ export function registerAll(context) {
         text: html,
         severity: 'error',
         cemTagNames,
-      });
+      }).map((diagnostic) => ({
+        ...diagnostic,
+        severity: ACCESSIBILITY_WARNING_CODES.has(diagnostic.code) ? 'warning' : diagnostic.severity,
+      }));
 
       const slotDiagnostics = detectInvalidSlotName({
         filePath: '<markup>',
@@ -1446,7 +1447,7 @@ export function registerAll(context) {
                 },
               });
               if (result !== null && typeof result === 'object' && !Array.isArray(result) && Array.isArray(result.content)) {
-                return result;
+                return finalizeToolResult(result);
               }
               return buildJsonToolResponse(result ?? {});
             }

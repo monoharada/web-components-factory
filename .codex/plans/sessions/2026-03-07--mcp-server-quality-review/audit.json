@@ -1,0 +1,20 @@
+{
+  "session_slug": "2026-03-07--mcp-server-quality-review",
+  "skill": "goal-plan-orchestrator",
+  "verdict": "READY_FOR_IMPLEMENTATION",
+  "summary": {
+    "high_findings": 3,
+    "medium_findings": 4,
+    "low_findings": 2
+  },
+  "dod": {
+    "D-01": "PASS",
+    "D-02": "PASS",
+    "D-03": "PASS",
+    "D-04": "PASS"
+  },
+  "open_issues": [
+    "U-01: HTTP transport を stateless 維持にするか stateful にするかは実装時決定",
+    "U-02: validate_markup severity の正とする契約を README と実装のどちらに置くか決定が必要"
+  ]
+}

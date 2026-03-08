@@ -3,12 +3,14 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {
+  MAX_TOOL_RESULT_BYTES,
   PLUGIN_CONTRACT_VERSION,
   buildPluginDataSourceMap,
   createMcpServer,
+  measureToolResultBytes,
   normalizePlugins,
 } from './core.mjs';
-import { loadWcfMcpRuntimeConfig } from './server.mjs';
+import { createServer, loadWcfMcpRuntimeConfig } from './server.mjs';
 import { createPluginTestPair, loadBundledJson, loadBundledText } from './test-support.js';
 
 describe('plugin extensibility', () => {
@@ -265,9 +267,121 @@ describe('plugin extensibility', () => {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
   });
+
+  it('bounds oversized raw MCP results returned by plugin handlers', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'raw-result-plugin',
+        version: '1.0.0',
+        tools: [{
+          name: 'raw_result_test',
+          description: 'Return a raw MCP result',
+          async handler() {
+            return {
+              content: [{
+                type: 'text',
+                text: 'x'.repeat(120 * 1024),
+              }],
+            };
+          },
+        }],
+      }],
+    });
+    try {
+      const result = await client.callTool({ name: 'raw_result_test', arguments: {} });
+      expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+      expect(result.isError).toBeUndefined();
+      expect(result.structuredContent).toEqual({
+        warning: {
+          code: 'TOOL_RESULT_TOO_LARGE',
+          message: 'Tool result exceeded the response size limit; returning metadata only.',
+          actualBytes: expect.any(Number),
+          limitBytes: MAX_TOOL_RESULT_BYTES,
+        },
+      });
+      expect(JSON.parse(String(result.content?.[0]?.text ?? '{}'))).toEqual(result.structuredContent);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('preserves isError when oversized raw MCP error results are bounded', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'raw-error-result-plugin',
+        version: '1.0.0',
+        tools: [{
+          name: 'raw_error_result_test',
+          description: 'Return an oversized raw MCP error result',
+          async handler() {
+            return {
+              content: [{
+                type: 'text',
+                text: 'x'.repeat(120 * 1024),
+              }],
+              isError: true,
+            };
+          },
+        }],
+      }],
+    });
+    try {
+      const result = await client.callTool({ name: 'raw_error_result_test', arguments: {} });
+      expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+      expect(result.isError).toBe(true);
+      expect(result.structuredContent).toEqual({
+        warning: {
+          code: 'TOOL_RESULT_TOO_LARGE',
+          message: 'Tool result exceeded the response size limit; returning metadata only.',
+          actualBytes: expect.any(Number),
+          limitBytes: MAX_TOOL_RESULT_BYTES,
+        },
+      });
+      expect(JSON.parse(String(result.content?.[0]?.text ?? '{}'))).toEqual(result.structuredContent);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
 });
 
 describe('runtime config loader', () => {
+  it('createServer resolves the default config from the provided cwd', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(process.cwd(), '.tmp-wcf-mcp-loaders-'));
+    try {
+      const registryDir = path.join(tmpDir, 'registry');
+      const configPath = path.join(tmpDir, 'wcf-mcp.config.json');
+      await fs.mkdir(registryDir, { recursive: true });
+      await Promise.all([
+        fs.copyFile(path.join(process.cwd(), 'custom-elements.json'), path.join(tmpDir, 'custom-elements.json')),
+        fs.copyFile(path.join(process.cwd(), 'registry', 'install-registry.json'), path.join(registryDir, 'install-registry.json')),
+        fs.copyFile(path.join(process.cwd(), 'registry', 'pattern-registry.json'), path.join(registryDir, 'pattern-registry.json')),
+      ]);
+      await fs.writeFile(configPath, JSON.stringify({
+        plugins: [
+          {
+            name: 'cwd-static-plugin',
+            version: '1.0.0',
+            staticTools: [
+              {
+                name: 'cwd_tool',
+                payload: { ok: true },
+              },
+            ],
+          },
+        ],
+      }), 'utf8');
+
+      const runtime = await createServer({ cwd: tmpDir });
+      expect(runtime.pluginRuntime).toMatchObject({
+        pluginCount: 1,
+        pluginToolCount: 1,
+      });
+      await runtime.server.close();
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   it('returns empty plugins when default config is absent', async () => {
     const tmpDir = await fs.mkdtemp(path.join(process.cwd(), '.tmp-wcf-mcp-config-'));
     try {

@@ -69,6 +69,7 @@ import {
   buildComponentTokenReferencedBy,
   WCF_RESOURCE_URIS,
 } from './core.mjs';
+import { PACKAGE_VERSION } from './core/constants.mjs';
 import { buildEnumAttributeMap, buildSlotNameMap, collectCemCustomElements, detectAccessibilityMisuseInMarkup, detectEmptyInteractiveElement, detectEnumValueMisuse, detectInvalidSlotName, detectMissingRequiredAttributes, detectNonLowercaseAttributes, detectOrphanedChildComponents, detectTokenMisuseInInlineStyles } from './validator.mjs';
 import { loadWcfMcpRuntimeConfig } from './server.mjs';
 
@@ -750,6 +751,8 @@ describe('MCP prompts/resources contract', () => {
     });
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
 
+    expect(client.getServerVersion()?.version).toBe(PACKAGE_VERSION);
+    expect(payload.version).toBe(PACKAGE_VERSION);
     expect(Array.isArray(payload.ideSetupTemplates)).toBe(true);
     expect(payload.ideSetupTemplates.length).toBeGreaterThanOrEqual(5);
     expect(payload.ideSetupTemplates.some((item) => item.ide === 'VS Code (GitHub Copilot)')).toBe(true);
@@ -1192,6 +1195,40 @@ describe('MCP prompts/resources contract', () => {
     expect(payload[1].error).toContain('not found');
   });
 
+  it('get_component_api batch returns a bounded overflow payload for representative 10-component responses', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: {
+        components: [
+          'button',
+          'checkbox',
+          'input-text',
+          'radio',
+          'select',
+          'textarea',
+          'combobox',
+          'date-picker',
+          'file-upload',
+          'dialog',
+        ],
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+    const responseText = String(result.content?.[0]?.text ?? '{}');
+    expect(responseText).not.toContain('\n  ');
+    const payload = JSON.parse(responseText);
+    expect(payload).toEqual({
+      warning: {
+        code: 'TOOL_RESULT_TOO_LARGE',
+        message: 'Tool result exceeded the response size limit; returning metadata only.',
+        actualBytes: expect.any(Number),
+        limitBytes: MAX_TOOL_RESULT_BYTES,
+      },
+    });
+    expect(result.structuredContent).toEqual(payload);
+  });
+
   it('search_guidelines zero-result query returns suggestions with alternativeTools', async () => {
     const result = await client.callTool({
       name: 'search_guidelines',
@@ -1445,6 +1482,19 @@ describe('MCP prompts/resources contract', () => {
     expect(emptyAriaLabelDiag).toBeDefined();
     expect(emptyAriaLabelDiag.severity).toBe('error');
     expect(emptyAriaLabelDiag.suggestion).toBeDefined();
+  });
+
+  it('validate_markup reports aria-live and role=alert as warnings', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<div aria-live="polite" role="alert">status</div>' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const ariaLive = payload.diagnostics.find((diag) => diag.code === 'ariaLiveNotRecommended');
+    const roleAlert = payload.diagnostics.find((diag) => diag.code === 'roleAlertNotRecommended');
+    expect(ariaLive?.severity).toBe('warning');
+    expect(roleAlert?.severity).toBe('warning');
   });
 
   it('validate_markup does not flag non-empty label', async () => {
@@ -2118,10 +2168,7 @@ describe('structuredContent helpers', () => {
     const result = buildJsonToolResponse(payload, { env: {} });
 
     expect(result).toHaveProperty('content');
-    expect(result.structuredContent).toEqual({
-      type: 'application/json',
-      data: payload,
-    });
+    expect(result.structuredContent).toEqual(payload);
     expect(JSON.parse(result.content[0].text)).toEqual(payload);
   });
 
@@ -2144,11 +2191,26 @@ describe('structuredContent helpers', () => {
     const result = buildJsonToolErrorResponse(payload, { env: {} });
 
     expect(result.isError).toBe(true);
-    expect(result.structuredContent).toEqual({
-      type: 'application/json',
-      data: payload,
-    });
+    expect(result.structuredContent).toEqual(payload);
     expect(JSON.parse(result.content[0].text)).toEqual(payload);
+  });
+
+  it('keeps JSON error responses bounded when isError would otherwise exceed the response size limit', () => {
+    const payload = { blob: 'x'.repeat(102325) };
+
+    const result = buildJsonToolErrorResponse(payload, { env: {} });
+
+    expect(result.isError).toBe(true);
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+    expect(result.structuredContent).toEqual({
+      warning: {
+        code: 'TOOL_RESULT_TOO_LARGE',
+        message: 'Tool result exceeded the response size limit; returning metadata only.',
+        actualBytes: expect.any(Number),
+        limitBytes: MAX_TOOL_RESULT_BYTES,
+      },
+    });
+    expect(JSON.parse(result.content[0].text)).toEqual(result.structuredContent);
   });
 
   it('builds token suggestion map from color/spacing tokens only', () => {
@@ -2176,10 +2238,7 @@ describe('structuredContent helpers', () => {
     });
     const structuredCandidate = {
       ...textOnlyResponse,
-      structuredContent: {
-        type: 'application/json',
-        data: payload,
-      },
+      structuredContent: payload,
     };
 
     expect(measureToolResultBytes(structuredCandidate)).toBeGreaterThan(MAX_TOOL_RESULT_BYTES);
@@ -2187,6 +2246,42 @@ describe('structuredContent helpers', () => {
     const result = buildJsonToolResponse(payload, { env: {} });
     expect(result.structuredContent).toBeUndefined();
     expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+  });
+
+  it('returns an overflow warning payload when compact text-only would still exceed the response size limit', () => {
+    const payload = { blob: 'x'.repeat(120 * 1024) };
+
+    const result = buildJsonToolResponse(payload, { env: {} });
+
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+    expect(result.structuredContent).toEqual({
+      warning: {
+        code: 'TOOL_RESULT_TOO_LARGE',
+        message: 'Tool result exceeded the response size limit; returning metadata only.',
+        actualBytes: expect.any(Number),
+        limitBytes: MAX_TOOL_RESULT_BYTES,
+      },
+    });
+    expect(JSON.parse(result.content[0].text)).toEqual(result.structuredContent);
+  });
+
+  it('keeps overflow fallback bounded when structuredContent is disabled', () => {
+    const payload = { blob: 'x'.repeat(120 * 1024) };
+
+    const result = buildJsonToolResponse(payload, {
+      env: { [STRUCTURED_CONTENT_DISABLE_FLAG]: '1' },
+    });
+
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+    expect(result.structuredContent).toBeUndefined();
+    expect(JSON.parse(result.content[0].text)).toEqual({
+      warning: {
+        code: 'TOOL_RESULT_TOO_LARGE',
+        message: 'Tool result exceeded the response size limit; returning metadata only.',
+        actualBytes: expect.any(Number),
+        limitBytes: MAX_TOOL_RESULT_BYTES,
+      },
+    });
   });
 });
 

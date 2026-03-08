@@ -102,7 +102,7 @@ export {
 import { normalizePlugins, buildPluginDataSourceMap } from './core/plugins.mjs';
 import { buildIndexes, extractPrefixFromIndexes, loadPatternRegistryShape, buildRelatedComponentMap, buildPatternFrequencyMap } from './core/cem.mjs';
 import { buildTokenSuggestionMap, buildComponentTokenReferencedBy } from './core/tokens.mjs';
-import { MAX_TOOL_RESULT_BYTES } from './core/constants.mjs';
+import { MAX_TOOL_RESULT_BYTES, PACKAGE_VERSION } from './core/constants.mjs';
 
 // ---------------------------------------------------------------------------
 // createMcpServer — builds the McpServer with all tools registered, but does
@@ -192,7 +192,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
 
   const server = new McpServer({
     name: 'web-components-factory-design-system',
-    version: '0.7.0',
+    version: PACKAGE_VERSION,
   });
 
   // Delegate all tool / resource / prompt registration to register.mjs (DD-08)

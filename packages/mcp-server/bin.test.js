@@ -1,13 +1,38 @@
 import { describe, expect, it } from 'vitest';
+import http from 'node:http';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { USAGE, parseArgs } from './bin.mjs';
+import { USAGE, buildHttpTransportOptions, createHttpRequestHandler, parseArgs } from './bin.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BIN_PATH = path.join(__dirname, 'bin.mjs');
+
+function sendHttpRequest({ port, pathName = '/mcp', method = 'GET', headers = {} }) {
+  return new Promise((resolve, reject) => {
+    const req = http.request({
+      host: '127.0.0.1',
+      port,
+      path: pathName,
+      method,
+      headers,
+    }, (res) => {
+      const chunks = [];
+      res.on('data', (chunk) => chunks.push(chunk));
+      res.on('end', () => {
+        resolve({
+          statusCode: res.statusCode ?? 0,
+          headers: res.headers,
+          body: Buffer.concat(chunks).toString('utf8'),
+        });
+      });
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
 
 describe('bin CLI argument parsing', () => {
   it('uses stdio transport by default', () => {
@@ -79,5 +104,105 @@ describe('bin transport wiring', () => {
     } finally {
       await fs.rm(tmpDir, { recursive: true, force: true });
     }
+  });
+});
+
+describe('HTTP transport handler', () => {
+  it('builds stateless transport options with localhost security guards', () => {
+    expect(buildHttpTransportOptions({ port: 3100 })).toEqual({
+      sessionIdGenerator: undefined,
+      allowedHosts: ['127.0.0.1:3100', 'localhost:3100'],
+      allowedOrigins: ['http://127.0.0.1:3100', 'http://localhost:3100'],
+      enableDnsRebindingProtection: true,
+    });
+  });
+
+  it('allows default-port host and origin variants without explicit :80', () => {
+    expect(buildHttpTransportOptions({ port: 80 })).toEqual({
+      sessionIdGenerator: undefined,
+      allowedHosts: ['127.0.0.1:80', '127.0.0.1', 'localhost:80', 'localhost'],
+      allowedOrigins: ['http://127.0.0.1:80', 'http://127.0.0.1', 'http://localhost:80', 'http://localhost'],
+      enableDnsRebindingProtection: true,
+    });
+  });
+
+  it('handles repeated requests without reusing a stateless transport', async () => {
+    let handleRequest;
+    const httpServer = http.createServer((req, res) => {
+      void handleRequest(req, res);
+    });
+    await new Promise((resolve) => httpServer.listen(0, '127.0.0.1', resolve));
+    const address = httpServer.address();
+    const port = typeof address === 'object' && address ? address.port : 0;
+    handleRequest = createHttpRequestHandler({ port });
+
+    try {
+      const first = await sendHttpRequest({ port });
+      const second = await sendHttpRequest({ port });
+
+      expect(first.statusCode).toBe(406);
+      expect(second.statusCode).toBe(406);
+    } finally {
+      await new Promise((resolve) => httpServer.close(resolve));
+    }
+  });
+
+  it('returns 404 for non-MCP HTTP paths', async () => {
+    let handleRequest;
+    const httpServer = http.createServer((req, res) => {
+      void handleRequest(req, res);
+    });
+    await new Promise((resolve) => httpServer.listen(0, '127.0.0.1', resolve));
+    const address = httpServer.address();
+    const port = typeof address === 'object' && address ? address.port : 0;
+    handleRequest = createHttpRequestHandler({ port });
+
+    try {
+      const response = await sendHttpRequest({
+        port,
+        pathName: '/wrong',
+      });
+      expect(response.statusCode).toBe(404);
+    } finally {
+      await new Promise((resolve) => httpServer.close(resolve));
+    }
+  });
+
+  it('rejects disallowed origins in HTTP mode', async () => {
+    let handleRequest;
+    const httpServer = http.createServer((req, res) => {
+      void handleRequest(req, res);
+    });
+    await new Promise((resolve) => httpServer.listen(0, '127.0.0.1', resolve));
+    const address = httpServer.address();
+    const port = typeof address === 'object' && address ? address.port : 0;
+    handleRequest = createHttpRequestHandler({ port });
+
+    try {
+      const response = await sendHttpRequest({
+        port,
+        headers: { Origin: 'http://evil.example' },
+      });
+      expect(response.statusCode).toBe(403);
+    } finally {
+      await new Promise((resolve) => httpServer.close(resolve));
+    }
+  });
+
+  it('fails fast before listening when HTTP config is invalid', () => {
+    const result = spawnSync(process.execPath, [
+      BIN_PATH,
+      '--transport=http',
+      '--port=43121',
+      '--config=./definitely-missing-config.json',
+    ], {
+      cwd: path.resolve(__dirname, '../..'),
+      encoding: 'utf8',
+      timeout: 10_000,
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('Config file not found');
+    expect(result.stderr).not.toContain('MCP HTTP server listening');
   });
 });
