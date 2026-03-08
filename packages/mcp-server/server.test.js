@@ -2195,6 +2195,24 @@ describe('structuredContent helpers', () => {
     expect(JSON.parse(result.content[0].text)).toEqual(payload);
   });
 
+  it('keeps JSON error responses bounded when isError would otherwise exceed the response size limit', () => {
+    const payload = { blob: 'x'.repeat(102325) };
+
+    const result = buildJsonToolErrorResponse(payload, { env: {} });
+
+    expect(result.isError).toBe(true);
+    expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+    expect(result.structuredContent).toEqual({
+      warning: {
+        code: 'TOOL_RESULT_TOO_LARGE',
+        message: 'Tool result exceeded the response size limit; returning metadata only.',
+        actualBytes: expect.any(Number),
+        limitBytes: MAX_TOOL_RESULT_BYTES,
+      },
+    });
+    expect(JSON.parse(result.content[0].text)).toEqual(result.structuredContent);
+  });
+
   it('builds token suggestion map from color/spacing tokens only', () => {
     const map = buildTokenSuggestionMap({
       tokens: [

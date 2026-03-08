@@ -58,7 +58,7 @@ export function measureToolResultBytes(result) {
   return Buffer.byteLength(JSON.stringify(result), 'utf8');
 }
 
-function buildOverflowToolResponse(actualBytes, { env = process.env } = {}) {
+function buildOverflowToolResponse(actualBytes, { env = process.env, isError = false } = {}) {
   const payload = {
     warning: {
       code: 'TOOL_RESULT_TOO_LARGE',
@@ -71,17 +71,31 @@ function buildOverflowToolResponse(actualBytes, { env = process.env } = {}) {
     type: 'text',
     text: JSON.stringify(payload),
   }];
+  const baseResult = isError
+    ? { content, isError: true }
+    : { content };
   if (isStructuredContentDisabled(env)) {
-    return { content };
+    return baseResult;
   }
   const structuredResponse = {
-    content,
+    ...baseResult,
     structuredContent: payload,
   };
   if (measureToolResultBytes(structuredResponse) <= MAX_TOOL_RESULT_BYTES) {
     return structuredResponse;
   }
-  return { content };
+  return baseResult;
+}
+
+export function finalizeToolResult(result, { env = process.env } = {}) {
+  const actualBytes = measureToolResultBytes(result);
+  if (actualBytes <= MAX_TOOL_RESULT_BYTES) {
+    return result;
+  }
+  return buildOverflowToolResponse(actualBytes, {
+    env,
+    isError: result?.isError === true,
+  });
 }
 
 export function buildJsonToolResponse(payload, { env = process.env } = {}) {
@@ -100,11 +114,7 @@ export function buildJsonToolResponse(payload, { env = process.env } = {}) {
     if (measureToolResultBytes(prettyResponse) <= MAX_TOOL_RESULT_BYTES) {
       return prettyResponse;
     }
-    const compactResponse = { content: compactContent };
-    if (measureToolResultBytes(compactResponse) <= MAX_TOOL_RESULT_BYTES) {
-      return compactResponse;
-    }
-    return buildOverflowToolResponse(measureToolResultBytes(compactResponse), { env });
+    return finalizeToolResult({ content: compactContent }, { env });
   }
 
   const prettyStructuredResponse = {
@@ -128,17 +138,12 @@ export function buildJsonToolResponse(payload, { env = process.env } = {}) {
     return prettyTextOnlyResponse;
   }
 
-  const compactTextOnlyResponse = { content: compactContent };
-  if (measureToolResultBytes(compactTextOnlyResponse) <= MAX_TOOL_RESULT_BYTES) {
-    return compactTextOnlyResponse;
-  }
-
-  return buildOverflowToolResponse(measureToolResultBytes(compactTextOnlyResponse), { env });
+  return finalizeToolResult({ content: compactContent }, { env });
 }
 
-export function buildJsonToolErrorResponse(payload, options) {
-  return {
+export function buildJsonToolErrorResponse(payload, options = {}) {
+  return finalizeToolResult({
     ...buildJsonToolResponse(payload, options),
     isError: true,
-  };
+  }, options);
 }

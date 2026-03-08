@@ -6,7 +6,7 @@ import { ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { CANONICAL_PREFIX, PACKAGE_VERSION, PLUGIN_TOOL_NOTICE, FIGMA_TO_WCF_PROMPT, WCF_RESOURCE_URIS, IDE_SETUP_TEMPLATES } from './constants.mjs';
 import { normalizePrefix, withPrefix, toCanonicalTagName, getCategory, buildDiagnosticSuggestion, applyPrefixToHtml, applyPrefixToTagMap, mergeWithPrefixed } from './prefix.mjs';
-import { buildJsonToolResponse, buildJsonToolErrorResponse, expandQueryWithSynonyms } from './response.mjs';
+import { buildJsonToolResponse, buildJsonToolErrorResponse, expandQueryWithSynonyms, finalizeToolResult } from './response.mjs';
 import { normalizePlugins, buildPluginDataSourceMap, toPassthroughSchema } from './plugins.mjs';
 import { normalizeTokenIdentifier, buildTokenSuggestionMap, buildDesignTokensPayload, buildDesignTokenDetailPayload, buildComponentTokenReferencedBy, buildTokensResourcePayload } from './tokens.mjs';
 import {
@@ -1447,7 +1447,7 @@ export function registerAll(context) {
                 },
               });
               if (result !== null && typeof result === 'object' && !Array.isArray(result) && Array.isArray(result.content)) {
-                return result;
+                return finalizeToolResult(result);
               }
               return buildJsonToolResponse(result ?? {});
             }

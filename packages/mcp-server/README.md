@@ -349,7 +349,8 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 `get_component_api` / `get_design_tokens` / `get_design_token_detail` / `get_accessibility_docs` / `search_guidelines` のうち、object payload を返すケースでは通常 `structuredContent` を返します。
 
 - `structuredContent` は MCP 仕様どおり JSON object を直接返します
-- 100KB 制限を超える場合は自動的に `structuredContent` を省略し、必要に応じて `content` を compact JSON に切り替えます
+- 100KB 制限を超える場合は自動的に `structuredContent` を省略し、必要に応じて `content` を compact JSON に切り替え、それでも収まらなければ `TOOL_RESULT_TOO_LARGE` warning payload にフォールバックします
+- plugin handler が raw MCP result を返す場合も、最終返却サイズには同じ上限が適用されます
 - 緊急切り戻し時は環境変数 `WCF_MCP_DISABLE_STRUCTURED_CONTENT=1` を設定してください
 
 例:

@@ -3,9 +3,11 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {
+  MAX_TOOL_RESULT_BYTES,
   PLUGIN_CONTRACT_VERSION,
   buildPluginDataSourceMap,
   createMcpServer,
+  measureToolResultBytes,
   normalizePlugins,
 } from './core.mjs';
 import { createServer, loadWcfMcpRuntimeConfig } from './server.mjs';
@@ -261,6 +263,81 @@ describe('plugin extensibility', () => {
       await client.callTool({ name: 'text_read_test', arguments: {} });
       expect(typeof textContent).toBe('string');
       expect(textContent.length).toBeGreaterThan(0);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('bounds oversized raw MCP results returned by plugin handlers', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'raw-result-plugin',
+        version: '1.0.0',
+        tools: [{
+          name: 'raw_result_test',
+          description: 'Return a raw MCP result',
+          async handler() {
+            return {
+              content: [{
+                type: 'text',
+                text: 'x'.repeat(120 * 1024),
+              }],
+            };
+          },
+        }],
+      }],
+    });
+    try {
+      const result = await client.callTool({ name: 'raw_result_test', arguments: {} });
+      expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+      expect(result.isError).toBeUndefined();
+      expect(result.structuredContent).toEqual({
+        warning: {
+          code: 'TOOL_RESULT_TOO_LARGE',
+          message: 'Tool result exceeded the response size limit; returning metadata only.',
+          actualBytes: expect.any(Number),
+          limitBytes: MAX_TOOL_RESULT_BYTES,
+        },
+      });
+      expect(JSON.parse(String(result.content?.[0]?.text ?? '{}'))).toEqual(result.structuredContent);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('preserves isError when oversized raw MCP error results are bounded', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'raw-error-result-plugin',
+        version: '1.0.0',
+        tools: [{
+          name: 'raw_error_result_test',
+          description: 'Return an oversized raw MCP error result',
+          async handler() {
+            return {
+              content: [{
+                type: 'text',
+                text: 'x'.repeat(120 * 1024),
+              }],
+              isError: true,
+            };
+          },
+        }],
+      }],
+    });
+    try {
+      const result = await client.callTool({ name: 'raw_error_result_test', arguments: {} });
+      expect(measureToolResultBytes(result)).toBeLessThanOrEqual(MAX_TOOL_RESULT_BYTES);
+      expect(result.isError).toBe(true);
+      expect(result.structuredContent).toEqual({
+        warning: {
+          code: 'TOOL_RESULT_TOO_LARGE',
+          message: 'Tool result exceeded the response size limit; returning metadata only.',
+          actualBytes: expect.any(Number),
+          limitBytes: MAX_TOOL_RESULT_BYTES,
+        },
+      });
+      expect(JSON.parse(String(result.content?.[0]?.text ?? '{}'))).toEqual(result.structuredContent);
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
