@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs/promises';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -23,10 +22,10 @@ import {
   searchIconCatalog,
 } from '../../packages/mcp-server/core.mjs';
 import { PACKAGE_VERSION } from '../../packages/mcp-server/core/constants.mjs';
+import { loadJsonDataWithFallback } from '../../packages/mcp-server/runtime-data.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
-const DATA_DIR = path.join(ROOT, 'packages/mcp-server/data');
 const MAX_RESPONSE_BYTES = MAX_TOOL_RESULT_BYTES;
 const MAX_GUIDELINE_RESULTS = 20;
 const P95_THRESHOLD_MS = 1000;
@@ -46,9 +45,7 @@ function computeP95(values) {
 }
 
 async function loadJson(fileName) {
-  const filePath = path.join(DATA_DIR, fileName);
-  const raw = await fs.readFile(filePath, 'utf8');
-  return JSON.parse(raw);
+  return loadJsonDataWithFallback(fileName, { repoRoot: ROOT });
 }
 
 function toTextToolResponse(payload) {

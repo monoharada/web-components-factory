@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 export const RUNTIME_FILE_MAP = Object.freeze({
   'custom-elements.json': 'custom-elements.json',
@@ -31,6 +32,33 @@ async function readTextIfExists(targetPath) {
   }
 }
 
+async function loadGeneratedJsonFallback(fileName, { repoRoot }) {
+  const generators = {
+    'design-tokens.json': {
+      modulePath: path.join(repoRoot, 'scripts/mcp/extract-design-tokens.mjs'),
+      exportName: 'buildDesignTokensData',
+    },
+    'guidelines-index.json': {
+      modulePath: path.join(repoRoot, 'scripts/mcp/index-guidelines.mjs'),
+      exportName: 'buildGuidelinesIndexData',
+    },
+  };
+
+  const generator = generators[fileName];
+  if (!generator) return null;
+
+  try {
+    await fs.access(generator.modulePath);
+  } catch {
+    return null;
+  }
+
+  const loaded = await import(pathToFileURL(generator.modulePath).href);
+  const build = loaded?.[generator.exportName];
+  if (typeof build !== 'function') return null;
+  return build();
+}
+
 export async function loadTextDataWithFallback(fileName, { bundledDir, repoRoot = process.cwd() } = {}) {
   const bundled = resolveBundledDataPath(fileName, { bundledDir });
   const repo = resolveRuntimeDataPath(fileName, { repoRoot });
@@ -44,12 +72,20 @@ export async function loadTextDataWithFallback(fileName, { bundledDir, repoRoot 
 }
 
 export async function loadJsonDataWithFallback(fileName, options = {}) {
-  const text = await loadTextDataWithFallback(fileName, options);
   try {
-    return JSON.parse(text);
+    const text = await loadTextDataWithFallback(fileName, options);
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      throw new Error(
+        `データファイルのJSON解析に失敗しました: ${fileName} (${error instanceof Error ? error.message : String(error)})`,
+      );
+    }
   } catch (error) {
-    throw new Error(
-      `データファイルのJSON解析に失敗しました: ${fileName} (${error instanceof Error ? error.message : String(error)})`,
-    );
+    const generated = await loadGeneratedJsonFallback(fileName, {
+      repoRoot: options.repoRoot ?? process.cwd(),
+    });
+    if (generated !== null) return generated;
+    throw error;
   }
 }

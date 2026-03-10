@@ -12,7 +12,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
@@ -193,7 +193,7 @@ function extractTitle(content, fileName) {
 // Main
 // ---------------------------------------------------------------------------
 
-async function main() {
+export async function buildGuidelinesIndexData() {
   const files = await discoverMarkdownFiles();
   const documents = [];
 
@@ -304,23 +304,40 @@ async function main() {
     topicCounts[doc.topic] = (topicCounts[doc.topic] ?? 0) + 1;
   }
 
-  const output = {
+  return {
     version: '0.1.0',
     indexedAt: new Date().toISOString(),
     documents,
     topicCounts,
   };
-
-  await fs.mkdir(path.dirname(OUTPUT), { recursive: true });
-  await fs.writeFile(OUTPUT, JSON.stringify(output, null, 2) + '\n', 'utf8');
-
-  const sizeKb = (Buffer.byteLength(JSON.stringify(output), 'utf8') / 1024).toFixed(1);
-  console.log(`Indexed ${documents.length} documents (${sizeKb} KB)`);
-  console.log(`  Topics: ${JSON.stringify(topicCounts)}`);
-  console.log(`  → ${path.relative(ROOT, OUTPUT)}`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+export async function writeGuidelinesIndex(outputPath = OUTPUT) {
+  const output = await buildGuidelinesIndexData();
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
+  await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
+
+  const sizeKb = (Buffer.byteLength(JSON.stringify(output), 'utf8') / 1024).toFixed(1);
+  const documents = Array.isArray(output.documents) ? output.documents : [];
+  const topicCounts = output.topicCounts ?? {};
+  console.log(`Indexed ${documents.length} documents (${sizeKb} KB)`);
+  console.log(`  Topics: ${JSON.stringify(topicCounts)}`);
+  console.log(`  → ${path.relative(ROOT, outputPath)}`);
+  return output;
+}
+
+export async function main() {
+  await writeGuidelinesIndex();
+}
+
+const directRunArg = process.argv[1];
+const isDirectRun =
+  typeof directRunArg === 'string' &&
+  pathToFileURL(path.resolve(directRunArg)).href === import.meta.url;
+
+if (isDirectRun) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
