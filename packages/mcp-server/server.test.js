@@ -70,7 +70,7 @@ import {
   WCF_RESOURCE_URIS,
 } from './core.mjs';
 import { PACKAGE_VERSION } from './core/constants.mjs';
-import { buildEnumAttributeMap, buildSlotNameMap, collectCemCustomElements, detectAccessibilityMisuseInMarkup, detectEmptyInteractiveElement, detectEnumValueMisuse, detectInvalidSlotName, detectMissingRequiredAttributes, detectNonLowercaseAttributes, detectOrphanedChildComponents, detectTokenMisuseInInlineStyles } from './validator.mjs';
+import { buildEnumAttributeMap, buildSlotNameMap, collectCemCustomElements, detectAccessibilityMisuseInMarkup, detectDuplicateIdsInMarkup, detectEmptyInteractiveElement, detectEnumValueMisuse, detectInvalidSlotName, detectMissingRequiredAttributes, detectNonLowercaseAttributes, detectOrphanedChildComponents, detectTokenMisuseInInlineStyles } from './validator.mjs';
 import { loadWcfMcpRuntimeConfig } from './server.mjs';
 
 // ---------------------------------------------------------------------------
@@ -153,7 +153,7 @@ describe('get_design_system_overview (logic)', () => {
     }
   });
 
-  it('includes all expected tool names (16 tools)', () => {
+  it('includes all expected tool names (19 tools)', () => {
     const expectedTools = [
       'get_design_system_overview',
       'list_components',
@@ -162,6 +162,8 @@ describe('get_design_system_overview (logic)', () => {
       'generate_usage_snippet',
       'get_install_recipe',
       'validate_markup',
+      'validate_files',
+      'validate_project',
       'generate_full_page_html',
       'list_patterns',
       'get_pattern_recipe',
@@ -170,11 +172,12 @@ describe('get_design_system_overview (logic)', () => {
       'get_design_token_detail',
       'get_accessibility_docs',
       'search_guidelines',
+      'search_design_system_knowledge',
       'get_component_selector_guide',
     ];
 
-    expect(expectedTools).toHaveLength(16);
-    expect(new Set(expectedTools).size).toBe(16);
+    expect(expectedTools).toHaveLength(19);
+    expect(new Set(expectedTools).size).toBe(19);
   });
 
   it('provides at least three IDE setup templates', () => {
@@ -499,6 +502,24 @@ describe('buildComponentTokenReferencedBy', () => {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
   });
+
+  it('maps fallback token references in cssProperty defaults to declaring component', () => {
+    const manifest = {
+      modules: [{
+        declarations: [{
+          tagName: 'dads-fallback-test',
+          customElement: true,
+          cssProperties: [{
+            name: '--dads-fallback-test-color',
+            default: 'var(--color-a, var(--color-b, #fff))',
+          }],
+        }],
+      }],
+    };
+    const refMap = buildComponentTokenReferencedBy(manifest);
+    expect(refMap.get('--color-a')?.has('dads-fallback-test')).toBe(true);
+    expect(refMap.get('--color-b')?.has('dads-fallback-test')).toBe(true);
+  });
 });
 
 describe('prefix normalization compatibility (logic)', () => {
@@ -571,6 +592,8 @@ describe('tool descriptions', () => {
       'generate_usage_snippet',
       'get_install_recipe',
       'validate_markup',
+      'validate_files',
+      'validate_project',
       'list_patterns',
       'get_pattern_recipe',
       'generate_pattern_snippet',
@@ -578,6 +601,7 @@ describe('tool descriptions', () => {
       'get_design_token_detail',
       'get_accessibility_docs',
       'search_guidelines',
+      'search_design_system_knowledge',
     ];
 
     for (const name of toolNames) {
@@ -1247,6 +1271,92 @@ describe('MCP prompts/resources contract', () => {
     expect(payload.suggestions.alternativeTools.some((t) => t.tool === 'get_component_api')).toBe(true);
   });
 
+  it('search_design_system_knowledge returns mixed-source results', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: 'button',
+        maxResults: 20,
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+    expect(payload.totalHits).toBeGreaterThan(0);
+    expect(new Set(payload.results.map((item) => item.source)).size).toBeGreaterThanOrEqual(2);
+    expect(payload.results.every((item) => item.followUp)).toBe(true);
+  });
+
+  it('search_design_system_knowledge supports source filtering for skills', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: 'css',
+        sources: ['skills'],
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+    expect(payload.totalHits).toBeGreaterThan(0);
+    expect(payload.results.every((item) => item.source === 'skills')).toBe(true);
+    expect(payload.results[0].followUp.resource).toBe('wcf://skills');
+  });
+
+  it('search_design_system_knowledge prioritizes exact component matches near the top', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: 'dads-button',
+        maxResults: 5,
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+    expect(payload.results[0].source).toBe('components');
+    expect(payload.results[0].id).toBe('dads-button');
+  });
+
+  it('search_design_system_knowledge prioritizes exact token matches near the top', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: '--color-primary',
+        maxResults: 5,
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+    expect(payload.results[0].source).toBe('tokens');
+    expect(payload.results[0].id).toBe('--color-primary');
+  });
+
+  it('search_design_system_knowledge prioritizes exact skill matches near the top', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: 'css-writing-rules',
+        maxResults: 5,
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+    expect(payload.results[0].source).toBe('skills');
+    expect(payload.results[0].id).toBe('css-writing-rules');
+  });
+
+  it('search_design_system_knowledge returns alternative tool suggestions on zero hits', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: 'zzznonexistentknowledgequery',
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+    expect(payload.totalHits).toBe(0);
+    expect(Array.isArray(payload.suggestions.alternativeTools)).toBe(true);
+    expect(payload.suggestions.alternativeTools.some((tool) => tool.tool === 'list_components')).toBe(true);
+  });
+
   it('search_guidelines benchmark: all 6 builder queries return >0 results', async () => {
     const BENCHMARK_QUERIES = [
       'keyboard navigation',
@@ -1335,6 +1445,28 @@ describe('MCP prompts/resources contract', () => {
     expect(enumDiag).toBeUndefined();
   });
 
+  it('validate_markup ignores template expressions in enum attributes', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-breadcrumb separator="{{ separatorVariant }}"></dads-breadcrumb>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const enumDiag = payload.diagnostics.find((d) => d.code === 'invalidEnumValue');
+    expect(enumDiag).toBeUndefined();
+  });
+
+  it('validate_markup ignores JSX-style enum expressions with spaces', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: `<dads-breadcrumb separator={isCompact ? 'slash' : 'chevron'}></dads-breadcrumb>`,
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const enumDiag = payload.diagnostics.find((d) => d.code === 'invalidEnumValue');
+    expect(enumDiag).toBeUndefined();
+  });
+
   // P-08: Slot name and required attribute validation
   it('validate_markup detects invalid slot name', async () => {
     const result = await client.callTool({
@@ -1346,6 +1478,19 @@ describe('MCP prompts/resources contract', () => {
     expect(slotDiag).toBeDefined();
     expect(slotDiag.severity).toBe('error');
     expect(slotDiag.message).toContain('nonexistent-slot-xyz');
+  });
+
+  it('validate_markup detects slot name that is invalid for the current parent component', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<dads-button><span slot="content">Wrong slot</span></dads-button>',
+      },
+    });
+    const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+    const slotDiag = payload.diagnostics.find((d) => d.code === 'invalidSlotName');
+    expect(slotDiag).toBeDefined();
+    expect(slotDiag.message).toContain('<dads-button>');
   });
 
   it('validate_markup accepts known slot names', async () => {
@@ -1437,6 +1582,18 @@ describe('MCP prompts/resources contract', () => {
     expect(lowercaseDiag.suggestion).toContain('variant');
   });
 
+  it('validate_markup ignores JSX spread attributes', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<dads-button {...props} variant="solid">Click</dads-button>',
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const unknownAttr = payload.diagnostics.find((d) => d.code === 'unknownAttribute');
+    expect(unknownAttr).toBeUndefined();
+  });
+
   it('validate_markup does not flag lowercase attributes', async () => {
     const result = await client.callTool({
       name: 'validate_markup',
@@ -1472,6 +1629,16 @@ describe('MCP prompts/resources contract', () => {
     expect(emptyLabelDiag.suggestion).toBeDefined();
   });
 
+  it('validate_markup does not flag template-driven label as empty', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<dads-input-text label="{{ fieldLabel }}" name="field"></dads-input-text>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const emptyLabelDiag = payload.diagnostics.find((d) => d.code === 'emptyLabel');
+    expect(emptyLabelDiag).toBeUndefined();
+  });
+
   it('validate_markup detects empty aria-label on custom element', async () => {
     const result = await client.callTool({
       name: 'validate_markup',
@@ -1495,6 +1662,32 @@ describe('MCP prompts/resources contract', () => {
     const roleAlert = payload.diagnostics.find((diag) => diag.code === 'roleAlertNotRecommended');
     expect(ariaLive?.severity).toBe('warning');
     expect(roleAlert?.severity).toBe('warning');
+  });
+
+  it('validate_markup ignores custom element strings inside script blocks', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<script>const tpl = `<dads-buton></dads-buton>`;</script><dads-button>OK</dads-button>',
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const unknownDiag = payload.diagnostics.find((d) => d.code === 'unknownElement');
+    expect(unknownDiag).toBeUndefined();
+  });
+
+  it('validate_markup ignores custom element strings inside HTML comments', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<!-- <dads-buton></dads-buton> --><dads-button>OK</dads-button>',
+      },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const unknownDiag = payload.diagnostics.find((d) => d.code === 'unknownElement');
+    expect(unknownDiag).toBeUndefined();
   });
 
   it('validate_markup does not flag non-empty label', async () => {
@@ -1804,12 +1997,14 @@ describe('get_design_tokens', () => {
     expect(data.themes).toHaveProperty('default', 'light');
     expect(Array.isArray(data.themes.available)).toBe(true);
     expect(data.themes.available).toContain('light');
+    expect(data.tokens[0]).toHaveProperty('themeValues');
+    expect(data.tokens[0].themeValues).toHaveProperty('light');
     expect(data).toHaveProperty('relationships');
     expect(data.relationships).toHaveProperty('byToken');
     expect(typeof data.relationships.byToken).toBe('object');
   });
 
-  it('returns INVALID_THEME error payload for dark/all at tool-contract helper level', async () => {
+  it('returns INVALID_THEME for dark and resolves all to available themes', async () => {
     let data;
     try {
       data = await loadBundledJson('design-tokens.json');
@@ -1822,8 +2017,10 @@ describe('get_design_tokens', () => {
     expect(darkResult.payload.error.code).toBe('INVALID_THEME');
 
     const allResult = buildDesignTokensPayload(data, { theme: 'all' });
-    expect(allResult.isError).toBe(true);
-    expect(allResult.payload.error.code).toBe('INVALID_THEME');
+    expect(allResult.isError).toBe(false);
+    expect(allResult.payload.theme.requested).toBe('all');
+    expect(allResult.payload.theme.available).toContain('light');
+    expect(allResult.payload.tokens[0]).toHaveProperty('themeValues');
   });
 });
 
@@ -1839,11 +2036,17 @@ describe('token detail helpers', () => {
     expect(refs).toEqual(['--color-a', '--color-b']);
   });
 
+  it('extracts fallback token names from nested var() expressions', () => {
+    const refs = extractReferencedTokenNames('var(--color-a, var(--color-b, var(--color-c, #fff)))');
+    expect(refs).toEqual(['--color-a', '--color-b', '--color-c']);
+  });
+
   it('resolves supported and unsupported token themes', () => {
-    expect(resolveTokenTheme('light')).toMatchObject({ ok: true, resolved: 'light' });
-    expect(resolveTokenTheme(undefined)).toMatchObject({ ok: true, requested: 'light' });
-    expect(resolveTokenTheme('dark')).toMatchObject({ ok: false, errorCode: 'INVALID_THEME' });
-    expect(resolveTokenTheme('all')).toMatchObject({ ok: false, errorCode: 'INVALID_THEME' });
+    const themeData = { themes: { default: 'light', available: ['light'] } };
+    expect(resolveTokenTheme('light', themeData)).toMatchObject({ ok: true, resolved: 'light' });
+    expect(resolveTokenTheme(undefined, themeData)).toMatchObject({ ok: true, requested: 'light' });
+    expect(resolveTokenTheme('all', themeData)).toMatchObject({ ok: true, requested: 'all', resolved: 'light' });
+    expect(resolveTokenTheme('dark', themeData)).toMatchObject({ ok: false, errorCode: 'INVALID_THEME' });
   });
 
   it('builds relationships and provides token suggestions', async () => {
@@ -1895,6 +2098,20 @@ describe('token detail helpers', () => {
     const result = buildDesignTokenDetailPayload(data, '--color-primary', 'dark');
     expect(result.isError).toBe(true);
     expect(result.payload.error.code).toBe('INVALID_THEME');
+  });
+
+  it('returns themeValues in token detail payload for theme=all', async () => {
+    let data;
+    try {
+      data = await loadBundledJson('design-tokens.json');
+    } catch {
+      return;
+    }
+
+    const result = buildDesignTokenDetailPayload(data, '--color-primary', 'all');
+    expect(result.isError).toBe(false);
+    expect(result.payload.theme.requested).toBe('all');
+    expect(result.payload.token.themeValues).toHaveProperty('light');
   });
 
   it('returns non-empty usageExamples for color and spacing tokens', async () => {
@@ -3156,6 +3373,147 @@ describe('v0.5.0 backward compatibility', () => {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }
   });
+
+  it('validate_files validates multiple files and aggregates diagnostics', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-mcp-validate-files-'));
+    const duplicatePath = path.join(tmpDir, 'duplicate.html');
+    const cleanPath = path.join(tmpDir, 'clean.html');
+
+    await fs.writeFile(
+      duplicatePath,
+      '<!DOCTYPE html><html><body><div id="hero"></div><div id="hero"></div></body></html>',
+      'utf8',
+    );
+    await fs.writeFile(
+      cleanPath,
+      '<!DOCTYPE html><html><head><script type="importmap">{}</script><script type="module" src="./vendor-runtime/boot.js"></script></head><body><dads-button>OK</dads-button></body></html>',
+      'utf8',
+    );
+
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'validate_files',
+        arguments: {
+          files: [
+            { path: duplicatePath },
+            { path: cleanPath },
+          ],
+        },
+      });
+      expect(result.isError).toBeFalsy();
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      expect(payload.summary.filesRequested).toBe(2);
+      expect(payload.summary.filesValidated).toBe(2);
+      expect(payload.summary.fileErrorCount).toBe(0);
+      expect(Array.isArray(payload.files)).toBe(true);
+      const duplicateFile = payload.files.find((file) => file.path === duplicatePath);
+      expect(duplicateFile).toBeDefined();
+      expect(duplicateFile.diagnostics.some((diagnostic) => diagnostic.code === 'duplicateId')).toBe(true);
+      const cleanFile = payload.files.find((file) => file.path === cleanPath);
+      expect(cleanFile.counts.errorCount).toBe(0);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it('validate_files accepts inline content and reports file read errors separately', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'validate_files',
+        arguments: {
+          files: [
+            {
+              path: 'inline.html',
+              content: '<dads-button id="cta"></dads-button><dads-button id="cta"></dads-button>',
+            },
+            {
+              path: '/tmp/definitely-missing-wcf-file.html',
+            },
+          ],
+        },
+      });
+      expect(result.isError).toBeFalsy();
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      expect(payload.summary.filesRequested).toBe(2);
+      expect(payload.summary.filesValidated).toBe(1);
+      expect(payload.summary.fileErrorCount).toBe(1);
+      expect(payload.fileErrors).toHaveLength(1);
+      expect(payload.files[0].diagnostics.some((diagnostic) => diagnostic.code === 'duplicateId')).toBe(true);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('validate_project scans a directory using include/exclude globs', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-mcp-validate-project-'));
+    const pagesDir = path.join(tmpDir, 'pages');
+    const partialsDir = path.join(tmpDir, 'partials');
+    await fs.mkdir(pagesDir, { recursive: true });
+    await fs.mkdir(partialsDir, { recursive: true });
+
+    await fs.writeFile(
+      path.join(pagesDir, 'index.html'),
+      '<!DOCTYPE html><html><body><div id="hero"></div><div id="hero"></div></body></html>',
+      'utf8',
+    );
+    await fs.writeFile(
+      path.join(partialsDir, 'ignore.html'),
+      '<dads-button Variant="solid">Ignore</dads-button>',
+      'utf8',
+    );
+
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'validate_project',
+        arguments: {
+          root: tmpDir,
+          include: ['pages/**/*.html'],
+          exclude: ['partials/**'],
+        },
+      });
+      expect(result.isError).toBeFalsy();
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      expect(payload.summary.filesMatched).toBe(1);
+      expect(payload.summary.filesValidated).toBe(1);
+      expect(payload.summary.truncated).toBe(false);
+      expect(payload.files).toHaveLength(1);
+      expect(payload.files[0].relativePath).toBe('pages/index.html');
+      expect(payload.files[0].diagnostics.some((diagnostic) => diagnostic.code === 'duplicateId')).toBe(true);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it('validate_project default include patterns cover template files such as .njk', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-mcp-validate-project-template-'));
+    await fs.writeFile(
+      path.join(tmpDir, 'page.njk'),
+      '{% if showButton %}<dads-button>OK</dads-button>{% endif %}',
+      'utf8',
+    );
+
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'validate_project',
+        arguments: {
+          root: tmpDir,
+        },
+      });
+      expect(result.isError).toBeFalsy();
+      const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
+      expect(payload.summary.filesMatched).toBe(1);
+      expect(payload.files[0].relativePath).toBe('page.njk');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -3217,6 +3575,25 @@ describe('canonical lowercase attribute detection', () => {
     });
     const lowercaseDiags = diagnostics.filter((d) => d.code === 'canonicalLowercaseRecommendation');
     expect(lowercaseDiags).toHaveLength(0);
+  });
+});
+
+describe('duplicate id detection', () => {
+  it('flags duplicate ids within a single document', () => {
+    const diagnostics = detectDuplicateIdsInMarkup({
+      text: '<div id="hero"></div><section id="hero"></section>',
+    });
+    expect(diagnostics).toHaveLength(1);
+    expect(diagnostics[0].code).toBe('duplicateId');
+    expect(diagnostics[0].severity).toBe('error');
+    expect(diagnostics[0].attrName).toBe('id');
+  });
+
+  it('ignores unique ids', () => {
+    const diagnostics = detectDuplicateIdsInMarkup({
+      text: '<div id="hero"></div><section id="content"></section>',
+    });
+    expect(diagnostics).toHaveLength(0);
   });
 });
 

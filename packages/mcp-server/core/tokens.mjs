@@ -9,6 +9,19 @@ const TOKEN_MISUSE_ALLOWED_TYPES = Object.freeze(new Set(['color', 'spacing']));
 const TOKEN_THEMES = Object.freeze(new Set(['light', 'dark', 'all']));
 const WCAG_LEVELS = Object.freeze(new Set(['A', 'AA', 'AAA', 'all']));
 
+function getThemeConfig(designTokensData) {
+  const available = Array.isArray(designTokensData?.themes?.available) && designTokensData.themes.available.length > 0
+    ? [...new Set(designTokensData.themes.available.map((theme) => String(theme).trim().toLowerCase()).filter(Boolean))]
+    : ['light'];
+  const defaultTheme = typeof designTokensData?.themes?.default === 'string' && available.includes(String(designTokensData.themes.default).toLowerCase())
+    ? String(designTokensData.themes.default).toLowerCase()
+    : available[0];
+  return {
+    defaultTheme,
+    available,
+  };
+}
+
 export function normalizeTokenValue(value) {
   if (typeof value === 'string') return value.trim().toLowerCase().replace(/\s+/g, ' ');
   if (typeof value === 'number') return String(value);
@@ -54,7 +67,7 @@ export function normalizeTokenIdentifier(value) {
   return `--${raw.replace(/^[-]+/, '')}`;
 }
 
-export function resolveTokenTheme(theme) {
+export function resolveTokenTheme(theme, designTokensData) {
   const requested = String(theme ?? 'light').trim().toLowerCase() || 'light';
   if (!TOKEN_THEMES.has(requested)) {
     return {
@@ -63,29 +76,46 @@ export function resolveTokenTheme(theme) {
       message: `Unsupported theme: ${requested}. Allowed values are light, dark, all.`,
     };
   }
-  if (requested !== 'light') {
+
+  const themeConfig = getThemeConfig(designTokensData);
+  if (requested === 'all') {
+    return {
+      ok: true,
+      requested,
+      resolved: themeConfig.defaultTheme,
+      available: themeConfig.available,
+      mode: 'all',
+    };
+  }
+
+  if (!themeConfig.available.includes(requested)) {
     return {
       ok: false,
       errorCode: 'INVALID_THEME',
-      message: `Theme "${requested}" is not available yet. Use theme="light" (NG-06).`,
+      message: `Theme "${requested}" is not supported. Available themes in current data: ${themeConfig.available.join(', ')}.`,
     };
   }
+
   return {
     ok: true,
     requested,
-    resolved: 'light',
-    available: ['light'],
+    resolved: requested,
+    available: themeConfig.available,
+    mode: 'single',
   };
 }
 
 export function extractReferencedTokenNames(value) {
   if (typeof value !== 'string') return [];
   const refs = [];
-  const re = /var\(\s*(--[^,\s)]+)\s*(?:,\s*[^)]+)?\)/g;
+  const re = /var\(([^)]*)\)/g;
   let match;
   while ((match = re.exec(value))) {
-    const tokenName = normalizeTokenIdentifier(match[1]);
-    if (tokenName) refs.push(tokenName);
+    const candidates = String(match[1] ?? '').match(/--[^,\s)]+/g) ?? [];
+    for (const candidate of candidates) {
+      const tokenName = normalizeTokenIdentifier(candidate);
+      if (tokenName) refs.push(tokenName);
+    }
   }
   return [...new Set(refs)];
 }
@@ -141,12 +171,10 @@ export function buildTokenRelationshipIndex(designTokensData) {
 /**
  * Extract which components reference which design tokens via var() in CEM cssProperties.
  * Returns Map<tokenName, Set<componentTagName>>.
- * DD-25: var(--token, fallback) fallback values are not extracted (known limitation).
  */
 export function buildComponentTokenReferencedBy(manifest) {
   const result = new Map();
   const modules = Array.isArray(manifest?.modules) ? manifest.modules : [];
-  const varRe = /var\((--[\w-]+)/g;
   for (const mod of modules) {
     const declarations = Array.isArray(mod?.declarations) ? mod.declarations : [];
     for (const decl of declarations) {
@@ -155,9 +183,8 @@ export function buildComponentTokenReferencedBy(manifest) {
       const cssProps = Array.isArray(decl?.cssProperties) ? decl.cssProperties : [];
       for (const prop of cssProps) {
         const defaultVal = typeof prop?.default === 'string' ? prop.default : '';
-        let m;
-        while ((m = varRe.exec(defaultVal)) !== null) {
-          const tokenName = normalizeTokenIdentifier(m[1]);
+        for (const tokenRef of extractReferencedTokenNames(defaultVal)) {
+          const tokenName = normalizeTokenIdentifier(tokenRef);
           if (!tokenName) continue;
           if (!result.has(tokenName)) result.set(tokenName, new Set());
           result.get(tokenName).add(tag);
@@ -235,6 +262,30 @@ function buildUsageExamples(token) {
   return [`.example { --token-value: ${cssVar}; }`];
 }
 
+function resolveTokenValueForTheme(token, themeInfo) {
+  if (token?.themeValues && typeof token.themeValues === 'object') {
+    const themedValue = token.themeValues[themeInfo.resolved];
+    if (typeof themedValue === 'string' && themedValue.trim() !== '') {
+      return themedValue;
+    }
+  }
+  return token?.value;
+}
+
+function serializeTokenForTheme(token, themeInfo, { includeThemeValues = false } = {}) {
+  const serialized = {
+    ...toTokenSummary({
+      ...token,
+      value: resolveTokenValueForTheme(token, themeInfo),
+    }),
+  };
+  if (token?.group !== undefined) serialized.group = token.group;
+  if (includeThemeValues && token?.themeValues && typeof token.themeValues === 'object') {
+    serialized.themeValues = token.themeValues;
+  }
+  return serialized;
+}
+
 function buildTokenErrorPayload(code, message, extra = {}) {
   return {
     isError: true,
@@ -253,7 +304,7 @@ export function buildDesignTokenDetailPayload(designTokensData, name, theme) {
     );
   }
 
-  const themeInfo = resolveTokenTheme(theme);
+  const themeInfo = resolveTokenTheme(theme, designTokensData);
   if (!themeInfo.ok) {
     return buildTokenErrorPayload(themeInfo.errorCode, themeInfo.message);
   }
@@ -294,7 +345,7 @@ export function buildDesignTokenDetailPayload(designTokensData, name, theme) {
     isError: false,
     payload: {
       token: {
-        ...toTokenSummary(token),
+        ...serializeTokenForTheme(token, themeInfo, { includeThemeValues: true }),
         group: token?.group ?? null,
       },
       references,
@@ -318,7 +369,7 @@ export function buildDesignTokensPayload(designTokensData, { type, category, que
     );
   }
 
-  const themeInfo = resolveTokenTheme(theme);
+  const themeInfo = resolveTokenTheme(theme, designTokensData);
   if (!themeInfo.ok) {
     return buildTokenErrorPayload(themeInfo.errorCode, themeInfo.message);
   }
@@ -335,7 +386,9 @@ export function buildDesignTokensPayload(designTokensData, { type, category, que
     isError: false,
     payload: {
       total: tokens.length,
-      tokens,
+      tokens: tokens.map((token) =>
+        serializeTokenForTheme(token, themeInfo, { includeThemeValues: themeInfo.requested === 'all' })
+      ),
       summary: designTokensData.summary,
       theme: {
         requested: themeInfo.requested,

@@ -1,6 +1,6 @@
 # Plugin Contract v1
 
-wcf-mcp プラグインの正式な契約仕様（v1.0.0）です。
+wcf-mcp プラグインの正式な契約仕様（v1.4.0）です。
 
 ## 概要
 
@@ -17,10 +17,93 @@ interface WcfMcpPlugin {
   version: string;
   /** カスタムツール定義の配列 */
   tools?: WcfMcpPluginTool[];
+  /** validate_* 系に差し込む validator hook */
+  validators?: WcfMcpPluginValidator[];
+  /** 追加 prompt */
+  prompts?: WcfMcpPluginPrompt[];
+  /** 追加 resource */
+  resources?: WcfMcpPluginResource[];
+  /** 追加 resource template */
+  resourceTemplates?: WcfMcpPluginResourceTemplate[];
   /** データソース差し替え定義の配列 */
   dataSources?: WcfMcpDataSourceConfig[];
 }
 ```
+
+## Validator オブジェクト
+
+```typescript
+interface WcfMcpPluginValidator {
+  /** validator 名（plugin 内で一意） */
+  name: string;
+  /** 説明 */
+  description?: string;
+  /** 診断配列または { diagnostics } を返す */
+  handler: (
+    input: { filePath: string; text: string; prefix: string },
+    context: WcfMcpHandlerContext
+  ) => Array<Record<string, unknown>> | { diagnostics: Array<Record<string, unknown>> } | Promise<Array<Record<string, unknown>> | { diagnostics: Array<Record<string, unknown>> }>;
+}
+```
+
+### validator hook
+
+- `validate_markup`
+- `validate_files`
+- `validate_project`
+
+上記 3 tool 実行時に、各 plugin validator が追加診断を返せます。
+
+- `severity` 未指定時は `warning`
+- `file` 未指定時は対象ファイルへ自動補完
+- 失敗した validator は `pluginValidatorRuntimeError` warning として返却
+
+## Prompt / Resource オブジェクト
+
+```typescript
+interface WcfMcpPluginPrompt {
+  name: string;
+  title?: string;
+  description?: string;
+  argsSchema?: Record<string, unknown>; // zod raw shape or plain shape
+  handler?: (args: Record<string, unknown>, context: WcfMcpHandlerContext) => string | { messages: Array<Record<string, unknown>> } | Promise<string | { messages: Array<Record<string, unknown>> }>;
+  text?: string;
+}
+
+interface WcfMcpPluginResource {
+  name: string;
+  uri: string;
+  title?: string;
+  description?: string;
+  mimeType?: string;
+  handler?: (context: { plugin: { name: string; version: string }; helpers: WcfMcpHandlerContext["helpers"] }) => string | { contents: Array<Record<string, unknown>> } | Promise<string | { contents: Array<Record<string, unknown>> }>;
+  text?: string;
+  payload?: unknown;
+}
+
+interface WcfMcpPluginResourceTemplate {
+  name: string;
+  uriTemplate: string;
+  title?: string;
+  description?: string;
+  mimeType?: string;
+  handler?: (
+    input: { uri: string; variables: Record<string, string> },
+    context: { plugin: { name: string; version: string }; helpers: WcfMcpHandlerContext["helpers"] }
+  ) => string | { contents: Array<Record<string, unknown>> } | Promise<string | { contents: Array<Record<string, unknown>> }>;
+  text?: string;
+  payload?: unknown;
+  list?: string[];
+  complete?: Record<string, string[]>;
+}
+```
+
+- prompt は `handler` または `text` が必須
+- resource は `handler` / `text` / `payload` のいずれかが必須
+- resourceTemplate も `handler` / `text` / `payload` のいずれかが必須
+- prompt 名は組み込み prompt と重複不可
+- resource URI は組み込み resource URI と重複不可
+- resource template URI は組み込み template URI と重複不可
 
 ## Tool オブジェクト
 
@@ -93,8 +176,11 @@ interface WcfMcpDataSourceConfig {
 | `custom-elements.json` | Custom Elements Manifest |
 | `install-registry.json` | インストールレジストリ |
 | `pattern-registry.json` | パターンレジストリ |
+| `component-selector-guide.json` | コンポーネント選択ガイド |
 | `design-tokens.json` | デザイントークン |
 | `guidelines-index.json` | ガイドラインインデックス |
+| `skills-registry.json` | スキルレジストリ |
+| `llms-full.txt` | LLM 向け全文リファレンス |
 
 ## バリデーションルール
 
@@ -106,8 +192,11 @@ interface WcfMcpDataSourceConfig {
 
 ## 互換性ポリシー
 
-- **契約バージョン**: `1.1.0`（`PLUGIN_CONTRACT_VERSION` 定数で公開）
+- **契約バージョン**: `1.4.0`（`PLUGIN_CONTRACT_VERSION` 定数で公開）
 - **v1.1 追加**: `helpers.loadTextData` — テキストファイルの読み込み（UTF-8）
+- **v1.2 追加**: `validators` — validate_* tool へ差し込む validator hook
+- **v1.3 追加**: `prompts`, `resources` — plugin から MCP prompt/resource を追加
+- **v1.4 追加**: `resourceTemplates`, prompt の richer `argsSchema` shape
 - **v1.x 内**: 破壊的変更なし。新フィールドは追加のみ（既存フィールドの削除・型変更なし）
 - **v2.0**: 破壊的変更を含む可能性あり。メジャーバージョンアップで通知
 

@@ -130,6 +130,9 @@ function extractTokensFromSource(source) {
     tokens.push({
       name,
       value,
+      themeValues: {
+        light: value,
+      },
       type: classifyType(name),
       category: classifyCategory(name),
       cssVariable: `var(${name})`,
@@ -221,7 +224,7 @@ async function main() {
   }
 
   const output = {
-    version: '0.2.0',
+    version: '0.3.0',
     extractedAt: new Date().toISOString(),
     themes: {
       default: 'light',
