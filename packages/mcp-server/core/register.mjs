@@ -406,6 +406,20 @@ function buildPluginPromptMessages(result, fallbackText) {
   };
 }
 
+function buildPluginHandlerContext(plugin, loadJson, loadText) {
+  return {
+    plugin: { name: plugin.name, version: plugin.version },
+    helpers: {
+      loadJsonData: loadJson,
+      loadTextData: loadText,
+      buildJsonToolResponse,
+      normalizePrefix,
+      withPrefix,
+      toCanonicalTagName,
+    },
+  };
+}
+
 function buildPluginResourceContents(resource, result) {
   if (result && typeof result === 'object' && Array.isArray(result.contents)) {
     return {
@@ -435,6 +449,17 @@ function buildPluginResourceContents(resource, result) {
       uri: String(resource.uri),
       mimeType,
       text,
+    }],
+  };
+}
+
+function buildPluginResourceErrorContents(resource, plugin, error) {
+  const message = error instanceof Error ? error.message : String(error);
+  return {
+    contents: [{
+      uri: String(resource.uri),
+      mimeType: 'text/plain',
+      text: `Plugin resource failed (${plugin.name}/${resource.name}): ${message}`,
     }],
   };
 }
@@ -682,17 +707,7 @@ export function registerAll(context) {
         try {
           const pluginResult = await validator.handler(
             { filePath, text, prefix: p },
-            {
-              plugin: { name: plugin.name, version: plugin.version },
-              helpers: {
-                loadJsonData: loadJson,
-                loadTextData: loadText,
-                buildJsonToolResponse,
-                normalizePrefix,
-                withPrefix,
-                toCanonicalTagName,
-              },
-            },
+            buildPluginHandlerContext(plugin, loadJson, loadText),
           );
           allRawDiagnostics.push(
             ...normalizePluginValidatorDiagnostics(pluginResult, {
@@ -1778,7 +1793,7 @@ export function registerAll(context) {
         query: z.string().optional()
           .describe('Search token names (partial match)'),
         theme: z.enum(['light', 'dark', 'all']).optional()
-          .describe('Theme filter (currently light only; dark/all return an error due to NG-06)'),
+          .describe('Theme filter (currently light only; dark is unsupported and all returns available themes)'),
       },
     },
     async ({ type, category, query, theme }) => {
@@ -1805,7 +1820,7 @@ export function registerAll(context) {
         name: z.string()
           .describe('Token name or css variable (e.g. --color-primary or var(--color-primary))'),
         theme: z.enum(['light', 'dark', 'all']).optional()
-          .describe('Theme selector (currently only light is supported due to NG-06)'),
+          .describe('Theme filter (currently light only; dark is unsupported and all returns available themes)'),
       },
     },
     async ({ name, theme }) => {
@@ -2208,17 +2223,7 @@ export function registerAll(context) {
         async (args) => {
           try {
             if (typeof prompt.handler === 'function') {
-              const result = await prompt.handler(args, {
-                plugin: { name: plugin.name, version: plugin.version },
-                helpers: {
-                  loadJsonData: loadJson,
-                  loadTextData: loadText,
-                  buildJsonToolResponse,
-                  normalizePrefix,
-                  withPrefix,
-                  toCanonicalTagName,
-                },
-              });
+              const result = await prompt.handler(args, buildPluginHandlerContext(plugin, loadJson, loadText));
               return buildPluginPromptMessages(result, prompt.text ?? `Prompt from ${plugin.name}`);
             }
             return buildPluginPromptMessages(prompt.text ?? `Prompt from ${plugin.name}`, prompt.text ?? '');
@@ -2241,21 +2246,15 @@ export function registerAll(context) {
           mimeType: resource.mimeType ?? undefined,
         },
         async () => {
-          if (typeof resource.handler === 'function') {
-            const result = await resource.handler({
-              plugin: { name: plugin.name, version: plugin.version },
-              helpers: {
-                loadJsonData: loadJson,
-                loadTextData: loadText,
-                buildJsonToolResponse,
-                normalizePrefix,
-                withPrefix,
-                toCanonicalTagName,
-              },
-            });
-            return buildPluginResourceContents(resource, result);
+          try {
+            if (typeof resource.handler === 'function') {
+              const result = await resource.handler(buildPluginHandlerContext(plugin, loadJson, loadText));
+              return buildPluginResourceContents(resource, result);
+            }
+            return buildPluginResourceContents(resource, undefined);
+          } catch (error) {
+            return buildPluginResourceErrorContents(resource, plugin, error);
           }
-          return buildPluginResourceContents(resource, undefined);
         },
       );
     }
@@ -2271,30 +2270,28 @@ export function registerAll(context) {
           mimeType: resourceTemplate.mimeType ?? undefined,
         },
         async (_uri, variables) => {
-          if (typeof resourceTemplate.handler === 'function') {
-            const result = await resourceTemplate.handler(
-              { uri: _uri, variables },
-              {
-                plugin: { name: plugin.name, version: plugin.version },
-                helpers: {
-                  loadJsonData: loadJson,
-                  loadTextData: loadText,
-                  buildJsonToolResponse,
-                  normalizePrefix,
-                  withPrefix,
-                  toCanonicalTagName,
-                },
-              },
-            );
+          try {
+            if (typeof resourceTemplate.handler === 'function') {
+              const result = await resourceTemplate.handler(
+                { uri: _uri, variables },
+                buildPluginHandlerContext(plugin, loadJson, loadText),
+              );
+              return buildPluginResourceContents(
+                { ...resourceTemplate, uri: _uri },
+                result,
+              );
+            }
             return buildPluginResourceContents(
               { ...resourceTemplate, uri: _uri },
-              result,
+              undefined,
+            );
+          } catch (error) {
+            return buildPluginResourceErrorContents(
+              { ...resourceTemplate, uri: _uri },
+              plugin,
+              error,
             );
           }
-          return buildPluginResourceContents(
-            { ...resourceTemplate, uri: _uri },
-            undefined,
-          );
         },
       );
     }
@@ -2310,17 +2307,7 @@ export function registerAll(context) {
         async (args) => {
           try {
             if (typeof tool.handler === 'function') {
-              const result = await tool.handler(args, {
-                plugin: { name: plugin.name, version: plugin.version },
-                helpers: {
-                  loadJsonData: loadJson,
-                  loadTextData: loadText,
-                  buildJsonToolResponse,
-                  normalizePrefix,
-                  withPrefix,
-                  toCanonicalTagName,
-                },
-              });
+              const result = await tool.handler(args, buildPluginHandlerContext(plugin, loadJson, loadText));
               if (result !== null && typeof result === 'object' && !Array.isArray(result) && Array.isArray(result.content)) {
                 return finalizeToolResult(result);
               }

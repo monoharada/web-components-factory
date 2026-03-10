@@ -187,7 +187,7 @@ interface WcfMcpDataSourceConfig {
 1. `name` と `version` は必須
 2. ツール名は組み込みツール名と重複不可
 3. 複数プラグイン間でツール名の重複不可
-4. `dataSources` のファイル名は上記5種のみ
+4. `dataSources` のファイル名は上記8種のみ
 5. 複数プラグイン間で同一ファイルの重複差し替え不可
 
 ## 互換性ポリシー

@@ -444,6 +444,52 @@ describe('plugin extensibility', () => {
     }
   });
 
+  it('isolates plugin resource handler failures and returns fallback text', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'failing-resource-plugin',
+        version: '1.0.0',
+        resources: [{
+          name: 'failing_resource',
+          uri: 'plugin://failing-resource',
+          async handler() {
+            throw new Error('boom');
+          },
+        }],
+      }],
+    });
+    try {
+      const resource = await client.readResource({ uri: 'plugin://failing-resource' });
+      expect(resource.contents?.[0]?.mimeType).toBe('text/plain');
+      expect(resource.contents?.[0]?.text).toContain('Plugin resource failed (failing-resource-plugin/failing_resource): boom');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('isolates plugin resourceTemplate handler failures and returns fallback text', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'failing-template-plugin',
+        version: '1.0.0',
+        resourceTemplates: [{
+          name: 'failing_template',
+          uriTemplate: 'plugin://failing-template/{slug}',
+          async handler() {
+            throw new Error('template boom');
+          },
+        }],
+      }],
+    });
+    try {
+      const resource = await client.readResource({ uri: 'plugin://failing-template/example' });
+      expect(resource.contents?.[0]?.mimeType).toBe('text/plain');
+      expect(resource.contents?.[0]?.text).toContain('Plugin resource failed (failing-template-plugin/failing_template): template boom');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
   it('provides helpers.loadJsonData in handler context (contract v1)', async () => {
     let receivedHelpers = null;
     const { client, server } = await createPluginTestPair({

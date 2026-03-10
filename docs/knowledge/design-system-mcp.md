@@ -111,8 +111,8 @@ HTML フラグメントを `<!DOCTYPE html>` / import map / `boot.js` 付きの�
 
 デザイントークンを type/category/query/theme でフィルタして返します。
 
-- `theme` は `light` / `dark` / `all` を受理
-- 現在の実データは `light` のみ。`all` は利用可能テーマ全体として `light` を返し、`dark` はエラーを返します
+- `theme` パラメータは `light` / `dark` / `all`
+- 現在の実データは `light` のみ。`all` は利用可能テーマ全体として `light` を返し、`dark` は `INVALID_THEME` エラーです
 - token 関係性では `var(--token-a, var(--token-b))` のような token fallback は拾うが、literal fallback（例 `#fff`）は relationship graph に含めない
 
 ### `get_design_token_detail({ name, theme? })`

@@ -40,8 +40,8 @@ export default {
     {
       name: 'heading_structure',
       description: 'Warn on skipped heading levels during validate_* flows.',
-      async handler({ html, text, filePath }) {
-        const diagnostics = detectSkippedHeadingLevel(html ?? text).map((item) => ({
+      async handler({ text, filePath }) {
+        const diagnostics = detectSkippedHeadingLevel(text).map((item) => ({
           file: filePath,
           severity: 'warning',
           code: item.code,
