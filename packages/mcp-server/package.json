@@ -1,6 +1,6 @@
 {
   "name": "@monoharada/wcf-mcp",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "MCP server for the web-components-factory design system. Provides component discovery, validation, and pattern-based UI composition without cloning the repository.",
   "type": "module",
   "bin": {

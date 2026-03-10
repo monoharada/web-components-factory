@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "package": {
     "name": "@monoharada/wcf-mcp",
-    "version": "0.9.1"
+    "version": "0.10.0"
   },
   "inventory": {
     "tools": [
@@ -105,7 +105,7 @@
         {
           "label": "get_design_system_overview",
           "status": "OK",
-          "bytes": 2714,
+          "bytes": 2715,
           "sizeKb": 2.7
         },
         {
