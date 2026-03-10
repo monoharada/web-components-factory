@@ -20,7 +20,7 @@ MCP クライアント側からは、stdio サーバーとして次のように�
 repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。  
 `npm run mcp:design-system` を repo root で実行する場合は、`<repo-root>/wcf-mcp.config.json` を配置してください。
 
-## 提供 tools / prompt / resources（16 tools + 1 prompt + 5 resources）
+## 提供 tools / prompt / resources（19 tools + 1 prompt + 5 resources）
 
 ### `get_design_system_overview()`
 
@@ -63,6 +63,23 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 - `unknownElement`: `error`
 - `unknownAttribute`: `warning`
 - `forbiddenAttribute` / `tokenMisuse` / `ariaLiveNotRecommended` / `roleAlertNotRecommended`: `warning`
+- common template syntax（`{{ }}`, `{% %}`, `<% %>`, `<? ?>`, script/style blocks）は HTML と誤認しないようにマスクして扱います
+
+### `validate_files({ files, prefix? })`
+
+複数ファイルをまとめて検証し、ファイル別 diagnostics と集計を返します。
+
+- `files[].content` を渡した場合はその文字列を検証
+- `files[].content` を省略した場合は `files[].path` をローカルディスクから読み込み
+- `duplicateId` を含む複数診断をまとめて返せるため、ページやテンプレート群のチェックに向きます
+
+### `validate_project({ root, include?, exclude?, maxFiles?, prefix? })`
+
+ディレクトリを走査し、glob 条件に一致するファイル群をまとめて検証します。
+
+- 既定の include は `**/*.html`, `**/*.htm`, `**/*.njk`, `**/*.liquid`, `**/*.astro`, `**/*.twig`, `**/*.hbs`
+- 既定の exclude は `node_modules`, `.git`, `dist`, `coverage`
+- `maxFiles` で走査対象の上限を制御できます
 
 ## UI パターン（レイアウト/画面レシピ）
 
@@ -94,8 +111,9 @@ HTML フラグメントを `<!DOCTYPE html>` / import map / `boot.js` 付きの�
 
 デザイントークンを type/category/query/theme でフィルタして返します。
 
-- `theme` は `light` / `dark` / `all` を受理
-- 現在は `light` のみ対応のため、`dark` / `all` はエラーを返します（NG-06）
+- `theme` パラメータは `light` / `dark` / `all`
+- 現在の実データは `light` のみ。`all` は利用可能テーマ全体として `light` を返し、`dark` は `INVALID_THEME` エラーです
+- token 関係性では `var(--token-a, var(--token-b))` のような token fallback は拾うが、literal fallback（例 `#fff`）は relationship graph に含めない
 
 ### `get_design_token_detail({ name, theme? })`
 
@@ -103,7 +121,7 @@ HTML フラグメントを `<!DOCTYPE html>` / import map / `boot.js` 付きの�
 
 - `name`: `--color-primary` または `var(--color-primary)` 形式
 - 返却: `token`, `references`, `referencedBy`, `relatedTokens`, `usageExamples`
-- `theme` は `get_design_tokens` と同様に `light` のみ対応
+- `theme` は `get_design_tokens` と同様に `all` を受理し、利用可能テーマ全体を返せます（現状は `light` のみ）
 
 ### `get_accessibility_docs({ component?, topic?, wcagLevel?, maxResults?, prefix? })`
 
@@ -117,6 +135,15 @@ HTML フラグメントを `<!DOCTYPE html>` / import map / `boot.js` 付きの�
 ### `search_guidelines({ query, topic?, maxResults? })`
 
 設計ガイドラインを topic/query で検索し、スコア付きで返します。
+
+### `search_design_system_knowledge({ query, sources?, maxResults?, prefix? })`
+
+components / patterns / guidelines / tokens / skills を横断して検索します。
+
+- broad first-pass discovery 用の入口
+- `source` と `followUp` を返すため、後続で `get_component_api` や `get_pattern_recipe` などに繋げやすい
+- `sources` で対象を絞れます
+- exact / prefix / intent-aware ranking を行い、broad query では source が偏りすぎないようにします
 
 ### `get_component_selector_guide({ category?, useCase? })`
 
@@ -142,13 +169,16 @@ Figma URL を受け取り、以下の順序で実装を進めるプロンプト�
 - `wcf://llms-full`: `llms-full.txt` 全文
 - `wcf://skills`: `skills-registry.json` ベースのスキルカタログ
 
-## 拡張（@experimental）
+## 拡張（plugin contract v1.1）
 
 `cwd/wcf-mcp.config.json`（または npx 実行時 `--config=` 指定ファイル）で以下を拡張できます。
 
 - `dataSources`: 既定の JSON データソース差し替え
 - `plugins[].module`: ESM module plugin 読み込み
 - `plugins[].staticTools`: 固定 payload を返す軽量ツール定義
+- `plugins[].validators`: `validate_*` 系に独自診断を差し込む validator hook
+- `plugins[].prompts` / `plugins[].resources`: plugin から prompt / resource を追加
+- `plugins[].resourceTemplates`: plugin から resource template を追加
 
 相対パスの解決基準:
 
@@ -157,9 +187,16 @@ Figma URL を受け取り、以下の順序で実装を進めるプロンプト�
 
 制約:
 
-- plugin tool 名は組み込み16ツールと重複不可
-- data source key は `custom-elements.json` / `install-registry.json` / `pattern-registry.json` / `design-tokens.json` / `guidelines-index.json` のみ
-- 契約は `@experimental`（将来変更の可能性あり）
+- plugin tool 名は組み込み19ツールと重複不可
+- data source key は `custom-elements.json` / `install-registry.json` / `pattern-registry.json` / `component-selector-guide.json` / `design-tokens.json` / `guidelines-index.json` / `skills-registry.json` / `llms-full.txt` をサポート
+- plugin contract 本体は v1.1。ライフサイクル hook など未実装の将来拡張のみ experimental 扱い
+
+## 品質ゲート
+
+- `npm run mcp:check`: パッケージ同梱データの最新性チェック
+- `npm run mcp:check:response-size`: 最大レスポンスと p95 latency のチェック
+- `npm run mcp:summary`: `packages/mcp-server/mcp-spec-test/summary/v3-final.json` を生成
+- `npm run mcp:summary:check`: 上記 summary JSON の drift をチェック
 
 ### 追加済み mockup patterns
 

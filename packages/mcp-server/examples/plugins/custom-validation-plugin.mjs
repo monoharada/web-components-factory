@@ -2,6 +2,9 @@
  * Sample plugin for wcf-mcp (Plugin Contract v1).
  * Demonstrates:
  *  - Custom tool with handler
+ *  - Validator hook used by validate_markup / validate_files / validate_project
+ *  - Static prompt and resource hooks
+ *  - Resource template hook
  *  - Custom tool using handler context (helpers.loadJsonData)
  *  - dataSources override for guidelines-index.json
  */
@@ -31,6 +34,64 @@ export default {
     {
       fileName: 'guidelines-index.json',
       path: './custom-guidelines.json',
+    },
+  ],
+  validators: [
+    {
+      name: 'heading_structure',
+      description: 'Warn on skipped heading levels during validate_* flows.',
+      async handler({ text, filePath }) {
+        const diagnostics = detectSkippedHeadingLevel(text).map((item) => ({
+          file: filePath,
+          severity: 'warning',
+          code: item.code,
+          message: item.message,
+          hint: 'Use sequential heading levels (e.g. h2 -> h3).',
+        }));
+        return { diagnostics };
+      },
+    },
+  ],
+  prompts: [
+    {
+      name: 'custom_validation_workflow',
+      title: 'Custom Validation Workflow',
+      argsSchema: {
+        audience: {
+          type: 'string',
+          description: 'Optional audience label',
+        },
+      },
+      text: 'Run validate_markup, then validate_files for page-level issues, then inspect custom guidelines.',
+    },
+  ],
+  resources: [
+    {
+      name: 'custom_validation_notes',
+      uri: 'plugin://custom-validation/notes',
+      mimeType: 'text/plain',
+      text: 'Custom validation plugin loaded. Use validate_heading_structure for manual checks.',
+    },
+  ],
+  resourceTemplates: [
+    {
+      name: 'custom_guideline_template',
+      uriTemplate: 'plugin://custom-validation/guidelines/{slug}',
+      complete: {
+        slug: ['headings', 'forms'],
+      },
+      async handler({ uri, variables }) {
+        return {
+          contents: [{
+            uri,
+            mimeType: 'application/json',
+            text: JSON.stringify({
+              slug: variables?.slug ?? '',
+              note: 'Custom guideline template resource',
+            }, null, 2),
+          }],
+        };
+      },
     },
   ],
   tools: [

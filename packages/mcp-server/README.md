@@ -78,7 +78,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 }
 ```
 
-## 提供機能（16 tools + 1 prompt + 5 resources）
+## 提供機能（19 tools + 1 prompt + 5 resources）
 
 ### ガードレール
 
@@ -101,6 +101,11 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | ツール | 説明 |
 |--------|------|
 | `validate_markup` | HTML スニペットを検証し、セマンティック検証（下表）で `suggestion` 付き診断を返す |
+| `validate_files` | 複数のマークアップファイルをまとめて検証し、ファイル別診断と集計を返す |
+| `validate_project` | ディレクトリを走査し、include/exclude glob に一致する複数ファイルをまとめて検証する |
+
+`validate_*` 系は common template syntax（`{{ }}`, `{% %}`, `<% %>`, `<? ?>`, script/style blocks）をそのまま HTML と誤認しないようにマスクして検証します。
+`validate_project` の既定 include は `*.html`, `*.htm`, `*.njk`, `*.liquid`, `*.astro`, `*.twig`, `*.hbs` です。
 
 #### validate_markup 検出コード一覧
 
@@ -119,6 +124,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | `roleAlertNotRecommended` | warning | `role="alert"` の使用（DADS 非推奨） | `role="alert"` |
 | `emptyLabel` | error | 空の `label` 属性（アクセシビリティ違反） | `<dads-input-text label="">` |
 | `emptyAriaLabel` | error | 空の `aria-label` 属性（アクセシビリティ違反） | `<dads-button aria-label="">` |
+| `duplicateId` | error | 同一ドキュメント内で `id` が重複している | `<div id="hero">...</div><section id="hero">...</section>` |
 | `forbiddenAttribute` | warning | 禁止属性 | `placeholder` |
 
 ### UI パターン
@@ -140,10 +146,11 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `get_design_tokens` | デザイントークンを type/category/query/theme で検索（`theme=light` のみ。`dark/all` はエラー） |
+| `get_design_tokens` | デザイントークンを type/category/query/theme で検索（現状データは `light` のみ。`all` は利用可能テーマ全体、`dark` は非サポート） |
 | `get_design_token_detail` | 単一トークンの詳細（references/referencedBy/relatedTokens/usageExamples）を取得 |
 | `get_accessibility_docs` | component/topic/wcagLevel で A11y チェックリストとガイドライン要点を検索（`topic=all` では両ソースを混在返却） |
 | `search_guidelines` | ガイドライン（topic/query）をスコア付きで検索 |
+| `search_design_system_knowledge` | components/patterns/guidelines/tokens/skills を横断して検索し、exact/prefix/intent-aware ranking と source ごとの follow-up 導線を返す |
 
 #### `get_design_tokens` の使用例
 
@@ -226,7 +233,8 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 }
 ```
 
-> **注意**: `theme` は `"light"` のみサポート。`"dark"` や `"all"` を指定すると `INVALID_THEME` エラーが返ります。
+> **注意**: 現在の実データは `light` のみです。`theme="all"` は利用可能テーマ全体として `light` を返します。`theme="dark"` は `INVALID_THEME` エラーです。
+> `var(--token, #fff)` のような literal fallback は relationship graph には含めません。`var(--token-a, var(--token-b))` のような token fallback のみ参照関係として扱います。
 
 ### Prompt
 
@@ -336,13 +344,20 @@ npx @monoharada/wcf-mcp --transport=http --port=3100
 詳細仕様: [docs/plugin-contract-v1.md](../../docs/plugin-contract-v1.md)
 
 - `plugins[].name` / `plugins[].version` は必須
+- `plugins[].validators` を使うと `validate_markup` / `validate_files` / `validate_project` に独自診断を差し込めます
+- `plugins[].prompts` / `plugins[].resources` を使うと MCP prompt / resource を追加できます
+- `plugins[].resourceTemplates` を使うと MCP resource template も追加できます
 - tool 名は組み込みツール名と重複不可（例: `list_components` など）
+- prompt の `argsSchema` は plain shape に加えて zod object shape も使えます
 - `dataSources` で差し替え可能な key は次のみ
   - `custom-elements.json`
   - `install-registry.json`
   - `pattern-registry.json`
+  - `component-selector-guide.json`
   - `design-tokens.json`
   - `guidelines-index.json`
+  - `skills-registry.json`
+  - `llms-full.txt`
 
 ## structuredContent rollback
 
@@ -636,7 +651,12 @@ CEM やレジストリを更新した後:
 ```bash
 npm run mcp:build     # データファイルをパッケージにコピー
 npm run mcp:check     # データが最新かチェック（CI用）
+npm run mcp:summary   # MCP inventory + quality summary(JSON)を生成
+npm run mcp:summary:check # summary JSON の drift をチェック
 ```
+
+- machine-readable summary: `packages/mcp-server/mcp-spec-test/summary/v3-final.json`
+- `npm run mcp:check:response-size` は human-readable stdout、`node scripts/mcp/check-response-size.mjs --json` は JSON 出力に使えます
 
 ### パッケージ構成
 

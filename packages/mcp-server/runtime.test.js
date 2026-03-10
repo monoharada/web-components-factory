@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { z } from 'zod';
 import {
   MAX_TOOL_RESULT_BYTES,
   PLUGIN_CONTRACT_VERSION,
@@ -10,12 +13,12 @@ import {
   measureToolResultBytes,
   normalizePlugins,
 } from './core.mjs';
-import { createServer, loadWcfMcpRuntimeConfig } from './server.mjs';
+import { createServer, loadTextDataFromPath, loadWcfMcpRuntimeConfig } from './server.mjs';
 import { createPluginTestPair, loadBundledJson, loadBundledText } from './test-support.js';
 
 describe('plugin extensibility', () => {
   it('exports PLUGIN_CONTRACT_VERSION as semver string', () => {
-    expect(PLUGIN_CONTRACT_VERSION).toBe('1.1.0');
+    expect(PLUGIN_CONTRACT_VERSION).toBe('1.4.0');
     expect(typeof PLUGIN_CONTRACT_VERSION).toBe('string');
   });
 
@@ -90,6 +93,94 @@ describe('plugin extensibility', () => {
     ])).toThrow(/Duplicate data source override/);
   });
 
+  it('accepts extended data source keys for selector guide, skills registry, and llms text', () => {
+    const normalized = normalizePlugins([
+      {
+        name: 'extended-data-plugin',
+        version: '1.0.0',
+        dataSources: [
+          { fileName: 'component-selector-guide.json', path: '/tmp/component-selector-guide.json' },
+          { fileName: 'skills-registry.json', path: '/tmp/skills-registry.json' },
+          { fileName: 'llms-full.txt', path: '/tmp/llms-full.txt' },
+        ],
+      },
+    ]);
+
+    expect(normalized[0].dataSources).toHaveLength(3);
+  });
+
+  it('normalizes validator hooks and rejects invalid validators', () => {
+    const normalized = normalizePlugins([
+      {
+        name: 'validator-plugin',
+        version: '1.0.0',
+        validators: [
+          {
+            name: 'heading_rule',
+            handler: () => [],
+          },
+        ],
+      },
+    ]);
+
+    expect(normalized[0].validators).toHaveLength(1);
+    expect(normalized[0].validators[0].name).toBe('heading_rule');
+
+    expect(() => normalizePlugins([
+      {
+        name: 'bad-validator-plugin',
+        version: '1.0.0',
+        validators: [{ name: 'missing_handler' }],
+      },
+    ])).toThrow(/needs handler/);
+  });
+
+  it('normalizes plugin prompts/resources and rejects collisions', () => {
+    const normalized = normalizePlugins([
+      {
+        name: 'prompt-resource-plugin',
+        version: '1.0.0',
+        prompts: [
+          { name: 'custom_prompt', argsSchema: z.object({ audience: z.string().optional() }), text: 'hello' },
+        ],
+        resources: [
+          { name: 'custom_resource', uri: 'plugin://custom', text: 'world' },
+        ],
+        resourceTemplates: [
+          { name: 'custom_template', uriTemplate: 'plugin://custom/{slug}', text: 'template body' },
+        ],
+      },
+    ]);
+
+    expect(normalized[0].prompts).toHaveLength(1);
+    expect(normalized[0].resources).toHaveLength(1);
+    expect(normalized[0].resourceTemplates).toHaveLength(1);
+
+    expect(() => normalizePlugins([
+      {
+        name: 'bad-prompt-plugin',
+        version: '1.0.0',
+        prompts: [{ name: 'figma_to_wcf', text: 'collision' }],
+      },
+    ])).toThrow(/prompt name collision/);
+
+    expect(() => normalizePlugins([
+      {
+        name: 'bad-resource-plugin',
+        version: '1.0.0',
+        resources: [{ name: 'dup', uri: 'wcf://components', text: 'collision' }],
+      },
+    ])).toThrow(/resource uri collision/);
+
+    expect(() => normalizePlugins([
+      {
+        name: 'bad-resource-template-plugin',
+        version: '1.0.0',
+        resourceTemplates: [{ name: 'dup-template', uriTemplate: 'wcf://guidelines/{topic}', text: 'collision' }],
+      },
+    ])).toThrow(/resourceTemplate uri collision/);
+  });
+
   it('uses loadJsonDataFromPath when plugin data source override is configured', async () => {
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-mcp-plugin-'));
     const customGuidelinesPath = path.join(tmpDir, 'guidelines-index.override.json');
@@ -145,6 +236,50 @@ describe('plugin extensibility', () => {
     }
   });
 
+  it('uses text data source override for llms-full resource', async () => {
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'wcf-mcp-plugin-text-'));
+    const customLlmsPath = path.join(tmpDir, 'llms-full.override.txt');
+    await fs.writeFile(customLlmsPath, 'custom llms text', 'utf8');
+
+    const loadJsonData = async (fileName) => loadBundledJson(fileName);
+    const loadValidator = async () => ({
+      collectCemCustomElements: () => new Map(),
+      validateTextAgainstCem: () => [],
+      detectTokenMisuseInInlineStyles: () => [],
+      detectAccessibilityMisuseInMarkup: () => [],
+    });
+
+    try {
+      const { server } = await createMcpServer(loadJsonData, loadValidator, {
+        plugins: [{
+          name: 'text-override-plugin',
+          version: '1.0.0',
+          dataSources: [{ fileName: 'llms-full.txt', path: customLlmsPath }],
+          tools: [],
+        }],
+        loadTextData: loadBundledText,
+        loadTextDataFromPath,
+      });
+      const client = new Client(
+        { name: 'wcf-mcp-runtime-test', version: '0.0.0' },
+        { capabilities: {} },
+      );
+      const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+
+      await Promise.all([
+        server.connect(serverTransport),
+        client.connect(clientTransport),
+      ]);
+
+      const resource = await client.readResource({ uri: 'wcf://llms-full' });
+      expect(resource.contents?.[0]?.text).toBe('custom llms text');
+
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    } finally {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
   it('rejects plugin without name', () => {
     expect(() => normalizePlugins([{ version: '1.0.0' }])).toThrow();
   });
@@ -183,6 +318,173 @@ describe('plugin extensibility', () => {
       expect(text).toBeTruthy();
       const payload = JSON.parse(text);
       expect(payload.pluginName).toBe('handler-test-plugin');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('runs validator hook during validate_markup', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'validator-hook-plugin',
+        version: '1.0.0',
+        validators: [{
+          name: 'heading_validator',
+          handler() {
+            return [{
+              code: 'pluginHeadingCheck',
+              message: 'Custom heading issue',
+            }];
+          },
+        }],
+      }],
+    });
+    try {
+      const result = await client.callTool({
+        name: 'validate_markup',
+        arguments: { html: '<dads-button>OK</dads-button>' },
+      });
+      const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+      const diag = payload.diagnostics.find((item) => item.code === 'pluginHeadingCheck');
+      expect(diag).toBeDefined();
+      expect(diag.plugin).toBe('validator-hook-plugin');
+      expect(diag.validator).toBe('heading_validator');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('runs validator hook during validate_files', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'validator-hook-plugin',
+        version: '1.0.0',
+        validators: [{
+          name: 'file_validator',
+          handler({ filePath }) {
+            return [{
+              file: filePath,
+              code: 'pluginFileCheck',
+              message: 'Custom file issue',
+            }];
+          },
+        }],
+      }],
+    });
+    try {
+      const result = await client.callTool({
+        name: 'validate_files',
+        arguments: {
+          files: [{ path: 'inline.html', content: '<dads-button>OK</dads-button>' }],
+        },
+      });
+      const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+      expect(payload.files[0].diagnostics.some((item) => item.code === 'pluginFileCheck')).toBe(true);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('registers plugin prompt and static resource via MCP', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'prompt-resource-plugin',
+        version: '1.0.0',
+        prompts: [{
+          name: 'custom_prompt',
+          title: 'Custom Prompt',
+          argsSchema: {
+            audience: z.string().optional(),
+          },
+          text: 'Use the custom workflow.',
+        }],
+        resources: [{
+          name: 'custom_resource',
+          uri: 'plugin://custom-resource',
+          mimeType: 'text/plain',
+          text: 'Custom resource body',
+        }],
+        resourceTemplates: [{
+          name: 'custom_template',
+          uriTemplate: 'plugin://custom-template/{slug}',
+          complete: {
+            slug: ['alpha', 'beta'],
+          },
+          async handler({ uri, variables }) {
+            return {
+              contents: [{
+                uri,
+                mimeType: 'application/json',
+                text: JSON.stringify({ slug: variables.slug }, null, 2),
+              }],
+            };
+          },
+        }],
+      }],
+    });
+    try {
+      const prompts = await client.listPrompts();
+      expect(prompts.prompts.some((item) => item.name === 'custom_prompt')).toBe(true);
+      const customPrompt = prompts.prompts.find((item) => item.name === 'custom_prompt');
+      expect(customPrompt.arguments?.some((arg) => arg.name === 'audience')).toBe(true);
+
+      const prompt = await client.getPrompt({ name: 'custom_prompt', arguments: {} });
+      const text = prompt.messages.map((message) => message.content.type === 'text' ? message.content.text : '').join('\n');
+      expect(text).toContain('custom workflow');
+
+      const resource = await client.readResource({ uri: 'plugin://custom-resource' });
+      expect(resource.contents?.[0]?.text).toBe('Custom resource body');
+
+      const templates = await client.listResourceTemplates();
+      expect(templates.resourceTemplates.some((item) => item.uriTemplate === 'plugin://custom-template/{slug}')).toBe(true);
+      const templated = await client.readResource({ uri: 'plugin://custom-template/alpha' });
+      expect(templated.contents?.[0]?.text).toContain('"alpha"');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('isolates plugin resource handler failures and returns fallback text', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'failing-resource-plugin',
+        version: '1.0.0',
+        resources: [{
+          name: 'failing_resource',
+          uri: 'plugin://failing-resource',
+          async handler() {
+            throw new Error('boom');
+          },
+        }],
+      }],
+    });
+    try {
+      const resource = await client.readResource({ uri: 'plugin://failing-resource' });
+      expect(resource.contents?.[0]?.mimeType).toBe('text/plain');
+      expect(resource.contents?.[0]?.text).toContain('Plugin resource failed (failing-resource-plugin/failing_resource): boom');
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('isolates plugin resourceTemplate handler failures and returns fallback text', async () => {
+    const { client, server } = await createPluginTestPair({
+      plugins: [{
+        name: 'failing-template-plugin',
+        version: '1.0.0',
+        resourceTemplates: [{
+          name: 'failing_template',
+          uriTemplate: 'plugin://failing-template/{slug}',
+          async handler() {
+            throw new Error('template boom');
+          },
+        }],
+      }],
+    });
+    try {
+      const resource = await client.readResource({ uri: 'plugin://failing-template/example' });
+      expect(resource.contents?.[0]?.mimeType).toBe('text/plain');
+      expect(resource.contents?.[0]?.text).toContain('Plugin resource failed (failing-template-plugin/failing_template): template boom');
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }

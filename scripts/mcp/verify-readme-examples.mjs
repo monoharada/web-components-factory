@@ -8,40 +8,30 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { BUILTIN_TOOL_NAMES } from '../../packages/mcp-server/core/plugins.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const README = path.join(__dirname, '../../packages/mcp-server/README.md');
+export const README = path.join(__dirname, '../../packages/mcp-server/README.md');
 
-const KNOWN_TOOLS = new Set([
-  'get_design_system_overview',
-  'list_components',
-  'search_icons',
-  'get_component_api',
-  'generate_usage_snippet',
-  'get_install_recipe',
-  'validate_markup',
-  'list_patterns',
-  'get_pattern_recipe',
-  'generate_pattern_snippet',
-  'get_design_tokens',
-  'get_design_token_detail',
-  'get_accessibility_docs',
-  'search_guidelines',
-]);
-
-async function main() {
-  const content = await fs.readFile(README, 'utf8');
-
-  // Extract ```json ... ``` blocks
+export function extractJsonBlocks(content) {
   const jsonBlockPattern = /```json\n([\s\S]*?)```/g;
   const blocks = [];
   let match;
   while ((match = jsonBlockPattern.exec(content)) !== null) {
     blocks.push({ raw: match[1].trim(), offset: match.index });
   }
+  return blocks;
+}
 
-  let errors = 0;
+export async function verifyReadmeExamples({
+  readmePath = README,
+  knownTools = BUILTIN_TOOL_NAMES,
+} = {}) {
+  const content = await fs.readFile(readmePath, 'utf8');
+  const blocks = extractJsonBlocks(content);
+  const knownToolSet = knownTools instanceof Set ? knownTools : new Set(knownTools);
+  const errors = [];
   let requestBlocks = 0;
 
   for (const block of blocks) {
@@ -54,9 +44,13 @@ async function main() {
       // Check if it's a tool request block (has "name" field)
       if (parsed.name && typeof parsed.name === 'string') {
         requestBlocks++;
-        if (!KNOWN_TOOLS.has(parsed.name)) {
-          console.error(`ERROR: Unknown tool name "${parsed.name}" in README JSON block`);
-          errors++;
+        if (!knownToolSet.has(parsed.name)) {
+          errors.push({
+            code: 'UNKNOWN_TOOL_NAME',
+            message: `Unknown tool name "${parsed.name}" in README JSON block`,
+            toolName: parsed.name,
+            offset: block.offset,
+          });
         }
       }
     } catch {
@@ -64,17 +58,48 @@ async function main() {
     }
   }
 
-  console.log(`Checked ${blocks.length} JSON blocks, ${requestBlocks} tool request blocks`);
-
-  if (errors > 0) {
-    console.error(`\n${errors} error(s) found.`);
-    process.exit(1);
-  }
-
-  console.log('README examples verified.');
+  return {
+    blocksChecked: blocks.length,
+    requestBlocks,
+    errorCount: errors.length,
+    errors,
+    knownToolCount: knownToolSet.size,
+  };
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+export function formatVerificationReport(report) {
+  const lines = [
+    `Checked ${report.blocksChecked} JSON blocks, ${report.requestBlocks} tool request blocks`,
+  ];
+  if (report.errorCount > 0) {
+    for (const error of report.errors) {
+      lines.push(`ERROR: ${error.message}`);
+    }
+    lines.push(``);
+    lines.push(`${report.errorCount} error(s) found.`);
+    return { ok: false, text: lines.join('\n') };
+  }
+  lines.push('README examples verified.');
+  return { ok: true, text: lines.join('\n') };
+}
+
+export async function main() {
+  const report = await verifyReadmeExamples();
+  const formatted = formatVerificationReport(report);
+  console.log(formatted.text);
+  if (!formatted.ok) {
+    process.exit(1);
+  }
+}
+
+const directRunArg = process.argv[1];
+const isDirectRun =
+  typeof directRunArg === 'string' &&
+  pathToFileURL(path.resolve(directRunArg)).href === import.meta.url;
+
+if (isDirectRun) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

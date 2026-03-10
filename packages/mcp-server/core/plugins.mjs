@@ -5,17 +5,20 @@
 import { z } from 'zod';
 import { PLUGIN_TOOL_NOTICE } from './constants.mjs';
 
-export const PLUGIN_CONTRACT_VERSION = '1.1.0';
+export const PLUGIN_CONTRACT_VERSION = '1.4.0';
 
 // Single-module constants (DD-14)
 const PLUGIN_DATA_SOURCE_KEYS = Object.freeze(new Set([
   'custom-elements.json',
   'install-registry.json',
   'pattern-registry.json',
+  'component-selector-guide.json',
   'design-tokens.json',
   'guidelines-index.json',
+  'skills-registry.json',
+  'llms-full.txt',
 ]));
-const BUILTIN_TOOL_NAMES = Object.freeze(new Set([
+export const BUILTIN_TOOL_NAMES = Object.freeze(new Set([
   'get_design_system_overview',
   'list_components',
   'search_icons',
@@ -23,6 +26,8 @@ const BUILTIN_TOOL_NAMES = Object.freeze(new Set([
   'generate_usage_snippet',
   'get_install_recipe',
   'validate_markup',
+  'validate_files',
+  'validate_project',
   'list_patterns',
   'get_pattern_recipe',
   'generate_pattern_snippet',
@@ -30,8 +35,22 @@ const BUILTIN_TOOL_NAMES = Object.freeze(new Set([
   'get_design_token_detail',
   'get_accessibility_docs',
   'search_guidelines',
+  'search_design_system_knowledge',
   'generate_full_page_html',
   'get_component_selector_guide',
+]));
+const BUILTIN_PROMPT_NAMES = Object.freeze(new Set([
+  'figma_to_wcf',
+]));
+const BUILTIN_RESOURCE_URIS = Object.freeze(new Set([
+  'wcf://components',
+  'wcf://tokens',
+  'wcf://guidelines/{topic}',
+  'wcf://llms-full',
+  'wcf://skills',
+]));
+const BUILTIN_RESOURCE_TEMPLATE_URIS = Object.freeze(new Set([
+  'wcf://guidelines/{topic}',
 ]));
 
 function isPlainObject(value) {
@@ -109,11 +128,151 @@ function normalizePluginTools(pluginName, tools) {
   return out;
 }
 
+function normalizePluginValidators(pluginName, validators) {
+  if (!Array.isArray(validators)) return [];
+  const out = [];
+  const seen = new Set();
+  for (const rawValidator of validators) {
+    if (!isPlainObject(rawValidator)) {
+      throw new Error(toPluginErrorMessage(pluginName, 'validators entries must be objects'));
+    }
+    const name = String(rawValidator.name ?? '').trim();
+    if (!name) throw new Error(toPluginErrorMessage(pluginName, 'validator.name is required'));
+    if (seen.has(name)) {
+      throw new Error(toPluginErrorMessage(pluginName, `duplicate validator name: ${name}`));
+    }
+    seen.add(name);
+    if (typeof rawValidator.handler !== 'function') {
+      throw new Error(toPluginErrorMessage(pluginName, `validator "${name}" needs handler`));
+    }
+    out.push({
+      name,
+      description: String(rawValidator.description ?? '').trim() || `Validator hook provided by ${pluginName}.`,
+      handler: rawValidator.handler,
+    });
+  }
+  return out;
+}
+
+function normalizePluginPrompts(pluginName, prompts) {
+  if (!Array.isArray(prompts)) return [];
+  const out = [];
+  const seen = new Set();
+  for (const rawPrompt of prompts) {
+    if (!isPlainObject(rawPrompt)) {
+      throw new Error(toPluginErrorMessage(pluginName, 'prompts entries must be objects'));
+    }
+    const name = String(rawPrompt.name ?? '').trim();
+    if (!name) throw new Error(toPluginErrorMessage(pluginName, 'prompt.name is required'));
+    if (seen.has(name)) {
+      throw new Error(toPluginErrorMessage(pluginName, `duplicate prompt name: ${name}`));
+    }
+    seen.add(name);
+    const hasHandler = typeof rawPrompt.handler === 'function';
+    const hasStaticText = typeof rawPrompt.text === 'string';
+    if (!hasHandler && !hasStaticText) {
+      throw new Error(toPluginErrorMessage(pluginName, `prompt "${name}" needs handler or text`));
+    }
+    out.push({
+      name,
+      title: String(rawPrompt.title ?? name).trim(),
+      description: String(rawPrompt.description ?? '').trim() || `Prompt provided by ${pluginName}.`,
+      argsSchema: isPlainObject(rawPrompt.argsSchema) ? rawPrompt.argsSchema : {},
+      handler: hasHandler ? rawPrompt.handler : undefined,
+      text: hasStaticText ? rawPrompt.text : undefined,
+    });
+  }
+  return out;
+}
+
+function normalizePluginResources(pluginName, resources) {
+  if (!Array.isArray(resources)) return [];
+  const out = [];
+  const seenNames = new Set();
+  const seenUris = new Set();
+  for (const rawResource of resources) {
+    if (!isPlainObject(rawResource)) {
+      throw new Error(toPluginErrorMessage(pluginName, 'resources entries must be objects'));
+    }
+    const name = String(rawResource.name ?? '').trim();
+    const uri = String(rawResource.uri ?? '').trim();
+    if (!name) throw new Error(toPluginErrorMessage(pluginName, 'resource.name is required'));
+    if (!uri) throw new Error(toPluginErrorMessage(pluginName, `resource "${name}" needs uri`));
+    if (seenNames.has(name)) {
+      throw new Error(toPluginErrorMessage(pluginName, `duplicate resource name: ${name}`));
+    }
+    if (seenUris.has(uri)) {
+      throw new Error(toPluginErrorMessage(pluginName, `duplicate resource uri: ${uri}`));
+    }
+    seenNames.add(name);
+    seenUris.add(uri);
+    const hasHandler = typeof rawResource.handler === 'function';
+    const hasText = typeof rawResource.text === 'string';
+    const hasPayload = Object.prototype.hasOwnProperty.call(rawResource, 'payload');
+    if (!hasHandler && !hasText && !hasPayload) {
+      throw new Error(toPluginErrorMessage(pluginName, `resource "${name}" needs handler, text, or payload`));
+    }
+    out.push({
+      name,
+      uri,
+      title: String(rawResource.title ?? name).trim(),
+      description: String(rawResource.description ?? '').trim() || `Resource provided by ${pluginName}.`,
+      mimeType: String(rawResource.mimeType ?? '').trim() || undefined,
+      handler: hasHandler ? rawResource.handler : undefined,
+      text: hasText ? rawResource.text : undefined,
+      payload: hasPayload ? rawResource.payload : undefined,
+    });
+  }
+  return out;
+}
+
+function normalizePluginResourceTemplates(pluginName, resourceTemplates) {
+  if (!Array.isArray(resourceTemplates)) return [];
+  const out = [];
+  const seenNames = new Set();
+  const seenTemplates = new Set();
+  for (const rawTemplate of resourceTemplates) {
+    if (!isPlainObject(rawTemplate)) {
+      throw new Error(toPluginErrorMessage(pluginName, 'resourceTemplates entries must be objects'));
+    }
+    const name = String(rawTemplate.name ?? '').trim();
+    const uriTemplate = String(rawTemplate.uriTemplate ?? '').trim();
+    if (!name) throw new Error(toPluginErrorMessage(pluginName, 'resourceTemplate.name is required'));
+    if (!uriTemplate) throw new Error(toPluginErrorMessage(pluginName, `resourceTemplate "${name}" needs uriTemplate`));
+    if (seenNames.has(name)) throw new Error(toPluginErrorMessage(pluginName, `duplicate resourceTemplate name: ${name}`));
+    if (seenTemplates.has(uriTemplate)) throw new Error(toPluginErrorMessage(pluginName, `duplicate resourceTemplate uriTemplate: ${uriTemplate}`));
+    seenNames.add(name);
+    seenTemplates.add(uriTemplate);
+    const hasHandler = typeof rawTemplate.handler === 'function';
+    const hasText = typeof rawTemplate.text === 'string';
+    const hasPayload = Object.prototype.hasOwnProperty.call(rawTemplate, 'payload');
+    if (!hasHandler && !hasText && !hasPayload) {
+      throw new Error(toPluginErrorMessage(pluginName, `resourceTemplate "${name}" needs handler, text, or payload`));
+    }
+    out.push({
+      name,
+      uriTemplate,
+      title: String(rawTemplate.title ?? name).trim(),
+      description: String(rawTemplate.description ?? '').trim() || `Resource template provided by ${pluginName}.`,
+      mimeType: String(rawTemplate.mimeType ?? '').trim() || undefined,
+      handler: hasHandler ? rawTemplate.handler : undefined,
+      text: hasText ? rawTemplate.text : undefined,
+      payload: hasPayload ? rawTemplate.payload : undefined,
+      list: Array.isArray(rawTemplate.list) ? rawTemplate.list : undefined,
+      complete: isPlainObject(rawTemplate.complete) ? rawTemplate.complete : undefined,
+    });
+  }
+  return out;
+}
+
 export function normalizePlugins(plugins = []) {
   if (!Array.isArray(plugins)) throw new Error('Invalid plugin configuration: plugins must be an array');
   const normalized = [];
   const seenPluginNames = new Set();
   const seenToolNames = new Set(BUILTIN_TOOL_NAMES);
+  const seenPromptNames = new Set(BUILTIN_PROMPT_NAMES);
+  const seenResourceUris = new Set(BUILTIN_RESOURCE_URIS);
+  const seenResourceTemplateUris = new Set(BUILTIN_RESOURCE_TEMPLATE_URIS);
 
   for (const rawPlugin of plugins) {
     if (!isPlainObject(rawPlugin)) throw new Error('Invalid plugin configuration: each plugin must be an object');
@@ -124,15 +283,37 @@ export function normalizePlugins(plugins = []) {
     seenPluginNames.add(name);
 
     const tools = normalizePluginTools(name, rawPlugin.tools);
+    const validators = normalizePluginValidators(name, rawPlugin.validators);
+    const prompts = normalizePluginPrompts(name, rawPlugin.prompts);
+    const resources = normalizePluginResources(name, rawPlugin.resources);
+    const resourceTemplates = normalizePluginResourceTemplates(name, rawPlugin.resourceTemplates);
     for (const tool of tools) {
       if (seenToolNames.has(tool.name)) {
         throw new Error(toPluginErrorMessage(name, `tool name collision: ${tool.name}`));
       }
       seenToolNames.add(tool.name);
     }
+    for (const prompt of prompts) {
+      if (seenPromptNames.has(prompt.name)) {
+        throw new Error(toPluginErrorMessage(name, `prompt name collision: ${prompt.name}`));
+      }
+      seenPromptNames.add(prompt.name);
+    }
+    for (const resource of resources) {
+      if (seenResourceUris.has(resource.uri)) {
+        throw new Error(toPluginErrorMessage(name, `resource uri collision: ${resource.uri}`));
+      }
+      seenResourceUris.add(resource.uri);
+    }
+    for (const resourceTemplate of resourceTemplates) {
+      if (seenResourceTemplateUris.has(resourceTemplate.uriTemplate)) {
+        throw new Error(toPluginErrorMessage(name, `resourceTemplate uri collision: ${resourceTemplate.uriTemplate}`));
+      }
+      seenResourceTemplateUris.add(resourceTemplate.uriTemplate);
+    }
 
     const dataSources = normalizePluginDataSources(name, rawPlugin.dataSources);
-    normalized.push({ name, version, tools, dataSources });
+    normalized.push({ name, version, tools, validators, prompts, resources, resourceTemplates, dataSources });
   }
 
   return normalized;

@@ -15,7 +15,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
@@ -130,6 +130,9 @@ function extractTokensFromSource(source) {
     tokens.push({
       name,
       value,
+      themeValues: {
+        light: value,
+      },
       type: classifyType(name),
       category: classifyCategory(name),
       cssVariable: `var(${name})`,
@@ -189,7 +192,7 @@ function buildRelationships(tokens) {
 // Main
 // ---------------------------------------------------------------------------
 
-async function main() {
+export async function buildDesignTokensData() {
   const allTokens = [];
 
   for (const src of SOURCES) {
@@ -220,8 +223,8 @@ async function main() {
     }
   }
 
-  const output = {
-    version: '0.2.0',
+  return {
+    version: '0.3.0',
     extractedAt: new Date().toISOString(),
     themes: {
       default: 'light',
@@ -231,17 +234,34 @@ async function main() {
     relationships: buildRelationships(uniqueTokens),
     summary,
   };
-
-  await fs.mkdir(path.dirname(OUTPUT), { recursive: true });
-  await fs.writeFile(OUTPUT, JSON.stringify(output, null, 2) + '\n', 'utf8');
-
-  const sizeKb = (Buffer.byteLength(JSON.stringify(output), 'utf8') / 1024).toFixed(1);
-  console.log(`Extracted ${uniqueTokens.length} tokens (${sizeKb} KB)`);
-  console.log(`  color: ${summary.color}, spacing: ${summary.spacing}, typography: ${summary.typography}, radius: ${summary.radius}, shadow: ${summary.shadow}`);
-  console.log(`  → ${path.relative(ROOT, OUTPUT)}`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+export async function writeDesignTokensData(outputPath = OUTPUT) {
+  const output = await buildDesignTokensData();
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
+  await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, 'utf8');
+
+  const sizeKb = (Buffer.byteLength(JSON.stringify(output), 'utf8') / 1024).toFixed(1);
+  const uniqueTokens = Array.isArray(output.tokens) ? output.tokens : [];
+  const summary = output.summary ?? {};
+  console.log(`Extracted ${uniqueTokens.length} tokens (${sizeKb} KB)`);
+  console.log(`  color: ${summary.color}, spacing: ${summary.spacing}, typography: ${summary.typography}, radius: ${summary.radius}, shadow: ${summary.shadow}`);
+  console.log(`  → ${path.relative(ROOT, outputPath)}`);
+  return output;
+}
+
+export async function main() {
+  await writeDesignTokensData();
+}
+
+const directRunArg = process.argv[1];
+const isDirectRun =
+  typeof directRunArg === 'string' &&
+  pathToFileURL(path.resolve(directRunArg)).href === import.meta.url;
+
+if (isDirectRun) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

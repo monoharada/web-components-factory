@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs/promises';
 import path from 'node:path';
 import { performance } from 'node:perf_hooks';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   MAX_TOOL_RESULT_BYTES,
   buildDesignTokenDetailPayload,
@@ -22,10 +21,11 @@ import {
   serializeApi,
   searchIconCatalog,
 } from '../../packages/mcp-server/core.mjs';
+import { PACKAGE_VERSION } from '../../packages/mcp-server/core/constants.mjs';
+import { loadJsonDataWithFallback } from '../../packages/mcp-server/runtime-data.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
-const DATA_DIR = path.join(ROOT, 'packages/mcp-server/data');
 const MAX_RESPONSE_BYTES = MAX_TOOL_RESULT_BYTES;
 const MAX_GUIDELINE_RESULTS = 20;
 const P95_THRESHOLD_MS = 1000;
@@ -45,9 +45,7 @@ function computeP95(values) {
 }
 
 async function loadJson(fileName) {
-  const filePath = path.join(DATA_DIR, fileName);
-  const raw = await fs.readFile(filePath, 'utf8');
-  return JSON.parse(raw);
+  return loadJsonDataWithFallback(fileName, { repoRoot: ROOT });
 }
 
 function toTextToolResponse(payload) {
@@ -302,6 +300,114 @@ function pickLargestGuidelineResponse(guidelinesIndex) {
   return largest;
 }
 
+function pickLargestKnowledgeSearchResponse(manifest, designTokens, guidelinesIndex, patternRegistry, skillsRegistry) {
+  const indexes = buildIndexes(manifest);
+  const patterns =
+    patternRegistry?.patterns && typeof patternRegistry.patterns === 'object'
+      ? patternRegistry.patterns
+      : {};
+  const skills = Array.isArray(skillsRegistry?.skills) ? skillsRegistry.skills : [];
+  const queries = ['spacing', 'button', 'css', 'layout', 'token'];
+  const sourcesList = [
+    ['components', 'patterns', 'guidelines', 'tokens', 'skills'],
+    ['guidelines', 'tokens'],
+    ['skills'],
+  ];
+
+  let largest = { label: 'search_design_system_knowledge', bytes: 0 };
+
+  for (const query of queries) {
+    const q = query.toLowerCase();
+    const terms = [q];
+    for (const sources of sourcesList) {
+      const results = [];
+
+      if (sources.includes('components')) {
+        const page = buildComponentSummaries(indexes, { query: q, limit: 200 });
+        for (const item of page.items) {
+          results.push({
+            source: 'components',
+            id: item.tagName,
+            title: item.tagName,
+            description: item.description ?? '',
+          });
+        }
+      }
+
+      if (sources.includes('patterns')) {
+        for (const pattern of Object.values(patterns)) {
+          const blob = `${pattern?.id ?? ''} ${pattern?.title ?? ''} ${pattern?.description ?? ''}`.toLowerCase();
+          if (!terms.some((term) => blob.includes(term))) continue;
+          results.push({
+            source: 'patterns',
+            id: pattern?.id,
+            title: pattern?.title ?? pattern?.id,
+            description: pattern?.description ?? '',
+          });
+        }
+      }
+
+      if (sources.includes('guidelines')) {
+        const docs = Array.isArray(guidelinesIndex?.documents) ? guidelinesIndex.documents : [];
+        for (const doc of docs) {
+          for (const section of doc.sections ?? []) {
+            const blob = `${doc?.title ?? ''} ${section?.heading ?? ''} ${section?.snippet ?? ''}`.toLowerCase();
+            if (!terms.some((term) => blob.includes(term))) continue;
+            results.push({
+              source: 'guidelines',
+              id: `${doc?.id}:${section?.heading ?? ''}`,
+              title: section?.heading ?? doc?.title,
+              description: section?.snippet ?? '',
+            });
+          }
+        }
+      }
+
+      if (sources.includes('tokens')) {
+        for (const token of designTokens?.tokens ?? []) {
+          const blob = `${token?.name ?? ''} ${token?.cssVariable ?? ''} ${token?.type ?? ''} ${token?.category ?? ''}`.toLowerCase();
+          if (!terms.some((term) => blob.includes(term))) continue;
+          results.push({
+            source: 'tokens',
+            id: token?.name,
+            title: token?.name,
+            description: `${token?.type ?? ''}/${token?.category ?? ''}: ${token?.value ?? ''}`,
+          });
+        }
+      }
+
+      if (sources.includes('skills')) {
+        for (const skill of skills) {
+          const blob = `${skill?.name ?? ''} ${skill?.description ?? ''} ${(skill?.tags ?? []).join(' ')}`.toLowerCase();
+          if (!terms.some((term) => blob.includes(term))) continue;
+          results.push({
+            source: 'skills',
+            id: skill?.name,
+            title: skill?.name,
+            description: skill?.description ?? '',
+          });
+        }
+      }
+
+      const payload = {
+        query,
+        sources,
+        totalHits: results.length,
+        results: results.slice(0, 10),
+      };
+      const bytes = toolResponseBytes(buildJsonToolResponse(payload, { env: {} }));
+      if (bytes > largest.bytes) {
+        largest = {
+          label: `search_design_system_knowledge(query="${query}", sources="${sources.join(',')}")`,
+          bytes,
+        };
+      }
+    }
+  }
+
+  return largest;
+}
+
 function getDesignSystemOverviewPayload(manifest, installRegistry, patternRegistry) {
   const indexes = buildIndexes(manifest);
   const patterns =
@@ -316,7 +422,7 @@ function getDesignSystemOverviewPayload(manifest, installRegistry, patternRegist
   }
   return {
     name: 'DADS Web Components (wcf)',
-    version: '0.4.0',
+    version: PACKAGE_VERSION,
     prefix: 'dads',
     totalComponents: indexes.decls.length,
     componentsByCategory: categoryCount,
@@ -431,19 +537,20 @@ function getPatternRecipePayload(installRegistry, patternRegistry) {
   return largest;
 }
 
-async function main() {
-  const [manifest, designTokens, guidelinesIndex, installRegistry, patternRegistry, selectorGuide] = await Promise.all([
+export async function collectResponseSizeReport() {
+  const [manifest, designTokens, guidelinesIndex, installRegistry, patternRegistry, selectorGuide, skillsRegistry] = await Promise.all([
     loadJson('custom-elements.json'),
     loadJson('design-tokens.json'),
     loadJson('guidelines-index.json'),
     loadJson('install-registry.json'),
     loadJson('pattern-registry.json'),
     loadJson('component-selector-guide.json').catch(() => null),
+    loadJson('skills-registry.json').catch(() => null),
   ]);
 
   const indexes = buildIndexes(manifest);
 
-  const checks = [
+  const timedChecks = [
     timed(() => pickLargestListComponentsResponse(manifest)),
     timed(() => pickLargestSearchIconsResponse(manifest)),
     timed(() => pickLargestGetComponentApiResponse(manifest, installRegistry, patternRegistry)),
@@ -454,6 +561,7 @@ async function main() {
     timed(() => pickLargestGetDesignTokenDetailResponse(designTokens)),
     timed(() => pickLargestAccessibilityDocsResponse(manifest, guidelinesIndex)),
     timed(() => pickLargestGuidelineResponse(guidelinesIndex)),
+    timed(() => pickLargestKnowledgeSearchResponse(manifest, designTokens, guidelinesIndex, patternRegistry, skillsRegistry)),
     timed(() => ({
       label: 'get_design_system_overview',
       bytes: toolResponseBytes(toTextToolResponse(getDesignSystemOverviewPayload(manifest, installRegistry, patternRegistry))),
@@ -475,31 +583,79 @@ async function main() {
     }),
   ];
 
-  let failed = false;
+  const checks = timedChecks.map((check) => ({
+    ...check,
+    status: check.bytes > MAX_RESPONSE_BYTES ? 'NG' : 'OK',
+    sizeKb: Number((check.bytes / 1024).toFixed(1)),
+  }));
 
-  // Size checks
-  for (const check of checks) {
-    const status = check.bytes > MAX_RESPONSE_BYTES ? 'NG' : 'OK';
-    console.log(`${status} ${check.label}: ${formatKb(check.bytes)} (${check.bytes} bytes) [${check.elapsedMs.toFixed(1)}ms]`);
-    if (status === 'NG') failed = true;
-  }
-
-  // p95 latency check
   const timings = checks.map((c) => c.elapsedMs);
   const p95 = computeP95(timings);
   const p95Status = p95 > P95_THRESHOLD_MS ? 'NG' : 'OK';
-  console.log(`\n${p95Status} p95 latency: ${p95.toFixed(1)}ms (threshold: ${P95_THRESHOLD_MS}ms)`);
-  if (p95Status === 'NG') failed = true;
+  const failedChecks = checks.filter((check) => check.status === 'NG').length;
+  const failed = failedChecks > 0 || p95Status === 'NG';
 
-  if (failed) {
-    console.error(`\nResponse size/performance check failed.`);
-    process.exit(1);
-  }
-
-  console.log('\nResponse size and performance check passed.');
+  return {
+    schemaVersion: '1.0',
+    packageVersion: PACKAGE_VERSION,
+    thresholds: {
+      maxResponseBytes: MAX_RESPONSE_BYTES,
+      p95ThresholdMs: P95_THRESHOLD_MS,
+    },
+    summary: {
+      status: failed ? 'NG' : 'OK',
+      totalChecks: checks.length,
+      failedChecks,
+      p95Status,
+      p95Ms: Number(p95.toFixed(1)),
+    },
+    checks: checks.map((check) => ({
+      label: check.label,
+      status: check.status,
+      bytes: check.bytes,
+      sizeKb: check.sizeKb,
+      elapsedMs: Number(check.elapsedMs.toFixed(1)),
+    })),
+  };
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+export function formatResponseSizeReport(report) {
+  const lines = [];
+  for (const check of report.checks) {
+    lines.push(`${check.status} ${check.label}: ${formatKb(check.bytes)} (${check.bytes} bytes) [${check.elapsedMs.toFixed(1)}ms]`);
+  }
+  lines.push('');
+  lines.push(`${report.summary.p95Status} p95 latency: ${report.summary.p95Ms.toFixed(1)}ms (threshold: ${report.thresholds.p95ThresholdMs}ms)`);
+  lines.push('');
+  lines.push(
+    report.summary.status === 'OK'
+      ? 'Response size and performance check passed.'
+      : 'Response size/performance check failed.',
+  );
+  return lines.join('\n');
+}
+
+export async function main(argv = process.argv.slice(2)) {
+  const json = argv.includes('--json');
+  const report = await collectResponseSizeReport();
+  if (json) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    console.log(formatResponseSizeReport(report));
+  }
+  if (report.summary.status !== 'OK') {
+    process.exit(1);
+  }
+}
+
+const directRunArg = process.argv[1];
+const isDirectRun =
+  typeof directRunArg === 'string' &&
+  pathToFileURL(path.resolve(directRunArg)).href === import.meta.url;
+
+if (isDirectRun) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}

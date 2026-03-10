@@ -41,6 +41,42 @@ function isForbiddenAttr(attrName) {
   return FORBIDDEN_ATTR_SET.has(attrName.toLowerCase());
 }
 
+function maskTextPreserveNewlines(fragment) {
+  return String(fragment).replace(/[^\n\r]/g, ' ');
+}
+
+function sanitizeMarkupForValidation(text) {
+  let out = String(text ?? '');
+  const patterns = [
+    /^---[\s\S]*?\n---/m, // Astro/frontmatter blocks
+    /<!--[\s\S]*?-->/g,
+    /<script\b[\s\S]*?<\/script>/gi,
+    /<style\b[\s\S]*?<\/style>/gi,
+    /{%\s*comment\s*%}[\s\S]*?{%\s*endcomment\s*%}/gi,
+    /{{!--[\s\S]*?--}}/g,
+    /{#[\s\S]*?#}/g,
+    /<%[\s\S]*?%>/g,
+    /<\?[\s\S]*?\?>/g,
+  ];
+  for (const pattern of patterns) {
+    out = out.replace(pattern, (match) => maskTextPreserveNewlines(match));
+  }
+  return out;
+}
+
+function isTemplateValue(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw) return false;
+  return (
+    raw.includes('{{') ||
+    raw.includes('{%') ||
+    raw.includes('<%') ||
+    raw.includes('<?') ||
+    raw.includes('${') ||
+    (/^\{[\s\S]*\}$/.test(raw))
+  );
+}
+
 function computeLineIndex(text) {
   const out = [0];
   for (let i = 0; i < text.length; i += 1) {
@@ -170,11 +206,12 @@ export function detectEnumValueMisuse({
   const diagnostics = [];
   if (!(enumMap instanceof Map) || enumMap.size === 0) return diagnostics;
 
-  const lineStarts = computeLineIndex(text);
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
   const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
   let m;
 
-  while ((m = tagRe.exec(text))) {
+  while ((m = tagRe.exec(sourceText))) {
     const tag = String(m[1] ?? '').toLowerCase();
     if (!tag.includes('-')) continue;
 
@@ -191,7 +228,7 @@ export function detectEnumValueMisuse({
       if (!validValues) continue;
 
       // Skip empty values (boolean-style attributes)
-      if (value === undefined || value === '') continue;
+      if (value === undefined || value.trim() === '' || isTemplateValue(value)) continue;
 
       if (!validValues.has(value)) {
         const startIndex = rawAttrsStart + offset;
@@ -253,6 +290,43 @@ function parseAttributeNames(rawAttrs) {
   return parseAttributes(rawAttrs).map(({ name, offset }) => ({ name, offset }));
 }
 
+function readBalancedBraces(text, startIndex) {
+  let index = startIndex;
+  let depth = 0;
+  let quote = null;
+
+  while (index < text.length) {
+    const ch = text[index];
+    if (quote) {
+      if (ch === '\\') {
+        index += 2;
+        continue;
+      }
+      if (ch === quote) quote = null;
+      index += 1;
+      continue;
+    }
+
+    if (ch === '"' || ch === "'" || ch === '`') {
+      quote = ch;
+      index += 1;
+      continue;
+    }
+
+    if (ch === '{') depth += 1;
+    if (ch === '}') {
+      depth -= 1;
+      index += 1;
+      if (depth === 0) break;
+      continue;
+    }
+
+    index += 1;
+  }
+
+  return index;
+}
+
 function parseAttributes(rawAttrs) {
   /** @type {{ name: string, offset: number }[]} */
   const out = [];
@@ -269,11 +343,15 @@ function parseAttributes(rawAttrs) {
 
     const c = rawAttrs[i];
     if (c === '/' || c === '>') break;
+    if (c === '{') {
+      i = readBalancedBraces(rawAttrs, i);
+      continue;
+    }
 
     const nameStart = i;
     while (i < len) {
       const ch = rawAttrs[i];
-      if (ch === '=' || ch === '>' || ch === '/' || isSpace(rawAttrs.charCodeAt(i))) break;
+      if (ch === '=' || ch === '>' || ch === '/' || ch === '{' || isSpace(rawAttrs.charCodeAt(i))) break;
       i += 1;
     }
 
@@ -294,6 +372,10 @@ function parseAttributes(rawAttrs) {
         while (i < len && rawAttrs[i] !== quote) i += 1;
         value = rawAttrs.slice(valueStart, i);
         if (i < len) i += 1;
+      } else if (quote === '{') {
+        const valueStart = i;
+        i = readBalancedBraces(rawAttrs, i);
+        value = rawAttrs.slice(valueStart, i);
       } else {
         const valueStart = i;
         while (i < len) {
@@ -330,11 +412,12 @@ export function validateTextAgainstCem({
   ignoreTags = new Set(),
 }) {
   const diagnostics = [];
-  const lineStarts = computeLineIndex(text);
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
 
   const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
   let m;
-  while ((m = tagRe.exec(text))) {
+  while ((m = tagRe.exec(sourceText))) {
     const tag = String(m[1] ?? '').toLowerCase();
 
     const tagOffset = m.index + 1;
@@ -418,11 +501,12 @@ export function detectTokenMisuseInInlineStyles({
   const diagnostics = [];
   if (!(valueToToken instanceof Map) || valueToToken.size === 0) return diagnostics;
 
-  const lineStarts = computeLineIndex(text);
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
   const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
   let m;
 
-  while ((m = tagRe.exec(text))) {
+  while ((m = tagRe.exec(sourceText))) {
     const tag = String(m[1] ?? '').toLowerCase();
     const attrChunk = String(m[2] ?? '');
     const inlineStyle = parseInlineStyleAttribute(attrChunk);
@@ -438,7 +522,7 @@ export function detectTokenMisuseInInlineStyles({
       if (!TOKEN_MISUSE_STYLE_PROPS.has(prop)) continue;
 
       const valueRaw = String(d[2] ?? '').trim();
-      if (!valueRaw || /^var\(/i.test(valueRaw)) continue;
+      if (!valueRaw || /^var\(/i.test(valueRaw) || isTemplateValue(valueRaw)) continue;
 
       const normalizedValue = normalizeStyleValue(valueRaw);
       const cssVariable = valueToToken.get(normalizedValue);
@@ -481,11 +565,12 @@ export function detectAccessibilityMisuseInMarkup({
   cemTagNames,
 }) {
   const diagnostics = [];
-  const lineStarts = computeLineIndex(text);
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
   const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
   let m;
 
-  while ((m = tagRe.exec(text))) {
+  while ((m = tagRe.exec(sourceText))) {
     const tag = String(m[1] ?? '').toLowerCase();
     const attrChunk = String(m[2] ?? '');
     const rawAttrsStart = m.index + 1 + tag.length;
@@ -542,7 +627,7 @@ export function detectAccessibilityMisuseInMarkup({
       ];
       for (const { name, offset, value } of parsedAttrs) {
         const attrLower = String(name ?? '').toLowerCase();
-        if (typeof value !== 'string' || value.trim() !== '') continue;
+        if (typeof value !== 'string' || value.trim() !== '' || isTemplateValue(value)) continue;
         const check = EMPTY_LABEL_CHECKS.find((c) => c.attr === attrLower);
         if (!check) continue;
         const startIndex = rawAttrsStart + offset;
@@ -618,34 +703,66 @@ export function detectInvalidSlotName({
   const diagnostics = [];
   if (!(slotMap instanceof Map) || slotMap.size === 0) return diagnostics;
 
-  // Build global slot vocabulary (all valid slot names across all components)
+  const sourceText = sanitizeMarkupForValidation(text);
   const globalSlotNames = new Set();
   for (const slotNames of slotMap.values()) {
     for (const name of slotNames) globalSlotNames.add(name);
   }
 
-  const lineStarts = computeLineIndex(text);
-  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  const lineStarts = computeLineIndex(sourceText);
+  const stack = [];
+  const tagRe = /<\/?([a-z][a-z0-9-]*)\b([^<>]*?)\/?>/gi;
   let m;
 
-  while ((m = tagRe.exec(text))) {
+  while ((m = tagRe.exec(sourceText))) {
+    const fullMatch = String(m[0] ?? '');
     const tag = String(m[1] ?? '').toLowerCase();
     const attrChunk = String(m[2] ?? '');
+    const isClosing = fullMatch.startsWith('</');
+    const isSelfClosing = fullMatch.endsWith('/>');
     const rawAttrsStart = m.index + 1 + tag.length;
+
+    if (isClosing) {
+      for (let index = stack.length - 1; index >= 0; index -= 1) {
+        if (stack[index] === tag) {
+          stack.splice(index, 1);
+          break;
+        }
+      }
+      continue;
+    }
+
     const attrs = parseAttributes(attrChunk);
+    const nearestComponentParent = [...stack].reverse().find((item) => slotMap.has(item));
 
     for (const { name, offset, value } of attrs) {
       const attrName = name.toLowerCase();
       if (attrName !== 'slot') continue;
-      if (value === undefined || value === '') continue;
-
-      // 'default' is always valid (unnamed slot)
+      if (value === undefined || value.trim() === '' || isTemplateValue(value)) continue;
       if (value === 'default') continue;
 
+      const startIndex = rawAttrsStart + offset;
+      const endIndex = startIndex + name.length;
+      const range = makeRange(lineStarts, startIndex, endIndex);
+
+      if (nearestComponentParent) {
+        const allowedSlots = slotMap.get(nearestComponentParent) ?? new Set();
+        if (!allowedSlots.has(value)) {
+          diagnostics.push({
+            file: filePath,
+            range,
+            severity,
+            code: 'invalidSlotName',
+            message: `Unknown slot name "${value}" for parent <${nearestComponentParent}>.`,
+            tagName: tag,
+            attrName: 'slot',
+            hint: `Check <${nearestComponentParent}> for available slot names.`,
+          });
+        }
+        continue;
+      }
+
       if (!globalSlotNames.has(value)) {
-        const startIndex = rawAttrsStart + offset;
-        const endIndex = startIndex + name.length;
-        const range = makeRange(lineStarts, startIndex, endIndex);
         diagnostics.push({
           file: filePath,
           range,
@@ -657,6 +774,10 @@ export function detectInvalidSlotName({
           hint: `Check the parent component's API for available slot names.`,
         });
       }
+    }
+
+    if (!isSelfClosing && !HTML_VOID_ELEMENTS.has(tag) && tag.includes('-')) {
+      stack.push(tag);
     }
   }
 
@@ -702,7 +823,8 @@ export function detectOrphanedChildComponents({
   severity = 'warning',
 }) {
   const diagnostics = [];
-  const lineStarts = computeLineIndex(text);
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
   const p = prefix.toLowerCase();
   const canonicalPrefix = 'dads';
 
@@ -722,7 +844,7 @@ export function detectOrphanedChildComponents({
   const tagRe = /<\/?([a-z][a-z0-9-]*)\b[^<>]*?\/?>/gi;
   let m;
 
-  while ((m = tagRe.exec(text))) {
+  while ((m = tagRe.exec(sourceText))) {
     const fullMatch = m[0];
     const tag = String(m[1] ?? '').toLowerCase();
     const isClosing = fullMatch.startsWith('</');
@@ -794,7 +916,8 @@ export function detectEmptyInteractiveElement({
   severity = 'warning',
 }) {
   const diagnostics = [];
-  const lineStarts = computeLineIndex(text);
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
   const p = prefix.toLowerCase();
   const canonicalPrefix = 'dads';
 
@@ -807,7 +930,7 @@ export function detectEmptyInteractiveElement({
   const selfClosingRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)\/>/gi;
   let m;
 
-  while ((m = selfClosingRe.exec(text))) {
+  while ((m = selfClosingRe.exec(sourceText))) {
     const tag = String(m[1] ?? '').toLowerCase();
     if (!elements.has(tag)) continue;
 
@@ -834,7 +957,7 @@ export function detectEmptyInteractiveElement({
   for (const tag of elements) {
     const emptyRe = new RegExp(`<(${tag})\\b([^<>]*?)>\\s*</${tag}>`, 'gi');
     let em;
-    while ((em = emptyRe.exec(text))) {
+    while ((em = emptyRe.exec(sourceText))) {
       const matchedTag = String(em[1] ?? '').toLowerCase();
       const attrChunk = String(em[2] ?? '');
       const attrs = parseAttributes(attrChunk);
@@ -888,7 +1011,8 @@ export function detectMissingRequiredAttributes({
   severity = 'error',
 }) {
   const diagnostics = [];
-  const lineStarts = computeLineIndex(text);
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
   const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
   let m;
 
@@ -901,7 +1025,7 @@ export function detectMissingRequiredAttributes({
     requiredMap.set(mappedTag, attrs);
   }
 
-  while ((m = tagRe.exec(text))) {
+  while ((m = tagRe.exec(sourceText))) {
     const tag = String(m[1] ?? '').toLowerCase();
     const requiredAttrs = requiredMap.get(tag);
     if (!requiredAttrs) continue;
@@ -932,6 +1056,59 @@ export function detectMissingRequiredAttributes({
 }
 
 /**
+ * Detect duplicate id attributes within a single markup document.
+ * @param {{
+ *   filePath?: string;
+ *   text: string;
+ *   severity?: string;
+ * }} params
+ */
+export function detectDuplicateIdsInMarkup({
+  filePath = '<input>',
+  text,
+  severity = 'error',
+}) {
+  const diagnostics = [];
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
+  const seen = new Map();
+  const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
+  let m;
+
+  while ((m = tagRe.exec(sourceText))) {
+    const tag = String(m[1] ?? '').toLowerCase();
+    const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
+    const attrs = parseAttributes(attrChunk);
+    const idAttr = attrs.find(({ name }) => String(name ?? '').toLowerCase() === 'id');
+    const idValue = String(idAttr?.value ?? '').trim();
+    if (!idAttr || idValue === '' || isTemplateValue(idValue)) continue;
+
+    const startIndex = rawAttrsStart + idAttr.offset;
+    const endIndex = startIndex + idAttr.name.length;
+    const range = makeRange(lineStarts, startIndex, endIndex);
+    const previous = seen.get(idValue);
+    if (previous) {
+      diagnostics.push({
+        file: filePath,
+        range,
+        severity,
+        code: 'duplicateId',
+        message: `Duplicate id "${idValue}" found. IDs must be unique within a document.`,
+        tagName: tag,
+        attrName: 'id',
+        hint: `Rename or remove one of the duplicated id="${idValue}" attributes.`,
+      });
+      continue;
+    }
+
+    seen.set(idValue, { tag, range });
+  }
+
+  return diagnostics;
+}
+
+/**
  * Detect attributes written in non-lowercase on known custom elements.
  * HTML attributes are case-insensitive, but WCF uses lowercase canonically.
  * @param {{
@@ -950,11 +1127,12 @@ export function detectNonLowercaseAttributes({
   const diagnostics = [];
   if (!(cem instanceof Map) || cem.size === 0) return diagnostics;
 
-  const lineStarts = computeLineIndex(text);
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
   const tagRe = /<([a-z][a-z0-9-]*)\b([^<>]*?)>/gi;
   let m;
 
-  while ((m = tagRe.exec(text))) {
+  while ((m = tagRe.exec(sourceText))) {
     const tag = String(m[1] ?? '').toLowerCase();
     if (!tag.includes('-')) continue;
 

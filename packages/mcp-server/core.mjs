@@ -8,6 +8,7 @@
  * Actual logic lives in core/ sub-modules (DD-02, DD-09).
  */
 
+import fs from 'node:fs/promises';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { registerAll } from './core/register.mjs';
 
@@ -118,6 +119,9 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
   const loadTextData = typeof options?.loadTextData === 'function'
     ? options.loadTextData
     : null;
+  const loadTextDataFromPath = typeof options?.loadTextDataFromPath === 'function'
+    ? options.loadTextDataFromPath
+    : null;
 
   const loadJson = async (fileName) => {
     const override = pluginDataSourceMap.get(fileName);
@@ -128,6 +132,13 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     return loadJsonDataFromPath(override.path, fileName, override.pluginName);
   };
   const loadText = async (fileName) => {
+    const override = pluginDataSourceMap.get(fileName);
+    if (override) {
+      if (loadTextDataFromPath) {
+        return loadTextDataFromPath(override.path, fileName, override.pluginName);
+      }
+      return fs.readFile(override.path, 'utf8');
+    }
     if (!loadTextData) throw new Error(`Text data loader not configured for ${fileName}`);
     return loadTextData(fileName);
   };
@@ -145,6 +156,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     buildSlotNameMap = () => new Map(),
     detectInvalidSlotName = () => [],
     detectMissingRequiredAttributes = () => [],
+    detectDuplicateIdsInMarkup = () => [],
     detectOrphanedChildComponents = () => [],
     detectEmptyInteractiveElement = () => [],
     detectNonLowercaseAttributes = () => [],
@@ -226,6 +238,7 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       buildSlotNameMap,
       detectInvalidSlotName,
       detectMissingRequiredAttributes,
+      detectDuplicateIdsInMarkup,
       detectOrphanedChildComponents,
       detectEmptyInteractiveElement,
       detectNonLowercaseAttributes,

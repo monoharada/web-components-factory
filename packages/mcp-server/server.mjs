@@ -197,6 +197,10 @@ export async function loadJsonDataFromPath(sourcePath) {
   return JSON.parse(text);
 }
 
+export async function loadTextDataFromPath(sourcePath) {
+  return fs.readFile(sourcePath, 'utf8');
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -211,6 +215,7 @@ export async function createServer(options = {}) {
   return createMcpServer(loadJsonData, loadValidator, {
     plugins: runtimeConfig.plugins,
     loadJsonDataFromPath,
+    loadTextDataFromPath,
     loadTextData,
   });
 }

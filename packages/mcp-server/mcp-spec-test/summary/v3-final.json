@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "1.0",
+  "package": {
+    "name": "@monoharada/wcf-mcp",
+    "version": "0.10.0"
+  },
+  "inventory": {
+    "tools": [
+      "generate_full_page_html",
+      "generate_pattern_snippet",
+      "generate_usage_snippet",
+      "get_accessibility_docs",
+      "get_component_api",
+      "get_component_selector_guide",
+      "get_design_system_overview",
+      "get_design_token_detail",
+      "get_design_tokens",
+      "get_install_recipe",
+      "get_pattern_recipe",
+      "list_components",
+      "list_patterns",
+      "search_design_system_knowledge",
+      "search_guidelines",
+      "search_icons",
+      "validate_files",
+      "validate_markup",
+      "validate_project"
+    ],
+    "toolCount": 19,
+    "prompts": [
+      "figma_to_wcf"
+    ],
+    "promptCount": 1,
+    "resources": [
+      "wcf://components",
+      "wcf://guidelines/{topic}",
+      "wcf://llms-full",
+      "wcf://skills",
+      "wcf://tokens"
+    ],
+    "resourceCount": 5
+  },
+  "checks": {
+    "responseSize": {
+      "schemaVersion": "1.0",
+      "thresholds": {
+        "maxResponseBytes": 102400,
+        "p95ThresholdMs": 1000
+      },
+      "summary": {
+        "status": "OK",
+        "totalChecks": 13,
+        "failedChecks": 0,
+        "p95Status": "OK"
+      },
+      "checks": [
+        {
+          "label": "list_components(limit=200, prefix=huge)",
+          "status": "OK",
+          "bytes": 24448,
+          "sizeKb": 23.9
+        },
+        {
+          "label": "search_icons(limit=100, prefix=huge)",
+          "status": "OK",
+          "bytes": 19421,
+          "sizeKb": 19
+        },
+        {
+          "label": "get_component_api(tagName=\"dads-heading\", prefix=huge)",
+          "status": "OK",
+          "bytes": 6970,
+          "sizeKb": 6.8
+        },
+        {
+          "label": "get_design_tokens(all)",
+          "status": "OK",
+          "bytes": 75275,
+          "sizeKb": 73.5
+        },
+        {
+          "label": "get_design_token_detail(name=\"--spacing-factor\", theme=\"light\")",
+          "status": "OK",
+          "bytes": 24521,
+          "sizeKb": 23.9
+        },
+        {
+          "label": "get_accessibility_docs(wcagLevel=A), prefix=huge",
+          "status": "OK",
+          "bytes": 88217,
+          "sizeKb": 86.1
+        },
+        {
+          "label": "search_guidelines(query=\"e\", topic=\"patterns\", maxResults=20)",
+          "status": "OK",
+          "bytes": 36089,
+          "sizeKb": 35.2
+        },
+        {
+          "label": "search_design_system_knowledge(query=\"css\", sources=\"components,patterns,guidelines,tokens,skills\")",
+          "status": "OK",
+          "bytes": 18852,
+          "sizeKb": 18.4
+        },
+        {
+          "label": "get_design_system_overview",
+          "status": "OK",
+          "bytes": 2715,
+          "sizeKb": 2.7
+        },
+        {
+          "label": "get_install_recipe(component=\"global-menu\")",
+          "status": "OK",
+          "bytes": 1076,
+          "sizeKb": 1.1
+        },
+        {
+          "label": "get_pattern_recipe(patternId=\"mockup-mobile-form\")",
+          "status": "OK",
+          "bytes": 5313,
+          "sizeKb": 5.2
+        },
+        {
+          "label": "generate_full_page_html(2 components)",
+          "status": "OK",
+          "bytes": 907,
+          "sizeKb": 0.9
+        },
+        {
+          "label": "get_component_selector_guide(all)",
+          "status": "OK",
+          "bytes": 17197,
+          "sizeKb": 16.8
+        }
+      ]
+    },
+    "readmeExamples": {
+      "status": "OK",
+      "blocksChecked": 23,
+      "requestBlocks": 8,
+      "errorCount": 0
+    }
+  }
+}

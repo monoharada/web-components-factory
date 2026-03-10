@@ -2,6 +2,8 @@
  * core/register.mjs — Tool / Resource / Prompt registration logic for the MCP server.
  */
 
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { CANONICAL_PREFIX, PACKAGE_VERSION, PLUGIN_TOOL_NOTICE, FIGMA_TO_WCF_PROMPT, WCF_RESOURCE_URIS, IDE_SETUP_TEMPLATES } from './constants.mjs';
@@ -146,6 +148,362 @@ function buildImportMapEntries(closure, components, prefix, dir, prefixStripRe) 
   );
 }
 
+function scoreSearchFields(query, terms, fields) {
+  let score = 0;
+  const matchedTerms = new Set();
+  for (const { text, weight } of fields) {
+    const normalized = String(text ?? '').toLowerCase();
+    if (!normalized) continue;
+    if (query && normalized === query) {
+      score += weight * 6;
+      matchedTerms.add(query);
+      continue;
+    }
+    if (query && normalized.startsWith(query)) {
+      score += weight * 3;
+      matchedTerms.add(query);
+    } else if (query && normalized.includes(query)) {
+      score += weight * 2;
+      matchedTerms.add(query);
+    }
+    for (const term of terms) {
+      if (!term) continue;
+      if (normalized.includes(term)) {
+        score += weight;
+        matchedTerms.add(term);
+      }
+    }
+  }
+  score += matchedTerms.size * 2;
+  return score;
+}
+
+function detectKnowledgeIntentSources(query, terms) {
+  const raw = `${query} ${terms.join(' ')}`.toLowerCase();
+  const intents = new Set();
+
+  if (
+    raw.includes('guideline') ||
+    raw.includes('rule') ||
+    raw.includes('a11y') ||
+    raw.includes('accessibility') ||
+    raw.includes('wcag') ||
+    raw.includes('aria') ||
+    raw.includes('keyboard') ||
+    raw.includes('focus') ||
+    raw.includes('contrast') ||
+    raw.includes('::part')
+  ) intents.add('guidelines');
+
+  if (
+    raw.includes('token') ||
+    raw.includes('css variable') ||
+    raw.includes('spacing') ||
+    raw.includes('color') ||
+    raw.includes('typography') ||
+    raw.includes('radius') ||
+    raw.includes('shadow') ||
+    query.startsWith('--') ||
+    query.includes('var(')
+  ) intents.add('tokens');
+
+  if (
+    raw.includes('pattern') ||
+    raw.includes('layout') ||
+    raw.includes('page') ||
+    raw.includes('screen') ||
+    raw.includes('shell') ||
+    raw.includes('dashboard') ||
+    raw.includes('template')
+  ) intents.add('patterns');
+
+  if (
+    raw.includes('skill') ||
+    raw.includes('workflow') ||
+    raw.includes('codex') ||
+    raw.includes('claude') ||
+    raw.includes('cursor') ||
+    raw.includes('prompt')
+  ) intents.add('skills');
+
+  if (
+    query.startsWith('dads-') ||
+    /^[a-z0-9-]+$/.test(query) ||
+    /^[A-Z][A-Za-z0-9]+$/.test(query)
+  ) intents.add('components');
+
+  return intents;
+}
+
+function getKnowledgeSourceBoost(source, query, terms) {
+  const intents = detectKnowledgeIntentSources(query, terms);
+  return intents.has(source) ? 6 : 0;
+}
+
+function selectKnowledgeResults(results, limit, requestedSources) {
+  if (requestedSources.size <= 1) {
+    return results.slice(0, limit);
+  }
+
+  const selected = [];
+  const deferred = [];
+  const sourceCounts = new Map();
+  const softCap = Math.max(1, Math.ceil(limit / requestedSources.size));
+
+  for (const result of results) {
+    const sourceCount = sourceCounts.get(result.source) ?? 0;
+    if (sourceCount < softCap) {
+      selected.push(result);
+      sourceCounts.set(result.source, sourceCount + 1);
+      if (selected.length >= limit) return selected;
+      continue;
+    }
+    deferred.push(result);
+  }
+
+  for (const result of deferred) {
+    selected.push(result);
+    if (selected.length >= limit) break;
+  }
+
+  return selected;
+}
+
+function buildKnowledgeFollowUp(result) {
+  switch (result.source) {
+    case 'components':
+      return {
+        tool: 'get_component_api',
+        arguments: { component: result.id },
+      };
+    case 'patterns':
+      return {
+        tool: 'get_pattern_recipe',
+        arguments: { patternId: result.id },
+      };
+    case 'guidelines':
+      return {
+        tool: 'search_guidelines',
+        arguments: {
+          query: result.title,
+          topic: result.metadata?.topic ?? 'all',
+        },
+      };
+    case 'tokens':
+      return {
+        tool: 'get_design_token_detail',
+        arguments: { name: result.id },
+      };
+    case 'skills':
+      return {
+        resource: 'wcf://skills',
+        hint: `Filter skill "${result.id}" from the skills catalog, or use get_skill_manifest when the design-system-skills plugin is enabled.`,
+      };
+    default:
+      return undefined;
+  }
+}
+
+function escapeRegex(value) {
+  return String(value).replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+}
+
+function isGlobLike(pattern) {
+  return /[*?[\]{}()]/.test(pattern);
+}
+
+function matchesGlobPattern(filePath, pattern) {
+  const file = filePath.split(path.sep).join('/');
+  const pat = pattern.split(path.sep).join('/');
+  if (!isGlobLike(pat)) return file === pat;
+  if (pat.endsWith('/**')) {
+    const prefix = pat.slice(0, -3);
+    return file === prefix || file.startsWith(`${prefix}/`);
+  }
+
+  const normalizedPattern = pat
+    .replaceAll('**/', '§§DOUBLE_STAR_DIR§§')
+    .replaceAll('/**', '§§DIR_DOUBLE_STAR§§')
+    .replaceAll('**', '§§DOUBLE_STAR§§');
+
+  const reSrc =
+    '^' +
+    escapeRegex(normalizedPattern)
+      .replaceAll('\\*', '[^/]*')
+      .replaceAll('\\?', '.')
+      .replaceAll('§§DOUBLE_STAR_DIR§§', '(?:.*/)?')
+      .replaceAll('§§DIR_DOUBLE_STAR§§', '(?:/.*)?')
+      .replaceAll('§§DOUBLE_STAR§§', '.*') +
+    '$';
+  return new RegExp(reSrc).test(file);
+}
+
+async function walkProjectFiles(rootDir) {
+  const out = [];
+  const queue = [rootDir];
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    const entries = await fs.readdir(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolutePath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        queue.push(absolutePath);
+        continue;
+      }
+      if (entry.isFile()) out.push(absolutePath);
+    }
+  }
+
+  return out;
+}
+
+function summarizeDiagnostics(diagnostics) {
+  const errorCount = diagnostics.filter((diagnostic) => diagnostic.severity === 'error').length;
+  const warningCount = diagnostics.filter((diagnostic) => diagnostic.severity === 'warning').length;
+  return {
+    total: diagnostics.length,
+    errorCount,
+    warningCount,
+  };
+}
+
+function normalizePluginValidatorDiagnostics(result, { pluginName, validatorName, filePath }) {
+  const diagnostics = Array.isArray(result)
+    ? result
+    : Array.isArray(result?.diagnostics)
+      ? result.diagnostics
+      : [];
+
+  return diagnostics
+    .filter((diagnostic) => diagnostic && typeof diagnostic === 'object')
+    .map((diagnostic) => ({
+      file: diagnostic.file ?? filePath,
+      range: diagnostic.range,
+      severity: diagnostic.severity ?? 'warning',
+      code: String(diagnostic.code ?? 'pluginValidationIssue'),
+      message: String(diagnostic.message ?? `Plugin validator reported an issue (${pluginName}/${validatorName}).`),
+      tagName: diagnostic.tagName,
+      attrName: diagnostic.attrName,
+      hint: diagnostic.hint,
+      plugin: pluginName,
+      validator: validatorName,
+    }));
+}
+
+function buildPluginPromptMessages(result, fallbackText) {
+  if (result && typeof result === 'object' && Array.isArray(result.messages)) {
+    return result;
+  }
+  return {
+    messages: [{
+      role: 'user',
+      content: {
+        type: 'text',
+        text: typeof result === 'string' ? result : fallbackText,
+      },
+    }],
+  };
+}
+
+function buildPluginHandlerContext(plugin, loadJson, loadText) {
+  return {
+    plugin: { name: plugin.name, version: plugin.version },
+    helpers: {
+      loadJsonData: loadJson,
+      loadTextData: loadText,
+      buildJsonToolResponse,
+      normalizePrefix,
+      withPrefix,
+      toCanonicalTagName,
+    },
+  };
+}
+
+function buildPluginResourceContents(resource, result) {
+  if (result && typeof result === 'object' && Array.isArray(result.contents)) {
+    return {
+      ...result,
+      contents: result.contents.map((item) => ({
+        ...item,
+        uri: String(item.uri),
+      })),
+    };
+  }
+
+  const mimeType = resource.mimeType ?? (typeof result === 'string' || typeof resource.text === 'string'
+    ? 'text/plain'
+    : 'application/json');
+  const text = typeof result === 'string'
+    ? result
+    : typeof resource.text === 'string'
+      ? resource.text
+      : JSON.stringify(
+          Object.prototype.hasOwnProperty.call(resource, 'payload') ? resource.payload : (result ?? {}),
+          null,
+          2,
+        );
+
+  return {
+    contents: [{
+      uri: String(resource.uri),
+      mimeType,
+      text,
+    }],
+  };
+}
+
+function buildPluginResourceErrorContents(resource, plugin, error) {
+  const message = error instanceof Error ? error.message : String(error);
+  return {
+    contents: [{
+      uri: String(resource.uri),
+      mimeType: 'text/plain',
+      text: `Plugin resource failed (${plugin.name}/${resource.name}): ${message}`,
+    }],
+  };
+}
+
+function normalizePromptArgsSchema(schema) {
+  if (!schema) return undefined;
+  if (typeof schema === 'object' && !Array.isArray(schema)) {
+    if (schema.shape && typeof schema.shape === 'object') return schema.shape;
+    if (schema._def?.shape) {
+      const shape = typeof schema._def.shape === 'function' ? schema._def.shape() : schema._def.shape;
+      if (shape && typeof shape === 'object') return shape;
+    }
+    return schema;
+  }
+  return undefined;
+}
+
+function buildPluginResourceTemplateConfig(resourceTemplate) {
+  const config = {};
+  if (Array.isArray(resourceTemplate.list)) {
+    config.list = async () => ({
+      resources: resourceTemplate.list.map((uri) => ({
+        uri,
+        name: resourceTemplate.name,
+        description: resourceTemplate.description,
+      })),
+    });
+  }
+  if (resourceTemplate.complete && typeof resourceTemplate.complete === 'object') {
+    config.complete = Object.fromEntries(
+      Object.entries(resourceTemplate.complete).map(([key, values]) => [
+        key,
+        async (input) => {
+          const query = String(input ?? '').trim().toLowerCase();
+          return (Array.isArray(values) ? values : [])
+            .map((value) => String(value))
+            .filter((value) => value.toLowerCase().startsWith(query));
+        },
+      ]),
+    );
+  }
+  return config;
+}
+
 function buildFullPageHtmlFromImportMap({ html, title, importMapEntries, dir = 'vendor-runtime', lang = 'ja' }) {
   const importMapJson = JSON.stringify({ imports: importMapEntries }, null, 2);
   return [
@@ -200,6 +558,192 @@ export function registerAll(context) {
 
   const VENDOR_DIR = 'vendor-runtime';
   const PREFIX_STRIP_RE = /^[^-]+-/;
+  let cachedSkillsRegistry = null;
+
+  async function loadSkillsRegistrySafe() {
+    if (cachedSkillsRegistry !== null) return cachedSkillsRegistry;
+    try {
+      const registry = await loadJsonData('skills-registry.json');
+      cachedSkillsRegistry = registry;
+      return registry;
+    } catch {
+      cachedSkillsRegistry = undefined;
+      return undefined;
+    }
+  }
+
+  async function collectMarkupDiagnostics({ filePath, text, prefix }) {
+    const {
+      validateTextAgainstCem,
+      detectTokenMisuseInInlineStyles,
+      detectAccessibilityMisuseInMarkup,
+      detectEnumValueMisuse,
+      detectInvalidSlotName,
+      detectMissingRequiredAttributes,
+      detectDuplicateIdsInMarkup,
+      detectOrphanedChildComponents,
+      detectEmptyInteractiveElement,
+      detectNonLowercaseAttributes,
+      detectCdnReferences,
+      detectMissingRuntimeScaffold,
+    } = await loadValidator();
+
+    const p = normalizePrefix(prefix);
+    let cemIndex = canonicalCemIndex;
+    let enumMap = canonicalEnumMap;
+    let slotMap = canonicalSlotMap;
+    if (p !== CANONICAL_PREFIX) {
+      cemIndex = mergeWithPrefixed(canonicalCemIndex, p);
+      enumMap = mergeWithPrefixed(canonicalEnumMap, p);
+      slotMap = mergeWithPrefixed(canonicalSlotMap, p);
+    }
+
+    const cemDiagnostics = validateTextAgainstCem({
+      filePath,
+      text,
+      cem: cemIndex,
+      severity: {
+        unknownElement: 'error',
+        unknownAttribute: 'warning',
+      },
+    });
+
+    const enumDiagnostics = detectEnumValueMisuse({
+      filePath,
+      text,
+      enumMap,
+      severity: 'error',
+    });
+
+    const tokenMisuseDiagnostics = detectTokenMisuseInInlineStyles({
+      filePath,
+      text,
+      valueToToken: tokenSuggestionMap,
+      severity: 'warning',
+    });
+
+    const cemTagNames = new Set(cemIndex.keys());
+    const accessibilityDiagnostics = detectAccessibilityMisuseInMarkup({
+      filePath,
+      text,
+      severity: 'error',
+      cemTagNames,
+    }).map((diagnostic) => ({
+      ...diagnostic,
+      severity: ACCESSIBILITY_WARNING_CODES.has(diagnostic.code) ? 'warning' : diagnostic.severity,
+    }));
+
+    const slotDiagnostics = detectInvalidSlotName({
+      filePath,
+      text,
+      slotMap,
+      severity: 'error',
+    });
+
+    const requiredAttrDiagnostics = detectMissingRequiredAttributes({
+      filePath,
+      text,
+      prefix: p,
+      severity: 'error',
+    });
+
+    const duplicateIdDiagnostics = detectDuplicateIdsInMarkup({
+      filePath,
+      text,
+      severity: 'error',
+    });
+
+    const orphanDiagnostics = detectOrphanedChildComponents({
+      filePath,
+      text,
+      prefix: p,
+      severity: 'warning',
+    });
+
+    const emptyInteractiveDiagnostics = detectEmptyInteractiveElement({
+      filePath,
+      text,
+      prefix: p,
+      severity: 'warning',
+    });
+
+    const lowercaseDiagnostics = detectNonLowercaseAttributes({
+      filePath,
+      text,
+      cem: cemIndex,
+      severity: 'warning',
+    });
+
+    const cdnDiagnostics = detectCdnReferences({
+      filePath,
+      text,
+      severity: 'warning',
+    });
+
+    const scaffoldDiagnostics = detectMissingRuntimeScaffold({
+      filePath,
+      text,
+      severity: 'warning',
+    });
+
+    const allRawDiagnostics = [
+      ...cemDiagnostics,
+      ...enumDiagnostics,
+      ...slotDiagnostics,
+      ...requiredAttrDiagnostics,
+      ...duplicateIdDiagnostics,
+      ...orphanDiagnostics,
+      ...emptyInteractiveDiagnostics,
+      ...lowercaseDiagnostics,
+      ...tokenMisuseDiagnostics,
+      ...accessibilityDiagnostics,
+      ...cdnDiagnostics,
+      ...scaffoldDiagnostics,
+    ];
+
+    for (const plugin of plugins) {
+      const validators = Array.isArray(plugin.validators) ? plugin.validators : [];
+      for (const validator of validators) {
+        try {
+          const pluginResult = await validator.handler(
+            { filePath, text, prefix: p },
+            buildPluginHandlerContext(plugin, loadJson, loadText),
+          );
+          allRawDiagnostics.push(
+            ...normalizePluginValidatorDiagnostics(pluginResult, {
+              pluginName: plugin.name,
+              validatorName: validator.name,
+              filePath,
+            }),
+          );
+        } catch (error) {
+          allRawDiagnostics.push({
+            file: filePath,
+            severity: 'warning',
+            code: 'pluginValidatorRuntimeError',
+            message: `Plugin validator failed (${plugin.name}/${validator.name}): ${error instanceof Error ? error.message : String(error)}`,
+            hint: 'Check the plugin validator implementation.',
+            plugin: plugin.name,
+            validator: validator.name,
+          });
+        }
+      }
+    }
+
+    return allRawDiagnostics.map((diagnostic) => ({
+      file: diagnostic.file,
+      range: diagnostic.range,
+      severity: diagnostic.severity,
+      code: diagnostic.code,
+      message: diagnostic.message,
+      tagName: diagnostic.tagName,
+      attrName: diagnostic.attrName,
+      hint: diagnostic.hint,
+      suggestion: buildDiagnosticSuggestion({ diagnostic, cemIndex, prefix: p }),
+      plugin: diagnostic.plugin,
+      validator: diagnostic.validator,
+    }));
+  }
 
   // -----------------------------------------------------------------------
   // Prompt: figma_to_wcf
@@ -459,6 +1003,8 @@ export function registerAll(context) {
           { name: 'generate_usage_snippet', purpose: 'Minimal HTML usage example' },
           { name: 'get_install_recipe', purpose: 'Installation instructions and dependency tree' },
           { name: 'validate_markup', purpose: 'Validate HTML against CEM schema' },
+          { name: 'validate_files', purpose: 'Validate multiple markup files and aggregate diagnostics' },
+          { name: 'validate_project', purpose: 'Validate a project directory using include/exclude globs' },
           { name: 'generate_full_page_html', purpose: 'Wrap HTML fragment into a complete page with importmap and boot script' },
           { name: 'list_patterns', purpose: 'Browse page-level UI composition patterns' },
           { name: 'get_pattern_recipe', purpose: 'Full pattern recipe with dependencies and HTML' },
@@ -467,23 +1013,25 @@ export function registerAll(context) {
           { name: 'get_design_token_detail', purpose: 'Get details, relationships, and usage examples for one token' },
           { name: 'get_accessibility_docs', purpose: 'Search component-level accessibility checklist and WCAG-filtered guidance' },
           { name: 'search_guidelines', purpose: 'Search design system guidelines and best practices' },
+          { name: 'search_design_system_knowledge', purpose: 'Search across components, patterns, guidelines, tokens, and skills' },
           { name: 'get_component_selector_guide', purpose: 'Component selection guide by category and use case' },
         ],
         recommendedWorkflow: [
           '1. get_design_system_overview → understand components, patterns, tokens, and IDE setup templates',
           '2. figma_to_wcf (optional) → bootstrap the Figma-to-WCF tool sequence',
-          '3. wcf://components and wcf://tokens resources → preload catalog/token context',
-          '4. search_guidelines → find relevant guidelines',
-          '5. get_design_tokens → get correct token values',
-          '6. get_design_token_detail → inspect one token with references/referencedBy and usage examples',
-          '7. get_accessibility_docs → fetch component-level accessibility checklist',
-          '8. list_components (category/query + pagination) → shortlist components',
-          '9. search_icons (optional) → find icon names quickly',
-          '10. get_component_api → check attributes, slots, events, CSS parts',
-          '11. generate_usage_snippet or get_pattern_recipe → get code',
-          '12. validate_markup → verify your HTML and use suggestions to self-correct',
-          '13. generate_full_page_html → wrap fragment into a complete preview-ready page',
-          '14. get_install_recipe → get import/install instructions',
+          '3. search_design_system_knowledge → do a broad first-pass search across components, patterns, tokens, guidelines, and skills',
+          '4. wcf://components and wcf://tokens resources → preload catalog/token context',
+          '5. search_guidelines → find relevant guidelines',
+          '6. get_design_tokens → get correct token values',
+          '7. get_design_token_detail → inspect one token with references/referencedBy and usage examples',
+          '8. get_accessibility_docs → fetch component-level accessibility checklist',
+          '9. list_components (category/query + pagination) → shortlist components',
+          '10. search_icons (optional) → find icon names quickly',
+          '11. get_component_api → check attributes, slots, events, CSS parts',
+          '12. generate_usage_snippet or get_pattern_recipe → get code',
+          '13. validate_markup / validate_files / validate_project → verify your HTML and use suggestions to self-correct',
+          '14. generate_full_page_html → wrap fragment into a complete preview-ready page',
+          '15. get_install_recipe → get import/install instructions',
         ],
         experimental: {
           plugins: {
@@ -798,144 +1346,201 @@ export function registerAll(context) {
       },
     },
     async ({ html, prefix }) => {
-      const {
-        collectCemCustomElements,
-        validateTextAgainstCem,
-        detectTokenMisuseInInlineStyles,
-        detectAccessibilityMisuseInMarkup,
-        buildEnumAttributeMap,
-        detectEnumValueMisuse,
-        buildSlotNameMap,
-        detectInvalidSlotName,
-        detectMissingRequiredAttributes,
-        detectOrphanedChildComponents,
-        detectEmptyInteractiveElement,
-        detectNonLowercaseAttributes,
-        detectCdnReferences,
-        detectMissingRuntimeScaffold,
-      } = await loadValidator();
+      const diagnostics = await collectMarkupDiagnostics({
+        filePath: '<markup>',
+        text: html,
+        prefix,
+      });
+      return buildJsonToolResponse({ diagnostics });
+    },
+  );
 
-      const p = normalizePrefix(prefix);
-      let cemIndex = canonicalCemIndex;
-      let enumMap = canonicalEnumMap;
-      let slotMap = canonicalSlotMap;
-      if (p !== CANONICAL_PREFIX) {
-        cemIndex = mergeWithPrefixed(canonicalCemIndex, p);
-        enumMap = mergeWithPrefixed(canonicalEnumMap, p);
-        slotMap = mergeWithPrefixed(canonicalSlotMap, p);
+  // -----------------------------------------------------------------------
+  // Tool: validate_files
+  // -----------------------------------------------------------------------
+  server.registerTool(
+    'validate_files',
+    {
+      description:
+        'Validate multiple markup files in one call. When: checking a page, template set, or small project for design-system issues. Returns: per-file diagnostics plus aggregate counts. After: fix the reported files or re-run validate_markup on a specific snippet.',
+      inputSchema: {
+        files: z.array(z.object({
+          path: z.string().min(1).describe('File path label. If content is omitted, this path is read from disk.'),
+          content: z.string().optional().describe('Optional markup content. When present, skips disk read.'),
+        })).min(1).max(50),
+        prefix: z.string().optional(),
+      },
+    },
+    async ({ files, prefix }) => {
+      const perFile = [];
+      const fileErrors = [];
+
+      for (const entry of files) {
+        const filePath = String(entry?.path ?? '').trim();
+        if (!filePath) continue;
+
+        let text;
+        if (typeof entry?.content === 'string') {
+          text = entry.content;
+        } else {
+          try {
+            text = await fs.readFile(filePath, 'utf8');
+          } catch (error) {
+            fileErrors.push({
+              path: filePath,
+              message: error instanceof Error ? error.message : String(error),
+            });
+            continue;
+          }
+        }
+
+        const diagnostics = await collectMarkupDiagnostics({
+          filePath,
+          text,
+          prefix,
+        });
+        perFile.push({
+          path: filePath,
+          counts: summarizeDiagnostics(diagnostics),
+          diagnostics,
+        });
       }
 
-      const cemDiagnostics = validateTextAgainstCem({
-        filePath: '<markup>',
-        text: html,
-        cem: cemIndex,
-        severity: {
-          unknownElement: 'error',
-          unknownAttribute: 'warning',
+      if (perFile.length === 0 && fileErrors.length > 0) {
+        return buildJsonToolErrorResponse({
+          error: {
+            code: 'FILE_READ_ERROR',
+            message: 'No files could be validated.',
+          },
+          fileErrors,
+        });
+      }
+
+      const allDiagnostics = perFile.flatMap((file) => file.diagnostics);
+      const counts = summarizeDiagnostics(allDiagnostics);
+
+      return buildJsonToolResponse({
+        summary: {
+          filesRequested: files.length,
+          filesValidated: perFile.length,
+          fileErrorCount: fileErrors.length,
+          filesWithErrors: perFile.filter((file) => file.counts.errorCount > 0).length,
+          filesWithWarnings: perFile.filter((file) => file.counts.warningCount > 0).length,
+          ...counts,
         },
+        fileErrors,
+        files: perFile,
       });
+    },
+  );
 
-      const enumDiagnostics = detectEnumValueMisuse({
-        filePath: '<markup>',
-        text: html,
-        enumMap,
-        severity: 'error',
-      });
+  // -----------------------------------------------------------------------
+  // Tool: validate_project
+  // -----------------------------------------------------------------------
+  server.registerTool(
+    'validate_project',
+    {
+      description:
+        'Validate a project directory with include/exclude globs. When: checking a template folder, static site, or small app slice for design-system issues. Returns: matched files, file-level diagnostics, and aggregate counts. After: narrow down with validate_files or validate_markup for targeted fixes.',
+      inputSchema: {
+        root: z.string().min(1).describe('Project or template root directory to scan'),
+        include: z.array(z.string()).optional().describe('Glob patterns to include (default: **/*.html, **/*.htm, **/*.njk, **/*.liquid, **/*.astro, **/*.twig, **/*.hbs)'),
+        exclude: z.array(z.string()).optional().describe('Glob patterns to exclude'),
+        maxFiles: z.number().int().min(1).max(500).optional().describe('Maximum files to validate (default: 200)'),
+        prefix: z.string().optional(),
+      },
+    },
+    async ({ root, include, exclude, maxFiles, prefix }) => {
+      const rootDir = path.resolve(String(root ?? '').trim());
+      const includePatterns = Array.isArray(include) && include.length > 0
+        ? include
+        : ['**/*.html', '**/*.htm', '**/*.njk', '**/*.liquid', '**/*.astro', '**/*.twig', '**/*.hbs'];
+      const excludePatterns = Array.isArray(exclude) && exclude.length > 0
+        ? exclude
+        : ['**/node_modules/**', '**/.git/**', '**/dist/**', '**/coverage/**'];
+      const limit = Number.isInteger(maxFiles) ? maxFiles : 200;
 
-      const tokenMisuseDiagnostics = detectTokenMisuseInInlineStyles({
-        filePath: '<markup>',
-        text: html,
-        valueToToken: tokenSuggestionMap,
-        severity: 'warning',
-      });
+      let allFiles;
+      try {
+        allFiles = await walkProjectFiles(rootDir);
+      } catch (error) {
+        return buildJsonToolErrorResponse({
+          error: {
+            code: 'PROJECT_READ_ERROR',
+            message: error instanceof Error ? error.message : String(error),
+          },
+          root: rootDir,
+        });
+      }
 
-      const cemTagNames = new Set(cemIndex.keys());
-      const accessibilityDiagnostics = detectAccessibilityMisuseInMarkup({
-        filePath: '<markup>',
-        text: html,
-        severity: 'error',
-        cemTagNames,
-      }).map((diagnostic) => ({
-        ...diagnostic,
-        severity: ACCESSIBILITY_WARNING_CODES.has(diagnostic.code) ? 'warning' : diagnostic.severity,
-      }));
+      const matched = [];
+      for (const absolutePath of allFiles) {
+        const relativePath = path.relative(rootDir, absolutePath).split(path.sep).join('/');
+        const included = includePatterns.some((pattern) => matchesGlobPattern(relativePath, pattern));
+        const excluded = excludePatterns.some((pattern) => matchesGlobPattern(relativePath, pattern));
+        if (!included || excluded) continue;
+        matched.push({ absolutePath, relativePath });
+        if (matched.length >= limit) break;
+      }
 
-      const slotDiagnostics = detectInvalidSlotName({
-        filePath: '<markup>',
-        text: html,
-        slotMap,
-        severity: 'error',
-      });
+      const files = matched.map((entry) => ({ path: entry.absolutePath }));
+      const result = await (async () => {
+        const perFile = [];
+        const fileErrors = [];
 
-      const requiredAttrDiagnostics = detectMissingRequiredAttributes({
-        filePath: '<markup>',
-        text: html,
-        prefix: p,
-        severity: 'error',
-      });
+        for (const entry of matched) {
+          let text;
+          try {
+            text = await fs.readFile(entry.absolutePath, 'utf8');
+          } catch (error) {
+            fileErrors.push({
+              path: entry.absolutePath,
+              message: error instanceof Error ? error.message : String(error),
+            });
+            continue;
+          }
 
-      const orphanDiagnostics = detectOrphanedChildComponents({
-        filePath: '<markup>',
-        text: html,
-        prefix: p,
-        severity: 'warning',
-      });
+          const diagnostics = await collectMarkupDiagnostics({
+            filePath: entry.absolutePath,
+            text,
+            prefix,
+          });
+          perFile.push({
+            path: entry.absolutePath,
+            relativePath: entry.relativePath,
+            counts: summarizeDiagnostics(diagnostics),
+            diagnostics,
+          });
+        }
 
-      const emptyInteractiveDiagnostics = detectEmptyInteractiveElement({
-        filePath: '<markup>',
-        text: html,
-        prefix: p,
-        severity: 'warning',
-      });
-
-      const lowercaseDiagnostics = detectNonLowercaseAttributes({
-        filePath: '<markup>',
-        text: html,
-        cem: cemIndex,
-        severity: 'warning',
-      });
-
-      const cdnDiagnostics = detectCdnReferences({
-        filePath: '<markup>',
-        text: html,
-        severity: 'warning',
-      });
-
-      const scaffoldDiagnostics = detectMissingRuntimeScaffold({
-        filePath: '<markup>',
-        text: html,
-        severity: 'warning',
-      });
-
-      const allRawDiagnostics = [
-        ...cemDiagnostics,
-        ...enumDiagnostics,
-        ...slotDiagnostics,
-        ...requiredAttrDiagnostics,
-        ...orphanDiagnostics,
-        ...emptyInteractiveDiagnostics,
-        ...lowercaseDiagnostics,
-        ...tokenMisuseDiagnostics,
-        ...accessibilityDiagnostics,
-        ...cdnDiagnostics,
-        ...scaffoldDiagnostics,
-      ];
-      const diagnostics = allRawDiagnostics.map((d) => {
-        const suggestion = buildDiagnosticSuggestion({ diagnostic: d, cemIndex, prefix: p });
+        const allDiagnostics = perFile.flatMap((file) => file.diagnostics);
         return {
-          file: d.file,
-          range: d.range,
-          severity: d.severity,
-          code: d.code,
-          message: d.message,
-          tagName: d.tagName,
-          attrName: d.attrName,
-          hint: d.hint,
-          suggestion,
+          summary: {
+            root: rootDir,
+            filesScanned: allFiles.length,
+            filesMatched: matched.length,
+            filesValidated: perFile.length,
+            fileErrorCount: fileErrors.length,
+            truncated: matched.length >= limit && allFiles.length > matched.length,
+            ...summarizeDiagnostics(allDiagnostics),
+          },
+          fileErrors,
+          files: perFile,
         };
-      });
+      })();
 
-      return buildJsonToolResponse({ diagnostics });
+      if (result.files.length === 0 && result.fileErrors.length > 0) {
+        return buildJsonToolErrorResponse({
+          error: {
+            code: 'PROJECT_VALIDATION_EMPTY',
+            message: 'No project files could be validated.',
+          },
+          root: rootDir,
+          fileErrors: result.fileErrors,
+        });
+      }
+
+      return buildJsonToolResponse(result);
     },
   );
 
@@ -1188,7 +1793,7 @@ export function registerAll(context) {
         query: z.string().optional()
           .describe('Search token names (partial match)'),
         theme: z.enum(['light', 'dark', 'all']).optional()
-          .describe('Theme filter (currently light only; dark/all return an error due to NG-06)'),
+          .describe('Theme filter (currently light only; dark is unsupported and all returns available themes)'),
       },
     },
     async ({ type, category, query, theme }) => {
@@ -1215,7 +1820,7 @@ export function registerAll(context) {
         name: z.string()
           .describe('Token name or css variable (e.g. --color-primary or var(--color-primary))'),
         theme: z.enum(['light', 'dark', 'all']).optional()
-          .describe('Theme selector (currently only light is supported due to NG-06)'),
+          .describe('Theme filter (currently light only; dark is unsupported and all returns available themes)'),
       },
     },
     async ({ name, theme }) => {
@@ -1421,9 +2026,276 @@ export function registerAll(context) {
   );
 
   // -----------------------------------------------------------------------
+  // Tool: search_design_system_knowledge
+  // -----------------------------------------------------------------------
+  server.registerTool(
+    'search_design_system_knowledge',
+    {
+      description:
+        'Search across components, patterns, guidelines, tokens, and skills in one call. When: you want a broad first-pass query before choosing a more specific tool. Returns: ranked source-qualified results with source, id, title, description/snippet, and score. After: follow up with the source-specific tool such as get_component_api, get_pattern_recipe, get_design_token_detail, search_guidelines, or the wcf://skills resource.',
+      inputSchema: {
+        query: z.string().describe('Search text for broad design-system discovery'),
+        sources: z.array(z.enum(['components', 'patterns', 'guidelines', 'tokens', 'skills'])).optional()
+          .describe('Optional source filters'),
+        maxResults: z.number().int().min(1).max(50).optional()
+          .describe('Maximum results to return (default: 10)'),
+        prefix: z.string().optional(),
+      },
+    },
+    async ({ query, sources, maxResults, prefix }) => {
+      const requestedSources = Array.isArray(sources) && sources.length > 0
+        ? new Set(sources)
+        : new Set(['components', 'patterns', 'guidelines', 'tokens', 'skills']);
+      const p = normalizePrefix(prefix);
+      const q = String(query ?? '').trim().toLowerCase();
+      const terms = expandQueryWithSynonyms(q).filter(Boolean);
+      const limit = Number.isInteger(maxResults) ? maxResults : 10;
+      const results = [];
+
+      if (requestedSources.has('components')) {
+        const page = buildComponentSummaries(indexes, {
+          query: q,
+          limit: 200,
+          prefix: p,
+        });
+        for (const item of page.items) {
+          const score = scoreSearchFields(q, terms, [
+            { text: item.tagName, weight: 5 },
+            { text: item.className, weight: 4 },
+            { text: item.description, weight: 2 },
+            { text: item.category, weight: 1 },
+          ]);
+          if (score <= 0) continue;
+          results.push({
+            source: 'components',
+            id: item.tagName,
+            title: item.tagName,
+            description: item.description ?? '',
+            metadata: {
+              className: item.className,
+              category: item.category,
+            },
+            score: score + getKnowledgeSourceBoost('components', q, terms),
+          });
+        }
+      }
+
+      if (requestedSources.has('patterns')) {
+        for (const pattern of Object.values(patterns)) {
+          const score = scoreSearchFields(q, terms, [
+            { text: pattern?.id, weight: 5 },
+            { text: pattern?.title, weight: 4 },
+            { text: pattern?.description, weight: 3 },
+            { text: Array.isArray(pattern?.requires) ? pattern.requires.join(' ') : '', weight: 1 },
+            { text: pattern?.behavior, weight: 1 },
+          ]);
+          if (score <= 0) continue;
+          results.push({
+            source: 'patterns',
+            id: String(pattern?.id ?? ''),
+            title: String(pattern?.title ?? pattern?.id ?? ''),
+            description: String(pattern?.description ?? ''),
+            metadata: {
+              requires: Array.isArray(pattern?.requires) ? pattern.requires : [],
+            },
+            score: score + getKnowledgeSourceBoost('patterns', q, terms),
+          });
+        }
+      }
+
+      if (requestedSources.has('guidelines') && Array.isArray(guidelinesIndexData?.documents)) {
+        for (const doc of guidelinesIndexData.documents) {
+          const sections = Array.isArray(doc?.sections) ? doc.sections : [];
+          for (const section of sections) {
+            const score = scoreSearchFields(q, terms, [
+              { text: doc?.title, weight: 3 },
+              { text: doc?.topic, weight: 1 },
+              { text: section?.heading, weight: 4 },
+              { text: Array.isArray(section?.keywords) ? section.keywords.join(' ') : '', weight: 2 },
+              { text: section?.snippet, weight: 2 },
+              { text: section?.body, weight: 1 },
+            ]);
+            if (score <= 0) continue;
+            results.push({
+              source: 'guidelines',
+              id: `${String(doc?.id ?? '')}:${String(section?.heading ?? '')}`,
+              title: String(section?.heading ?? doc?.title ?? ''),
+              description: String(section?.snippet ?? ''),
+              metadata: {
+                documentId: String(doc?.id ?? ''),
+                topic: String(doc?.topic ?? ''),
+                startLine: section?.startLine,
+              },
+              score: score + getKnowledgeSourceBoost('guidelines', q, terms),
+            });
+          }
+        }
+      }
+
+      if (requestedSources.has('tokens') && Array.isArray(designTokensData?.tokens)) {
+        for (const token of designTokensData.tokens) {
+          const score = scoreSearchFields(q, terms, [
+            { text: token?.name, weight: 5 },
+            { text: token?.cssVariable, weight: 4 },
+            { text: token?.type, weight: 2 },
+            { text: token?.category, weight: 2 },
+            { text: token?.value, weight: 1 },
+          ]);
+          if (score <= 0) continue;
+          results.push({
+            source: 'tokens',
+            id: String(token?.name ?? ''),
+            title: String(token?.name ?? ''),
+            description: `${String(token?.type ?? '')}/${String(token?.category ?? '')}: ${String(token?.value ?? '')}`,
+            metadata: {
+              cssVariable: String(token?.cssVariable ?? ''),
+              group: token?.group ?? null,
+            },
+            score: score + getKnowledgeSourceBoost('tokens', q, terms),
+          });
+        }
+      }
+
+      if (requestedSources.has('skills')) {
+        const skillsRegistry = await loadSkillsRegistrySafe();
+        const skills = Array.isArray(skillsRegistry?.skills) ? skillsRegistry.skills : [];
+        for (const skill of skills) {
+          const score = scoreSearchFields(q, terms, [
+            { text: skill?.name, weight: 5 },
+            { text: skill?.description, weight: 3 },
+            { text: Array.isArray(skill?.tags) ? skill.tags.join(' ') : '', weight: 2 },
+            { text: Array.isArray(skill?.clients) ? skill.clients.join(' ') : '', weight: 1 },
+          ]);
+          if (score <= 0) continue;
+          results.push({
+            source: 'skills',
+            id: String(skill?.name ?? ''),
+            title: String(skill?.name ?? ''),
+            description: String(skill?.description ?? ''),
+            metadata: {
+              status: String(skill?.status ?? 'active'),
+              tags: Array.isArray(skill?.tags) ? skill.tags : [],
+            },
+            score: score + getKnowledgeSourceBoost('skills', q, terms),
+          });
+        }
+      }
+
+      results.sort((left, right) =>
+        right.score - left.score ||
+        left.source.localeCompare(right.source) ||
+        left.title.localeCompare(right.title)
+      );
+
+      const topResults = selectKnowledgeResults(results, limit, requestedSources).map((result) => ({
+        ...result,
+        followUp: buildKnowledgeFollowUp(result),
+      }));
+      return buildJsonToolResponse({
+        query,
+        sources: [...requestedSources],
+        totalHits: results.length,
+        results: topResults,
+        suggestions: results.length === 0 ? {
+          alternativeTools: [
+            { tool: 'list_components', hint: 'Browse component inventory directly' },
+            { tool: 'search_guidelines', hint: 'Search guidelines with a narrower query' },
+            { tool: 'get_design_tokens', hint: 'Inspect tokens by type/category instead of free text' },
+          ],
+        } : undefined,
+      });
+    },
+  );
+
+  // -----------------------------------------------------------------------
   // Plugin tools registration
   // -----------------------------------------------------------------------
   for (const plugin of plugins) {
+    const pluginPrompts = Array.isArray(plugin.prompts) ? plugin.prompts : [];
+    for (const prompt of pluginPrompts) {
+      server.registerPrompt(
+        prompt.name,
+        {
+          title: prompt.title,
+          description: prompt.description,
+          argsSchema: normalizePromptArgsSchema(prompt.argsSchema),
+        },
+        async (args) => {
+          try {
+            if (typeof prompt.handler === 'function') {
+              const result = await prompt.handler(args, buildPluginHandlerContext(plugin, loadJson, loadText));
+              return buildPluginPromptMessages(result, prompt.text ?? `Prompt from ${plugin.name}`);
+            }
+            return buildPluginPromptMessages(prompt.text ?? `Prompt from ${plugin.name}`, prompt.text ?? '');
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            return buildPluginPromptMessages(`Plugin prompt failed (${prompt.name}): ${message}`, '');
+          }
+        },
+      );
+    }
+
+    const pluginResources = Array.isArray(plugin.resources) ? plugin.resources : [];
+    for (const resource of pluginResources) {
+      server.registerResource(
+        resource.name,
+        resource.uri,
+        {
+          title: resource.title,
+          description: resource.description,
+          mimeType: resource.mimeType ?? undefined,
+        },
+        async () => {
+          try {
+            if (typeof resource.handler === 'function') {
+              const result = await resource.handler(buildPluginHandlerContext(plugin, loadJson, loadText));
+              return buildPluginResourceContents(resource, result);
+            }
+            return buildPluginResourceContents(resource, undefined);
+          } catch (error) {
+            return buildPluginResourceErrorContents(resource, plugin, error);
+          }
+        },
+      );
+    }
+
+    const pluginResourceTemplates = Array.isArray(plugin.resourceTemplates) ? plugin.resourceTemplates : [];
+    for (const resourceTemplate of pluginResourceTemplates) {
+      server.registerResource(
+        resourceTemplate.name,
+        new ResourceTemplate(resourceTemplate.uriTemplate, buildPluginResourceTemplateConfig(resourceTemplate)),
+        {
+          title: resourceTemplate.title,
+          description: resourceTemplate.description,
+          mimeType: resourceTemplate.mimeType ?? undefined,
+        },
+        async (_uri, variables) => {
+          try {
+            if (typeof resourceTemplate.handler === 'function') {
+              const result = await resourceTemplate.handler(
+                { uri: _uri, variables },
+                buildPluginHandlerContext(plugin, loadJson, loadText),
+              );
+              return buildPluginResourceContents(
+                { ...resourceTemplate, uri: _uri },
+                result,
+              );
+            }
+            return buildPluginResourceContents(
+              { ...resourceTemplate, uri: _uri },
+              undefined,
+            );
+          } catch (error) {
+            return buildPluginResourceErrorContents(
+              { ...resourceTemplate, uri: _uri },
+              plugin,
+              error,
+            );
+          }
+        },
+      );
+    }
+
     const pluginTools = Array.isArray(plugin.tools) ? plugin.tools : [];
     for (const tool of pluginTools) {
       server.registerTool(
@@ -1435,17 +2307,7 @@ export function registerAll(context) {
         async (args) => {
           try {
             if (typeof tool.handler === 'function') {
-              const result = await tool.handler(args, {
-                plugin: { name: plugin.name, version: plugin.version },
-                helpers: {
-                  loadJsonData: loadJson,
-                  loadTextData: loadText,
-                  buildJsonToolResponse,
-                  normalizePrefix,
-                  withPrefix,
-                  toCanonicalTagName,
-                },
-              });
+              const result = await tool.handler(args, buildPluginHandlerContext(plugin, loadJson, loadText));
               if (result !== null && typeof result === 'object' && !Array.isArray(result) && Array.isArray(result.content)) {
                 return finalizeToolResult(result);
               }

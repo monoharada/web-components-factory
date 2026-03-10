@@ -11,7 +11,7 @@ import { pathToFileURL } from 'node:url';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { createMcpServer } from '../../packages/mcp-server/core.mjs';
 import { resolveRuntimeDataPath } from '../../packages/mcp-server/runtime-data.mjs';
-import { loadJsonDataFromPath, loadWcfMcpRuntimeConfig } from '../../packages/mcp-server/server.mjs';
+import { loadJsonDataFromPath, loadTextDataFromPath, loadWcfMcpRuntimeConfig } from '../../packages/mcp-server/server.mjs';
 
 const REPO_ROOT = path.resolve(process.cwd());
 
@@ -40,6 +40,7 @@ export async function main() {
   const { server } = await createMcpServer(loadJsonData, loadValidator, {
     plugins: runtimeConfig.plugins,
     loadJsonDataFromPath,
+    loadTextDataFromPath,
     loadTextData,
   });
   const transport = new StdioServerTransport();
