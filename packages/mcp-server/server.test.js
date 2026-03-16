@@ -711,6 +711,8 @@ describe('buildServerInstructions', () => {
     expect(instructions).toContain('get_pattern_recipe');
     expect(instructions).toContain('build_page');
     expect(instructions).toContain('No CDN');
+    expect(instructions).toContain('the full page HTML');
+    expect(instructions).toContain('importmap');
   });
 
   it('handles empty registries gracefully', () => {
@@ -831,6 +833,32 @@ describe('MCP prompts/resources contract', () => {
     expect(text).toContain('Option B');
     expect(text).toContain('generate_usage_snippet');
     expect(text).toContain('generate_full_page_html');
+  });
+
+  it('build_page prompt prioritizes patternId over components when both given', async () => {
+    const result = await client.getPrompt({
+      name: BUILD_PAGE_PROMPT,
+      arguments: { patternId: 'search-results', components: 'button,card' },
+    });
+    const text = result.messages
+      .map((message) => (message.content.type === 'text' ? message.content.text : ''))
+      .join('\n');
+    expect(text).toContain('Using a Pattern');
+    expect(text).toContain('search-results');
+    expect(text).toContain('patternId was specified');
+    expect(text).not.toContain('Using Specific Components');
+  });
+
+  it('build_page prompt instructs full page validation (not body fragment)', async () => {
+    const result = await client.getPrompt({
+      name: BUILD_PAGE_PROMPT,
+      arguments: { patternId: 'search-results' },
+    });
+    const text = result.messages
+      .map((message) => (message.content.type === 'text' ? message.content.text : ''))
+      .join('\n');
+    expect(text).toContain('the full page HTML');
+    expect(text).toContain('importmap');
   });
 
   it('build_page prompt lists component IDs when using components arg', async () => {

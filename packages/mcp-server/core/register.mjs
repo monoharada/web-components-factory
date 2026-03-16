@@ -144,42 +144,45 @@ function buildBuildPagePromptText({ patternId, components: componentsCsv, userIn
     '',
   ];
 
+  // patternId takes priority over components when both are specified
   if (patternId) {
     lines.push(
       '## Using a Pattern',
       `1. get_pattern_recipe({ patternId: "${patternId}", include: ["fullPage"] })`,
-      '2. validate_markup({ html: <body contents> })',
+      '2. validate_markup({ html: "<the full page HTML>" }) — pass the entire page to catch missing importmap / boot script',
       '3. Save the fullPageHtml to a .html file',
       '',
     );
-  }
-
-  if (componentsCsv) {
+    if (componentsCsv) {
+      lines.push(
+        '> Note: patternId was specified, so the components argument is ignored. Remove patternId to use individual components instead.',
+        '',
+      );
+    }
+  } else if (componentsCsv) {
     const ids = componentsCsv.split(',').map((s) => s.trim()).filter(Boolean);
     lines.push(
       '## Using Specific Components',
       ...ids.map((id) => `- generate_usage_snippet({ component: "${id}" })`),
       '- Combine the HTML fragments',
-      '- generate_full_page_html({ html: "<combined fragments>" })',
-      '- validate_markup({ html: <body contents> })',
+      '- generate_full_page_html({ html: "<combined fragments>" }) → returns fullHtml',
+      '- validate_markup({ html: "<the full page HTML>" }) — pass the entire page to catch missing importmap / boot script',
       '',
     );
-  }
-
-  if (!patternId && !componentsCsv) {
+  } else {
     lines.push(
       '## Workflow Options',
       '',
       '### Option A: Use a pattern (recommended)',
       '1. get_pattern_recipe({ patternId: "<id>", include: ["fullPage"] })',
-      '2. validate_markup({ html: <body contents> })',
+      '2. validate_markup({ html: "<the full page HTML>" }) — pass the entire page to catch missing importmap / boot script',
       '3. Save the fullPageHtml to a .html file',
       '',
       '### Option B: Build from individual components',
       '1. generate_usage_snippet({ component: "<componentId>" }) for each component',
       '2. Combine the HTML fragments',
-      '3. generate_full_page_html({ html: "<combined fragments>" })',
-      '4. validate_markup({ html: <body contents> })',
+      '3. generate_full_page_html({ html: "<combined fragments>" }) → returns fullHtml',
+      '4. validate_markup({ html: "<the full page HTML>" }) — pass the entire page to catch missing importmap / boot script',
       '',
     );
   }

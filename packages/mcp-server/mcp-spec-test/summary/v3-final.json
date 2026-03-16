@@ -2,7 +2,7 @@
   "schemaVersion": "1.0",
   "package": {
     "name": "@monoharada/wcf-mcp",
-    "version": "0.10.0"
+    "version": "0.11.0"
   },
   "inventory": {
     "tools": [
@@ -28,9 +28,10 @@
     ],
     "toolCount": 19,
     "prompts": [
+      "build_page",
       "figma_to_wcf"
     ],
-    "promptCount": 1,
+    "promptCount": 2,
     "resources": [
       "wcf://components",
       "wcf://guidelines/{topic}",
