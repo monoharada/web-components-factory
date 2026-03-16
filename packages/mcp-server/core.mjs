@@ -21,8 +21,10 @@ export {
   PLUGIN_TOOL_NOTICE,
   CATEGORY_MAP,
   FIGMA_TO_WCF_PROMPT,
+  BUILD_PAGE_PROMPT,
   WCF_RESOURCE_URIS,
   IDE_SETUP_TEMPLATES,
+  buildServerInstructions,
 } from './core/constants.mjs';
 
 // --- core/response.mjs ---
@@ -103,7 +105,7 @@ export {
 import { normalizePlugins, buildPluginDataSourceMap } from './core/plugins.mjs';
 import { buildIndexes, extractPrefixFromIndexes, loadPatternRegistryShape, buildRelatedComponentMap, buildPatternFrequencyMap } from './core/cem.mjs';
 import { buildTokenSuggestionMap, buildComponentTokenReferencedBy } from './core/tokens.mjs';
-import { MAX_TOOL_RESULT_BYTES, PACKAGE_VERSION } from './core/constants.mjs';
+import { MAX_TOOL_RESULT_BYTES, PACKAGE_VERSION, buildServerInstructions } from './core/constants.mjs';
 
 // ---------------------------------------------------------------------------
 // createMcpServer — builds the McpServer with all tools registered, but does
@@ -202,10 +204,15 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     // component-selector-guide.json may not exist yet
   }
 
-  const server = new McpServer({
-    name: 'web-components-factory-design-system',
-    version: PACKAGE_VERSION,
-  });
+  const server = new McpServer(
+    {
+      name: 'web-components-factory-design-system',
+      version: PACKAGE_VERSION,
+    },
+    {
+      instructions: buildServerInstructions(detectedPrefix, installRegistry, patterns),
+    },
+  );
 
   // Delegate all tool / resource / prompt registration to register.mjs (DD-08)
   registerAll({

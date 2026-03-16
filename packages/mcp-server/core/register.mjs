@@ -6,7 +6,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { CANONICAL_PREFIX, PACKAGE_VERSION, PLUGIN_TOOL_NOTICE, FIGMA_TO_WCF_PROMPT, WCF_RESOURCE_URIS, IDE_SETUP_TEMPLATES } from './constants.mjs';
+import { CANONICAL_PREFIX, PACKAGE_VERSION, PLUGIN_TOOL_NOTICE, FIGMA_TO_WCF_PROMPT, BUILD_PAGE_PROMPT, WCF_RESOURCE_URIS, IDE_SETUP_TEMPLATES } from './constants.mjs';
 import { normalizePrefix, withPrefix, toCanonicalTagName, getCategory, buildDiagnosticSuggestion, applyPrefixToHtml, applyPrefixToTagMap, mergeWithPrefixed } from './prefix.mjs';
 import { buildJsonToolResponse, buildJsonToolErrorResponse, expandQueryWithSynonyms, finalizeToolResult } from './response.mjs';
 import { normalizePlugins, buildPluginDataSourceMap, toPassthroughSchema } from './plugins.mjs';
@@ -128,6 +128,74 @@ function buildFigmaToWcfPromptText({ figmaUrl, userIntent }) {
     '- For each section, name concrete components and token variables.',
     '- Provide final validation notes and required fixes.',
   ].join('\n');
+}
+
+function buildBuildPagePromptText({ patternId, components: componentsCsv, userIntent, detectedPrefix, installRegistry, patterns }) {
+  const p = normalizePrefix(detectedPrefix);
+  const intent = String(userIntent ?? '').trim();
+  const registryComponents = installRegistry?.components && typeof installRegistry.components === 'object'
+    ? installRegistry.components : {};
+  const componentIds = Object.keys(registryComponents).sort();
+  const patternIds = patterns && typeof patterns === 'object'
+    ? Object.keys(patterns).sort() : [];
+
+  const lines = [
+    intent ? `Page goal: ${intent}` : 'Page goal: (not specified)',
+    '',
+  ];
+
+  if (patternId) {
+    lines.push(
+      '## Using a Pattern',
+      `1. get_pattern_recipe({ patternId: "${patternId}", include: ["fullPage"] })`,
+      '2. validate_markup({ html: <body contents> })',
+      '3. Save the fullPageHtml to a .html file',
+      '',
+    );
+  }
+
+  if (componentsCsv) {
+    const ids = componentsCsv.split(',').map((s) => s.trim()).filter(Boolean);
+    lines.push(
+      '## Using Specific Components',
+      ...ids.map((id) => `- generate_usage_snippet({ component: "${id}" })`),
+      '- Combine the HTML fragments',
+      '- generate_full_page_html({ html: "<combined fragments>" })',
+      '- validate_markup({ html: <body contents> })',
+      '',
+    );
+  }
+
+  if (!patternId && !componentsCsv) {
+    lines.push(
+      '## Workflow Options',
+      '',
+      '### Option A: Use a pattern (recommended)',
+      '1. get_pattern_recipe({ patternId: "<id>", include: ["fullPage"] })',
+      '2. validate_markup({ html: <body contents> })',
+      '3. Save the fullPageHtml to a .html file',
+      '',
+      '### Option B: Build from individual components',
+      '1. generate_usage_snippet({ component: "<componentId>" }) for each component',
+      '2. Combine the HTML fragments',
+      '3. generate_full_page_html({ html: "<combined fragments>" })',
+      '4. validate_markup({ html: <body contents> })',
+      '',
+    );
+  }
+
+  lines.push(
+    `## Available Pattern IDs (${patternIds.length})`,
+    patternIds.length > 0 ? patternIds.join(', ') : '(none)',
+    '',
+    `## Available Component IDs (${componentIds.length})`,
+    componentIds.length > 0 ? componentIds.join(', ') : '(none)',
+    '',
+    '## CLI Vendor Setup (alternative)',
+    `npx web-components-factory init --prefix ${p} --dir .` + (patternId ? ` --pattern ${patternId}` : ''),
+  );
+
+  return lines.join('\n');
 }
 
 function escapeHtmlTitle(s) {
@@ -771,6 +839,32 @@ export function registerAll(context) {
   );
 
   // -----------------------------------------------------------------------
+  // Prompt: build_page
+  // -----------------------------------------------------------------------
+  server.registerPrompt(
+    BUILD_PAGE_PROMPT,
+    {
+      title: 'Build Page',
+      description:
+        'Guided prompt for building a no-build HTML page from a pattern or component list.',
+      argsSchema: {
+        patternId: z.string().optional().describe('Pattern ID (e.g., "search-results", "card-grid"). Use list_patterns to see all.'),
+        components: z.string().optional().describe('Comma-separated component IDs if not using a pattern'),
+        userIntent: z.string().optional().describe('What the page should accomplish'),
+      },
+    },
+    async ({ patternId, components: componentsCsv, userIntent }) => ({
+      messages: [{
+        role: 'user',
+        content: {
+          type: 'text',
+          text: buildBuildPagePromptText({ patternId, components: componentsCsv, userIntent, detectedPrefix, installRegistry, patterns }),
+        },
+      }],
+    }),
+  );
+
+  // -----------------------------------------------------------------------
   // Resource: wcf://components
   // -----------------------------------------------------------------------
   server.registerResource(
@@ -987,6 +1081,10 @@ export function registerAll(context) {
             name: FIGMA_TO_WCF_PROMPT,
             purpose: 'Figma-to-WCF conversion workflow prompt',
           },
+          {
+            name: BUILD_PAGE_PROMPT,
+            purpose: 'Build a no-build HTML page from a pattern or component list',
+          },
         ],
         availableResources: [
           { uri: WCF_RESOURCE_URIS.components, purpose: 'Component catalog snapshot' },
@@ -1179,7 +1277,7 @@ export function registerAll(context) {
 
       if (!decl) {
         const identifier = component || tagName || className || '';
-        return buildComponentNotFoundError(identifier, indexes, p);
+        return buildComponentNotFoundError(identifier, indexes, p, installRegistry);
       }
 
       const canonicalTag = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
@@ -1232,7 +1330,7 @@ export function registerAll(context) {
       const decl = resolved?.decl;
 
       if (!decl) {
-        return buildComponentNotFoundError(component, indexes, p);
+        return buildComponentNotFoundError(component, indexes, p, installRegistry);
       }
 
       const canonicalTag = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
@@ -1265,10 +1363,7 @@ export function registerAll(context) {
       const decl = resolved?.decl;
 
       if (!decl) {
-        return {
-          content: [{ type: 'text', text: `Component not found: ${component}` }],
-          isError: true,
-        };
+        return buildComponentNotFoundError(component, indexes, p, installRegistry);
       }
 
       const canonicalTag = typeof decl.tagName === 'string' ? decl.tagName.toLowerCase() : undefined;
