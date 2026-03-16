@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { BUILTIN_TOOL_NAMES } from './core/plugins.mjs';
-import { FIGMA_TO_WCF_PROMPT, WCF_RESOURCE_URIS } from './core/constants.mjs';
+import { BUILD_PAGE_PROMPT, FIGMA_TO_WCF_PROMPT, WCF_RESOURCE_URIS } from './core/constants.mjs';
 import { buildMcpSpecSummary } from '../../scripts/mcp/generate-mcp-spec-summary.mjs';
 import { collectResponseSizeReport } from '../../scripts/mcp/check-response-size.mjs';
 import { verifyReadmeExamples } from '../../scripts/mcp/verify-readme-examples.mjs';
@@ -26,7 +26,7 @@ describe('mcp tooling scripts', () => {
     expect(summary.inventory.toolCount).toBe(BUILTIN_TOOL_NAMES.size);
     expect(summary.inventory.tools).toContain('generate_full_page_html');
     expect(summary.inventory.tools).toContain('get_component_selector_guide');
-    expect(summary.inventory.prompts).toEqual([FIGMA_TO_WCF_PROMPT]);
+    expect(summary.inventory.prompts).toEqual([BUILD_PAGE_PROMPT, FIGMA_TO_WCF_PROMPT]);
     expect(summary.inventory.resourceCount).toBe(Object.keys(WCF_RESOURCE_URIS).length);
     expect(summary.checks.readmeExamples.status).toBe('OK');
     expect(summary.checks.responseSize.summary.status).toBe('OK');

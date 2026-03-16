@@ -3,7 +3,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { FIGMA_TO_WCF_PROMPT, PACKAGE_VERSION, WCF_RESOURCE_URIS } from '../../packages/mcp-server/core/constants.mjs';
+import { FIGMA_TO_WCF_PROMPT, BUILD_PAGE_PROMPT, PACKAGE_VERSION, WCF_RESOURCE_URIS } from '../../packages/mcp-server/core/constants.mjs';
 import { BUILTIN_TOOL_NAMES } from '../../packages/mcp-server/core/plugins.mjs';
 import { collectResponseSizeReport } from './check-response-size.mjs';
 import { verifyReadmeExamples } from './verify-readme-examples.mjs';
@@ -61,8 +61,8 @@ export async function buildMcpSpecSummary() {
     inventory: {
       tools: [...BUILTIN_TOOL_NAMES].sort(),
       toolCount: BUILTIN_TOOL_NAMES.size,
-      prompts: [FIGMA_TO_WCF_PROMPT],
-      promptCount: 1,
+      prompts: [BUILD_PAGE_PROMPT, FIGMA_TO_WCF_PROMPT],
+      promptCount: 2,
       resources: Object.values(WCF_RESOURCE_URIS).sort(),
       resourceCount: Object.keys(WCF_RESOURCE_URIS).length,
     },

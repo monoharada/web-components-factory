@@ -21,6 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // ---------------------------------------------------------------------------
 
 import {
+  BUILD_PAGE_PROMPT,
   CANONICAL_PREFIX,
   CATEGORY_MAP,
   FIGMA_TO_WCF_PROMPT,
@@ -39,6 +40,7 @@ import {
   buildJsonToolErrorResponse,
   buildJsonToolResponse,
   buildRelatedComponentMap,
+  buildServerInstructions,
   buildTokenRelationshipIndex,
   buildTokenSuggestionMap,
   expandQueryWithSynonyms,
@@ -623,6 +625,7 @@ describe('core.mjs facade export surface', () => {
     const core = await import('./core.mjs');
     const actual = Object.keys(core).sort();
     const expected = [
+      'BUILD_PAGE_PROMPT',
       'CANONICAL_PREFIX',
       'CATEGORY_MAP',
       'FIGMA_TO_WCF_PROMPT',
@@ -649,6 +652,7 @@ describe('core.mjs facade export surface', () => {
       'buildPatternFrequencyMap',
       'buildPluginDataSourceMap',
       'buildRelatedComponentMap',
+      'buildServerInstructions',
       'buildTokenRelationshipIndex',
       'buildTokenSuggestionMap',
       'createMcpServer',
@@ -687,6 +691,35 @@ describe('core.mjs facade export surface', () => {
       'withPrefix',
     ];
     expect(actual).toEqual(expected);
+  });
+});
+
+describe('buildServerInstructions', () => {
+  it('includes pattern IDs and component IDs', () => {
+    const instructions = buildServerInstructions('dads', {
+      components: { button: {}, card: {}, icon: {} },
+    }, {
+      'search-results': { id: 'search-results', requires: ['button'] },
+      'card-grid': { id: 'card-grid', requires: ['card'] },
+    });
+    expect(instructions).toContain('wcf-mcp');
+    expect(instructions).toContain('search-results');
+    expect(instructions).toContain('card-grid');
+    expect(instructions).toContain('button');
+    expect(instructions).toContain('card');
+    expect(instructions).toContain('icon');
+    expect(instructions).toContain('get_pattern_recipe');
+    expect(instructions).toContain('build_page');
+    expect(instructions).toContain('No CDN');
+    expect(instructions).toContain('the full page HTML');
+    expect(instructions).toContain('importmap');
+  });
+
+  it('handles empty registries gracefully', () => {
+    const instructions = buildServerInstructions('dads', null, null);
+    expect(instructions).toContain('Available Pattern IDs (0)');
+    expect(instructions).toContain('Available Component IDs (0)');
+    expect(instructions).toContain('(none)');
   });
 });
 
@@ -768,6 +801,79 @@ describe('MCP prompts/resources contract', () => {
     ).rejects.toThrow(/Invalid arguments|validation|url/i);
   });
 
+  it('registers build_page prompt and returns workflow guidance', async () => {
+    const promptList = await client.listPrompts();
+    const buildPagePrompt = promptList.prompts.find((item) => item.name === BUILD_PAGE_PROMPT);
+    expect(buildPagePrompt).toBeDefined();
+
+    // With patternId
+    const result = await client.getPrompt({
+      name: BUILD_PAGE_PROMPT,
+      arguments: { patternId: 'search-results' },
+    });
+    const text = result.messages
+      .map((message) => (message.content.type === 'text' ? message.content.text : ''))
+      .join('\n');
+    expect(text).toContain('get_pattern_recipe');
+    expect(text).toContain('search-results');
+    expect(text).toContain('validate_markup');
+    expect(text).toContain('Available Pattern IDs');
+    expect(text).toContain('Available Component IDs');
+  });
+
+  it('build_page prompt returns workflow options when no patternId or components given', async () => {
+    const result = await client.getPrompt({
+      name: BUILD_PAGE_PROMPT,
+      arguments: {},
+    });
+    const text = result.messages
+      .map((message) => (message.content.type === 'text' ? message.content.text : ''))
+      .join('\n');
+    expect(text).toContain('Option A');
+    expect(text).toContain('Option B');
+    expect(text).toContain('generate_usage_snippet');
+    expect(text).toContain('generate_full_page_html');
+  });
+
+  it('build_page prompt prioritizes patternId over components when both given', async () => {
+    const result = await client.getPrompt({
+      name: BUILD_PAGE_PROMPT,
+      arguments: { patternId: 'search-results', components: 'button,card' },
+    });
+    const text = result.messages
+      .map((message) => (message.content.type === 'text' ? message.content.text : ''))
+      .join('\n');
+    expect(text).toContain('Using a Pattern');
+    expect(text).toContain('search-results');
+    expect(text).toContain('patternId was specified');
+    expect(text).not.toContain('Using Specific Components');
+  });
+
+  it('build_page prompt instructs full page validation (not body fragment)', async () => {
+    const result = await client.getPrompt({
+      name: BUILD_PAGE_PROMPT,
+      arguments: { patternId: 'search-results' },
+    });
+    const text = result.messages
+      .map((message) => (message.content.type === 'text' ? message.content.text : ''))
+      .join('\n');
+    expect(text).toContain('the full page HTML');
+    expect(text).toContain('importmap');
+  });
+
+  it('build_page prompt lists component IDs when using components arg', async () => {
+    const result = await client.getPrompt({
+      name: BUILD_PAGE_PROMPT,
+      arguments: { components: 'button,card', userIntent: 'Landing page' },
+    });
+    const text = result.messages
+      .map((message) => (message.content.type === 'text' ? message.content.text : ''))
+      .join('\n');
+    expect(text).toContain('Landing page');
+    expect(text).toContain('generate_usage_snippet({ component: "button" })');
+    expect(text).toContain('generate_usage_snippet({ component: "card" })');
+  });
+
   it('returns overview with prompt/resource discovery and 5 IDE templates', async () => {
     const result = await client.callTool({
       name: 'get_design_system_overview',
@@ -823,6 +929,7 @@ describe('MCP prompts/resources contract', () => {
 
     expect(Array.isArray(payload.availablePrompts)).toBe(true);
     expect(payload.availablePrompts.some((item) => item.name === FIGMA_TO_WCF_PROMPT)).toBe(true);
+    expect(payload.availablePrompts.some((item) => item.name === BUILD_PAGE_PROMPT)).toBe(true);
 
     expect(Array.isArray(payload.availableResources)).toBe(true);
     expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.components)).toBe(true);
@@ -970,6 +1077,27 @@ describe('MCP prompts/resources contract', () => {
     });
     expect(result.isError).toBe(true);
     expect(String(result.content?.[0]?.text)).toContain('not found');
+  });
+
+  it('component not-found error includes available component IDs', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'totally-invalid' },
+    });
+    expect(result.isError).toBe(true);
+    const text = String(result.content?.[0]?.text);
+    expect(text).toContain('Available component IDs');
+    expect(text).toContain('button');
+  });
+
+  it('get_install_recipe not-found error includes available component IDs', async () => {
+    const result = await client.callTool({
+      name: 'get_install_recipe',
+      arguments: { component: 'totally-invalid' },
+    });
+    expect(result.isError).toBe(true);
+    const text = String(result.content?.[0]?.text);
+    expect(text).toContain('Available component IDs');
   });
 
   it('get_component_api suggests correct tag for unprefixed typo (Levenshtein)', async () => {

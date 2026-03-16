@@ -41,6 +41,7 @@ export const BUILTIN_TOOL_NAMES = Object.freeze(new Set([
 ]));
 const BUILTIN_PROMPT_NAMES = Object.freeze(new Set([
   'figma_to_wcf',
+  'build_page',
 ]));
 const BUILTIN_RESOURCE_URIS = Object.freeze(new Set([
   'wcf://components',

@@ -78,7 +78,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 }
 ```
 
-## 提供機能（19 tools + 1 prompt + 5 resources）
+## 提供機能（19 tools + 2 prompts + 5 resources）
 
 ### ガードレール
 
@@ -240,6 +240,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | 名前 | 説明 |
 |------|------|
+| `build_page` | パターンID またはコンポーネントリストから no-build HTML ページを構築するガイド付きプロンプト |
 | `figma_to_wcf` | Figma URL を入力に、`overview → tokens → component api → snippet → validate` の実行順を返す |
 
 ### Resources (`wcf://`)

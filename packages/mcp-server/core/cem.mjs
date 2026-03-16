@@ -899,7 +899,7 @@ export function resolveDeclByComponent(indexes, component, prefix) {
   return undefined;
 }
 
-export function buildComponentNotFoundError(component, indexes, prefix) {
+export function buildComponentNotFoundError(component, indexes, prefix, installRegistry) {
   const comp = typeof component === 'string' ? component.trim() : '';
   const p = normalizePrefix(prefix);
   const suggestions = [];
@@ -916,8 +916,19 @@ export function buildComponentNotFoundError(component, indexes, prefix) {
     suggestions.push(suggested);
   }
 
-  const msg = suggestions.length > 0
-    ? `Component not found: ${comp}. Did you mean: ${suggestions.join(', ')}?`
-    : `Component not found: ${comp}`;
-  return { content: [{ type: 'text', text: msg }], isError: true };
+  const parts = [];
+  if (suggestions.length > 0) {
+    parts.push(`Component not found: ${comp}. Did you mean: ${suggestions.join(', ')}?`);
+  } else {
+    parts.push(`Component not found: ${comp}`);
+  }
+
+  const validIds = installRegistry?.components && typeof installRegistry.components === 'object'
+    ? Object.keys(installRegistry.components).sort()
+    : [];
+  if (validIds.length > 0) {
+    parts.push(`\nAvailable component IDs (${validIds.length}): ${validIds.join(', ')}`);
+  }
+
+  return { content: [{ type: 'text', text: parts.join('') }], isError: true };
 }
