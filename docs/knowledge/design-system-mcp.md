@@ -20,7 +20,7 @@ MCP クライアント側からは、stdio サーバーとして次のように�
 repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。  
 `npm run mcp:design-system` を repo root で実行する場合は、`<repo-root>/wcf-mcp.config.json` を配置してください。
 
-## 提供 tools / prompt / resources（19 tools + 1 prompt + 5 resources）
+## 提供 tools / prompt / resources（19 tools + 2 prompts + 5 resources）
 
 ### `get_design_system_overview()`
 
@@ -150,6 +150,15 @@ components / patterns / guidelines / tokens / skills を横断して検索しま
 カテゴリやユースケースから候補コンポーネントを返します。
 
 ## Prompt / Resources
+
+### Prompt: `build_page({ patternId?, components?, userIntent? })`
+
+パターン ID またはコンポーネントリストから no-build HTML ページを構築するガイド付きプロンプトです。
+
+- `patternId` 指定時: `get_pattern_recipe` → `validate_markup` のフルページ生成フロー
+- `components` 指定時: 各コンポーネントの `generate_usage_snippet` → `generate_full_page_html` → `validate_markup`
+- 両方指定時: `patternId` が優先され、`components` は無視されます
+- 未指定時: 上記2つのワークフローオプションを提示
 
 ### Prompt: `figma_to_wcf({ figmaUrl, userIntent? })`
 
