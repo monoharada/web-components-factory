@@ -24,10 +24,12 @@ repo-local 起動時は、`cwd/wcf-mcp.config.json` を自動探索します。
 
 ### `get_design_system_overview()`
 
-最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー、IDE 設定テンプレート、prompt/resource 導線）を返します。
+最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、`componentPatternMap`、推奨 preloading / workflow、IDE 設定テンプレート、prompt/resource 導線）を返します。
 
 - IDE テンプレート: Claude Desktop / Claude Code / Cursor / VS Code (GitHub Copilot) / Windsurf
 - `setupInfo` にランタイムセットアップ情報を含む: `noCDN`, `deliveryModel`, `importMapHint`, `bootScript`, `vendorSetup`, `htmlSetup`
+- `recommendedPreloadResources` に `wcf://components` / `wcf://tokens` の事前読み込み推奨が含まれます
+- `componentPatternMap` に「tablist → dads-tab」「resource list → dads-resource-list」のような UI パターン対応表が含まれます
 
 ### `list_components({ prefix? })`
 
@@ -63,6 +65,7 @@ HTML 断片を CEM と突き合わせて検証し、diagnostics を返します�
 - `unknownElement`: `error`
 - `unknownAttribute`: `warning`
 - `forbiddenAttribute` / `tokenMisuse` / `ariaLiveNotRecommended` / `roleAlertNotRecommended`: `warning`
+- 独自実装パターンの置換提案は `nativePatternReplaceable` / `customAnimationReplaceable` として `warning` または `info` で返ります
 - common template syntax（`{{ }}`, `{% %}`, `<% %>`, `<? ?>`, script/style blocks）は HTML と誤認しないようにマスクして扱います
 
 ### `validate_files({ files, prefix? })`
@@ -149,6 +152,9 @@ components / patterns / guidelines / tokens / skills を横断して検索しま
 
 カテゴリやユースケースから候補コンポーネントを返します。
 
+- `keywords` を併せて返すため、`tab`, `tablist`, `download`, `badge`, `spinner` のような alias でも候補に到達できます
+- `useCase` 指定時は exact keyword を優先して rank します（例: `tab` で `dads-tab` が `dads-table` より上に来る）
+
 ## Prompt / Resources
 
 ### Prompt: `build_page({ patternId?, components?, userIntent? })`
@@ -172,7 +178,7 @@ Figma URL を受け取り、以下の順序で実装を進めるプロンプト�
 
 ### Resources (`wcf://`)
 
-- `wcf://components`: コンポーネントカタログ（カテゴリ集計付き）
+- `wcf://components`: コンポーネントカタログ（カテゴリ集計付き）。画面生成前の preload を推奨
 - `wcf://tokens`: トークン summary
 - `wcf://guidelines/{topic}`: topic 別ガイドライン（`accessibility|css|patterns|all`）
 - `wcf://llms-full`: `llms-full.txt` 全文

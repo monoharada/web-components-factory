@@ -27,8 +27,8 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ch
 
 | Attribute | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `color` | string | - | カラー (gray | blue | light-blue | cyan | green | lime | yellow | orange | red | magenta | purple) |
-| `variant` | string | - | バリアント (text | outline | filled-outline | fill) |
+| `color` | 'gray' \| 'blue' \| 'light-blue' \| 'cyan' \| 'green' \| 'lime' \| 'yellow' \| 'orange' \| 'red' \| 'magenta' \| 'purple' | - | カラー |
+| `variant` | 'text' \| 'outline' \| 'filled-outline' \| 'fill' | - | バリアント |
 
 
 ## Slots

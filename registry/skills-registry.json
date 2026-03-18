@@ -257,6 +257,47 @@
       }
     },
     {
+      "name": "wcf-mcp-release",
+      "path": ".claude/skills/wcf-mcp-release",
+      "entry": "SKILL.md",
+      "clients": [
+        "codex",
+        "claude_code",
+        "cursor"
+      ],
+      "status": "active",
+      "description": "Bump and verify the publishable @monoharada/wcf-mcp package.",
+      "tags": [
+        "workflow"
+      ],
+      "version": "1.0.0",
+      "dependencies": [],
+      "compat": {
+        "minVersion": {
+          "claude_code": "1.0",
+          "cursor": "0.50",
+          "codex": "0.1"
+        },
+        "capabilities": [
+          "read_repo",
+          "run_commands",
+          "write_repo"
+        ]
+      },
+      "manifest": {
+        "author": "wcf-team",
+        "license": "MIT",
+        "entryFormat": "markdown",
+        "sections": [
+          "overview",
+          "workflow",
+          "do_dont"
+        ],
+        "sizeBytes": 2031,
+        "lastUpdated": "2026-03-18"
+      }
+    },
+    {
       "name": "wcf-ui-builder",
       "path": ".claude/skills/wcf-ui-builder",
       "entry": "SKILL.md",

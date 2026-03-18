@@ -9648,7 +9648,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Checkboxコンポーネント\n\nDADS HTML版の構造・見た目に準拠しつつ、Form-Associated Custom Elementとしてフォームに参加します。",
+          "description": "Checkboxコンポーネント\n\nDADS HTML版の構造・見た目に準拠しつつ、Form-Associated Custom Elementとしてフォームに参加します。\nlabel 属性と name 属性を指定して利用してください。子テキストはラベル契約として扱いません。",
           "name": "DadsCheckbox",
           "cssParts": [
             {
@@ -10501,6 +10501,22 @@
           "definitionPath": "./packages/components/checkbox/checkbox.ts",
           "typeDefinitionPath": "./packages/components/checkbox/checkbox.ts",
           "custom": {
+            "authoringGuidance": {
+              "summary": "label 属性と name 属性を必ず指定してください。子テキストはラベル契約として扱いません。",
+              "examples": [
+                {
+                  "scenario": "基本チェックボックス",
+                  "code": "<dads-checkbox label=\"利用規約に同意する\" name=\"terms\"></dads-checkbox>"
+                }
+              ],
+              "pitfalls": [
+                {
+                  "issue": "子テキストだけでは label 属性の代わりになりません。",
+                  "wrongCode": "<dads-checkbox name=\"terms\">利用規約に同意する</dads-checkbox>",
+                  "correctCode": "<dads-checkbox label=\"利用規約に同意する\" name=\"terms\"></dads-checkbox>"
+                }
+              ]
+            },
             "a11yAnnotations": {
               "version": 1,
               "summary": "コンポーネント仕様（アクセシビリティ注釈）",
@@ -10785,6 +10801,13 @@
               }
             },
             {
+              "kind": "field",
+              "name": "color",
+              "type": {
+                "text": "DadsChipLabelColor | null"
+              }
+            },
+            {
               "kind": "method",
               "name": "compose",
               "static": true,
@@ -10922,21 +10945,28 @@
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "DadsChipLabelVariant | null"
+              }
             }
           ],
           "attributes": [
             {
               "type": {
-                "text": "string"
+                "text": "'gray' | 'blue' | 'light-blue' | 'cyan' | 'green' | 'lime' | 'yellow' | 'orange' | 'red' | 'magenta' | 'purple'"
               },
-              "description": "カラー (gray | blue | light-blue | cyan | green | lime | yellow | orange | red | magenta | purple)",
+              "description": "カラー",
               "name": "color"
             },
             {
               "type": {
-                "text": "string"
+                "text": "'text' | 'outline' | 'filled-outline' | 'fill'"
               },
-              "description": "バリアント (text | outline | filled-outline | fill)",
+              "description": "バリアント",
               "name": "variant"
             }
           ],
@@ -10951,6 +10981,22 @@
           "definitionPath": "./packages/components/chip-label/chip-label.ts",
           "typeDefinitionPath": "./packages/components/chip-label/chip-label.ts",
           "custom": {
+            "authoringGuidance": {
+              "summary": "status badge の semantic alias はありません。color と variant の組み合わせで表現します。",
+              "examples": [
+                {
+                  "scenario": "情報ラベル相当",
+                  "code": "<dads-chip-label color=\"blue\" variant=\"filled-outline\">情報</dads-chip-label>"
+                }
+              ],
+              "pitfalls": [
+                {
+                  "issue": "variant=\"info\" のような semantic 値は未定義です。",
+                  "wrongCode": "<dads-chip-label variant=\"info\">情報</dads-chip-label>",
+                  "correctCode": "<dads-chip-label color=\"blue\" variant=\"filled-outline\">情報</dads-chip-label>"
+                }
+              ]
+            },
             "a11yAnnotations": {
               "version": 1,
               "summary": "チップラベル（ステータスや分類の表示）",
@@ -27532,6 +27578,50 @@
           "definitionPath": "./packages/components/heading/heading.ts",
           "typeDefinitionPath": "./packages/components/heading/heading.ts",
           "custom": {
+            "usageSnippet": "<!-- ページ見出し -->\n<dads-heading level=\"1\" size=\"36\">申請一覧</dads-heading>\n\n<!-- typeset コンテナ内の節見出し -->\n<main data-dads-typeset>\n  <dads-heading level=\"2\" size=\"24\" margin=\"top\">基本情報</dads-heading>\n</main>",
+            "authoringGuidance": {
+              "summary": "見出し階層を保つには level だけでなく size も明示してください。",
+              "defaults": [
+                {
+                  "attribute": "level",
+                  "value": "2",
+                  "notes": "runtime default"
+                },
+                {
+                  "attribute": "size",
+                  "value": "36",
+                  "notes": "runtime default。level に応じた自動マッピングはありません。"
+                },
+                {
+                  "attribute": "margin",
+                  "value": "none",
+                  "notes": "runtime default"
+                }
+              ],
+              "examples": [
+                {
+                  "scenario": "ページ見出し",
+                  "code": "<dads-heading level=\"1\" size=\"36\">申請一覧</dads-heading>"
+                },
+                {
+                  "scenario": "typeset コンテナ内の節見出し",
+                  "code": "<main data-dads-typeset>\n  <dads-heading level=\"2\" size=\"24\" margin=\"top\">基本情報</dads-heading>\n</main>"
+                }
+              ],
+              "pitfalls": [
+                {
+                  "issue": "size を省略すると level に関係なく size=\"36\" になります。",
+                  "wrongCode": "<dads-heading level=\"1\">ページタイトル</dads-heading>",
+                  "correctCode": "<dads-heading level=\"1\" size=\"36\">ページタイトル</dads-heading>"
+                }
+              ],
+              "references": [
+                {
+                  "title": "Content Typeset Rules",
+                  "path": "docs/rules/content-typeset-rules.md"
+                }
+              ]
+            },
             "a11yAnnotations": {
               "version": 1,
               "summary": "見出しコンポーネント仕様（アクセシビリティ注釈）",
@@ -28584,7 +28674,7 @@
                 "text": "object"
               },
               "static": true,
-              "default": "{ name: 'dads-input-text', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"input\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"input-wrapper\" id=\"input-wrapper\"> <input part=\"input\" id=\"input\" type=\"text\" /> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"type-mismatch-error\" id=\"type-mismatch-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), inputTextTokens, inputTextStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), PropertyAttr('type'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), PropertyAttr('name'), PropertyAttr('size'), PropertyAttr('input-width'), BooleanAttr('auto-validate'), PropertyAttr('autocomplete'), // value は observedAttributes に含めるが、PropertyAttr は使わない { attribute: 'value' }, ], }",
+              "default": "{ name: 'dads-input-text', template: html` <div part=\"wrapper\" id=\"wrapper\"> <label part=\"label\" id=\"label\" for=\"input\"> <span part=\"label-text\" id=\"label-text\"> <slot name=\"label\" id=\"label-slot\"></slot> <span id=\"label-fallback\"></span> </span> <span part=\"requirement\" id=\"requirement\"></span> </label> <div part=\"support-text\" id=\"support-text\"> <slot name=\"support-text\" id=\"support-slot\"></slot> <span id=\"support-fallback\"></span> </div> <div part=\"input-wrapper\" id=\"input-wrapper\"> <input part=\"input\" id=\"input\" type=\"text\" /> </div> <div part=\"error-text\" id=\"error-text\"> <slot name=\"error-text\" id=\"error-slot\"></slot> <span id=\"error-fallback\"></span> </div> <!-- バリデーション用カスタムエラーメッセージスロット（非表示） --> <slot name=\"required-error\" id=\"required-error-slot\" hidden></slot> <slot name=\"type-mismatch-error\" id=\"type-mismatch-error-slot\" hidden></slot> </div> `, styles: withReset([ applyDADSTokens(), applySpacingTokens(), inputTextTokens, inputTextStyles, applyDADSFocusStyles(), ], 'minimal'), attributes: [ PropertyAttr('label'), PropertyAttr('support-text'), PropertyAttr('type'), BooleanAttr('required'), BooleanAttr('error'), PropertyAttr('error-text'), BooleanAttr('disabled'), BooleanAttr('readonly'), PropertyAttr('name'), PropertyAttr('size'), PropertyAttr('input-width'), BooleanAttr('auto-validate'), PropertyAttr('autocomplete'), PropertyAttr('inputmode'), // value は observedAttributes に含めるが、PropertyAttr は使わない { attribute: 'value' }, ], }",
               "inheritedFrom": {
                 "name": "WebComponent",
                 "module": "packages/core/web-components.ts"
@@ -28885,6 +28975,13 @@
             },
             {
               "type": {
+                "text": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'"
+              },
+              "description": "モバイル向け入力モードヒント",
+              "name": "inputmode"
+            },
+            {
+              "type": {
                 "text": "string"
               },
               "description": "ラベルテキスト（スロット未使用時のフォールバック）",
@@ -28950,6 +29047,15 @@
           "definitionPath": "./packages/components/input-text/input-text.ts",
           "typeDefinitionPath": "./packages/components/input-text/input-text.ts",
           "custom": {
+            "authoringGuidance": {
+              "summary": "モバイル向けキーボード最適化が必要な場合は inputmode を使えます。",
+              "examples": [
+                {
+                  "scenario": "数字キーボードを開く入力",
+                  "code": "<dads-input-text label=\"郵便番号\" name=\"postal-code\" inputmode=\"numeric\" autocomplete=\"postal-code\"></dads-input-text>"
+                }
+              ]
+            },
             "a11yAnnotations": {
               "version": 1,
               "summary": "インプットテキストコンポーネント仕様（アクセシビリティ注釈）",
@@ -43101,6 +43207,29 @@
           "definitionPath": "./packages/components/resource-list/resource-list.ts",
           "typeDefinitionPath": "./packages/components/resource-list/resource-list.ts",
           "custom": {
+            "usageSnippet": "<dads-resource-list\n  href=\"/files/guide.pdf\"\n  download\n  data-interaction=\"whole\"\n  data-style=\"frame\"\n>\n  <span slot=\"title\">申請ガイド（PDF）</span>\n  <span slot=\"support\">PDF 1.2MB</span>\n</dads-resource-list>",
+            "authoringGuidance": {
+              "summary": "項目全体をリンク化する host-level whole link は data-interaction=\"whole\" と href の組み合わせで使います。",
+              "examples": [
+                {
+                  "scenario": "全体リンクのリソースリスト",
+                  "code": "<dads-resource-list href=\"/files/guide.pdf\" download data-interaction=\"whole\" data-style=\"frame\">\n  <span slot=\"title\">申請ガイド（PDF）</span>\n  <span slot=\"support\">PDF 1.2MB</span>\n</dads-resource-list>"
+                }
+              ],
+              "pitfalls": [
+                {
+                  "issue": "href だけでは whole-link モードになりません。",
+                  "wrongCode": "<dads-resource-list href=\"/files/guide.pdf\"><span slot=\"title\">申請ガイド</span></dads-resource-list>",
+                  "correctCode": "<dads-resource-list href=\"/files/guide.pdf\" data-interaction=\"whole\"><span slot=\"title\">申請ガイド</span></dads-resource-list>"
+                }
+              ],
+              "references": [
+                {
+                  "title": "resource-list component tests",
+                  "path": "packages/components/resource-list/resource-list.test.ts"
+                }
+              ]
+            },
             "a11yAnnotations": {
               "version": 1,
               "summary": "リソースリストコンポーネント仕様（アクセシビリティ注釈：リンク版 / フォームコントロール版）",
@@ -51087,6 +51216,45 @@
           "definitionPath": "./packages/components/table/table.ts",
           "typeDefinitionPath": "./packages/components/table/table.ts",
           "custom": {
+            "usageSnippet": "<!-- 基本テーブル -->\n<dads-table>\n  <table>\n    <thead>\n      <tr>\n        <th scope=\"col\">項目</th>\n        <th scope=\"col\">値</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>サンプル</td>\n        <td>1</td>\n      </tr>\n    </tbody>\n  </table>\n</dads-table>\n\n<!-- ソート + 行選択 -->\n<dads-table selectable hover sort-behavior=\"dom\">\n  <table>\n    <thead>\n      <tr>\n        <th scope=\"col\"><input type=\"checkbox\" data-select-all aria-label=\"表示中の行をすべて選択\" /></th>\n        <th scope=\"col\" data-sort-type=\"string\"><button type=\"button\" data-sort>氏名</button></th>\n        <th scope=\"col\" data-sort-type=\"number\"><button type=\"button\" data-sort>金額</button></th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td><input type=\"checkbox\" data-select-row aria-label=\"行を選択: A001\" /></td>\n        <td>山田 太郎</td>\n        <td data-sort-value=\"1200\">1,200</td>\n      </tr>\n    </tbody>\n  </table>\n</dads-table>",
+            "authoringGuidance": {
+              "summary": "ソートと行選択は light DOM のネイティブ要素で組み立てます。",
+              "defaults": [
+                {
+                  "attribute": "size",
+                  "value": "md",
+                  "notes": "未指定時は size=\"md\" が適用されます。"
+                }
+              ],
+              "examples": [
+                {
+                  "scenario": "ソート付きテーブル",
+                  "code": "<dads-table hover sort-behavior=\"dom\">\n  <table>\n    <thead>\n      <tr>\n        <th scope=\"col\" data-sort-type=\"string\"><button type=\"button\" data-sort>氏名</button></th>\n        <th scope=\"col\" data-sort-type=\"date\"><button type=\"button\" data-sort>更新日</button></th>\n        <th scope=\"col\">操作</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>山田 太郎</td>\n        <td data-sort-value=\"2026-03-17\">2026/03/17</td>\n        <td>詳細</td>\n      </tr>\n    </tbody>\n  </table>\n</dads-table>"
+                },
+                {
+                  "scenario": "行選択付きテーブル",
+                  "code": "<dads-table selectable>\n  <table>\n    <thead>\n      <tr>\n        <th scope=\"col\"><input type=\"checkbox\" data-select-all aria-label=\"表示中の行をすべて選択\" /></th>\n        <th scope=\"col\">利用者ID</th>\n        <th scope=\"col\">氏名</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td><input type=\"checkbox\" data-select-row aria-label=\"行を選択: A001\" /></td>\n        <td>A001</td>\n        <td>山田 太郎</td>\n      </tr>\n    </tbody>\n  </table>\n</dads-table>"
+                }
+              ],
+              "pitfalls": [
+                {
+                  "issue": "data-sort を <th> に付けると正しく動作しません。",
+                  "wrongCode": "<th scope=\"col\" data-sort>氏名</th>",
+                  "correctCode": "<th scope=\"col\" data-sort-type=\"string\"><button type=\"button\" data-sort>氏名</button></th>"
+                },
+                {
+                  "issue": "data-sort-type は <button> ではなく親 <th> に付けます。",
+                  "wrongCode": "<th scope=\"col\"><button type=\"button\" data-sort data-sort-type=\"number\">金額</button></th>",
+                  "correctCode": "<th scope=\"col\" data-sort-type=\"number\"><button type=\"button\" data-sort>金額</button></th>"
+                }
+              ],
+              "references": [
+                {
+                  "title": "showcase table sort example",
+                  "path": "src/demos/showcase-components.ts"
+                }
+              ]
+            },
             "a11yAnnotations": {
               "version": 1,
               "summary": "テーブル／データテーブル（アクセシビリティ注釈）",

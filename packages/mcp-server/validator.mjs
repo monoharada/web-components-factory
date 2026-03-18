@@ -1248,3 +1248,317 @@ export function detectMissingRuntimeScaffold({
 
   return diagnostics;
 }
+
+function getAttributeRecord(attrs, ...names) {
+  const lowered = names.map((name) => name.toLowerCase());
+  return attrs.find((attr) => lowered.includes(String(attr?.name ?? '').toLowerCase()));
+}
+
+export function detectTableAuthoringMisuse({
+  filePath = '<input>',
+  text,
+  prefix = 'dads',
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
+  const tableTag = `${String(prefix).toLowerCase()}-table`;
+  const tagRe = /<\/?([a-z][a-z0-9-]*)\b([^<>]*?)\/?>/gi;
+  const stack = [];
+  let m;
+
+  while ((m = tagRe.exec(sourceText))) {
+    const fullMatch = m[0];
+    const tag = String(m[1] ?? '').toLowerCase();
+    const isClosing = fullMatch.startsWith('</');
+    const isSelfClosing = fullMatch.endsWith('/>');
+    const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
+
+    if (isClosing) {
+      for (let index = stack.length - 1; index >= 0; index -= 1) {
+        if (stack[index] === tag) {
+          stack.splice(index, 1);
+          break;
+        }
+      }
+      continue;
+    }
+
+    const insideTable = stack.includes(tableTag) || tag === tableTag;
+    const attrs = parseAttributes(attrChunk);
+    const sortAttr = getAttributeRecord(attrs, 'data-sort', 'data-js-sort');
+    const sortTypeAttr = getAttributeRecord(attrs, 'data-sort-type');
+    const rowSelectAttr = getAttributeRecord(attrs, 'data-select-row', 'data-js-check');
+    const selectAllAttr = getAttributeRecord(attrs, 'data-select-all', 'data-js-check-all');
+    const typeAttr = getAttributeRecord(attrs, 'type');
+    const typeValue = String(typeAttr?.value ?? '').toLowerCase();
+
+    if (insideTable && sortAttr && tag === 'th') {
+      const startIndex = rawAttrsStart + sortAttr.offset;
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + sortAttr.name.length),
+        severity,
+        code: 'sortOnTh',
+        message: 'data-sort must be placed on a <button> inside the <th>, not on the <th> itself.',
+        tagName: tag,
+        attrName: sortAttr.name,
+        hint: 'Wrap the header text in <button type="button" data-sort>...</button> and keep data-sort-type on the <th>.',
+      });
+    } else if (insideTable && sortAttr && tag !== 'button') {
+      const startIndex = rawAttrsStart + sortAttr.offset;
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + sortAttr.name.length),
+        severity,
+        code: 'sortWrongTarget',
+        message: 'data-sort controls must be native <button> elements.',
+        tagName: tag,
+        attrName: sortAttr.name,
+        hint: 'Use <button type="button" data-sort>...</button> inside the sortable <th>.',
+      });
+    }
+
+    if (insideTable && sortTypeAttr && tag === 'button') {
+      const startIndex = rawAttrsStart + sortTypeAttr.offset;
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + sortTypeAttr.name.length),
+        severity,
+        code: 'sortTypeOnWrongElement',
+        message: 'data-sort-type is read from the enclosing <th>, not from the sort button.',
+        tagName: tag,
+        attrName: sortTypeAttr.name,
+        hint: 'Move data-sort-type to the parent <th scope="col" data-sort-type="...">.',
+      });
+    }
+
+    const selectionAttr = rowSelectAttr ?? selectAllAttr;
+    if (insideTable && selectionAttr && !(tag === 'input' && typeValue === 'checkbox')) {
+      const startIndex = rawAttrsStart + selectionAttr.offset;
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + selectionAttr.name.length),
+        severity,
+        code: 'selectionControlWrongElement',
+        message: `${selectionAttr.name} must be placed on input[type="checkbox"].`,
+        tagName: tag,
+        attrName: selectionAttr.name,
+        hint: `Use <input type="checkbox" ${selectionAttr.name} aria-label="...">.`,
+      });
+    }
+
+    if (!isSelfClosing && !HTML_VOID_ELEMENTS.has(tag)) {
+      stack.push(tag);
+    }
+  }
+
+  return diagnostics;
+}
+
+export function detectResourceListAuthoringMisuse({
+  filePath = '<input>',
+  text,
+  prefix = 'dads',
+  severity = 'warning',
+}) {
+  const diagnostics = [];
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
+  const tagName = `${String(prefix).toLowerCase()}-resource-list`;
+  const tagRe = new RegExp(`<(${tagName})\\b([^<>]*?)>([\\s\\S]*?)</${tagName}>`, 'gi');
+  let m;
+
+  while ((m = tagRe.exec(sourceText))) {
+    const attrChunk = String(m[2] ?? '');
+    const bodyChunk = String(m[3] ?? '');
+    const rawAttrsStart = m.index + 1 + tagName.length;
+    const attrs = parseAttributes(attrChunk);
+    const hrefAttr = getAttributeRecord(attrs, 'href');
+    const interactionAttr = getAttributeRecord(attrs, 'data-interaction');
+    if (!hrefAttr) continue;
+    const interactionValue = String(interactionAttr?.value ?? '').toLowerCase();
+    if (interactionValue === 'whole') continue;
+    const hasDelegatedTitleLink = /slot\s*=\s*["']title["'][^>]*>[\s\S]*?<a\b[^>]*href=/i.test(bodyChunk);
+    if (hasDelegatedTitleLink) continue;
+
+    const startIndex = rawAttrsStart + hrefAttr.offset;
+    diagnostics.push({
+      file: filePath,
+      range: makeRange(lineStarts, startIndex, startIndex + hrefAttr.name.length),
+      severity,
+      code: 'resourceListWholeLinkMissingInteraction',
+      message: '<dads-resource-list href="..."> requires data-interaction="whole" for host-level whole-link mode.',
+      tagName,
+      attrName: 'href',
+      hint: 'Add data-interaction="whole", or move the main link into slot="title" as a delegated title link.',
+    });
+  }
+
+  return diagnostics;
+}
+
+export function detectReplaceableNativePatterns({
+  filePath = '<input>',
+  text,
+  prefix = 'dads',
+}) {
+  const diagnostics = [];
+  const sourceText = sanitizeMarkupForValidation(text);
+  const lineStarts = computeLineIndex(sourceText);
+  const p = String(prefix).toLowerCase();
+  const customStack = [];
+  const tagRe = /<\/?([a-z][a-z0-9-]*)\b([^<>]*?)\/?>/gi;
+  let m;
+
+  while ((m = tagRe.exec(sourceText))) {
+    const fullMatch = m[0];
+    const tag = String(m[1] ?? '').toLowerCase();
+    const isClosing = fullMatch.startsWith('</');
+    const isSelfClosing = fullMatch.endsWith('/>');
+    const attrChunk = String(m[2] ?? '');
+    const rawAttrsStart = m.index + 1 + tag.length;
+
+    if (isClosing) {
+      if (tag.startsWith(`${p}-`)) {
+        for (let index = customStack.length - 1; index >= 0; index -= 1) {
+          if (customStack[index] === tag) {
+            customStack.splice(index, 1);
+            break;
+          }
+        }
+      }
+      continue;
+    }
+
+    const insideWcfCustomElement = customStack.some((entry) => entry.startsWith(`${p}-`));
+    const attrs = parseAttributes(attrChunk);
+    const roleAttr = getAttributeRecord(attrs, 'role');
+    const roleValue = String(roleAttr?.value ?? '').toLowerCase();
+    const typeAttr = getAttributeRecord(attrs, 'type');
+    const typeValue = String(typeAttr?.value ?? '').toLowerCase();
+
+    if (!insideWcfCustomElement && roleAttr && roleValue === 'tablist') {
+      const startIndex = rawAttrsStart + roleAttr.offset;
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + roleAttr.name.length),
+        severity: 'warning',
+        code: 'nativePatternReplaceable',
+        message: 'Custom tablist markup detected outside dads-tab.',
+        tagName: tag,
+        attrName: 'role',
+        hint: 'Consider using <dads-tab> instead of a custom role="tablist" implementation.',
+      });
+    }
+
+    if (!insideWcfCustomElement && (tag === 'dialog' || (roleAttr && roleValue === 'dialog'))) {
+      const startIndex = tag === 'dialog' ? m.index + 1 : rawAttrsStart + roleAttr.offset;
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + (tag === 'dialog' ? tag.length : roleAttr.name.length)),
+        severity: 'info',
+        code: 'nativePatternReplaceable',
+        message: 'Dialog-like markup detected outside dads-dialog or dads-drawer.',
+        tagName: tag,
+        attrName: roleAttr ? 'role' : undefined,
+        hint: 'Consider using <dads-dialog> for modal dialogs or <dads-drawer> for slide-out panels.',
+      });
+    }
+
+    if (!insideWcfCustomElement && roleAttr && roleValue === 'progressbar') {
+      const startIndex = rawAttrsStart + roleAttr.offset;
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + roleAttr.name.length),
+        severity: 'warning',
+        code: 'nativePatternReplaceable',
+        message: 'Progress/loading markup detected outside dads-spinner or dads-progress-bar.',
+        tagName: tag,
+        attrName: 'role',
+        hint: 'Consider using <dads-spinner> for indeterminate loading or <dads-progress-bar> for determinate progress.',
+      });
+    }
+
+    if (!insideWcfCustomElement && tag === 'input' && typeValue === 'file') {
+      const startIndex = rawAttrsStart + (typeAttr?.offset ?? 0);
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + (typeAttr?.name.length ?? 4)),
+        severity: 'info',
+        code: 'nativePatternReplaceable',
+        message: 'Native file input detected outside dads-file-upload.',
+        tagName: tag,
+        attrName: 'type',
+        hint: 'Consider using <dads-file-upload> when you need upload UI, drag-and-drop, or file list feedback.',
+      });
+    }
+
+    if (!insideWcfCustomElement && tag === 'dl') {
+      const startIndex = m.index + 1;
+      diagnostics.push({
+        file: filePath,
+        range: makeRange(lineStarts, startIndex, startIndex + tag.length),
+        severity: 'info',
+        code: 'nativePatternReplaceable',
+        message: 'Description-list style markup detected outside dads-description-list.',
+        tagName: tag,
+        hint: 'Consider using <dads-description-list> when you need the DADS key-value presentation pattern.',
+      });
+    }
+
+    if (!insideWcfCustomElement && tag === 'nav') {
+      const windowText = sourceText.slice(m.index, Math.min(sourceText.length, m.index + 2000)).toLowerCase();
+      if (windowText.includes('<ol') && (windowText.includes('aria-current="step"') || windowText.includes("aria-current='step'") || /\b(step|wizard)\b/.test(windowText))) {
+        const startIndex = m.index + 1;
+        diagnostics.push({
+          file: filePath,
+          range: makeRange(lineStarts, startIndex, startIndex + tag.length),
+          severity: 'info',
+          code: 'nativePatternReplaceable',
+          message: 'Step-navigation like markup detected outside dads-step-navigation.',
+          tagName: tag,
+          hint: 'Consider using <dads-step-navigation> and <dads-step-navigation-item> for wizard progress UI.',
+        });
+      }
+    }
+
+    if (!isSelfClosing && !HTML_VOID_ELEMENTS.has(tag) && tag.startsWith(`${p}-`)) {
+      customStack.push(tag);
+    }
+  }
+
+  return diagnostics;
+}
+
+export function detectReplaceableAnimationPatterns({
+  filePath = '<input>',
+  text,
+}) {
+  const diagnostics = [];
+  const lineStarts = computeLineIndex(text);
+  const styleBlockRe = /<style\b[^>]*>([\s\S]*?)<\/style>/gi;
+  let m;
+
+  while ((m = styleBlockRe.exec(text))) {
+    const cssText = String(m[1] ?? '');
+    if (!/@keyframes\s+[^{\s]*(spin|spinner|rotate)/i.test(cssText)) continue;
+    if (!/animation\s*:/i.test(cssText)) continue;
+    const nearbyMarkup = text.slice(Math.max(0, m.index - 500), Math.min(text.length, m.index + m[0].length + 1500));
+    if (!/(loading|spinner|processing|sending|処理中|送信中|読み込み中|ローディング|スピナー)/i.test(nearbyMarkup)) continue;
+
+    const styleIndex = m.index + m[0].toLowerCase().indexOf('@keyframes');
+    diagnostics.push({
+      file: filePath,
+      range: makeRange(lineStarts, styleIndex, styleIndex + 10),
+      severity: 'warning',
+      code: 'customAnimationReplaceable',
+      message: 'Custom spinner/loading animation detected in CSS.',
+      hint: 'Consider using <dads-spinner> or <dads-progress-bar> instead of hand-written loading animation CSS.',
+    });
+  }
+
+  return diagnostics;
+}

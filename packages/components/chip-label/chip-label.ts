@@ -12,6 +12,20 @@ import { withReset } from '../../styles/reset-css.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 import { chipLabelStyles } from './chip-label-styles.js';
 
+type DadsChipLabelVariant = 'text' | 'outline' | 'filled-outline' | 'fill';
+type DadsChipLabelColor =
+  | 'gray'
+  | 'blue'
+  | 'light-blue'
+  | 'cyan'
+  | 'green'
+  | 'lime'
+  | 'yellow'
+  | 'orange'
+  | 'red'
+  | 'magenta'
+  | 'purple';
+
 /**
  * チップラベルコンポーネント
  *
@@ -25,8 +39,8 @@ import { chipLabelStyles } from './chip-label-styles.js';
  * @csspart icon - アイコンスロット
  * @csspart label - ラベルテキストコンテナ
  *
- * @attr {string} variant - バリアント (text | outline | filled-outline | fill)
- * @attr {string} color - カラー (gray | blue | light-blue | cyan | green | lime | yellow | orange | red | magenta | purple)
+ * @attr {'text' | 'outline' | 'filled-outline' | 'fill'} variant - バリアント
+ * @attr {'gray' | 'blue' | 'light-blue' | 'cyan' | 'green' | 'lime' | 'yellow' | 'orange' | 'red' | 'magenta' | 'purple'} color - カラー
  *
  * @example
  * ```html
@@ -39,6 +53,9 @@ import { chipLabelStyles } from './chip-label-styles.js';
  * ```
  */
 export class DadsChipLabel extends TypographyWebComponent {
+  declare variant: DadsChipLabelVariant | null;
+  declare color: DadsChipLabelColor | null;
+
   static definition = {
     name: 'dads-chip-label',
     template: html`

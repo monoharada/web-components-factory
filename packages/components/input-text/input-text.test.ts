@@ -173,6 +173,18 @@ describe('DadsInputText - 属性反映', () => {
     expect(input?.type).toBe('tel');
   });
 
+  it('inputmode属性がinputに反映される', async () => {
+    const { defineInputText } = await import('./input-text-define');
+    defineInputText();
+
+    element = createTestElement('dads-input-text');
+    element.setAttribute('inputmode', 'numeric');
+    await waitForCustomElement(element);
+
+    const input = getShadowContent(element, '[part="input"]') as HTMLInputElement;
+    expect(input?.getAttribute('inputmode')).toBe('numeric');
+  });
+
   it('デフォルトでsize="md"が適用される', async () => {
     const { defineInputText } = await import('./input-text-define');
     defineInputText();

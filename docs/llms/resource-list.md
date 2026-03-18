@@ -16,14 +16,14 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component re
 ## Usage
 
 ```html
-<dads-resource-list>
-  <div slot="action"><!-- 右端アクション --></div>
-  <div slot="control"><!-- チェックボックス/ラジオ等の選択コントロール --></div>
-  <div slot="icon"><!-- 先頭アイコン --></div>
-  <div slot="label"><!-- ラベル --></div>
-  <div slot="sub"><!-- サブラベル --></div>
-  <div slot="support"><!-- サポートテキスト --></div>
-  <div slot="title"><!-- タイトル --></div>
+<dads-resource-list
+  href="/files/guide.pdf"
+  download
+  data-interaction="whole"
+  data-style="frame"
+>
+  <span slot="title">申請ガイド（PDF）</span>
+  <span slot="support">PDF 1.2MB</span>
 </dads-resource-list>
 ```
 

@@ -41,6 +41,7 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component in
 | `error` | boolean | - | エラー状態 |
 | `error-text` | string | - | エラーメッセージ（スロット未使用時のフォールバック） |
 | `input-width` | string | - | 幅バリアント (short | medium | full | カスタム値) |
+| `inputmode` | 'none' \| 'text' \| 'decimal' \| 'numeric' \| 'tel' \| 'search' \| 'email' \| 'url' | - | モバイル向け入力モードヒント |
 | `label` | string | - | ラベルテキスト（スロット未使用時のフォールバック） |
 | `name` | string | - | フォーム名 |
 | `readonly` | boolean | - | 読み取り専用 |
