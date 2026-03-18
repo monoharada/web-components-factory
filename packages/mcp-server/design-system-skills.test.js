@@ -336,15 +336,15 @@ describe('wcf://skills resource', () => {
     await Promise.allSettled([client?.close?.(), server?.close?.()]);
   });
 
-  it('returns skills catalog with 8 entries', async () => {
+  it('returns skills catalog with 9 entries', async () => {
     const result = await client.readResource({ uri: 'wcf://skills' });
     expect(result.contents).toBeDefined();
     expect(result.contents.length).toBe(1);
     const payload = JSON.parse(String(result.contents[0].text));
     expect(payload.schemaVersion).toBe(2);
-    expect(payload.total).toBe(8);
+    expect(payload.total).toBe(9);
     expect(Array.isArray(payload.skills)).toBe(true);
-    expect(payload.skills.length).toBe(8);
+    expect(payload.skills.length).toBe(9);
     for (const skill of payload.skills) {
       expect(typeof skill.name).toBe('string');
       expect(typeof skill.description).toBe('string');

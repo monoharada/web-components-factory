@@ -32,6 +32,7 @@ describe('skills registry', () => {
       'wcf-compose',
       'wcf-discovery',
       'wcf-install',
+      'wcf-mcp-release',
       'wcf-ui-builder',
       'wcf-validate',
     ]);

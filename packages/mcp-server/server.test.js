@@ -1212,6 +1212,20 @@ describe('MCP prompts/resources contract', () => {
     expect(payload.authoringGuidance.summary).toContain('name');
   });
 
+  it('get_component_api batch mode preserves interactionExamples and layoutBehavior', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { components: ['input-text', 'layout-shell'] },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '[]'));
+    expect(Array.isArray(payload)).toBe(true);
+    const inputText = payload.find((item) => item.tagName === 'dads-input-text');
+    const layoutShell = payload.find((item) => item.tagName === 'dads-layout-shell');
+    expect(Array.isArray(inputText?.interactionExamples)).toBe(true);
+    expect(layoutShell?.layoutBehavior?.constraints?.patterns).toContain('app-shell');
+  });
+
   it('generate_usage_snippet resolves by bare name via auto-prefix', async () => {
     const result = await client.callTool({
       name: 'generate_usage_snippet',
@@ -2031,6 +2045,18 @@ describe('MCP prompts/resources contract', () => {
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
     const diag = payload.diagnostics.find((item) => item.code === 'resourceListWholeLinkMissingInteraction');
     expect(diag).toBeDefined();
+  });
+
+  it('validate_markup does not warn on resource-list delegated title link pattern', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<dads-resource-list href="/files/doc.pdf"><span slot="title"><a href="/files/doc.pdf">資料</a></span></dads-resource-list>',
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const diag = payload.diagnostics.find((item) => item.code === 'resourceListWholeLinkMissingInteraction');
+    expect(diag).toBeUndefined();
   });
 
   it('validate_markup suggests replacing custom tablist markup', async () => {
