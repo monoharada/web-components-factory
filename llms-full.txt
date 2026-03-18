@@ -2420,12 +2420,13 @@ None
 #### Usage
 
 ```html
-<dads-heading
-  size=""
->
-  <div slot="icon"><!-- 先頭アイコン 挙動メモ: - `slot="shoulder"` と `slot="icon"` は同時に指定できます（shoulderは上、iconは見出し行の先頭）。 - slot が無い場合は該当パーツは表示されません（内部で `data-has-*` を付与して制御）。 - `chip` / `rule` は装飾（意匠）です。情報の唯一の手掛かりにしないでください。 --></div>
-  <div slot="shoulder"><!-- ショルダーテキスト --></div>
-</dads-heading>
+<!-- ページ見出し -->
+<dads-heading level="1" size="36">申請一覧</dads-heading>
+
+<!-- typeset コンテナ内の節見出し -->
+<main data-dads-typeset>
+  <dads-heading level="2" size="24" margin="top">基本情報</dads-heading>
+</main>
 ```
 
 ---
@@ -2499,6 +2500,7 @@ None
 | `error` | boolean | - | エラー状態 |
 | `error-text` | string | - | エラーメッセージ（スロット未使用時のフォールバック） |
 | `input-width` | string | - | 幅バリアント (short | medium | full | カスタム値) |
+| `inputmode` | string | - | モバイル向け入力モードヒント |
 | `label` | string | - | ラベルテキスト（スロット未使用時のフォールバック） |
 | `name` | string | - | フォーム名 |
 | `readonly` | boolean | - | 読み取り専用 |
@@ -3897,14 +3899,14 @@ None
 #### Usage
 
 ```html
-<dads-resource-list>
-  <div slot="action"><!-- 右端アクション --></div>
-  <div slot="control"><!-- チェックボックス/ラジオ等の選択コントロール --></div>
-  <div slot="icon"><!-- 先頭アイコン --></div>
-  <div slot="label"><!-- ラベル --></div>
-  <div slot="sub"><!-- サブラベル --></div>
-  <div slot="support"><!-- サポートテキスト --></div>
-  <div slot="title"><!-- タイトル --></div>
+<dads-resource-list
+  href="/files/guide.pdf"
+  download
+  data-interaction="whole"
+  data-style="frame"
+>
+  <span slot="title">申請ガイド（PDF）</span>
+  <span slot="support">PDF 1.2MB</span>
 </dads-resource-list>
 ```
 
@@ -4671,9 +4673,43 @@ None
 #### Usage
 
 ```html
-<dads-table
-  size=""
->...</dads-table>
+<!-- 基本テーブル -->
+<dads-table>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">項目</th>
+        <th scope="col">値</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>サンプル</td>
+        <td>1</td>
+      </tr>
+    </tbody>
+  </table>
+</dads-table>
+
+<!-- ソート + 行選択 -->
+<dads-table selectable hover sort-behavior="dom">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"><input type="checkbox" data-select-all aria-label="表示中の行をすべて選択" /></th>
+        <th scope="col" data-sort-type="string"><button type="button" data-sort>氏名</button></th>
+        <th scope="col" data-sort-type="number"><button type="button" data-sort>金額</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="checkbox" data-select-row aria-label="行を選択: A001" /></td>
+        <td>山田 太郎</td>
+        <td data-sort-value="1200">1,200</td>
+      </tr>
+    </tbody>
+  </table>
+</dads-table>
 ```
 
 ---
@@ -4967,6 +5003,36 @@ Requires: `heading`, `table`, `page-navigation`
     </table>
   </dads-table>
   <dads-page-navigation current="1" total="3"></dads-page-navigation>
+</main>
+```
+
+### table-with-sort
+
+**テーブル（ソート付き）**: 列ヘッダーのクリックでソートできるデータテーブル
+
+Requires: `heading`, `table`
+
+```html
+<main data-dads-typeset>
+  <dads-heading level="1" size="36">一覧</dads-heading>
+  <dads-table hover sort-behavior="dom">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col" data-sort-type="string"><button type="button" data-sort>氏名</button></th>
+          <th scope="col" data-sort-type="date"><button type="button" data-sort>更新日</button></th>
+          <th scope="col">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>山田 太郎</td>
+          <td data-sort-value="2026-03-17">2026/03/17</td>
+          <td>詳細</td>
+        </tr>
+      </tbody>
+    </table>
+  </dads-table>
 </main>
 ```
 

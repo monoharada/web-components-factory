@@ -1,0 +1,146 @@
+{
+  "dads-table": {
+    "summary": "ソートと行選択は light DOM のネイティブ要素で組み立てます。",
+    "defaults": [
+      {
+        "attribute": "size",
+        "value": "md",
+        "notes": "未指定時は size=\"md\" が適用されます。"
+      }
+    ],
+    "examples": [
+      {
+        "scenario": "ソート付きテーブル",
+        "code": "<dads-table hover sort-behavior=\"dom\">\n  <table>\n    <thead>\n      <tr>\n        <th scope=\"col\" data-sort-type=\"string\"><button type=\"button\" data-sort>氏名</button></th>\n        <th scope=\"col\" data-sort-type=\"date\"><button type=\"button\" data-sort>更新日</button></th>\n        <th scope=\"col\">操作</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>山田 太郎</td>\n        <td data-sort-value=\"2026-03-17\">2026/03/17</td>\n        <td>詳細</td>\n      </tr>\n    </tbody>\n  </table>\n</dads-table>"
+      },
+      {
+        "scenario": "行選択付きテーブル",
+        "code": "<dads-table selectable>\n  <table>\n    <thead>\n      <tr>\n        <th scope=\"col\"><input type=\"checkbox\" data-select-all aria-label=\"表示中の行をすべて選択\" /></th>\n        <th scope=\"col\">利用者ID</th>\n        <th scope=\"col\">氏名</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td><input type=\"checkbox\" data-select-row aria-label=\"行を選択: A001\" /></td>\n        <td>A001</td>\n        <td>山田 太郎</td>\n      </tr>\n    </tbody>\n  </table>\n</dads-table>"
+      }
+    ],
+    "pitfalls": [
+      {
+        "issue": "data-sort を <th> に付けると正しく動作しません。",
+        "wrongCode": "<th scope=\"col\" data-sort>氏名</th>",
+        "correctCode": "<th scope=\"col\" data-sort-type=\"string\"><button type=\"button\" data-sort>氏名</button></th>"
+      },
+      {
+        "issue": "data-sort-type は <button> ではなく親 <th> に付けます。",
+        "wrongCode": "<th scope=\"col\"><button type=\"button\" data-sort data-sort-type=\"number\">金額</button></th>",
+        "correctCode": "<th scope=\"col\" data-sort-type=\"number\"><button type=\"button\" data-sort>金額</button></th>"
+      }
+    ],
+    "references": [
+      {
+        "title": "showcase table sort example",
+        "path": "src/demos/showcase-components.ts"
+      }
+    ]
+  },
+  "dads-heading": {
+    "summary": "見出し階層を保つには level だけでなく size も明示してください。",
+    "defaults": [
+      {
+        "attribute": "level",
+        "value": "2",
+        "notes": "runtime default"
+      },
+      {
+        "attribute": "size",
+        "value": "36",
+        "notes": "runtime default。level に応じた自動マッピングはありません。"
+      },
+      {
+        "attribute": "margin",
+        "value": "none",
+        "notes": "runtime default"
+      }
+    ],
+    "examples": [
+      {
+        "scenario": "ページ見出し",
+        "code": "<dads-heading level=\"1\" size=\"36\">申請一覧</dads-heading>"
+      },
+      {
+        "scenario": "typeset コンテナ内の節見出し",
+        "code": "<main data-dads-typeset>\n  <dads-heading level=\"2\" size=\"24\" margin=\"top\">基本情報</dads-heading>\n</main>"
+      }
+    ],
+    "pitfalls": [
+      {
+        "issue": "size を省略すると level に関係なく size=\"36\" になります。",
+        "wrongCode": "<dads-heading level=\"1\">ページタイトル</dads-heading>",
+        "correctCode": "<dads-heading level=\"1\" size=\"36\">ページタイトル</dads-heading>"
+      }
+    ],
+    "references": [
+      {
+        "title": "Content Typeset Rules",
+        "path": "docs/rules/content-typeset-rules.md"
+      }
+    ]
+  },
+  "dads-resource-list": {
+    "summary": "項目全体をリンク化する host-level whole link は data-interaction=\"whole\" と href の組み合わせで使います。",
+    "examples": [
+      {
+        "scenario": "全体リンクのリソースリスト",
+        "code": "<dads-resource-list href=\"/files/guide.pdf\" download data-interaction=\"whole\" data-style=\"frame\">\n  <span slot=\"title\">申請ガイド（PDF）</span>\n  <span slot=\"support\">PDF 1.2MB</span>\n</dads-resource-list>"
+      }
+    ],
+    "pitfalls": [
+      {
+        "issue": "href だけでは whole-link モードになりません。",
+        "wrongCode": "<dads-resource-list href=\"/files/guide.pdf\"><span slot=\"title\">申請ガイド</span></dads-resource-list>",
+        "correctCode": "<dads-resource-list href=\"/files/guide.pdf\" data-interaction=\"whole\"><span slot=\"title\">申請ガイド</span></dads-resource-list>"
+      }
+    ],
+    "references": [
+      {
+        "title": "resource-list component tests",
+        "path": "packages/components/resource-list/resource-list.test.ts"
+      }
+    ]
+  },
+  "dads-checkbox": {
+    "summary": "label 属性と name 属性を必ず指定してください。子テキストはラベル契約として扱いません。",
+    "examples": [
+      {
+        "scenario": "基本チェックボックス",
+        "code": "<dads-checkbox label=\"利用規約に同意する\" name=\"terms\"></dads-checkbox>"
+      }
+    ],
+    "pitfalls": [
+      {
+        "issue": "子テキストだけでは label 属性の代わりになりません。",
+        "wrongCode": "<dads-checkbox name=\"terms\">利用規約に同意する</dads-checkbox>",
+        "correctCode": "<dads-checkbox label=\"利用規約に同意する\" name=\"terms\"></dads-checkbox>"
+      }
+    ]
+  },
+  "dads-chip-label": {
+    "summary": "status badge の semantic alias はありません。color と variant の組み合わせで表現します。",
+    "examples": [
+      {
+        "scenario": "情報ラベル相当",
+        "code": "<dads-chip-label color=\"blue\" variant=\"filled-outline\">情報</dads-chip-label>"
+      }
+    ],
+    "pitfalls": [
+      {
+        "issue": "variant=\"info\" のような semantic 値は未定義です。",
+        "wrongCode": "<dads-chip-label variant=\"info\">情報</dads-chip-label>",
+        "correctCode": "<dads-chip-label color=\"blue\" variant=\"filled-outline\">情報</dads-chip-label>"
+      }
+    ]
+  },
+  "dads-input-text": {
+    "summary": "モバイル向けキーボード最適化が必要な場合は inputmode を使えます。",
+    "examples": [
+      {
+        "scenario": "数字キーボードを開く入力",
+        "code": "<dads-input-text label=\"郵便番号\" name=\"postal-code\" inputmode=\"numeric\" autocomplete=\"postal-code\"></dads-input-text>"
+      }
+    ]
+  }
+}

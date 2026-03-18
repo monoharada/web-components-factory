@@ -16,12 +16,13 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component he
 ## Usage
 
 ```html
-<dads-heading
-  size=""
->
-  <div slot="icon"><!-- 先頭アイコン 挙動メモ: - `slot="shoulder"` と `slot="icon"` は同時に指定できます（shoulderは上、iconは見出し行の先頭）。 - slot が無い場合は該当パーツは表示されません（内部で `data-has-*` を付与して制御）。 - `chip` / `rule` は装飾（意匠）です。情報の唯一の手掛かりにしないでください。 --></div>
-  <div slot="shoulder"><!-- ショルダーテキスト --></div>
-</dads-heading>
+<!-- ページ見出し -->
+<dads-heading level="1" size="36">申請一覧</dads-heading>
+
+<!-- typeset コンテナ内の節見出し -->
+<main data-dads-typeset>
+  <dads-heading level="2" size="24" margin="top">基本情報</dads-heading>
+</main>
 ```
 
 ## Attributes

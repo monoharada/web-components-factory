@@ -84,7 +84,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `get_design_system_overview` | 最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、推奨ワークフロー、IDE設定テンプレート）を返す |
+| `get_design_system_overview` | 最初に呼ぶ前提情報（カテゴリ別コンポーネント数、利用可能パターン、`componentPatternMap`、推奨 preloading / workflow、IDE設定テンプレート）を返す |
 
 ### コンポーネント検索・API
 
@@ -100,7 +100,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | ツール | 説明 |
 |--------|------|
-| `validate_markup` | HTML スニペットを検証し、セマンティック検証（下表）で `suggestion` 付き診断を返す |
+| `validate_markup` | HTML スニペットを検証し、セマンティック検証（下表）で `suggestion` 付き診断を返す。severity は `error` / `warning` / `info` |
 | `validate_files` | 複数のマークアップファイルをまとめて検証し、ファイル別診断と集計を返す |
 | `validate_project` | ディレクトリを走査し、include/exclude glob に一致する複数ファイルをまとめて検証する |
 
@@ -126,6 +126,11 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 | `emptyAriaLabel` | error | 空の `aria-label` 属性（アクセシビリティ違反） | `<dads-button aria-label="">` |
 | `duplicateId` | error | 同一ドキュメント内で `id` が重複している | `<div id="hero">...</div><section id="hero">...</section>` |
 | `forbiddenAttribute` | warning | 禁止属性 | `placeholder` |
+| `sortOnTh` / `sortWrongTarget` / `sortTypeOnWrongElement` | warning | `dads-table` のソート構造誤用 | `th[data-sort]`, `button[data-sort-type]` |
+| `selectionControlWrongElement` | warning | `data-select-row` / `data-select-all` が checkbox 以外 | `<button data-select-row>` |
+| `resourceListWholeLinkMissingInteraction` | warning | `dads-resource-list[href]` に `data-interaction="whole"` がない | `<dads-resource-list href="...">` |
+| `nativePatternReplaceable` | warning / info | 既存 DADS コンポーネントに置換可能な独自パターン | `role="tablist"`, `role="dialog"`, `<dl>` |
+| `customAnimationReplaceable` | warning | スピナー相当の独自 CSS アニメーション | `@keyframes spin` + `animation` |
 
 ### UI パターン
 
@@ -247,7 +252,7 @@ claude mcp add wcf -- npx @monoharada/wcf-mcp
 
 | URI | 説明 |
 |-----|------|
-| `wcf://components` | コンポーネントカタログのスナップショット |
+| `wcf://components` | コンポーネントカタログのスナップショット。プロトタイピング前の preload を推奨 |
 | `wcf://tokens` | トークン summary（type/category/themes/sample） |
 | `wcf://guidelines/{topic}` | topic 別ガイドライン要約（`accessibility`,`css`,`patterns`,`all`） |
 | `wcf://llms-full` | `llms-full.txt` の全文 |

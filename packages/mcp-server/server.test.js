@@ -937,6 +937,10 @@ describe('MCP prompts/resources contract', () => {
     expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.guidelinesTemplate)).toBe(true);
     expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.llmsFull)).toBe(true);
     expect(payload.availableResources.some((item) => item.uri === WCF_RESOURCE_URIS.skills)).toBe(true);
+    expect(Array.isArray(payload.componentPatternMap)).toBe(true);
+    expect(payload.componentPatternMap.some((entry) => entry.componentIds.includes('tab'))).toBe(true);
+    expect(Array.isArray(payload.recommendedPreloadResources)).toBe(true);
+    expect(payload.recommendedPreloadResources.some((entry) => entry.uri === WCF_RESOURCE_URIS.components)).toBe(true);
   });
 
   it('exposes static resources and guidelines template resources', async () => {
@@ -1183,6 +1187,31 @@ describe('MCP prompts/resources contract', () => {
     expect(payload.layoutBehavior).toBeUndefined();
   });
 
+  it('get_component_api returns authoringGuidance for table', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'table' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.authoringGuidance).toBeDefined();
+    expect(payload.authoringGuidance.summary).toContain('ネイティブ要素');
+    expect(Array.isArray(payload.authoringGuidance.examples)).toBe(true);
+    expect(payload.authoringGuidance.examples[0].code).toContain('data-sort');
+  });
+
+  it('get_component_api returns authoringGuidance for checkbox', async () => {
+    const result = await client.callTool({
+      name: 'get_component_api',
+      arguments: { component: 'checkbox' },
+    });
+    expect(result.isError).toBeFalsy();
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.authoringGuidance).toBeDefined();
+    expect(payload.authoringGuidance.summary).toContain('label');
+    expect(payload.authoringGuidance.summary).toContain('name');
+  });
+
   it('generate_usage_snippet resolves by bare name via auto-prefix', async () => {
     const result = await client.callTool({
       name: 'generate_usage_snippet',
@@ -1190,6 +1219,27 @@ describe('MCP prompts/resources contract', () => {
     });
     expect(result.isError).toBeFalsy();
     expect(String(result.content?.[0]?.text)).toContain('dads-button');
+  });
+
+  it('generate_usage_snippet returns custom snippet for table', async () => {
+    const result = await client.callTool({
+      name: 'generate_usage_snippet',
+      arguments: { component: 'table' },
+    });
+    const text = String(result.content?.[0]?.text ?? '');
+    expect(text).toContain('<!-- ソート + 行選択 -->');
+    expect(text).toContain('<button type="button" data-sort>');
+    expect(text).toContain('data-sort-type="string"');
+  });
+
+  it('generate_usage_snippet returns custom snippet for resource-list', async () => {
+    const result = await client.callTool({
+      name: 'generate_usage_snippet',
+      arguments: { component: 'resource-list' },
+    });
+    const text = String(result.content?.[0]?.text ?? '');
+    expect(text).toContain('data-interaction="whole"');
+    expect(text).toContain('download');
   });
 
   // P-10: attribute prefill with default values (unit test for generateSnippet)
@@ -1469,6 +1519,45 @@ describe('MCP prompts/resources contract', () => {
     const payload = JSON.parse(result.content?.[0]?.text ?? '{}');
     expect(payload.results[0].source).toBe('skills');
     expect(payload.results[0].id).toBe('css-writing-rules');
+  });
+
+  it('search_design_system_knowledge finds dads-tab for "tablist"', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: 'tablist',
+        sources: ['components'],
+        maxResults: 5,
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.results[0].id).toBe('dads-tab');
+  });
+
+  it('search_design_system_knowledge finds dads-resource-list for "file list"', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: 'file list',
+        sources: ['components'],
+        maxResults: 5,
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.results.some((item) => item.id === 'dads-resource-list')).toBe(true);
+  });
+
+  it('search_design_system_knowledge finds dads-chip-label for "badge"', async () => {
+    const result = await client.callTool({
+      name: 'search_design_system_knowledge',
+      arguments: {
+        query: 'badge',
+        sources: ['components'],
+        maxResults: 5,
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.results.some((item) => item.id === 'dads-chip-label')).toBe(true);
   });
 
   it('search_design_system_knowledge returns alternative tool suggestions on zero hits', async () => {
@@ -1893,6 +1982,97 @@ describe('MCP prompts/resources contract', () => {
     const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
     const importmapDiag = payload.diagnostics.find((d) => d.code === 'missingImportmap');
     expect(importmapDiag).toBeUndefined();
+  });
+
+  it('validate_markup warns when data-sort is placed on th', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<dads-table><table><thead><tr><th scope="col" data-sort>氏名</th></tr></thead><tbody></tbody></table></dads-table>',
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const diag = payload.diagnostics.find((item) => item.code === 'sortOnTh');
+    expect(diag).toBeDefined();
+    expect(diag.severity).toBe('warning');
+  });
+
+  it('validate_markup warns when data-sort-type is placed on button', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<dads-table><table><thead><tr><th scope="col"><button type="button" data-sort data-sort-type="number">金額</button></th></tr></thead><tbody></tbody></table></dads-table>',
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const diag = payload.diagnostics.find((item) => item.code === 'sortTypeOnWrongElement');
+    expect(diag).toBeDefined();
+  });
+
+  it('validate_markup warns when row selection is not a checkbox input', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<dads-table><table><tbody><tr><td><button data-select-row>選択</button></td></tr></tbody></table></dads-table>',
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const diag = payload.diagnostics.find((item) => item.code === 'selectionControlWrongElement');
+    expect(diag).toBeDefined();
+  });
+
+  it('validate_markup warns when resource-list href omits whole interaction', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<dads-resource-list href="/files/doc.pdf"><span slot="title">資料</span></dads-resource-list>',
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const diag = payload.diagnostics.find((item) => item.code === 'resourceListWholeLinkMissingInteraction');
+    expect(diag).toBeDefined();
+  });
+
+  it('validate_markup suggests replacing custom tablist markup', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: { html: '<div role="tablist"><button role="tab">概要</button></div>' },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const diag = payload.diagnostics.find((item) => item.code === 'nativePatternReplaceable');
+    expect(diag).toBeDefined();
+    expect(diag.suggestion).toContain('dads-tab');
+  });
+
+  it('validate_files summary counts info diagnostics', async () => {
+    const result = await client.callTool({
+      name: 'validate_files',
+      arguments: {
+        files: [
+          {
+            path: '/virtual/file-upload.html',
+            content: '<input type="file" name="attachment">',
+          },
+        ],
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    expect(payload.summary.infoCount).toBeGreaterThanOrEqual(1);
+    const diag = payload.files[0].diagnostics.find((item) => item.code === 'nativePatternReplaceable');
+    expect(diag?.severity).toBe('info');
+  });
+
+  it('validate_markup suggests replacing custom loading animation CSS', async () => {
+    const result = await client.callTool({
+      name: 'validate_markup',
+      arguments: {
+        html: '<style>@keyframes spin { to { transform: rotate(360deg); } } .spinner { animation: spin 1s linear infinite; }</style><div class="spinner">読み込み中</div>',
+      },
+    });
+    const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+    const diag = payload.diagnostics.find((item) => item.code === 'customAnimationReplaceable');
+    expect(diag).toBeDefined();
+    expect(diag.suggestion).toContain('dads-spinner');
   });
 
   it('validate_markup does NOT flag date-picker missing label/name (not in CEM)', async () => {
@@ -3235,6 +3415,17 @@ describe('get_pattern_recipe contract', () => {
     }
   });
 
+  it('list_patterns includes table-with-sort', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({ name: 'list_patterns', arguments: {} });
+      const payload = JSON.parse(String(result.content?.[0]?.text ?? '[]'));
+      expect(payload.some((pattern) => pattern.id === 'table-with-sort')).toBe(true);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
   it('returns scaffoldHint with all 5 keys', async () => {
     const { client, server } = await createTestPair();
     try {
@@ -3809,6 +4000,37 @@ describe('get_component_selector_guide', () => {
       expect(payload.totalCategories).toBeGreaterThanOrEqual(1);
       const allComponents = payload.categories.flatMap((c) => c.components);
       expect(allComponents.some((comp) => comp.id.includes('date') || comp.useCase.toLowerCase().includes('date'))).toBe(true);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('ranks dads-tab ahead of table-like components for "tab"', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'get_component_selector_guide',
+        arguments: { useCase: 'tab' },
+      });
+      const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+      const allComponents = payload.categories.flatMap((category) => category.components);
+      expect(allComponents[0].id).toBe('tab');
+      expect(Array.isArray(allComponents[0].keywords)).toBe(true);
+    } finally {
+      await Promise.allSettled([client?.close?.(), server?.close?.()]);
+    }
+  });
+
+  it('matches keyword aliases like "download"', async () => {
+    const { client, server } = await createTestPair();
+    try {
+      const result = await client.callTool({
+        name: 'get_component_selector_guide',
+        arguments: { useCase: 'download' },
+      });
+      const payload = JSON.parse(String(result.content?.[0]?.text ?? '{}'));
+      const allComponents = payload.categories.flatMap((category) => category.components);
+      expect(allComponents.some((component) => component.id === 'resource-list')).toBe(true);
     } finally {
       await Promise.allSettled([client?.close?.(), server?.close?.()]);
     }

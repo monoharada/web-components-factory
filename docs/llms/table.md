@@ -16,9 +16,43 @@ npx wcf vendor install --prefix myui --dir vendor/components/myui --component ta
 ## Usage
 
 ```html
-<dads-table
-  size=""
->...</dads-table>
+<!-- 基本テーブル -->
+<dads-table>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">項目</th>
+        <th scope="col">値</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>サンプル</td>
+        <td>1</td>
+      </tr>
+    </tbody>
+  </table>
+</dads-table>
+
+<!-- ソート + 行選択 -->
+<dads-table selectable hover sort-behavior="dom">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"><input type="checkbox" data-select-all aria-label="表示中の行をすべて選択" /></th>
+        <th scope="col" data-sort-type="string"><button type="button" data-sort>氏名</button></th>
+        <th scope="col" data-sort-type="number"><button type="button" data-sort>金額</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="checkbox" data-select-row aria-label="行を選択: A001" /></td>
+        <td>山田 太郎</td>
+        <td data-sort-value="1200">1,200</td>
+      </tr>
+    </tbody>
+  </table>
+</dads-table>
 ```
 
 ## Attributes

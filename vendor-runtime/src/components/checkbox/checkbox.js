@@ -26,6 +26,7 @@ import { checkboxStyles } from './checkbox-styles.js';
  * Checkboxコンポーネント
  *
  * DADS HTML版の構造・見た目に準拠しつつ、Form-Associated Custom Elementとしてフォームに参加します。
+ * label 属性と name 属性を指定して利用してください。子テキストはラベル契約として扱いません。
  *
  * @customElement dads-checkbox
  * @tagname dads-checkbox

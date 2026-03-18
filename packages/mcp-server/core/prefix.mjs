@@ -111,7 +111,7 @@ export function buildDiagnosticSuggestion({ diagnostic, cemIndex, prefix }) {
   }
 
   if (code === 'forbiddenAttribute' && String(diagnostic?.attrName ?? '').toLowerCase() === 'placeholder') {
-    return 'Use aria-label or aria-describedby support text instead of placeholder.';
+    return 'Use support-text (attribute or slot), a visible label, and aria-describedby/aria-label where needed instead of placeholder. See: https://design.digital.go.jp/dads/components/input-text/accessibility/';
   }
 
   if (code === 'ariaLiveNotRecommended') {
@@ -128,6 +128,18 @@ export function buildDiagnosticSuggestion({ diagnostic, cemIndex, prefix }) {
 
   if (code === 'emptyAriaLabel') {
     return diagnostic?.hint ?? 'Provide a meaningful aria-label value or use a visible <label> element.';
+  }
+
+  if (
+    code === 'sortOnTh' ||
+    code === 'sortWrongTarget' ||
+    code === 'sortTypeOnWrongElement' ||
+    code === 'selectionControlWrongElement' ||
+    code === 'resourceListWholeLinkMissingInteraction' ||
+    code === 'nativePatternReplaceable' ||
+    code === 'customAnimationReplaceable'
+  ) {
+    return diagnostic?.hint ?? undefined;
   }
 
   return undefined;

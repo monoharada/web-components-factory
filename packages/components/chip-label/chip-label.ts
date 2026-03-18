@@ -12,6 +12,20 @@ import { withReset } from '../../styles/reset-css.js';
 import { setDefaultAttributes } from '../../utils/form-component-helpers.js';
 import { chipLabelStyles } from './chip-label-styles.js';
 
+type DadsChipLabelVariant = 'text' | 'outline' | 'filled-outline' | 'fill';
+type DadsChipLabelColor =
+  | 'gray'
+  | 'blue'
+  | 'light-blue'
+  | 'cyan'
+  | 'green'
+  | 'lime'
+  | 'yellow'
+  | 'orange'
+  | 'red'
+  | 'magenta'
+  | 'purple';
+
 /**
  * チップラベルコンポーネント
  *
@@ -39,6 +53,9 @@ import { chipLabelStyles } from './chip-label-styles.js';
  * ```
  */
 export class DadsChipLabel extends TypographyWebComponent {
+  declare variant: DadsChipLabelVariant | null;
+  declare color: DadsChipLabelColor | null;
+
   static definition = {
     name: 'dads-chip-label',
     template: html`

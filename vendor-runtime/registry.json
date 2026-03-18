@@ -400,7 +400,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム</dads-heading>\n  <form id=\"application-form-single\">\n    <dads-fieldset>\n      <legend>申請情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n      <dads-select name=\"type\" required></dads-select>\n      <dads-textarea name=\"reason\" required></dads-textarea>\n    </dads-fieldset>\n    <dads-button type=\"submit\">送信</dads-button>\n  </form>\n</main>\n"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム</dads-heading>\n  <form id=\"application-form-single\">\n    <dads-fieldset>\n      <legend>申請情報</legend>\n      <dads-input-text label=\"氏名\" name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n      <dads-select label=\"種別\" name=\"type\" required></dads-select>\n      <dads-textarea label=\"理由\" name=\"reason\" required></dads-textarea>\n    </dads-fieldset>\n    <dads-button type=\"submit\">送信</dads-button>\n  </form>\n</main>\n"
     },
     "application-form-step-validation": {
       "id": "application-form-step-validation",
@@ -429,7 +429,7 @@
         "@wcf",
         "index"
       ],
-      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム（ステップ）</dads-heading>\n  <dads-step-navigation></dads-step-navigation>\n  <form id=\"application-form-step\">\n    <dads-fieldset>\n      <legend>ステップ1: 申請者情報</legend>\n      <dads-input-text name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n    </dads-fieldset>\n    <dads-button type=\"submit\">次へ</dads-button>\n  </form>\n</main>\n"
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">申請フォーム（ステップ）</dads-heading>\n  <dads-step-navigation></dads-step-navigation>\n  <form id=\"application-form-step\">\n    <dads-fieldset>\n      <legend>ステップ1: 申請者情報</legend>\n      <dads-input-text label=\"氏名\" name=\"name\" required error error-text=\"氏名は必須です\"></dads-input-text>\n    </dads-fieldset>\n    <dads-button type=\"submit\">次へ</dads-button>\n  </form>\n</main>\n"
     },
     "card-grid": {
       "id": "card-grid",
@@ -581,7 +581,7 @@
       "entryHints": [
         "boot"
       ],
-      "sampleHtml": "<section data-dads-typeset>\n  <dads-device-mock device=\"mobile\" visible-height=\"560px\">\n    <main>\n      <dads-heading level=\"2\">申請フォーム</dads-heading>\n      <form>\n        <dads-fieldset>\n          <legend>基本情報</legend>\n          <dads-input-text name=\"name\" required></dads-input-text>\n          <dads-select name=\"type\" required></dads-select>\n          <dads-textarea name=\"detail\" required></dads-textarea>\n        </dads-fieldset>\n        <dads-button type=\"submit\">確認へ進む</dads-button>\n      </form>\n    </main>\n  </dads-device-mock>\n</section>\n"
+      "sampleHtml": "<section data-dads-typeset>\n  <dads-device-mock device=\"mobile\" visible-height=\"560px\">\n    <main>\n      <dads-heading level=\"2\">申請フォーム</dads-heading>\n      <form>\n        <dads-fieldset>\n          <legend>基本情報</legend>\n          <dads-input-text label=\"氏名\" name=\"name\" required></dads-input-text>\n          <dads-select label=\"種別\" name=\"type\" required></dads-select>\n          <dads-textarea label=\"詳細\" name=\"detail\" required></dads-textarea>\n        </dads-fieldset>\n        <dads-button type=\"submit\">確認へ進む</dads-button>\n      </form>\n    </main>\n  </dads-device-mock>\n</section>\n"
     },
     "mockup-website": {
       "id": "mockup-website",
@@ -679,6 +679,27 @@
         "index"
       ],
       "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\">一覧</dads-heading>\n  <dads-table>\n    <table>\n      <thead>\n        <tr><th>項目</th><th>値</th></tr>\n      </thead>\n      <tbody>\n        <tr><td>サンプル</td><td>1</td></tr>\n      </tbody>\n    </table>\n  </dads-table>\n  <dads-page-navigation current=\"1\" total=\"3\"></dads-page-navigation>\n</main>\n"
+    },
+    "table-with-sort": {
+      "id": "table-with-sort",
+      "title": "テーブル（ソート付き）",
+      "description": "列ヘッダーのクリックでソートできるデータテーブル",
+      "components": [
+        "heading",
+        "table"
+      ],
+      "requiredComponents": [
+        "heading",
+        "table"
+      ],
+      "stability": "stable",
+      "contractVersion": "1.0",
+      "entryHints": [
+        "boot",
+        "@wcf",
+        "index"
+      ],
+      "sampleHtml": "<main data-dads-typeset>\n  <dads-heading level=\"1\" size=\"36\">一覧</dads-heading>\n  <dads-table hover sort-behavior=\"dom\">\n    <table>\n      <thead>\n        <tr>\n          <th scope=\"col\" data-sort-type=\"string\"><button type=\"button\" data-sort>氏名</button></th>\n          <th scope=\"col\" data-sort-type=\"date\"><button type=\"button\" data-sort>更新日</button></th>\n          <th scope=\"col\">操作</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>山田 太郎</td>\n          <td data-sort-value=\"2026-03-17\">2026/03/17</td>\n          <td>詳細</td>\n        </tr>\n      </tbody>\n    </table>\n  </dads-table>\n</main>\n"
     }
   }
 }

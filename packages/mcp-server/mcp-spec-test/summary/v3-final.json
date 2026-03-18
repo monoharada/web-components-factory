@@ -58,8 +58,8 @@
         {
           "label": "list_components(limit=200, prefix=huge)",
           "status": "OK",
-          "bytes": 24448,
-          "sizeKb": 23.9
+          "bytes": 24580,
+          "sizeKb": 24
         },
         {
           "label": "search_icons(limit=100, prefix=huge)",
@@ -106,8 +106,8 @@
         {
           "label": "get_design_system_overview",
           "status": "OK",
-          "bytes": 2715,
-          "sizeKb": 2.7
+          "bytes": 2822,
+          "sizeKb": 2.8
         },
         {
           "label": "get_install_recipe(component=\"global-menu\")",
@@ -130,8 +130,8 @@
         {
           "label": "get_component_selector_guide(all)",
           "status": "OK",
-          "bytes": 17197,
-          "sizeKb": 16.8
+          "bytes": 29318,
+          "sizeKb": 28.6
         }
       ]
     },

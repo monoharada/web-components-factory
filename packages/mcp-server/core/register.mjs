@@ -249,6 +249,71 @@ function scoreSearchFields(query, terms, fields) {
   return score;
 }
 
+function normalizeSearchText(value) {
+  return String(value ?? '').trim().toLowerCase();
+}
+
+function normalizeSearchTokens(value) {
+  return normalizeSearchText(value)
+    .split(/[^a-z0-9\u3040-\u30ff\u3400-\u9fff-]+/u)
+    .filter(Boolean);
+}
+
+function includesWholeToken(value, query) {
+  return normalizeSearchTokens(value).includes(normalizeSearchText(query));
+}
+
+function buildSelectorGuideComponentLookup(selectorGuideData) {
+  const lookup = new Map();
+  const categories = Array.isArray(selectorGuideData?.categories) ? selectorGuideData.categories : [];
+  for (const category of categories) {
+    const categoryKey = String(category?.key ?? '');
+    const components = Array.isArray(category?.components) ? category.components : [];
+    for (const component of components) {
+      const id = String(component?.id ?? '').trim();
+      const tagName = String(component?.tagName ?? '').trim().toLowerCase();
+      const useCase = String(component?.useCase ?? '');
+      const keywords = Array.isArray(component?.keywords) ? component.keywords.map((keyword) => String(keyword)) : [];
+      const entry = { id, tagName, useCase, keywords, categoryKey };
+      if (id) lookup.set(`id:${id}`, entry);
+      if (tagName) lookup.set(`tag:${tagName}`, entry);
+    }
+  }
+  return lookup;
+}
+
+function scoreSelectorGuideComponent(component, query) {
+  const q = normalizeSearchText(query);
+  if (!q) return 0;
+
+  const id = String(component?.id ?? '');
+  const tagName = String(component?.tagName ?? '').toLowerCase();
+  const useCase = String(component?.useCase ?? '');
+  const keywords = Array.isArray(component?.keywords) ? component.keywords : [];
+
+  if (id.toLowerCase() === q) return 120;
+  if (tagName === q || tagName === `dads-${q}`) return 115;
+  if (keywords.some((keyword) => normalizeSearchText(keyword) === q)) return 110;
+  if (includesWholeToken(useCase, q)) return 90;
+  if (keywords.some((keyword) => includesWholeToken(keyword, q))) return 85;
+  if (tagName.startsWith(q) || id.toLowerCase().startsWith(q)) return 70;
+  if (useCase.toLowerCase().includes(q)) return 40;
+  if (keywords.some((keyword) => normalizeSearchText(keyword).includes(q))) return 35;
+  if (tagName.includes(q) || id.toLowerCase().includes(q)) return 20;
+  return 0;
+}
+
+function buildOverviewPatternMap(selectorGuideData) {
+  const entries = Array.isArray(selectorGuideData?.componentPatternMap) ? selectorGuideData.componentPatternMap : [];
+  return entries.map((entry) => ({
+    pattern: String(entry?.pattern ?? ''),
+    componentIds: Array.isArray(entry?.componentIds) ? entry.componentIds.map((item) => String(item)) : [],
+    usage: typeof entry?.usage === 'string' ? entry.usage : undefined,
+    note: String(entry?.note ?? ''),
+    keywords: Array.isArray(entry?.keywords) ? entry.keywords.map((item) => String(item)) : [],
+  })).filter((entry) => entry.pattern && entry.componentIds.length > 0);
+}
+
 function detectKnowledgeIntentSources(query, terms) {
   const raw = `${query} ${terms.join(' ')}`.toLowerCase();
   const intents = new Set();
@@ -432,10 +497,12 @@ async function walkProjectFiles(rootDir) {
 function summarizeDiagnostics(diagnostics) {
   const errorCount = diagnostics.filter((diagnostic) => diagnostic.severity === 'error').length;
   const warningCount = diagnostics.filter((diagnostic) => diagnostic.severity === 'warning').length;
+  const infoCount = diagnostics.filter((diagnostic) => diagnostic.severity === 'info').length;
   return {
     total: diagnostics.length,
     errorCount,
     warningCount,
+    infoCount,
   };
 }
 
@@ -620,6 +687,7 @@ export function registerAll(context) {
     llmsFullText,
     tokenSuggestionMap,
     componentTokenRefMap,
+    selectorGuideData,
     plugins,
     loadJsonData,
     loadJson,
@@ -657,6 +725,10 @@ export function registerAll(context) {
       detectNonLowercaseAttributes,
       detectCdnReferences,
       detectMissingRuntimeScaffold,
+      detectTableAuthoringMisuse = () => [],
+      detectResourceListAuthoringMisuse = () => [],
+      detectReplaceableNativePatterns = () => [],
+      detectReplaceableAnimationPatterns = () => [],
     } = await loadValidator();
 
     const p = normalizePrefix(prefix);
@@ -757,6 +829,32 @@ export function registerAll(context) {
       severity: 'warning',
     });
 
+    const tableAuthoringDiagnostics = detectTableAuthoringMisuse({
+      filePath,
+      text,
+      prefix: p,
+      severity: 'warning',
+    });
+
+    const resourceListAuthoringDiagnostics = detectResourceListAuthoringMisuse({
+      filePath,
+      text,
+      prefix: p,
+      severity: 'warning',
+    });
+
+    const replaceableNativeDiagnostics = detectReplaceableNativePatterns({
+      filePath,
+      text,
+      prefix: p,
+    });
+
+    const replaceableAnimationDiagnostics = detectReplaceableAnimationPatterns({
+      filePath,
+      text,
+      prefix: p,
+    });
+
     const allRawDiagnostics = [
       ...cemDiagnostics,
       ...enumDiagnostics,
@@ -770,6 +868,10 @@ export function registerAll(context) {
       ...accessibilityDiagnostics,
       ...cdnDiagnostics,
       ...scaffoldDiagnostics,
+      ...tableAuthoringDiagnostics,
+      ...resourceListAuthoringDiagnostics,
+      ...replaceableNativeDiagnostics,
+      ...replaceableAnimationDiagnostics,
     ];
 
     for (const plugin of plugins) {
@@ -1023,6 +1125,7 @@ export function registerAll(context) {
         const cat = getCategory(tagName);
         categoryCount[cat] = (categoryCount[cat] ?? 0) + 1;
       }
+      const componentPatternMap = buildOverviewPatternMap(selectorGuideData);
 
       const patternList = Object.values(patterns).map((p) => ({
         id: p?.id,
@@ -1037,6 +1140,7 @@ export function registerAll(context) {
         componentsByCategory: categoryCount,
         totalPatterns: patternList.length,
         patterns: patternList,
+        componentPatternMap,
         setupInfo: {
           npmPackage: 'web-components-factory',
           installCommand: 'npm install web-components-factory',
@@ -1118,10 +1222,10 @@ export function registerAll(context) {
           { name: 'get_component_selector_guide', purpose: 'Component selection guide by category and use case' },
         ],
         recommendedWorkflow: [
-          '1. get_design_system_overview → understand components, patterns, tokens, and IDE setup templates',
-          '2. figma_to_wcf (optional) → bootstrap the Figma-to-WCF tool sequence',
-          '3. search_design_system_knowledge → do a broad first-pass search across components, patterns, tokens, guidelines, and skills',
-          '4. wcf://components and wcf://tokens resources → preload catalog/token context',
+          '1. get_design_system_overview → start here and inspect componentPatternMap before creating custom HTML/CSS',
+          '2. wcf://components and wcf://tokens resources → preload the component/token catalog',
+          '3. figma_to_wcf (optional) → bootstrap the Figma-to-WCF tool sequence',
+          '4. search_design_system_knowledge → do a broad first-pass search across components, patterns, tokens, guidelines, and skills',
           '5. search_guidelines → find relevant guidelines',
           '6. get_design_tokens → get correct token values',
           '7. get_design_token_detail → inspect one token with references/referencedBy and usage examples',
@@ -1133,6 +1237,18 @@ export function registerAll(context) {
           '13. validate_markup / validate_files / validate_project → verify your HTML and use suggestions to self-correct',
           '14. generate_full_page_html → wrap fragment into a complete preview-ready page',
           '15. get_install_recipe → get import/install instructions',
+        ],
+        recommendedPreloadResources: [
+          {
+            uri: WCF_RESOURCE_URIS.components,
+            reason: 'Read this before prototyping to avoid re-implementing existing WCF components.',
+            when: 'Before generating page markup',
+          },
+          {
+            uri: WCF_RESOURCE_URIS.tokens,
+            reason: 'Read this before styling to avoid hard-coded token values.',
+            when: 'Before writing CSS or inline styles',
+          },
         ],
         experimental: {
           plugins: {
@@ -1261,6 +1377,8 @@ export function registerAll(context) {
           if (related.length > 0) api.relatedComponents = related;
           const a11y = extractAccessibilityChecklist(d, { prefix });
           if (a11y) api.accessibilityChecklist = a11y;
+          const authoringGuidance = d?.custom?.authoringGuidance;
+          if (authoringGuidance) api.authoringGuidance = authoringGuidance;
           results.push(api);
         }
         return buildJsonToolResponse(results);
@@ -1300,6 +1418,10 @@ export function registerAll(context) {
       const accessibilityChecklist = extractAccessibilityChecklist(decl, { prefix });
       if (accessibilityChecklist) {
         api.accessibilityChecklist = accessibilityChecklist;
+      }
+      const authoringGuidance = decl?.custom?.authoringGuidance;
+      if (authoringGuidance) {
+        api.authoringGuidance = authoringGuidance;
       }
       const interactionExamples = canonicalTag ? INTERACTION_EXAMPLES_MAP[canonicalTag] : undefined;
       if (interactionExamples) {
@@ -1686,13 +1808,13 @@ export function registerAll(context) {
       },
     },
     async ({ category, useCase }) => {
-      if (!context.selectorGuideData || !Array.isArray(context.selectorGuideData.categories)) {
+      if (!selectorGuideData || !Array.isArray(selectorGuideData.categories)) {
         return buildJsonToolErrorResponse({
           error: 'Component selector guide not available.',
         });
       }
 
-      let categories = context.selectorGuideData.categories;
+      let categories = selectorGuideData.categories;
 
       if (typeof category === 'string' && category.trim()) {
         const cat = category.trim().toLowerCase();
@@ -1700,15 +1822,35 @@ export function registerAll(context) {
       }
 
       if (typeof useCase === 'string' && useCase.trim()) {
-        const kw = useCase.trim().toLowerCase();
-        categories = categories.map((c) => ({
-          ...c,
-          components: c.components.filter((comp) =>
-            comp.useCase.toLowerCase().includes(kw) ||
-            comp.id.toLowerCase().includes(kw) ||
-            comp.tagName.toLowerCase().includes(kw)
-          ),
-        })).filter((c) => c.components.length > 0);
+        const scored = [];
+        for (const categoryEntry of categories) {
+          const components = Array.isArray(categoryEntry?.components) ? categoryEntry.components : [];
+          for (const component of components) {
+            const score = scoreSelectorGuideComponent(component, useCase);
+            if (score <= 0) continue;
+            scored.push({
+              categoryKey: categoryEntry.key,
+              component: { ...component, _score: score },
+            });
+          }
+        }
+
+        const grouped = new Map();
+        for (const hit of scored.sort((left, right) => right.component._score - left.component._score)) {
+          const list = grouped.get(hit.categoryKey) ?? [];
+          list.push(hit.component);
+          grouped.set(hit.categoryKey, list);
+        }
+
+        categories = categories
+          .map((categoryEntry) => ({
+            ...categoryEntry,
+            components: (grouped.get(categoryEntry.key) ?? []).map((component) => {
+              const { _score, ...rest } = component;
+              return rest;
+            }),
+          }))
+          .filter((categoryEntry) => categoryEntry.components.length > 0);
       }
 
       return buildJsonToolResponse({
@@ -2149,19 +2291,25 @@ export function registerAll(context) {
       const terms = expandQueryWithSynonyms(q).filter(Boolean);
       const limit = Number.isInteger(maxResults) ? maxResults : 10;
       const results = [];
+      const selectorGuideLookup = buildSelectorGuideComponentLookup(selectorGuideData);
 
       if (requestedSources.has('components')) {
         const page = buildComponentSummaries(indexes, {
-          query: q,
           limit: 200,
           prefix: p,
         });
         for (const item of page.items) {
+          const canonicalTagName = toCanonicalTagName(item.tagName, p) ?? item.tagName;
+          const guideEntry =
+            selectorGuideLookup.get(`tag:${String(canonicalTagName).toLowerCase()}`) ??
+            selectorGuideLookup.get(`id:${installRegistry?.tags?.[String(canonicalTagName).toLowerCase()] ?? ''}`);
           const score = scoreSearchFields(q, terms, [
             { text: item.tagName, weight: 5 },
             { text: item.className, weight: 4 },
             { text: item.description, weight: 2 },
             { text: item.category, weight: 1 },
+            { text: guideEntry?.useCase, weight: 4 },
+            { text: Array.isArray(guideEntry?.keywords) ? guideEntry.keywords.join(' ') : '', weight: 5 },
           ]);
           if (score <= 0) continue;
           results.push({
@@ -2172,6 +2320,8 @@ export function registerAll(context) {
             metadata: {
               className: item.className,
               category: item.category,
+              useCase: guideEntry?.useCase,
+              keywords: guideEntry?.keywords ?? [],
             },
             score: score + getKnowledgeSourceBoost('components', q, terms),
           });

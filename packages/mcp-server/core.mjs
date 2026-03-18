@@ -164,6 +164,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
     detectNonLowercaseAttributes = () => [],
     detectCdnReferences = () => [],
     detectMissingRuntimeScaffold = () => [],
+    detectTableAuthoringMisuse = () => [],
+    detectResourceListAuthoringMisuse = () => [],
+    detectReplaceableNativePatterns = () => [],
+    detectReplaceableAnimationPatterns = () => [],
   } = await loadValidator();
   const canonicalCemIndex = collectCemCustomElements(manifest);
   const canonicalEnumMap = buildEnumAttributeMap(manifest);
@@ -251,6 +255,10 @@ export async function createMcpServer(loadJsonData, loadValidator, options = {})
       detectNonLowercaseAttributes,
       detectCdnReferences,
       detectMissingRuntimeScaffold,
+      detectTableAuthoringMisuse,
+      detectResourceListAuthoringMisuse,
+      detectReplaceableNativePatterns,
+      detectReplaceableAnimationPatterns,
     }),
     selectorGuideData,
     maxToolResultBytes: MAX_TOOL_RESULT_BYTES,

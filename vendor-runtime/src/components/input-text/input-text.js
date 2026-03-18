@@ -62,6 +62,7 @@ import { setDefaultAttributes, setupFormValidation, updateLabelFallback, updateS
  * @attr {string} input-width - 幅バリアント (short | medium | full | カスタム値)
  * @attr {boolean} auto-validate - 自動バリデーションを有効化
  * @attr {string} autocomplete - オートコンプリートヒント
+ * @attr {string} inputmode - モバイル向け入力モードヒント
  *
  * @fires dads-input - 入力時に発火
  * @fires dads-change - 値変更確定時に発火
@@ -221,6 +222,7 @@ export class DadsInputText extends TypographyFormComponent {
                 break;
             case 'name':
             case 'autocomplete':
+            case 'inputmode':
                 if (newValue !== null)
                     __classPrivateFieldGet(this, _DadsInputText_input, "f").setAttribute(name, newValue);
                 else
@@ -316,7 +318,7 @@ _DadsInputText_input = new WeakMap(), _DadsInputText_labelSlot = new WeakMap(), 
         __classPrivateFieldGet(this, _DadsInputText_input, "f").type = 'text';
     }
     // 転送する属性（文字列）
-    const transferAttrs = ['name', 'autocomplete'];
+    const transferAttrs = ['name', 'autocomplete', 'inputmode'];
     for (const attr of transferAttrs) {
         const value = this.getAttribute(attr);
         if (value !== null) {
@@ -465,6 +467,7 @@ DadsInputText.definition = {
         PropertyAttr('input-width'),
         BooleanAttr('auto-validate'),
         PropertyAttr('autocomplete'),
+        PropertyAttr('inputmode'),
         // value は observedAttributes に含めるが、PropertyAttr は使わない
         { attribute: 'value' },
     ],

@@ -1,23 +1,165 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "componentPatternMap": [
+    {
+      "pattern": "タブ切替 / tablist",
+      "componentIds": ["tab"],
+      "usage": "<dads-tab><div data-tab-label=\"概要\">内容</div><div data-tab-label=\"詳細\">内容</div></dads-tab>",
+      "note": "role=\"tablist\" の独自実装は不要です。",
+      "keywords": ["tab", "tabs", "tablist", "tab panel", "タブ", "タブ切替", "セクション切替"]
+    },
+    {
+      "pattern": "モーダルダイアログ",
+      "componentIds": ["dialog"],
+      "note": "フォーカストラップと Escape 閉じを自動提供します。",
+      "keywords": ["dialog", "modal", "ダイアログ", "モーダル", "確認ダイアログ"]
+    },
+    {
+      "pattern": "ドロワー / サイドパネル",
+      "componentIds": ["drawer"],
+      "note": "フィルターパネルや補助導線のオーバーレイ表示に使います。",
+      "keywords": ["drawer", "side panel", "ドロワー", "サイドパネル", "フィルターパネル"]
+    },
+    {
+      "pattern": "アコーディオン / 折りたたみ",
+      "componentIds": ["accordion-details", "accordion-item-details"],
+      "note": "FAQ や設定グループ向けです。",
+      "keywords": ["accordion", "collapsible", "アコーディオン", "折りたたみ"]
+    },
+    {
+      "pattern": "単一の折りたたみ",
+      "componentIds": ["disclosure"],
+      "note": "詳細表示の開閉に使います。",
+      "keywords": ["disclosure", "details", "expand", "ディスクロージャー"]
+    },
+    {
+      "pattern": "ステップナビゲーション / ウィザード",
+      "componentIds": ["step-navigation"],
+      "note": "multi-step フォームの進捗表示です。",
+      "keywords": ["step", "wizard", "multi-step", "stepper", "ステップ", "ウィザード"]
+    },
+    {
+      "pattern": "ファイルアップロード / ドラッグ&ドロップ",
+      "componentIds": ["file-upload"],
+      "note": "ネイティブ file input を置き換える標準候補です。",
+      "keywords": ["file upload", "drag drop", "file input", "アップロード", "ドラッグ&ドロップ"]
+    },
+    {
+      "pattern": "ローディング / スピナー",
+      "componentIds": ["spinner", "progress-bar"],
+      "note": "indeterminate は spinner、determinate は progress-bar を使います。",
+      "keywords": ["spinner", "loading", "progress", "progress bar", "ローディング", "スピナー", "進捗"]
+    },
+    {
+      "pattern": "ローディングアイコン（静的）",
+      "componentIds": ["loading-icon"],
+      "note": "アニメーションなしの読み込みアイコンです。",
+      "keywords": ["loading icon", "static loading", "読み込みアイコン", "砂時計"]
+    },
+    {
+      "pattern": "パンくずリスト",
+      "componentIds": ["breadcrumb"],
+      "note": "階層ナビゲーションを表します。",
+      "keywords": ["breadcrumb", "パンくず", "現在位置"]
+    },
+    {
+      "pattern": "リソースリスト / ファイルDL一覧",
+      "componentIds": ["resource-list"],
+      "usage": "<dads-resource-list href=\"/files/guide.pdf\" download data-interaction=\"whole\" data-style=\"frame\"><span slot=\"title\">申請ガイド</span></dads-resource-list>",
+      "note": "独自の .doc-item カードリストを置き換える候補です。",
+      "keywords": ["resource list", "file list", "download list", "download", "リソースリスト", "ファイル一覧", "ダウンロード"]
+    },
+    {
+      "pattern": "説明リスト / dt+dd",
+      "componentIds": ["description-list"],
+      "note": "独自の dl + CSS grid を置き換える候補です。",
+      "keywords": ["description list", "definition list", "dl", "説明リスト", "詳細情報"]
+    },
+    {
+      "pattern": "ステータスバッジ / ラベル",
+      "componentIds": ["chip-label"],
+      "note": "badge 風 UI は chip-label の color + variant を使います。",
+      "keywords": ["badge", "status badge", "label", "tag", "ステータスバッジ", "チップ"]
+    },
+    {
+      "pattern": "タグ / フィルタートークン",
+      "componentIds": ["chip-tag"],
+      "note": "remove/filter 可能なタグです。",
+      "keywords": ["tag", "filter token", "chip", "タグ", "フィルター"]
+    },
+    {
+      "pattern": "通知バナー",
+      "componentIds": ["notification-banner"],
+      "note": "info / warning / error の通知表示に使います。",
+      "keywords": ["notification", "alert banner", "info banner", "通知", "お知らせ"]
+    },
+    {
+      "pattern": "緊急バナー",
+      "componentIds": ["emergency-banner"],
+      "note": "障害・緊急告知用です。",
+      "keywords": ["emergency", "urgent", "critical alert", "緊急", "障害通知"]
+    },
+    {
+      "pattern": "ページナビゲーション / ページ送り",
+      "componentIds": ["page-navigation"],
+      "note": "URL 連携は as=\"link\"、JS 連携は as=\"button\" を使います。",
+      "keywords": ["pagination", "page navigation", "ページ送り", "ページネーション"]
+    },
+    {
+      "pattern": "検索ボックス",
+      "componentIds": ["search-box"],
+      "note": "独自の input[type=search] + button を置き換える候補です。",
+      "keywords": ["search", "search box", "検索", "検索ボックス"]
+    },
+    {
+      "pattern": "グローバルメニュー",
+      "componentIds": ["global-menu"],
+      "note": "サイト全体のグローバルナビゲーションです。",
+      "keywords": ["global menu", "site navigation", "グローバルメニュー"]
+    },
+    {
+      "pattern": "メニューリスト / サイドナビ",
+      "componentIds": ["menu-list"],
+      "note": "サイドバー内のナビゲーションリストです。",
+      "keywords": ["menu", "side nav", "navigation list", "メニュー", "サイドナビ"]
+    },
+    {
+      "pattern": "日付入力",
+      "componentIds": ["date-picker", "calendar"],
+      "note": "日付入力は date-picker、カレンダー単体は calendar を使います。",
+      "keywords": ["date picker", "calendar", "日付選択", "カレンダー"]
+    },
+    {
+      "pattern": "コンボボックス / オートコンプリート",
+      "componentIds": ["combobox"],
+      "note": "検索可能なセレクトです。",
+      "keywords": ["combobox", "autocomplete", "typeahead", "コンボボックス", "オートコンプリート"]
+    },
+    {
+      "pattern": "スイッチ / トグル",
+      "componentIds": ["switch"],
+      "note": "ON/OFF 切替向けです。",
+      "keywords": ["switch", "toggle", "スイッチ", "トグル", "on/off"]
+    }
+  ],
   "categories": [
     {
       "key": "Form",
       "label": "フォーム入力",
       "description": "User input, selection, and form control components",
       "components": [
-        { "id": "input-text", "tagName": "dads-input-text", "useCase": "Single-line text input (name, email, phone, etc.)" },
-        { "id": "textarea", "tagName": "dads-textarea", "useCase": "Multi-line text input (comments, descriptions, notes)" },
-        { "id": "select", "tagName": "dads-select", "useCase": "Dropdown selection from predefined options" },
-        { "id": "checkbox", "tagName": "dads-checkbox", "useCase": "Boolean toggle or multi-select checkboxes" },
-        { "id": "radio", "tagName": "dads-radio", "useCase": "Single selection from mutually exclusive options" },
-        { "id": "switch", "tagName": "dads-switch", "useCase": "On/off toggle for settings or preferences" },
-        { "id": "combobox", "tagName": "dads-combobox", "useCase": "Text input with autocomplete/suggestion dropdown" },
-        { "id": "date-picker", "tagName": "dads-date-picker", "useCase": "Date selection with calendar interface" },
-        { "id": "file-upload", "tagName": "dads-file-upload", "useCase": "File attachment and upload" },
-        { "id": "fieldset", "tagName": "dads-fieldset", "useCase": "Group related form fields with legend" },
-        { "id": "search-box", "tagName": "dads-search-box", "useCase": "Search input with clear/submit actions" },
-        { "id": "calendar", "tagName": "dads-calendar", "useCase": "Calendar date picker component" }
+        { "id": "input-text", "tagName": "dads-input-text", "useCase": "Single-line text input (name, email, phone, etc.)", "keywords": ["text input", "name", "email", "phone", "入力"] },
+        { "id": "textarea", "tagName": "dads-textarea", "useCase": "Multi-line text input (comments, descriptions, notes)", "keywords": ["textarea", "multiline", "comments", "notes", "複数行入力"] },
+        { "id": "select", "tagName": "dads-select", "useCase": "Dropdown selection from predefined options", "keywords": ["select", "dropdown", "選択"] },
+        { "id": "checkbox", "tagName": "dads-checkbox", "useCase": "Boolean toggle or multi-select checkboxes", "keywords": ["checkbox", "multi-select", "チェックボックス"] },
+        { "id": "radio", "tagName": "dads-radio", "useCase": "Single selection from mutually exclusive options", "keywords": ["radio", "single choice", "ラジオ"] },
+        { "id": "switch", "tagName": "dads-switch", "useCase": "On/off toggle for settings or preferences", "keywords": ["switch", "toggle", "スイッチ", "トグル", "on/off"] },
+        { "id": "combobox", "tagName": "dads-combobox", "useCase": "Text input with autocomplete/suggestion dropdown", "keywords": ["combobox", "autocomplete", "typeahead", "コンボボックス", "オートコンプリート"] },
+        { "id": "date-picker", "tagName": "dads-date-picker", "useCase": "Date selection with calendar interface", "keywords": ["date picker", "calendar", "日付選択", "カレンダー"] },
+        { "id": "file-upload", "tagName": "dads-file-upload", "useCase": "File attachment and upload", "keywords": ["file upload", "drag drop", "file input", "アップロード", "ドラッグ&ドロップ"] },
+        { "id": "fieldset", "tagName": "dads-fieldset", "useCase": "Group related form fields with legend", "keywords": ["fieldset", "group", "legend", "フォームグループ"] },
+        { "id": "search-box", "tagName": "dads-search-box", "useCase": "Search input with clear/submit actions", "keywords": ["search", "search box", "検索", "検索ボックス"] },
+        { "id": "calendar", "tagName": "dads-calendar", "useCase": "Calendar date picker component", "keywords": ["calendar", "日付", "カレンダー"] }
       ]
     },
     {
@@ -25,12 +167,12 @@
       "label": "アクション",
       "description": "Interactive elements that trigger actions or reveal content",
       "components": [
-        { "id": "button", "tagName": "dads-button", "useCase": "Primary action trigger (submit, save, cancel, delete)" },
-        { "id": "dialog", "tagName": "dads-dialog", "useCase": "Modal dialog for confirmations, alerts, or focused tasks" },
-        { "id": "drawer", "tagName": "dads-drawer", "useCase": "Slide-out panel for secondary content or navigation" },
-        { "id": "disclosure", "tagName": "dads-disclosure", "useCase": "Expandable content section (show/hide)" },
-        { "id": "accordion-details", "tagName": "dads-accordion-details", "useCase": "Accordion container for collapsible FAQ or grouped content" },
-        { "id": "accordion-item-details", "tagName": "dads-accordion-item-details", "useCase": "Individual accordion item within an accordion group" }
+        { "id": "button", "tagName": "dads-button", "useCase": "Primary action trigger (submit, save, cancel, delete)", "keywords": ["button", "action", "ボタン"] },
+        { "id": "dialog", "tagName": "dads-dialog", "useCase": "Modal dialog for confirmations, alerts, or focused tasks", "keywords": ["dialog", "modal", "confirm", "ダイアログ", "モーダル"] },
+        { "id": "drawer", "tagName": "dads-drawer", "useCase": "Slide-out panel for secondary content or navigation", "keywords": ["drawer", "side panel", "ドロワー", "サイドパネル"] },
+        { "id": "disclosure", "tagName": "dads-disclosure", "useCase": "Expandable content section (show/hide)", "keywords": ["disclosure", "details", "expand", "折りたたみ"] },
+        { "id": "accordion-details", "tagName": "dads-accordion-details", "useCase": "Accordion container for collapsible FAQ or grouped content", "keywords": ["accordion", "faq", "collapsible", "アコーディオン"] },
+        { "id": "accordion-item-details", "tagName": "dads-accordion-item-details", "useCase": "Individual accordion item within an accordion group", "keywords": ["accordion item", "faq item", "アコーディオン項目"] }
       ]
     },
     {
@@ -38,16 +180,16 @@
       "label": "ナビゲーション",
       "description": "Page navigation, breadcrumbs, tabs, and menu components",
       "components": [
-        { "id": "breadcrumb", "tagName": "dads-breadcrumb", "useCase": "Hierarchical page location indicator" },
-        { "id": "page-navigation", "tagName": "dads-page-navigation", "useCase": "Pagination for multi-page content (tables, search results)" },
-        { "id": "step-navigation", "tagName": "dads-step-navigation", "useCase": "Step-by-step wizard progress indicator" },
-        { "id": "menu-list", "tagName": "dads-menu-list", "useCase": "Vertical navigation menu list" },
-        { "id": "tab", "tagName": "dads-tab", "useCase": "Tab interface for switching between related content panels" },
-        { "id": "global-menu", "tagName": "dads-global-menu", "useCase": "Site-wide header navigation menu" },
-        { "id": "language-selector", "tagName": "dads-language-selector", "useCase": "Language/locale switcher" },
-        { "id": "hamburger-menu-button", "tagName": "dads-hamburger-menu-button", "useCase": "Mobile menu toggle button" },
-        { "id": "utility-link", "tagName": "dads-utility-link", "useCase": "Utility navigation link (login, settings, help)" },
-        { "id": "mobile-menu", "tagName": "dads-mobile-menu", "useCase": "Mobile-optimized navigation menu" }
+        { "id": "breadcrumb", "tagName": "dads-breadcrumb", "useCase": "Hierarchical page location indicator", "keywords": ["breadcrumb", "パンくず", "現在位置"] },
+        { "id": "page-navigation", "tagName": "dads-page-navigation", "useCase": "Pagination for multi-page content (tables, search results)", "keywords": ["pagination", "page navigation", "ページ送り", "ページネーション"] },
+        { "id": "step-navigation", "tagName": "dads-step-navigation", "useCase": "Step-by-step wizard progress indicator", "keywords": ["step", "wizard", "multi-step", "stepper", "ステップ", "ウィザード"] },
+        { "id": "menu-list", "tagName": "dads-menu-list", "useCase": "Vertical navigation menu list", "keywords": ["menu", "side nav", "navigation list", "メニュー", "サイドナビ"] },
+        { "id": "tab", "tagName": "dads-tab", "useCase": "Tab interface for switching between related content panels", "keywords": ["tab", "tabs", "tablist", "tab panel", "タブ", "タブ切替"] },
+        { "id": "global-menu", "tagName": "dads-global-menu", "useCase": "Site-wide header navigation menu", "keywords": ["global menu", "site navigation", "グローバルメニュー"] },
+        { "id": "language-selector", "tagName": "dads-language-selector", "useCase": "Language/locale switcher", "keywords": ["language", "locale", "言語切替"] },
+        { "id": "hamburger-menu-button", "tagName": "dads-hamburger-menu-button", "useCase": "Mobile menu toggle button", "keywords": ["hamburger", "mobile menu", "ハンバーガー"] },
+        { "id": "utility-link", "tagName": "dads-utility-link", "useCase": "Utility navigation link (login, settings, help)", "keywords": ["utility link", "login", "settings", "help", "補助リンク"] },
+        { "id": "mobile-menu", "tagName": "dads-mobile-menu", "useCase": "Mobile-optimized navigation menu", "keywords": ["mobile menu", "drawer menu", "モバイルメニュー"] }
       ]
     },
     {
@@ -55,17 +197,17 @@
       "label": "コンテンツ表示",
       "description": "Text, list, table, and structured content display",
       "components": [
-        { "id": "card", "tagName": "dads-card", "useCase": "Contained content block (article preview, info card)" },
-        { "id": "heading", "tagName": "dads-heading", "useCase": "Section heading with proper hierarchy (h1-h6)" },
-        { "id": "text", "tagName": "dads-text", "useCase": "Styled text block with typography tokens" },
-        { "id": "blockquote", "tagName": "dads-blockquote", "useCase": "Quoted text or citation block" },
-        { "id": "code-block", "tagName": "dads-code-block", "useCase": "Code snippet display with syntax styling" },
-        { "id": "divider", "tagName": "dads-divider", "useCase": "Visual separator between content sections" },
-        { "id": "list", "tagName": "dads-list", "useCase": "Ordered or unordered list" },
-        { "id": "description-list", "tagName": "dads-description-list", "useCase": "Key-value pair list (terms and definitions)" },
-        { "id": "resource-list", "tagName": "dads-resource-list", "useCase": "List of downloadable resources or links" },
-        { "id": "table", "tagName": "dads-table", "useCase": "Data table with sortable columns" },
-        { "id": "table-control", "tagName": "dads-table-control", "useCase": "Table toolbar with filters and actions" }
+        { "id": "card", "tagName": "dads-card", "useCase": "Contained content block (article preview, info card)", "keywords": ["card", "info card", "カード"] },
+        { "id": "heading", "tagName": "dads-heading", "useCase": "Section heading with proper hierarchy (h1-h6)", "keywords": ["heading", "title", "見出し"] },
+        { "id": "text", "tagName": "dads-text", "useCase": "Styled text block with typography tokens", "keywords": ["text", "typography", "本文"] },
+        { "id": "blockquote", "tagName": "dads-blockquote", "useCase": "Quoted text or citation block", "keywords": ["blockquote", "quote", "引用"] },
+        { "id": "code-block", "tagName": "dads-code-block", "useCase": "Code snippet display with syntax styling", "keywords": ["code block", "snippet", "コード"] },
+        { "id": "divider", "tagName": "dads-divider", "useCase": "Visual separator between content sections", "keywords": ["divider", "separator", "区切り"] },
+        { "id": "list", "tagName": "dads-list", "useCase": "Ordered or unordered list", "keywords": ["list", "ul", "ol", "リスト"] },
+        { "id": "description-list", "tagName": "dads-description-list", "useCase": "Key-value pair list (terms and definitions)", "keywords": ["description list", "definition list", "dl", "説明リスト", "詳細情報"] },
+        { "id": "resource-list", "tagName": "dads-resource-list", "useCase": "List of downloadable resources or links", "keywords": ["resource list", "file list", "download list", "download", "リソースリスト", "ファイル一覧", "ダウンロード"] },
+        { "id": "table", "tagName": "dads-table", "useCase": "Data table with sortable columns", "keywords": ["table", "data table", "sortable table", "テーブル"] },
+        { "id": "table-control", "tagName": "dads-table-control", "useCase": "Table toolbar with filters and actions", "keywords": ["table toolbar", "filter bar", "テーブル操作"] }
       ]
     },
     {
@@ -73,18 +215,18 @@
       "label": "表示・フィードバック",
       "description": "Visual indicators, status displays, and feedback elements",
       "components": [
-        { "id": "avatar", "tagName": "dads-avatar", "useCase": "User profile image or initials" },
-        { "id": "icon", "tagName": "dads-icon", "useCase": "SVG icon display" },
-        { "id": "chip-label", "tagName": "dads-chip-label", "useCase": "Label chip for categories or tags" },
-        { "id": "chip-tag", "tagName": "dads-chip-tag", "useCase": "Interactive tag chip (filterable, removable)" },
-        { "id": "notification-banner", "tagName": "dads-notification-banner", "useCase": "Page-level notification or info banner" },
-        { "id": "emergency-banner", "tagName": "dads-emergency-banner", "useCase": "Critical alert banner (system-wide)" },
-        { "id": "carousel", "tagName": "dads-carousel", "useCase": "Image or content carousel/slider" },
-        { "id": "device-mock", "tagName": "dads-device-mock", "useCase": "Device frame mockup for previews" },
-        { "id": "progress-indicator", "tagName": "dads-progress-indicator", "useCase": "Progress display (determinate or indeterminate)" },
-        { "id": "spinner", "tagName": "dads-spinner", "useCase": "Loading spinner for async operations" },
-        { "id": "progress-bar", "tagName": "dads-progress-bar", "useCase": "Linear progress bar" },
-        { "id": "loading-icon", "tagName": "dads-loading-icon", "useCase": "Inline loading indicator" }
+        { "id": "avatar", "tagName": "dads-avatar", "useCase": "User profile image or initials", "keywords": ["avatar", "profile", "アバター"] },
+        { "id": "icon", "tagName": "dads-icon", "useCase": "SVG icon display", "keywords": ["icon", "svg", "アイコン"] },
+        { "id": "chip-label", "tagName": "dads-chip-label", "useCase": "Label chip for categories or tags", "keywords": ["badge", "status badge", "label", "tag", "ステータスバッジ", "チップ"] },
+        { "id": "chip-tag", "tagName": "dads-chip-tag", "useCase": "Interactive tag chip (filterable, removable)", "keywords": ["chip tag", "filter tag", "タグ", "フィルタートークン"] },
+        { "id": "notification-banner", "tagName": "dads-notification-banner", "useCase": "Page-level notification or info banner", "keywords": ["notification", "alert banner", "info banner", "通知", "お知らせ"] },
+        { "id": "emergency-banner", "tagName": "dads-emergency-banner", "useCase": "Critical alert banner (system-wide)", "keywords": ["emergency", "urgent", "critical alert", "緊急", "障害通知"] },
+        { "id": "carousel", "tagName": "dads-carousel", "useCase": "Image or content carousel/slider", "keywords": ["carousel", "slider", "カルーセル"] },
+        { "id": "device-mock", "tagName": "dads-device-mock", "useCase": "Device frame mockup for previews", "keywords": ["device mock", "preview frame", "モック"] },
+        { "id": "progress-indicator", "tagName": "dads-progress-indicator", "useCase": "Progress display (determinate or indeterminate)", "keywords": ["progress indicator", "進捗インジケーター"] },
+        { "id": "spinner", "tagName": "dads-spinner", "useCase": "Loading spinner for async operations", "keywords": ["spinner", "loading", "処理中", "送信中", "読み込み中", "スピナー"] },
+        { "id": "progress-bar", "tagName": "dads-progress-bar", "useCase": "Linear progress bar", "keywords": ["progress", "progress bar", "進捗", "プログレスバー"] },
+        { "id": "loading-icon", "tagName": "dads-loading-icon", "useCase": "Inline loading indicator", "keywords": ["loading icon", "static loading", "読み込みアイコン", "砂時計"] }
       ]
     },
     {
@@ -92,10 +234,10 @@
       "label": "レイアウト",
       "description": "Page layout containers and structural components",
       "components": [
-        { "id": "layout-shell", "tagName": "dads-layout-shell", "useCase": "Page-level layout container (website, app-shell, master-detail)" },
-        { "id": "layout-sidebar", "tagName": "dads-layout-sidebar", "useCase": "Sidebar navigation panel for app layouts" },
-        { "id": "layout-aside", "tagName": "dads-layout-aside", "useCase": "Aside panel for detail/supplementary content" },
-        { "id": "header-container", "tagName": "dads-header-container", "useCase": "Header area container with slots" }
+        { "id": "layout-shell", "tagName": "dads-layout-shell", "useCase": "Page-level layout container (website, app-shell, master-detail)", "keywords": ["layout shell", "app shell", "website layout", "レイアウト"] },
+        { "id": "layout-sidebar", "tagName": "dads-layout-sidebar", "useCase": "Sidebar navigation panel for app layouts", "keywords": ["sidebar", "サイドバー"] },
+        { "id": "layout-aside", "tagName": "dads-layout-aside", "useCase": "Aside panel for detail/supplementary content", "keywords": ["aside", "detail pane", "補助パネル"] },
+        { "id": "header-container", "tagName": "dads-header-container", "useCase": "Header area container with slots", "keywords": ["header container", "ヘッダー"] }
       ]
     }
   ]
