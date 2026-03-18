@@ -1377,6 +1377,10 @@ export function registerAll(context) {
           if (related.length > 0) api.relatedComponents = related;
           const a11y = extractAccessibilityChecklist(d, { prefix });
           if (a11y) api.accessibilityChecklist = a11y;
+          const interactionExamples = cTag ? INTERACTION_EXAMPLES_MAP[cTag] : undefined;
+          if (interactionExamples) api.interactionExamples = interactionExamples;
+          const layoutBehavior = cTag ? LAYOUT_BEHAVIOR_MAP[cTag] : undefined;
+          if (layoutBehavior) api.layoutBehavior = layoutBehavior;
           const authoringGuidance = d?.custom?.authoringGuidance;
           if (authoringGuidance) api.authoringGuidance = authoringGuidance;
           results.push(api);

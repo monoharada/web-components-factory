@@ -39,8 +39,8 @@ type DadsChipLabelColor =
  * @csspart icon - アイコンスロット
  * @csspart label - ラベルテキストコンテナ
  *
- * @attr {string} variant - バリアント (text | outline | filled-outline | fill)
- * @attr {string} color - カラー (gray | blue | light-blue | cyan | green | lime | yellow | orange | red | magenta | purple)
+ * @attr {'text' | 'outline' | 'filled-outline' | 'fill'} variant - バリアント
+ * @attr {'gray' | 'blue' | 'light-blue' | 'cyan' | 'green' | 'lime' | 'yellow' | 'orange' | 'red' | 'magenta' | 'purple'} color - カラー
  *
  * @example
  * ```html

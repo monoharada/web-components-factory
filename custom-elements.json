@@ -10957,16 +10957,16 @@
           "attributes": [
             {
               "type": {
-                "text": "string"
+                "text": "'gray' | 'blue' | 'light-blue' | 'cyan' | 'green' | 'lime' | 'yellow' | 'orange' | 'red' | 'magenta' | 'purple'"
               },
-              "description": "カラー (gray | blue | light-blue | cyan | green | lime | yellow | orange | red | magenta | purple)",
+              "description": "カラー",
               "name": "color"
             },
             {
               "type": {
-                "text": "string"
+                "text": "'text' | 'outline' | 'filled-outline' | 'fill'"
               },
-              "description": "バリアント (text | outline | filled-outline | fill)",
+              "description": "バリアント",
               "name": "variant"
             }
           ],
@@ -28975,7 +28975,7 @@
             },
             {
               "type": {
-                "text": "string"
+                "text": "'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'"
               },
               "description": "モバイル向け入力モードヒント",
               "name": "inputmode"

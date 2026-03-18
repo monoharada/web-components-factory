@@ -1368,11 +1368,12 @@ export function detectResourceListAuthoringMisuse({
   const sourceText = sanitizeMarkupForValidation(text);
   const lineStarts = computeLineIndex(sourceText);
   const tagName = `${String(prefix).toLowerCase()}-resource-list`;
-  const tagRe = new RegExp(`<(${tagName})\\b([^<>]*?)>`, 'gi');
+  const tagRe = new RegExp(`<(${tagName})\\b([^<>]*?)>([\\s\\S]*?)</${tagName}>`, 'gi');
   let m;
 
   while ((m = tagRe.exec(sourceText))) {
     const attrChunk = String(m[2] ?? '');
+    const bodyChunk = String(m[3] ?? '');
     const rawAttrsStart = m.index + 1 + tagName.length;
     const attrs = parseAttributes(attrChunk);
     const hrefAttr = getAttributeRecord(attrs, 'href');
@@ -1380,6 +1381,8 @@ export function detectResourceListAuthoringMisuse({
     if (!hrefAttr) continue;
     const interactionValue = String(interactionAttr?.value ?? '').toLowerCase();
     if (interactionValue === 'whole') continue;
+    const hasDelegatedTitleLink = /slot\s*=\s*["']title["'][^>]*>[\s\S]*?<a\b[^>]*href=/i.test(bodyChunk);
+    if (hasDelegatedTitleLink) continue;
 
     const startIndex = rawAttrsStart + hrefAttr.offset;
     diagnostics.push({
@@ -1456,7 +1459,7 @@ export function detectReplaceableNativePatterns({
       diagnostics.push({
         file: filePath,
         range: makeRange(lineStarts, startIndex, startIndex + (tag === 'dialog' ? tag.length : roleAttr.name.length)),
-        severity: 'warning',
+        severity: 'info',
         code: 'nativePatternReplaceable',
         message: 'Dialog-like markup detected outside dads-dialog or dads-drawer.',
         tagName: tag,

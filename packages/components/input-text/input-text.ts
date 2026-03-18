@@ -72,7 +72,7 @@ import {
  * @attr {string} input-width - 幅バリアント (short | medium | full | カスタム値)
  * @attr {boolean} auto-validate - 自動バリデーションを有効化
  * @attr {string} autocomplete - オートコンプリートヒント
- * @attr {string} inputmode - モバイル向け入力モードヒント
+ * @attr {'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'} inputmode - モバイル向け入力モードヒント
  *
  * @fires dads-input - 入力時に発火
  * @fires dads-change - 値変更確定時に発火
